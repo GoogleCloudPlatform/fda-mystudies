@@ -146,7 +146,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
@@ -199,7 +199,7 @@
               reloadResourceDataTable(data.resourceList, null);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully.");
+                  "Content items reordered");
               if ($('.eighthResources').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.eighthResources').find('span').removeClass(
@@ -208,7 +208,7 @@
             } else {
               $('#alertMsg').show();
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-                  "Unable to reorder consent.");
+                  "Unable to reorder consent");
             }
             setTimeout(hideDisplayMessage, 5000);
           },
@@ -255,12 +255,12 @@
                   $('#spanMarkAsComp').removeAttr('data-original-title');
                 }
                 $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                    "Resource deleted successfully.");
+                    "Resource deleted successfully");
                 $('#alertMsg').show();
                 reloadData(studyId);
               } else {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(
-                    "Unable to delete resource.");
+                    "Unable to delete resource");
                 $('#alertMsg').show();
               }
               setTimeout(hideDisplayMessage, 5000);
@@ -317,7 +317,7 @@
           }
           var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewResourceInfo("
               + parseInt(obj.id) + ");'></span>";
-          if (obj.status) {
+          if (obj.action) {
             actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo(" + parseInt(obj.id)
                 + ");'></span>"
           } else {
@@ -331,7 +331,7 @@
 
         }
       });
-      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete) {
+      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete=='') {
         $("#markAsComp").attr("disabled", false);
       }
       $('#resource_list').DataTable().draw();
@@ -390,4 +390,21 @@
   function hideDisplayMessage() {
     $('#alertMsg').hide();
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminStudies/viewStudyNotificationList.do?_S=${param._S}";
+		    }, 5000);
+	  }else{
+	  	setTimeout(hideDisplayMessage, 5000);
+	  }
+	}
 </script>

@@ -45,7 +45,6 @@ public final class StudyMapper {
     studyDetail.setAppId(studySiteInfo.getCustomAppId());
     studyDetail.setAppInfoId(studySiteInfo.getAppId());
     studyDetail.setAppName(studySiteInfo.getAppName());
-    studyDetail.setLogoImageUrl(studySiteInfo.getLogoImageUrl());
     studyDetail.setStudyStatus(studySiteInfo.getStudyStatus());
     return studyDetail;
   }

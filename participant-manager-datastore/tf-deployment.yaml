@@ -99,6 +99,11 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: consent_bucket_name
+            - name: STUDY_BUILDER_GCP_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: study_resources_bucket_name
             - name: ORG_NAME
               valueFrom:
                 secretKeyRef:

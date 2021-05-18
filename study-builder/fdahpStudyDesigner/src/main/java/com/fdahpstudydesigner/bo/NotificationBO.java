@@ -120,6 +120,9 @@ public class NotificationBO implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
+  @Column(name = "schedule_timestamp")
+  private String scheduleTimestamp;
+
   public String getActionPage() {
     return actionPage;
   }
@@ -318,5 +321,15 @@ public class NotificationBO implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  /** @return the scheduleTimestamp */
+  public String getScheduleTimestamp() {
+    return scheduleTimestamp;
+  }
+
+  /** @param scheduleTimestamp the scheduleTimestamp to set */
+  public void setScheduleTimestamp(String scheduleTimestamp) {
+    this.scheduleTimestamp = scheduleTimestamp;
   }
 }

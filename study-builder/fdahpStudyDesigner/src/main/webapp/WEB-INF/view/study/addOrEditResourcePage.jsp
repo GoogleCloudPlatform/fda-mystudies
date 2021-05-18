@@ -23,9 +23,9 @@
                 src="/studybuilder/images/icons/back-b.png" alt=""/></a>
           </span>
           <c:if test="${isstudyProtocol ne 'isstudyProtocol'}">
-            <c:if test="${actionOn eq 'add'}">Add Resource</c:if>
-            <c:if test="${actionOn eq 'edit'}">Edit Resource</c:if>
-            <c:if test="${not empty resourceBO && actionOn eq 'view'}">View Resource <c:set
+            <c:if test="${actionOn eq 'add'}">Add resource</c:if>
+            <c:if test="${actionOn eq 'edit'}">Edit resource</c:if>
+            <c:if test="${not empty resourceBO && actionOn eq 'view'}">View resource <c:set
                 var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
             </c:if>
           </c:if>
@@ -76,7 +76,7 @@
           <div class="form-group">
             <input autofocus="autofocus" type="text" class="form-control" id="resourceTitle"
                    name="title"
-                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required
+                   value="${fn:escapeXml(resourceBO.title)}" maxlength="50" required data-error="Please fill out this field" 
                    <c:if test="${isstudyProtocol eq 'isstudyProtocol'}">readonly</c:if>/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -108,7 +108,7 @@
       <div id="richEditor"
            class="mt-lg form-group resetContentType <c:if test="${resourceBO.textOrPdf}">dis-none</c:if>">
         <textarea class="remReqOnSave" id="richText" name="richText"
-                  required>${resourceBO.richText}</textarea>
+                  required data-error="Please fill out this field"  >${resourceBO.richText}</textarea>
         <div class="help-block with-errors red-txt"></div>
       </div>
 
@@ -119,8 +119,8 @@
           Upload PDF
         </button>
         <input id="uploadImg" class="dis-none remReqOnSave" type="file" name="pdfFile" accept=".pdf"
-               data-error="Please select a pdf file" required>
-        <input type="hidden" class="remReqOnSave" value="${resourceBO.pdfUrl}" required id="pdfUrl"
+               data-error="Please select a pdf file" required data-error="Please fill out this field" >
+        <input type="hidden" class="remReqOnSave" value="${resourceBO.pdfUrl}" required data-error="Please fill out this field"  id="pdfUrl"
                name="pdfUrl">
         <input type="hidden" value="${resourceBO.pdfName}" id="pdfName" name="pdfName">
         <span class="alert customalert pdfDiv">
@@ -182,7 +182,7 @@
               </div>
               <div class="col-md-3 col-lg-3 p-none">
                 <div class="form-group">
-                  <select id="anchorDateId" class="selectpicker disBtn1" required
+                  <select id="anchorDateId" class="selectpicker disBtn1" required data-error="Please fill out this field" 
                           name="anchorDateId">
                     <option value=''>Select</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
@@ -213,8 +213,8 @@
                      placeholder="X" name="timePeriodFromDays"
                      value="${resourceBO.timePeriodFromDays}"
                      oldxDaysVal="${resourceBO.timePeriodFromDays}"
-                     maxlength="3" required pattern="[0-9]+"
-                     data-pattern-error="Please enter valid number."/>
+                     maxlength="3" required data-error="Please fill out this field"  pattern="[0-9]+"
+                     data-pattern-error="Please enter valid number"/>
               <span class="help-block with-errors red-txt"></span>
             </span>
             <span class="mb-sm pr-md">
@@ -242,7 +242,7 @@
                      class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm resetAncDate"
                      placeholder="Y"
                      name="timePeriodToDays" value="${resourceBO.timePeriodToDays}"
-                     oldyDaysVal="${resourceBO.timePeriodToDays}" maxlength="3" required/>
+                     oldyDaysVal="${resourceBO.timePeriodToDays}" maxlength="3" required data-error="Please fill out this field" />
 
               <span class="help-block with-errors red-txt"></span>
             </span>
@@ -266,7 +266,7 @@
                      class="form-control disRadBtn1 disBtn2 datepicker remReqOnSave mt-md"
                      placeholder="Start date" name="startDate"
                      value="${resourceBO.startDate}"
-                     oldStartDateVal="${resourceBO.startDate}" required/>
+                     oldStartDateVal="${resourceBO.startDate}" required data-error="Please fill out this field" />
               <span class="help-block with-errors red-txt"></span>
             </span>
             <span class="gray-xs-f mb-sm pr-md">
@@ -276,7 +276,7 @@
               <input id="EndDate" type="text"
                      class="form-control disRadBtn1 disBtn2 datepicker remReqOnSave mt-md"
                      placeholder="End date" name="endDate" value="${resourceBO.endDate}"
-                     oldEndDateVal="${resourceBO.endDate}" required/>
+                     oldEndDateVal="${resourceBO.endDate}" required data-error="Please fill out this field" />
               <span class="help-block with-errors red-txt"></span>
             </span>
             <div class="help-block with-errors red-txt"></div>
@@ -296,7 +296,7 @@
           <div class="form-group">
             <textarea class="form-control remReqOnSave" rows="4" id="comment"
                       name="resourceText"
-                      data-error="Please enter plain text of up to 250 characters max."
+                      data-error="Please enter plain text of up to 250 characters max"
                       maxlength="250"
                       >${resourceBO.resourceText}</textarea>
             <div class="help-block with-errors red-txt"></div>
@@ -460,7 +460,7 @@
         if ($("#resourceTitle").parent().addClass('has-error has-danger').find(".help-block").text()
             == '') {
           $("#resourceTitle").parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field"));
         }
         $('#saveResourceId').prop('disabled', false);
         return false;
@@ -629,14 +629,20 @@
     $("#xdays, #ydays").on('blur', function () {
       chkDaysValid(false);
     });
+
+    var today, datepicker;
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    
     $('#StartDate').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false,
     });
     $('#EndDate').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false,
     });
 
@@ -733,7 +739,6 @@
           $('#inlineRadio5').prop('disabled', true);
           $('.disRadBtn1').prop('disabled', true);
           $('.disRadBtn1').prop('checked', false);
-          $('.disRadBtn1').val('');
           $('.disBtn1').removeAttr('required');
           $('.disBtn1').val('');
 
@@ -922,7 +927,7 @@
 
     $('#anchorDateId').change(function () {
       var element = $(this).find('option:selected').text();
-      if (element == 'Enrollment Date') {
+      if (element == 'Enrollment date') {
         $('#xSign').children('option').remove();
         $('#xSign').append("<option value='0' selected>+</option>");
         $('#ySign').children('option').remove();
@@ -960,7 +965,7 @@
         if (clickDone && isFromValid($('#ydays').parents('form')))
           $('#ydays').focus();
         $('#ydays').parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X."));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
         valid = false;
       } else {
         $('#ydays').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -986,7 +991,7 @@
     if (value == '<p><br></p>' || value == '') {
       isValid = false;
       $('#richText').parent().addClass('has-error-cust').find(".help-block").empty().append(
-    	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field."));
+    	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please fill out this field"));
     }
     return isValid;
   }

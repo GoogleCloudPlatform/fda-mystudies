@@ -52,7 +52,7 @@ public enum ErrorCode {
       400,
       "EC_0006",
       HttpStatus.BAD_REQUEST.toString(),
-      "Your password has expired. Please use the Forgot Password link to get password help."),
+      "Your password has expired. Please use the Forgot Password link to set up a new password."),
 
   EMAIL_EXISTS(
       409,
@@ -203,9 +203,9 @@ public enum ErrorCode {
   ADMIN_NOT_FOUND(404, "EC_0042", HttpStatus.NOT_FOUND.toString(), "Admin user not found"),
 
   PENDING_CONFIRMATION(
-      403,
+      409,
       "EC_0043",
-      HttpStatus.BAD_REQUEST.toString(),
+      HttpStatus.CONFLICT.toString(),
       "Your account is pending activation. Please check your email for details and sign in to complete activation."),
 
   ACCOUNT_NOT_VERIFIED(

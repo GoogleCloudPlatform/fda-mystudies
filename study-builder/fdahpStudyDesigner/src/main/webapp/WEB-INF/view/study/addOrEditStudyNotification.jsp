@@ -23,10 +23,10 @@
                id="goToNotificationListForm"><img
                 src="/studybuilder/images/icons/back-b.png" alt=""/></a>
           </span>
-          <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">Add Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'view'}">View Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'resend'}">Resend Notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'edit'}">Edit notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">Add notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'view'}">View notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'resend'}">Resend notification</c:if>
         </div>
 
         <div class="dis-line form-group mb-none">
@@ -80,7 +80,7 @@
         <div class="form-group">
           <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
                     id="notificationText"
-                    name="notificationText" required
+                    name="notificationText" required data-error="Please fill out this field" 
           >${notificationBO.notificationText}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -128,7 +128,7 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group date">
-          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal"
+          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" data-error="Please fill out this field" 
                  id="scheduleDate"
                  name="scheduleDate" value="${notificationBO.scheduleDate}"
                  oldValue="${notificationBO.scheduleDate}"
@@ -142,7 +142,7 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group">
-          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime"
+          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime" data-error="Please fill out this field" 
                  name="scheduleTime" value="${notificationBO.scheduleTime}"
                  oldValue="${notificationBO.scheduleTime}"
                  placeholder="00:00" disabled/>
@@ -180,14 +180,6 @@ For studies that are already launched, notifications get scheduled for delivery 
     $('.eigthNotification').removeClass('cursor-none');
 
     $('[data-toggle="tooltip"]').tooltip();
-
-    <c:if test="${studyBo.status eq 'Active'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
-
-    <c:if test="${notificationBO.actionPage eq 'view'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
 
     <c:if test="${notificationBO.actionPage eq 'view'}">
     $('#studyNotificationFormId input,textarea').prop('disabled', true);
@@ -295,9 +287,13 @@ For studies that are already launched, notifications get scheduled for delivery 
       });
     });
 
+    var today, datepicker;
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false
     }).on('dp.change change', function (e) {
       validateTime();
@@ -477,7 +473,7 @@ For studies that are already launched, notifications get scheduled for delivery 
       if (dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
             '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Please select a time that has not already passed for the current date."));
+            "Please select a time that has not already passed for the current date"));
         valid = false;
       }
     }

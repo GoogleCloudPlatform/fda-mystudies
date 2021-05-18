@@ -16,11 +16,11 @@
           <span class="pr-sm cur-pointer"
                 onclick="goToBackPage(this);"><img
               src="../images/icons/back-b.png" alt=""/></span>
-          <c:if test="${empty comprehensionQuestionBo.id}">Add Comprehension Test Question</c:if>
+          <c:if test="${empty comprehensionQuestionBo.id}">Add comprehension test question</c:if>
           <c:if
-              test="${not empty comprehensionQuestionBo.id && actionPage eq 'addEdit'}">Edit Comprehension Test Question</c:if>
+              test="${not empty comprehensionQuestionBo.id && actionPage eq 'addEdit'}">Edit comprehension test question</c:if>
           <c:if
-              test="${not empty comprehensionQuestionBo.id && actionPage eq 'view'}">View Comprehension Test Question<c:set
+              test="${not empty comprehensionQuestionBo.id && actionPage eq 'view'}">View comprehension test question<c:set
               var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
           </c:if>
         </div>
@@ -58,7 +58,7 @@
           </span>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" name="questionText" id="questionText" required
+          <input type="text" class="form-control" name="questionText" id="questionText" required data-error="Please fill out this field" 
                  value="${comprehensionQuestionBo.questionText}" maxlength="300"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -96,8 +96,8 @@
             <div class="ans-opts col-md-12 p-none" id="0">
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
-                  <input type='text' class='form-control responseOptionClass'
-                         name="responseList[0].responseOption" id="responseOptionId0" required
+                  <input type='text' class='form-control responseOptionClass' 
+                         name="responseList[0].responseOption" id="responseOptionId0" required data-error="Please fill out this field" 
                          maxlength="150" onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -129,7 +129,7 @@
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control' name="responseList[1].responseOption"
-                         id="responseOptionId1" required maxlength="150"
+                         id="responseOptionId1" required data-error="Please fill out this field"  maxlength="150"
                          onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -186,7 +186,7 @@
                     <input type='text' class='form-control'
                            name="responseList[${responseBoVar.index}].responseOption"
                            id="responseOptionId${responseBoVar.index}"
-                           value="${responseBo.responseOption}" required maxlength="150"
+                           value="${responseBo.responseOption}" required data-error="Please fill out this field" maxlength="150"
                            onblur="validateForUniqueValue(this,function(){});"
                            onkeypress="resetValue(this);"/>
                     <div class='help-block with-errors red-txt'></div>
@@ -194,7 +194,7 @@
                 </div>
                 <div class='col-md-3'>
                   <div class="form-group">
-                    <select class='selectpicker wid100' required
+                    <select class='selectpicker wid100' required 
                             data-error='Please choose one option'
                             name="responseList[${responseBoVar.index}].correctAnswer"
                             id="correctAnswerId${responseBoVar.index}">
@@ -292,7 +292,7 @@
     var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
         + "'><div class='col-md-6 pl-none'>"
         + "<div class='form-group'>"
-        + "<input type='text' class='form-control' required name='responseList[" + ansCount
+        + "<input type='text' class='form-control' required data-error='Please fill out this field'  name='responseList[" + ansCount
         + "].responseOption' id='responseOptionId" + ansCount
         + "'  maxlength='150' onblur='validateForUniqueValue(this,function(){});' onkeypress='resetValue(this);'/>"
         + "<div class='help-block with-errors red-txt'></div>"
@@ -450,7 +450,7 @@
       if (!$('#questionText')[0].checkValidity()) {
         $("#questionText").parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "This is a required field."));
+            "This is a required field"));
       }
     }
   }

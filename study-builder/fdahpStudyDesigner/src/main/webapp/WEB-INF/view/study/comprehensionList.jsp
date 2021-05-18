@@ -20,6 +20,23 @@
     }
     return true;
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+	  window.setTimeout(function(){
+		window.location.href = "/studybuilder/adminStudies/consentReview.do?_S=${param._S}";
+		    }, 5000);
+	  }else{
+	    	setTimeout(hideDisplayMessage, 5000);
+	  }
+	}
 </script>
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -89,7 +106,7 @@
         <div class="text-right">
           <div class="black-md-f dis-line pull-left line34">Comprehension test questions
           </div>
-          <div class="dis-line form-group mb-none mr-sm">
+          <div class="dis-line form-group mb-none">
             <c:if test="${empty permission}">
              <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"	
                   data-placement="bottom" data-original-title="">
@@ -238,7 +255,7 @@ var markAsComplete = "${markAsComplete}"
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1]}],
@@ -289,7 +306,7 @@ var markAsComplete = "${markAsComplete}"
             if (status == "SUCCESS") {
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
               if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
                 $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
               }
@@ -323,7 +340,7 @@ var markAsComplete = "${markAsComplete}"
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The score should be less than or equal to the number of questions and greater than 0."));
+            "The score should be less than or equal to the number of questions and greater than 0"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");
@@ -546,7 +563,7 @@ var markAsComplete = "${markAsComplete}"
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The score should be less than or equal to the number of questions and greater than 0."));
+            "The score should be less than or equal to the number of questions and greater than 0"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");

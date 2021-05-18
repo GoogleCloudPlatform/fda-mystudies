@@ -58,11 +58,15 @@
     display: inline-block;
     vertical-align: top;
   }
+  
+   .help-block-txt ul {
+      width: max-content !important;
+    }
 
 
   /* error box css start here  */
   .help-block ul {
-    width: 150px;
+    width: 155px;
   / / font-size: 10 px !important;
   }
  /* error box css end here  */
@@ -91,12 +95,12 @@
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
-      <div class="black-md-f text-uppercase dis-line pull-left line34">
+      <div class="black-md-f dis-line pull-left line34">
         <span class="pr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png" class="pr-md" alt=""/></span>
-        <c:if test="${actionType eq 'add'}">Add Questionnaire</c:if>
-        <c:if test="${actionType eq 'edit'}">Edit Questionnaire</c:if>
-        <c:if test="${actionType eq 'view'}">View Questionnaire <c:set
+        <c:if test="${actionType eq 'add'}">Add questionnaire</c:if>
+        <c:if test="${actionType eq 'edit'}">Edit questionnaire</c:if>
+        <c:if test="${actionType eq 'view'}">View questionnaire <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?questionnaireBo.questionnarieVersion:''}
         </c:if>
 
@@ -192,11 +196,11 @@
           </div>
           <div class="form-group col-md-5 p-none">
             <input autofocus="autofocus" type="text" autocomplete="off" custAttType="customValidate"
-                   class="form-control" name="shortTitle" id="shortTitleId"
+                   class="form-control" name="shortTitle" id="shortTitleId" data-error="Please fill out this field" 
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
                 <c:if
                     test="${not empty questionnaireBo.shortTitleDuplicate && (questionnaireBo.shortTitleDuplicate gt 0)}"> disabled</c:if>
-                   required="required" maxlength="50"/>
+                   required="required" data-error="Please fill out this field"  maxlength="50"/>
             <div class="help-block with-errors red-txt"></div>
             <input type="hidden" id="preShortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"/>
@@ -209,14 +213,14 @@
           <div class="form-group">
             <input type="text" class="form-control" name="title" id="titleId"
                    value="${fn:escapeXml(questionnaireBo.title)}" maxlength="300"
-                   required="required"/>
+                   required="required" data-error="Please fill out this field" />
             <div class="help-block with-errors red-txt"></div>
           </div>
           <div class="mt-lg" id="stepContainer">
             <div
                 class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
                 onclick="getQuestionnaireStep('Instruction');">Add
-              Instruction step
+              instruction step
             </div>
             <div
                 class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
@@ -373,7 +377,6 @@
         <form:form action="" name="anchorFormId" id="anchorFormId"
                    method="post" role="form" data-toggle="validator">
           <div class="anchortypeclass" style="display: none;">
-            <c:if test="${fn:length(anchorTypeList) gt 0}">
               <div class="gray-xs-f mb-sm">Select anchor date type</div>
               <div class="clearfix"></div>
               <div class="col-md-5 col-lg-5 p-none">
@@ -387,11 +390,10 @@
                         ${questionnaireBo.anchorDateId eq anchorTypeInfo.id ? 'selected' : ''}>${anchorTypeInfo.name}</option>
                     </c:forEach>
                   </select>
-                  <div class="help-block with-errors red-txt"></div>
+                  <div class="help-block with-errors red-txt help-block-txt"></div>
                 </div>
               </div>
               <div class="clearfix"></div>
-            </c:if>
           </div>
         </form:form>
         <!-- Ancor date type -->
@@ -493,7 +495,7 @@
                 <input type="checkbox" id="isLaunchStudy"
                        name="questionnairesFrequenciesBo.isLaunchStudy" value="true"
                   ${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy ?'checked':''}
-                       required ${(questionnaireBo.shortTitleDuplicate>
+                       required data-error="Please fill out this field"  ${(questionnaireBo.shortTitleDuplicate>
                     0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
                   with study</label>
               </span>
@@ -531,7 +533,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
                           <input id="onetimexdaysId" type="text"
@@ -542,7 +544,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -554,7 +556,7 @@
                     </span>
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
-                      <input id="selectTime" type="text"
+                      <input id="selectTime" type="text" data-error="Please fill out this field" 
                              class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="questionnairesFrequenciesBo.frequencyTime"
                              value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
@@ -573,23 +575,23 @@
               <div class="mt-md form-group regularClass">
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <input id="chooseDate" type="text"
+                  <input id="chooseDate" type="text" data-error="Please fill out this field" 
                          class="mt-sm form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                          name="questionnairesFrequenciesBo.frequencyDate"
                          placeholder="Choose date"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"
-                         required
+                         required data-error="Please fill out this field" 
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
                   <span class='help-block with-errors red-txt'></span>
                 </span>
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <input id="selectTime1" type="text"
+                  <input id="selectTime1" type="text" data-error="Please fill out this field" 
                          class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
-                         required
+                         required data-error="Please fill out this field" 
                       <c:if
                           test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
                          placeholder="Select time"/>
@@ -608,7 +610,7 @@
                   type="checkbox" id="isStudyLifeTime"
                   name="questionnairesFrequenciesBo.isStudyLifeTime" value="true"
                 ${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime ?'checked':''}
-                  required ${(questionnaireBo.shortTitleDuplicate>
+                  required data-error="Please fill out this field"  ${(questionnaireBo.shortTitleDuplicate>
                   0)?'disabled' : ''}> <label for="isStudyLifeTime"> Study
                 lifetime </label>
               </span>
@@ -621,7 +623,7 @@
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="studyLifetimeEnd" placeholder="Choose end date"
-                             required
+                             required data-error="Please fill out this field" 
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                              value=""/>
@@ -630,7 +632,7 @@
                       <input id="chooseEndDate" type="text"
                              class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                              name="studyLifetimeEnd" placeholder="Choose end date"
-                             required
+                             required data-error="Please fill out this field" 
                           <c:if
                               test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                              value="${questionnaireBo.studyLifetimeEnd}"/>
@@ -671,7 +673,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
                           <input id="onetimeydaysId" type="text"
@@ -682,7 +684,7 @@
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
                                  maxlength="3" pattern="[0-9]+"
-                                 data-pattern-error="Please enter valid number."/>
+                                 data-pattern-error="Please enter valid number"/>
                         </c:otherwise>
                       </c:choose>
                       <span class="help-block with-errors red-txt"></span>
@@ -730,7 +732,7 @@
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                   </span>
                   <br/> <input id="startDate"
-                               type="text"
+                               type="text" data-error="Please fill out this field" 
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="Choose date" name="studyLifetimeStart"
                                value="${questionnaireBo.studyLifetimeStart}"/>
@@ -756,7 +758,7 @@
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          title="Select"
+                          title="Select" data-error="Please fill out this field" 
                           name="questionnairesFrequenciesList[0].xDaysSign"
                           id="dailyXSign">
                         <option value="0"
@@ -771,13 +773,13 @@
                       </span>
                       <span
                           class="form-group m-none dis-inline vertical-align-middle">
-                        <input id="dailyxdaysId" type="text"
+                        <input id="dailyxdaysId" type="text" data-error="Please fill out this field" 
                                class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="X"
                                name="questionnairesFrequenciesList[0].timePeriodFromDays"
                                value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number" data-error="Please fill out this field" />
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -801,11 +803,11 @@
                   </span>
                   <br/> <input id="days" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required data-error="Please fill out this field" 
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -848,7 +850,7 @@
                     <span
                         class="form-group m-none dis-inline vertical-align-middle pr-md">
                       <input id="time0" type="text"
-                             name="questionnairesFrequenciesList[0].frequencyTime" required
+                             name="questionnairesFrequenciesList[0].frequencyTime" required data-error="Please fill out this field" 
                              class="form-control clock dailyClock" placeholder="Time"
                              onclick='timep(this.id);'/>
                       <span
@@ -874,7 +876,7 @@
                           class="form-group m-none dis-inline vertical-align-middle pr-md">
                         <input id="time${frequeincesVar.index}" type="text"
                                name="questionnairesFrequenciesList[${frequeincesVar.index}].frequencyTime"
-                               required
+                               required data-error="Please fill out this field" 
                                class="form-control clock dailyClock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="Time" onclick='timep(this.id);'
                                value="${questionnairesFrequencies.frequencyTime}"
@@ -936,12 +938,13 @@
                     title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                 </span>
+                 </span>
                 <br/>
-                <span
+                <div
                     class=" form-group m-none dis-inline vertical-align-middle pr-md">
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                         name="dayOfTheWeek" required>
+                                         name="dayOfTheWeek" required data-error="Please select an item in the list" >
                     <option value=''>Select</option>
                     <option value='Sunday'
                       ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -967,13 +970,13 @@
                   </select>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
-                </span>
-              </span>
+                </div>
+             
               <span
-                  class="form-group m-none dis-inline vertical-align-middle pr-md">
-                <input id="selectWeeklyTime" type="text"
+                  class="form-group m-none dis-inline vertical-align-middle pr-md ml-lg">
+                <input id="selectWeeklyTime" type="text" data-error="Please fill out this field" 
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -998,7 +1001,7 @@
                   <br/> <input
                     id="startWeeklyDate" type="text"
                     class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                    required name="studyLifetimeStart" placeholder="Choose date"
+                    required name="studyLifetimeStart" placeholder="Choose date" data-error="Please fill out this field" 
                     value="${questionnaireBo.studyLifetimeStart}"
                     readonly="readonly"/>
                   <span
@@ -1023,7 +1026,7 @@
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          title="Select" name="questionnairesFrequenciesBo.xDaysSign"
+                          title="Select" name="questionnairesFrequenciesBo.xDaysSign" data-error="Please fill out this field" 
                           id="weeklyXSign">
                         <option value="0"
                           ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+
@@ -1035,13 +1038,13 @@
                       </span>
                       <span
                           class="form-group m-none dis-inline vertical-align-middle">
-                        <input id="weeklyxdaysId" type="text"
+                        <input id="weeklyxdaysId" type="text" data-error="Please fill out this field" 
                                class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="X"
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number" data-error="Please fill out this field" />
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1059,9 +1062,9 @@
                     <br/></span>
                   <span
                       class="form-group m-none dis-inline vertical-align-middle pr-md">
-                    <input id="selectWeeklyTimeAnchor" type="text"
+                    <input id="selectWeeklyTimeAnchor" type="text" data-error="Please fill out this field" 
                            class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                           required onclick="timep(this.id)" placeholder="Time"
+                           required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
                            name="questionnairesFrequenciesBo.frequencyTime"
                            value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                     <span class='help-block with-errors red-txt'></span>
@@ -1078,10 +1081,10 @@
                     <br/> <input id="weeksAnchor" type="text"
                                  class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                  name="repeatQuestionnaire" placeholder="No of times"
-                                 value="${questionnaireBo.repeatQuestionnaire}" required
+                                 value="${questionnaireBo.repeatQuestionnaire}" required data-error="Please fill out this field" 
                                  onkeypress="return isNumber(event, this)"
                                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                 data-pattern-error="Please enter valid number."
+                                 data-pattern-error="Please enter valid number"
                                  maxlength="3"/>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
@@ -1100,10 +1103,10 @@
                   <br/> <input id="weeks" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                name="repeatQuestionnaire" placeholder="No of times"
-                               value="${questionnaireBo.repeatQuestionnaire}" required
+                               value="${questionnaireBo.repeatQuestionnaire}" required data-error="Please fill out this field" 
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1173,7 +1176,7 @@
                   class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
                 <span class=""><input id="startDateMonthly" type="text"
                                       class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                      required placeholder="Choose date"
+                                      required data-error="Please fill out this field"  placeholder="Choose date"
                                       name="questionnairesFrequenciesBo.frequencyDate"
                                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1183,7 +1186,7 @@
                   class="form-group m-none dis-inline vertical-align-middle pr-md">
                 <input id="selectMonthlyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                       required onclick="timep(this.id)" placeholder="Time"
+                       required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
                        value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                 <span class='help-block with-errors red-txt'></span>
@@ -1211,7 +1214,7 @@
                   <br/> <input id="pickStartDate"
                                type="text"
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               placeholder="Choose start date" required
+                               placeholder="Choose start date" required data-error="Please fill out this field" 
                                name="studyLifetimeStart"
                                value="${questionnaireBo.studyLifetimeStart}"
                                readonly="readonly"/>
@@ -1228,11 +1231,11 @@
                   </span>
                   <br/> <input id="months" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required data-error="Please fill out this field" 
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1269,11 +1272,11 @@
                           class="form-group m-none dis-inline vertical-align-middle">
                         <input id="monthlyxdaysId" type="text"
                                class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               placeholder="X"
+                               placeholder="X" data-error="Please fill out this field" 
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
                                value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number."/>
+                               data-pattern-error="Please enter valid number"/>
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -1297,7 +1300,7 @@
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
                   <input id="selectMonthlyTimeAnchor" type="text"
                          class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                         required onclick="timep(this.id)" placeholder="Time"
+                         required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
                   <span class='help-block with-errors red-txt'></span>
@@ -1312,11 +1315,11 @@
                   </span>
                   <br/> <input id="monthsAnchor" type="text"
                                class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                               name="repeatQuestionnaire" placeholder="No of times" required
+                               name="repeatQuestionnaire" placeholder="No of times" required data-error="Please fill out this field" 
                                value="${questionnaireBo.repeatQuestionnaire}"
                                onkeypress="return isNumber(event, this)"
                                pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                               data-pattern-error="Please enter valid number" maxlength="3"/>
                   <span class='help-block with-errors red-txt'></span>
                 </span>
               </div>
@@ -1392,7 +1395,7 @@
                            class="form-control calendar customCalnder cusStrDate"
                            name="questionnaireCustomScheduleBo[0].frequencyStartDate"
                            value="" placeholder="Start date"
-                           onclick='customStartDate(this.id,0);' required/>
+                           onclick='customStartDate(this.id,0);' required data-error="Please fill out this field" />
                     <span
                         class='help-block with-errors red-txt'></span>
                   </span>
@@ -1405,7 +1408,7 @@
                            class="form-control calendar customCalnder cusEndDate"
                            name="questionnaireCustomScheduleBo[0].frequencyEndDate"
                            placeholder="End date" onclick='customEndDate(this.id,0);'
-                           required/>
+                           required data-error="Please fill out this field" />
                     <span class='help-block with-errors red-txt'></span>
                   </span>
                  
@@ -1414,13 +1417,15 @@
                     <input id="customTime0" type="text" count='0'
                            class="form-control clock cusTime"
                            name="questionnaireCustomScheduleBo[0].frequencyTime"
-                           placeholder="Time" onclick='timep(this.id);' disabled required/>
+                           placeholder="Time" onclick='timep(this.id);' disabled required data-error="Please fill out this field" />
                     <span class='help-block with-errors red-txt'></span>
                   </span>
                   <span class="addbtn addBtnDis align-span-center mr-md"
                         onclick="addDate();">+
                   </span>
-                  </span>
+                   <span id="delete"	
+                          class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"	
+                          onclick="removeDate(this);"></span>
                 </div>
               </c:if>
               <c:if
@@ -1450,7 +1455,7 @@
                              value="${questionnaireCustomScheduleBo.frequencyStartDate}"
                              placeholder="Start date"
                              onclick='customStartDate(this.id,${customVar.index});'
-                             required/>
+                             required data-error="Please fill out this field" />
                       <span class='help-block with-errors red-txt'></span>
                     </span>
                     <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -1464,7 +1469,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndDate"
                              value="${questionnaireCustomScheduleBo.frequencyEndDate}"
                              placeholder="End date"
-                             onclick='customEndDate(this.id,${customVar.index});' required/>
+                             onclick='customEndDate(this.id,${customVar.index});' required data-error="Please fill out this field" />
                       <span class='help-block with-errors red-txt'></span>
                     </span>
                     <span
@@ -1474,7 +1479,7 @@
                              class="form-control clock cusTime ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                              value="${questionnaireCustomScheduleBo.frequencyTime}"
-                             placeholder="Time" onclick='timep(this.id);' required/>
+                             placeholder="Time" onclick='timep(this.id);' required data-error="Please fill out this field" />
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
@@ -1523,8 +1528,8 @@
                            count='0' placeholder="X"
                            name="questionnaireCustomScheduleBo[0].timePeriodFromDays"
                            value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                           maxlength="3" required pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number."/>
+                           maxlength="3" required  data-error="Please fill out this field" pattern="[0-9]+"
+                           data-pattern-error="Please enter valid number"/>
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1558,7 +1563,7 @@
                            name="questionnaireCustomScheduleBo[0].timePeriodToDays"
                            value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                            maxlength="3" pattern="[0-9]+"
-                           data-pattern-error="Please enter valid number." required/>
+                           data-pattern-error="Please enter valid number" required data-error="Please fill out this field" />
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
@@ -1574,15 +1579,18 @@
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyTime"
                                                           value="${questionnaireCustomScheduleBo.frequencyTime}"
-                                                          placeholder="Time" required/>
+                                                          placeholder="Time" required data-error="Please fill out this field" />
                     <span
                         class='help-block with-errors red-txt'></span>
                   </span>
                   <span id="addbtn0"
                         class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
-                        onclick="addDateAnchor();">+
+                        onclick="addDateAnchor(0);">+
                   </span>
-                  
+                  <span	
+                        id="deleteAncchor0"	
+                        class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"	
+                        onclick="removeDateAnchor(this);"></span>
                 </div>
               </c:if>
               <c:if
@@ -1628,8 +1636,8 @@
                              count='${customVar.index}' placeholder="X"
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
                              value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                             maxlength="3" required pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number."/>
+                             maxlength="3" required data-error="Please fill out this field" pattern="[0-9]+"
+                             data-pattern-error="Please enter valid number"/>
                       <span
                           class="help-block with-errors red-txt"></span>
                     </span>
@@ -1663,7 +1671,7 @@
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodToDays"
                              value="${questionnaireCustomScheduleBo.timePeriodToDays}"
                              maxlength="3" pattern="[0-9]+"
-                             data-pattern-error="Please enter valid number." required/>
+                             data-pattern-error="Please enter valid number" required data-error="Please fill out this field" />
                       <span class="help-block with-errors red-txt"></span>
                     </span>
                     <span class="mb-sm pr-md">
@@ -1678,13 +1686,13 @@
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
                         value="${questionnaireCustomScheduleBo.frequencyTime}"
-                        placeholder="Time" required/>
+                        placeholder="Time" required data-error="Please fill out this field" />
                       <span
                           class='help-block with-errors red-txt'></span>
                     </span>
                     <span id="addbtn${customVar.index}"
                           class="addbtn addBtnDis align-span-center mr-sm cursor-display"
-                          onclick="addDateAnchor();">+
+                          onclick="addDateAnchor(${customVar.index});">+
                     </span>
                     <span
                         id="deleteAncchor${customVar.index}"
@@ -1927,23 +1935,28 @@
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
 
-        var j = 0;
-        for (j = customCount; j > 0; j--) {
-          var xdays = $("#xdays" + j).val();
-          
-          if(xdays == '') {
-            document.getElementById('manualTime0').value = '';
-        	  
-            $("#AnchorDate" + j ).hide();
-            $("#AnchorDate" + j ).find('input:text').removeAttr('required', true);
-
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
+        $($('.manually-anchor-option').get().reverse()).each(function () {
+            var id = $(this).attr("id");	
+            var countId = $("#"+id).find(".xdays").attr("count");	
+            if($('#'+id).find('#xdays'+countId).val()=="" && $('.manually-anchor-option').filter(function() {	
+                return $(this).css('display') !== 'none';	
+            }).length !== 1){	
+          	
+                    $("#"+id).remove();	
+                    $("#"+id).find('input:text').removeAttr('required', true);	
+                    $("#AddButton").show();	
+                    $("#AddButton").attr('required', true);	
+                }else {	
+                      $("#AddButton").hide();	
+                      $("#AddButton").attr('required', false);	
+                  }	
+         });	
+         	
+         if( $('.manually-anchor-option').filter(function() {	
+             return $(this).css('display') !== 'none';}).length == 1){	
+           $("#AddButton").show();	
+           $('.manually-anchor-option').find(".delete").css("visibility", "hidden");	
+         }
       } else {
           
         localStorage.setItem("IsAnchorDateSelected", "false");
@@ -1962,10 +1975,10 @@
         $('.weeklyStartCls').show();
         $('.weeklyStartCls').find('input:text,select').attr('required', true);
         $("#weekDaysId").show();
-        $("#weekDaysId").find('input:text').attr('required', true);
+        $("#weekDaysId").find('input:text,select').attr('required', true);
 
         $(".weeklyRegular").show();
-        $(".weeklyRegular").attr('required', true);
+        $(".weeklyRegular").find('input:text').attr('required', true);
 
         $(".weeklyanchorDiv").hide();
         $(".weeklyanchorDiv").find('input:text').removeAttr('required', true);
@@ -1973,7 +1986,7 @@
         $('.monthlyStartCls').show();
         $('.monthlyStartCls').find('input:text').attr('required', true);
         $("#monthlyDateId").show();
-        $("#monthlyDateId").find('input:text').attr('required', true);
+        $("#monthlyDateId").find('input:text,select').attr('required', true);
 
         $(".monthlyRegular").show();
         $(".monthlyRegular").attr('required', true);
@@ -1990,24 +2003,34 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
 
-        var i = 0;
-        for (i = customCount-1; i > 0; i--) {
-          var RegStartDate = $("#StartDate" + i).val();
-        	
-          if(RegStartDate == '') {
-        	document.getElementById('customTime0').value = '';
-        	$("#customTime0").attr("disabled", true);
-          
-            $("#RegDate" + i ).hide();
-            $("#RegDate" + i ).find('input:text').removeAttr('required', true);
 
-            $("#AddButton").show();
-            $("#AddButton").attr('required', true);
-          } else {
-            $("#AddButton").hide();
-            $("#AddButton").attr('required', false);
-          }
-        }
+        $('.manually-option').each(function () {	
+            var id = $(this).attr("id");	
+            var countId = $("#"+id).find(".cusStrDate").attr("count");	
+            if($('#'+id).find('#StartDate'+countId).val()=="" && $('.manually-option').filter(function() {	
+                return $(this).css('display') !== 'none';	
+            }).length !== 1){	
+                  	
+                    $("#"+id).remove();	
+                    $("#"+id).find('input:text').removeAttr('required', true);	
+                    $("#AddButton").show();	
+                    $("#AddButton").attr('required', true);	
+                }else {	
+                      $("#AddButton").hide();	
+                      $("#AddButton").attr('required', false);	
+                  }	
+         });
+         
+         if( $('.manually-option').filter(function() {	
+             return $(this).css('display') !== 'none';}).length == 1){	
+     	   $("#AddButton").show();	
+            $('.manually-option').find(".delete").css("visibility", "hidden");	
+         }
+         
+         if($('.manually-option').filter(function() {return $(this).css('display') !== 'none';}).length !== 1 ){
+             $('.manually-option').find('#AddButton').first().hide();
+         }
+
         
 	        var startDate = $("#startDate").val();
 	  
@@ -2119,7 +2142,7 @@
       "filter": false,
       rowReorder: reorder,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "columnDefs": [
         {orderable: false, targets: [0, 1, 2, 3]},
@@ -2180,7 +2203,7 @@
 
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
 
               var questionnaireSteps = data.questionnaireJsonObject;
               var isDone = data.isDone;
@@ -2723,7 +2746,7 @@
               }
             });
           } else {
-            showErrMsg("Please fill in all mandatory fields.");
+            showErrMsg("Please fill in all mandatory fields");
             var slaCount = $('#contentTab').find('.has-error.has-danger').length;
             var flaCount = $('#schedule').find('.has-error.has-danger').length;
             if (parseInt(slaCount) >= 1) {
@@ -2733,7 +2756,7 @@
             }
           }
         } else {
-          showErrMsg("Please fill in all mandatory fields.");
+          showErrMsg("Please fill in all mandatory fields");
           var slaCount = $('#contentTab').find('.has-error.has-danger').length;
           var flaCount = $('#schedule').find('.has-error.has-danger').length;
           if (parseInt(slaCount) >= 1) {
@@ -2751,7 +2774,7 @@
           if (isFromValid("#contentFormId")) {
             doneQuestionnaire(this, 'save', function (val) {
               if (val) {
-                showSucMsg("Content saved as draft.");
+                showSucMsg("Content saved as draft");
               } else {
                 var slaCount = $('#contentTab').find('.has-error.has-danger').length;
                 var flaCount = $('#schedule').find('.has-error.has-danger').length;
@@ -2934,7 +2957,7 @@
 
     disablePastTime('#selectWeeklyTime', '#startWeeklyDate');
     disablePastTime('#selectMonthlyTime', '#startDateMonthly');
-    disablePastTime('#selectTime', '#chooseDate', '#selectTime1');
+    disablePastTime('#selectTime1', '#chooseDate');
 
     $(document).on('click change dp.change', '.cusStrDate, .cusTime', function (e) {
       if ($(this).is('.cusTime') && !$(this).prop('disabled')) {
@@ -2976,7 +2999,7 @@
             $(timeId).parent().addClass("has-danger").addClass("has-error");
             $(timeId).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Time reset to current time. "));
+                "Time reset to current time "));
           }
         } else {
           $(timeId).data("DateTimePicker").minDate(false);
@@ -3015,7 +3038,7 @@
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
-        "  <input id='time" + count + "' type='text' required name='questionnairesFrequenciesList["
+        "  <input id='time" + count + "' type='text' required data-error='Please fill out this field'  name='questionnairesFrequenciesList["
         + count
         + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>"
         +
@@ -3064,7 +3087,7 @@
     var newDateCon = "<div class='manually-option mb-md form-group' id='RegDate" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
-        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field'  name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start date' onclick='customStartDate(this.id,"
         + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
@@ -3074,14 +3097,14 @@
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
-        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End date' onclick='customEndDate(this.id,"
         + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
-        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
@@ -3089,14 +3112,16 @@
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
         + "</div>";
 
+        if ($('.manually-option').length > 1) {
+            $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
+        } else {
+            $('.manuallyContainer').find(".remBtnDis").addClass("hide");
+        }
+        
     $(".manually-option:last").after(newDateCon);
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
-    if ($('.manually-option').length > 1) {
-      $('.manuallyContainer').find(".remBtnDis").removeClass("hide");
-    } else {
-      $('.manuallyContainer').find(".remBtnDis").addClass("hide");
-    }
+    
     customStartDate('StartDate' + customCount, customCount);
     customEndDate('EndDate' + customCount, customCount);
     timep('customTime' + customCount);
@@ -3106,6 +3131,11 @@
 
   function removeDate(param) {
     $(param).parents(".manually-option").remove();
+    if($('.manually-option').length == 1){
+   	 $('.manually-option').find(".delete").css("visibility", "hidden");
+   	 $('#AddButton').show();
+    }
+    
     $(".manually-option").parents("form").validator("destroy");
     $(".manually-option").parents("form").validator();
     if ($('.manually-option').length > 1) {
@@ -3115,6 +3145,12 @@
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
+    
+    if( $('.manually-option').filter(function() {	
+        return $(this).css('display') !== 'none';}).length == 1){	
+       $('.manually-option').find(".delete").css("visibility", "hidden");	
+    }
+    
     $(document).find('.cusTime').trigger('dp.change');
   }
 
@@ -3772,7 +3808,7 @@
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
             'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
-                   "Please ensure that the runs created do not have any overlapping time period."));
+                   "Please ensure that the runs created do not have any overlapping time period"));
       } else {
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass(
             'has-error has-danger').find(".help-block").addClass('with-errors').empty();
@@ -3850,19 +3886,19 @@
           if (!val) {
             $('.scheduleQusClass a').tab('show');
           } else if (actType === 'save') {
-            showSucMsg("Content saved as draft.");
+            showSucMsg("Content saved as draft");
             $("body").removeClass("loading");
           }
           callback(val);
         });
       } else {
-        showErrMsg("Please choose anchor date for date/time of the launch.");
+        showErrMsg("Please choose anchor date for date/time of the launch");
         $('.scheduleTaskClass a').tab('show');
         if (callback)
           callback(false);
       }
     } else {
-      showErrMsg("Please fill in all mandatory fields.");
+      showErrMsg("Please fill in all mandatory fields");
       $('.scheduleQusClass a').tab('show');
       if (callback)
         callback(false);
@@ -4201,7 +4237,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -4278,13 +4314,13 @@
             $(this).parent().addClass('has-error has-danger');
             $(this).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Date reset to current date. "));
+                "Date reset to current date "));
           } else {
             $(this).data("DateTimePicker").clear();
             $(this).parent().addClass('has-error has-danger');
             $(this).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please select a valid date."));
+                "Please select a valid date"));
           }
         } else {
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4300,7 +4336,7 @@
                 $(this).parent().addClass("has-danger").addClass("has-error");
                 $(this).parent().find(".help-block").empty().append(
                     $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                    "Time reset to current time. "));
+                    "Time reset to current time "));
               }
             } else {
               if (dt < serverDateTime()) {
@@ -4341,7 +4377,7 @@
           $('#onetimeydaysId').focus();
         $('#onetimeydaysId').parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         valid = false;
       } else {
         $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").empty();
@@ -4351,9 +4387,9 @@
     return valid;
   }
 
-  function addDateAnchor() {
+  function addDateAnchor(customCountIndex) {
 	  $('.manually-anchor-option').find(".delete").css("visibility", "visible");
-    customAnchorCount = parseInt($('.manually-anchor-option').length);
+	  customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
@@ -4367,7 +4403,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
         + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectYSign' count='"
@@ -4380,17 +4416,17 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required data-error='Please fill out this field'  pattern='[0-9]+' data-pattern-error='Please enter valid number'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].frequencyTime' placeholder='Time' required/>"
+        + "].frequencyTime' placeholder='Time' required data-error='Please fill out this field' />"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span id='addbtn" + customAnchorCount
-        + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor();'>+</span>"
+        + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
         + "<span id='deleteAncchor" + customAnchorCount
         + "' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
         + "</div>";
@@ -4400,8 +4436,8 @@
     $(".manually-anchor-option").parents("form").validator();
     if ($('.manually-anchor-option').length > 1) {
       $('.manuallyAnchorContainer').find(".remBtnDis").removeClass("hide");
-      if ($('#anchorDateId').find('option:selected').text() == 'Enrollment Date') {
-        setAnchorDropdown('Manually Schedule', 'Enrollment Date');
+      if ($('#anchorDateId').find('option:selected').text() == 'Enrollment date') {
+        setAnchorDropdown('Manually Schedule', 'Enrollment date');
       }
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
@@ -4425,7 +4461,7 @@
   }
 
   function setAnchorDropdown(frequency_text, anchorType) {
-    if (anchorType == 'Enrollment Date') {
+    if (anchorType == 'Enrollment date') {
       if (frequency_text == 'One time') {
         $('#onetimeXSign').children('option').remove();
         $('#onetimeXSign').append("<option value='0' selected>+</option>");
@@ -4515,7 +4551,7 @@
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Y should be greater than X."));
+                "Y should be greater than X"));
             $("#addbtn" + parent_id).addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
@@ -4541,7 +4577,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current row and greater than Y of the previous row."));
+              "X should be less than Y of the current row and greater than Y of the previous row"));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -4554,7 +4590,7 @@
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Y should be greater than X."));
+                  "Y should be greater than X"));
               $("#addbtn" + parent_id).addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -4576,6 +4612,13 @@
       $(this).parent().parent().addClass("current");
 
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+    	    return $(this).css('display') !== 'none';}).length == 1){
+    	 $("#AddButton").show();
+    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+      }
+      
     });
 
     jQuery(document).on("keyup", ".ydays", function () {
@@ -4593,7 +4636,7 @@
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -4612,6 +4655,12 @@
       $(this).parent().parent().siblings().removeClass("current");
       $(this).parent().parent().addClass("current");
       $(".current").nextAll().remove();
+      
+      if( $('.manually-anchor-option').filter(function() {
+    	    return $(this).css('display') !== 'none';}).length == 1){
+    	 $("#AddButton").show();
+    	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+      }
 
     });
 
@@ -4632,7 +4681,7 @@
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X."));
+            "Y should be greater than X"));
         $("#addbtn" + parent_id).addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");
@@ -4653,7 +4702,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current row and greater than Y of the previous row."));
+              "X should be less than Y of the current row and greater than Y of the previous row"));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
