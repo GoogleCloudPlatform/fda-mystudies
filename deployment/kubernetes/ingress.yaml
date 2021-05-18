@@ -6,13 +6,13 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: <PREFIX>-<ENV>
+  name: btcsoft-dev
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: <PREFIX>-<ENV>-ingress-ip
-    networking.gke.io/managed-certificates: <PREFIX>-<ENV>-cert-participants,<PREFIX>-<ENV>-cert-studies
+    kubernetes.io/ingress.global-static-ip-name: btcsoft-dev-ingress-ip
+    networking.gke.io/managed-certificates: btcsoft-dev-cert-participants,btcsoft-dev-cert-studies
 spec:
   rules:
-    - host: participants.<PREFIX>-<ENV>.<DOMAIN>
+    - host: participants.btcsoft-dev.boston-technology.com
       http:
         paths:
           - path: /auth-server/*
@@ -47,7 +47,7 @@ spec:
             backend:
               serviceName: participant-manager-datastore-np
               servicePort: 50000
-    - host: studies.<PREFIX>-<ENV>.<DOMAIN>
+    - host: studies.btcsoft-dev.boston-technology.com
       http:
         paths:
           - path: /study-datastore/*

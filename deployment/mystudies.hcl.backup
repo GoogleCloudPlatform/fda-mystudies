@@ -671,38 +671,38 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # to install the Cloud Build app and connect your GitHub repository to your Cloud project.
 #
 # The following content should be initially commented out if the above manual step is not completed.
-locals {
-  apps_dependencies = {
-    "study-builder"                             = ["study-builder/**"]
-    "study-datastore"                           = ["study-datastore/**"]
-    "hydra"                                     = ["hydra/**"]
-    "auth-server"                               = ["auth-server/**", "common-modules/**"]
-    "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
-    "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
-    "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
-    "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
-    "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
-    "participant-manager"                       = ["participant-manager/**"]
-  }
-}
+#7# locals {
+#7#   apps_dependencies = {
+#7#     "study-builder"                             = ["study-builder/**"]
+#7#     "study-datastore"                           = ["study-datastore/**"]
+#7#     "hydra"                                     = ["hydra/**"]
+#7#     "auth-server"                               = ["auth-server/**", "common-modules/**"]
+#7#     "response-datastore"                        = ["response-datastore/**", "common-modules/**"]
+#7#     "participant-datastore/consent-mgmt-module" = ["participant-datastore/consent-mgmt-module/**", "common-modules/**"]
+#7#     "participant-datastore/user-mgmt-module"    = ["participant-datastore/user-mgmt-module/**", "common-modules/**"]
+#7#     "participant-datastore/enroll-mgmt-module"  = ["participant-datastore/enroll-mgmt-module/**", "common-modules/**"]
+#7#     "participant-manager-datastore"             = ["participant-manager-datastore/**", "common-modules/**"]
+#7#     "participant-manager"                       = ["participant-manager/**"]
+#7#   }
+#7# }
 
-resource "google_cloudbuild_trigger" "server_build_triggers" {
-  for_each = local.apps_dependencies
+#7# resource "google_cloudbuild_trigger" "server_build_triggers" {
+#7#   for_each = local.apps_dependencies
 
-  provider = google-beta
-  project  = module.project.project_id
-  name     = replace(each.key, "/", "-")
+#7#   provider = google-beta
+#7#   project  = module.project.project_id
+#7#   name     = replace(each.key, "/", "-")
 
-  included_files = each.value
+#7#   included_files = each.value
 #7#
-  github {
-    owner = "{{.github_owner}}"
-    name  = "{{.github_repo}}"
-    push { branch = "^{{.github_branch}}$" }
-  }
+#7#   github {
+#7#     owner = "{{.github_owner}}"
+#7#     name  = "{{.github_repo}}"
+#7#     push { branch = "^{{.github_branch}}$" }
+#7#   }
 
-  filename = "$${each.key}/cloudbuild.yaml"
-}
+#7#   filename = "$${each.key}/cloudbuild.yaml"
+#7# }
 EOF
     }
   }
