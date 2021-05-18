@@ -6,15 +6,15 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: <PREFIX>-<ENV>-cert-participants
+  name: btcsoft-dev-cert-participants
 spec:
   domains:
-    - participants.<PREFIX>-<ENV>.<DOMAIN>
+    - participants.btcsoft-dev.boston-technology.com
 ---
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: <PREFIX>-<ENV>-cert-studies
+  name: btcsoft-dev-cert-studies
 spec:
   domains:
-    - studies.<PREFIX>-<ENV>.<DOMAIN>
+    - studies.btcsoft-dev.boston-technology.com
