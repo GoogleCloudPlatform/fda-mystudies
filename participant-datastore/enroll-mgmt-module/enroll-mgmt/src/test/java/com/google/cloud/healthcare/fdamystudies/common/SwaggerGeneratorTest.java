@@ -6,11 +6,10 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies;
+package com.google.cloud.healthcare.fdamystudies.common;
 
 import static org.junit.Assert.assertTrue;
 
-import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import java.io.File;
 import org.junit.jupiter.api.Test;
 

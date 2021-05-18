@@ -218,9 +218,11 @@ public class UsersController {
           userBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         }
 
+        // Superadmin flow
         if (userBO.getRoleId().equals(1)) {
           permissions = FdahpStudyDesignerConstants.SUPER_ADMIN_PERMISSIONS;
         } else {
+          // Study admin flow
           if (!"".equals(manageNotifications)) {
             if ("0".equals(manageNotifications)) {
               permissions +=
