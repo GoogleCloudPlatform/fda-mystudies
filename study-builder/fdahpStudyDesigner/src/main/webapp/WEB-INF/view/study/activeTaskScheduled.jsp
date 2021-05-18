@@ -76,7 +76,6 @@
 <form:form action="" name="anchorFormId" id="anchorFormId" method="post" role="form"
            data-toggle="validator">
   <div class="anchortypeclass" style="display:none;">
-    <c:if test="${fn:length(anchorTypeList) gt 0}">
       <div class="gray-xs-f mb-sm">Select anchor date type</div>
       <div class="clearfix"></div>
       <div class="col-md-5 col-lg-5 p-none">
@@ -94,7 +93,6 @@
         </div>
       </div>
       <div class="clearfix"></div>
-    </c:if>
   </div>
 </form:form>
 <!-- Ancor date type -->
@@ -1288,7 +1286,6 @@
   if($('.manually-anchor-option').length == 1){
 	  $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
   }
-   
     if ($("#schedule2").prop("checked")) {
     	 var schedule_opts = $("input[name='frequency']:checked").val();
     	 
@@ -1388,7 +1385,6 @@
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
     }
-
     $(".typeofschedule").change(function () {
       var scheduletype = $(this).attr('scheduletype');
       $('#isLaunchStudy').prop('checked', false);
@@ -1699,6 +1695,7 @@
       //AnchorDate start
       var scheduletype = $('input[name="scheduleType"]:checked').val();
       if (scheduletype == 'AnchorDate') {
+    	  
         var element = $('#anchorDateId').find('option:selected').text();
         setAnchorDropdown(val, element);
         if (val == 'One time') {
@@ -2923,7 +2920,10 @@
             if (message == "SUCCESS") {
               var activeTaskId = data.activeTaskId;
               var activeTaskFrequenceId = data.activeTaskFrequenceId;
+              
+              var activeTaskCreated=data.activeTaskCreated
               $("#activeTaskId, #taskId,#taskContentId,.activeTaskIdClass").val(activeTaskId);
+              $("#activeTaskCreated").val(activeTaskCreated);
               $("#previousFrequency").val(frequency_text);
               if (frequency_text == 'One time') {
                 $("#oneTimeFreId").val(activeTaskFrequenceId);
@@ -2965,7 +2965,9 @@
             if (message == "SUCCESS") {
               var activeTaskId = data.activeTaskId;
               var activeTaskFrequenceId = data.activeTaskFrequenceId;
+              var activeTaskCreated=data.activeTaskCreated
               $("#activeTaskId, #taskId,#taskContentId,.activeTaskIdClass").val(activeTaskId);
+              $("#activeTaskCreated").val(activeTaskCreated);
               $("#previousFrequency").val(frequency_text);
               if (frequency_text == 'One time') {
                 $("#oneTimeFreId").val(activeTaskFrequenceId);

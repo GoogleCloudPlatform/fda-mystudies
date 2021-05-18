@@ -431,7 +431,7 @@
                                          window.clipboardData).getData('Text');
                       e.preventDefault();
                       var all = t + bufferText;
-                      var array = bufferText.slice(0, (maxwords-t.length))
+                      var array = bufferText.slice(0, maxwords)
                       document.execCommand('insertText', false, array);
                  
                }
@@ -620,7 +620,7 @@
                                        window.clipboardData).getData('Text');
                     e.preventDefault();
                     var all = t + bufferText;
-                    var array = bufferText.slice(0, (maxwords-t.length))
+                    var array = bufferText.slice(0, maxwords)
                     document.execCommand('insertText', false, array);
                
              }

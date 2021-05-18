@@ -12,6 +12,7 @@
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
   <artifactId>oauth-scim-service</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
   <name>oauth-scim-service</name>
   <description>OAuth Scim Service</description>
 
@@ -24,7 +25,6 @@
     <wiremock.version>2.26.3</wiremock.version>
     <mockito.version>2.24.0</mockito.version>
   </properties>
-
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
