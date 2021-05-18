@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+output "project_id" {
+  value = module.project.project_id
+}
 
-folder         = "folders/274914618000"
-auditors_group = "btcsoft-dev-auditors@boston-technology.com"
+output "project_number" {
+  value = module.project.project_number
+}
