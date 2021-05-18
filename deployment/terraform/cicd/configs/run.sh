@@ -19,11 +19,11 @@ set -ex
 MODULES=(
   devops
   audit
-  btc-qa-secrets
-  btc-qa-networks
-  btc-qa-apps
-  btc-qa-firebase
-  btc-qa-data
+  example-dev-secrets
+  example-dev-networks
+  example-dev-apps
+  example-dev-firebase
+  example-dev-data
 )
 
 ACTIONS=()

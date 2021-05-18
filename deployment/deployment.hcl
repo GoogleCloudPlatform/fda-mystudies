@@ -14,41 +14,41 @@ template "mystudies" {
   data = {
     # Prefix that will be prepended to your project and resource names
     # For example, "mystudies"
-    prefix           = "btc"
+    prefix           = "<PREFIX>"
     # Environment label that will be appended to PREFIX in your project and resource names
     # For example, "dev"
-    env              = "qa"
+    env              = "<ENV>"
     # Id of the folder you are deploying into
     # In the form of "0000000000000"
-    folder_id        = "924672158484"
+    folder_id        = "<FOLDER_ID>"
     # Billing account that your projects will be attached to
     # In the form of "XXXXXX-XXXXXX-XXXXXX"
-    billing_account  = "010BB2-E7A763-738CAE"
+    billing_account  = "<BILLING_ACCOUNT>"
     # Domain that your applications URLs will belong to
     # For example, "example.com"
-    domain           = "boston-technology.com"
+    domain           = "<DOMAIN>"
     # Default cloud region that your resources will be created in
     # For example, "us-central1"
-    default_location = "us-east1"
+    default_location = "<LOCATION>"
     # Default zone within that region that your resources will be created in
     # For example, "a"
-    default_zone     = "b"
+    default_zone     = "<ZONE>"
     # The account or organization that your cloned github repo belongs to 
     # For example, "GoogleCloudPlatform"
-    github_owner     = "boston-tech"
+    github_owner     = "<REPO_OWNER>"
     # The name of your cloned github repo 
     # For example, "fda-mystudies"
-    github_repo      = "develop-fda-mystudies"
+    github_repo      = "<REPO>"
     # The branch of your cloned repo that your CICD pipelines will monitor
     # For example, "develop"
-    github_branch    = "develop-du"
+    github_branch    = "<REPO_BRANCH>"
     # GKE master authorized networks.
     # Comment out this block if you would like to allow connections from anywhere.
     master_authorized_networks = [
       {
         cidr_block   = "0.0.0.0/0"
-        display_name = "btc-qa-ip"
-      }
+        display_name = "Example diplay name"
+      },
     ]
   }
 }
