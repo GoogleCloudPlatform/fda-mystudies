@@ -7,13 +7,6 @@
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
 
-# Release 2.0.5
-* Changes to Cloud Storage permissions for study resources in new deployments. For upgrading existing deployments, follow [these steps](/deployment/README.md#study-resources-in-cloud-storage-205-upgrade).
-* Added support for additional email services
-* Bug fixes and UI refinements
-* Additional code improvements
-* The full list of bugs and features addressed in this release can be viewed [`here`](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/8?closed=1)
-
 # Release 2.0.4
 * Upgrade to newer - HTTP/2-based Apple Push Notification service (APNs) [#3417](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/3364)
 * Fix app container build issue [#3409](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/3409)

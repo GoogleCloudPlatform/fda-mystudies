@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: study-datastore
-          image: gcr.io/btc-qa-apps/study-datastore:latest
+          image: gcr.io/<PREFIX>-<ENV>-apps/study-datastore:latest
           env:
             # DB ACCESS
             - name: DB_USER
@@ -109,8 +109,8 @@ spec:
             periodSeconds: 20
           resources:
             requests:
-               cpu: "50m"
-               memory: "400Mi"
+              memory: "400Mi"
+              cpu: "50m"
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
@@ -118,7 +118,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=btc-qa-data:us-east1:mystudies=tcp:3306",
+            "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

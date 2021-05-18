@@ -22,18 +22,17 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-      - name: participant-manager
-        image: gcr.io/btc-qa-apps/participant-manager:latest
-        ports:
-        - containerPort: 80
-        readinessProbe:
-          httpGet:
-            port: 80
-            path: /participant-manager/index.html
-          initialDelaySeconds: 30
-          periodSeconds: 20
-        resources:
-           requests:
-             cpu: "50m"
-             memory: "500Mi"      
-           
+        - name: participant-manager
+          image: gcr.io/<PREFIX>-<ENV>-apps/participant-manager:latest
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              port: 80
+              path: /participant-manager/index.html
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "50m"
