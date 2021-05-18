@@ -9,7 +9,7 @@
 
 # PREFIX is a name you choose for your deployment that will be prepended to various
 # directories, cloud resources and URLs (for example this could be `mystudies`)
-export PREFIX=btc
+export PREFIX=btcsoft
 
 # ENV is a label you choose that will be appended to PREFIX in your directories
 # and cloud resources (for example this could be `dev`, `test` or `prod`)
