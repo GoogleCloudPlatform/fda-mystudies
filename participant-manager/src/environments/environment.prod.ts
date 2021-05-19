@@ -11,7 +11,7 @@ export const environment = {
     'https://participants.btcsoft-dev.boston-technology.com/auth-server',
   authServerRedirectUrl:
     'https://participants.btcsoft-dev.boston-technology.com/auth-server/callback',
-  hydraClientId: 'yvGGhtvbgiDCB2z9',
+  hydraClientId: 'TUUo9PjRQN80y3Mt',
   appVersion: 'v0.1',
   termsPageTitle: 'Terms title goes here',
   termsPageDescription: 'Terms description goes here',
