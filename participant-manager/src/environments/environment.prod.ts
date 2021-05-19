@@ -3,14 +3,14 @@ export const environment = {
   production: true,
   // remove http/https to appear relative. xsrf-token skips absolute paths.
   participantManagerDatastoreUrl:
-    '//participants.btc-qa.boston-technology.com/participant-manager-datastore',
+    '//participants.btcsoft-dev.boston-technology.com/participant-manager-datastore',
   baseHref: '/participant-manager/',
   hydraLoginUrl:
-    'https://participants.btc-qa.boston-technology.com/oauth2/auth',
+    'https://participants.btcsoft-dev.boston-technology.com/oauth2/auth',
   authServerUrl:
-    'https://participants.btc-qa.boston-technology.com/auth-server',
+    'https://participants.btcsoft-dev.boston-technology.com/auth-server',
   authServerRedirectUrl:
-    'https://participants.btc-qa.boston-technology.com/auth-server/callback',
+    'https://participants.btcsoft-dev.boston-technology.com/auth-server/callback',
   hydraClientId: 'yvGGhtvbgiDCB2z9',
   appVersion: 'v0.1',
   termsPageTitle: 'Terms title goes here',
