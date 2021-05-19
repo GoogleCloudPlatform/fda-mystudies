@@ -551,6 +551,7 @@
   }
 
   function addNewQuestion(questionId) {
+	  debugger
     $("#questionId").val(questionId);
     $("#actionTypeForFormStep").val('add');
     document.formStepId.action = "/studybuilder/adminStudies/formQuestion.do?_S=${param._S}";
@@ -558,6 +559,7 @@
   }
 
   function viewQuestion(questionId) {
+	  
     $("#questionId").val(questionId);
     $("#actionTypeForFormStep").val('view');
     document.formStepId.action = "/studybuilder/adminStudies/formQuestion.do?_S=${param._S}";
@@ -565,6 +567,7 @@
   }
 
   function editQuestion(questionId) {
+	  debugger
     $("#questionId").val(questionId);
     $("#actionTypeForFormStep").val('edit');
     document.formStepId.action = "/studybuilder/adminStudies/formQuestion.do?_S=${param._S}";
