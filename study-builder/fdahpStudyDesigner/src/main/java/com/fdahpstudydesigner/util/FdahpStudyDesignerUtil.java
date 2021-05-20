@@ -1079,8 +1079,7 @@ public class FdahpStudyDesignerUtil {
 
         // Delete the original blob now that we've copied to where we want it, finishing the "move"
         // operation
-        //   blob.delete();
-
+        blob.delete();
       }
 
     } catch (Exception e) {
