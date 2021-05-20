@@ -81,9 +81,14 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.ImageUtility;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,8 +96,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
@@ -4203,6 +4210,25 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
+      String fileName = "";
+      if ((studyBo.getFile() != null) && !studyBo.getFile().isEmpty()) {
+        if (FdahpStudyDesignerUtil.isNotEmpty(studyBo.getThumbnailImage())) {
+          fileName =
+              studyBo
+                  .getThumbnailImage()
+                  .replace(
+                      "."
+                          + studyBo.getThumbnailImage()
+                              .split("\\.")[studyBo.getThumbnailImage().split("\\.").length - 1],
+                      "");
+        } else {
+          fileName =
+              FdahpStudyDesignerUtil.getStandardFileName(
+                  "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
+        }
+        studyBo.setThumbnailImage(
+            fileName + "." + FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename()));
+      }
       if (studyBo.getId() == null) {
         studyBo.setCreatedBy(studyBo.getUserId());
         appId = studyBo.getAppId().toUpperCase();
@@ -4288,6 +4314,24 @@ public class StudyDAOImpl implements StudyDAO {
             }
           }
         }
+      }
+      if ((studyBo.getFile() != null) && !studyBo.getFile().isEmpty()) {
+        BufferedImage newBi = ImageIO.read(new ByteArrayInputStream(studyBo.getFile().getBytes()));
+        BufferedImage resizedImage = ImageUtility.resizeImage(newBi, 225, 225);
+        String extension = FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename());
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, extension, baos);
+        baos.flush();
+
+        studyBo.setFile(
+            new CustomMultipartFile(
+                baos.toByteArray(), studyBo.getFile().getOriginalFilename(), extension));
+        FdahpStudyDesignerUtil.saveImage(
+            studyBo.getFile(),
+            fileName,
+            FdahpStudyDesignerConstants.STUDTYLOGO,
+            studyBo.getCustomStudyId());
       }
       studySequenceBo =
           (StudySequenceBo)

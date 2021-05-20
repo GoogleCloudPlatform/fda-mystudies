@@ -164,7 +164,8 @@ public interface StudyQuestionnaireDAO {
       Integer stepId,
       Integer questionId,
       String stepType,
-      boolean isChange);
+      boolean isChange,
+      String customStudyId);
 
   public QuestionnaireBo getQuestionnaireById(Integer questionnaireId);
 

@@ -1037,7 +1037,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   null,
                   questionId,
                   "",
-                  isChange);
+                  isChange,
+                  studyBo.getCustomStudyId());
           if (!message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             return message;
           }
@@ -1167,7 +1168,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   stepId,
                   null,
                   stepType,
-                  isChange);
+                  isChange,
+                  studyBo.getCustomStudyId());
           if (!message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             return message;
           }
@@ -1479,7 +1481,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               null,
               null,
               "",
-              isChange);
+              isChange,
+              customStudyId);
       if (!message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
         return message;
       }
@@ -1985,6 +1988,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 .setInteger("instructionFormId", stepId)
                 .setString("stepType", stepType);
       }
+
       questionnairesStepsBo = (QuestionnairesStepsBo) query.uniqueResult();
       if ((null != questionnairesStepsBo) && (questionnairesStepsBo.getStepType() != null)) {
         if (StringUtils.isNotEmpty(questionnaireShortTitle)) {
@@ -2130,8 +2134,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 && StringUtils.isNotEmpty(questionReponseTypeBo.getMaxImage())) {
               questionReponseTypeBo.setSignedMaxImage(
                   FdahpStudyDesignerUtil.getSignedUrl(
-                      FdahpStudyDesignerConstants.QUESTIONNAIRE
-                          + "/"
+                      FdahpStudyDesignerConstants.STUDIES
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                          + customStudyId
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                          + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + questionReponseTypeBo.getMaxImage(),
                       12));
             }
@@ -2140,7 +2148,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 && StringUtils.isNotEmpty(questionReponseTypeBo.getMinImage())) {
               questionReponseTypeBo.setSignedMinImage(
                   FdahpStudyDesignerUtil.getSignedUrl(
-                      FdahpStudyDesignerConstants.QUESTIONNAIRE
+                      FdahpStudyDesignerConstants.STUDIES
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                          + customStudyId
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                          + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
                           + questionReponseTypeBo.getMinImage(),
                       12));
@@ -2161,12 +2173,25 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
                   s.setSignedImage(
                       FdahpStudyDesignerUtil.getSignedUrl(
-                          FdahpStudyDesignerConstants.QUESTIONNAIRE + "/" + s.getImage(), 12));
+                          FdahpStudyDesignerConstants.STUDIES
+                              + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                              + customStudyId
+                              + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                              + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                              + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                              + s.getImage(),
+                          12));
                 }
                 if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
                   s.setSignedSelectedImage(
                       FdahpStudyDesignerUtil.getSignedUrl(
-                          FdahpStudyDesignerConstants.QUESTIONNAIRE + "/" + s.getSelectedImage(),
+                          FdahpStudyDesignerConstants.STUDIES
+                              + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                              + customStudyId
+                              + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                              + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                              + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                              + s.getSelectedImage(),
                           12));
                 }
               }
@@ -2525,6 +2550,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         } catch (Exception e) {
           logger.error("StudyQuestionnaireDAOImpl - getQuestionsById() - SUB  ERROR ", e);
         }
+
         QuestionReponseTypeBo questionReponseTypeBo = null;
         logger.info(
             "StudyQuestionnaireDAOImpl - getQuestionnaireStep() - questionsResponseTypeId:"
@@ -2599,7 +2625,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             && StringUtils.isNotEmpty(questionReponseTypeBo.getMinImage())) {
           questionReponseTypeBo.setSignedMinImage(
               FdahpStudyDesignerUtil.getSignedUrl(
-                  FdahpStudyDesignerConstants.QUESTIONNAIRE
+                  FdahpStudyDesignerConstants.STUDIES
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + customStudyId
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
                       + questionReponseTypeBo.getMinImage(),
                   12));
@@ -2610,7 +2640,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             && StringUtils.isNotEmpty(questionReponseTypeBo.getMaxImage())) {
           questionReponseTypeBo.setSignedMaxImage(
               FdahpStudyDesignerUtil.getSignedUrl(
-                  FdahpStudyDesignerConstants.QUESTIONNAIRE
+                  FdahpStudyDesignerConstants.STUDIES
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + customStudyId
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
                       + questionReponseTypeBo.getMaxImage(),
                   12));
@@ -2629,12 +2663,26 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             if (FdahpStudyDesignerUtil.isNotEmpty(s.getImage())) {
               s.setSignedImage(
                   FdahpStudyDesignerUtil.getSignedUrl(
-                      FdahpStudyDesignerConstants.QUESTIONNAIRE + "/" + s.getImage(), 12));
+                      FdahpStudyDesignerConstants.STUDIES
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                          + customStudyId
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                          + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                          + "/"
+                          + s.getImage(),
+                      12));
             }
             if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
               s.setSignedSelectedImage(
                   FdahpStudyDesignerUtil.getSignedUrl(
-                      FdahpStudyDesignerConstants.QUESTIONNAIRE + "/" + s.getSelectedImage(), 12));
+                      FdahpStudyDesignerConstants.STUDIES
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                          + customStudyId
+                          + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                          + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                          + "/"
+                          + s.getSelectedImage(),
+                      12));
             }
           }
         }
@@ -2664,8 +2712,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   public QuestionReponseTypeBo getQuestionsResponseTypeBo(
-      QuestionReponseTypeBo questionsResponseTypeBo, Session session) {
-    logger.entry("begin getQuestionsResponseTypeBo()");
+      QuestionReponseTypeBo questionsResponseTypeBo, Session session, String customStudyId) {
     QuestionReponseTypeBo addOrUpdateQuestionsResponseTypeBo = null;
     try {
       if ((questionsResponseTypeBo != null) && (session != null)) {
@@ -2869,7 +2916,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
               String imagePath =
                   FdahpStudyDesignerUtil.saveImage(
-                      customMultipartFile, fileName, FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                      customMultipartFile,
+                      fileName,
+                      FdahpStudyDesignerConstants.QUESTIONNAIRE,
+                      customStudyId);
               addOrUpdateQuestionsResponseTypeBo.setMinImage(imagePath);
             } else {
               addOrUpdateQuestionsResponseTypeBo.setMinImage(null);
@@ -2924,7 +2974,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
               String imagePath =
                   FdahpStudyDesignerUtil.saveImage(
-                      customMultipartFile, fileName, FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                      customMultipartFile,
+                      fileName,
+                      FdahpStudyDesignerConstants.QUESTIONNAIRE,
+                      customStudyId);
 
               addOrUpdateQuestionsResponseTypeBo.setMaxImage(imagePath);
             } else {
@@ -3643,13 +3696,16 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   public QuestionsBo saveOrUpdateQuestion(QuestionsBo questionsBo) {
     logger.entry("begin saveOrUpdateQuestion()");
     Session session = null;
+
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+
+      Integer studyId = this.getStudyIdByCustomStudy(session, questionsBo.getCustomStudyId());
+
       // Ancrodate text start
       if ((questionsBo.getUseAnchorDate() != null) && questionsBo.getUseAnchorDate()) {
         if (StringUtils.isNotEmpty(questionsBo.getAnchorDateName())) {
-          Integer studyId = this.getStudyIdByCustomStudy(session, questionsBo.getCustomStudyId());
           AnchorDateTypeBo anchorDateTypeBo = new AnchorDateTypeBo();
           anchorDateTypeBo.setId(questionsBo.getAnchorDateId());
           anchorDateTypeBo.setCustomStudyId(questionsBo.getCustomStudyId());
@@ -3669,7 +3725,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   .setString("customStudyId", questionsBo.getCustomStudyId());
           query.setMaxResults(1);
           StudyVersionBo studyVersionBo = (StudyVersionBo) query.uniqueResult();
-          Integer studyId = this.getStudyIdByCustomStudy(session, questionsBo.getCustomStudyId());
           SessionObject sessionObject = new SessionObject();
           sessionObject.setUserId(questionsBo.getModifiedBy());
           boolean isChange = false;
@@ -3687,7 +3742,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               null,
               questionsBo.getId(),
               "",
-              isChange);
+              isChange,
+              questionsBo.getCustomStudyId());
           questionsBo.setAnchorDateId(null);
         }
       }
@@ -3697,7 +3753,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           && (questionsBo.getId() != null)
           && (questionsBo.getFromId() != null)) {
         QuestionReponseTypeBo addQuestionReponseTypeBo =
-            getQuestionsResponseTypeBo(questionsBo.getQuestionReponseTypeBo(), session);
+            getQuestionsResponseTypeBo(
+                questionsBo.getQuestionReponseTypeBo(), session, questionsBo.getCustomStudyId());
         if (addQuestionReponseTypeBo != null) {
           if (addQuestionReponseTypeBo.getQuestionsResponseTypeId() == null) {
             addQuestionReponseTypeBo.setQuestionsResponseTypeId(questionsBo.getId());
@@ -3787,7 +3844,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           FdahpStudyDesignerUtil.saveImage(
                               customMultipartFile,
                               fileName,
-                              FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+                              questionsBo.getCustomStudyId());
                       questionResponseSubTypeBo.setImage(imagePath);
                     }
                   }
@@ -3832,7 +3890,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           FdahpStudyDesignerUtil.saveImage(
                               customMultipartFile,
                               fileName,
-                              FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+                              questionsBo.getCustomStudyId());
                       questionResponseSubTypeBo.setSelectedImage(imagePath);
                     }
                   }
@@ -4226,6 +4285,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+      Integer studyId = this.getStudyIdByCustomStudy(session, customStudyId);
       if (questionnairesStepsBo != null) {
         if (questionnairesStepsBo.getStepId() != null) {
           addOrUpdateQuestionnairesStepsBo =
@@ -4298,7 +4358,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               && questionnairesStepsBo.getQuestionsBo().getUseAnchorDate()) {
             if (StringUtils.isNotEmpty(
                 questionnairesStepsBo.getQuestionsBo().getAnchorDateName())) {
-              Integer studyId = this.getStudyIdByCustomStudy(session, customStudyId);
               AnchorDateTypeBo anchorDateTypeBo = new AnchorDateTypeBo();
               anchorDateTypeBo.setId(questionnairesStepsBo.getQuestionsBo().getAnchorDateId());
               anchorDateTypeBo.setCustomStudyId(customStudyId);
@@ -4327,7 +4386,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .setString("customStudyId", customStudyId);
               query.setMaxResults(1);
               StudyVersionBo studyVersionBo = (StudyVersionBo) query.uniqueResult();
-              Integer studyId = this.getStudyIdByCustomStudy(session, customStudyId);
+
               updateAnchordateInQuestionnaire(
                   session,
                   transaction,
@@ -4338,7 +4397,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   null,
                   questionsBo.getId(),
                   "",
-                  isChange);
+                  isChange,
+                  questionsBo.getCustomStudyId());
             }
 
             questionsBo.setAnchorDateId(null);
@@ -4352,7 +4412,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               && (questionnairesStepsBo.getQuestionReponseTypeBo() != null)) {
             QuestionReponseTypeBo questionResponseTypeBo =
                 getQuestionsResponseTypeBo(
-                    questionnairesStepsBo.getQuestionReponseTypeBo(), session);
+                    questionnairesStepsBo.getQuestionReponseTypeBo(), session, customStudyId);
             if (questionResponseTypeBo != null) {
               if (questionResponseTypeBo.getQuestionsResponseTypeId() == null) {
                 questionResponseTypeBo.setQuestionsResponseTypeId(questionsBo.getId());
@@ -4439,7 +4499,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               FdahpStudyDesignerUtil.saveImage(
                                   customMultipartFile,
                                   fileName,
-                                  FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                                  FdahpStudyDesignerConstants.QUESTIONNAIRE,
+                                  customStudyId);
                           questionResponseSubTypeBo.setImage(imagePath);
                         }
                       }
@@ -4492,7 +4553,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               FdahpStudyDesignerUtil.saveImage(
                                   customMultipartFile,
                                   fileName,
-                                  FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                                  FdahpStudyDesignerConstants.QUESTIONNAIRE,
+                                  customStudyId);
                           questionResponseSubTypeBo.setSelectedImage(imagePath);
                         }
                       }
@@ -4967,8 +5029,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       Integer stepId,
       Integer questionId,
       String stepType,
-      boolean isChange) {
-    logger.entry("begin updateAnchordateInQuestionnaire");
+      boolean isChange,
+      String customStudyId) {
+    logger.info("StudyQuestionnaireDAOImpl - updateAnchordateInQuestionnaire - Starts");
     List<Integer> anchorIds = new ArrayList<Integer>();
     List<Integer> anchorExistIds = new ArrayList<Integer>();
     Boolean isAnchorUsed = false;
