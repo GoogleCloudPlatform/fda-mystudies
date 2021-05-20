@@ -961,6 +961,10 @@ public class SiteServiceImpl implements SiteService {
       while (rows.hasNext()) {
         Row r = rows.next();
 
+        if (r.getCell(EMAIL_ADDRESS_COLUMN) == null) {
+          continue;
+        }
+        
         String email = r.getCell(EMAIL_ADDRESS_COLUMN).getStringCellValue();
         if (StringUtils.isBlank(email) || !Pattern.matches(EMAIL_REGEX, email)) {
           invalidEmails.add(email);
