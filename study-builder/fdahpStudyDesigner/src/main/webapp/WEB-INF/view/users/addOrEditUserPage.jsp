@@ -571,7 +571,6 @@
         $('.mnotf').prop('disabled', true);
       }
     });
-
     $('#inlineCheckbox4').on('click', function () {
       if ($(this).prop("checked") == true) {
         $(this).val(1);
@@ -641,7 +640,8 @@
       var count = $(
           ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
       if (count == tot_items) {
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").empty().append(
+    	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
       }
 
@@ -652,9 +652,10 @@
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
         if ($(this).text() == "- All items are already selected -") {
-          $(this).hide();
+        	$(this).remove();
         }
       });
+     
       $(".study-selected-item").remove();
     });
 
@@ -787,7 +788,7 @@
 
     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
       if ($(this).text() == "- All items are already selected -") {
-        $(this).hide();
+        $(this).remove();
       }
     });
 
