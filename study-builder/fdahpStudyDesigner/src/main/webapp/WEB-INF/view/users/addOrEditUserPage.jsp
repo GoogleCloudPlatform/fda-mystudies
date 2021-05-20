@@ -606,7 +606,7 @@
 
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
         if ($(this).text() == "- All items are already selected -") {
-          $(this).hide();
+          $(this).remove();
         }
       });
 
@@ -637,8 +637,7 @@
 
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-      var count = $(
-          ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+      var count = $(".study-selected-item").length;
       if (count == tot_items) {
     	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
