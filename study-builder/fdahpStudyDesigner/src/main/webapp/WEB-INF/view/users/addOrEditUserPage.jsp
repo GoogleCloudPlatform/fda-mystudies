@@ -888,6 +888,13 @@
       	 $('.edit-user-list-widget').show();
       	 $('.perm-assign').show();
       	 $('.pull-right').show();
+      	var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+        var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+        if (selected_study == tot_study) {
+      	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+          $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+          	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+        }
           } else{
         	  $('.edit-user-list-widget').hide();
            	 $('.perm-assign').hide();
