@@ -456,7 +456,7 @@ public class FdahpStudyDesignerConstants {
 
   public static final String PATH_SEPARATOR = "/";
 
-  public static final String STUDIES = "demotest/studies";
+  public static final String STUDIES = "studies";
 
   public static final String DEFAULT_IMAGES = "defaultImages";
 
