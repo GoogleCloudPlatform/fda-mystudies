@@ -141,7 +141,7 @@ public class SiteServiceImpl implements SiteService {
 
   private static final String CREATED = "created";
 
-  private static final int EMAIL_ADDRESS_COLUMN = 1;
+  private static final int EMAIL_ADDRESS_COLUMN = 0;
 
   private XLogger logger = XLoggerFactory.getXLogger(SiteServiceImpl.class.getName());
 
