@@ -111,12 +111,14 @@
   }
   function importStudy() {
 	  debugger
-	  bootbox.prompt({ 
+	   bootbox.prompt({ 
 		  title: "Import a study",
 		  inputType: "text",
   		  placeholder: "Enter a valid signed URL",
            dataError: "Please enter a valid URL",
            required: true,
+           closeButton: false,
+           className : "has-danger has-error",
 		    buttons: {
 		          'cancel': {
 		            label: 'Cancel',
@@ -144,8 +146,6 @@
 	                     $("body").removeClass("loading");
 	                   }
 	                 });
-	           }else{
-	        	   showErrMsg("enter valid url");
 	           }
 		    }
 	  });
