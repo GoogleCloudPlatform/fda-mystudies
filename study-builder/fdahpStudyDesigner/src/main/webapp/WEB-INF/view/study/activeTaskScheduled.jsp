@@ -1036,7 +1036,7 @@
               Anchor date
             </span>
           </span>
-          <span>
+          <span class="mr-2">
             <select class="signDropDown selectpicker sign-box"
                         count='0' title="Select"
                         name="activeTaskCustomScheduleBo[0].xDaysSign" id="xSign0">
@@ -1064,7 +1064,7 @@
                 class="light-txt opacity06"> days
               </span>
 
-                <span class="form-group  dis-inline vertical-align-middle pr-md"
+                <span class="form-group  dis-inline vertical-align-middle pr-md pl-md"
                 style="margin-bottom: -13px"><input id="manualStartTime0"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
@@ -1083,7 +1083,7 @@
               Date
             </span>
           </span>
-          <span>
+          <span class="pl-2 mr-2">
             <select class="signDropDown selectpicker sign-box"
                         count='0' title="Select"
                         name="activeTaskCustomScheduleBo[0].yDaysSign" id="ySign0">
@@ -1095,7 +1095,7 @@
             </option>
             </select>
           </span>
-          <span class="form-group m-none dis-inline vertical-align-middle">
+          <span class="form-group m-none dis-inline vertical-align-middle pl-2">
             <input id="ydays0" type="text"
                    class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate"
                    count='0' placeholder="Y"
@@ -1115,7 +1115,7 @@
               
                 
             
-          <span class="form-group  dis-inline vertical-align-middle pr-md"
+          <span class="form-group  dis-inline vertical-align-middle pr-md pl-md"
                 style="margin-bottom: -13px"><input id="manualEndTime0"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field" 
@@ -1149,7 +1149,7 @@
                   class="light-txt opacity06"> Anchor date
               </span>
             </span>
-            <span>
+            <span class="mr-2">
               <select
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 count='${customVar.index}' title="Select" data-error="Please select an item in the list"
@@ -1163,7 +1163,7 @@
                 </option>
               </select>
             </span>
-            <span class="form-group m-none dis-inline vertical-align-middle">
+            <span class="form-group m-none dis-inline vertical-align-middle pl-2">
               <input id="xdays${customVar.index}" type="text"
                      class="form-control wid70 disRadBtn1 disBtn1 remove_required remReqOnSave xdays daysMask mt-sm resetAncDate xancorText ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      count='${customVar.index}' placeholder="X"
@@ -1179,7 +1179,7 @@
                   class="light-txt opacity06"> days
                   </span>
 
-                <span class="form-group  dis-inline vertical-align-middle pr-md"
+                <span class="form-group  dis-inline vertical-align-middle pr-md pl-md"
                 style="margin-bottom: -13px"><input id="manualStartTime${customVar.index}"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
@@ -1198,7 +1198,7 @@
                 Date
               </span>
             </span>
-            <span>
+            <span class="pl-2 mr-2">
               <select
                 class="signDropDown selectpicker sign-box ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 count='${customVar.index}' title="Select" data-error="Please select an item in the list"
@@ -1212,7 +1212,7 @@
               </option>
              </select>
             </span>
-            <span class="form-group m-none dis-inline vertical-align-middle">
+            <span class="form-group m-none dis-inline vertical-align-middle pl-2">
               <input id="ydays${customVar.index}" type="text"
                      class="form-control wid70 disRadBtn1 disBtn1 remove_required remReqOnSave ydays daysMask mt-sm resetAncDate yancorText ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      count='${customVar.index}' placeholder="Y"
@@ -1229,7 +1229,7 @@
                   class="light-txt opacity06"> days
               </span>
             </span>
-            <span class="form-group  dis-inline vertical-align-middle pr-md"
+            <span class="form-group  dis-inline vertical-align-middle pr-md pl-md"
                   style="margin-bottom: -13px"><input
                 id="manualEndTime${customVar.index}" type="text"
                 class="form-control remove_required clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
@@ -3354,7 +3354,7 @@
         + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
         + "</select></span>"
-        + "<span class='form-group m-none dis-inline vertical-align-middle'>"
+        + "<span class='form-group m-none dis-inline vertical-align-middle pl-2'>"
         + "<input id='xdays" + customAnchorCount
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate xancorText'"
         + "count='" + customAnchorCount + "' placeholder='X' name='activeTaskCustomScheduleBo["
@@ -3363,7 +3363,7 @@
         + "</span>"
 		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days</span>" 
         
-        + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
+        + "<span class='form-group  dis-inline vertical-align-middle pr-md pl-md' style='margin-bottom: -13px'>"
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].frequencyStartTime' placeholder='Start time' required data-error='Please fill out this field' />"
@@ -3377,7 +3377,7 @@
         + "].yDaysSign' id='ySign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
         + "</select></span>"
-        + "<span class='form-group m-none dis-inline vertical-align-middle'>"
+        + "<span class='form-group m-none dis-inline vertical-align-middle pl-2'>"
         + "<input id='ydays" + customAnchorCount
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate yancorText' count='"
         + customAnchorCount + "' placeholder='Y'"
@@ -3385,7 +3385,7 @@
         + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
-        + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
+        + "<span class='form-group  dis-inline vertical-align-middle pr-md pl-md' style='margin-bottom: -13px'>"
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].frequencyEndTime' placeholder='End time' required data-error='Please fill out this field' />"

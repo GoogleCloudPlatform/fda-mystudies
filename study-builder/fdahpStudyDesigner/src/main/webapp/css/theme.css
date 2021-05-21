@@ -1110,3 +1110,7 @@ font-size: 12px;
 .switch-green > .deactivate_switch-input:checked ~ .deactivate_switch-label {
   background:  #c5c5c5;
 }
+
+.pl-2 { padding-left: 2px !important; }
+.mr-2 { margin-right: 2px !important; }
+.pr-10 { padding-right: 10px !important; }
