@@ -35,6 +35,7 @@ import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.StudyActiveTasksDAO;
 import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.dao.StudyQuestionnaireDAO;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.IdGenerator;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -404,9 +405,15 @@ public class StudyExportService {
       BlobInfo blobInfo =
           BlobInfo.newBuilder(map.get("cloud.bucket.name"), absoluteFileName).build();
       storage.create(blobInfo, bytes);
-      return absoluteFileName;
+
+      String message = studyDao.saveExportFilePath(studyBo.getId(), absoluteFileName);
+      if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
+        return absoluteFileName;
+      }
+
     } catch (Exception e) {
       logger.error("Save file to cloud storage failed", e);
+      return e.getMessage();
     }
     return null;
   }
@@ -1339,31 +1346,35 @@ public class StudyExportService {
     insertSqlStatements.addAll(questionnairesFrequenciesBoInsertQueryList);
   }
 
-  private String prepareInsertQuery(String sqlQuery, Object... values) throws SQLException {
+  private String prepareInsertQuery(String sqlQuery, Object... values) {
     Object[] columns =
         sqlQuery
             .substring(sqlQuery.indexOf('(') + 1, sqlQuery.indexOf(")"))
             .replace("`", "")
             .split(",");
-
-    if (columns.length != values.length) {
-      throw new SQLException("Column count doesn't match value count.");
-    }
-
-    int i = 0;
-    for (Object column : columns) {
-      column = ((String) column).trim();
-      if (values[i] instanceof String || values[i] instanceof Timestamp) {
-        sqlQuery =
-            sqlQuery.replace("<" + column + ">", "'" + values[i].toString().replace("'", "") + "'");
-      } else {
-        sqlQuery = sqlQuery.replace("<" + column + ">", "" + values[i] + "");
+    try {
+      if (columns.length != values.length) {
+        throw new SQLException("Column count doesn't match value count.");
       }
 
-      i++;
-    }
+      int i = 0;
+      for (Object column : columns) {
+        column = ((String) column).trim();
+        if (values[i] instanceof String || values[i] instanceof Timestamp) {
+          sqlQuery =
+              sqlQuery.replace(
+                  "<" + column + ">", "'" + values[i].toString().replace("'", "") + "'");
+        } else {
+          sqlQuery = sqlQuery.replace("<" + column + ">", "" + values[i] + "");
+        }
 
-    return sqlQuery;
+        i++;
+      }
+      return sqlQuery;
+    } catch (Exception e) {
+      logger.error("export study failed due to %s", e);
+      return e.getMessage();
+    }
   }
 
   private void getNewInstructionFormIds(
