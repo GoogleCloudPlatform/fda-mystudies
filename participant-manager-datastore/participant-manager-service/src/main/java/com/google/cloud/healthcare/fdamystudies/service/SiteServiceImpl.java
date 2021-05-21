@@ -142,7 +142,7 @@ public class SiteServiceImpl implements SiteService {
 
   private static final String CREATED = "created";
 
-  private static final int EMAIL_ADDRESS_COLUMN = 1;
+  private static final int EMAIL_ADDRESS_COLUMN = 0;
 
   private XLogger logger = XLoggerFactory.getXLogger(SiteServiceImpl.class.getName());
 
@@ -961,6 +961,10 @@ public class SiteServiceImpl implements SiteService {
       rows.next();
       while (rows.hasNext()) {
         Row r = rows.next();
+
+        if (r.getCell(EMAIL_ADDRESS_COLUMN) == null) {
+          continue;
+        }
 
         String email = r.getCell(EMAIL_ADDRESS_COLUMN).getStringCellValue();
         if (StringUtils.isBlank(email) || !Pattern.matches(EMAIL_REGEX, email)) {
