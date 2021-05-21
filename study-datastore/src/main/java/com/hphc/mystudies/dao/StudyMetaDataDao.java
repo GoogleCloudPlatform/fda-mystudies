@@ -210,7 +210,7 @@ public class StudyMetaDataDao {
                           propMap.get("cloud.bucket.name"),
                           StudyMetaDataConstants.STUDIES
                               + "/"
-                              + resource.getStudyId()
+                              + resource.getCustomStudyId()
                               + "/"
                               + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH).trim()
                               + resource.getPdfUrl(),
@@ -1192,7 +1192,7 @@ public class StudyMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       StudyMetaDataConstants.STUDIES
                           + "/"
-                          + studyDto.getId()
+                          + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
                           + studyDto.getThumbnailImage(),

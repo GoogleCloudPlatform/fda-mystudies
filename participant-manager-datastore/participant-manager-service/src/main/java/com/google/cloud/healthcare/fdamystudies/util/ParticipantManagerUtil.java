@@ -26,13 +26,18 @@ public class ParticipantManagerUtil {
 
   @Autowired private Storage storageService;
 
-  public String getSignedUrl(String fileUrl, int signedUrlDurationInHours) {
+  public String getSignedUrl(String fileUrl, int signedUrlDurationInHours, String customStudyId) {
     try {
       if (StringUtils.isEmpty(fileUrl)) {
         return null;
       }
-      String filePath =
-          StringUtils.substringAfter(fileUrl, appConfig.getStudyBuilderCloudBucketName() + "/");
+      String fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+      String filePath;
+      if ("STUDY_BI_GATEWAY.jpg".equals(fileName)) {
+        filePath = "defaultImages/" + fileName;
+      } else {
+        filePath = "studies/" + customStudyId + "/studylogo/" + fileName;
+      }
 
       BlobInfo blobInfo =
           BlobInfo.newBuilder(appConfig.getStudyBuilderCloudBucketName(), filePath).build();

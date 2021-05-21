@@ -1502,10 +1502,15 @@ public class StudyServiceImpl implements StudyService {
             StringUtils.isEmpty(studyBo.getThumbnailImage())
                 ? propMap.get("fda.imgDisplaydPath")
                     + propMap.get("cloud.bucket.name")
-                    + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    + "/"
+                    + FdahpStudyDesignerConstants.DEFAULT_IMAGES
+                    + "/"
                     + propMap.get(FdahpStudyDesignerConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE)
                 : propMap.get("fda.imgDisplaydPath")
                     + propMap.get("cloud.bucket.name")
+                    + "/"
+                    + studyBo.getCustomStudyId()
+                    + "/"
                     + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                     + studyBo.getThumbnailImage());
       }

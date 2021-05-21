@@ -2377,7 +2377,7 @@ public class ActivityMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       StudyMetaDataConstants.STUDIES
                           + "/"
-                          + studyDto.getId()
+                          + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + reponseType.getMinImage(),
@@ -2454,7 +2454,7 @@ public class ActivityMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       StudyMetaDataConstants.STUDIES
                           + "/"
-                          + studyDto.getId()
+                          + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + reponseType.getMinImage(),
@@ -2601,7 +2601,7 @@ public class ActivityMetaDataDao {
                           propMap.get("cloud.bucket.name"),
                           StudyMetaDataConstants.STUDIES
                               + "/"
-                              + studyDto.getId()
+                              + studyDto.getCustomStudyId()
                               + "/"
                               + propMap
                                   .get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE)
