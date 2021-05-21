@@ -301,6 +301,10 @@ public class StudyServiceImpl implements StudyService {
       if (consentInfoBo != null) {
         consentInfoBo.setBriefSummary(
             consentInfoBo.getBriefSummary().replaceAll("(\\r|\\n|\\r\\n)+", "&#13;&#10;"));
+        if (consentInfoBo.getElaborated() != null) {
+          consentInfoBo.setElaborated(
+              StringEscapeUtils.escapeHtml4(consentInfoBo.getElaborated().trim()));
+        }
       }
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentInfoById() - Error", e);
