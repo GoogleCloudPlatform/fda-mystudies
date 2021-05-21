@@ -25,6 +25,8 @@ package com.fdahpstudydesigner.util;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
@@ -996,17 +998,25 @@ public class FdahpStudyDesignerUtil {
     return generatedHash;
   }
 
-  public static String saveImage(MultipartFile fileStream, String fileName, String underDirectory) {
+  public static String saveImage(
+      MultipartFile fileStream, String fileName, String underDirectory, String customStudyId) {
     String fileNameWithExtension =
         fileName + "." + FilenameUtils.getExtension(fileStream.getOriginalFilename());
-    String absoluteFileName = underDirectory + PATH_SEPARATOR + fileNameWithExtension;
+    String absoluteFileName =
+        FdahpStudyDesignerConstants.STUDIES
+            + PATH_SEPARATOR
+            + customStudyId
+            + PATH_SEPARATOR
+            + underDirectory
+            + PATH_SEPARATOR
+            + fileNameWithExtension;
     BlobInfo blobInfo =
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
 
     try {
-      byte[] b = fileStream.getBytes();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      storage.create(blobInfo, b);
+      storage.create(blobInfo, fileStream.getBytes());
+
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);
     }
@@ -1047,5 +1057,33 @@ public class FdahpStudyDesignerUtil {
       logger.error("Exception in getTimeStamp(): " + e);
     }
     return null;
+  }
+
+  public static void copyImage(String fileName, String underDirectory, String customStudyId) {
+    String newFilePath =
+        FdahpStudyDesignerConstants.STUDIES
+            + PATH_SEPARATOR
+            + customStudyId
+            + PATH_SEPARATOR
+            + underDirectory
+            + PATH_SEPARATOR
+            + fileName;
+
+    String oldFilePath = underDirectory + PATH_SEPARATOR + fileName;
+    try {
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), oldFilePath));
+
+      if (blob != null) {
+        blob.copyTo(configMap.get("cloud.bucket.name"), newFilePath);
+
+        // Delete the original blob now that we've copied to where we want it, finishing the "move"
+        // operation
+        blob.delete();
+      }
+
+    } catch (Exception e) {
+      logger.error("Save Image in cloud storage failed", e);
+    }
   }
 }
