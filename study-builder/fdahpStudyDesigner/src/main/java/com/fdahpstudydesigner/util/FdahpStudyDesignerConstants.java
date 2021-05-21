@@ -454,6 +454,22 @@ public class FdahpStudyDesignerConstants {
   public static final String SUPER_ADMIN_PERMISSIONS =
       "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW,ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT,ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW";
 
+  public static final String ACTION_EXPORT_SUCCESS_MSG = "Study exported successfully.";
+
+  public static final String FAILURE_EXPORT_STUDY_MESSAGE =
+      "Sorry, a technical error occurred and the study could not be exported.";
+
+  public static final String IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE =
+      "Import failed due to anomalies detected in the exported study file. Please try again with a new signed URL generated at the point of export in the origin Study Builder.";
+
+  public static final String IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION =
+      "Import failed. Studies can only be imported from compatible Study Builder applications (running a platform release version of 2.0.6 or higher, and lower than or equal to the destination platform version  which is";
+  public static final String PATH_SEPARATOR = "/";
+
+  public static final String STUDIES = "studies";
+
+  public static final String DEFAULT_IMAGES = "defaultImages";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

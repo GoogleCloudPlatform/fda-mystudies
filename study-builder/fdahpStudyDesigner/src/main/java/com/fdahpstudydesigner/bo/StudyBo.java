@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -29,12 +29,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,7 +66,7 @@ public class StudyBo implements Serializable {
   private String category;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
@@ -101,9 +101,10 @@ public class StudyBo implements Serializable {
   private Integer hasStudyDraft = 0;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "inbox_email_address")
   private String inboxEmailAddress;
@@ -120,7 +121,7 @@ public class StudyBo implements Serializable {
   private String mediaLink;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
@@ -171,7 +172,7 @@ public class StudyBo implements Serializable {
   @Column(name = "type")
   private String type;
 
-  @Transient private Integer userId;
+  @Transient private String userId;
 
   @Column(name = "version")
   private Float version = 0f;
@@ -185,6 +186,20 @@ public class StudyBo implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
+  @Column(name = "file_path")
+  private String filePath;
+
+  public String getFilePath() {
+    return filePath;
+  }
+
+  public void setFilePath(String filePath) {
+    this.filePath = filePath;
+  }
+
+  @Column(name = "isCloudStorageMoved", columnDefinition = "int default 0")
+  private Integer isCloudStorageMoved;
+
   public String getButtonText() {
     return buttonText;
   }
@@ -193,7 +208,7 @@ public class StudyBo implements Serializable {
     return category;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -241,7 +256,7 @@ public class StudyBo implements Serializable {
     return hasStudyDraft;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -265,7 +280,7 @@ public class StudyBo implements Serializable {
     return mediaLink;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -333,7 +348,7 @@ public class StudyBo implements Serializable {
     return type;
   }
 
-  public Integer getUserId() {
+  public String getUserId() {
     return userId;
   }
 
@@ -357,7 +372,7 @@ public class StudyBo implements Serializable {
     this.category = category;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -405,7 +420,7 @@ public class StudyBo implements Serializable {
     this.hasStudyDraft = hasStudyDraft;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -429,7 +444,7 @@ public class StudyBo implements Serializable {
     this.mediaLink = mediaLink;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -501,7 +516,7 @@ public class StudyBo implements Serializable {
     this.type = type;
   }
 
-  public void setUserId(Integer userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 
@@ -527,5 +542,13 @@ public class StudyBo implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public Integer isCloudStorageMoved() {
+    return isCloudStorageMoved;
+  }
+
+  public void setCloudStorageMoved(Integer isCloudStorageMoved) {
+    this.isCloudStorageMoved = isCloudStorageMoved;
   }
 }

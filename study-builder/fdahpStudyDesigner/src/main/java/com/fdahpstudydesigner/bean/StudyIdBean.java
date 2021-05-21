@@ -25,16 +25,16 @@ package com.fdahpstudydesigner.bean;
 
 public class StudyIdBean {
 
-  Integer activetaskStudyId = null;
+  String activetaskStudyId = null;
   Integer activityStudyId = null;
-  Integer consentStudyId = null;
-  Integer questionnarieStudyId = null;
+  String consentStudyId = null;
+  String questionnarieStudyId = null;
 
-  public Integer getActivetaskStudyId() {
+  public String getActivetaskStudyId() {
     return activetaskStudyId;
   }
 
-  public void setActivetaskStudyId(Integer activetaskStudyId) {
+  public void setActivetaskStudyId(String activetaskStudyId) {
     this.activetaskStudyId = activetaskStudyId;
   }
 
@@ -46,19 +46,19 @@ public class StudyIdBean {
     this.activityStudyId = activityStudyId;
   }
 
-  public Integer getConsentStudyId() {
+  public String getConsentStudyId() {
     return consentStudyId;
   }
 
-  public void setConsentStudyId(Integer consentStudyId) {
+  public void setConsentStudyId(String consentStudyId) {
     this.consentStudyId = consentStudyId;
   }
 
-  public Integer getQuestionnarieStudyId() {
+  public String getQuestionnarieStudyId() {
     return questionnarieStudyId;
   }
 
-  public void setQuestionnarieStudyId(Integer questionnarieStudyId) {
+  public void setQuestionnarieStudyId(String questionnarieStudyId) {
     this.questionnarieStudyId = questionnarieStudyId;
   }
 }

@@ -27,12 +27,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "study_permission")
@@ -52,17 +52,18 @@ public class StudyPermissionBO implements Serializable {
   private Integer projectLead;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer studyPermissionId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String studyPermissionId;
 
   @Transient private String userFullName;
 
   @Column(name = "user_id")
-  private Integer userId;
+  private String userId;
 
   @Column(name = "view_permission", length = 1)
   private boolean viewPermission;
@@ -75,11 +76,11 @@ public class StudyPermissionBO implements Serializable {
     return projectLead;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public Integer getStudyPermissionId() {
+  public String getStudyPermissionId() {
     return studyPermissionId;
   }
 
@@ -87,7 +88,7 @@ public class StudyPermissionBO implements Serializable {
     return userFullName;
   }
 
-  public Integer getUserId() {
+  public String getUserId() {
     return userId;
   }
 
@@ -103,11 +104,11 @@ public class StudyPermissionBO implements Serializable {
     this.projectLead = projectLead;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
-  public void setStudyPermissionId(Integer studyPermissionId) {
+  public void setStudyPermissionId(String studyPermissionId) {
     this.studyPermissionId = studyPermissionId;
   }
 
@@ -115,7 +116,7 @@ public class StudyPermissionBO implements Serializable {
     this.userFullName = userFullName;
   }
 
-  public void setUserId(Integer userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 

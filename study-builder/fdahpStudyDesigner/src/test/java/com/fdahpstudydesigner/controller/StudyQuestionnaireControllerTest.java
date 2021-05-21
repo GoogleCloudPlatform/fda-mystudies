@@ -15,7 +15,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.bo.QuestionnaireBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
@@ -71,7 +70,7 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject sessionObj = getSessionObject();
-    sessionObj.setUserId(1);
+    sessionObj.setUserId("1");
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, sessionObj);
 
@@ -83,7 +82,7 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
             .sessionAttrs(sessionAttributes);
 
     QuestionnaireBo questionnaireBo = new QuestionnaireBo();
-    questionnaireBo.setId(2);
+    questionnaireBo.setId("2");
     questionnaireBo.setQuestionnaireCustomScheduleBo(null);
     questionnaireBo.setQuestionnairesFrequenciesBo(null);
     questionnaireBo.setQuestionnairesFrequenciesList(null);

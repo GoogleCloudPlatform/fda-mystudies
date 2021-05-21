@@ -269,4 +269,5 @@
   function slideUpStudyMenu() {
     $(".slideUp.active").ScrollTo();
   }
+  
 </script>

@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "activetask_formula")
@@ -38,14 +38,15 @@ public class ActivetaskFormulaBo implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "activetask_formula_id")
-  private Integer activetaskFormulaId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "activetask_formula_id", updatable = false, nullable = false)
+  private String activetaskFormulaId;
 
   @Column(name = "value")
   private String value;
 
-  public Integer getActivetaskFormulaId() {
+  public String getActivetaskFormulaId() {
     return activetaskFormulaId;
   }
 
@@ -53,7 +54,7 @@ public class ActivetaskFormulaBo implements Serializable {
     return value;
   }
 
-  public void setActivetaskFormulaId(Integer activetaskFormulaId) {
+  public void setActivetaskFormulaId(String activetaskFormulaId) {
     this.activetaskFormulaId = activetaskFormulaId;
   }
 

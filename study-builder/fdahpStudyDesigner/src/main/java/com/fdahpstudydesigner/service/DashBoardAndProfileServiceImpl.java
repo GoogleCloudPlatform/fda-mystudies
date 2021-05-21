@@ -72,7 +72,7 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
   }
 
   @Override
-  public String updateProfileDetails(UserBO userBO, int userId, SessionObject userSession) {
+  public String updateProfileDetails(UserBO userBO, String userId, SessionObject userSession) {
     logger.entry("begin updateProfileDetails()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     StudyBuilderAuditEvent auditLogEvent = null;

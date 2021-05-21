@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -33,9 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 public interface UsersService {
 
   public String activateOrDeactivateUser(
-      int userId,
+      String userId,
       int userStatus,
-      int loginUser,
+      String loginUser,
       SessionObject userSession,
       HttpServletRequest request);
 
@@ -48,19 +48,19 @@ public interface UsersService {
       SessionObject userSession,
       AuditLogEventRequest auditRequest);
 
-  public String enforcePasswordChange(Integer userId, String email);
+  public String enforcePasswordChange(String userId, String email);
 
   public List<String> getActiveUserEmailIds();
 
-  public List<Integer> getPermissionsByUserId(Integer userId);
+  public List<Integer> getPermissionsByUserId(String userId);
 
-  public UserBO getUserDetails(Integer userId);
+  public UserBO getUserDetails(String userId);
 
   public List<UserBO> getUserList();
 
-  public Integer getUserPermissionByUserId(Integer sessionUserId);
+  public String getUserPermissionByUserId(String sessionUserId);
 
-  public RoleBO getUserRole(int roleId);
+  public RoleBO getUserRole(String roleId);
 
   public List<RoleBO> getUserRoleList();
 }

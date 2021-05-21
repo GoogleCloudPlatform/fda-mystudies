@@ -27,7 +27,6 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SESSION_EXPIRY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
-
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -157,7 +156,7 @@ public class LoginController {
     logger.entry("begin changePassword()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;
-    int userId = 0;
+    String userId;
     ModelAndView mv = new ModelAndView("redirect:login.do");
     SessionObject sesObj = null;
     HttpSession session = null;

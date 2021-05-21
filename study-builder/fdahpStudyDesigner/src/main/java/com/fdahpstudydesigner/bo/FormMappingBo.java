@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -63,15 +63,16 @@ public class FormMappingBo implements Serializable {
   private static final long serialVersionUID = -1590511768535969365L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "form_id")
-  private Integer formId;
+  private String formId;
 
   @Column(name = "question_id")
-  private Integer questionId;
+  private String questionId;
 
   @Column(name = "sequence_no")
   private Integer sequenceNo;
@@ -83,15 +84,15 @@ public class FormMappingBo implements Serializable {
     return active;
   }
 
-  public Integer getFormId() {
+  public String getFormId() {
     return formId;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public Integer getQuestionId() {
+  public String getQuestionId() {
     return questionId;
   }
 
@@ -103,15 +104,15 @@ public class FormMappingBo implements Serializable {
     this.active = active;
   }
 
-  public void setFormId(Integer formId) {
+  public void setFormId(String formId) {
     this.formId = formId;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
-  public void setQuestionId(Integer questionId) {
+  public void setQuestionId(String questionId) {
     this.questionId = questionId;
   }
 

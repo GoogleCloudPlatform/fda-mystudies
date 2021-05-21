@@ -1,9 +1,8 @@
 /*
  * Copyright 2020-2021 Google LLC
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -71,6 +70,7 @@ import com.fdahpstudydesigner.common.JsonUtils;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.dao.NotificationDAOImpl;
+import com.fdahpstudydesigner.service.StudyExportService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -101,7 +101,7 @@ public class StudyControllerTest extends BaseMockIT {
 
   private static final String USER_ID_VALUE = "4878641";
 
-  private static final int STUDY_ID_INT_VALUE = 678574;
+  private static final String STUDY_ID_INT_VALUE = "678574";
 
   private static final String STUDIES_META_DATA_URI = "/studies/studymetadata";
 
@@ -110,6 +110,8 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String TEST_STUDY_ID_STRING = "678680";
 
   @Autowired NotificationDAOImpl notificationDaoImpl;
+
+  @Autowired StudyExportService studyExportService;
 
   private static final String OAUTH_TOKEN = "/oauth2/token";
 
@@ -193,7 +195,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -220,7 +222,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -247,7 +249,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -273,7 +275,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldMarkStudyResourceSectionAsComplete() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -306,7 +308,7 @@ public class StudyControllerTest extends BaseMockIT {
     studySessionBeans.add(studySessionBean);
     SessionObject session = getSessionObject();
     session.setStudySessionBeans(studySessionBeans);
-    session.setUserId(0);
+    session.setUserId("0");
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
@@ -339,7 +341,7 @@ public class StudyControllerTest extends BaseMockIT {
     studySessionBeans.add(studySession);
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setStudySessionBeans(studySessionBeans);
@@ -375,7 +377,7 @@ public class StudyControllerTest extends BaseMockIT {
     studySessionBeans.add(studySession);
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setStudySessionBeans(studySessionBeans);
@@ -410,7 +412,7 @@ public class StudyControllerTest extends BaseMockIT {
     studySessionBeans.add(studySession);
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setStudySessionBeans(studySessionBeans);
@@ -436,7 +438,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldLaunchStudy() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = getSessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -462,7 +464,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldUpdatesPublishedToStudy() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt("4878642"));
+    session.setUserId("4878642");
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -488,7 +490,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldPauseStudy() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -514,7 +516,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldResumeStudy() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -541,7 +543,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(STUDY_ID_VALUE));
+    session.setUserId(STUDY_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -572,7 +574,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -605,7 +607,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(STUDY_ID_VALUE));
+    session.setUserId(STUDY_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -635,7 +637,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldDeactivateStudy() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -661,7 +663,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldSaveStudyInDraftState() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -695,7 +697,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldMarkStudySectionAsComplete() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -732,7 +734,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldSaveOrUpdateStudySection() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -771,7 +773,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -794,12 +796,11 @@ public class StudyControllerTest extends BaseMockIT {
 
     mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
 
-    List<NotificationBO> notificationList =
-        notificationDaoImpl.getNotificationList(Integer.valueOf(STUDY_ID_VALUE));
+    List<NotificationBO> notificationList = notificationDaoImpl.getNotificationList(STUDY_ID_VALUE);
     assertTrue(notificationList.size() > 0);
 
     for (NotificationBO notification : notificationList) {
-      if (notification.getCreatedBy().equals(Integer.parseInt(USER_ID_VALUE))) {
+      if (notification.getCreatedBy().equals(USER_ID_VALUE)) {
         assertEquals(resourceBO.getResourceText(), notification.getNotificationText());
       }
     }
@@ -812,7 +813,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -837,8 +838,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
 
-    List<NotificationBO> notificationList =
-        notificationDaoImpl.getNotificationList(Integer.valueOf(STUDY_ID_VALUE));
+    List<NotificationBO> notificationList = notificationDaoImpl.getNotificationList(STUDY_ID_VALUE);
     assertEquals(0, notificationList.size());
 
     verifyAuditEventCall(STUDY_NEW_RESOURCE_CREATED);
@@ -849,7 +849,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -883,7 +883,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -917,7 +917,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -951,7 +951,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -984,7 +984,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldReviewStudyAndSaveEConsent() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1012,7 +1012,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldMarkCompleteStudyReviewAndEConsent() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1022,7 +1022,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678590");
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(678574);
+    consentBo.setStudyId("678574");
     consentBo.setType("complete");
     consentBo.setConsentDocContent(
         "<span style=&#34;font-size:20px;&#34;><strong>Data gathering</strong></span><br/><span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>Auto0016</span><br/>");
@@ -1042,7 +1042,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldConsentReviewAndEConsentInfo() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1071,7 +1071,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldMarkStudyComprehensionTestSectionAsComplete() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1081,7 +1081,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(678576);
+    consentBo.setStudyId("678576");
     consentBo.setComprehensionTest("complete");
     consentBo.setConsentDocContent("doc");
 
@@ -1100,7 +1100,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldViewStudyList() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1124,7 +1124,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldPublishStudyConsentContent() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt("4878642"));
+    session.setUserId("4878642");
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1149,7 +1149,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldPublishStudyConsentDoc() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt("4878642"));
+    session.setUserId("4878642");
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1176,7 +1176,7 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1241,7 +1241,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldFailSendingStudyMetadata() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
@@ -1302,9 +1302,41 @@ public class StudyControllerTest extends BaseMockIT {
     verifyAuditEventCall(STUDY_METADATA_SEND_FAILED);
   }
 
+  @Test
+  public void shouldCreateInsertSqlQueries() throws Exception {
+
+    SessionObject session = new SessionObject();
+    session.setUserId("1");
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
+    mockMvc
+        .perform(
+            post("/studies/{studyId}/export.do", "f24b5b94l66b1n4286v8884w9ccb90306363")
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+  }
+
   public static String readJsonFile(String filepath) throws IOException {
     return JsonUtils.getObjectMapper()
         .readValue(JsonUtils.class.getResourceAsStream(filepath), JsonNode.class)
         .toString();
+  }
+
+  @Test
+  public void shouldreplicateStudies() throws Exception {
+
+    SessionObject session = new SessionObject();
+    session.setUserId("1");
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
+    mockMvc
+        .perform(post("/studies/{studyId}/replicate.do", "678574").sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
   }
 }

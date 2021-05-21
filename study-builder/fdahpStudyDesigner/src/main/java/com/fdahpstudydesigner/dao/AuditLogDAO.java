@@ -29,5 +29,5 @@ import org.hibernate.Transaction;
 public interface AuditLogDAO {
 
   public String updateDraftToEditedStatus(
-      Session session, Transaction transaction, Integer userId, String actionType, Integer studyId);
+      Session session, Transaction transaction, String userId, String actionType, String studyId);
 }

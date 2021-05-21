@@ -311,17 +311,17 @@
                         <div class="ellipse-hover-icon"
                              onmouseleave="ellipseUnHover(this);">
                           <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View"
-                                onclick="viewStep(${entry.value.stepId},'${entry.value.stepType}')"></span>
+                                onclick="viewStep('${entry.value.stepId}','${entry.value.stepType}')"></span>
                           <span
                               class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
                               data-toggle="tooltip" data-placement="top" title="Edit"
                               <c:if
-                                  test="${actionType ne 'view'}">onclick="editStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
+                                  test="${actionType ne 'view'}">onclick="editStep('${entry.value.stepId}','${entry.value.stepType}')"</c:if>></span>
                           <span
                               class="sprites_icon delete deleteStepButton <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
                               data-toggle="tooltip" data-placement="top" title="Delete"
                               <c:if
-                                  test="${actionType ne 'view'}">onclick="deletStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
+                                  test="${actionType ne 'view'}">onclick="deletStep('${entry.value.stepId}','${entry.value.stepType}')"</c:if>></span>
                         </div>
                       </div>
                       <c:if test="${entry.value.stepType eq 'Form'}">
@@ -4143,17 +4143,17 @@
         }
         dynamicAction += '<span class="ellipse" onmouseenter="ellipseHover(this);"></span>' +
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
-            '  <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View" onclick="viewStep(' + parseInt(value.stepId)
+            '  <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View" onclick="viewStep(' + value.stepId
             + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         if (value.status) {
-          dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editStep('
-              + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
+          dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editStep(&#34;'
+              +value.stepId + '&#34;,&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         } else {
-          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editStep('
-              + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
+          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editStep(&#34;'
+              + value.stepId + '&#34;,&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>';
         }
-        dynamicAction += '  <span class="sprites_icon delete deleteStepButton" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deletStep('
-            + parseInt(value.stepId) + ',&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>' +
+        dynamicAction += '  <span class="sprites_icon delete deleteStepButton" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deletStep(&#34;'
+            + value.stepId + '&#34;,&#34;' + DOMPurify.sanitize(value.stepType) + '&#34;)"></span>' +
             '</div>' +
             '</div>';
 

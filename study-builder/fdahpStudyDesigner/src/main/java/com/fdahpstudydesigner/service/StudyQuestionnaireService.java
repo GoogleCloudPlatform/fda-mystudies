@@ -41,83 +41,82 @@ import java.util.SortedMap;
 public interface StudyQuestionnaireService {
 
   public String checkFromQuestionShortTitle(
-      Integer questionnaireId,
+      String questionnaireId,
       String shortTitle,
       String questionnaireShortTitle,
       String customStudyId);
 
-  public String checkQuestionnaireResponseTypeValidation(Integer studyId, String customStudyId);
+  public String checkQuestionnaireResponseTypeValidation(String studyId, String customStudyId);
 
   public String checkQuestionnaireShortTitle(
-      Integer studyId, String shortTitle, String customStudyId);
+      String studyId, String shortTitle, String customStudyId);
 
   public String checkQuestionnaireStepShortTitle(
-      Integer questionnaireId,
+      String questionnaireId,
       String stepType,
       String shortTitle,
       String questionnaireShortTitle,
       String customStudyId);
 
-  public String checkStatShortTitle(Integer studyId, String shortTitle, String customStudyId);
+  public String checkStatShortTitle(String studyId, String shortTitle, String customStudyId);
 
   public QuestionnaireBo copyStudyQuestionnaireBo(
-      Integer questionnaireId, String customStudyId, SessionObject sessionObject);
+      String questionnaireId, String customStudyId, SessionObject sessionObject);
 
   public String deleteFromStepQuestion(
-      Integer formId,
-      Integer questionId,
+      String formId,
+      String questionId,
       SessionObject sessionObject,
       String customStudyId,
       AuditLogEventRequest auditRequest);
 
   public String deleteQuestionnaireStep(
-      Integer stepId,
-      Integer questionnaireId,
+      String stepId,
+      String questionnaireId,
       String stepType,
       SessionObject sessionObject,
       String customStudyId);
 
   public String deletQuestionnaire(
-      Integer studyId, Integer questionnaireId, SessionObject sessionObject, String customStudyId);
+      String studyId, String questionnaireId, SessionObject sessionObject, String customStudyId);
 
   public List<HealthKitKeysInfo> getHeanlthKitKeyInfoList();
 
   public InstructionsBo getInstructionsBo(
-      Integer instructionId,
+      String instructionId,
       String questionnaireShortTitle,
       String customStudyId,
-      Integer questionnaireId);
+      String questionnaireId);
 
-  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId, String customStudyId);
+  public QuestionnaireBo getQuestionnaireById(String questionnaireId, String customStudyId);
 
   public List<QuestionnairesStepsBo> getQuestionnairesStepsList(
-      Integer questionnaireId, Integer sequenceNo);
+      String questionnaireId, Integer sequenceNo);
 
   public QuestionnairesStepsBo getQuestionnaireStep(
-      Integer stepId,
+      String stepId,
       String stepType,
       String questionnaireShortTitle,
       String customStudyId,
-      Integer questionnaireId);
+      String questionnaireId);
 
-  public SortedMap<Integer, QuestionnaireStepBean> getQuestionnaireStepList(
-      Integer questionnaireId);
+  public SortedMap<Integer, QuestionnaireStepBean> getQuestionnaireStepList(String questionnaireId);
 
   public List<QuestionResponseTypeMasterInfoBo> getQuestionReponseTypeList();
 
   public QuestionsBo getQuestionsById(
-      Integer questionId, String questionnaireShortTitle, String customStudyId);
+      String questionId, String questionnaireShortTitle, String customStudyId);
 
   public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId, Boolean isLive);
 
-  public Boolean isAnchorDateExistsForStudy(Integer studyId, String customStudyId);
+  public Boolean isAnchorDateExistsForStudy(String studyId, String customStudyId);
 
-  public Boolean isQuestionnairesCompleted(Integer studyId);
+  public Boolean isQuestionnairesCompleted(String studyId);
 
-  public String reOrderFormStepQuestions(Integer formId, int oldOrderNumber, int newOrderNumber);
+  public String reOrderFormStepQuestions(String formId, int oldOrderNumber, int newOrderNumber);
 
   public String reOrderQuestionnaireSteps(
-      Integer questionnaireId, int oldOrderNumber, int newOrderNumber);
+      String questionnaireId, int oldOrderNumber, int newOrderNumber);
 
   public QuestionnairesStepsBo saveOrUpdateFromStepQuestionnaire(
       QuestionnairesStepsBo questionnairesStepsBo, SessionObject sesObj, String customStudyId);
@@ -139,21 +138,21 @@ public interface StudyQuestionnaireService {
       SessionObject sessionObject,
       String customStudyId);
 
-  public String validateLineChartSchedule(Integer questionnaireId, String frequency);
+  public String validateLineChartSchedule(String questionnaireId, String frequency);
 
   public FormulaInfoBean validateQuestionConditionalBranchingLogic(
       String lhs, String rhs, String operator, String input);
 
-  public String validateRepetableFormQuestionStats(Integer formId);
+  public String validateRepetableFormQuestionStats(String formId);
 
   public String checkUniqueAnchorDateName(
       String anchordateText, String customStudyId, String anchorDateId);
 
   public List<AnchorDateTypeBo> getAnchorTypesByStudyId(String customStudyId);
 
-  public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId);
+  public boolean isAnchorDateExistByQuestionnaire(String questionnaireId);
 
-  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId);
+  public QuestionnaireBo getQuestionnaireById(String questionnaireId);
 
-  public QuestionsBo getQuestionById(Integer valueOf);
+  public QuestionsBo getQuestionById(String valueOf);
 }

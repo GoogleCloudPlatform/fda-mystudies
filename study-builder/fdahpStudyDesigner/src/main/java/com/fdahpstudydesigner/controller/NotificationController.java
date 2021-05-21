@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,8 +63,7 @@ public class NotificationController {
         // notification(global/study) that has been requested for
         // delete.
         message =
-            notificationService.deleteNotification(
-                Integer.parseInt(notificationId), sessionObject, notificationType);
+            notificationService.deleteNotification(notificationId, sessionObject, notificationType);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           request
               .getSession()
@@ -118,12 +119,11 @@ public class NotificationController {
         if (!"".equals(notificationId)) {
           // Fetching notification detail from notification table by
           // Id.
-          notificationBO = notificationService.getNotification(Integer.parseInt(notificationId));
+          notificationBO = notificationService.getNotification((notificationId));
           // Fetching notification history of last sent detail from
           // notification table by Id.
           notificationHistoryNoDateTime =
-              notificationService.getNotificationHistoryListNoDateTime(
-                  Integer.parseInt(notificationId));
+              notificationService.getNotificationHistoryListNoDateTime(notificationId);
           // Spring security reason we have different method for
           // edit/resend/addOrCopy of notification as these section
           // are editable.
@@ -185,12 +185,11 @@ public class NotificationController {
         if (!"".equals(notificationId)) {
           // Fetching notification detail from notification table by
           // Id
-          notificationBO = notificationService.getNotification(Integer.parseInt(notificationId));
+          notificationBO = notificationService.getNotification(notificationId);
           // Fetching notification history of last sent detail from
           // notification table by Id
           notificationHistoryNoDateTime =
-              notificationService.getNotificationHistoryListNoDateTime(
-                  Integer.parseInt(notificationId));
+              notificationService.getNotificationHistoryListNoDateTime(notificationId);
           // Spring security reason we have different method for view
           // section
           if ("view".equals(actionType)) {
@@ -213,8 +212,9 @@ public class NotificationController {
   @RequestMapping("/adminNotificationEdit/saveOrUpdateNotification.do")
   public ModelAndView saveOrUpdateOrResendNotification(
       HttpServletRequest request, NotificationBO notificationBO) {
+
     logger.info("begin saveOrUpdateOrResendNotification()");
-    Integer notificationId = 0;
+    String notificationId = null;
     ModelAndView mav = new ModelAndView();
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
@@ -271,7 +271,7 @@ public class NotificationController {
         notificationBO.setScheduleTimestamp(null);
         notificationBO.setNotificationScheduleType("0");
       }
-      if (null == notificationBO.getNotificationId()) {
+      if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
         notificationBO.setCreatedBy(sessionObject.getUserId());
         notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       } else {
@@ -281,14 +281,15 @@ public class NotificationController {
       notificationId =
           notificationService.saveOrUpdateOrResendNotification(
               notificationBO, notificationType, buttonType, sessionObject, "");
-      if (!notificationId.equals(0)) {
-        if ((notificationBO.getNotificationId() == null) && "add".equalsIgnoreCase(buttonType)) {
+      if (StringUtils.isNotEmpty(notificationId)) {
+        if (StringUtils.isEmpty(notificationBO.getNotificationId())
+            && "add".equalsIgnoreCase(buttonType)) {
           request
               .getSession()
               .setAttribute(
                   FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get("save.notification.success.message"));
-        } else if ((notificationBO.getNotificationId() != null)
+        } else if ((StringUtils.isNotEmpty(notificationBO.getNotificationId()))
             && "update".equalsIgnoreCase(buttonType)) {
           request
               .getSession()
@@ -303,7 +304,8 @@ public class NotificationController {
                   propMap.get("resend.notification.success.message"));
         }
       } else {
-        if ((notificationBO.getNotificationId() == null) && "add".equalsIgnoreCase(buttonType)) {
+        if (StringUtils.isEmpty(notificationBO.getNotificationId())
+            && "add".equalsIgnoreCase(buttonType)) {
           request
               .getSession()
               .setAttribute(
@@ -356,20 +358,22 @@ public class NotificationController {
        * Passing 0 in below param as notifications are independent from
        * study and empty string to define it is as global notification
        */
-      notificationList = notificationService.getNotificationList(0, "");
-      for (NotificationBO notification : notificationList) {
-        if (!notification.isNotificationSent()
-            && notification
-                .getNotificationScheduleType()
-                .equals(FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE)) {
-          notification.setCheckNotificationSendingStatus("Scheduled");
-        } else if (!notification.isNotificationSent()
-            && notification
-                .getNotificationScheduleType()
-                .equals(FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE)) {
-          notification.setCheckNotificationSendingStatus("Sending");
-        } else if (notification.isNotificationSent()) {
-          notification.setCheckNotificationSendingStatus("Sent");
+      notificationList = notificationService.getNotificationList(null, "");
+      if (CollectionUtils.isNotEmpty(notificationList)) {
+        for (NotificationBO notification : notificationList) {
+          if (!notification.isNotificationSent()
+              && notification
+                  .getNotificationScheduleType()
+                  .equals(FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE)) {
+            notification.setCheckNotificationSendingStatus("Scheduled");
+          } else if (!notification.isNotificationSent()
+              && notification
+                  .getNotificationScheduleType()
+                  .equals(FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE)) {
+            notification.setCheckNotificationSendingStatus("Sending");
+          } else if (notification.isNotificationSent()) {
+            notification.setCheckNotificationSendingStatus("Sent");
+          }
         }
       }
       map.addAttribute("notificationList", notificationList);

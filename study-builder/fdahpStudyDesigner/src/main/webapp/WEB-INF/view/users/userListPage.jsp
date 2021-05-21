@@ -127,7 +127,7 @@
                     <input type="checkbox" class="switch-input"
                            value="${user.enabled ? 1 : 0}" id="${user.userId}"
                            <c:if test="${user.enabled}">checked</c:if>
-                           onchange="activateOrDeactivateUser(${user.userId})"
+                           onchange="activateOrDeactivateUser('${user.userId}')"
                            <c:if
                                test="${empty user.userPassword || user.emailChanged}">disabled</c:if>>
                     <span class="switch-label" data-on="On" data-off="Off"></span>

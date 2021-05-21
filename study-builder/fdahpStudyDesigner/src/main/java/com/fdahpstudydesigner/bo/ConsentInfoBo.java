@@ -27,12 +27,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "consent_info")
@@ -56,7 +56,7 @@ public class ConsentInfoBo implements Serializable {
   private String briefSummary;
 
   @Column(name = "consent_item_title_id")
-  private Integer consentItemTitleId;
+  private String consentItemTitleId;
 
   @Column(name = "consent_item_type")
   private String consentItemType;
@@ -65,7 +65,7 @@ public class ConsentInfoBo implements Serializable {
   private String contentType;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
@@ -83,15 +83,16 @@ public class ConsentInfoBo implements Serializable {
   private String htmlContent;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "is_live")
   private Integer live = 0;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
@@ -103,7 +104,7 @@ public class ConsentInfoBo implements Serializable {
   private Boolean status;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Transient private String type;
 
@@ -124,7 +125,7 @@ public class ConsentInfoBo implements Serializable {
     return briefSummary;
   }
 
-  public Integer getConsentItemTitleId() {
+  public String getConsentItemTitleId() {
     return consentItemTitleId;
   }
 
@@ -136,7 +137,7 @@ public class ConsentInfoBo implements Serializable {
     return contentType;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -160,7 +161,7 @@ public class ConsentInfoBo implements Serializable {
     return htmlContent;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -168,7 +169,7 @@ public class ConsentInfoBo implements Serializable {
     return live;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -184,7 +185,7 @@ public class ConsentInfoBo implements Serializable {
     return status;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
@@ -212,7 +213,7 @@ public class ConsentInfoBo implements Serializable {
     this.briefSummary = briefSummary;
   }
 
-  public void setConsentItemTitleId(Integer consentItemTitleId) {
+  public void setConsentItemTitleId(String consentItemTitleId) {
     this.consentItemTitleId = consentItemTitleId;
   }
 
@@ -224,7 +225,7 @@ public class ConsentInfoBo implements Serializable {
     this.contentType = contentType;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -248,7 +249,7 @@ public class ConsentInfoBo implements Serializable {
     this.htmlContent = htmlContent;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -256,7 +257,7 @@ public class ConsentInfoBo implements Serializable {
     this.live = live;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -272,7 +273,7 @@ public class ConsentInfoBo implements Serializable {
     this.status = status;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 

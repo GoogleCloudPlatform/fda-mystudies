@@ -32,5 +32,5 @@ public interface DashBoardAndProfileDAO {
 
   public String isEmailValid(String email);
 
-  public String updateProfileDetails(UserBO userBO, int userId);
+  public String updateProfileDetails(UserBO userBO, String userId);
 }

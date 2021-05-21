@@ -27,12 +27,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "notification")
@@ -48,7 +48,7 @@ public class NotificationBO implements Serializable {
   @Transient private String actionPage;
 
   @Column(name = "active_task_id")
-  private Integer activeTaskId;
+  private String activeTaskId;
 
   @Column(name = "is_anchor_date", length = 1)
   private boolean anchorDate = false;
@@ -56,7 +56,7 @@ public class NotificationBO implements Serializable {
   @Transient private String checkNotificationSendingStatus;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
@@ -65,7 +65,7 @@ public class NotificationBO implements Serializable {
   private String customStudyId;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
@@ -77,9 +77,10 @@ public class NotificationBO implements Serializable {
   private boolean notificationDone = true;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "notification_id")
-  private Integer notificationId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "notification_id", updatable = false, nullable = false)
+  private String notificationId;
 
   @Column(name = "notification_schedule_type")
   private String notificationScheduleType;
@@ -100,10 +101,10 @@ public class NotificationBO implements Serializable {
   private String notificationType;
 
   @Column(name = "questionnarie_id")
-  private Integer questionnarieId;
+  private String questionnarieId;
 
   @Column(name = "resource_id")
-  private Integer resourceId;
+  private String resourceId;
 
   @Column(name = "schedule_date")
   private String scheduleDate;
@@ -112,7 +113,7 @@ public class NotificationBO implements Serializable {
   private String scheduleTime;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Column(name = "x_days")
   private Integer xDays;
@@ -127,7 +128,7 @@ public class NotificationBO implements Serializable {
     return actionPage;
   }
 
-  public Integer getActiveTaskId() {
+  public String getActiveTaskId() {
     return activeTaskId;
   }
 
@@ -135,7 +136,7 @@ public class NotificationBO implements Serializable {
     return checkNotificationSendingStatus;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -147,7 +148,7 @@ public class NotificationBO implements Serializable {
     return customStudyId;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -155,7 +156,7 @@ public class NotificationBO implements Serializable {
     return modifiedOn;
   }
 
-  public Integer getNotificationId() {
+  public String getNotificationId() {
     return notificationId;
   }
 
@@ -175,11 +176,11 @@ public class NotificationBO implements Serializable {
     return notificationType;
   }
 
-  public Integer getQuestionnarieId() {
+  public String getQuestionnarieId() {
     return questionnarieId;
   }
 
-  public Integer getResourceId() {
+  public String getResourceId() {
     return resourceId;
   }
 
@@ -191,7 +192,7 @@ public class NotificationBO implements Serializable {
     return scheduleTime;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
@@ -223,7 +224,7 @@ public class NotificationBO implements Serializable {
     this.actionPage = actionPage;
   }
 
-  public void setActiveTaskId(Integer activeTaskId) {
+  public void setActiveTaskId(String activeTaskId) {
     this.activeTaskId = activeTaskId;
   }
 
@@ -235,7 +236,7 @@ public class NotificationBO implements Serializable {
     this.checkNotificationSendingStatus = checkNotificationSendingStatus;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -247,7 +248,7 @@ public class NotificationBO implements Serializable {
     this.customStudyId = customStudyId;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -263,7 +264,7 @@ public class NotificationBO implements Serializable {
     this.notificationDone = notificationDone;
   }
 
-  public void setNotificationId(Integer notificationId) {
+  public void setNotificationId(String notificationId) {
     this.notificationId = notificationId;
   }
 
@@ -291,11 +292,11 @@ public class NotificationBO implements Serializable {
     this.notificationType = notificationType;
   }
 
-  public void setQuestionnarieId(Integer questionnarieId) {
+  public void setQuestionnarieId(String questionnarieId) {
     this.questionnarieId = questionnarieId;
   }
 
-  public void setResourceId(Integer resourceId) {
+  public void setResourceId(String resourceId) {
     this.resourceId = resourceId;
   }
 
@@ -315,7 +316,7 @@ public class NotificationBO implements Serializable {
     this.scheduleTimestamp = scheduleTimestamp;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 

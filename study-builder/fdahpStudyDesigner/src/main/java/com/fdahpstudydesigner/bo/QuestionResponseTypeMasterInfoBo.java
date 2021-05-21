@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -64,9 +64,10 @@ public class QuestionResponseTypeMasterInfoBo implements Serializable {
   private Boolean healthkitAlternative;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "response_type")
   private String responseType;
@@ -102,7 +103,7 @@ public class QuestionResponseTypeMasterInfoBo implements Serializable {
     return healthkitAlternative;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -138,7 +139,7 @@ public class QuestionResponseTypeMasterInfoBo implements Serializable {
     this.healthkitAlternative = healthkitAlternative;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

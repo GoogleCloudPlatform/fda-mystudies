@@ -3,6 +3,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
 
+
+<style>
+.modal-dialog {
+    text-align: inherit !important;
+}
+</style>
+
 <!-- create Study Section Start -->
 <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md tit_con">
   <div class="md-container">
@@ -35,6 +42,7 @@
                   </label>
             <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create study
             </button>
+              <button type="button" class="btn btn-primary blue-btn importStudy"  onclick="importStudy();"> Import </button>
           </div>
         </div>
       </c:if>
@@ -101,4 +109,46 @@
   function hideDisplayMessage() {
     $('#alertMsg').slideUp('5000');
   }
+  function importStudy() {
+	  debugger
+	  bootbox.prompt({ 
+		  title: "Import a study",
+		  inputType: "text",
+  		  placeholder: "Enter a valid signed URL",
+           dataError: "Please enter a valid URL",
+           required: true,
+		    buttons: {
+		          'cancel': {
+		            label: 'Cancel',
+		          },
+		          'confirm': {
+		            label: 'Submit',
+		          },
+		        },
+		    callback: function (result) {
+		    	debugger
+	              if (result) {
+	            	  $
+	           	   .ajax({
+	                      url: "/studybuilder/studies/import.do?_S=${param._S}",
+	                      type: "POST",
+	                      datatype: "json",
+	                      data: {
+	                        signedUrl: result,
+	                        "${_csrf.parameterName}": "${_csrf.token}",
+	                      },
+	                   success: function updateAction(data) {
+	                       $('#backOrCancelForm').submit();
+	                   },
+	                   error: function status(data, status) {
+	                     $("body").removeClass("loading");
+	                   }
+	                 });
+	           }else{
+	        	   showErrMsg("enter valid url");
+	           }
+		    }
+	  });
+  }
+
 </script>

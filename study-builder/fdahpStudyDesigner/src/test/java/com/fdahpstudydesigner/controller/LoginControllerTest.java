@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
@@ -131,7 +130,7 @@ public class LoginControllerTest extends BaseMockIT {
     session.setEmail("superadmin@gmail.com");
     session.setFirstName("Account");
     session.setLastName("Manager");
-    session.setUserId(1);
+    session.setUserId("1");
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -201,7 +200,7 @@ public class LoginControllerTest extends BaseMockIT {
     session.setEmail("super@gmail.com");
     session.setFirstName("firstname");
     session.setLastName("lastname");
-    session.setUserId(3);
+    session.setUserId("3");
     sessionAttributesMap.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     return sessionAttributesMap;
   }

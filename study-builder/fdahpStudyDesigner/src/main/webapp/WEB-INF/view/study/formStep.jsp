@@ -265,17 +265,17 @@
                           <div class="ellipse-hover-icon"
                                onmouseleave="ellipseUnHover(this);">
                             <span class="sprites_icon preview-g mr-sm"data-toggle="tooltip" data-placement="top" title="View"
-                                  onclick="viewQuestion(${entry.value.questionInstructionId});"></span>
+                                  onclick="viewQuestion('${entry.value.questionInstructionId}');"></span>
                             <span
                                 class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionTypeForQuestionPage eq 'view'}"> cursor-none-without-event </c:if>"
                                 data-toggle="tooltip" data-placement="top" title="Edit"
                                 <c:if
-                                    test="${actionTypeForQuestionPage ne 'view'}">onclick="editQuestion(${entry.value.questionInstructionId});"</c:if>></span>
+                                    test="${actionTypeForQuestionPage ne 'view'}">onclick="editQuestion('${entry.value.questionInstructionId}');"</c:if>></span>
                             <span
                                 class="sprites_icon delete <c:if test="${actionTypeForQuestionPage eq 'view'}"> cursor-none-without-event </c:if>"
                                 data-toggle="tooltip" data-placement="top" title="Delete"
                                 <c:if
-                                    test="${actionTypeForQuestionPage ne 'view'}">onclick="deletQuestion(${entry.value.stepId},${entry.value.questionInstructionId})"</c:if>></span>
+                                    test="${actionTypeForQuestionPage ne 'view'}">onclick="deletQuestion('${entry.value.stepId}','${entry.value.questionInstructionId}')"</c:if>></span>
                           </div>
                         </div>
                       </div>
@@ -558,6 +558,7 @@
   }
 
   function viewQuestion(questionId) {
+	  
     $("#questionId").val(questionId);
     $("#actionTypeForFormStep").val('view');
     document.formStepId.action = "/studybuilder/adminStudies/formQuestion.do?_S=${param._S}";
@@ -768,14 +769,14 @@
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
             '  <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View"></span>';
         if (value.status) {
-          dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion('
-              + parseInt(value.questionInstructionId) + ');"></span>';
+          dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion(&#34;'
+              + value.questionInstructionId + '&#34;);"></span>';
         } else {
-          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion('
-              + parseInt(value.questionInstructionId) + ');"></span>';
+          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion(&#34;'
+              + value.questionInstructionId + '&#34;);"></span>';
         }
-        dynamicAction += '<span class="sprites_icon delete" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deletQuestion(' + parseInt(value.stepId)
-            + ',' + parseInt(value.questionInstructionId) + ')"></span>' +
+        dynamicAction += '<span class="sprites_icon delete" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deletQuestion(&#34;' + value.stepId
+            + '&#34;,&#34;' + value.questionInstructionId + '&#34;)"></span>' +
             '</div>' +
             '</div></div>';
         datarow.push(dynamicAction);

@@ -10,14 +10,14 @@ package com.fdahpstudydesigner.bean;
 
 public class UserIdAccessLevelInfo {
 
-  private Integer userId;
+  private String userId;
   private String accessLevel;
 
-  public Integer getUserId() {
+  public String getUserId() {
     return userId;
   }
 
-  public void setUserId(Integer userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 

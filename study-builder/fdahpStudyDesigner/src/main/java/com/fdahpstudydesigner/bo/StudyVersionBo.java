@@ -27,12 +27,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "study_version")
@@ -70,9 +70,10 @@ public class StudyVersionBo implements Serializable {
   private Float studyVersion = 0f;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "version_id")
-  private Integer versionId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "version_id", updatable = false, nullable = false)
+  private String versionId;
 
   public String getActivityLVersion() {
     return activityLVersion;
@@ -102,7 +103,7 @@ public class StudyVersionBo implements Serializable {
     return studyVersion;
   }
 
-  public Integer getVersionId() {
+  public String getVersionId() {
     return versionId;
   }
 
@@ -134,7 +135,7 @@ public class StudyVersionBo implements Serializable {
     this.studyVersion = studyVersion;
   }
 
-  public void setVersionId(Integer versionId) {
+  public void setVersionId(String versionId) {
     this.versionId = versionId;
   }
 }

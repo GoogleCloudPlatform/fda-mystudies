@@ -33,7 +33,7 @@ public interface LoginService {
       String securityToken, String password, UserBO userBO, SessionObject sesObj);
 
   public String changePassword(
-      Integer userId, String newPassword, String oldPassword, SessionObject sesObj);
+      String userId, String newPassword, String oldPassword, SessionObject sesObj);
 
   public UserBO checkSecurityToken(String securityToken);
 

@@ -135,7 +135,23 @@
        Once deactivated, mobile app users will no longer be able to participate in the study. Deactivated studies cannot be reactivated.
       </div>
       </div>
-    </div>
+      
+      <div class="form-group mr-sm" style="white-space: normal;">
+        <button type="button" class="btn btn-default gray-btn-action "
+                id="exportId" onclick="exportStudy();"
+
+                <c:choose>
+                <c:when test="${not empty permission}"> disabled </c:when>
+                <c:when test="${not studyPermissionBO.viewPermission}"> disabled </c:when>
+                </c:choose>>Export
+        </button> <span class="sprites_icon copy copy_to_clipboard" id="copy_to_clipboard" 
+                        data-toggle="tooltip" data-placement="top" title="Copy to clickBoard"></span>
+                        
+         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
+       This action exports study to google cloud storage.
+      </div>
+      </div>
+
   </div>
 </div>
 <form:form
@@ -147,6 +163,10 @@
 <form:form
     action="/studybuilder/adminStudies/studyList.do?_S=${param._S}"
     name="studyListInfoForm" id="studyListInfoForm" method="post">
+</form:form>
+<form:form
+    action="/studybuilder/adminStudies/viewBasicInfo.do?_S=${param._S}"
+    name="basicInfoForm" id="basicInfoForm" method="post">
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {
@@ -252,6 +272,7 @@
   }
 
   function updateStudyByAction(buttonText) {
+	  
     if (buttonText) {
       var studyId = "${studyBo.id}";
       $
@@ -288,4 +309,54 @@
           });
     }
   }
+  
+  var signedUrl = "";
+  function exportStudy(){
+	   var studyId = "${studyBo.id}";
+	  $
+      .ajax({
+        url: "/studybuilder/studies/${studyBo.id}/export.do",
+        type: "POST",
+        datatype: "json",
+        data: {
+          "${_csrf.parameterName}": "${_csrf.token}",
+        },
+        
+        success: function (data) {
+            var message = data.message;
+            signedUrl = data.signedUrlOfExportStudy;
+            if (message == "SUCCESS") {
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
+              $('#alertMsg').show();
+            } else {
+              var errMsg = data.errMsg;
+              if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text(errMsg);
+              } else {
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
+              }
+            }
+            setTimeout(hideDisplayMessage, 5000);
+          },
+          error: function (xhr, status, error) {
+            $(item).prop('disabled', false);
+            $('#alertMsg').show();
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
+            setTimeout(hideDisplayMessage, 5000);
+          }
+        }); 
+}
+  
+  
+  $('.copy_to_clipboard').on('click', function () {
+	$('#copy_to_clipboard').val(signedUrl);
+	var copyText = document.getElementById("copy_to_clipboard");
+    var textArea = document.createElement("textarea");
+    textArea.value = copyText.value;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("Copy");
+    textArea.remove();
+  });
+  
 </script>

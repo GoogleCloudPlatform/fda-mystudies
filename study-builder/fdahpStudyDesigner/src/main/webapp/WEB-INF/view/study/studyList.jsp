@@ -6,10 +6,13 @@
 
 <style>
 #studies_list tr th {
-    padding-left: 20px !important;
+    padding-left: 10px !important;
 }
 #studies_list tr td {
-    padding-left: 20px !important;
+    padding-left: 10px !important;
+}
+.mr-lg {
+    margin-right: 15px !important;
 }
 </style>
 
@@ -69,8 +72,16 @@
 					</c:choose>" data-toggle="tooltip" data-placement="top"
                 title="${(not empty study.liveStudyId)?((study.flag)?'Edit draft version':'Edit'):'Edit draft version'}"
                 studyId="${study.id}"></span>
-            <c:if test="${not empty study.liveStudyId}">
-              <span class="eye-inc viewStudyClass mr-lg" isLive="Yes"
+           
+             <span class="sprites_icon copy copyStudy mr-lg
+              <c:if  test="${empty study.customStudyId}">
+								cursor-none
+						</c:if>" 
+                   data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
+                  title="Copy-into-new" onclick='copyStudy("${study.id}");'>
+                    </span>
+           <c:if test="${not empty study.liveStudyId}">
+              <span class="eye-inc viewStudyClass mr-lg published" isLive="Yes"
                     studyId="${study.liveStudyId}"
                     permission="view" data-toggle="tooltip" data-placement="top"
                     title="View last published version"></span>
@@ -81,10 +92,11 @@
     </tbody>
   </table>
 </div>
-<form:form action="/studybuilder/adminStudies/viewBasicInfo.do" id="addEditStudyForm"
+
+<form:form action="/studybuilder/adminStudies/viewBasicInfo.do?_S=${param._S}"
            name="addEditStudyForm"
-           method="post">
-  <input type="hidden" id="studyId" name="studyId">
+           id="addEditStudyForm" method="post">
+  <input type="hidden" name="studyId" id="studyId" value="${studyId}"/>
 </form:form>
 <script>
   $(document).ready(function () {
@@ -110,6 +122,8 @@
       document.body.appendChild(form);
       form.submit();
     });
+    
+
 
     $('.viewStudyClass').on('click', function () {
       var form = document.createElement('form');
@@ -221,5 +235,26 @@
       }
      
   }
+ 
+  function copyStudy(studyId) {
+      var form = document.createElement('form');
+      form.method = 'post';
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'studyId';
+      input.value = studyId;
+      form.appendChild(input);
 
+      input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = '${_csrf.parameterName}';
+      input.value = '${_csrf.token}';
+      form.appendChild(input);
+
+      form.action = '/studybuilder/adminStudies/replicate.do';
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+ 
 </script>

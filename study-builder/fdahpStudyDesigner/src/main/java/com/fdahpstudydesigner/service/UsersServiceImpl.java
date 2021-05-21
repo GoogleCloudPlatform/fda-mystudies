@@ -1,5 +1,5 @@
 /*
- * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -49,6 +49,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,9 +70,9 @@ public class UsersServiceImpl implements UsersService {
 
   @Override
   public String activateOrDeactivateUser(
-      int userId,
+      String userId,
       int userStatus,
-      int loginUser,
+      String loginUser,
       SessionObject userSession,
       HttpServletRequest request) {
     logger.entry("begin activateOrDeactivateUser()");
@@ -143,7 +144,7 @@ public class UsersServiceImpl implements UsersService {
     UserBO userBO3 = null;
 
     try {
-      if (null == userBO.getUserId()) {
+      if (StringUtils.isEmpty(userBO.getUserId())) {
         addFlag = true;
         userBO2 = new UserBO();
         userBO2.setFirstName(null != userBO.getFirstName() ? userBO.getFirstName().trim() : "");
@@ -232,7 +233,7 @@ public class UsersServiceImpl implements UsersService {
   }
 
   @Override
-  public String enforcePasswordChange(Integer userId, String email) {
+  public String enforcePasswordChange(String userId, String email) {
     logger.entry("begin enforcePasswordChange()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -258,7 +259,7 @@ public class UsersServiceImpl implements UsersService {
   }
 
   @Override
-  public List<Integer> getPermissionsByUserId(Integer userId) {
+  public List<Integer> getPermissionsByUserId(String userId) {
     logger.entry("begin permissionsByUserId()");
     List<Integer> permissions = null;
     try {
@@ -271,7 +272,7 @@ public class UsersServiceImpl implements UsersService {
   }
 
   @Override
-  public UserBO getUserDetails(Integer userId) {
+  public UserBO getUserDetails(String userId) {
     logger.entry("begin getUserDetails()");
     UserBO userBO = null;
     try {
@@ -297,9 +298,9 @@ public class UsersServiceImpl implements UsersService {
   }
 
   @Override
-  public Integer getUserPermissionByUserId(Integer sessionUserId) {
+  public String getUserPermissionByUserId(String sessionUserId) {
+    String userId = null;
     logger.entry("begin getUserPermissionByUserId()");
-    Integer userId = null;
     try {
       userId = usersDAO.getUserPermissionByUserId(sessionUserId);
     } catch (Exception e) {
@@ -310,7 +311,7 @@ public class UsersServiceImpl implements UsersService {
   }
 
   @Override
-  public RoleBO getUserRole(int roleId) {
+  public RoleBO getUserRole(String roleId) {
     logger.entry("begin getUserRole()");
     RoleBO roleBO = null;
     try {

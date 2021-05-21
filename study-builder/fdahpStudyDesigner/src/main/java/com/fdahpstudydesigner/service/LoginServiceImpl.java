@@ -202,7 +202,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   public String changePassword(
-      Integer userId, String newPassword, String oldPassword, SessionObject sesObj) {
+      String userId, String newPassword, String oldPassword, SessionObject sesObj) {
     logger.entry("begin changePassword()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;

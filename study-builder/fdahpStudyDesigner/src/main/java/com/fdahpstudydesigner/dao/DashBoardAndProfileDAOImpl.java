@@ -101,8 +101,9 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
   }
 
   @Override
-  public String updateProfileDetails(UserBO userBO, int userId) {
-    logger.entry("begin updateProfileDetails()");
+  public String updateProfileDetails(UserBO userBO, String userId) {
+    logger.info("DashBoardAndProfileDAOImpl - updateProfileDetails() - Starts");
+
     Session session = null;
     Query query = null;
     String queryString = "";
@@ -124,7 +125,7 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
             null != userBO.getUserEmail().trim() ? userBO.getUserEmail().trim() : "");
         updatedUserBo.setPhoneNumber(
             null != userBO.getPhoneNumber().trim() ? userBO.getPhoneNumber().trim() : "");
-        updatedUserBo.setModifiedBy(null != userBO.getModifiedBy() ? userBO.getModifiedBy() : 0);
+        updatedUserBo.setModifiedBy(null != userBO.getModifiedBy() ? userBO.getModifiedBy() : null);
         updatedUserBo.setModifiedOn(null != userBO.getModifiedOn() ? userBO.getModifiedOn() : "");
         session.update(updatedUserBo);
       }
