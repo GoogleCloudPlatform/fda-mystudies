@@ -472,6 +472,13 @@
               }
             });
       });
+      var total_studies = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+      var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+      if (selected_study == total_studies) {
+   	    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+       	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+        }
     });
 
     if (countCall == 0) {
