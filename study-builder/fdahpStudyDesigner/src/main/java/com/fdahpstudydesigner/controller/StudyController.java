@@ -5356,7 +5356,7 @@ public class StudyController {
   }
 
   @RequestMapping(value = "/adminStudies/replicate.do", method = RequestMethod.POST)
-  public void replicateStudy(HttpServletRequest request, HttpServletResponse response)
+  public ModelAndView replicateStudy(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     logger.info("StudyController - replicateStudy() - Starts");
     HttpSession session = request.getSession();
@@ -5375,19 +5375,20 @@ public class StudyController {
 
     if (study != null) {
       auditLogEventHelper.logEvent(STUDY_COPIED_INTO_NEW, auditRequest);
-      jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, FdahpStudyDesignerConstants.SUCCESS);
-      jsonobject.put("studyId", study.getId());
+      request
+          .getSession()
+          .setAttribute(
+              FdahpStudyDesignerConstants.SUC_MSG,
+              FdahpStudyDesignerConstants.STUDY_REPLICATTE_SUCCESS_MSG);
     } else {
       auditLogEventHelper.logEvent(STUDY_COPY_FAILED, auditRequest);
-      jsonobject.put(
-          FdahpStudyDesignerConstants.ERR_MSG,
-          FdahpStudyDesignerConstants.STUDY_REPLICATTE_FAILURE_MSG);
     }
 
-    response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+    /* response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
     out = response.getWriter();
-    out.print(jsonobject);
+    out.print(jsonobject);*/
 
     logger.info("StudyController - replicateStudy() - Ends");
+    return new ModelAndView("redirect:/adminStudies/studyList.do");
   }
 }

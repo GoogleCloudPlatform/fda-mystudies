@@ -236,7 +236,7 @@
      
   }
  
- /*  function copyStudy(studyId) {
+   function copyStudy(studyId) {
       var form = document.createElement('form');
       form.method = 'post';
       var input = document.createElement('input');
@@ -254,28 +254,28 @@
       form.action = '/studybuilder/adminStudies/replicate.do';
       document.body.appendChild(form);
       form.submit();
-    } */
+    }  
     
-    function copyStudy(studyId){
-    	debugger
+   /*  function copyStudy(studyId){
  	  $
        .ajax({
          url: "/studybuilder/adminStudies/replicate.do",
          type: "POST",
          datatype: "json",
          data: {
-        	 studyId: studyId,
+           studyId: studyId,
            "${_csrf.parameterName}": "${_csrf.token}",
          },
          
          success: function (data) {
-        	 debugger
              var message = data.message;
              if (message == "SUCCESS") {
-               studyInfo(data.studyId);
-               $('#alertMsg').show();
-               $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
-              
+             $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study replicated successfully");
+             $("#alertMsg").show('5000');
+             setTimeout(function (){
+            	 studyInfo(data.studyId);
+            	}, 5000);
+            
              } else {
                  $("#alertMsg").removeClass('s-box').addClass('e-box').text(data.errMsg);
              }
@@ -287,7 +287,7 @@
              setTimeout(hideDisplayMessage, 5000);
            }
          }); 
- }
+ }   */
 
     function studyInfo(studyId){
         var form = document.createElement('form');
@@ -309,6 +309,5 @@
         form.submit();
     }
     
-    
- 
+
 </script>
