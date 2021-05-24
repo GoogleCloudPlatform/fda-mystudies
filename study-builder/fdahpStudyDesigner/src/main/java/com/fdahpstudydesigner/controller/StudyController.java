@@ -5327,6 +5327,8 @@ public class StudyController {
     logger.info("StudyController - importStudy() - Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     HttpSession session = request.getSession();
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
     SessionObject sessionObject =
         (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
@@ -5347,13 +5349,21 @@ public class StudyController {
       auditLogEventHelper.logEvent(STUDY_IMPORT_FAILED, auditRequest);
     }
 
+    jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, msg);
+    response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+    out = response.getWriter();
+    out.print(jsonobject);
+
     logger.info("StudyController - replicateStudy() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/replicate.do", method = RequestMethod.POST)
-  public ModelAndView replicateStudy(HttpServletRequest request) {
+  public ModelAndView replicateStudy(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
     logger.info("StudyController - replicateStudy() - Starts");
     HttpSession session = request.getSession();
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     SessionObject sessionObject =
         (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -5374,12 +5384,12 @@ public class StudyController {
               FdahpStudyDesignerConstants.STUDY_REPLICATTE_SUCCESS_MSG);
     } else {
       auditLogEventHelper.logEvent(STUDY_COPY_FAILED, auditRequest);
-      request
-          .getSession()
-          .setAttribute(
-              FdahpStudyDesignerConstants.SUC_MSG,
-              FdahpStudyDesignerConstants.STUDY_REPLICATTE_FAILURE_MSG);
     }
+
+    /* response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+    out = response.getWriter();
+    out.print(jsonobject);*/
+
     logger.info("StudyController - replicateStudy() - Ends");
     return new ModelAndView("redirect:/adminStudies/studyList.do");
   }

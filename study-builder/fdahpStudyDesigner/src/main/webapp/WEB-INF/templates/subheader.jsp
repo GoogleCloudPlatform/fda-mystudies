@@ -111,14 +111,13 @@
   }
   function importStudy() {
 	  debugger
-	   bootbox.prompt({ 
+	   var bb=  bootbox.prompt({ 
 		  title: "Import a study",
 		  inputType: "text",
   		  placeholder: "Enter a valid signed URL",
            dataError: "Please enter a valid URL",
            required: true,
            closeButton: false,
-           className : "has-danger has-error",
 		    buttons: {
 		          'cancel': {
 		            label: 'Cancel',
@@ -139,11 +138,15 @@
 	                        signedUrl: result,
 	                        "${_csrf.parameterName}": "${_csrf.token}",
 	                      },
-	                   success: function updateAction(data) {
-	                       $('#backOrCancelForm').submit();
-	                   },
+	                      success: function emailValid(data, status) {
+	                          var message = data.message;
+	                          if (message != "SUCCESS") {
+	                        	  bootbox.alert(message) ;
+	                          } 
+	                        },
 	                   error: function status(data, status) {
 	                     $("body").removeClass("loading");
+	                     showErrMsg("Import failed.")
 	                   }
 	                 });
 	           }

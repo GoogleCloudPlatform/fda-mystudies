@@ -462,6 +462,10 @@ public class FdahpStudyDesignerConstants {
 
   public static final String IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION =
       "Import failed. Studies can only be imported from compatible Study Builder applications (running a platform release version of 2.0.6 or higher, and lower than or equal to the destination platform version  which is";
+
+  public static final String IMPORT_FAILED_DUE_TO_ALREADY_USED_URL =
+      "The URL has already been used to import a study into this Study Builder. Use the copy-into-new action to replicate the study or use a new URL generated at the point of study export.";
+
   public static final String PATH_SEPARATOR = "/";
 
   public static final String STUDIES = "studies";
@@ -474,7 +478,7 @@ public class FdahpStudyDesignerConstants {
 
   public static final String STUDY_REPLICATTE_SUCCESS_MSG = "Study replicated successfully";
 
-  public static final String IMPORT_FAILURE_MSG = "Import failed. ";
+  public static final String IMPORT_FAILURE_MSG = "Import failed.";
 
   public static final String EXPORT_FAILURE_MSG = "Export failed. Please try again later.";
 
