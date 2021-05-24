@@ -1,5 +1,6 @@
 package com.fdahpstudydesigner.service;
 
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_ALREADY_USED_URL;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
@@ -64,6 +65,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -1462,7 +1464,8 @@ public class StudyExportService {
       float version = Float.parseFloat(tokens[tokens.length - 2]);
       // validating release version
       if (Float.parseFloat(map.get("release.version")) < version) {
-        throw new Exception(IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + map.get("release.version"));
+        throw new Exception(
+            IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + " " + map.get("display.release.version"));
       }
 
       // validating tableName and insert statements
@@ -1480,7 +1483,7 @@ public class StudyExportService {
         String tableName =
             line.substring(line.indexOf('`') + 1, line.indexOf('`', line.indexOf('`') + 1));
 
-        if (Arrays.binarySearch(allowedTablesName, tableName) == -1) {
+        if (!Arrays.asList(allowedTablesName).contains(tableName)) {
           throw new Exception(IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE);
         }
         insertStatements.add(line);
@@ -1500,6 +1503,9 @@ public class StudyExportService {
       }
     } catch (Exception e) {
       logger.error("StudyExportService - importStudy() - ERROR ", e);
+      if (e instanceof DuplicateKeyException) {
+        return IMPORT_FAILED_DUE_TO_ALREADY_USED_URL;
+      }
       return e.getMessage();
     }
     return SUCCESS;
