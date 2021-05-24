@@ -5291,19 +5291,23 @@ public class StudyController {
       throws IOException {
     logger.info("StudyController - exportStudy() - Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    String message = FdahpStudyDesignerConstants.FAILURE;
     String underDirectory = "export-studies";
-
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     SessionObject sesObj =
         (SessionObject)
             request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
-    message = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
+    String data = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
+    String message = null;
+    int passwordResetLinkExpirationInDay =
+        Integer.parseInt(propMap.get("signed.url.expiration.in.hour"));
 
-    if (message.contains(underDirectory)) {
-      jsonobject.put("signedUrlOfExportStudy", FdahpStudyDesignerUtil.getSignedUrl(message, 12));
+    if (data.contains(underDirectory)) {
+      jsonobject.put(
+          "signedUrlOfExportStudy",
+          FdahpStudyDesignerUtil.getSignedUrl(data, passwordResetLinkExpirationInDay));
       auditLogEventHelper.logEvent(STUDY_EXPORTED, auditRequest);
       message = FdahpStudyDesignerConstants.SUCCESS;
     } else {
@@ -5367,7 +5371,6 @@ public class StudyController {
           .getSession()
           .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Study replicated successfully");
     } else {
-      auditLogEventHelper.logEvent(STUDY_COPY_FAILED, auditRequest);
     }
     logger.info("StudyController - replicateStudy() - Ends");
     return new ModelAndView("redirect:/adminStudies/studyList.do");

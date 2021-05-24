@@ -331,8 +331,7 @@ public class StudyExportService {
   }
 
   private void addFormsListInsertSql(
-      List<FormBo> formsList, List<String> insertSqlStatements, Map<String, String> customIdsMap)
-      throws SQLException {
+      List<FormBo> formsList, List<String> insertSqlStatements, Map<String, String> customIdsMap) {
     List<String> formBoInsertQueryList = new ArrayList<>();
     if (CollectionUtils.isEmpty(formsList)) {
       return;
@@ -357,8 +356,7 @@ public class StudyExportService {
   private void addComprehensionTestResponseBoListInsertSql(
       List<ComprehensionTestResponseBo> comprehensionTestResponseBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
-      throws SQLException {
+      Map<String, String> customIdsMap) {
     if (CollectionUtils.isEmpty(comprehensionTestResponseBoList)) {
       return;
     }

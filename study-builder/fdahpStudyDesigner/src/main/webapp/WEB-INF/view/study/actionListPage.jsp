@@ -6,7 +6,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <style>
-
 .blue-btn {
     background: #007cba;
     border-color: #007cba !important;
