@@ -5343,7 +5343,8 @@ public class StudyController {
       auditLogEventHelper.logEvent(STUDY_IMPORTED, auditRequest);
       request
           .getSession()
-          .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Study imported successfully");
+          .setAttribute(
+              FdahpStudyDesignerConstants.SUC_MSG, FdahpStudyDesignerConstants.IMPORT_SUCCESS_MSG);
     } else {
       auditLogEventHelper.logEvent(STUDY_IMPORT_FAILED, auditRequest);
     }
@@ -5360,9 +5361,9 @@ public class StudyController {
         (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
     String studyId =
-        FdahpStudyDesignerUtil.isEmpty(request.getParameter("studyId"))
+        FdahpStudyDesignerUtil.isEmpty(request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
             ? ""
-            : request.getParameter("studyId");
+            : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
 
     StudyBo study = studyService.replicateStudy(studyId, sessionObject, auditRequest);
 
@@ -5370,8 +5371,16 @@ public class StudyController {
       auditLogEventHelper.logEvent(STUDY_COPIED_INTO_NEW, auditRequest);
       request
           .getSession()
-          .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Study replicated successfully");
+          .setAttribute(
+              FdahpStudyDesignerConstants.SUC_MSG,
+              FdahpStudyDesignerConstants.STUDY_REPLICATTE_SUCCESS_MSG);
     } else {
+      auditLogEventHelper.logEvent(STUDY_COPY_FAILED, auditRequest);
+      request
+          .getSession()
+          .setAttribute(
+              FdahpStudyDesignerConstants.SUC_MSG,
+              FdahpStudyDesignerConstants.STUDY_REPLICATTE_FAILURE_MSG);
     }
     logger.info("StudyController - replicateStudy() - Ends");
     return new ModelAndView("redirect:/adminStudies/studyList.do");
