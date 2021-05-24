@@ -184,7 +184,7 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Explanatory text that can be provided in a 'Learn More'
+                    Explanatory text that can be provided in a 'Learn more'
                     section
                     <span class="requiredStar">*</span>
                     <span class="filled-tooltip"
@@ -203,7 +203,7 @@
                   <a class="preview__text" href="javascript:void()"
                      data-toggle="modal" onclick="previewDataSharing();"><img
                       class="mr-xs" src="../images/icons/eye-icn.png" alt="">
-                    <span>See Screen Preview</span>
+                    <span>See screen preview</span>
                   </a>
                 </div>
               </div>
