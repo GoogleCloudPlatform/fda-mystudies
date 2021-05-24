@@ -20,6 +20,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParticipantManagerUtil {
 
+  private static final String PATH_SEPARATOR = "/";
+
+  private static final String STUDYLOGO = "studylogo";
+
+  private static final String STUDIES = "studies";
+
+  private static final String DEFAULT_IMAGES_FOLDER_NAME = "defaultImages";
+
+  private static final String DEFAULT_IMAGE = "STUDY_BI_GATEWAY.jpg";
+
   private XLogger logger = XLoggerFactory.getXLogger(ParticipantManagerUtil.class.getName());
 
   @Autowired private AppPropertyConfig appConfig;
@@ -31,12 +41,19 @@ public class ParticipantManagerUtil {
       if (StringUtils.isEmpty(fileUrl)) {
         return null;
       }
-      String fileName = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
+      String fileName = fileUrl.substring(fileUrl.lastIndexOf(PATH_SEPARATOR) + 1);
       String filePath;
-      if ("STUDY_BI_GATEWAY.jpg".equals(fileName)) {
-        filePath = "defaultImages/" + fileName;
+      if (DEFAULT_IMAGE.equals(fileName)) {
+        filePath = DEFAULT_IMAGES_FOLDER_NAME + PATH_SEPARATOR + fileName;
       } else {
-        filePath = "studies/" + customStudyId + "/studylogo/" + fileName;
+        filePath =
+            STUDIES
+                + PATH_SEPARATOR
+                + customStudyId
+                + PATH_SEPARATOR
+                + STUDYLOGO
+                + PATH_SEPARATOR
+                + fileName;
       }
 
       BlobInfo blobInfo =
