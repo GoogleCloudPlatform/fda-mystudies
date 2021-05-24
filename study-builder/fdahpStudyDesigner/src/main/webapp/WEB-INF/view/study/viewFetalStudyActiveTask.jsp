@@ -32,6 +32,7 @@
   <input type="hidden" value="" id="buttonText" name="buttonText">
   <input type="hidden" value="${actionPage}" id="actionPage" name="actionPage">
   <input type="hidden" value="${currentPage}" id="currentPageId" name="currentPage">
+  <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <div class="pt-lg">
     <div class="gray-xs-f mb-sm">Activity short title or key
       <small>(50 characters max)</small>
@@ -631,7 +632,7 @@
             $('#fetalKickId').val('');
             $('.timeDurationClass').find('.help-block').empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Number of kicks should be greater than zero."));
+            "Number of kicks should be greater than zero"));
           } else {
             $('.timeDurationClass').find('.help-block').empty();
           }

@@ -27,6 +27,7 @@
          name="actionPage">
   <input type="hidden" value="${currentPage}" id="currentPageId"
          name="currentPage">
+         <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <div class="pt-lg">
     <div class="gray-xs-f mb-sm">
       Activity short title or key
@@ -64,7 +65,7 @@
     <div>
       <div class="form-group">
         <input type="text" class="form-control" name="displayName"
-               value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150"
+               value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150" data-error="Please fill out this field" 
                required/>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -82,7 +83,7 @@
   </div>
   <div class="form-group">
     <textarea class="form-control" rows="5" id="comment"
-              name="instruction" maxlength="150" required>${activeTaskBo.instruction}</textarea>
+              name="instruction" maxlength="150" required data-error="Please fill out this field" >${activeTaskBo.instruction}</textarea>
     <div class="help-block with-errors red-txt"></div>
   </div>
   <c:if test="${fn:length(activeTaskBo.taskAttributeValueBos) eq 0}">
@@ -938,7 +939,7 @@
               $(this).val(newVal);
               $(this).parent().addClass("has-danger has-error");
               $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."));
+                  "Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)"));
             }
           }
         });

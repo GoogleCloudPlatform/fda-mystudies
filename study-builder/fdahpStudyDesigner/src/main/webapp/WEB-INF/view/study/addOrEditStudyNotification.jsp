@@ -181,14 +181,6 @@ For studies that are already launched, notifications get scheduled for delivery 
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    <c:if test="${studyBo.status eq 'Active'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
-
-    <c:if test="${notificationBO.actionPage eq 'view'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
-
     <c:if test="${notificationBO.actionPage eq 'view'}">
     $('#studyNotificationFormId input,textarea').prop('disabled', true);
     $('.studyNotificationButtonHide').addClass('dis-none');
@@ -295,9 +287,13 @@ For studies that are already launched, notifications get scheduled for delivery 
       });
     });
 
+    var today, datepicker;
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false
     }).on('dp.change change', function (e) {
       validateTime();
@@ -477,7 +473,7 @@ For studies that are already launched, notifications get scheduled for delivery 
       if (dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
             '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Please select a time that has not already passed for the current date."));
+            "Please select a time that has not already passed for the current date"));
         valid = false;
       }
     }

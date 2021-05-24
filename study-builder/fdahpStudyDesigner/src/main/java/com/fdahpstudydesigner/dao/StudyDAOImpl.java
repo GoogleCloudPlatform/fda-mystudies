@@ -63,6 +63,7 @@ import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.bo.StudyVersionBo;
+import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
@@ -2067,16 +2068,33 @@ public class StudyDAOImpl implements StudyDAO {
 
       session = hibernateTemplate.getSessionFactory().openSession();
       if ((userId != null) && (userId != 0)) {
-        query =
-            session.createQuery(
-                "select new com.fdahpstudydesigner.bean.StudyListBean(s.id,s.customStudyId,s.name,s.category,s.researchSponsor,user.firstName, user.lastName,p.viewPermission,s.status,s.createdOn,s.appId)"
-                    + " from StudyBo s,StudyPermissionBO p, UserBO user"
-                    + " where s.id=p.studyId"
-                    + " and user.userId = s.createdBy"
-                    + " and s.version=0"
-                    + " and p.userId=:impValue"
-                    + " order by s.createdOn desc");
-        query.setInteger(FdahpStudyDesignerConstants.IMP_VALUE, userId);
+
+        query = session.getNamedQuery("getUserById").setInteger("userId", userId);
+        UserBO userBO = (UserBO) query.uniqueResult();
+
+        if (userBO.getRoleId().equals(1)) {
+          query =
+              session.createQuery(
+                  "select new com.fdahpstudydesigner.bean.StudyListBean(s.id,s.customStudyId,s.name,s.category,s.researchSponsor,user.firstName, user.lastName,s.status,s.createdOn,s.appId)"
+                      + " from StudyBo s, UserBO user"
+                      + " where user.userId = s.createdBy"
+                      + " and s.version=0"
+                      + " order by s.createdOn desc");
+
+        } else {
+
+          query =
+              session.createQuery(
+                  "select new com.fdahpstudydesigner.bean.StudyListBean(s.id,s.customStudyId,s.name,s.category,s.researchSponsor,user.firstName, user.lastName,p.viewPermission,s.status,s.createdOn,s.appId)"
+                      + " from StudyBo s,StudyPermissionBO p, UserBO user"
+                      + " where s.id=p.studyId"
+                      + " and user.userId = s.createdBy"
+                      + " and s.version=0"
+                      + " and p.userId=:impValue"
+                      + " order by s.createdOn desc");
+          query.setInteger(FdahpStudyDesignerConstants.IMP_VALUE, userId);
+        }
+
         studyListBeans = query.list();
 
         if ((studyListBeans != null) && !studyListBeans.isEmpty()) {
@@ -2139,6 +2157,9 @@ public class StudyDAOImpl implements StudyDAO {
               } else {
                 bean.setProjectLeadName("None");
               }
+            }
+            if (userBO.getRoleId().equals(1)) {
+              bean.setViewPermission(true);
             }
           }
         }

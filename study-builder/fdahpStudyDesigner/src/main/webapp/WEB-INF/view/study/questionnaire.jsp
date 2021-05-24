@@ -66,7 +66,7 @@
 
   /* error box css start here  */
   .help-block ul {
-    width: 150px;
+    width: 155px;
   / / font-size: 10 px !important;
   }
  /* error box css end here  */
@@ -377,7 +377,6 @@
         <form:form action="" name="anchorFormId" id="anchorFormId"
                    method="post" role="form" data-toggle="validator">
           <div class="anchortypeclass" style="display: none;">
-            <c:if test="${fn:length(anchorTypeList) gt 0}">
               <div class="gray-xs-f mb-sm">Select anchor date type</div>
               <div class="clearfix"></div>
               <div class="col-md-5 col-lg-5 p-none">
@@ -395,7 +394,6 @@
                 </div>
               </div>
               <div class="clearfix"></div>
-            </c:if>
           </div>
         </form:form>
         <!-- Ancor date type -->
@@ -781,7 +779,7 @@
                                name="questionnairesFrequenciesList[0].timePeriodFromDays"
                                value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
                                maxlength="3" pattern="[0-9]+"
-                               data-pattern-error="Please enter valid number"/>
+                               data-pattern-error="Please enter valid number" data-error="Please fill out this field" />
                         <span
                             class="help-block with-errors red-txt"></span>
                       </span>
@@ -940,12 +938,13 @@
                     title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                 </span>
+                 </span>
                 <br/>
-                <span
+                <div
                     class=" form-group m-none dis-inline vertical-align-middle pr-md">
                   <span class=""><select id="startDateWeekly"
                                          class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                         name="dayOfTheWeek" required data-error="Please fill out this field" >
+                                         name="dayOfTheWeek" required data-error="Please select an item in the list" >
                     <option value=''>Select</option>
                     <option value='Sunday'
                       ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
@@ -971,10 +970,10 @@
                   </select>
                     <span class='help-block with-errors red-txt'></span>
                   </span>
-                </span>
-              </span>
+                </div>
+             
               <span
-                  class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  class="form-group m-none dis-inline vertical-align-middle pr-md ml-lg">
                 <input id="selectWeeklyTime" type="text" data-error="Please fill out this field" 
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
                        required data-error="Please fill out this field"  onclick="timep(this.id)" placeholder="Time"
@@ -1976,10 +1975,10 @@
         $('.weeklyStartCls').show();
         $('.weeklyStartCls').find('input:text,select').attr('required', true);
         $("#weekDaysId").show();
-        $("#weekDaysId").find('input:text').attr('required', true);
+        $("#weekDaysId").find('input:text,select').attr('required', true);
 
         $(".weeklyRegular").show();
-        $(".weeklyRegular").attr('required', true);
+        $(".weeklyRegular").find('input:text').attr('required', true);
 
         $(".weeklyanchorDiv").hide();
         $(".weeklyanchorDiv").find('input:text').removeAttr('required', true);
@@ -1987,7 +1986,7 @@
         $('.monthlyStartCls').show();
         $('.monthlyStartCls').find('input:text').attr('required', true);
         $("#monthlyDateId").show();
-        $("#monthlyDateId").find('input:text').attr('required', true);
+        $("#monthlyDateId").find('input:text,select').attr('required', true);
 
         $(".monthlyRegular").show();
         $(".monthlyRegular").attr('required', true);
@@ -3809,7 +3808,7 @@
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
             'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
-                   "Please ensure that the runs created do not have any overlapping time period."));
+                   "Please ensure that the runs created do not have any overlapping time period"));
       } else {
         $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass(
             'has-error has-danger').find(".help-block").addClass('with-errors').empty();
@@ -3893,7 +3892,7 @@
           callback(val);
         });
       } else {
-        showErrMsg("Please choose anchor date for date/time of the launch.");
+        showErrMsg("Please choose anchor date for date/time of the launch");
         $('.scheduleTaskClass a').tab('show');
         if (callback)
           callback(false);
@@ -4578,7 +4577,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current row and greater than Y of the previous row."));
+              "X should be less than Y of the current row and greater than Y of the previous row"));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -4703,7 +4702,7 @@
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current row and greater than Y of the previous row."));
+              "X should be less than Y of the current row and greater than Y of the previous row"));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");

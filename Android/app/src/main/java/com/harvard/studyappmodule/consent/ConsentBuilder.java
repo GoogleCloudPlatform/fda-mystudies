@@ -301,7 +301,7 @@ public class ConsentBuilder {
     QuestionStepCustom firstName =
             new QuestionStepCustom(
                     context.getResources().getString(R.string.first_name),
-                    context.getResources().getString(R.string.first_name),
+                    context.getResources().getString(R.string.first_name_2),
                     textAnswerFormat);
     firstName.setPlaceholder(context.getResources().getString(R.string.required));
     firstName.setAnswerFormat1(textAnswerFormat);
@@ -310,7 +310,7 @@ public class ConsentBuilder {
     QuestionStepCustom lastName =
             new QuestionStepCustom(
                     context.getResources().getString(R.string.last_name),
-                    context.getResources().getString(R.string.last_name),
+                    context.getResources().getString(R.string.last_name_2),
                     textAnswerFormat);
     lastName.setPlaceholder(context.getResources().getString(R.string.required));
     lastName.setAnswerFormat1(textAnswerFormat);

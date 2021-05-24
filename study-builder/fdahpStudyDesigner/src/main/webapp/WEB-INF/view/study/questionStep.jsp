@@ -675,9 +675,9 @@
                         title="Enter an integer number in the range (Min, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" 
+                    <input type="text" class="form-control ScaleRequired" 
                            name="questionReponseTypeBo.minValue" id="scaleMinValueId"
-                           value="${questionnairesStepsBo.questionReponseTypeBo.minValue}"
+                           value="${questionnairesStepsBo.questionReponseTypeBo.minValue}" data-error="Please fill out this field" 
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -692,9 +692,9 @@
                         title="Enter an integer number in the range (Min+1, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ScaleRequired" data-error="Please fill out this field" 
+                    <input type="text" class="form-control ScaleRequired"  
                            name="questionReponseTypeBo.maxValue" id="scaleMaxValueId"
-                           value="${questionnairesStepsBo.questionReponseTypeBo.maxValue}"
+                           value="${questionnairesStepsBo.questionReponseTypeBo.maxValue}" data-error="Please fill out this field"
                            onkeypress="return isOnlyNumber(event)">
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -821,10 +821,10 @@
                     </div>
                     <input class="dis-none upload-image" data-imageId='0'
                            name="questionReponseTypeBo.minImageFile" id="scaleMinImageFileId"
-                           type="file" accept=".png, .jpg, .jpeg" onchange="readURL(this);">
+                           type="file" accept=".png, .jpg, .jpeg" onchange="readURL(this);" data-error="Failed to upload">
                     <input type="hidden" name="questionReponseTypeBo.minImage"
-                           id="scaleMinImagePathId"
-                           value="${questionnairesStepsBo.questionReponseTypeBo.minImage}">
+                           id="scaleMinImagePathId" 
+                           value="${questionnairesStepsBo.questionReponseTypeBo.minImage}" data-error="Failed to upload" >
                     <span id="removeUrl"
                           class="blue-link elaborateHide removeImageId <c:if test="${empty questionnairesStepsBo.questionReponseTypeBo.minImage}">hide</c:if>"
                           onclick="removeImage(this);">X
@@ -891,9 +891,9 @@
                         title="Enter an integer number in the range (Min, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field" 
+                    <input type="text" class="form-control ContinuousscaleRequired" 
                            name="questionReponseTypeBo.minValue" id="continuesScaleMinValueId"
-                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minValue)}"
+                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.minValue)}" data-error="Please fill out this field" 
                            onkeypress="return isNumberKey(event)">
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -908,9 +908,9 @@
                         title="Enter an integer number in the range (Min+1, 10000)."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field" 
+                    <input type="text" class="form-control ContinuousscaleRequired"  
                            name="questionReponseTypeBo.maxValue" id="continuesScaleMaxValueId"
-                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxValue)}"
+                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxValue)}" data-error="Please fill out this field"
                            onkeypress="return isNumberKey(event)">
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -930,10 +930,10 @@
                           title="Enter an integer between the minimum and maximum."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field" 
+                    <input type="text" class="form-control ContinuousscaleRequired" 
                            name="questionReponseTypeBo.defaultValue"
                            id="continuesScaleDefaultValueId"
-                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.defaultValue)}"
+                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.defaultValue)}" data-error="Please fill out this field" 
                            onkeypress="return isNumberKey(event)">
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -949,10 +949,10 @@
                           title="Enter the maximum number of decimal places to be shown for the values on the scale. Note that your options  (0,1,2,3,4) are limited by the selected maximum and minimum values."></span>
                   </div>
                   <div class="form-group">
-                    <input type="text" class="form-control ContinuousscaleRequired" data-error="Please fill out this field" 
+                    <input type="text" class="form-control ContinuousscaleRequired" 
                            name="questionReponseTypeBo.maxFractionDigits"
                            id="continuesScaleFractionDigitsId"
-                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxFractionDigits)}"
+                           value="${fn:escapeXml(questionnairesStepsBo.questionReponseTypeBo.maxFractionDigits)}" data-error="Please fill out this field" 
                            onkeypress="return isNumber(event)" maxlength="2"
                            onblur="validateFractionDigits(this);">
                     <div class="help-block with-errors red-txt"></div>
@@ -1696,7 +1696,7 @@
                         <input type="hidden" class="form-control"
                                id="valPickSubTypeValueId${subtype.index}"
                                name="questionResponseSubTypeList[${subtype.index}].responseSubTypeValueId"
-                               value="${questionResponseSubType.responseSubTypeValueId}">
+                               value="${questionResponseSubType.responseSubTypeValueId}" data-error="Please fill out this field" >
                         <div class="col-md-3 pl-none">
                           <div class="form-group"> 
                             <input type="text" class="form-control ValuepickerRequired"  data-error="Please fill out this field"
@@ -2521,7 +2521,7 @@
                 <div class="OtherOptionCls" style="display:none;">
                   <div class="clearfix"></div>
                   <div class="col-md-6 p-none mt-md">
-                    <div class="gray-xs-f mb-xs pr-md">Place holder text for the text field</div>
+                    <div class="gray-xs-f mb-xs pr-md">Placeholder text for the text field</div>
                     <div class="form-group">
                       <input type="text" class="form-control"
                              name="questionReponseTypeBo.otherPlaceholderText" id=""
@@ -3695,7 +3695,7 @@
           var otherText = $('.otherIncludeTextCls:checked').val();
           if (otherText == 'Yes') {
             $('.OtherOptionCls').show();
-            $('.OtherOptionCls').find('input:text,select').attr('required', true);
+            $('.OtherOptionCls').find('input:text,select').attr('required', false);
           } else {
             $('.OtherOptionCls').hide();
             $('.OtherOptionCls').find('input:text,select').removeAttr('required');
@@ -4317,7 +4317,7 @@
             $("#displayStepsCount").parent().find(".help-block").empty();
             $("#displayStepsCount").parent().find(".help-block").append(
           		$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "(Max-Min) value should be exactly divisisble by the step size."));
+                      "(Max-Min) value should be exactly divisisble by the step size"));
           }
         }
       });
@@ -4598,7 +4598,7 @@
           $(this).parent().find(".help-block").empty();
           $(this).parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30)."));
+              "Please select a number from the following set (1,2,3,4,5,6,10,12,15,20 & 30)"));
         }
       });
       $("#textScalePositionId").blur(function () {
@@ -4925,6 +4925,28 @@
       }
     }
 
+    var today, datepicker;
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    
+    $('#minDateId').datetimepicker({
+        minDate: today,
+        ignoreReadonly: true,
+        useCurrent: false,
+      });
+
+    $('#maxDateId').datetimepicker({
+        minDate: today,
+        ignoreReadonly: true,
+        useCurrent: false,
+      });
+
+    $('#defaultDate').datetimepicker({
+        minDate: today,
+        ignoreReadonly: true,
+        useCurrent: false,
+      });
+
+    
     function setResponseDate(type) {
 
       if (type == 'Date-Time') {
@@ -5796,7 +5818,7 @@
           "</div>" +
           "<div class='col-md-4 pl-none'>" +
           "   <div class='form-group'>" +
-          "      <input type='text' class='form-control valuePickerVal' name='questionResponseSubTypeList["
+          "      <input type='text' class='form-control valuePickerVal' data-error='Please fill out this field' name='questionResponseSubTypeList["
           + count + "].value' id='displayValPickValue" + count
           + "' required data-error='Please fill out this field' maxlength='50' onblur='validateForUniqueValue(this,&#34;Value picker&#34;,function(){})';>"
           +
@@ -6102,7 +6124,7 @@
           "         <div class='thumb-img'><img src='../images/icons/sm-thumb.jpg'/></div>" +
           "         <div class='textLabelselectImagePathId" + imageCount + "'>Upload</div>" +
           "      </div>" +
-          "      <input class='dis-none upload-image ImagechoiceRequired' data-error='Please fill out this field'data-imageId='"
+          "      <input class='dis-none upload-image ImagechoiceRequired' data-error='Please fill out this field' data-imageId='"
           + imageCount + "' name='questionResponseSubTypeList[" + imageCount
           + "].selectImageFile' id='selectImageFileId" + imageCount
           + "' type='file'  accept='.png, .jpg, .jpeg' onchange='readURL(this);' required data-error='Please fill out this field'>" +
@@ -6350,7 +6372,7 @@
             $(item).parent().find(".help-block").empty();
             $(item).parent().find(".help-block").append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Please enter a value in the range (0,x)."));
+                "Please enter a value in the range (0,x)"));
           }
         } else {
           $(item).val('');
@@ -6549,7 +6571,7 @@
             "         <div class='form-group sm__in add_var_hide'>" +
             "            <input type='text' id='constantValId" + (parseInt(v) + 1) + "' index='"
             + (parseInt(v) + 1)
-            + "' class='constant form-control add_var_hide' value='' onkeypress='return isNumberKey(event)'/>"
+            + "' class='constant form-control add_var_hide' value='' onkeypress='return isNumberKey(event)' data-error='Please fill out this field' />"
             +
             "			<div class='help-block with-errors red-txt'></div>" +
             "         </div>" +
@@ -6836,7 +6858,7 @@
           "   </div>" +
           "   <div class='form-group sm__in add_var_hide'>" +
           "      <input type='text' id='constantValId" + (parseInt(v)) + "' index='" + (parseInt(v))
-          + "' class='constant form-control add_var_hide' onkeypress='return isNumberKey(event)'/>"
+          + "' class='constant form-control add_var_hide' onkeypress='return isNumberKey(event)'/> data-error='Please fill out this field'"
           +
           "   </div>" +
           "   <div class='form-group sm__in'>" +
