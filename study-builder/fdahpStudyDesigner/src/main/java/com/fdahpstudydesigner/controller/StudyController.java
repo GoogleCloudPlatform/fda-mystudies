@@ -5347,15 +5347,15 @@ public class StudyController {
             ? ""
             : request.getParameter("studyId");
 
-    StudyBo studyBo = studyService.replicateStudy(studyId, sessionObject);
-    if (studyBo != null) {
-      auditRequest.setStudyId(studyBo.getCustomStudyId());
-      auditRequest.setStudyVersion(studyBo.getVersion().toString());
-      auditRequest.setAppId(studyBo.getAppId());
+    StudyBo study = studyService.replicateStudy(studyId, sessionObject, auditRequest);
+
+    if (study != null) {
       auditLogEventHelper.logEvent(STUDY_COPIED_INTO_NEW, auditRequest);
       request
           .getSession()
           .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Study replicated successfully");
+    } else {
+      auditLogEventHelper.logEvent(STUDY_COPY_FAILED, auditRequest);
     }
     logger.info("StudyController - replicateStudy() - Ends");
     return new ModelAndView("redirect:/adminStudies/studyList.do");
