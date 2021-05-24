@@ -22,6 +22,7 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudyIdBean;
 import com.fdahpstudydesigner.bean.StudyListBean;
@@ -1561,9 +1562,13 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public StudyBo replicateStudy(String studyId, SessionObject sessionObject) {
+  public StudyBo replicateStudy(
+      String studyId, SessionObject sessionObject, AuditLogEventRequest auditRequest) {
 
     StudyBo studyBo = studyDAO.getStudy(studyId);
+    auditRequest.setStudyId(studyBo.getCustomStudyId());
+    auditRequest.setStudyVersion(studyBo.getVersion().toString());
+    auditRequest.setAppId(studyBo.getAppId());
 
     EligibilityBo eligibilityBo = studyDAO.getStudyEligibiltyByStudyId(studyBo.getId());
 
