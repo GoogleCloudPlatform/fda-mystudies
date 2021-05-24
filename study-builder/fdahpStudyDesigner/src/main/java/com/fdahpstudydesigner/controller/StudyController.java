@@ -26,6 +26,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_STUDY_CRE
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACCESSED_IN_EDIT_MODE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_SECTIONS_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COPIED_INTO_NEW;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LIST_VIEWED;
@@ -5341,6 +5342,7 @@ public class StudyController {
   public ModelAndView replicateStudy(HttpServletRequest request) {
     logger.info("StudyController - replicateStudy() - Starts");
     HttpSession session = request.getSession();
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     SessionObject sessionObject =
         (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
@@ -5349,11 +5351,16 @@ public class StudyController {
             ? ""
             : request.getParameter("studyId");
 
-    studyService.replicateStudy(studyId, sessionObject);
-
-    request
-        .getSession()
-        .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Study replicated successfully");
+    StudyBo studyBo = studyService.replicateStudy(studyId, sessionObject);
+    if (studyBo != null) {
+      auditRequest.setStudyId(studyBo.getCustomStudyId());
+      auditRequest.setStudyVersion(studyBo.getVersion().toString());
+      auditRequest.setAppId(studyBo.getAppId());
+      auditLogEventHelper.logEvent(STUDY_COPIED_INTO_NEW, auditRequest);
+      request
+          .getSession()
+          .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Study replicated successfully");
+    }
     logger.info("StudyController - replicateStudy() - Ends");
     return new ModelAndView("redirect:/adminStudies/studyList.do");
   }

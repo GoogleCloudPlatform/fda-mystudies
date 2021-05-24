@@ -498,7 +498,13 @@ public enum StudyBuilderAuditEvent {
       STUDY_DATASTORE,
       null,
       "Questionnaire marked completed (activity ID - ${questionnaire_id}).",
-      "STUDY_QUESTIONNAIRE_MARKED_COMPLETED");
+      "STUDY_QUESTIONNAIRE_MARKED_COMPLETED"),
+
+  STUDY_COPIED_INTO_NEW(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_COPIED_INTO_NEW"),
+
+  STUDY_EXPORTED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_EXPORTED"),
+
+  STUDY_IMPORTED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_IMPORTED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;
