@@ -105,6 +105,7 @@ public class LoginController {
       Model model)
       throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    logger.entry("@@GetMapping(value = login) login()");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     model.addAttribute("loginRequest", new LoginRequest());
 
@@ -148,6 +149,7 @@ public class LoginController {
       HttpServletResponse response)
       throws JsonProcessingException, UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    logger.entry("@PostMapping(value = login) authenticate()");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     String tempRegId = cookieHelper.getCookieValue(request, TEMP_REG_ID_COOKIE);
@@ -157,6 +159,7 @@ public class LoginController {
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
     String appName = cookieHelper.getCookieValue(request, APP_NAME_COOKIE);
 
+    logger.debug("cookies values: " + appId + mobilePlatform + source + appName);
     boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source);
     if (!attrsAdded) {
       return ERROR_VIEW_NAME;
@@ -176,6 +179,8 @@ public class LoginController {
               "hasBindingErrors=%b and missing required params=%b, error code=%s",
               bindingResult.hasErrors(), errors.hasErrors(), ErrorCode.INVALID_LOGIN_CREDENTIALS));
       model.addAttribute(ERROR_DESCRIPTION, ErrorCode.INVALID_LOGIN_CREDENTIALS.getDescription());
+
+      logger.exit("validate login credentials failed");
       return LOGIN_VIEW_NAME;
     }
 
@@ -191,6 +196,8 @@ public class LoginController {
         == authenticationResponse.getAccountStatus()) {
       String redirectUrl = redirectConfig.getAccountActivationUrl(mobilePlatform, source);
       String url = String.format("%s?email=%s", redirectUrl, loginRequest.getEmail());
+      logger.debug(
+          "Authentication Response Account Status : " + authenticationResponse.getAccountStatus());
       return redirect(response, url);
     }
 
@@ -202,6 +209,8 @@ public class LoginController {
           ACCOUNT_STATUS_COOKIE,
           String.valueOf(authenticationResponse.getAccountStatus()));
     } else {
+
+      logger.exit("login page authentication failed");
       return LOGIN_VIEW_NAME;
     }
     return redirectToConsentPage(loginChallenge, authenticationResponse.getUserId(), response);
@@ -277,6 +286,7 @@ public class LoginController {
       logger.exit("tempRegId is invalid, return to login page");
       return LOGIN_VIEW_NAME;
     }
+    logger.exit("login page");
     return LOGIN_VIEW_NAME;
   }
 
