@@ -158,6 +158,7 @@ public class StudyController {
     String actionSucMsg = "";
     StudyPermissionBO studyPermissionBO = null;
     boolean markAsCompleted = false;
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -226,6 +227,8 @@ public class StudyController {
           map.addAttribute("liveStudyBo", liveStudyBo);
           map.addAttribute("studyPermissionBO", studyPermissionBO);
           map.addAttribute("markAsCompleted", markAsCompleted);
+          map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.expiration.in.hour"));
+          map.addAttribute("releaseVersion", propMap.get("display.release.version"));
           mav = new ModelAndView("actionList", map);
         } else {
           return new ModelAndView("redirect:/adminStudies/studyList.do");

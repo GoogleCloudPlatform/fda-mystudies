@@ -160,7 +160,7 @@
                         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
        This action exports the study into a cloud storage location and generates a signed URL that can then be copied into the Study Builder you want to import the study into.  
-       The URL is valid for X hours and can only be used to import the study into compatible Study Builder applications (running  platform release version <Y> or higher).
+       The URL is valid for ${signedUrlExpiryTime} hours and can only be used to import the study into compatible Study Builder applications (running  platform release version ${releaseVersion} or higher).
       </div>
       </div>
 
@@ -374,7 +374,8 @@
   });
 
   $('.copy_to_clipboard').on('mouseover', function () {
-	  $('#copy_to_clipboard').attr("title", "Last generated on "");
+	  debugger
+	  $('#copy_to_clipboard').attr("title", "Last generated on ${date}"");
 	});
   
 </script>
