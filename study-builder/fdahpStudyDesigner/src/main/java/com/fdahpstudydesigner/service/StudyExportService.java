@@ -4,6 +4,7 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAI
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
 import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
@@ -109,13 +110,16 @@ public class StudyExportService {
 
   private static final String UNDER_DIRECTORY = "export-studies";
 
-  public String exportStudy(String studyId, String userId) {
+  public String exportStudy(String studyId, String userId, AuditLogEventRequest auditRequest) {
 
     final Map<String, String> customIdsMap = new HashMap<>();
     Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
     List<String> insertSqlStatements = new ArrayList<>();
 
     StudyBo studyBo = studyDao.getStudy(studyId);
+    auditRequest.setStudyId(studyBo.getCustomStudyId());
+    auditRequest.setStudyVersion(studyBo.getVersion().toString());
+    auditRequest.setAppId(studyBo.getAppId());
     customIdsMap.put(STUDY_ID + studyBo.getId(), IdGenerator.id());
     customIdsMap.put(
         CUSTOM_STUDY_ID + studyBo.getCustomStudyId(),

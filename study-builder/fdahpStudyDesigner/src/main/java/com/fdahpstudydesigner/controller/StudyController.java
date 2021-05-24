@@ -29,6 +29,10 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COPIED_INTO_NEW;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_EXPORTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_EXPORT_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_IMPORTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_IMPORT_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LIST_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_METADATA_SEND_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_METADATA_SEND_OPERATION_FAILED;
@@ -5286,6 +5290,7 @@ public class StudyController {
       HttpServletRequest request, HttpServletResponse response, @PathVariable String studyId)
       throws IOException {
     logger.info("StudyController - exportStudy() - Starts");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     String message = FdahpStudyDesignerConstants.FAILURE;
     String underDirectory = "export-studies";
 
@@ -5295,11 +5300,14 @@ public class StudyController {
         (SessionObject)
             request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
-    message = studyExportService.exportStudy(studyId, sesObj.getUserId());
+    message = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
 
     if (message.contains(underDirectory)) {
       jsonobject.put("signedUrlOfExportStudy", FdahpStudyDesignerUtil.getSignedUrl(message, 12));
+      auditLogEventHelper.logEvent(STUDY_EXPORTED, auditRequest);
       message = FdahpStudyDesignerConstants.SUCCESS;
+    } else {
+      auditLogEventHelper.logEvent(STUDY_EXPORT_FAILED, auditRequest);
     }
 
     jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
@@ -5314,6 +5322,7 @@ public class StudyController {
   public void importStudy(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
     logger.info("StudyController - importStudy() - Starts");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     HttpSession session = request.getSession();
     SessionObject sessionObject =
         (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -5326,9 +5335,12 @@ public class StudyController {
     String msg = studyExportService.importStudy(signedUrl, sessionObject);
 
     if (msg.contains(FdahpStudyDesignerConstants.SUCCESS)) {
+      auditLogEventHelper.logEvent(STUDY_IMPORTED, auditRequest);
       request
           .getSession()
           .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Study imported successfully");
+    } else {
+      auditLogEventHelper.logEvent(STUDY_IMPORT_FAILED, auditRequest);
     }
 
     logger.info("StudyController - replicateStudy() - Ends");
