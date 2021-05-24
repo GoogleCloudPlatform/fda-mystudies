@@ -4,6 +4,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+<style>
+
+.blue-btn {
+    background: #007cba;
+    border-color: #007cba !important;
+    padding: 4px 20px;
+    width: 230px;
+    height: 38px;
+}
+</style>
+
 <div class="col-sm-10 col-rc white-bg p-none">
 
   <!--  Start top tab section-->
@@ -137,14 +149,14 @@
       </div>
       
       <div class="form-group mr-sm" style="white-space: normal;">
-        <button type="button" class="btn btn-default gray-btn-action "
+        <button type="button" class="btn btn-default blue-btn "
                 id="exportId" onclick="exportStudy();"
 
                 <c:choose>
                 <c:when test="${not empty permission}"> disabled </c:when>
                 <c:when test="${not studyPermissionBO.viewPermission}"> disabled </c:when>
                 </c:choose>>Export
-        </button> <span class="sprites_icon copy copy_to_clipboard" id="copy_to_clipboard" 
+        </button> <span class="sprites_icon copy copy_to_clipboard " id="copy_to_clipboard" 
                         data-toggle="tooltip" data-placement="top" title="Copy to clickBoard"></span>
                         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
@@ -333,7 +345,7 @@
               if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(errMsg);
               } else {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
+                $("#alertMsg").removeClass('s-box').addClass('e-box').text("Export failed. Please try again later.");
               }
             }
             setTimeout(hideDisplayMessage, 5000);
