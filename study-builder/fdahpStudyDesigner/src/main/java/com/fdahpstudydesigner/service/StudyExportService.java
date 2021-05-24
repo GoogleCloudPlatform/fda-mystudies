@@ -113,7 +113,6 @@ public class StudyExportService {
   public String exportStudy(String studyId, String userId, AuditLogEventRequest auditRequest) {
 
     final Map<String, String> customIdsMap = new HashMap<>();
-    Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
     List<String> insertSqlStatements = new ArrayList<>();
 
     StudyBo studyBo = studyDao.getStudy(studyId);
@@ -121,9 +120,7 @@ public class StudyExportService {
     auditRequest.setStudyVersion(studyBo.getVersion().toString());
     auditRequest.setAppId(studyBo.getAppId());
     customIdsMap.put(STUDY_ID + studyBo.getId(), IdGenerator.id());
-    customIdsMap.put(
-        CUSTOM_STUDY_ID + studyBo.getCustomStudyId(),
-        studyBo.getCustomStudyId() + "_" + map.get(RELEASE_VERSION));
+    customIdsMap.put(CUSTOM_STUDY_ID + studyBo.getCustomStudyId(), null);
 
     StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(), userId);
     StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
@@ -170,15 +167,16 @@ public class StudyExportService {
 
       addResourceInsertSql(resourceBOs, insertSqlStatements, customIdsMap);
 
-    } catch (SQLException e) {
+    } catch (Exception e) {
       logger.error(String.format("export study failed due to %s", e.getMessage()), e);
+      return FdahpStudyDesignerConstants.EXPORT_FAILURE_MSG;
     }
     return saveFileToCloudStorage(studyBo, insertSqlStatements, customIdsMap);
   }
 
   private void prepareInsertSqlQueriesForStudyActiveTasks(
       final Map<String, String> customIdsMap, List<String> insertSqlStatements, StudyBo studyBo)
-      throws SQLException {
+      throws Exception {
 
     List<ActiveTaskBo> activeTaskBos =
         studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
@@ -214,7 +212,7 @@ public class StudyExportService {
 
   private void prepareInsertSqlQueriesForQuestionnaires(
       final Map<String, String> customIdsMap, List<String> insertSqlStatements, StudyBo studyBo)
-      throws SQLException {
+      throws Exception {
 
     List<QuestionnaireBo> questionnairesList =
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
@@ -305,7 +303,7 @@ public class StudyExportService {
 
   private void prepareInsertSqlQueriesForComprehensionTest(
       final Map<String, String> customIdsMap, List<String> insertSqlStatements, StudyBo studyBo)
-      throws SQLException {
+      throws Exception {
 
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
         studyDao.getComprehensionTestQuestionList(studyBo.getId());
@@ -331,7 +329,8 @@ public class StudyExportService {
   }
 
   private void addFormsListInsertSql(
-      List<FormBo> formsList, List<String> insertSqlStatements, Map<String, String> customIdsMap) {
+      List<FormBo> formsList, List<String> insertSqlStatements, Map<String, String> customIdsMap)
+      throws Exception {
     List<String> formBoInsertQueryList = new ArrayList<>();
     if (CollectionUtils.isEmpty(formsList)) {
       return;
@@ -356,7 +355,8 @@ public class StudyExportService {
   private void addComprehensionTestResponseBoListInsertSql(
       List<ComprehensionTestResponseBo> comprehensionTestResponseBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap) {
+      Map<String, String> customIdsMap)
+      throws Exception {
     if (CollectionUtils.isEmpty(comprehensionTestResponseBoList)) {
       return;
     }
@@ -394,7 +394,7 @@ public class StudyExportService {
 
       byte[] bytes = content.toString().getBytes();
       String fileName =
-          customIdsMap.get(STUDY_ID + studyBo.getId())
+          customIdsMap.get(STUDY_ID + studyBo.getCustomStudyId())
               + "_"
               + map.get("release.version")
               + "_"
@@ -430,7 +430,7 @@ public class StudyExportService {
       List<ActiveTaskFrequencyBo> activeTaskFrequencyBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
     if (CollectionUtils.isEmpty(activeTaskFrequencyBoList)) {
       return;
     }
@@ -461,7 +461,7 @@ public class StudyExportService {
       List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(activeTaskCustomScheduleBoList)) {
       return;
@@ -494,7 +494,7 @@ public class StudyExportService {
       List<QuestionReponseTypeBo> questionResponseTypeBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(questionResponseTypeBoList)) {
       return;
@@ -559,7 +559,7 @@ public class StudyExportService {
       List<QuestionResponseSubTypeBo> questionResponseSubTypeBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(questionResponseSubTypeBoList)) {
       return;
@@ -592,7 +592,7 @@ public class StudyExportService {
       List<InstructionsBo> instructionList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
     List<String> instructionBoInsertQueryList = new ArrayList<>();
     if (CollectionUtils.isEmpty(instructionList)) {
       return;
@@ -621,7 +621,7 @@ public class StudyExportService {
       List<FormMappingBo> formsList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     List<String> formMappingBoInsertQueryList = new ArrayList<>();
     if (CollectionUtils.isEmpty(formsList)) {
@@ -647,7 +647,7 @@ public class StudyExportService {
       List<QuestionsBo> questionsList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     List<String> questionsBoInsertQueryList = new ArrayList<>();
     if (CollectionUtils.isEmpty(questionsList)) {
@@ -694,7 +694,7 @@ public class StudyExportService {
       List<QuestionnaireCustomScheduleBo> questionnairesCustomFrequenciesBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     List<String> questionnairesCustomScheduleBoInsertQueryList = new ArrayList<>();
     if (CollectionUtils.isEmpty(questionnairesCustomFrequenciesBoList)) {
@@ -728,7 +728,7 @@ public class StudyExportService {
       List<QuestionnairesStepsBo> questionnairesStepsList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
     if (CollectionUtils.isEmpty(questionnairesStepsList)) {
       return;
     }
@@ -762,7 +762,7 @@ public class StudyExportService {
 
   private void addStudiesInsertSql(
       StudyBo studyBo, List<String> insertSqlStatements, Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (studyBo == null) {
       return;
@@ -815,7 +815,7 @@ public class StudyExportService {
       StudySequenceBo studySequenceBo,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (studySequenceBo == null) {
       return;
@@ -849,7 +849,7 @@ public class StudyExportService {
       AnchorDateTypeBo anchorDate,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (anchorDate == null) {
       return;
@@ -872,7 +872,7 @@ public class StudyExportService {
       List<StudyPageBo> studypageList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(studypageList)) {
       return;
@@ -902,7 +902,7 @@ public class StudyExportService {
       EligibilityBo eligibilityBo,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (eligibilityBo == null) {
       return;
@@ -928,7 +928,7 @@ public class StudyExportService {
       List<NotificationBO> notificationBOs,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(notificationBOs)) {
       return;
@@ -972,7 +972,7 @@ public class StudyExportService {
       List<ActiveTaskBo> activeTaskBos,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(activeTaskBos)) {
       return;
@@ -1018,7 +1018,7 @@ public class StudyExportService {
       List<ActiveTaskAtrributeValuesBo> activeTaskAttributeBos,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(activeTaskAttributeBos)) {
       return;
@@ -1055,7 +1055,7 @@ public class StudyExportService {
       List<ResourceBO> resourceBOs,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(resourceBOs)) {
       return;
@@ -1100,7 +1100,7 @@ public class StudyExportService {
       StudyPermissionBO studyPermissionBo,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (studyPermissionBo == null) {
       return;
@@ -1123,7 +1123,7 @@ public class StudyExportService {
       List<EligibilityTestBo> eligibilityTestBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
     if (CollectionUtils.isEmpty(eligibilityTestBoList)) {
       return;
     }
@@ -1153,7 +1153,7 @@ public class StudyExportService {
       List<ConsentBo> consentBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(consentBoList)) {
       return;
@@ -1200,7 +1200,7 @@ public class StudyExportService {
       List<ConsentInfoBo> consentInfoBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(consentInfoBoList)) {
       return;
@@ -1242,7 +1242,7 @@ public class StudyExportService {
       List<ComprehensionTestQuestionBo> comprehensionTestQuestionList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(comprehensionTestQuestionList)) {
       return;
@@ -1275,7 +1275,7 @@ public class StudyExportService {
       List<QuestionnaireBo> questionnairesList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     if (CollectionUtils.isEmpty(questionnairesList)) {
       return;
@@ -1319,7 +1319,7 @@ public class StudyExportService {
       List<QuestionnairesFrequenciesBo> questionnairesFrequenciesBoList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
-      throws SQLException {
+      throws Exception {
 
     List<String> questionnairesFrequenciesBoInsertQueryList = new ArrayList<>();
     if (CollectionUtils.isEmpty(questionnairesFrequenciesBoList)) {
@@ -1348,7 +1348,7 @@ public class StudyExportService {
     insertSqlStatements.addAll(questionnairesFrequenciesBoInsertQueryList);
   }
 
-  private String prepareInsertQuery(String sqlQuery, Object... values) {
+  private String prepareInsertQuery(String sqlQuery, Object... values) throws Exception {
     Object[] columns =
         sqlQuery
             .substring(sqlQuery.indexOf('(') + 1, sqlQuery.indexOf(")"))
@@ -1375,7 +1375,7 @@ public class StudyExportService {
       return sqlQuery;
     } catch (Exception e) {
       logger.error("export study failed due to %s", e);
-      return e.getMessage();
+      throw new SQLException(e.getMessage());
     }
   }
 

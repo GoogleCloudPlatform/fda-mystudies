@@ -5301,21 +5301,19 @@ public class StudyController {
             request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
     String data = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
-    String message = null;
-    int passwordResetLinkExpirationInDay =
-        Integer.parseInt(propMap.get("signed.url.expiration.in.hour"));
 
     if (data.contains(underDirectory)) {
       jsonobject.put(
           "signedUrlOfExportStudy",
-          FdahpStudyDesignerUtil.getSignedUrl(data, passwordResetLinkExpirationInDay));
+          FdahpStudyDesignerUtil.getSignedUrl(
+              data, Integer.parseInt(propMap.get("signed.url.expiration.in.hour"))));
+      jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, FdahpStudyDesignerConstants.SUCCESS);
+      jsonobject.put("currentTime", FdahpStudyDesignerUtil.getCurrentDateTime());
       auditLogEventHelper.logEvent(STUDY_EXPORTED, auditRequest);
-      message = FdahpStudyDesignerConstants.SUCCESS;
     } else {
       auditLogEventHelper.logEvent(STUDY_EXPORT_FAILED, auditRequest);
     }
 
-    jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
     response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
     out = response.getWriter();
     out.print(jsonobject);

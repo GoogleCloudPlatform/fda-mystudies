@@ -156,10 +156,11 @@
                 <c:when test="${not studyPermissionBO.viewPermission}"> disabled </c:when>
                 </c:choose>>Export
         </button> <span class="sprites_icon copy copy_to_clipboard " id="copy_to_clipboard" 
-                        data-toggle="tooltip" data-placement="top" title="Copy to clickBoard"></span>
+                        data-toggle="tooltip" data-placement="top" ></span>
                         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-       This action exports study to google cloud storage.
+       This action exports the study into a cloud storage location and generates a signed URL that can then be copied into the Study Builder you want to import the study into.  
+       The URL is valid for X hours and can only be used to import the study into compatible Study Builder applications (running  platform release version <Y> or higher).
       </div>
       </div>
 
@@ -322,6 +323,7 @@
   }
   
   var signedUrl = "";
+  var date = "";
   function exportStudy(){
 	   var studyId = "${studyBo.id}";
 	  $
@@ -336,6 +338,7 @@
         success: function (data) {
             var message = data.message;
             signedUrl = data.signedUrlOfExportStudy;
+            date=data.date;
             if (message == "SUCCESS") {
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
               $('#alertMsg').show();
@@ -369,5 +372,9 @@
     document.execCommand("Copy");
     textArea.remove();
   });
+
+  $('.copy_to_clipboard').on('mouseover', function () {
+	  $('#copy_to_clipboard').attr("title", "Last generated on "");
+	});
   
 </script>
