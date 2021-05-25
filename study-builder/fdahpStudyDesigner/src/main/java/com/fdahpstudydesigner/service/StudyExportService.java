@@ -1464,8 +1464,8 @@ public class StudyExportService {
       String[] tokens = path.split("_");
       long checksum = Long.parseLong(tokens[tokens.length - 1]);
       String version = tokens[tokens.length - 2];
-      // validating release version
 
+      // validating release version
       ComparableVersion signedUrlVersion = new ComparableVersion(version);
       ComparableVersion releaseVersion = new ComparableVersion(map.get("release.version"));
 

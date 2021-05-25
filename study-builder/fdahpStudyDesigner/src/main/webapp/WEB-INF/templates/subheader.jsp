@@ -110,7 +110,6 @@
     $('#alertMsg').slideUp('5000');
   }
   function importStudy() {
-	  debugger
 	   var bb=  bootbox.prompt({ 
 		  title: "Import a study",
 		  inputType: "text",
@@ -127,12 +126,13 @@
 		          },
 		        },
 		    callback: function (result) {
-		    	debugger
 		    	if(result !=null && (result == "" || !(/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(result)))){
 		    		showErrMsg("Please enter a valid URL")
 		           }else if(result !=null){
-	            	  $
-	           	   .ajax({
+		        	   if(!validateExpireDate(result)){
+		        		   showErrMsg("The URL has expired. Please use a newly generated one.")
+		        	   }else{
+	            	    $.ajax({
 	                      url: "/studybuilder/studies/import.do?_S=${param._S}",
 	                      type: "POST",
 	                      datatype: "json",
@@ -141,25 +141,32 @@
 	                        "${_csrf.parameterName}": "${_csrf.token}",
 	                      },
 	                      success: function emailValid(data, status) {
-	                    	  debugger
 	                    	  message = data.message;
 	                    	  if (message == "SUCCESS") {
-	                              $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
-	                              $('#alertMsg').show();
+	                    		  showSucMsg(message);
 	                            } else {
-	                                bootbox.alert(message);
+	                              bootbox.alert(message);
 	                            }
-	                            setTimeout(hideDisplayMessage, 5000);
 	                          },
 	                   error: function status(data, status) {
 	                     $("body").removeClass("loading");
 	                     showErrMsg("Import failed.")
 	                   }
 	                 });
-	           } 
+	              } 
+		       }
 		    }
 		        
 	  });
+  }
+  
+  function validateExpireDate(result){
+	 var urlArray= result.split("&");
+	 var expireTimeStamp= urlArray[1].split("=");
+	  if(expireTimeStamp[1] < $.now()){
+		  return false;
+	  }
+	  return true;
   }
 
 </script>
