@@ -174,7 +174,7 @@ public class StudyExportService {
       logger.error(String.format("export study failed due to %s", e.getMessage()), e);
       return FdahpStudyDesignerConstants.EXPORT_FAILURE_MSG;
     }
-    return saveFileToCloudStorage(studyBo, insertSqlStatements, customIdsMap);
+    return saveFileToCloudStorage(studyBo, insertSqlStatements);
   }
 
   private void prepareInsertSqlQueriesForStudyActiveTasks(
@@ -382,8 +382,7 @@ public class StudyExportService {
     insertSqlStatements.addAll(comprehensionTestResponseBoInserQueryList);
   }
 
-  public String saveFileToCloudStorage(
-      StudyBo studyBo, List<String> insertSqlStatements, Map<String, String> customIdsMap) {
+  public String saveFileToCloudStorage(StudyBo studyBo, List<String> insertSqlStatements) {
     Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
     StringBuilder content = new StringBuilder();
 
@@ -397,7 +396,7 @@ public class StudyExportService {
 
       byte[] bytes = content.toString().getBytes();
       String fileName =
-          customIdsMap.get(STUDY_ID + studyBo.getCustomStudyId())
+          studyBo.getId()
               + "_"
               + map.get("release.version")
               + "_"
@@ -411,11 +410,17 @@ public class StudyExportService {
           BlobInfo.newBuilder(map.get("cloud.bucket.name"), absoluteFileName).build();
       storage.create(blobInfo, bytes);
 
+      String signedUrl =
+          FdahpStudyDesignerUtil.getSignedUrl(
+              absoluteFileName, Integer.parseInt(map.get("signed.url.expiration.in.hour")));
+
       String message =
           studyDao.saveExportFilePath(
-              studyBo.getId(), absoluteFileName, studyBo.getCustomStudyId());
-      if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-        return absoluteFileName;
+              studyBo.getId(), absoluteFileName, studyBo.getCustomStudyId(), signedUrl);
+
+      if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)
+          && StringUtils.isNotEmpty(signedUrl)) {
+        return signedUrl;
       }
 
     } catch (Exception e) {

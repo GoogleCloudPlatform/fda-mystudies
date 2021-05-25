@@ -143,7 +143,8 @@
 	                      success: function emailValid(data, status) {
 	                    	  message = data.message;
 	                    	  if (message == "SUCCESS") {
-	                    		  showSucMsg(message);
+	                    		  showSucMsg("Study imported successfully");
+	                    		  location.reload();
 	                            } else {
 	                              bootbox.alert(message);
 	                            }
@@ -163,7 +164,7 @@
   function validateExpireDate(result){
 	 var urlArray= result.split("&");
 	 var expireTimeStamp= urlArray[1].split("=");
-	  if(expireTimeStamp[1] < $.now()){
+	  if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
 		  return false;
 	  }
 	  return true;

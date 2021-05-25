@@ -228,7 +228,7 @@ public class StudyController {
           map.addAttribute("studyPermissionBO", studyPermissionBO);
           map.addAttribute("markAsCompleted", markAsCompleted);
           map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.expiration.in.hour"));
-          map.addAttribute("releaseVersion", propMap.get("display.release.version"));
+          map.addAttribute("releaseVersion", propMap.get("release.version"));
           mav = new ModelAndView("actionList", map);
         } else {
           return new ModelAndView("redirect:/adminStudies/studyList.do");
@@ -5310,21 +5310,16 @@ public class StudyController {
       throws IOException {
     logger.info("StudyController - exportStudy() - Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    String underDirectory = "export-studies";
-    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     SessionObject sesObj =
         (SessionObject)
             request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
-    String data = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
+    String signedUrl = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
 
-    if (data.contains(underDirectory)) {
-      jsonobject.put(
-          "signedUrlOfExportStudy",
-          FdahpStudyDesignerUtil.getSignedUrl(
-              data, Integer.parseInt(propMap.get("signed.url.expiration.in.hour"))));
+    if (StringUtils.isNotEmpty(signedUrl)) {
+      jsonobject.put("signedUrlOfExportStudy", signedUrl);
       jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, FdahpStudyDesignerConstants.SUCCESS);
       jsonobject.put("currentTime", FdahpStudyDesignerUtil.getCurrentDateTime());
       auditLogEventHelper.logEvent(STUDY_EXPORTED, auditRequest);

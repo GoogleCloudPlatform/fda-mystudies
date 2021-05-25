@@ -192,6 +192,17 @@ public class StudyBo implements Serializable {
   @Column(name = "destination_custom_study_id")
   private String destinationCustomStudyId;
 
+  @Column(name = "export_signed_url")
+  private String exportSignedUrl;
+
+  public String getExportSignedUrl() {
+    return exportSignedUrl;
+  }
+
+  public void setExportSignedUrl(String exportSignedUrl) {
+    this.exportSignedUrl = exportSignedUrl;
+  }
+
   public String getFilePath() {
     return filePath;
   }

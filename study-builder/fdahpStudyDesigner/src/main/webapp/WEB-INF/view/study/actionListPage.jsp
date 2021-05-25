@@ -156,7 +156,7 @@
                 <c:when test="${not studyPermissionBO.viewPermission}"> disabled </c:when>
                 </c:choose>>Export
         </button> <span class="sprites_icon copy copy_to_clipboard " id="copy_to_clipboard" 
-                        data-toggle="tooltip" data-placement="top" ></span>
+                        data-toggle="tooltip" data-placement="top" data-original-title=""></span>
                         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
        This action exports the study into a cloud storage location and generates a signed URL that can then be copied into the Study Builder you want to import the study into.  
@@ -182,11 +182,18 @@
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {
+	  debugger
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".tenth").addClass('active');
     $("#createStudyId").show();
     $('.tenth').removeClass('cursor-none');
+
+    if(!validateExpireDate("${studyBo.exportSignedUrl}")){
+    	$('.copy_to_clipboard').hide();
+        }else{
+        	$('.copy_to_clipboard').show();
+            }
   });
 
   function validateStudyStatus(obj) {
@@ -324,8 +331,7 @@
     }
   }
   
-  var signedUrl = "";
-  var date = "";
+  var currentTime = "";
   function exportStudy(){
 	   var studyId = "${studyBo.id}";
 	  $
@@ -339,18 +345,14 @@
         
         success: function (data) {
             var message = data.message;
-            signedUrl = data.signedUrlOfExportStudy;
-            date=data.date;
             if (message == "SUCCESS") {
+            	currentTime = data.currentTime;
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
               $('#alertMsg').show();
+              $('.copy_to_clipboard').show();
+              location.reload();
             } else {
-              var errMsg = data.errMsg;
-              if (errMsg != '' && errMsg != null && typeof errMsg != 'undefined') {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').text(errMsg);
-              } else {
-                $("#alertMsg").removeClass('s-box').addClass('e-box').text("Export failed. Please try again later.");
-              }
+            	showErrMsg1("Export failed. Please try again later.");
             }
             setTimeout(hideDisplayMessage, 5000);
           },
@@ -365,6 +367,7 @@
   
   
   $('.copy_to_clipboard').on('click', function () {
+	  var signedUrl = "${studyBo.exportSignedUrl}";
 	$('#copy_to_clipboard').val(signedUrl);
 	var copyText = document.getElementById("copy_to_clipboard");
     var textArea = document.createElement("textarea");
@@ -375,9 +378,22 @@
     textArea.remove();
   });
 
-  $('.copy_to_clipboard').on('mouseover', function () {
-	  debugger
-	 // $('#copy_to_clipboard').attr("title", "Last generated on ${date}"");
-	});
+  var expireTime = "";
+  function validateExpireDate(result){
+		 var urlArray= result.split("&");
+		 var expireTimeStamp= urlArray[1].split("=");
+		 expireTime = expireTimeStamp[1];
+		  if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
+			  return false;
+		  }
+		  return true;
+	  }
   
+ $('.copy_to_clipboard').on('mouseover', function () {
+	 var c =  ${signedUrlExpiryTime};
+	  var a = expireTime-(c*3600);
+	  var b = new Date(a*1000);
+	 $('#copy_to_clipboard').attr("title", "Last generated on " + b );
+	}); 
+	   
 </script>

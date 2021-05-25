@@ -7426,7 +7426,8 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public String saveExportFilePath(String studyId, String filePath, String destinationCustomId) {
+  public String saveExportFilePath(
+      String studyId, String filePath, String destinationCustomId, String signedUrl) {
     logger.entry("begin saveExportFilePath()");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -7447,6 +7448,7 @@ public class StudyDAOImpl implements StudyDAO {
       if (studyBo != null) {
         studyBo.setFilePath(filePath);
         studyBo.setDestinationCustomStudyId(destinationCustomId);
+        studyBo.setExportSignedUrl(signedUrl);
         session.update(studyBo);
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
