@@ -410,7 +410,9 @@ public class StudyExportService {
           BlobInfo.newBuilder(map.get("cloud.bucket.name"), absoluteFileName).build();
       storage.create(blobInfo, bytes);
 
-      String message = studyDao.saveExportFilePath(studyBo.getId(), absoluteFileName);
+      String message =
+          studyDao.saveExportFilePath(
+              studyBo.getId(), absoluteFileName, studyBo.getCustomStudyId());
       if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
         return absoluteFileName;
       }
@@ -808,7 +810,8 @@ public class StudyExportService {
             studyBo.getType(),
             studyBo.getVersion(),
             studyBo.isEnrollmentdateAsAnchordate(),
-            studyBo.getFilePath());
+            studyBo.getFilePath(),
+            studyBo.getCustomStudyId());
 
     insertSqlStatements.add(studiesInsertQuery);
   }

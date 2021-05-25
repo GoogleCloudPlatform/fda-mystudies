@@ -189,12 +189,23 @@ public class StudyBo implements Serializable {
   @Column(name = "file_path")
   private String filePath;
 
+  @Column(name = "destination_custom_study_id")
+  private String destinationCustomStudyId;
+
   public String getFilePath() {
     return filePath;
   }
 
   public void setFilePath(String filePath) {
     this.filePath = filePath;
+  }
+
+  public String getDestinationCustomStudyId() {
+    return destinationCustomStudyId;
+  }
+
+  public void setDestinationCustomStudyId(String destinationCustomStudyId) {
+    this.destinationCustomStudyId = destinationCustomStudyId;
   }
 
   @Column(name = "isCloudStorageMoved", columnDefinition = "int default 0")
