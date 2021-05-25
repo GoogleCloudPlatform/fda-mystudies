@@ -4585,6 +4585,19 @@ public class StudyController {
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + studyBo.getThumbnailImage(),
                   12));
+        } else if (StringUtils.isEmpty(studyBo.getCustomStudyId())
+            && StringUtils.isNotEmpty(studyBo.getDestinationCustomStudyId())) {
+          map.addAttribute(
+              "signedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDIES
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getDestinationCustomStudyId()
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + FdahpStudyDesignerConstants.STUDTYLOGO
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getThumbnailImage(),
+                  12));
         }
         map.addAttribute(
             "defaultImageSignedUrl",

@@ -7136,12 +7136,13 @@ public class StudyDAOImpl implements StudyDAO {
 
       String oldStudyId = studyBo.getId();
       studyBo.setId(null);
-      studyBo.setCustomStudyId(null);
       studyBo.setStatus(FdahpStudyDesignerConstants.STUDY_PRE_LAUNCH);
       studyBo.setStudylunchDate(null);
       String appId = studyBo.getAppId().toUpperCase();
       studyBo.setAppId(appId);
       studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+      studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId());
+      studyBo.setCustomStudyId(null);
       studyId = (String) session.save(studyBo);
 
       studyPermissionBO = new StudyPermissionBO();
