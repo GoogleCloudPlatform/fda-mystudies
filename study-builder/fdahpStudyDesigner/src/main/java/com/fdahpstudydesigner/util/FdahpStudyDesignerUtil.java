@@ -1059,27 +1059,56 @@ public class FdahpStudyDesignerUtil {
     return null;
   }
 
-  public static void copyImage(String fileName, String underDirectory, String customStudyId) {
-    String newFilePath =
-        FdahpStudyDesignerConstants.STUDIES
-            + PATH_SEPARATOR
-            + customStudyId
-            + PATH_SEPARATOR
-            + underDirectory
-            + PATH_SEPARATOR
-            + fileName;
+  public static void copyOrMoveImage(
+      String fileName,
+      String underDirectory,
+      String customStudyId,
+      boolean delete,
+      boolean isOldFilePath,
+      String newCustomStudyId) {
+    String newFilePath;
 
-    String oldFilePath = underDirectory + PATH_SEPARATOR + fileName;
+    String oldFilePath;
+    if (isOldFilePath) {
+      oldFilePath = underDirectory + PATH_SEPARATOR + fileName;
+      newFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + customStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+    } else {
+      oldFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + customStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+      newFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + newCustomStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+    }
+
     try {
       Storage storage = StorageOptions.getDefaultInstance().getService();
       Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), oldFilePath));
 
       if (blob != null) {
         blob.copyTo(configMap.get("cloud.bucket.name"), newFilePath);
-
         // Delete the original blob now that we've copied to where we want it, finishing the "move"
         // operation
-        blob.delete();
+        if (delete) {
+          blob.delete();
+        }
       }
 
     } catch (Exception e) {
