@@ -459,6 +459,13 @@
               }
             });
       });
+      var total_studies = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+      var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+      if (selected_study == total_studies) {
+   	    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+       	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+        }
     });
     if (countCall == 0) {
       $('.selStd').each(function () {
@@ -583,7 +590,7 @@
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
         if ($(this).text() == "- All items are already selected -") {
-          $(this).hide();
+          $(this).remove();
         }
       });
       $('#multiple :selected').each(function (i, sel) {
@@ -611,10 +618,10 @@
       });
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-      var count = $(
-          ".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+      var count = $(".study-selected-item").length;
       if (count == tot_items) {
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").empty().append(
+    	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
       }
     });
@@ -623,7 +630,7 @@
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
         if ($(this).text() == "- All items are already selected -") {
-          $(this).hide();
+        	$(this).remove();
         }
       });
       $(".study-selected-item").remove();
@@ -744,7 +751,7 @@
         });
     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
       if ($(this).text() == "- All items are already selected -") {
-        $(this).hide();
+        $(this).remove();
       }
     });
     $('#std' + id).remove();
@@ -836,6 +843,13 @@
       	 $('.edit-user-list-widget').show();
       	 $('.perm-assign').show();
       	 $('.pull-right').show();
+      	 var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+         var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+         if (selected_study == tot_study) {
+      	    $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+          	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+           }
           } else{
         	  $('.edit-user-list-widget').hide();
            	 $('.perm-assign').hide();
