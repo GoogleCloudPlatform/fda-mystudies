@@ -62,6 +62,7 @@ import java.util.zip.Checksum;
 import javax.sql.DataSource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1462,11 +1463,15 @@ public class StudyExportService {
       String path = signedUrl.substring(0, signedUrl.indexOf(".sql"));
       String[] tokens = path.split("_");
       long checksum = Long.parseLong(tokens[tokens.length - 1]);
-      float version = Float.parseFloat(tokens[tokens.length - 2]);
+      String version = tokens[tokens.length - 2];
       // validating release version
-      if (Float.parseFloat(map.get("release.version")) < version) {
+
+      ComparableVersion compareVersion = new ComparableVersion(version);
+      ComparableVersion compareVersion1 = new ComparableVersion(map.get("release.version"));
+
+      if (compareVersion.compareTo(compareVersion1) > 0) {
         throw new Exception(
-            IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + " " + map.get("display.release.version"));
+            IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + " " + map.get("release.version"));
       }
 
       // validating tableName and insert statements
