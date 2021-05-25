@@ -39,6 +39,7 @@ import com.hphc.mystudies.bean.DestinationBean;
 import com.hphc.mystudies.bean.FetalKickCounterFormatBean;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityStepsBean;
+import com.hphc.mystudies.bean.QuestionnaireStepsBean;
 import com.hphc.mystudies.bean.SpatialSpanMemoryFormatBean;
 import com.hphc.mystudies.bean.TowerOfHanoiFormatBean;
 import com.hphc.mystudies.bean.appendix.QuestionnaireActivityStructureBean;
@@ -1954,8 +1955,8 @@ public class ActivityMetaDataDao {
                           + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
                       .toString());
           QuestionnaireActivityStepsBean formBean = new QuestionnaireActivityStepsBean();
-          List<QuestionnaireActivityStepsBean> formSteps = new ArrayList<>();
-          HashMap<Integer, QuestionnaireActivityStepsBean> formStepsMap = new HashMap<>();
+          List<QuestionnaireStepsBean> formSteps = new ArrayList<>();
+          HashMap<Integer, QuestionnaireStepsBean> formStepsMap = new HashMap<>();
 
           formBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM.toLowerCase());
           formBean.setResultType(StudyMetaDataConstants.RESULT_TYPE_GROUPED);
@@ -2003,8 +2004,7 @@ public class ActivityMetaDataDao {
                   .list();
           if ((formQuestionsList != null) && !formQuestionsList.isEmpty()) {
             for (QuestionsDto formQuestionDto : formQuestionsList) {
-              QuestionnaireActivityStepsBean formQuestionBean =
-                  new QuestionnaireActivityStepsBean();
+              QuestionnaireStepsBean formQuestionBean = new QuestionnaireStepsBean();
               formQuestionBean.setType(
                   StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION.toLowerCase());
               if (formQuestionDto.getResponseType() != null) {
