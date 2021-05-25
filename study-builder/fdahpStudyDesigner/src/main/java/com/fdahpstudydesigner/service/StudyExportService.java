@@ -1466,10 +1466,10 @@ public class StudyExportService {
       String version = tokens[tokens.length - 2];
       // validating release version
 
-      ComparableVersion compareVersion = new ComparableVersion(version);
-      ComparableVersion compareVersion1 = new ComparableVersion(map.get("release.version"));
+      ComparableVersion signedUrlVersion = new ComparableVersion(version);
+      ComparableVersion releaseVersion = new ComparableVersion(map.get("release.version"));
 
-      if (compareVersion.compareTo(compareVersion1) > 0) {
+      if (signedUrlVersion.compareTo(releaseVersion) > 0) {
         throw new Exception(
             IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + " " + map.get("release.version"));
       }
