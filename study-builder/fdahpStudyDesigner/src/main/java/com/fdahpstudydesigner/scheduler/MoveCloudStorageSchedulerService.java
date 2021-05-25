@@ -22,15 +22,8 @@
 
 package com.fdahpstudydesigner.scheduler;
 
-import com.fdahpstudydesigner.bo.QuestionReponseTypeBo;
-import com.fdahpstudydesigner.bo.QuestionResponseSubTypeBo;
-import com.fdahpstudydesigner.bo.QuestionnairesStepsBo;
-import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
-import com.fdahpstudydesigner.bo.StudyPageBo;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import java.util.ArrayList;
+import com.fdahpstudydesigner.dao.StudyDAOImpl;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -42,12 +35,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.util.CollectionUtils;
 
 @EnableScheduling
 public class MoveCloudStorageSchedulerService {
 
   private static Logger logger = Logger.getLogger(MoveCloudStorageSchedulerService.class.getName());
+
+  @Autowired StudyDAOImpl study;
 
   @Value("${jobs.move.cloud.storage.scheduler.enable}")
   private boolean moveCloudStorageSchedulerEnable;
@@ -93,112 +87,7 @@ public class MoveCloudStorageSchedulerService {
               .setString("customStudyId", studyBo.getCustomStudyId())
               .executeUpdate();
 
-          if (studyBo.getThumbnailImage() != null) {
-            FdahpStudyDesignerUtil.copyImage(
-                studyBo.getThumbnailImage(),
-                FdahpStudyDesignerConstants.STUDTYLOGO,
-                studyBo.getCustomStudyId());
-          }
-
-          List<QuestionnairesStepsBo> questionnaireStepsList =
-              session
-                  .createQuery(
-                      "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
-                  .setInteger("studyId", studyBo.getId())
-                  .list();
-          List<Integer> questionIds = new ArrayList();
-          for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
-            if (questionnaireSteps.getStepType().equals("Form")) {
-              List<Integer> questionIdList =
-                  session
-                      .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
-                      .setInteger("formId", questionnaireSteps.getInstructionFormId())
-                      .list();
-              questionIds.addAll(questionIdList);
-            } else if (questionnaireSteps.getStepType().equals("Question")) {
-              questionIds.add(questionnaireSteps.getInstructionFormId());
-            }
-          }
-          if (!CollectionUtils.isEmpty(questionIds)) {
-
-            List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
-                session
-                    .createQuery(
-                        "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
-                    .setParameterList("responseTypeId", questionIds)
-                    .list();
-
-            for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
-
-              if (questionResponseSubType.getSelectedImage() != null) {
-                FdahpStudyDesignerUtil.copyImage(
-                    questionResponseSubType.getSelectedImage(),
-                    FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                    studyBo.getCustomStudyId());
-              }
-
-              if (questionResponseSubType.getImage() != null) {
-                FdahpStudyDesignerUtil.copyImage(
-                    questionResponseSubType.getImage(),
-                    FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                    studyBo.getCustomStudyId());
-              }
-            }
-
-            List<QuestionReponseTypeBo> questionResponseTypeList =
-                session
-                    .createQuery(
-                        "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
-                    .setParameterList("responseTypeId", questionIds)
-                    .list();
-
-            for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
-              if (questionResponseType.getMinImage() != null) {
-                FdahpStudyDesignerUtil.copyImage(
-                    questionResponseType.getMinImage(),
-                    FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                    studyBo.getCustomStudyId());
-              }
-
-              if (questionResponseType.getMaxImage() != null) {
-                FdahpStudyDesignerUtil.copyImage(
-                    questionResponseType.getMaxImage(),
-                    FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                    studyBo.getCustomStudyId());
-              }
-            }
-          }
-          List<StudyPageBo> studyPageBoList =
-              session
-                  .createQuery("from StudyPageBo where studyId=:studyId")
-                  .setInteger("studyId", studyBo.getId())
-                  .list();
-
-          for (StudyPageBo studyPageBo : studyPageBoList) {
-
-            if (studyPageBo.getImagePath() != null) {
-              FdahpStudyDesignerUtil.copyImage(
-                  studyPageBo.getImagePath(),
-                  FdahpStudyDesignerConstants.STUDTYPAGES,
-                  studyBo.getCustomStudyId());
-            }
-          }
-
-          List<ResourceBO> resourceBoList =
-              session
-                  .createQuery("from ResourceBO where studyId=:studyId")
-                  .setInteger("studyId", studyBo.getId())
-                  .list();
-
-          for (ResourceBO resourceBo : resourceBoList) {
-
-            if (resourceBo.getPdfUrl() != null) {
-              FdahpStudyDesignerUtil.copyImage(
-                  resourceBo.getPdfUrl(),
-                  FdahpStudyDesignerConstants.RESOURCEPDFFILES,
-                  studyBo.getCustomStudyId());
-            }
-          }
+          study.moveOrCopyCloudStorage(session, studyBo, true, true, null);
 
           session
               .createQuery(
