@@ -1027,8 +1027,9 @@ public class FdahpStudyDesignerUtil {
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
 
     try {
+      byte[] b = fileStream.getBytes();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      storage.create(blobInfo, fileStream.getBytes());
+      storage.create(blobInfo, b);
 
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);

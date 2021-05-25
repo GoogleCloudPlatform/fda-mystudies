@@ -39,9 +39,14 @@ import com.fdahpstudydesigner.bo.StudyVersionBo;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.ImageUtility;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -52,7 +57,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
@@ -2833,11 +2840,36 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       questionsResponseTypeBo.getMinImageFile().getOriginalFilename(),
                       String.valueOf(questionsResponseTypeBo.getQuestionsResponseTypeId()));
 
+              BufferedImage newBi =
+                  ImageIO.read(
+                      new ByteArrayInputStream(
+                          questionsResponseTypeBo.getMinImageFile().getBytes()));
+              int minWidthAndHeight = 0;
+
+              if (newBi.getHeight() > 120 && newBi.getWidth() > 120) {
+                minWidthAndHeight = 120;
+              } else {
+                minWidthAndHeight = Math.min(newBi.getHeight(), newBi.getWidth());
+              }
+              BufferedImage resizedImage =
+                  ImageUtility.resizeImage(newBi, minWidthAndHeight, minWidthAndHeight);
+              String extension =
+                  FilenameUtils.getExtension(
+                      questionsResponseTypeBo.getMinImageFile().getOriginalFilename());
+
+              ByteArrayOutputStream baos = new ByteArrayOutputStream();
+              ImageIO.write(resizedImage, extension, baos);
+              baos.flush();
+
+              CustomMultipartFile customMultipartFile =
+                  new CustomMultipartFile(
+                      baos.toByteArray(),
+                      questionsResponseTypeBo.getMinImageFile().getOriginalFilename(),
+                      extension);
+
               String imagePath =
                   FdahpStudyDesignerUtil.saveImage(
-                      questionsResponseTypeBo.getMinImageFile(),
-                      fileName,
-                      FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                      customMultipartFile, fileName, FdahpStudyDesignerConstants.QUESTIONNAIRE);
               addOrUpdateQuestionsResponseTypeBo.setMinImage(imagePath);
             } else {
               addOrUpdateQuestionsResponseTypeBo.setMinImage(null);
@@ -2861,11 +2893,38 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       FdahpStudyDesignerConstants.QUESTION_STEP_IMAGE + 1,
                       questionsResponseTypeBo.getMaxImageFile().getOriginalFilename(),
                       String.valueOf(questionsResponseTypeBo.getQuestionsResponseTypeId()));
+
+              BufferedImage newBi =
+                  ImageIO.read(
+                      new ByteArrayInputStream(
+                          questionsResponseTypeBo.getMaxImageFile().getBytes()));
+              int minWidthAndHeight = 0;
+
+              if (newBi.getHeight() > 120 && newBi.getWidth() > 120) {
+                minWidthAndHeight = 120;
+              } else {
+                minWidthAndHeight = Math.min(newBi.getHeight(), newBi.getWidth());
+              }
+
+              BufferedImage resizedImage =
+                  ImageUtility.resizeImage(newBi, minWidthAndHeight, minWidthAndHeight);
+              String extension =
+                  FilenameUtils.getExtension(
+                      questionsResponseTypeBo.getMaxImageFile().getOriginalFilename());
+
+              ByteArrayOutputStream baos = new ByteArrayOutputStream();
+              ImageIO.write(resizedImage, extension, baos);
+              baos.flush();
+
+              CustomMultipartFile customMultipartFile =
+                  new CustomMultipartFile(
+                      baos.toByteArray(),
+                      questionsResponseTypeBo.getMaxImageFile().getOriginalFilename(),
+                      extension);
+
               String imagePath =
                   FdahpStudyDesignerUtil.saveImage(
-                      questionsResponseTypeBo.getMaxImageFile(),
-                      fileName,
-                      FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                      customMultipartFile, fileName, FdahpStudyDesignerConstants.QUESTIONNAIRE);
 
               addOrUpdateQuestionsResponseTypeBo.setMaxImage(imagePath);
             } else {
@@ -3697,9 +3756,36 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               questionResponseSubTypeBo.getImageFile().getOriginalFilename(),
                               String.valueOf(questionsBo.getId()));
 
+                      BufferedImage newBi =
+                          ImageIO.read(
+                              new ByteArrayInputStream(
+                                  questionResponseSubTypeBo.getImageFile().getBytes()));
+                      int minWidthAndHeight = 0;
+
+                      if (newBi.getHeight() > 120 && newBi.getWidth() > 120) {
+                        minWidthAndHeight = 120;
+                      } else {
+                        minWidthAndHeight = Math.min(newBi.getHeight(), newBi.getWidth());
+                      }
+                      BufferedImage resizedImage =
+                          ImageUtility.resizeImage(newBi, minWidthAndHeight, minWidthAndHeight);
+                      String extension =
+                          FilenameUtils.getExtension(
+                              questionResponseSubTypeBo.getImageFile().getOriginalFilename());
+
+                      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                      ImageIO.write(resizedImage, extension, baos);
+                      baos.flush();
+
+                      CustomMultipartFile customMultipartFile =
+                          new CustomMultipartFile(
+                              baos.toByteArray(),
+                              questionResponseSubTypeBo.getImageFile().getOriginalFilename(),
+                              extension);
+
                       String imagePath =
                           FdahpStudyDesignerUtil.saveImage(
-                              questionResponseSubTypeBo.getImageFile(),
+                              customMultipartFile,
                               fileName,
                               FdahpStudyDesignerConstants.QUESTIONNAIRE);
                       questionResponseSubTypeBo.setImage(imagePath);
@@ -3716,9 +3802,36 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               FdahpStudyDesignerConstants.FORM_STEP_SELECTEDIMAGE + i,
                               questionResponseSubTypeBo.getSelectImageFile().getOriginalFilename(),
                               String.valueOf(questionsBo.getId()));
+
+                      BufferedImage newBi =
+                          ImageIO.read(
+                              new ByteArrayInputStream(
+                                  questionResponseSubTypeBo.getSelectImageFile().getBytes()));
+                      int minWidthAndHeight = 0;
+
+                      if (newBi.getHeight() > 120 && newBi.getWidth() > 120) {
+                        minWidthAndHeight = 120;
+                      } else {
+                        minWidthAndHeight = Math.min(newBi.getHeight(), newBi.getWidth());
+                      }
+                      BufferedImage resizedImage =
+                          ImageUtility.resizeImage(newBi, minWidthAndHeight, minWidthAndHeight);
+                      String extension =
+                          FilenameUtils.getExtension(
+                              questionResponseSubTypeBo.getSelectImageFile().getOriginalFilename());
+
+                      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                      ImageIO.write(resizedImage, extension, baos);
+                      baos.flush();
+
+                      CustomMultipartFile customMultipartFile =
+                          new CustomMultipartFile(
+                              baos.toByteArray(),
+                              questionResponseSubTypeBo.getSelectImageFile().getOriginalFilename(),
+                              extension);
                       String imagePath =
                           FdahpStudyDesignerUtil.saveImage(
-                              questionResponseSubTypeBo.getSelectImageFile(),
+                              customMultipartFile,
                               fileName,
                               FdahpStudyDesignerConstants.QUESTIONNAIRE);
                       questionResponseSubTypeBo.setSelectedImage(imagePath);
@@ -4288,9 +4401,36 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                                   questionResponseSubTypeBo.getImageFile().getOriginalFilename(),
                                   String.valueOf(questionnairesStepsBo.getQuestionsBo().getId()));
 
+                          BufferedImage newBi =
+                              ImageIO.read(
+                                  new ByteArrayInputStream(
+                                      questionResponseSubTypeBo.getImageFile().getBytes()));
+                          int minWidthAndHeight = 0;
+
+                          if (newBi.getHeight() > 120 && newBi.getWidth() > 120) {
+                            minWidthAndHeight = 120;
+                          } else {
+                            minWidthAndHeight = Math.min(newBi.getHeight(), newBi.getWidth());
+                          }
+                          BufferedImage resizedImage =
+                              ImageUtility.resizeImage(newBi, minWidthAndHeight, minWidthAndHeight);
+                          String extension =
+                              FilenameUtils.getExtension(
+                                  questionResponseSubTypeBo.getImageFile().getOriginalFilename());
+
+                          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                          ImageIO.write(resizedImage, extension, baos);
+                          baos.flush();
+
+                          CustomMultipartFile customMultipartFile =
+                              new CustomMultipartFile(
+                                  baos.toByteArray(),
+                                  questionResponseSubTypeBo.getImageFile().getOriginalFilename(),
+                                  extension);
+
                           String imagePath =
                               FdahpStudyDesignerUtil.saveImage(
-                                  questionResponseSubTypeBo.getImageFile(),
+                                  customMultipartFile,
                                   fileName,
                                   FdahpStudyDesignerConstants.QUESTIONNAIRE);
                           questionResponseSubTypeBo.setImage(imagePath);
@@ -4309,9 +4449,41 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                                       .getSelectImageFile()
                                       .getOriginalFilename(),
                                   String.valueOf(questionnairesStepsBo.getQuestionsBo().getId()));
+
+                          BufferedImage newBi =
+                              ImageIO.read(
+                                  new ByteArrayInputStream(
+                                      questionResponseSubTypeBo.getSelectImageFile().getBytes()));
+                          int minWidthAndHeight = 0;
+
+                          if (newBi.getHeight() > 120 && newBi.getWidth() > 120) {
+                            minWidthAndHeight = 120;
+                          } else {
+                            minWidthAndHeight = Math.min(newBi.getHeight(), newBi.getWidth());
+                          }
+                          BufferedImage resizedImage =
+                              ImageUtility.resizeImage(newBi, minWidthAndHeight, minWidthAndHeight);
+                          String extension =
+                              FilenameUtils.getExtension(
+                                  questionResponseSubTypeBo
+                                      .getSelectImageFile()
+                                      .getOriginalFilename());
+
+                          ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                          ImageIO.write(resizedImage, extension, baos);
+                          baos.flush();
+
+                          CustomMultipartFile customMultipartFile =
+                              new CustomMultipartFile(
+                                  baos.toByteArray(),
+                                  questionResponseSubTypeBo
+                                      .getSelectImageFile()
+                                      .getOriginalFilename(),
+                                  extension);
+
                           String imagePath =
                               FdahpStudyDesignerUtil.saveImage(
-                                  questionResponseSubTypeBo.getSelectImageFile(),
+                                  customMultipartFile,
                                   fileName,
                                   FdahpStudyDesignerConstants.QUESTIONNAIRE);
                           questionResponseSubTypeBo.setSelectedImage(imagePath);
