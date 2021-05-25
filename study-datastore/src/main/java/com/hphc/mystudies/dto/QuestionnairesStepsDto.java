@@ -26,10 +26,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "questionnaires_steps")
@@ -38,15 +38,16 @@ public class QuestionnairesStepsDto implements Serializable {
   private static final long serialVersionUID = -6626878023643784669L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "step_id")
-  private Integer stepId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "step_id", updatable = false, nullable = false)
+  private String stepId;
 
   @Column(name = "questionnaires_id")
-  private Integer questionnairesId;
+  private String questionnairesId;
 
   @Column(name = "instruction_form_id")
-  private Integer instructionFormId;
+  private String instructionFormId;
 
   @Column(name = "step_type")
   private String stepType;
@@ -61,7 +62,7 @@ public class QuestionnairesStepsDto implements Serializable {
   private String skiappable;
 
   @Column(name = "destination_step")
-  private Integer destinationStep;
+  private String destinationStep;
 
   @Column(name = "repeatable")
   private String repeatable = "No";
@@ -79,10 +80,10 @@ public class QuestionnairesStepsDto implements Serializable {
   private String modifiedOn;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
@@ -92,27 +93,27 @@ public class QuestionnairesStepsDto implements Serializable {
 
   @Transient private String destinationStepType;
 
-  public Integer getStepId() {
+  public String getStepId() {
     return stepId;
   }
 
-  public void setStepId(Integer stepId) {
+  public void setStepId(String stepId) {
     this.stepId = stepId;
   }
 
-  public Integer getQuestionnairesId() {
+  public String getQuestionnairesId() {
     return questionnairesId;
   }
 
-  public void setQuestionnairesId(Integer questionnairesId) {
+  public void setQuestionnairesId(String questionnairesId) {
     this.questionnairesId = questionnairesId;
   }
 
-  public Integer getInstructionFormId() {
+  public String getInstructionFormId() {
     return instructionFormId;
   }
 
-  public void setInstructionFormId(Integer instructionFormId) {
+  public void setInstructionFormId(String instructionFormId) {
     this.instructionFormId = instructionFormId;
   }
 
@@ -148,11 +149,11 @@ public class QuestionnairesStepsDto implements Serializable {
     this.skiappable = skiappable;
   }
 
-  public Integer getDestinationStep() {
+  public String getDestinationStep() {
     return destinationStep;
   }
 
-  public void setDestinationStep(Integer destinationStep) {
+  public void setDestinationStep(String destinationStep) {
     this.destinationStep = destinationStep;
   }
 
@@ -196,19 +197,19 @@ public class QuestionnairesStepsDto implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 

@@ -26,9 +26,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -44,12 +44,13 @@ public class StudyPageDto implements Serializable {
   private static final long serialVersionUID = 1910738533774432289L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "page_id")
-  private Integer pageId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "page_id", updatable = false, nullable = false)
+  private String pageId;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Column(name = "title")
   private String title;
@@ -67,10 +68,10 @@ public class StudyPageDto implements Serializable {
   private String modifiedOn;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
@@ -83,19 +84,19 @@ public class StudyPageDto implements Serializable {
     this.studyVersion = studyVersion;
   }
 
-  public Integer getPageId() {
+  public String getPageId() {
     return pageId;
   }
 
-  public void setPageId(Integer pageId) {
+  public void setPageId(String pageId) {
     this.pageId = pageId;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 

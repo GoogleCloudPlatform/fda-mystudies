@@ -26,11 +26,11 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "version_info")
@@ -45,9 +45,10 @@ public class AppVersionInfo implements Serializable {
   private static final long serialVersionUID = 4985607753888575491L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "version_info_id")
-  private int versionInfoId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "version_info_id", updatable = false, nullable = false)
+  private String versionInfoId;
 
   @Column(name = "android")
   private String androidVersion;
@@ -64,11 +65,11 @@ public class AppVersionInfo implements Serializable {
   @Column(name = "ios_force_update")
   private Boolean iosForceUpdate;
 
-  public int getVersionInfoId() {
+  public String getVersionInfoId() {
     return versionInfoId;
   }
 
-  public void setVersionInfoId(int versionInfoId) {
+  public void setVersionInfoId(String versionInfoId) {
     this.versionInfoId = versionInfoId;
   }
 
