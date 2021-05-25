@@ -74,9 +74,18 @@
                 studyId="${study.id}"></span>
            
              <span class="sprites_icon copy copyStudy mr-lg
-              <c:if  test="${empty study.customStudyId}">
-								cursor-none
-						</c:if>" 
+              <c:choose>
+						<c:when test="${not study.viewPermission}">
+							  cursor-none
+						</c:when>
+						<c:when test="${not empty study.status && (study.status eq 'Deactivated')}">
+							  cursor-none
+						</c:when>
+						<c:when test="${empty study.customStudyId}">
+						      cursor-none
+						</c:when>
+			  </c:choose>"
+             
                    data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
                   title="Copy-into-new" onclick='copyStudy("${study.id}");'>
                     </span>

@@ -128,7 +128,9 @@
 		        },
 		    callback: function (result) {
 		    	debugger
-	              if (result) {
+		    	if(result !=null && (result == "" || !(/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(result)))){
+		    		showErrMsg("Please enter a valid URL")
+		           }else if(result !=null){
 	            	  $
 	           	   .ajax({
 	                      url: "/studybuilder/studies/import.do?_S=${param._S}",
@@ -139,18 +141,24 @@
 	                        "${_csrf.parameterName}": "${_csrf.token}",
 	                      },
 	                      success: function emailValid(data, status) {
-	                          var message = data.message;
-	                          if (message != "SUCCESS") {
-	                        	  bootbox.alert(message) ;
-	                          } 
-	                        },
+	                    	  debugger
+	                    	  message = data.message;
+	                    	  if (message == "SUCCESS") {
+	                              $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	                              $('#alertMsg').show();
+	                            } else {
+	                                bootbox.alert(message);
+	                            }
+	                            setTimeout(hideDisplayMessage, 5000);
+	                          },
 	                   error: function status(data, status) {
 	                     $("body").removeClass("loading");
 	                     showErrMsg("Import failed.")
 	                   }
 	                 });
-	           }
+	           } 
 		    }
+		        
 	  });
   }
 
