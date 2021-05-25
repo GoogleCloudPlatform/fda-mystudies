@@ -190,6 +190,7 @@
   });
 
   function validateStudyStatus(obj) {
+	  debugger
     var buttonText = obj.id;
     var messageText = "";
     if (buttonText) {
@@ -257,6 +258,7 @@
   }
 
   function showBootBoxMessage(buttonText, messageText) {
+	  debugger
     if (buttonText == 'resumeId') {
     	 messageText = "You are attempting to resume the study. Are you sure you wish to proceed?";
     } else if (buttonText == 'lunchId') {
@@ -375,7 +377,7 @@
 
   $('.copy_to_clipboard').on('mouseover', function () {
 	  debugger
-	  $('#copy_to_clipboard').attr("title", "Last generated on ${date}"");
+	 // $('#copy_to_clipboard').attr("title", "Last generated on ${date}"");
 	});
   
 </script>
