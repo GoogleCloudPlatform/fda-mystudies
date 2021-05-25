@@ -20,19 +20,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class ParticipantManagerUtil {
 
+  private static final String PATH_SEPARATOR = "/";
+
+  private static final String STUDYLOGO = "studylogo";
+
+  private static final String STUDIES = "studies";
+
+  private static final String DEFAULT_IMAGES_FOLDER_NAME = "defaultImages";
+
+  private static final String DEFAULT_IMAGE = "STUDY_BI_GATEWAY.jpg";
+
   private XLogger logger = XLoggerFactory.getXLogger(ParticipantManagerUtil.class.getName());
 
   @Autowired private AppPropertyConfig appConfig;
 
   @Autowired private Storage storageService;
 
-  public String getSignedUrl(String fileUrl, int signedUrlDurationInHours) {
+  public String getSignedUrl(String fileUrl, int signedUrlDurationInHours, String customStudyId) {
     try {
       if (StringUtils.isEmpty(fileUrl)) {
         return null;
       }
-      String filePath =
-          StringUtils.substringAfter(fileUrl, appConfig.getStudyBuilderCloudBucketName() + "/");
+      String fileName = fileUrl.substring(fileUrl.lastIndexOf(PATH_SEPARATOR) + 1);
+      String filePath;
+      if (DEFAULT_IMAGE.equals(fileName)) {
+        filePath = DEFAULT_IMAGES_FOLDER_NAME + PATH_SEPARATOR + fileName;
+      } else {
+        filePath =
+            STUDIES
+                + PATH_SEPARATOR
+                + customStudyId
+                + PATH_SEPARATOR
+                + STUDYLOGO
+                + PATH_SEPARATOR
+                + fileName;
+      }
 
       BlobInfo blobInfo =
           BlobInfo.newBuilder(appConfig.getStudyBuilderCloudBucketName(), filePath).build();

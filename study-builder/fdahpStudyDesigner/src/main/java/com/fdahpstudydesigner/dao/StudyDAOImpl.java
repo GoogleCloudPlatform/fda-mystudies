@@ -1616,7 +1616,8 @@ public class StudyDAOImpl implements StudyDAO {
                   .replaceAll("&#34;", "&quot;")
                   .replaceAll("em>", "i>")
                   .replaceAll(
-                      "<a", "<a target='_blank' style='text-decoration:underline;color:blue;'"));
+                      "<a", "<a target=\"_blank\" style=\"text-decoration:underline;color:blue;\"")
+                  .replaceAll("'", "\\\\'"));
         }
       }
     } catch (Exception e) {
@@ -4229,6 +4230,7 @@ public class StudyDAOImpl implements StudyDAO {
         studyBo.setThumbnailImage(
             fileName + "." + FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename()));
       }
+
       if (StringUtils.isEmpty(studyBo.getId())) {
         studyBo.setCreatedBy(studyBo.getUserId());
         appId = studyBo.getAppId().toUpperCase();

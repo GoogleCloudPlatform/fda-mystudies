@@ -2714,6 +2714,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   public QuestionReponseTypeBo getQuestionsResponseTypeBo(
       QuestionReponseTypeBo questionsResponseTypeBo, Session session, String customStudyId) {
+    logger.entry("begin getQuestionsResponseTypeBo()");
     QuestionReponseTypeBo addOrUpdateQuestionsResponseTypeBo = null;
     try {
       if ((questionsResponseTypeBo != null) && (session != null)) {
@@ -3759,7 +3760,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         QuestionReponseTypeBo addQuestionReponseTypeBo =
             getQuestionsResponseTypeBo(
                 questionsBo.getQuestionReponseTypeBo(), session, questionsBo.getCustomStudyId());
-
         if (addQuestionReponseTypeBo != null) {
           if (StringUtils.isEmpty(addQuestionReponseTypeBo.getQuestionsResponseTypeId())) {
             addQuestionReponseTypeBo.setQuestionsResponseTypeId(questionsBo.getId());
@@ -4298,6 +4298,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       String studyId = this.getStudyIdByCustomStudy(session, customStudyId);
+
       if (questionnairesStepsBo != null) {
         if (StringUtils.isNotEmpty(questionnairesStepsBo.getStepId())) {
           addOrUpdateQuestionnairesStepsBo =
@@ -4370,7 +4371,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               && questionnairesStepsBo.getQuestionsBo().getUseAnchorDate()) {
             if (StringUtils.isNotEmpty(
                 questionnairesStepsBo.getQuestionsBo().getAnchorDateName())) {
-
               AnchorDateTypeBo anchorDateTypeBo = new AnchorDateTypeBo();
               anchorDateTypeBo.setId(questionnairesStepsBo.getQuestionsBo().getAnchorDateId());
               anchorDateTypeBo.setCustomStudyId(customStudyId);
@@ -5050,7 +5050,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String stepType,
       boolean isChange,
       String customStudyId) {
-    logger.info("StudyQuestionnaireDAOImpl - updateAnchordateInQuestionnaire - Starts");
+
+    logger.entry("begin updateAnchordateInQuestionnaire");
     List<Integer> anchorIds = new ArrayList<Integer>();
     List<Integer> anchorExistIds = new ArrayList<Integer>();
     Boolean isAnchorUsed = false;

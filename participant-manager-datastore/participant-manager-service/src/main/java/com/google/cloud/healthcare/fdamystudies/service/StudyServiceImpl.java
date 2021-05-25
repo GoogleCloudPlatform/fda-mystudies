@@ -155,7 +155,8 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setName(study.getName());
       studyDetail.setType(study.getType());
       studyDetail.setStudyStatus(study.getStatus());
-      studyDetail.setLogoImageUrl(participantManagerUtil.getSignedUrl(study.getLogoImageUrl(), 12));
+      studyDetail.setLogoImageUrl(
+          participantManagerUtil.getSignedUrl(study.getLogoImageUrl(), 12, study.getCustomId()));
       SiteCount siteCount = sitesPerStudyMap.get(study.getId());
       if (siteCount != null && siteCount.getCount() != null) {
         studyDetail.setSitesCount(siteCount.getCount());
@@ -201,7 +202,8 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setName(study.getStudyName());
       studyDetail.setType(study.getType());
       studyDetail.setStudyStatus(study.getStatus());
-      studyDetail.setLogoImageUrl(participantManagerUtil.getSignedUrl(study.getLogoImageUrl(), 12));
+      studyDetail.setLogoImageUrl(
+          participantManagerUtil.getSignedUrl(study.getLogoImageUrl(), 12, study.getCustomId()));
       studyDetail.setStudyPermission(study.getEdit());
       studyDetail.setSitesCount(
           sitesCountMap.containsKey(study.getStudyId())

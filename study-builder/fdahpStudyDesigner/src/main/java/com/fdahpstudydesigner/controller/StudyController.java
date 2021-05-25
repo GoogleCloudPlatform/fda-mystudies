@@ -3305,6 +3305,8 @@ public class StudyController {
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
               : 0;
+      String briefsummaryText = request.getParameter("briefSummary");
+      consentInfoBo.setBriefSummary(briefsummaryText);
 
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)

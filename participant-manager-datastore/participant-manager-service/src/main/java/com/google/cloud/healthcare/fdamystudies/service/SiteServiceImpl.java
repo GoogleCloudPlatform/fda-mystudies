@@ -964,7 +964,7 @@ public class SiteServiceImpl implements SiteService {
         if (r.getCell(EMAIL_ADDRESS_COLUMN) == null) {
           continue;
         }
-        
+
         String email = r.getCell(EMAIL_ADDRESS_COLUMN).getStringCellValue();
         if (StringUtils.isBlank(email) || !Pattern.matches(EMAIL_REGEX, email)) {
           invalidEmails.add(email);
@@ -1200,7 +1200,8 @@ public class SiteServiceImpl implements SiteService {
       if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
         StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
         studyDetail.setLogoImageUrl(
-            participantManagerUtil.getSignedUrl(studySiteInfo.getLogoImageUrl(), 12));
+            participantManagerUtil.getSignedUrl(
+                studySiteInfo.getLogoImageUrl(), 12, studySiteInfo.getCustomId()));
         studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
 
@@ -1247,7 +1248,8 @@ public class SiteServiceImpl implements SiteService {
         if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
           StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
           studyDetail.setLogoImageUrl(
-              participantManagerUtil.getSignedUrl(studySiteInfo.getLogoImageUrl(), 12));
+              participantManagerUtil.getSignedUrl(
+                  studySiteInfo.getLogoImageUrl(), 12, studySiteInfo.getCustomId()));
           studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
         StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());

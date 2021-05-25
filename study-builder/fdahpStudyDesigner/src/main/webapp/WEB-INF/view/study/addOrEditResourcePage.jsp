@@ -337,7 +337,6 @@
   <input type="hidden" value="studyResources" name="fileFolder"/>
   <input type="hidden" value="${resourceBO.pdfUrl}" name="fileName"/>
    <input type="hidden" value="${resourceBO.studyId}" name="studyId"/>
-  
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {

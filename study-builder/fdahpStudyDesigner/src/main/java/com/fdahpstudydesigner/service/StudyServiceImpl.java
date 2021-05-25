@@ -314,6 +314,10 @@ public class StudyServiceImpl implements StudyService {
       if (consentInfoBo != null) {
         consentInfoBo.setBriefSummary(
             consentInfoBo.getBriefSummary().replaceAll("(\\r|\\n|\\r\\n)+", "&#13;&#10;"));
+        if (consentInfoBo.getElaborated() != null) {
+          consentInfoBo.setElaborated(
+              StringEscapeUtils.escapeHtml4(consentInfoBo.getElaborated().trim()));
+        }
       }
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentInfoById() - Error", e);
@@ -1517,10 +1521,15 @@ public class StudyServiceImpl implements StudyService {
             StringUtils.isEmpty(studyBo.getThumbnailImage())
                 ? propMap.get("fda.imgDisplaydPath")
                     + propMap.get("cloud.bucket.name")
-                    + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    + "/"
+                    + FdahpStudyDesignerConstants.DEFAULT_IMAGES
+                    + "/"
                     + propMap.get(FdahpStudyDesignerConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE)
                 : propMap.get("fda.imgDisplaydPath")
                     + propMap.get("cloud.bucket.name")
+                    + "/"
+                    + studyBo.getCustomStudyId()
+                    + "/"
                     + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                     + studyBo.getThumbnailImage());
       }

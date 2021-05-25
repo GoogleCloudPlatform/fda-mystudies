@@ -310,4 +310,8 @@ public interface StudyMetaDataConstants {
       "Answer these questions to determine your eligibility for the study";
   public static final String COMPREHENSION_TEXT =
       "Take this comprehension test to assess your understanding of the study:";
+
+  public static final String STUDIES = "studies";
+
+  public static final String DEFAULT_IMAGES = "defaultImages";
 }

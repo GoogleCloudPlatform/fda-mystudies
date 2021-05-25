@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,6 +192,10 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       instructionsBo =
           studyQuestionnaireDAO.getInstructionsBo(
               instructionId, questionnaireShortTitle, customStudyId, questionnaireId);
+      if (instructionsBo.getInstructionText() != null) {
+        instructionsBo.setInstructionText(
+            StringEscapeUtils.escapeHtml4(instructionsBo.getInstructionText().trim()));
+      }
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getInstructionsBo - ERROR ", e);
     }

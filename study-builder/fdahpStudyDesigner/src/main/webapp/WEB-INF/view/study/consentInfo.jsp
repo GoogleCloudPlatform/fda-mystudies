@@ -349,10 +349,11 @@
                 var elaboratedContent = $(
                     '#elaboratedRTE')
                     .summernote('code');
-                elaboratedContent = replaceSpecialCharacters(elaboratedContent);
+                
                 var briefSummaryText = replaceSpecialCharacters($(
                     "#briefSummary")
                     .val());
+                elaboratedContent = $('#elaboratedRTE').text(elaboratedContent).html();
                 $("#elaborated").val(
                     elaboratedContent);
                 $("#briefSummary").val(

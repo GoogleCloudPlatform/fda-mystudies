@@ -86,7 +86,6 @@ public class MoveCloudStorageSchedulerService {
                 .list();
 
         for (StudyBo studyBo : studyBoList) {
-
           session
               .createQuery(
                   "update StudyBo SBO set SBO.isCloudStorageMoved = 1 where SBO.customStudyId=:customStudyId")
