@@ -26,9 +26,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "response_type_value")
@@ -37,12 +37,13 @@ public class QuestionReponseTypeDto implements Serializable {
   private static final long serialVersionUID = -5612905113940249120L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "response_type_id")
-  private Integer responseTypeId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "response_type_id", updatable = false, nullable = false)
+  private String responseTypeId;
 
   @Column(name = "questions_response_type_id")
-  private Integer questionsResponseTypeId;
+  private String questionsResponseTypeId;
 
   @Column(name = "max_value")
   private String maxValue;
@@ -156,7 +157,7 @@ public class QuestionReponseTypeDto implements Serializable {
   private String otherExclusive;
 
   @Column(name = "other_destination_step_id")
-  private Integer otherDestinationStepId;
+  private String otherDestinationStepId;
 
   @Column(name = "other_description")
   private String otherDescription;
@@ -170,19 +171,19 @@ public class QuestionReponseTypeDto implements Serializable {
   @Column(name = "other_participant_fill")
   private String otherParticipantFill;
 
-  public Integer getResponseTypeId() {
+  public String getResponseTypeId() {
     return responseTypeId;
   }
 
-  public void setResponseTypeId(Integer responseTypeId) {
+  public void setResponseTypeId(String responseTypeId) {
     this.responseTypeId = responseTypeId;
   }
 
-  public Integer getQuestionsResponseTypeId() {
+  public String getQuestionsResponseTypeId() {
     return questionsResponseTypeId;
   }
 
-  public void setQuestionsResponseTypeId(Integer questionsResponseTypeId) {
+  public void setQuestionsResponseTypeId(String questionsResponseTypeId) {
     this.questionsResponseTypeId = questionsResponseTypeId;
   }
 
@@ -482,11 +483,11 @@ public class QuestionReponseTypeDto implements Serializable {
     this.otherExclusive = otherExclusive;
   }
 
-  public Integer getOtherDestinationStepId() {
+  public String getOtherDestinationStepId() {
     return otherDestinationStepId;
   }
 
-  public void setOtherDestinationStepId(Integer otherDestinationStepId) {
+  public void setOtherDestinationStepId(String otherDestinationStepId) {
     this.otherDestinationStepId = otherDestinationStepId;
   }
 

@@ -26,9 +26,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "notification")
@@ -37,12 +37,13 @@ public class NotificationDto implements Serializable {
   private static final long serialVersionUID = 3191684940344338282L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "notification_id")
-  private Integer notificationId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "notification_id", updatable = false, nullable = false)
+  private String notificationId;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Column(name = "notification_text")
   private String notificationText;
@@ -78,13 +79,13 @@ public class NotificationDto implements Serializable {
   private Integer studyVersion = 1;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
@@ -93,7 +94,7 @@ public class NotificationDto implements Serializable {
   private String customStudyId;
 
   @Column(name = "resource_id")
-  private Integer resourceId;
+  private String resourceId;
 
   @Column(name = "is_anchor_date", length = 1)
   private boolean anchorDate = false;
@@ -104,19 +105,19 @@ public class NotificationDto implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
-  public Integer getNotificationId() {
+  public String getNotificationId() {
     return notificationId;
   }
 
-  public void setNotificationId(Integer notificationId) {
+  public void setNotificationId(String notificationId) {
     this.notificationId = notificationId;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
@@ -200,11 +201,11 @@ public class NotificationDto implements Serializable {
     this.studyVersion = studyVersion;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -216,11 +217,11 @@ public class NotificationDto implements Serializable {
     this.createdOn = createdOn;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -240,11 +241,11 @@ public class NotificationDto implements Serializable {
     this.customStudyId = customStudyId;
   }
 
-  public Integer getResourceId() {
+  public String getResourceId() {
     return resourceId;
   }
 
-  public void setResourceId(Integer resourceId) {
+  public void setResourceId(String resourceId) {
     this.resourceId = resourceId;
   }
 

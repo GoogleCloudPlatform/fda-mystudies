@@ -26,9 +26,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "response_sub_type_value")
@@ -37,12 +37,13 @@ public class QuestionResponseSubTypeDto implements Serializable {
   private static final long serialVersionUID = -7906353217574963756L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "response_sub_type_value_id")
-  private Integer responseSubTypeValueId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "response_sub_type_value_id", updatable = false, nullable = false)
+  private String responseSubTypeValueId;
 
   @Column(name = "response_type_id")
-  private Integer responseTypeId;
+  private String responseTypeId;
 
   @Column(name = "text")
   private String text;
@@ -66,7 +67,7 @@ public class QuestionResponseSubTypeDto implements Serializable {
   private Integer studyVersion = 1;
 
   @Column(name = "destination_step_id")
-  private Integer destinationStepId;
+  private String destinationStepId;
 
   @Column(name = "active")
   private Boolean active;
@@ -80,19 +81,19 @@ public class QuestionResponseSubTypeDto implements Serializable {
   @Column(name = "description")
   private String description;
 
-  public Integer getResponseSubTypeValueId() {
+  public String getResponseSubTypeValueId() {
     return responseSubTypeValueId;
   }
 
-  public void setResponseSubTypeValueId(Integer responseSubTypeValueId) {
+  public void setResponseSubTypeValueId(String responseSubTypeValueId) {
     this.responseSubTypeValueId = responseSubTypeValueId;
   }
 
-  public Integer getResponseTypeId() {
+  public String getResponseTypeId() {
     return responseTypeId;
   }
 
-  public void setResponseTypeId(Integer responseTypeId) {
+  public void setResponseTypeId(String responseTypeId) {
     this.responseTypeId = responseTypeId;
   }
 
@@ -152,11 +153,11 @@ public class QuestionResponseSubTypeDto implements Serializable {
     this.studyVersion = studyVersion;
   }
 
-  public Integer getDestinationStepId() {
+  public String getDestinationStepId() {
     return destinationStepId;
   }
 
-  public void setDestinationStepId(Integer destinationStepId) {
+  public void setDestinationStepId(String destinationStepId) {
     this.destinationStepId = destinationStepId;
   }
 

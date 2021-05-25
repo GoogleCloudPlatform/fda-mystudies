@@ -26,9 +26,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -61,9 +61,10 @@ public class StudyVersionDto implements Serializable {
   private static final long serialVersionUID = 4330801191289201775L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "version_id")
-  private Integer versionId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "version_id", updatable = false, nullable = false)
+  private String versionId;
 
   @Column(name = "custom_study_id")
   private String customStudyId;
@@ -77,11 +78,11 @@ public class StudyVersionDto implements Serializable {
   @Column(name = "consent_version")
   private Float consentVersion = 0f;
 
-  public Integer getVersionId() {
+  public String getVersionId() {
     return versionId;
   }
 
-  public void setVersionId(Integer versionId) {
+  public void setVersionId(String versionId) {
     this.versionId = versionId;
   }
 
