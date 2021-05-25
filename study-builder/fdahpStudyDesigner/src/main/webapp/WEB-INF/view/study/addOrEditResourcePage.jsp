@@ -888,6 +888,18 @@
       resetValidation($(this).parents('form'));
     }
 
+    if ($('#inlineRadio4').prop('checked') == true) {
+        $('.disRadBtn1').prop('disabled', true);
+        $('.disRadBtn1').val('');
+        $('.disRadBtn1').prop('checked', false);
+        $('.disBtn1').prop('disabled', true);
+        $('.disBtn1').val('');
+        $('.disBtn1').removeAttr('required');
+        $('.disBtn2').removeAttr('required');
+        $('.disBtn1').selectpicker('refresh');
+        resetValidation($('.resetDate'));
+      }
+    
     $('#inlineRadio4').on('click', function () {
       if ($('#inlineRadio4').prop('checked') == true) {
         $('.disRadBtn1').prop('disabled', true);
