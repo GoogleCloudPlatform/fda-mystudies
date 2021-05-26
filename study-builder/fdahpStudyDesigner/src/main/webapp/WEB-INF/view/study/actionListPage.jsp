@@ -8,7 +8,7 @@
 <style>
 .blue-btn {
     background: #007cba;
-    border-color: #007cba !important;
+    border-color: #007cba;
     padding: 4px 20px;
     width: 230px;
     height: 38px;
@@ -157,6 +157,8 @@
                 </c:choose>>Export
         </button> <span class="sprites_icon copy copy_to_clipboard " id="copy_to_clipboard" 
                         data-toggle="tooltip" data-placement="top" data-original-title=""></span>
+                        <span class=" copy_to_clipboard " id="copy_to_clipboard"
+                         >Copy signed URL</span>
                         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
        This action exports the study into a cloud storage location and generates a signed URL that can then be copied into the Study Builder you want to import the study into.  
