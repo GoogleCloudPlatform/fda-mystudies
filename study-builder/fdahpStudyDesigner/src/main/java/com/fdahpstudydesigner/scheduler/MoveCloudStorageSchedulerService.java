@@ -28,10 +28,12 @@ import com.fdahpstudydesigner.bo.QuestionnairesStepsBo;
 import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
+import com.fdahpstudydesigner.dao.StudyDAOImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -42,12 +44,13 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.util.CollectionUtils;
 
 @EnableScheduling
 public class MoveCloudStorageSchedulerService {
 
   private static Logger logger = Logger.getLogger(MoveCloudStorageSchedulerService.class.getName());
+
+  @Autowired StudyDAOImpl study;
 
   @Value("${jobs.move.cloud.storage.scheduler.enable}")
   private boolean moveCloudStorageSchedulerEnable;
@@ -198,6 +201,7 @@ public class MoveCloudStorageSchedulerService {
                   studyBo.getCustomStudyId());
             }
           }
+          study.moveOrCopyCloudStorage(session, studyBo, true, true, null);
 
           session
               .createQuery(

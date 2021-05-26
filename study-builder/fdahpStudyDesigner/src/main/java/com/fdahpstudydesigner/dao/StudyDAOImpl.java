@@ -4191,6 +4191,8 @@ public class StudyDAOImpl implements StudyDAO {
     return resourceId;
   }
 
+  protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+
   @SuppressWarnings("unchecked")
   @Override
   public String saveOrUpdateStudy(StudyBo studyBo, SessionObject sessionObject) {
@@ -4287,6 +4289,12 @@ public class StudyDAOImpl implements StudyDAO {
                     .setString("id", studyBo.getId())
                     .uniqueResult();
         if (dbStudyBo != null) {
+
+          if (!dbStudyBo.getCustomStudyId().equals(studyBo.getCustomStudyId())) {
+
+            moveOrCopyCloudStorage(session, dbStudyBo, false, false, studyBo.getCustomStudyId());
+          }
+
           dbStudyBo.setCustomStudyId(studyBo.getCustomStudyId());
           dbStudyBo.setName(studyBo.getName());
           dbStudyBo.setFullName(studyBo.getFullName());
@@ -7464,5 +7472,142 @@ public class StudyDAOImpl implements StudyDAO {
     }
     logger.exit("saveExportFilePath() - Ends");
     return message;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void moveOrCopyCloudStorage(
+      Session session,
+      StudyBo studyBo,
+      boolean delete,
+      boolean oldFilePath,
+      String newCustomStudyId) {
+    if (studyBo.getThumbnailImage() != null) {
+      FdahpStudyDesignerUtil.copyOrMoveImage(
+          studyBo.getThumbnailImage(),
+          FdahpStudyDesignerConstants.STUDTYLOGO,
+          studyBo.getCustomStudyId(),
+          delete,
+          oldFilePath,
+          newCustomStudyId);
+    }
+
+    List<QuestionnairesStepsBo> questionnaireStepsList =
+        session
+            .createQuery(
+                "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
+            .setString("studyId", studyBo.getId())
+            .list();
+    List<String> questionIds = new ArrayList();
+    for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
+      if (questionnaireSteps.getStepType().equals("Form")) {
+        List<String> questionIdList =
+            session
+                .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
+                .setString("formId", questionnaireSteps.getInstructionFormId())
+                .list();
+        questionIds.addAll(questionIdList);
+      } else if (questionnaireSteps.getStepType().equals("Question")) {
+        questionIds.add(questionnaireSteps.getInstructionFormId());
+      }
+    }
+    if (!CollectionUtils.isEmpty(questionIds)) {
+
+      List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
+          session
+              .createQuery(
+                  "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
+
+        if (questionResponseSubType.getSelectedImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseSubType.getSelectedImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+
+        if (questionResponseSubType.getImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseSubType.getImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+      }
+
+      List<QuestionReponseTypeBo> questionResponseTypeList =
+          session
+              .createQuery(
+                  "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
+        if (questionResponseType.getMinImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseType.getMinImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+
+        if (questionResponseType.getMaxImage() != null) {
+
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseType.getMaxImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+      }
+    }
+    List<StudyPageBo> studyPageBoList =
+        session
+            .createQuery("from StudyPageBo where studyId=:studyId")
+            .setString("studyId", studyBo.getId())
+            .list();
+
+    for (StudyPageBo studyPageBo : studyPageBoList) {
+
+      if (studyPageBo.getImagePath() != null) {
+        FdahpStudyDesignerUtil.copyOrMoveImage(
+            studyPageBo.getImagePath(),
+            FdahpStudyDesignerConstants.STUDTYPAGES,
+            studyBo.getCustomStudyId(),
+            delete,
+            oldFilePath,
+            newCustomStudyId);
+      }
+    }
+
+    List<ResourceBO> resourceBoList =
+        session
+            .createQuery("from ResourceBO where studyId=:studyId")
+            .setString("studyId", studyBo.getId())
+            .list();
+
+    for (ResourceBO resourceBo : resourceBoList) {
+
+      if (resourceBo.getPdfUrl() != null) {
+        FdahpStudyDesignerUtil.copyOrMoveImage(
+            resourceBo.getPdfUrl(),
+            FdahpStudyDesignerConstants.RESOURCEPDFFILES,
+            studyBo.getCustomStudyId(),
+            delete,
+            oldFilePath,
+            newCustomStudyId);
+      }
+    }
   }
 }
