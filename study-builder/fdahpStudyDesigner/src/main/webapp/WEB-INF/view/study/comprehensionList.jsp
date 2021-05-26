@@ -163,7 +163,7 @@
 	        class="requiredStar">*
 	      </span>
         </div>
-        <div class="form-group col-md-5 p-none scoreClass">
+        <div class="form-group col-md-9 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
                  name="comprehensionTestMinimumScore" required data-error="Please fill out this field"
                  value="${consentBo.comprehensionTestMinimumScore}"
