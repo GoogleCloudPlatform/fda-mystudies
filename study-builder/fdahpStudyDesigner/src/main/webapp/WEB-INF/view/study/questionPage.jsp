@@ -732,7 +732,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the minimum value.<br>JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -773,7 +773,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the maximum value.<br>JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -926,7 +926,7 @@
                 <div class="gray-xs-f mb-xs">Image for minimum value
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" data-html="true"
-                      title="Upload an image that represents the minimum value.<br>JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                      title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                 </div>
                 <div class="form-group col-smthumb-2">
                   <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -966,7 +966,7 @@
                 <div class="gray-xs-f mb-xs">Image for maximum value
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" data-html="true"
-                      title="Upload an image that represents the maximum value.<br>JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                      title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                 </div>
                 <div class="form-group col-smthumb-2">
                   <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -2151,7 +2151,7 @@
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" data-html="true"
-                      title="JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                      title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                 </div>
               </div>
               <div class="col-md-2 pl-none col-smthumb-2">
@@ -2159,7 +2159,7 @@
                   <span class="requiredStar">*</span>
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip" data-html="true"
-                      title="JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                      title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                 </div>
               </div>
               <div class="col-md-3 pl-none">
@@ -3357,7 +3357,7 @@ if(document.getElementById("singleSelect").checked==true){
         $('#maxDateId').data("DateTimePicker").clear();
         $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
         $('#maxDateId').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Max Date and Time Should not be less than or equal Min Date and Time"));
+            "Max date and time should not be less than or equal min date and time"));
       } else {
         $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
         $('#maxDateId').parent().find(".help-block").empty();
@@ -3378,7 +3378,7 @@ if(document.getElementById("singleSelect").checked==true){
           $("#defaultDate").data("DateTimePicker").clear();
           $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
           $('#defaultDate').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Enter default date to be shown as selected as per availability of Min and Max"));
+              "Enter default date to be shown as selected as per availability of min and max"));
         }
       }
     });
@@ -3460,8 +3460,20 @@ if(document.getElementById("singleSelect").checked==true){
           if(allowedExtensions.includes(fileExtension)){
         img = new Image();
         img.onload = function () {
-          var ht = this.height;
-          var wds = this.width;
+        	var minHeightAndWidth=0;
+
+        	 var ht = this.height;
+             var wds = this.width;
+             if(ht>120 && wds >120){
+             	ht=this.height=120;
+             	wds=this.weight=120;
+             }else{
+             	minHeightAndWidth=Math.min(ht,wds);
+             	ht=this.height=minHeightAndWidth;
+             	wds=this.width=minHeightAndWidth;
+             	
+             }
+         
           if ((parseInt(ht) == parseInt(wds)) && (parseInt(ht) >= 90 && parseInt(ht) <= 120)
               && (parseInt(wds) >= 90 && parseInt(wds) <= 120)) {
             $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
@@ -3476,7 +3488,7 @@ if(document.getElementById("singleSelect").checked==true){
             $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
             $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
             $(thisAttr).parent().find(".help-block").empty().append(
-              $("<ul><li> </li></ul>").attr("class","list-unstyled").text("File incorrect"));
+              $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(" Invalid image size or format"));
             $(thisAttr).parent().parent().parent().find(".removeUrl").click();
             var id = $(thisAttr).next().attr("id");
             $("#" + id).val('');
@@ -3491,7 +3503,7 @@ if(document.getElementById("singleSelect").checked==true){
           $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
           $(thisAttr).parent().find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File incorrect"));
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(" Invalid image size or format"));
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);

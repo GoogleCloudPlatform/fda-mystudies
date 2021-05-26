@@ -3126,8 +3126,6 @@ public class StudyController {
     logger.entry("begin saveOrUpdateBasicInfo()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
-    String fileName = "";
-    String file = "";
     String buttonText = "";
     String message = FdahpStudyDesignerConstants.FAILURE;
     ModelMap map = new ModelMap();
