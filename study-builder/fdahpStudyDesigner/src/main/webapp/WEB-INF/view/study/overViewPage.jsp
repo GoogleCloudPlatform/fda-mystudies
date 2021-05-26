@@ -461,6 +461,8 @@
             });
     
     <c:if test="${not empty permission}">
+    $(".note-editable").attr("contenteditable","false");
+    $(".note-toolbar").attr("class","disabled");
     $('.summernote').summernote('disable');
     </c:if>
     
