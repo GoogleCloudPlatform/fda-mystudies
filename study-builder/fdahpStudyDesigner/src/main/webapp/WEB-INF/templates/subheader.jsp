@@ -109,6 +109,7 @@
   function hideDisplayMessage() {
     $('#alertMsg').slideUp('5000');
   }
+  
   function importStudy() {
 	   var bb=  bootbox.prompt({ 
 		  title: "Import a study",
@@ -127,11 +128,9 @@
 		        },
 		    callback: function (result) {
 		    	if(result !=null && (result == "" || !(/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(result)))){
-		    		showErrMsg("Please enter a valid URL")
+		    		showErrMsg("Please enter a valid URL");
 		           }else if(result !=null){
-		        	   if(!validateExpireDate(result)){
-		        		   showErrMsg("The URL has expired. Please use a newly generated one.")
-		        	   }else{
+		        	   if(validateExpireDate(result)){
 	            	    $.ajax({
 	                      url: "/studybuilder/studies/import.do?_S=${param._S}",
 	                      type: "POST",
@@ -162,12 +161,18 @@
   }
   
   function validateExpireDate(result){
-	 var urlArray= result.split("&");
-	 var expireTimeStamp= urlArray[1].split("=");
-	  if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
-		  return false;
+	 var index= result.search("Expires=");
+	  if(index != -1){
+		  var expire = result.substring(index, result.indexOf('&', index));
+	      var expireTimeStamp= expire.split("=");
+	      if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
+	    	  showErrMsg("The URL has expired. Please use a newly generated one.");
+	    	  return false;
+	      }
+	      return true;
 	  }
-	  return true;
+	  showErrMsg("Please enter a valid URL");
+	  return false;
   }
 
 </script>

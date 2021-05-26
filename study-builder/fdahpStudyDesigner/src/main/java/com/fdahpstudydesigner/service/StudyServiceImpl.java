@@ -1595,9 +1595,12 @@ public class StudyServiceImpl implements StudyService {
 
     List<ResourceBO> resourceBOs = studyDAO.getResourceList(studyBo.getId());
 
+    List<ActiveTaskBo> activeTaskBos =
+        studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
+
     // replicating study
     studyDAO.cloneStudy(studyBo, sessionObject);
-    saveActiveTaskDetails(studyBo);
+    saveActiveTaskDetails(activeTaskBos, studyBo);
 
     if (eligibilityBo != null) {
       studyDAO.cloneEligibility(eligibilityBo, studyBo.getId());
@@ -1650,10 +1653,7 @@ public class StudyServiceImpl implements StudyService {
     return studyBo;
   }
 
-  private void saveActiveTaskDetails(StudyBo studyBo) {
-
-    List<ActiveTaskBo> activeTaskBos =
-        studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
+  private void saveActiveTaskDetails(List<ActiveTaskBo> activeTaskBos, StudyBo studyBo) {
 
     List<String> activeTaskIds = new ArrayList<>();
     List<String> activeTaskTypes = new ArrayList<>();
