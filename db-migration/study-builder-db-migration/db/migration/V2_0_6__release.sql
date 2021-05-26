@@ -1,5 +1,10 @@
 /* Issue #3551 Standardize use of title case and lower case across screens, 
    and update text accordingly. */
+   
+UPDATE fda_hphc.statistic_master_images SET value = 'Heart rate' WHERE value = 'Heart Rate';
+UPDATE fda_hphc.statistic_master_images SET value = 'Blood glucose' WHERE value = 'Blood Glucose';
+UPDATE fda_hphc.statistic_master_images SET value = 'Active task' WHERE value = 'Active Task';
+UPDATE fda_hphc.statistic_master_images SET value = 'Baby kicks' WHERE value = 'Baby Kicks';
 
 UPDATE fda_hphc.roles SET role_name = 'Project lead' WHERE role_name = 'Project Lead';
 
@@ -66,7 +71,7 @@ UPDATE fda_hphc.health_kit_keys_info SET display_name = 'Forced expiratory volum
 UPDATE fda_hphc.health_kit_keys_info SET display_name = 'Peak expiratory flow rate' WHERE display_name = 'Peak Expiratory Flow Rate';
 UPDATE fda_hphc.health_kit_keys_info SET display_name = 'Dietary fat' WHERE display_name = 'Dietary Fat';
 UPDATE fda_hphc.health_kit_keys_info SET display_name = 'Dietary fat polyunsaturated' WHERE display_name = 'Dietary Fat Polyunsaturated';
-UPDATE fda_hphc.health_kit_keys_info SET display_name = 'Dietary fat polyunsaturated' WHERE display_name = 'Dietary Fat Polyunsaturated';
+UPDATE fda_hphc.health_kit_keys_info SET display_name = 'Dietary fat monounsaturated' WHERE display_name = 'Dietary Fat Monounsaturated';
 UPDATE fda_hphc.health_kit_keys_info SET display_name = 'Dietary fat saturated' WHERE display_name = 'Dietary Fat Saturated';
 
 UPDATE fda_hphc.health_kit_keys_info SET display_name = 'Dietary cholestrol' WHERE display_name = 'Dietary Cholestrol';
