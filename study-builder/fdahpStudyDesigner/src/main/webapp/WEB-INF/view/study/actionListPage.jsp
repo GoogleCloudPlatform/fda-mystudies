@@ -191,12 +191,12 @@
     $('.tenth').removeClass('cursor-none');
 
     if("${studyBo.exportSignedUrl}" == null || "${studyBo.exportSignedUrl}" == ""){
-    	$('.copy_to_clipboard').hide();
+    	$('.copy_to_clipboard').addClass('cursor-none');
     }
     else if(!validateExpireDate("${studyBo.exportSignedUrl}")){
-    	$('.copy_to_clipboard').hide();
+    	$('.copy_to_clipboard').addClass('cursor-none');
     }else{
-        $('.copy_to_clipboard').show();
+        $('.copy_to_clipboard').removeClass('cursor-none');
     }
   });
 
@@ -333,7 +333,6 @@
     }
   }
   
-  var currentTime = "";
   function exportStudy(){
 	   var studyId = "${studyBo.id}";
 	  $
@@ -348,10 +347,9 @@
         success: function (data) {
             var message = data.message;
             if (message == "SUCCESS") {
-            	currentTime = data.currentTime;
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
               $('#alertMsg').show();
-              $('.copy_to_clipboard').show();
+              $('.copy_to_clipboard').removeClass('cursor-none');
               setTimeout(function () {
                   location.reload(true);
                 }, 5000);
@@ -394,10 +392,10 @@
 	  }
   
  $('.copy_to_clipboard').on('mouseover', function () {
-	 var urlExpire =  ${signedUrlExpiryTime};
-	  var timeStamp = expireTime-(urlExpire*3600);
-	  var lastGeneratedDate = new Date(timeStamp*1000);
-	 $('#copy_to_clipboard').attr("title", "Last generated on " + lastGeneratedDate );
+	  var urlExpireTime =  ${signedUrlExpiryTime};
+	  var lastGeneratedTimestamp = expireTime-(urlExpireTime*3600);
+	  var lastGeneratedTime = new Date(lastGeneratedTimestamp*1000).toLocaleString([], { hour12: true});
+	 $('#copy_to_clipboard').attr("title", "Last generated on " + lastGeneratedTime );
 	}); 
 	   
 </script>
