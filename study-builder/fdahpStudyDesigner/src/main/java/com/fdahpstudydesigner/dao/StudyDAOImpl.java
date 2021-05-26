@@ -7014,7 +7014,7 @@ public class StudyDAOImpl implements StudyDAO {
       boolean oldFilePath,
       String newCustomStudyId) {
     if (studyBo.getThumbnailImage() != null) {
-      FdahpStudyDesignerUtil.copyOrMoveImage(
+      FdahpStudyDesignerUtil.copyOrMoveStudyResources(
           studyBo.getThumbnailImage(),
           FdahpStudyDesignerConstants.STUDTYLOGO,
           studyBo.getCustomStudyId(),
@@ -7054,7 +7054,7 @@ public class StudyDAOImpl implements StudyDAO {
       for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
 
         if (questionResponseSubType.getSelectedImage() != null) {
-          FdahpStudyDesignerUtil.copyOrMoveImage(
+          FdahpStudyDesignerUtil.copyOrMoveStudyResources(
               questionResponseSubType.getSelectedImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -7064,7 +7064,7 @@ public class StudyDAOImpl implements StudyDAO {
         }
 
         if (questionResponseSubType.getImage() != null) {
-          FdahpStudyDesignerUtil.copyOrMoveImage(
+          FdahpStudyDesignerUtil.copyOrMoveStudyResources(
               questionResponseSubType.getImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -7083,7 +7083,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
         if (questionResponseType.getMinImage() != null) {
-          FdahpStudyDesignerUtil.copyOrMoveImage(
+          FdahpStudyDesignerUtil.copyOrMoveStudyResources(
               questionResponseType.getMinImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -7094,7 +7094,7 @@ public class StudyDAOImpl implements StudyDAO {
 
         if (questionResponseType.getMaxImage() != null) {
 
-          FdahpStudyDesignerUtil.copyOrMoveImage(
+          FdahpStudyDesignerUtil.copyOrMoveStudyResources(
               questionResponseType.getMaxImage(),
               FdahpStudyDesignerConstants.QUESTIONNAIRE,
               studyBo.getCustomStudyId(),
@@ -7113,7 +7113,7 @@ public class StudyDAOImpl implements StudyDAO {
     for (StudyPageBo studyPageBo : studyPageBoList) {
 
       if (studyPageBo.getImagePath() != null) {
-        FdahpStudyDesignerUtil.copyOrMoveImage(
+        FdahpStudyDesignerUtil.copyOrMoveStudyResources(
             studyPageBo.getImagePath(),
             FdahpStudyDesignerConstants.STUDTYPAGES,
             studyBo.getCustomStudyId(),
@@ -7132,7 +7132,7 @@ public class StudyDAOImpl implements StudyDAO {
     for (ResourceBO resourceBo : resourceBoList) {
 
       if (resourceBo.getPdfUrl() != null) {
-        FdahpStudyDesignerUtil.copyOrMoveImage(
+        FdahpStudyDesignerUtil.copyOrMoveStudyResources(
             resourceBo.getPdfUrl(),
             FdahpStudyDesignerConstants.RESOURCEPDFFILES,
             studyBo.getCustomStudyId(),

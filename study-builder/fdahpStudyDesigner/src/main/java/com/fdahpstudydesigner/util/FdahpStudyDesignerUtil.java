@@ -1087,7 +1087,7 @@ public class FdahpStudyDesignerUtil {
     return null;
   }
 
-  public static void copyOrMoveImage(
+  public static void copyOrMoveStudyResources(
       String fileName,
       String underDirectory,
       String customStudyId,
