@@ -182,7 +182,6 @@
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {
-	  debugger
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".tenth").addClass('active');
@@ -198,10 +197,8 @@
         $('.copy_to_clipboard').show();
     }
   });
-
-
+ 
   function validateStudyStatus(obj) {
-	  debugger
     var buttonText = obj.id;
     var messageText = "";
     if (buttonText) {
@@ -269,7 +266,6 @@
   }
 
   function showBootBoxMessage(buttonText, messageText) {
-	  debugger
     if (buttonText == 'resumeId') {
     	 messageText = "You are attempting to resume the study. Are you sure you wish to proceed?";
     } else if (buttonText == 'lunchId') {
