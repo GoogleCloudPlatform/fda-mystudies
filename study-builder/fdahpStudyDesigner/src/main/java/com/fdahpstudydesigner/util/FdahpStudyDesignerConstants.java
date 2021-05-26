@@ -444,8 +444,6 @@ public class FdahpStudyDesignerConstants {
 
   public static final String DEFAULT_IMAGES = "defaultImages";
 
-  public static final int SIGNED_URL_DURATION_IN_HOURS = 12;
-
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

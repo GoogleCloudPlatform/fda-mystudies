@@ -141,8 +141,7 @@ public class StudyMetaDataDao {
                     : StudyMetaDataUtil.getSignedUrl(
                         propMap.get("cloud.bucket.name"),
                         propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
-                            + gatewayWelcomeInfo.getImagePath(),
-                        StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                            + gatewayWelcomeInfo.getImagePath()));
             infoBean.setText(
                 StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())
                     ? ""
@@ -203,8 +202,7 @@ public class StudyMetaDataDao {
                               + resource.getCustomStudyId()
                               + "/"
                               + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH).trim()
-                              + resource.getPdfUrl(),
-                          StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                              + resource.getPdfUrl()));
             }
 
             resourceBean.setResourcesId(
@@ -298,8 +296,7 @@ public class StudyMetaDataDao {
                             + propMap
                                 .get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                                 .trim()
-                            + studyDto.getThumbnailImage(),
-                        StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                            + studyDto.getThumbnailImage()));
             studyBean.setStudyId(
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
@@ -940,8 +937,7 @@ public class StudyMetaDataDao {
                               + studyDto.getCustomStudyId()
                               + "/"
                               + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH).trim()
-                              + resourcesDto.getPdfUrl(),
-                          StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                              + resourcesDto.getPdfUrl()));
             }
             resourcesBean.setResourcesId(
                 resourcesDto.getId() == null ? "" : String.valueOf(resourcesDto.getId()));
@@ -1150,8 +1146,7 @@ public class StudyMetaDataDao {
                             + studyDto.getCustomStudyId()
                             + "/"
                             + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_PAGE_PATH).trim()
-                            + studyPageInfo.getImagePath(),
-                        StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                            + studyPageInfo.getImagePath()));
             info.setText(
                 StringUtils.isEmpty(studyPageInfo.getDescription())
                     ? ""
@@ -1182,8 +1177,7 @@ public class StudyMetaDataDao {
                           + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
-                          + studyDto.getThumbnailImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                          + studyDto.getThumbnailImage()));
           info.setText(StringUtils.isEmpty(studyDto.getFullName()) ? "" : studyDto.getFullName());
           infoList.add(info);
         }
@@ -1637,8 +1631,7 @@ public class StudyMetaDataDao {
                             + propMap
                                 .get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                                 .trim()
-                            + studyDto.getThumbnailImage(),
-                        StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                            + studyDto.getThumbnailImage()));
             studyBean.setStudyId(
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""

@@ -37,7 +37,7 @@ public class ParticipantManagerUtil {
 
   @Autowired private Storage storageService;
 
-  public String getSignedUrl(String fileUrl, int signedUrlDurationInHours, String customStudyId) {
+  public String getSignedUrl(String fileUrl, String customStudyId) {
     try {
       if (StringUtils.isEmpty(fileUrl)) {
         return null;
@@ -59,7 +59,9 @@ public class ParticipantManagerUtil {
 
       BlobInfo blobInfo =
           BlobInfo.newBuilder(appConfig.getStudyBuilderCloudBucketName(), filePath).build();
-      return storageService.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+      return storageService
+          .signUrl(blobInfo, appConfig.getSignedUrlDurationInHours(), TimeUnit.HOURS)
+          .toString();
     } catch (Exception e) {
       logger.error("Unable to generate signed url", e);
     }

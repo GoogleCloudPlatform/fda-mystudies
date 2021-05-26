@@ -1071,11 +1071,16 @@ public class FdahpStudyDesignerUtil {
     return null;
   }
 
-  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
+  public static String getSignedUrl(String filePath) {
     try {
       BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+      return storage
+          .signUrl(
+              blobInfo,
+              Integer.parseInt(configMap.get("signed.url.duration.in.hours")),
+              TimeUnit.HOURS)
+          .toString();
     } catch (Exception e) {
       logger.error("Unable to generate signed url", e);
     }

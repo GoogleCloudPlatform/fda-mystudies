@@ -2171,15 +2171,13 @@ public class StudyController {
               FdahpStudyDesignerUtil.getSignedUrl(
                   FdahpStudyDesignerConstants.DEFAULT_IMAGES
                       + "/"
-                      + configMap.get("study.defaultImage"),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                      + configMap.get("study.defaultImage")));
           map.addAttribute(
               "defaultPageOverviewImageSignedUrl",
               FdahpStudyDesignerUtil.getSignedUrl(
                   FdahpStudyDesignerConstants.DEFAULT_IMAGES
                       + "/"
-                      + configMap.get("study.page2.defaultImage"),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                      + configMap.get("study.page2.defaultImage")));
           mav = new ModelAndView("overviewStudyPages", map);
         } else {
           return new ModelAndView("redirect:studyList.do");
@@ -4558,8 +4556,7 @@ public class StudyController {
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.STUDTYLOGO
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                      + studyBo.getThumbnailImage(),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                      + studyBo.getThumbnailImage()));
         }
         // grouped for Study category , Research sponsors , Data partner
         referenceMap =
@@ -4582,8 +4579,7 @@ public class StudyController {
             FdahpStudyDesignerUtil.getSignedUrl(
                 FdahpStudyDesignerConstants.DEFAULT_IMAGES
                     + "/"
-                    + configMap.get("study.basicInformation.defaultImage"),
-                FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                    + configMap.get("study.basicInformation.defaultImage")));
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");

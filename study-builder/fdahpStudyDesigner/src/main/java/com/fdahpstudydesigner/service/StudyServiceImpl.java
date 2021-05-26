@@ -401,9 +401,7 @@ public class StudyServiceImpl implements StudyService {
                     + FdahpStudyDesignerConstants.STUDTYPAGES
                     + FdahpStudyDesignerConstants.PATH_SEPARATOR
                     + s.getImagePath();
-            s.setSignedUrl(
-                FdahpStudyDesignerUtil.getSignedUrl(
-                    path, FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+            s.setSignedUrl(FdahpStudyDesignerUtil.getSignedUrl(path));
             if (s.getImagePath().contains("?v=")) {
               String imagePathArr[] = s.getImagePath().split("\\?");
               s.setImagePath(imagePathArr[0] + "?v=" + new Date().getTime());

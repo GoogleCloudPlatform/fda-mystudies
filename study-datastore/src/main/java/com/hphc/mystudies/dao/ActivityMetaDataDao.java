@@ -2366,8 +2366,7 @@ public class ActivityMetaDataDao {
                           + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + reponseType.getMaxImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                          + reponseType.getMaxImage())));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
@@ -2380,8 +2379,7 @@ public class ActivityMetaDataDao {
                           + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + reponseType.getMinImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                          + reponseType.getMinImage())));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
     }
@@ -2443,8 +2441,7 @@ public class ActivityMetaDataDao {
                           + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + reponseType.getMaxImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                          + reponseType.getMaxImage())));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
@@ -2457,8 +2454,7 @@ public class ActivityMetaDataDao {
                           + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + reponseType.getMinImage(),
-                      StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                          + reponseType.getMinImage())));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
     }
@@ -2590,8 +2586,7 @@ public class ActivityMetaDataDao {
                               + propMap
                                   .get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE)
                                   .trim()
-                              + subType.getImage(),
-                          StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                              + subType.getImage())));
           imageChoiceMap.put(
               "selectedImage",
               StringUtils.isEmpty(subType.getSelectedImage())
@@ -2606,8 +2601,7 @@ public class ActivityMetaDataDao {
                               + propMap
                                   .get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE)
                                   .trim()
-                              + subType.getSelectedImage(),
-                          StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS)));
+                              + subType.getSelectedImage())));
           imageChoiceMap.put(
               "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
           imageChoiceMap.put(

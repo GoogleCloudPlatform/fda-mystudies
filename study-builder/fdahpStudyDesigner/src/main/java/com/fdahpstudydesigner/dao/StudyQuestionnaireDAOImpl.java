@@ -2138,8 +2138,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                          + questionReponseTypeBo.getMaxImage(),
-                      FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                          + questionReponseTypeBo.getMaxImage()));
             }
 
             if ((questionReponseTypeBo != null)
@@ -2152,8 +2151,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + questionReponseTypeBo.getMinImage(),
-                      FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                          + questionReponseTypeBo.getMinImage()));
             }
             questionnairesStepsBo.setQuestionReponseTypeBo(questionReponseTypeBo);
 
@@ -2175,8 +2173,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
                               + FdahpStudyDesignerConstants.QUESTIONNAIRE
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                              + s.getImage(),
-                          FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                              + s.getImage()));
                 }
                 if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
                   s.setSignedSelectedImage(
@@ -2187,8 +2184,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
                               + FdahpStudyDesignerConstants.QUESTIONNAIRE
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                              + s.getSelectedImage(),
-                          FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                              + s.getSelectedImage()));
                 }
               }
             }
@@ -2626,8 +2622,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
-                      + questionReponseTypeBo.getMinImage(),
-                  12));
+                      + questionReponseTypeBo.getMinImage()));
         }
 
         if (questionReponseTypeBo != null
@@ -2641,8 +2636,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
-                      + questionReponseTypeBo.getMaxImage(),
-                  12));
+                      + questionReponseTypeBo.getMaxImage()));
         }
         questionsBo.setQuestionReponseTypeBo(questionReponseTypeBo);
 
@@ -2664,8 +2658,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + s.getImage(),
-                      FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                          + s.getImage()));
             }
             if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
               s.setSignedSelectedImage(
@@ -2676,8 +2669,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + s.getSelectedImage(),
-                      FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                          + s.getSelectedImage()));
             }
           }
         }
