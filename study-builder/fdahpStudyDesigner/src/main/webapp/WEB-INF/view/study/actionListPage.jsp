@@ -390,10 +390,10 @@
 	  }
   
  $('.copy_to_clipboard').on('mouseover', function () {
-	 var c =  ${signedUrlExpiryTime};
-	  var a = expireTime-(c*3600);
-	  var b = new Date(a*1000);
-	 $('#copy_to_clipboard').attr("title", "Last generated on " + b );
+	 var urlExpire =  ${signedUrlExpiryTime};
+	  var timeStamp = expireTime-(urlExpire*3600);
+	  var lastGeneratedDate = new Date(timeStamp*1000);
+	 $('#copy_to_clipboard').attr("title", "Last generated on " + lastGeneratedDate );
 	}); 
 	   
 </script>

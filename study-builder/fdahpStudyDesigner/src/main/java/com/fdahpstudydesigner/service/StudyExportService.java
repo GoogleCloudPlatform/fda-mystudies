@@ -817,7 +817,8 @@ public class StudyExportService {
             studyBo.getVersion(),
             studyBo.isEnrollmentdateAsAnchordate(),
             studyBo.getFilePath(),
-            studyBo.getCustomStudyId());
+            studyBo.getCustomStudyId(),
+            studyBo.getExportSignedUrl());
 
     insertSqlStatements.add(studiesInsertQuery);
   }
@@ -836,22 +837,22 @@ public class StudyExportService {
         prepareInsertQuery(
             StudyExportSqlQueries.STUDY_SEQUENCE,
             IdGenerator.id(),
-            studySequenceBo.isActions() ? "Y" : "N",
-            studySequenceBo.isBasicInfo() ? "Y" : "N",
-            studySequenceBo.isCheckList(),
-            studySequenceBo.isComprehensionTest() ? "Y" : "N",
-            studySequenceBo.isConsentEduInfo() ? "Y" : "N",
-            studySequenceBo.iseConsent() ? "Y" : "N",
-            studySequenceBo.isEligibility() ? "Y" : "N",
-            studySequenceBo.isMiscellaneousBranding() ? "Y" : "N",
-            studySequenceBo.isMiscellaneousNotification() ? "Y" : "N",
-            studySequenceBo.isMiscellaneousResources() ? "Y" : "N",
-            studySequenceBo.isOverView() ? "Y" : "N",
-            studySequenceBo.isSettingAdmins() ? "Y" : "N",
-            studySequenceBo.isStudyDashboardChart() ? "Y" : "N",
-            studySequenceBo.isStudyDashboardStats() ? "Y" : "N",
-            studySequenceBo.isStudyExcActiveTask() ? "Y" : "N",
-            studySequenceBo.isStudyExcQuestionnaries() ? "Y" : "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
+            "N",
             customIdsMap.get(STUDY_ID + studySequenceBo.getStudyId()));
     insertSqlStatements.add(studySequeneInsertQuery);
   }
