@@ -350,7 +350,9 @@
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
               $('#alertMsg').show();
               $('.copy_to_clipboard').show();
-              location.reload();
+              setTimeout(function () {
+                  location.reload(true);
+                }, 5000);
             } else {
             	showErrMsg1("Export failed. Please try again later.");
             }
