@@ -4290,8 +4290,20 @@ public class StudyDAOImpl implements StudyDAO {
                     .uniqueResult();
         if (dbStudyBo != null) {
 
-          if (!dbStudyBo.getCustomStudyId().equals(studyBo.getCustomStudyId())) {
+          if (StringUtils.isNotEmpty(dbStudyBo.getDestinationCustomStudyId())
+              && StringUtils.isEmpty(dbStudyBo.getCustomStudyId())) {
+            StudyBo study =
+                (StudyBo)
+                    session
+                        .createQuery(
+                            "From StudyBo SBO WHERE SBO.live=0 AND customStudyId=:customStudyId")
+                        .setString("customStudyId", dbStudyBo.getDestinationCustomStudyId())
+                        .uniqueResult();
+            if (study != null) {
+              moveOrCopyCloudStorage(session, study, false, false, studyBo.getCustomStudyId());
+            }
 
+          } else if (!dbStudyBo.getCustomStudyId().equals(studyBo.getCustomStudyId())) {
             moveOrCopyCloudStorage(session, dbStudyBo, false, false, studyBo.getCustomStudyId());
           }
 
