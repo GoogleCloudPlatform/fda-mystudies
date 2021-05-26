@@ -7,8 +7,9 @@
 
 <style>
 .blue-btn {
+    color: #fff;
     background: #007cba;
-    border-color: #007cba;
+    border-color: #007cba !important;
     padding: 4px 20px;
     width: 230px;
     height: 38px;
