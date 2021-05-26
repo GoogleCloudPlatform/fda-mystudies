@@ -22,18 +22,9 @@
 
 package com.fdahpstudydesigner.scheduler;
 
-import com.fdahpstudydesigner.bo.QuestionReponseTypeBo;
-import com.fdahpstudydesigner.bo.QuestionResponseSubTypeBo;
-import com.fdahpstudydesigner.bo.QuestionnairesStepsBo;
-import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
-import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.dao.StudyDAOImpl;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -89,118 +80,13 @@ public class MoveCloudStorageSchedulerService {
                 .list();
 
         for (StudyBo studyBo : studyBoList) {
+
           session
               .createQuery(
                   "update StudyBo SBO set SBO.isCloudStorageMoved = 1 where SBO.customStudyId=:customStudyId")
               .setString("customStudyId", studyBo.getCustomStudyId())
               .executeUpdate();
 
-          if (studyBo.getThumbnailImage() != null) {
-            FdahpStudyDesignerUtil.copyImage(
-                studyBo.getThumbnailImage(),
-                FdahpStudyDesignerConstants.STUDTYLOGO,
-                studyBo.getCustomStudyId());
-          }
-
-          List<QuestionnairesStepsBo> questionnaireStepsList =
-              session
-                  .createQuery(
-                      "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
-                  .setString("studyId", studyBo.getId())
-                  .list();
-          List<String> questionIds = new ArrayList();
-          for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
-            if (questionnaireSteps.getStepType().equals("Form")) {
-              List<String> questionIdList =
-                  session
-                      .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
-                      .setString("formId", questionnaireSteps.getInstructionFormId())
-                      .list();
-              questionIds.addAll(questionIdList);
-            } else if (questionnaireSteps.getStepType().equals("Question")) {
-              questionIds.add(questionnaireSteps.getInstructionFormId());
-            }
-          }
-          if (!CollectionUtils.isEmpty(questionIds)) {
-
-            List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
-                session
-                    .createQuery(
-                        "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
-                    .setParameterList("responseTypeId", questionIds)
-                    .list();
-
-            for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
-
-              if (questionResponseSubType.getSelectedImage() != null) {
-                FdahpStudyDesignerUtil.copyImage(
-                    questionResponseSubType.getSelectedImage(),
-                    FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                    studyBo.getCustomStudyId());
-              }
-
-              if (questionResponseSubType.getImage() != null) {
-                FdahpStudyDesignerUtil.copyImage(
-                    questionResponseSubType.getImage(),
-                    FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                    studyBo.getCustomStudyId());
-              }
-            }
-
-            List<QuestionReponseTypeBo> questionResponseTypeList =
-                session
-                    .createQuery(
-                        "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
-                    .setParameterList("responseTypeId", questionIds)
-                    .list();
-
-            for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
-              if (questionResponseType.getMinImage() != null) {
-                FdahpStudyDesignerUtil.copyImage(
-                    questionResponseType.getMinImage(),
-                    FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                    studyBo.getCustomStudyId());
-              }
-
-              if (questionResponseType.getMaxImage() != null) {
-                FdahpStudyDesignerUtil.copyImage(
-                    questionResponseType.getMaxImage(),
-                    FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                    studyBo.getCustomStudyId());
-              }
-            }
-          }
-          List<StudyPageBo> studyPageBoList =
-              session
-                  .createQuery("from StudyPageBo where studyId=:studyId")
-                  .setString("studyId", studyBo.getId())
-                  .list();
-
-          for (StudyPageBo studyPageBo : studyPageBoList) {
-
-            if (studyPageBo.getImagePath() != null) {
-              FdahpStudyDesignerUtil.copyImage(
-                  studyPageBo.getImagePath(),
-                  FdahpStudyDesignerConstants.STUDTYPAGES,
-                  studyBo.getCustomStudyId());
-            }
-          }
-
-          List<ResourceBO> resourceBoList =
-              session
-                  .createQuery("from ResourceBO where studyId=:studyId")
-                  .setString("studyId", studyBo.getId())
-                  .list();
-
-          for (ResourceBO resourceBo : resourceBoList) {
-
-            if (resourceBo.getPdfUrl() != null) {
-              FdahpStudyDesignerUtil.copyImage(
-                  resourceBo.getPdfUrl(),
-                  FdahpStudyDesignerConstants.RESOURCEPDFFILES,
-                  studyBo.getCustomStudyId());
-            }
-          }
           study.moveOrCopyCloudStorage(session, studyBo, true, true, null);
 
           session
