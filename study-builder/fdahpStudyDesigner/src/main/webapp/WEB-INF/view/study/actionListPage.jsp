@@ -189,12 +189,16 @@
     $("#createStudyId").show();
     $('.tenth').removeClass('cursor-none');
 
-    if(!validateExpireDate("${studyBo.exportSignedUrl}")){
+    if("${studyBo.exportSignedUrl}" == null || "${studyBo.exportSignedUrl}" == ""){
     	$('.copy_to_clipboard').hide();
-        }else{
-        	$('.copy_to_clipboard').show();
-            }
+    }
+    else if(!validateExpireDate("${studyBo.exportSignedUrl}")){
+    	$('.copy_to_clipboard').hide();
+    }else{
+        $('.copy_to_clipboard').show();
+    }
   });
+
 
   function validateStudyStatus(obj) {
 	  debugger
