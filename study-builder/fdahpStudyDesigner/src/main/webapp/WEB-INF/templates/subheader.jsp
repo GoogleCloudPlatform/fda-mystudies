@@ -42,20 +42,12 @@
                   </label>
             <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create study
             </button>
-              <button type="button" class="btn btn-primary blue-btn importStudy" id="importStudy"  > Import </button>
+              <button type="button" class="btn btn-primary blue-btn importStudy"  onclick="importStudy();"> Import </button>
           </div>
         </div>
       </c:if>
     </div>
   </div>
-</div>
-<div id="importStudy" class="modal">
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
-  </div>
-
 </div>
 <!-- StudyList Section End-->
 
@@ -118,7 +110,7 @@
     $('#alertMsg').slideUp('5000');
   }
   function importStudy() {
-	  /*  var bb=  bootbox.prompt({ 
+	   var bb=  bootbox.prompt({ 
 		  title: "Import a study",
 		  inputType: "text",
   		  placeholder: "Enter a valid signed URL",
@@ -132,9 +124,9 @@
 		          'confirm': {
 		            label: 'Submit',
 		          },
-		        }, */
-		  //  callback: function (result) {
-		    	if(result !=null /*&&  (result == "" || !(/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(result))) */){
+		        },
+		    callback: function (result) {
+		    	if(result !=null && (result == "" || !(/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(result)))){
 		    		showErrMsg("Please enter a valid URL")
 		           }else if(result !=null){
 		        	   if(!validateExpireDate(result)){
@@ -164,9 +156,9 @@
 	                 });
 	              } 
 		       }
-//		    }
+		    }
 		        
-	//  });
+	  });
   }
   
   function validateExpireDate(result){

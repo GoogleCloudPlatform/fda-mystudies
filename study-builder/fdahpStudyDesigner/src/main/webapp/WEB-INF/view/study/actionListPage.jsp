@@ -188,16 +188,13 @@
     $("#createStudyId").show();
     $('.tenth').removeClass('cursor-none');
 
-    if("${studyBo.exportSignedUrl}" == null || "${studyBo.exportSignedUrl}" == ""){
+    if(!validateExpireDate("${studyBo.exportSignedUrl}")){
     	$('.copy_to_clipboard').hide();
-    }
-    else if(!validateExpireDate("${studyBo.exportSignedUrl}")){
-    	$('.copy_to_clipboard').hide();
-    }else{
-        $('.copy_to_clipboard').show();
-    }
+        }else{
+        	$('.copy_to_clipboard').show();
+            }
   });
- 
+
   function validateStudyStatus(obj) {
     var buttonText = obj.id;
     var messageText = "";
