@@ -158,10 +158,14 @@
       </div>
 
       <div class="right-content-body mt-xlg" id="displayTitleId">
-        <div class="gray-xs-f mb-xs" id="minScoreText">Minimum score needed to pass the test</div>
+        <div class="gray-xs-f mb-xs" id="minScoreText">Minimum score needed to pass the test
+	      <span
+	        class="requiredStar">*
+	      </span>
+        </div>
         <div class="form-group col-md-5 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
-                 name="comprehensionTestMinimumScore"
+                 name="comprehensionTestMinimumScore" required data-error="Please fill out this field"
                  value="${consentBo.comprehensionTestMinimumScore}"
                  maxlength="3" onkeypress="return isNumber(event)"  Style="width:250px">
           <div class="help-block with-errors red-txt"></div>
