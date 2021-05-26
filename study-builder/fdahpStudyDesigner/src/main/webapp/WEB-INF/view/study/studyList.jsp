@@ -84,6 +84,9 @@
 						<c:when test="${empty study.customStudyId}">
 						      cursor-none
 						</c:when>
+						<c:when test="${not fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}"> 
+						      cursor-none
+						</c:when>
 			  </c:choose>"
              
                    data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
