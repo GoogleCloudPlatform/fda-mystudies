@@ -381,14 +381,22 @@ public class StudyServiceImpl implements StudyService {
     List<StudyPageBo> studyPageBos = null;
     try {
       studyPageBos = studyDAO.getOverviewStudyPagesById(studyId, userId);
+      StudyBo study = getStudyInfo(studyId);
       if ((null != studyPageBos) && !studyPageBos.isEmpty()) {
         for (StudyPageBo s : studyPageBos) {
           if (FdahpStudyDesignerUtil.isNotEmpty(s.getImagePath())) {
             // to make unique image
+            String path =
+                FdahpStudyDesignerConstants.STUDIES
+                    + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                    + study.getCustomStudyId()
+                    + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                    + FdahpStudyDesignerConstants.STUDTYPAGES
+                    + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                    + s.getImagePath();
             s.setSignedUrl(
                 FdahpStudyDesignerUtil.getSignedUrl(
-                    FdahpStudyDesignerConstants.STUDTYPAGES + "/" + s.getImagePath(),
-                    FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                    path, FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
             if (s.getImagePath().contains("?v=")) {
               String imagePathArr[] = s.getImagePath().split("\\?");
               s.setImagePath(imagePathArr[0] + "?v=" + new Date().getTime());
@@ -1026,6 +1034,7 @@ public class StudyServiceImpl implements StudyService {
       if ((studyPageBean.getMultipartFiles() != null)
           && (studyPageBean.getMultipartFiles().length > 0)) {
         String imagePath[] = new String[studyPageBean.getImagePath().length];
+        StudyBo study = getStudyInfo(studyPageBean.getStudyId());
         for (int i = 0; i < studyPageBean.getMultipartFiles().length; i++) {
           String file;
           if (!studyPageBean.getMultipartFiles()[i].isEmpty()) {
@@ -1050,7 +1059,8 @@ public class StudyServiceImpl implements StudyService {
                 FdahpStudyDesignerUtil.saveImage(
                     studyPageBean.getMultipartFiles()[i],
                     file,
-                    FdahpStudyDesignerConstants.STUDTYPAGES);
+                    FdahpStudyDesignerConstants.STUDTYPAGES,
+                    study.getCustomStudyId());
 
           } else {
             imagePath[i] = studyPageBean.getImagePath()[i].split("\\?")[0];
@@ -1108,7 +1118,10 @@ public class StudyServiceImpl implements StudyService {
 
         fileName =
             FdahpStudyDesignerUtil.saveImage(
-                resourceBO.getPdfFile(), file, FdahpStudyDesignerConstants.RESOURCEPDFFILES);
+                resourceBO.getPdfFile(),
+                file,
+                FdahpStudyDesignerConstants.RESOURCEPDFFILES,
+                studyBo.getCustomStudyId());
 
         resourceBO2.setPdfUrl(fileName);
         resourceBO2.setPdfName(resourceBO.getPdfFile().getOriginalFilename());
@@ -1433,10 +1446,15 @@ public class StudyServiceImpl implements StudyService {
             StringUtils.isEmpty(studyBo.getThumbnailImage())
                 ? propMap.get("fda.imgDisplaydPath")
                     + propMap.get("cloud.bucket.name")
-                    + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                    + "/"
+                    + FdahpStudyDesignerConstants.DEFAULT_IMAGES
+                    + "/"
                     + propMap.get(FdahpStudyDesignerConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE)
                 : propMap.get("fda.imgDisplaydPath")
                     + propMap.get("cloud.bucket.name")
+                    + "/"
+                    + studyBo.getCustomStudyId()
+                    + "/"
                     + propMap.get(FdahpStudyDesignerConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
                     + studyBo.getThumbnailImage());
       }

@@ -1198,7 +1198,9 @@ public class SiteServiceImpl implements SiteService {
         StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
         studyDetail.setLogoImageUrl(
             participantManagerUtil.getSignedUrl(
-                studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+                studySiteInfo.getLogoImageUrl(),
+                CommonConstants.SIGNED_URL_DURATION_IN_HOURS,
+                studySiteInfo.getCustomId()));
         studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
 
@@ -1246,7 +1248,9 @@ public class SiteServiceImpl implements SiteService {
           StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
           studyDetail.setLogoImageUrl(
               participantManagerUtil.getSignedUrl(
-                  studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+                  studySiteInfo.getLogoImageUrl(),
+                  CommonConstants.SIGNED_URL_DURATION_IN_HOURS,
+                  studySiteInfo.getCustomId()));
           studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
         StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());

@@ -438,9 +438,15 @@ public class FdahpStudyDesignerConstants {
   public static final String SUPER_ADMIN_PERMISSIONS =
       "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW,ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT,ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW";
 
+  public static final String PATH_SEPARATOR = "/";
+
+  public static final String STUDIES = "studies";
+
+  public static final String DEFAULT_IMAGES = "defaultImages";
+
+  public static final int SIGNED_URL_DURATION_IN_HOURS = 12;
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
-
-  public static final int SIGNED_URL_DURATION_IN_HOURS = 12;
 }

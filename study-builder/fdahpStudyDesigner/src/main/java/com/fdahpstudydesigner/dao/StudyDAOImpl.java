@@ -79,6 +79,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
@@ -4189,6 +4190,26 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
+      String fileName = "";
+      if ((studyBo.getFile() != null) && !studyBo.getFile().isEmpty()) {
+        if (FdahpStudyDesignerUtil.isNotEmpty(studyBo.getThumbnailImage())) {
+          fileName =
+              studyBo
+                  .getThumbnailImage()
+                  .replace(
+                      "."
+                          + studyBo.getThumbnailImage()
+                              .split("\\.")[studyBo.getThumbnailImage().split("\\.").length - 1],
+                      "");
+        } else {
+          fileName =
+              FdahpStudyDesignerUtil.getStandardFileName(
+                  "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
+        }
+        studyBo.setThumbnailImage(
+            fileName + "." + FilenameUtils.getExtension(studyBo.getFile().getOriginalFilename()));
+      }
+
       if (studyBo.getId() == null) {
         studyBo.setCreatedBy(studyBo.getUserId());
         appId = studyBo.getAppId().toUpperCase();
@@ -4245,6 +4266,12 @@ public class StudyDAOImpl implements StudyDAO {
                     .setInteger("id", studyBo.getId())
                     .uniqueResult();
         if (dbStudyBo != null) {
+
+          if (!dbStudyBo.getCustomStudyId().equals(studyBo.getCustomStudyId())) {
+
+            moveOrCopyCloudStorage(session, dbStudyBo, false, false, studyBo.getCustomStudyId());
+          }
+
           dbStudyBo.setCustomStudyId(studyBo.getCustomStudyId());
           dbStudyBo.setName(studyBo.getName());
           dbStudyBo.setFullName(studyBo.getFullName());
@@ -4274,6 +4301,14 @@ public class StudyDAOImpl implements StudyDAO {
             }
           }
         }
+      }
+      if ((studyBo.getFile() != null) && !studyBo.getFile().isEmpty()) {
+
+        FdahpStudyDesignerUtil.saveImage(
+            studyBo.getFile(),
+            fileName,
+            FdahpStudyDesignerConstants.STUDTYLOGO,
+            studyBo.getCustomStudyId());
       }
       studySequenceBo =
           (StudySequenceBo)
@@ -6952,5 +6987,142 @@ public class StudyDAOImpl implements StudyDAO {
       }
     }
     return completed;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void moveOrCopyCloudStorage(
+      Session session,
+      StudyBo studyBo,
+      boolean delete,
+      boolean oldFilePath,
+      String newCustomStudyId) {
+    if (studyBo.getThumbnailImage() != null) {
+      FdahpStudyDesignerUtil.copyOrMoveImage(
+          studyBo.getThumbnailImage(),
+          FdahpStudyDesignerConstants.STUDTYLOGO,
+          studyBo.getCustomStudyId(),
+          delete,
+          oldFilePath,
+          newCustomStudyId);
+    }
+
+    List<QuestionnairesStepsBo> questionnaireStepsList =
+        session
+            .createQuery(
+                "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
+            .setInteger("studyId", studyBo.getId())
+            .list();
+    List<Integer> questionIds = new ArrayList();
+    for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
+      if (questionnaireSteps.getStepType().equals("Form")) {
+        List<Integer> questionIdList =
+            session
+                .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
+                .setInteger("formId", questionnaireSteps.getInstructionFormId())
+                .list();
+        questionIds.addAll(questionIdList);
+      } else if (questionnaireSteps.getStepType().equals("Question")) {
+        questionIds.add(questionnaireSteps.getInstructionFormId());
+      }
+    }
+    if (!CollectionUtils.isEmpty(questionIds)) {
+
+      List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
+          session
+              .createQuery(
+                  "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
+
+        if (questionResponseSubType.getSelectedImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseSubType.getSelectedImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+
+        if (questionResponseSubType.getImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseSubType.getImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+      }
+
+      List<QuestionReponseTypeBo> questionResponseTypeList =
+          session
+              .createQuery(
+                  "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
+        if (questionResponseType.getMinImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseType.getMinImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+
+        if (questionResponseType.getMaxImage() != null) {
+
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseType.getMaxImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              studyBo.getCustomStudyId(),
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+      }
+    }
+    List<StudyPageBo> studyPageBoList =
+        session
+            .createQuery("from StudyPageBo where studyId=:studyId")
+            .setInteger("studyId", studyBo.getId())
+            .list();
+
+    for (StudyPageBo studyPageBo : studyPageBoList) {
+
+      if (studyPageBo.getImagePath() != null) {
+        FdahpStudyDesignerUtil.copyOrMoveImage(
+            studyPageBo.getImagePath(),
+            FdahpStudyDesignerConstants.STUDTYPAGES,
+            studyBo.getCustomStudyId(),
+            delete,
+            oldFilePath,
+            newCustomStudyId);
+      }
+    }
+
+    List<ResourceBO> resourceBoList =
+        session
+            .createQuery("from ResourceBO where studyId=:studyId")
+            .setInteger("studyId", studyBo.getId())
+            .list();
+
+    for (ResourceBO resourceBo : resourceBoList) {
+
+      if (resourceBo.getPdfUrl() != null) {
+        FdahpStudyDesignerUtil.copyOrMoveImage(
+            resourceBo.getPdfUrl(),
+            FdahpStudyDesignerConstants.RESOURCEPDFFILES,
+            studyBo.getCustomStudyId(),
+            delete,
+            oldFilePath,
+            newCustomStudyId);
+      }
+    }
   }
 }

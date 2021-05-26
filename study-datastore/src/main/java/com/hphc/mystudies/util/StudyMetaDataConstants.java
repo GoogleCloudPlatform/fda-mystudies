@@ -314,4 +314,8 @@ public interface StudyMetaDataConstants {
       "Take this comprehension test to assess your understanding of the study:";
 
   public static final int SIGNED_URL_DURATION_IN_HOURS = 12;
+
+  public static final String STUDIES = "studies";
+
+  public static final String DEFAULT_IMAGES = "defaultImages";
 }
