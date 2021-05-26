@@ -26,7 +26,7 @@
         </div>
         <c:if test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
-            <button type="button" class="btn btn-default gray-btn submitEle"
+            <button type="button" class="btn btn-default gray-btn submitEle" id="saveId"
                     actType="save">Save
             </button>
           </div>
@@ -706,6 +706,21 @@
 	      return valid;
     
     } 
+    
+    $("#saveId").on('click', function (p) {
+        p.preventDefault();
+        var formValid = true;
+        var isValid=validateSummernote();
+        if(isValid===false){
+            return false;
+        }
+        if (isFromValid($(this).parents('form')) && formValid) {
+          $(this).attr('disabled', 'disabled')
+          $(this).parents('form').submit();
+        } else {
+          p.preventDefault();
+        }
+      });
     
     $("#completedId").on('click', function (e) {
       e.preventDefault();
