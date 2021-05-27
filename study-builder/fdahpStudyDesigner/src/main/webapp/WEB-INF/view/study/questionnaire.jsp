@@ -3933,7 +3933,6 @@
     var anchorForm = true;
     var onetimeForm = true;
     var anchorDateForm = true;
-    $('.typeofschedule').prop('disabled', false);
     if (actType !== 'save') {
       $("#status").val(true);
       if (scheduletype == 'AnchorDate') {
