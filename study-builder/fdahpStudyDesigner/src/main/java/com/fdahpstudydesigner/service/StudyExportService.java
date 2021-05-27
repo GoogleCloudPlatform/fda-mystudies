@@ -1465,8 +1465,6 @@ public class StudyExportService {
 
       msg = validateAndExecuteQuries(signedUrl, map, filepath);
     }
-
-    // if(msg.contains(msg))
     return msg;
   }
 
