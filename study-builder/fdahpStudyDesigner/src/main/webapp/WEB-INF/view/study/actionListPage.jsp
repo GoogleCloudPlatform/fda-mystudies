@@ -335,6 +335,7 @@
   }
   
   function exportStudy(){
+	  $('.copy_to_clipboard').addClass('cursor-none');
 	   var studyId = "${studyBo.id}";
 	  $
       .ajax({
@@ -350,9 +351,9 @@
             if (message == "SUCCESS") {
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
               $('#alertMsg').show();
-              $('.copy_to_clipboard').removeClass('cursor-none');
               setTimeout(function () {
                   location.reload(true);
+                  $('.copy_to_clipboard').removeClass('cursor-none');
                 }, 5000);
             } else {
             	showErrMsg1("Export failed. Please try again later.");
