@@ -4286,7 +4286,7 @@ public class StudyDAOImpl implements StudyDAO {
 
           if (!dbStudyBo.getCustomStudyId().equals(studyBo.getCustomStudyId())) {
 
-            moveOrCopyCloudStorage(session, dbStudyBo, false, false, studyBo.getCustomStudyId());
+            moveOrCopyCloudStorage(session, dbStudyBo, true, false, studyBo.getCustomStudyId());
           }
 
           dbStudyBo.setCustomStudyId(studyBo.getCustomStudyId());
