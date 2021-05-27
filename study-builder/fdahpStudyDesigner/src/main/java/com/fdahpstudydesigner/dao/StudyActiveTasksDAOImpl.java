@@ -349,7 +349,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       query =
           session
-              .createQuery(" from ActiveTaskMasterAttributeBo where taskTypeId=:activeTaskType")
+              .createQuery(
+                  " from ActiveTaskMasterAttributeBo where taskTypeId=:activeTaskType ORDER BY CAST(masterId AS int) asc")
               .setParameter("activeTaskType", activeTaskType);
       taskMasterAttributeBos = query.list();
     } catch (Exception e) {
