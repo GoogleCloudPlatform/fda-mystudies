@@ -146,6 +146,7 @@
 	                    	  if (message == "SUCCESS") {
 	                    		  showSucMsg("Study imported successfully");
 	                    		  location.reload();
+	                    		  setTimeout(hideDisplayMessage, 5000);
 	                            } else {
 	                              bootbox.alert(message);
 	                            }
