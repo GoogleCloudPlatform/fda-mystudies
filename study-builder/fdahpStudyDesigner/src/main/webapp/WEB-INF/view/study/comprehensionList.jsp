@@ -163,9 +163,9 @@
 	        class="requiredStar">*
 	      </span>
         </div>
-        <div class="form-group col-md-5 p-none scoreClass">
+        <div class="form-group col-md-3 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
-                 name="comprehensionTestMinimumScore" required data-error="Please fill out this field"
+                 name="comprehensionTestMinimumScore" data-error="Please fill out this field"
                  value="${consentBo.comprehensionTestMinimumScore}"
                  maxlength="3" onkeypress="return isNumber(event)"  Style="width:250px">
           <div class="help-block with-errors red-txt"></div>
@@ -212,6 +212,7 @@ var markAsComplete = "${markAsComplete}"
       if (val == "Yes") {
     	$("#saveId").html("Next");
         $("#comprehensionTestMinimumScore, #minScoreText").hide();
+        $('#comprehensionTestMinimumScore').attr('required', true);
         $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
         $("#mainContainer").show();
         if ($('#comprehension_list tbody tr').length == 1
@@ -231,6 +232,7 @@ var markAsComplete = "${markAsComplete}"
           $("#addHelpNote").show();
         }
       } else {
+    	$('#comprehensionTestMinimumScore').attr('required', false);
     	$("#saveId").html("Save");
         $("#comprehensionTestMinimumScore").val('');
         $("#mainContainer").hide();
