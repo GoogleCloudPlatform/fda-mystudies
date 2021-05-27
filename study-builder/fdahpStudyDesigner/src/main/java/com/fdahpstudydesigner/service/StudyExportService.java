@@ -116,65 +116,71 @@ public class StudyExportService {
   public String exportStudy(String studyId, String userId, AuditLogEventRequest auditRequest) {
 
     final Map<String, String> customIdsMap = new HashMap<>();
-    List<String> insertSqlStatements = new ArrayList<>();
 
     StudyBo studyBo = studyDao.getStudy(studyId);
-    auditRequest.setStudyId(studyBo.getCustomStudyId());
-    auditRequest.setStudyVersion(studyBo.getVersion().toString());
-    auditRequest.setAppId(studyBo.getAppId());
-    customIdsMap.put(STUDY_ID + studyBo.getId(), IdGenerator.id());
-    customIdsMap.put(CUSTOM_STUDY_ID + studyBo.getCustomStudyId(), null);
 
-    StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(), userId);
-    StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
-    AnchorDateTypeBo anchorDate = studyDao.getAnchorDateDetails(studyBo.getId());
-    List<StudyPageBo> studypageList = studyDao.getOverviewStudyPagesById(studyBo.getId(), userId);
+    if (studyBo != null) {
+      auditRequest.setStudyId(studyBo.getCustomStudyId());
+      auditRequest.setStudyVersion(studyBo.getVersion().toString());
+      auditRequest.setAppId(studyBo.getAppId());
+      customIdsMap.put(STUDY_ID + studyBo.getId(), IdGenerator.id());
+      customIdsMap.put(CUSTOM_STUDY_ID + studyBo.getCustomStudyId(), null);
 
-    EligibilityBo eligibilityBo = studyDao.getStudyEligibiltyByStudyId(studyBo.getId());
+      StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(), userId);
+      StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
+      AnchorDateTypeBo anchorDate = studyDao.getAnchorDateDetails(studyBo.getId());
+      List<StudyPageBo> studypageList = studyDao.getOverviewStudyPagesById(studyBo.getId(), userId);
 
-    List<EligibilityTestBo> eligibilityBoList = new ArrayList<>();
-    if (eligibilityBo != null) {
-      eligibilityBoList = studyDao.viewEligibilityTestQusAnsByEligibilityId(eligibilityBo.getId());
-      customIdsMap.put(NEW_ELIGIBILITY_ID + eligibilityBo.getId(), IdGenerator.id());
+      EligibilityBo eligibilityBo = studyDao.getStudyEligibiltyByStudyId(studyBo.getId());
+
+      List<EligibilityTestBo> eligibilityBoList = new ArrayList<>();
+      if (eligibilityBo != null) {
+        eligibilityBoList =
+            studyDao.viewEligibilityTestQusAnsByEligibilityId(eligibilityBo.getId());
+        customIdsMap.put(NEW_ELIGIBILITY_ID + eligibilityBo.getId(), IdGenerator.id());
+      }
+
+      List<ConsentBo> consentBoList = studyDao.getConsentList(studyBo.getId());
+
+      List<ConsentInfoBo> consentInfoBoList = studyDao.getConsentInfoList(studyBo.getId());
+
+      List<NotificationBO> notificationBOs = notificationDAO.getNotificationList(studyBo.getId());
+
+      List<ResourceBO> resourceBOs = studyDao.getResourceList(studyBo.getId());
+
+      List<String> insertSqlStatements = new ArrayList<>();
+      try {
+        addStudiesInsertSql(studyBo, insertSqlStatements, customIdsMap);
+        addStudyPermissionInsertSql(studyPermissionBo, insertSqlStatements, customIdsMap);
+        addStudySequenceInsertSql(studySequenceBo, insertSqlStatements, customIdsMap);
+
+        addAnchorDateInsertSql(anchorDate, insertSqlStatements, customIdsMap);
+        addStudypagesListInsertSql(studypageList, insertSqlStatements, customIdsMap);
+
+        addEligibilityInsertSql(eligibilityBo, insertSqlStatements, customIdsMap);
+        addEligibilityTestListInsertSql(eligibilityBoList, insertSqlStatements, customIdsMap);
+
+        addConsentBoListInsertSql(consentBoList, insertSqlStatements, customIdsMap);
+        addConsentInfoBoListInsertSql(consentInfoBoList, insertSqlStatements, customIdsMap);
+
+        prepareInsertSqlQueriesForComprehensionTest(customIdsMap, insertSqlStatements, studyBo);
+
+        prepareInsertSqlQueriesForQuestionnaires(customIdsMap, insertSqlStatements, studyBo);
+
+        prepareInsertSqlQueriesForStudyActiveTasks(customIdsMap, insertSqlStatements, studyBo);
+
+        addNotificationInsertSql(notificationBOs, insertSqlStatements, customIdsMap);
+
+        addResourceInsertSql(resourceBOs, insertSqlStatements, customIdsMap);
+
+        return saveFileToCloudStorage(studyBo, insertSqlStatements);
+
+      } catch (Exception e) {
+        logger.error(String.format("export study failed due to %s", e.getMessage()), e);
+        return FdahpStudyDesignerConstants.EXPORT_FAILURE_MSG;
+      }
     }
-
-    List<ConsentBo> consentBoList = studyDao.getConsentList(studyBo.getId());
-
-    List<ConsentInfoBo> consentInfoBoList = studyDao.getConsentInfoList(studyBo.getId());
-
-    List<NotificationBO> notificationBOs = notificationDAO.getNotificationList(studyBo.getId());
-
-    List<ResourceBO> resourceBOs = studyDao.getResourceList(studyBo.getId());
-
-    try {
-      addStudiesInsertSql(studyBo, insertSqlStatements, customIdsMap);
-      addStudyPermissionInsertSql(studyPermissionBo, insertSqlStatements, customIdsMap);
-      addStudySequenceInsertSql(studySequenceBo, insertSqlStatements, customIdsMap);
-
-      addAnchorDateInsertSql(anchorDate, insertSqlStatements, customIdsMap);
-      addStudypagesListInsertSql(studypageList, insertSqlStatements, customIdsMap);
-
-      addEligibilityInsertSql(eligibilityBo, insertSqlStatements, customIdsMap);
-      addEligibilityTestListInsertSql(eligibilityBoList, insertSqlStatements, customIdsMap);
-
-      addConsentBoListInsertSql(consentBoList, insertSqlStatements, customIdsMap);
-      addConsentInfoBoListInsertSql(consentInfoBoList, insertSqlStatements, customIdsMap);
-
-      prepareInsertSqlQueriesForComprehensionTest(customIdsMap, insertSqlStatements, studyBo);
-
-      prepareInsertSqlQueriesForQuestionnaires(customIdsMap, insertSqlStatements, studyBo);
-
-      prepareInsertSqlQueriesForStudyActiveTasks(customIdsMap, insertSqlStatements, studyBo);
-
-      addNotificationInsertSql(notificationBOs, insertSqlStatements, customIdsMap);
-
-      addResourceInsertSql(resourceBOs, insertSqlStatements, customIdsMap);
-
-    } catch (Exception e) {
-      logger.error(String.format("export study failed due to %s", e.getMessage()), e);
-      return FdahpStudyDesignerConstants.EXPORT_FAILURE_MSG;
-    }
-    return saveFileToCloudStorage(studyBo, insertSqlStatements);
+    return FdahpStudyDesignerConstants.EXPORT_FAILURE_MSG;
   }
 
   private void prepareInsertSqlQueriesForStudyActiveTasks(
@@ -383,9 +389,7 @@ public class StudyExportService {
   }
 
   public String saveFileToCloudStorage(StudyBo studyBo, List<String> insertSqlStatements) {
-    Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
     StringBuilder content = new StringBuilder();
-
     try {
       for (String insertSqlStatement : insertSqlStatements) {
         if (StringUtils.isNotEmpty(insertSqlStatement)) {
@@ -394,6 +398,7 @@ public class StudyExportService {
         }
       }
 
+      Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
       byte[] bytes = content.toString().getBytes();
       String fileName =
           studyBo.getId()
@@ -415,12 +420,11 @@ public class StudyExportService {
               absoluteFileName, Integer.parseInt(map.get("signed.url.expiration.in.hour")));
 
       String message =
-          studyDao.saveExportFilePath(
-              studyBo.getId(), absoluteFileName, studyBo.getCustomStudyId(), signedUrl);
+          studyDao.saveExportFilePath(studyBo.getId(), studyBo.getCustomStudyId(), signedUrl);
 
       if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)
           && StringUtils.isNotEmpty(signedUrl)) {
-        return signedUrl;
+        return FdahpStudyDesignerConstants.SUCCESS;
       }
 
     } catch (Exception e) {
@@ -816,7 +820,6 @@ public class StudyExportService {
             studyBo.getType(),
             studyBo.getVersion(),
             studyBo.isEnrollmentdateAsAnchordate(),
-            studyBo.getFilePath(),
             studyBo.getCustomStudyId(),
             studyBo.getExportSignedUrl());
 

@@ -4323,7 +4323,6 @@ public class StudyDAOImpl implements StudyDAO {
           dbStudyBo.setModifiedBy(studyBo.getUserId());
           dbStudyBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           dbStudyBo.setAppId(studyBo.getAppId());
-          dbStudyBo.setFilePath(studyBo.getFilePath());
           session.update(dbStudyBo);
 
           String searchQuery = "From AnchorDateTypeBo where studyId=:id";
@@ -7446,8 +7445,7 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public String saveExportFilePath(
-      String studyId, String filePath, String destinationCustomId, String signedUrl) {
+  public String saveExportFilePath(String studyId, String destinationCustomId, String signedUrl) {
     logger.entry("begin saveExportFilePath()");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -7466,7 +7464,6 @@ public class StudyDAOImpl implements StudyDAO {
                     .uniqueResult();
       }
       if (studyBo != null) {
-        studyBo.setFilePath(filePath);
         studyBo.setDestinationCustomStudyId(destinationCustomId);
         studyBo.setExportSignedUrl(signedUrl);
         session.update(studyBo);

@@ -250,6 +250,5 @@ public interface StudyDAO {
 
   public void saveActiveTaskFrequencyBo(ActiveTaskFrequencyBo activeTaskFrequencyBo);
 
-  public String saveExportFilePath(
-      String studyId, String filePath, String destinationCustomId, String message);
+  public String saveExportFilePath(String studyId, String destinationCustomId, String message);
 }

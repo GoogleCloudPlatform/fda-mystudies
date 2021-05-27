@@ -5309,26 +5309,26 @@ public class StudyController {
       HttpServletRequest request, HttpServletResponse response, @PathVariable String studyId)
       throws IOException {
     logger.info("StudyController - exportStudy() - Starts");
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    JSONObject jsonobject = new JSONObject();
-    PrintWriter out = null;
+
     SessionObject sesObj =
         (SessionObject)
             request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
-    String signedUrl = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
-
-    if (StringUtils.isNotEmpty(signedUrl)) {
-      jsonobject.put("signedUrlOfExportStudy", signedUrl);
-      jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, FdahpStudyDesignerConstants.SUCCESS);
-      jsonobject.put("currentTime", FdahpStudyDesignerUtil.getCurrentDateTime());
+    String message = "";
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    if (StringUtils.isNotEmpty(studyId)) {
+      message = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
+    }
+    JSONObject jsonobject = new JSONObject();
+    if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
+      jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
       auditLogEventHelper.logEvent(STUDY_EXPORTED, auditRequest);
     } else {
       auditLogEventHelper.logEvent(STUDY_EXPORT_FAILED, auditRequest);
     }
 
     response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
-    out = response.getWriter();
+    PrintWriter out = response.getWriter();
     out.print(jsonobject);
 
     logger.info("StudyController - exportStudy() - Ends");

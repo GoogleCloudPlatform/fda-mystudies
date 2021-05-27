@@ -186,9 +186,6 @@ public class StudyBo implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
-  @Column(name = "file_path")
-  private String filePath;
-
   @Column(name = "destination_custom_study_id")
   private String destinationCustomStudyId;
 
@@ -201,14 +198,6 @@ public class StudyBo implements Serializable {
 
   public void setExportSignedUrl(String exportSignedUrl) {
     this.exportSignedUrl = exportSignedUrl;
-  }
-
-  public String getFilePath() {
-    return filePath;
-  }
-
-  public void setFilePath(String filePath) {
-    this.filePath = filePath;
   }
 
   public String getDestinationCustomStudyId() {
