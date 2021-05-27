@@ -36,7 +36,7 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
 
   @Query(
       value =
-          "SELECT * FROM locations WHERE LOWER(custom_id) LIKE %:searchTerm% OR LOWER(name) LIKE %:searchTerm% "
+          "SELECT * FROM locations WHERE is_default!='Y' AND (LOWER(custom_id) LIKE %:searchTerm% OR LOWER(name) LIKE %:searchTerm%) "
               + "ORDER BY CASE :orderByCondition WHEN 'locationId_asc' THEN custom_id END ASC, "
               + "         CASE :orderByCondition WHEN 'locationName_asc' THEN name END ASC, "
               + "         CASE :orderByCondition WHEN 'status_asc' THEN status END ASC, "
@@ -50,7 +50,7 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
 
   @Query(
       value =
-          "SELECT count(id) FROM locations WHERE custom_id LIKE %:searchTerm% OR name LIKE %:searchTerm% ",
+          "SELECT count(id) FROM locations WHERE is_default!='Y' AND (custom_id LIKE %:searchTerm% OR name LIKE %:searchTerm%) ",
       nativeQuery = true)
   public Long countLocationBySearchTerm(String searchTerm);
 }
