@@ -1377,6 +1377,17 @@ public class StudyExportService {
       int i = 0;
       for (Object column : columns) {
         column = ((String) column).trim();
+        if (column.equals("brief_summary")
+            || column.equals("description")
+            || column.equals("elaborated")
+            || column.equals("rich_text")
+            || column.equals("consent_doc_content")
+            || column.equals("learn_more_text")) {
+          String value = (String) values[i];
+          if (StringUtils.isNotEmpty(value)) {
+            values[i] = value.replaceAll("\r", "\\\\r").replaceAll("\n", "\\\\n");
+          }
+        }
         if (values[i] instanceof String || values[i] instanceof Timestamp) {
           sqlQuery =
               sqlQuery.replace(
