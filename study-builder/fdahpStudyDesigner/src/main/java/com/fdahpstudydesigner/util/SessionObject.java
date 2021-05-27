@@ -57,6 +57,7 @@ public class SessionObject implements Serializable {
   private String accessLevel = "";
   private String correlationId;
   private String gcpBucketName;
+  private String storagePath;
 
   public String getCorrelationId() {
     return correlationId;
@@ -252,6 +253,14 @@ public class SessionObject implements Serializable {
 
   public void setAccessLevel(String accessLevel) {
     this.accessLevel = accessLevel;
+  }
+
+  public String getStoragePath() {
+    return storagePath;
+  }
+
+  public void setStoragePath(String storagePath) {
+    this.storagePath = storagePath;
   }
 
   public void setCorrelationId(String correlationId) {

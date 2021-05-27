@@ -127,7 +127,9 @@
 		          },
 		        },
 		    callback: function (result) {
-		    	if(result !=null && (result == "" || !(/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(result)))){
+		    	var bucketName = "${sessionObject.gcpBucketName}";
+		    	var storagePath = "${sessionObject.storagePath}";
+		    	if(result !=null && !(result.startsWith(storagePath+bucketName) && result.includes("Expires="))){
 		    		showErrMsg("Please enter a valid URL");
 		           }else if(result !=null){
 		        	   if(validateExpireDate(result)){
@@ -160,19 +162,17 @@
 	  });
   }
   
+
   function validateExpireDate(result){
+
 	 var index= result.search("Expires=");
-	  if(index != -1){
-		  var expire = result.substring(index, result.indexOf('&', index));
-	      var expireTimeStamp= expire.split("=");
-	      if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
-	    	  showErrMsg("The URL has expired. Please use a newly generated one.");
-	    	  return false;
-	      }
-	      return true;
-	  }
-	  showErrMsg("Please enter a valid URL");
-	  return false;
+     var expire = result.substring(index, result.indexOf('&', index));
+	 var expireTimeStamp= expire.split("=");
+	 if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
+	    showErrMsg("The URL has expired. Please use a newly generated one.");
+	    return false;
+	 }
+	    return true;
   }
 
 </script>
