@@ -268,58 +268,7 @@
       form.submit();
     }  
     
-   /*  function copyStudy(studyId){
- 	  $
-       .ajax({
-         url: "/studybuilder/adminStudies/replicate.do",
-         type: "POST",
-         datatype: "json",
-         data: {
-           studyId: studyId,
-           "${_csrf.parameterName}": "${_csrf.token}",
-         },
-         
-         success: function (data) {
-             var message = data.message;
-             if (message == "SUCCESS") {
-             $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study replicated successfully");
-             $("#alertMsg").show('5000');
-             setTimeout(function (){
-            	 studyInfo(data.studyId);
-            	}, 5000);
-            
-             } else {
-                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(data.errMsg);
-             }
-           },
-           error: function (xhr, status, error) {
-             $(item).prop('disabled', false);
-             $('#alertMsg').show();
-             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Study replication failed. Please try again later.");
-             setTimeout(hideDisplayMessage, 5000);
-           }
-         }); 
- }   */
 
-    function studyInfo(studyId){
-        var form = document.createElement('form');
-        form.method = 'post';
-        var input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'studyId';
-        input.value = studyId;
-        form.appendChild(input);
-
-        input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = '${_csrf.parameterName}';
-        input.value = '${_csrf.token}';
-        form.appendChild(input);
-
-        form.action = '/studybuilder/adminStudies/viewStudyDetails.do';
-        document.body.appendChild(form);
-        form.submit();
-    }
     
 
 </script>

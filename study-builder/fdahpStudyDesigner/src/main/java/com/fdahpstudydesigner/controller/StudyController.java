@@ -5350,19 +5350,15 @@ public class StudyController {
             ? ""
             : request.getParameter("signedUrl");
 
-    String msg = studyExportService.importStudy(signedUrl, sessionObject);
+    String message = studyExportService.importStudy(signedUrl, sessionObject);
 
-    if (msg.contains(FdahpStudyDesignerConstants.SUCCESS)) {
+    if (message.contains(FdahpStudyDesignerConstants.SUCCESS)) {
       auditLogEventHelper.logEvent(STUDY_IMPORTED, auditRequest);
-      request
-          .getSession()
-          .setAttribute(
-              FdahpStudyDesignerConstants.SUC_MSG, FdahpStudyDesignerConstants.IMPORT_SUCCESS_MSG);
     } else {
       auditLogEventHelper.logEvent(STUDY_IMPORT_FAILED, auditRequest);
     }
 
-    jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, msg);
+    jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
     response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
     out = response.getWriter();
     out.print(jsonobject);
@@ -5375,8 +5371,6 @@ public class StudyController {
       throws IOException {
     logger.info("StudyController - replicateStudy() - Starts");
     HttpSession session = request.getSession();
-    JSONObject jsonobject = new JSONObject();
-    PrintWriter out = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     SessionObject sessionObject =
         (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -5397,11 +5391,12 @@ public class StudyController {
               FdahpStudyDesignerConstants.STUDY_REPLICATTE_SUCCESS_MSG);
     } else {
       auditLogEventHelper.logEvent(STUDY_COPY_FAILED, auditRequest);
+      request
+          .getSession()
+          .setAttribute(
+              FdahpStudyDesignerConstants.ERR_MSG,
+              FdahpStudyDesignerConstants.STUDY_REPLICATTE_FAILURE_MSG);
     }
-
-    /* response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
-    out = response.getWriter();
-    out.print(jsonobject);*/
 
     logger.info("StudyController - replicateStudy() - Ends");
     return new ModelAndView("redirect:/adminStudies/studyList.do");
