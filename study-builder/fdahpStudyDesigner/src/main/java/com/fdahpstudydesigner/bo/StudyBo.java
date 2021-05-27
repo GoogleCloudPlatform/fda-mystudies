@@ -183,6 +183,9 @@ public class StudyBo implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
+  @Column(name = "isCloudStorageMoved", columnDefinition = "int default 0")
+  private Integer isCloudStorageMoved;
+
   public String getAllowRejoin() {
     return allowRejoin;
   }
@@ -549,5 +552,13 @@ public class StudyBo implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public Integer isCloudStorageMoved() {
+    return isCloudStorageMoved;
+  }
+
+  public void setCloudStorageMoved(Integer isCloudStorageMoved) {
+    this.isCloudStorageMoved = isCloudStorageMoved;
   }
 }
