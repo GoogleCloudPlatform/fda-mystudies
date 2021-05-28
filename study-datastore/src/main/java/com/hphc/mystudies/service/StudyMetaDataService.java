@@ -178,10 +178,10 @@ public class StudyMetaDataService {
                 studyBeanObject.setLogo(
                     StudyMetaDataUtil.getSignedUrl(
                         propMap.get("cloud.bucket.name"),
-                        propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                        StudyMetaDataConstants.DEFAULT_IMAGES
+                            + "/"
                             + propMap.get(
-                                StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE),
-                        StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                                StudyMetaDataConstants.STUDY_BASICINFORMATION_DEFAULT_IMAGE)));
               }
             }
           }
@@ -474,17 +474,17 @@ public class StudyMetaDataService {
             infoBean.setImage(
                 StudyMetaDataUtil.getSignedUrl(
                     propMap.get("cloud.bucket.name"),
-                    propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
-                        + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE),
-                    StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                    StudyMetaDataConstants.DEFAULT_IMAGES
+                        + "/"
+                        + propMap.get(StudyMetaDataConstants.STUDY_DEFAULT_IMAGE)));
 
           } else {
             infoBean.setImage(
                 StudyMetaDataUtil.getSignedUrl(
                     propMap.get("cloud.bucket.name"),
-                    propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
-                        + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE),
-                    StudyMetaDataConstants.SIGNED_URL_DURATION_IN_HOURS));
+                    StudyMetaDataConstants.DEFAULT_IMAGES
+                        + "/"
+                        + propMap.get(StudyMetaDataConstants.STUDY_PAGE2_DEFAULT_IMAGE)));
           }
         }
         count++;
