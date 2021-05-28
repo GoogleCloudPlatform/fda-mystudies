@@ -54,7 +54,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
@@ -1202,7 +1201,7 @@ public class SiteServiceImpl implements SiteService {
         StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
         studyDetail.setLogoImageUrl(
             participantManagerUtil.getSignedUrl(
-                studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+                studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
         studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
 
@@ -1250,7 +1249,7 @@ public class SiteServiceImpl implements SiteService {
           StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
           studyDetail.setLogoImageUrl(
               participantManagerUtil.getSignedUrl(
-                  studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+                  studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
           studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
         StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
