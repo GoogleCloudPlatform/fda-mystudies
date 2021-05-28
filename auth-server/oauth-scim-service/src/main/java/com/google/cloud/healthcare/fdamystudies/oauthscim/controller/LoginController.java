@@ -163,7 +163,7 @@ public class LoginController {
     }
 
     if (StringUtils.isNotEmpty(tempRegId)) {
-      return redirectToLoginOrConsentPage(tempRegId, loginChallenge, response);
+      redirectToLoginOrConsentPage(tempRegId, loginChallenge, response);
     }
 
     // validate login credentials
@@ -207,21 +207,22 @@ public class LoginController {
     return redirectToConsentPage(loginChallenge, authenticationResponse.getUserId(), response);
   }
 
-  private String redirectToLoginOrConsentPage(
+  private void redirectToLoginOrConsentPage(
       String tempRegId, String loginChallenge, HttpServletResponse response)
       throws UnsupportedEncodingException {
     Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
     if (!optUser.isPresent()) {
-      logger.exit("tempRegId is invalid, return to login page");
+      logger.exit("tempRegId is invalid");
       cookieHelper.deleteCookie(response, TEMP_REG_ID_COOKIE);
-      return LOGIN_VIEW_NAME;
+      //      return LOGIN_VIEW_NAME;
     } else {
       UserEntity user = optUser.get();
-      logger.exit("tempRegId is valid, return to consent page");
-      cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
-      cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
+      logger.exit("tempRegId is valid, reset tempRegId");
+      //      cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
+      //      cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE,
+      // String.valueOf(user.getStatus()));
       userService.resetTempRegId(user.getUserId());
-      return redirectToConsentPage(loginChallenge, user.getUserId(), response);
+      //      return redirectToConsentPage(loginChallenge, user.getUserId(), response);
     }
   }
 
