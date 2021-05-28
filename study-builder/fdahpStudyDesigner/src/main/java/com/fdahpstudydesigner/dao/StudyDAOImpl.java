@@ -1604,7 +1604,8 @@ public class StudyDAOImpl implements StudyDAO {
                   .replaceAll("&#34;", "&quot;")
                   .replaceAll("em>", "i>")
                   .replaceAll(
-                      "<a", "<a target='_blank' style='text-decoration:underline;color:blue;'"));
+                      "<a", "<a target=\"_blank\" style=\"text-decoration:underline;color:blue;\"")
+                  .replaceAll("'", "\\\\'"));
         }
       }
     } catch (Exception e) {
