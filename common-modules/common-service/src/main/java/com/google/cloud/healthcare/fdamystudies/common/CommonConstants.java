@@ -102,6 +102,4 @@ public final class CommonConstants {
 
   public static final String BAD_REQUEST_MESSAGE =
       "Invalid entries found in the submitted form. Please try again.";
-
-  public static final int SIGNED_URL_DURATION_IN_HOURS = 12;
 }
