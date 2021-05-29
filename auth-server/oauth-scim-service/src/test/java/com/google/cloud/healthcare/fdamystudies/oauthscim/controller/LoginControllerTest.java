@@ -300,16 +300,22 @@ public class LoginControllerTest extends BaseMockIT {
 
     HttpHeaders headers = getCommonHeaders();
 
-    mockMvc
-        .perform(
-            post(ApiEndpoint.LOGIN_PAGE.getPath())
-                .contextPath(getContextPath())
-                .headers(headers)
-                .params(queryParams)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId, sourceCookie))
-        .andDo(print())
-        .andExpect(status().is2xxSuccessful())
-        .andReturn();
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.LOGIN_PAGE.getPath())
+                    .contextPath(getContextPath())
+                    .headers(headers)
+                    .params(queryParams)
+                    .cookie(
+                        appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId, sourceCookie))
+            .andDo(print())
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()))
+            .andReturn();
+
+    String accountStatus = result.getResponse().getCookie(ACCOUNT_STATUS_COOKIE).getValue();
+    assertTrue(UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus));
   }
 
   @Test
