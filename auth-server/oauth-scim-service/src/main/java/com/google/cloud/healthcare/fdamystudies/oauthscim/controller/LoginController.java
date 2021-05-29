@@ -213,13 +213,13 @@ public class LoginController {
     Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
     if (!optUser.isPresent()) {
       logger.exit("tempRegId is invalid, return to login page");
-      cookieHelper.deleteCookie(response, TEMP_REG_ID_COOKIE);
       return LOGIN_VIEW_NAME;
     } else {
       UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
       cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
       cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
+      cookieHelper.deleteCookie(response, TEMP_REG_ID_COOKIE);
       userService.resetTempRegId(user.getUserId());
       return redirectToConsentPage(loginChallenge, user.getUserId(), response);
     }
