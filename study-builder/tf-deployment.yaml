@@ -107,6 +107,11 @@ spec:
               value: -Duser.timezone=America/New_York
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
+               - name: EXPORT_STUDIES_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: btcsoft-dev-mystudies-sql-import
           ports:
           - containerPort: 8080
           readinessProbe:
