@@ -111,7 +111,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: btcsoft-dev-mystudies-sql-import
+                  key: export_studies_bucket_name
           ports:
           - containerPort: 8080
           readinessProbe:
