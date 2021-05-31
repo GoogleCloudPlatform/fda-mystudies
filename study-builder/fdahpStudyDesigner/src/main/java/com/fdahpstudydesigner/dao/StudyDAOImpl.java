@@ -7042,16 +7042,16 @@ public class StudyDAOImpl implements StudyDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<ConsentBo> getConsentList(String customStudyId) {
+  public List<ConsentBo> getConsentList(String studyId) {
     List<ConsentBo> consentBoList = null;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       String searchQuery =
-          " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId ORDER BY CBO.version desc ";
+          " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
       query = session.createQuery(searchQuery);
-      query.setString("customStudyId", customStudyId);
+      query.setString("studyId", studyId);
       consentBoList = query.list();
       transaction.commit();
     } catch (Exception e) {

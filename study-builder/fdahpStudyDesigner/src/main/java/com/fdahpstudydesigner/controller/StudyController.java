@@ -1667,7 +1667,7 @@ public class StudyController {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
 
-          consentBoList = studyService.getConsentList(studyBo.getCustomStudyId());
+          consentBoList = studyService.getConsentList(studyBo.getId());
           if (!CollectionUtils.isEmpty(consentBoList)) {
             lastPublishedVersion = 'V' + String.valueOf(consentBoList.get(0).getVersion());
           } else {
