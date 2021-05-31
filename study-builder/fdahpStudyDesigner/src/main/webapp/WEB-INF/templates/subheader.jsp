@@ -127,7 +127,7 @@
 		          },
 		        },
 		    callback: function (result) {
-		    	var bucketName = "${sessionObject.gcpBucketName}";
+		    	var bucketName = "${sessionObject.exportStudiesBucketName}";
 		    	var storagePath = "${sessionObject.storagePath}";
 		    	if(result !=null && !(result.startsWith(storagePath+bucketName) && result.includes("Expires="))){
 		    		showErrMsg("Please enter a valid URL");

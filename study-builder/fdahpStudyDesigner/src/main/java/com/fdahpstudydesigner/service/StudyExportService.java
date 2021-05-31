@@ -412,11 +412,12 @@ public class StudyExportService {
 
       Storage storage = StorageOptions.getDefaultInstance().getService();
       BlobInfo blobInfo =
-          BlobInfo.newBuilder(map.get("cloud.bucket.name"), absoluteFileName).build();
+          BlobInfo.newBuilder(map.get("cloud.bucket.name.export.studies"), absoluteFileName)
+              .build();
       storage.create(blobInfo, bytes);
 
       String signedUrl =
-          FdahpStudyDesignerUtil.getSignedUrl(
+          FdahpStudyDesignerUtil.getSignedUrlForExportedStudy(
               absoluteFileName, Integer.parseInt(map.get("signed.url.expiration.in.hour")));
 
       String message =
@@ -1473,7 +1474,7 @@ public class StudyExportService {
 
     String[] allowedTablesName = StudyExportSqlQueries.ALLOWED_STUDY_TABLE_NAMES;
     Storage storage = StorageOptions.getDefaultInstance().getService();
-    Blob blob = storage.get(BlobId.of(map.get("cloud.bucket.name"), filepath));
+    Blob blob = storage.get(BlobId.of(map.get("cloud.bucket.name.export.studies"), filepath));
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     blob.downloadTo(outputStream);
 
