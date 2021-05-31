@@ -7092,18 +7092,15 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public AnchorDateTypeBo getAnchorDateDetails(String studyId) {
+  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId) {
     logger.info("StudyDAOImpl - getStudy() - Starts");
     Session session = null;
-    AnchorDateTypeBo anchorDatetype = null;
+    List<AnchorDateTypeBo> anchorDateTypeBoList = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      anchorDatetype =
-          (AnchorDateTypeBo)
-              session
-                  .getNamedQuery("getAnchorDateType")
-                  .setString("studyId", studyId)
-                  .uniqueResult();
+      String searchQuery = "From AnchorDateTypeBo where studyId=:studyId";
+      anchorDateTypeBoList = session.createQuery(searchQuery).setString("studyId", studyId).list();
+
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getStudy() - ERROR", e);
     } finally {
@@ -7112,7 +7109,7 @@ public class StudyDAOImpl implements StudyDAO {
       }
     }
     logger.info("StudyDAOImpl - getStudy() - Ends");
-    return anchorDatetype;
+    return anchorDateTypeBoList;
   }
 
   @SuppressWarnings("unchecked")
@@ -7198,10 +7195,12 @@ public class StudyDAOImpl implements StudyDAO {
       studySequenceBo.setStudyId(studyId);
       session.save(studySequenceBo);
 
-      AnchorDateTypeBo anchorDateTypeBo = getAnchorDateDetails(oldStudyId);
-      anchorDateTypeBo.setCustomStudyId(studyBo.getCustomStudyId());
-      anchorDateTypeBo.setStudyId(studyId);
-      session.save(anchorDateTypeBo);
+      List<AnchorDateTypeBo> anchorDateTypeBos = getAnchorDateDetails(oldStudyId);
+      for (AnchorDateTypeBo anchorDateTypeBo : anchorDateTypeBos) {
+        anchorDateTypeBo.setCustomStudyId(null);
+        anchorDateTypeBo.setStudyId(studyId);
+        session.save(anchorDateTypeBo);
+      }
 
       List<StudyPageBo> studyPageList = getOverviewStudyPagesById(oldStudyId, studyBo.getUserId());
 
