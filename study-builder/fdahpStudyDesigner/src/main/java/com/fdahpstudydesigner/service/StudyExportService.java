@@ -128,7 +128,7 @@ public class StudyExportService {
 
       StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(), userId);
       StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
-      AnchorDateTypeBo anchorDate = studyDao.getAnchorDateDetails(studyBo.getId());
+      List<AnchorDateTypeBo> anchorDate = studyDao.getAnchorDateDetails(studyBo.getId());
       List<StudyPageBo> studypageList = studyDao.getOverviewStudyPagesById(studyBo.getId(), userId);
 
       EligibilityBo eligibilityBo = studyDao.getStudyEligibiltyByStudyId(studyBo.getId());
@@ -862,26 +862,30 @@ public class StudyExportService {
   }
 
   private void addAnchorDateInsertSql(
-      AnchorDateTypeBo anchorDate,
+      List<AnchorDateTypeBo> anchorDateList,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap)
       throws Exception {
 
-    if (anchorDate == null) {
+    if (CollectionUtils.isNotEmpty(anchorDateList)) {
       return;
     }
 
-    String anchorDateTypeInsertQuery =
-        prepareInsertQuery(
-            StudyExportSqlQueries.ANCHORDATE_TYPE,
-            IdGenerator.id(),
-            customIdsMap.get(CUSTOM_STUDY_ID + anchorDate.getCustomStudyId()),
-            anchorDate.getHasAnchortypeDraft(),
-            anchorDate.getName(),
-            customIdsMap.get(STUDY_ID + anchorDate.getStudyId()),
-            anchorDate.getVersion());
+    List<String> anchorDateInsertQueryList = new ArrayList<>();
+    for (AnchorDateTypeBo anchorDate : anchorDateList) {
+      String anchorDateTypeInsertQuery =
+          prepareInsertQuery(
+              StudyExportSqlQueries.ANCHORDATE_TYPE,
+              IdGenerator.id(),
+              customIdsMap.get(CUSTOM_STUDY_ID + anchorDate.getCustomStudyId()),
+              anchorDate.getHasAnchortypeDraft(),
+              anchorDate.getName(),
+              customIdsMap.get(STUDY_ID + anchorDate.getStudyId()),
+              anchorDate.getVersion());
 
-    insertSqlStatements.add(anchorDateTypeInsertQuery);
+      anchorDateInsertQueryList.add(anchorDateTypeInsertQuery);
+    }
+    insertSqlStatements.addAll(anchorDateInsertQueryList);
   }
 
   private void addStudypagesListInsertSql(
