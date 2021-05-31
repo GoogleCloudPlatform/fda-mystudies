@@ -197,8 +197,9 @@ var markAsComplete = "${markAsComplete}"
    if(mainContainerDivision==true){
 	    $('#comprehensionTestMinimumScore').attr('required', false);
 		var mainContainerDivision = $('#mainContainer').hide();		   
-	 }
-    $('#comprehensionTestMinimumScore').attr('required', true);
+	} else {
+		$('#comprehensionTestMinimumScore').attr('required', true);
+	}
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
