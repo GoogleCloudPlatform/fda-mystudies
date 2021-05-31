@@ -195,8 +195,11 @@ var markAsComplete = "${markAsComplete}"
   $(document).ready(function () {
 	  var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
 	  if(mainContainerDivision==true){
-			var mainContainerDivision = $('#mainContainer').hide();		   
-		 }
+	  	$('#comprehensionTestMinimumScore').attr('required', false);
+		var mainContainerDivision = $('#mainContainer').hide();		   
+	  } else {
+		$('#comprehensionTestMinimumScore').attr('required', true);
+	  }
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
