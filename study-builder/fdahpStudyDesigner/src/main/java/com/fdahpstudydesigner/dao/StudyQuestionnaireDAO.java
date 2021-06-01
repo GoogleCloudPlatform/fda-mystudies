@@ -200,7 +200,7 @@ public interface StudyQuestionnaireDAO {
   public List<FormBo> getFormsByInstructionFormIds(List<String> instructionFormIds);
 
   public QuestionnaireBo cloneStudyQuestionnaire(
-      String questionnaireId, String studyId, SessionObject sessionObject);
+      String questionnaireId, String studyId, SessionObject sessionObject, String anchorDateId);
 
   public List<String> getQuestionsByFormIds(List<String> formIds);
 }

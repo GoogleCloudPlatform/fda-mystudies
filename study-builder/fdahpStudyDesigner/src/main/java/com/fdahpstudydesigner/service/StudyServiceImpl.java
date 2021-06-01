@@ -31,6 +31,7 @@ import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
 import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
 import com.fdahpstudydesigner.bo.ActiveTaskFrequencyBo;
+import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.Checklist;
 import com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo;
 import com.fdahpstudydesigner.bo.ComprehensionTestResponseBo;
@@ -1588,6 +1589,8 @@ public class StudyServiceImpl implements StudyService {
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
         studyDAO.getComprehensionTestQuestionList(studyBo.getId());
 
+    List<AnchorDateTypeBo> anchorDateList = studyDAO.getAnchorDateDetails(studyBo.getId());
+
     List<QuestionnaireBo> questionnairesList =
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
 
@@ -1600,7 +1603,15 @@ public class StudyServiceImpl implements StudyService {
 
     // replicating study
     studyDAO.cloneStudy(studyBo, sessionObject);
-    saveActiveTaskDetails(activeTaskBos, studyBo);
+
+    String anchorDateId = "";
+    if (CollectionUtils.isNotEmpty(anchorDateList)) {
+      for (AnchorDateTypeBo anchorDateTypeBo : anchorDateList) {
+        anchorDateId = studyDAO.cloneAnchorDateBo(anchorDateTypeBo, studyBo.getId());
+      }
+    }
+
+    saveActiveTaskDetails(activeTaskBos, studyBo, anchorDateId);
 
     if (eligibilityBo != null) {
       studyDAO.cloneEligibility(eligibilityBo, studyBo.getId());
@@ -1629,7 +1640,7 @@ public class StudyServiceImpl implements StudyService {
     if (CollectionUtils.isNotEmpty(questionnairesList)) {
       for (QuestionnaireBo questionnaireBo : questionnairesList) {
         studyQuestionnaireDAO.cloneStudyQuestionnaire(
-            questionnaireBo.getId(), studyBo.getId(), sessionObject);
+            questionnaireBo.getId(), studyBo.getId(), sessionObject, anchorDateId);
       }
     }
 
@@ -1650,10 +1661,12 @@ public class StudyServiceImpl implements StudyService {
         notificationDAO.saveNotification(notificationBO);
       }
     }
+
     return studyBo;
   }
 
-  private void saveActiveTaskDetails(List<ActiveTaskBo> activeTaskBos, StudyBo studyBo) {
+  private void saveActiveTaskDetails(
+      List<ActiveTaskBo> activeTaskBos, StudyBo studyBo, String anchorDateId) {
 
     List<String> activeTaskIds = new ArrayList<>();
     List<String> activeTaskTypes = new ArrayList<>();
@@ -1677,6 +1690,7 @@ public class StudyServiceImpl implements StudyService {
         String oldActiveTaskId = activeTask.getId();
         activeTask.setId(null);
         activeTask.setStudyId(studyBo.getId());
+        activeTask.setAnchorDateId(anchorDateId);
         studyDAO.saveStudyActiveTask(activeTask);
 
         for (ActiveTaskAtrributeValuesBo active : activeTaskAtrributeValuesBos) {

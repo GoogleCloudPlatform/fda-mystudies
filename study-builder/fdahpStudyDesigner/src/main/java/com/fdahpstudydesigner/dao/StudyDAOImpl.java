@@ -7153,8 +7153,10 @@ public class StudyDAOImpl implements StudyDAO {
       studyBo.setId(null);
       studyBo.setStatus(FdahpStudyDesignerConstants.STUDY_PRE_LAUNCH);
       studyBo.setStudylunchDate(null);
-      String appId = studyBo.getAppId().toUpperCase();
-      studyBo.setAppId(appId);
+      studyBo.setAppId(
+          studyBo.getType().equals(FdahpStudyDesignerConstants.STUDY_TYPE_SD)
+              ? null
+              : studyBo.getAppId().toUpperCase());
       studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId());
       studyBo.setCustomStudyId(null);
@@ -7194,13 +7196,6 @@ public class StudyDAOImpl implements StudyDAO {
       StudySequenceBo studySequenceBo = new StudySequenceBo();
       studySequenceBo.setStudyId(studyId);
       session.save(studySequenceBo);
-
-      List<AnchorDateTypeBo> anchorDateTypeBos = getAnchorDateDetails(oldStudyId);
-      for (AnchorDateTypeBo anchorDateTypeBo : anchorDateTypeBos) {
-        anchorDateTypeBo.setCustomStudyId(null);
-        anchorDateTypeBo.setStudyId(studyId);
-        session.save(anchorDateTypeBo);
-      }
 
       List<StudyPageBo> studyPageList = getOverviewStudyPagesById(oldStudyId, studyBo.getUserId());
 
@@ -7616,5 +7611,32 @@ public class StudyDAOImpl implements StudyDAO {
             newCustomStudyId);
       }
     }
+  }
+
+  @Override
+  public String cloneAnchorDateBo(AnchorDateTypeBo anchorDateTypeBo, String studyId) {
+    logger.info("StudyDAOImpl - cloneAnchorDateBo() - Starts");
+    Session session = null;
+    String anchorDateTypeId = "";
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+
+      anchorDateTypeBo.setId(null);
+      anchorDateTypeBo.setStudyId(studyId);
+      anchorDateTypeBo.setCustomStudyId(null);
+      anchorDateTypeId = (String) session.save(anchorDateTypeBo);
+
+      transaction.commit();
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("StudyDAOImpl - cloneAnchorDateBo() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("StudyDAOImpl - cloneAnchorDateBo() - Ends");
+    return anchorDateTypeId;
   }
 }

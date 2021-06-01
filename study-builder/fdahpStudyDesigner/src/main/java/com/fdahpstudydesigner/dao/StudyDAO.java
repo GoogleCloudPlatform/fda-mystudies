@@ -251,4 +251,6 @@ public interface StudyDAO {
   public void saveActiveTaskFrequencyBo(ActiveTaskFrequencyBo activeTaskFrequencyBo);
 
   public String saveExportFilePath(String studyId, String destinationCustomId, String message);
+
+  public String cloneAnchorDateBo(AnchorDateTypeBo anchorDateTypeBo, String studyId);
 }

@@ -5566,7 +5566,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public QuestionnaireBo cloneStudyQuestionnaire(
-      String questionnaireId, String studyId, SessionObject sessionObject) {
+      String questionnaireId, String studyId, SessionObject sessionObject, String anchorDateId) {
     logger.info("StudyQuestionnaireDAOImpl - copyStudyQuestionnaireBo() - Starts");
     QuestionnaireBo questionnaireBo = null;
     QuestionnaireBo newQuestionnaireBo = null;
@@ -5583,15 +5583,16 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         String searchQuery = null;
         newQuestionnaireBo = SerializationUtils.clone(questionnaireBo);
         newQuestionnaireBo.setId(null);
-        newQuestionnaireBo.setLive(0);
+        //   newQuestionnaireBo.setLive(0);
         newQuestionnaireBo.setStudyId(studyId);
         newQuestionnaireBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
         newQuestionnaireBo.setCreatedBy(sessionObject.getUserId());
         newQuestionnaireBo.setModifiedBy(null);
         newQuestionnaireBo.setModifiedDate(null);
-        newQuestionnaireBo.setShortTitle(null);
         newQuestionnaireBo.setVersion(0f);
+        newQuestionnaireBo.setIsChange(1);
         newQuestionnaireBo.setShortTitle(questionnaireBo.getShortTitle());
+        newQuestionnaireBo.setAnchorDateId(anchorDateId);
         session.save(newQuestionnaireBo);
 
         /** Questionnaire Schedule Purpose copying Start * */
@@ -5753,7 +5754,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   if (questionsBo
                       .getUseStasticData()
                       .equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-                    newQuestionsBo.setStatShortName(null);
+                    // newQuestionsBo.setStatShortName(null);
                     newQuestionsBo.setStatus(false);
                     newQuestionnairesStepsBo.setStatus(false);
                   }
@@ -5870,7 +5871,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                         if (questionsBo
                             .getUseStasticData()
                             .equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-                          newQuestionsBo.setStatShortName(null);
+                          //  newQuestionsBo.setStatShortName(null);
                           newQuestionsBo.setStatus(false);
                           newQuestionnairesStepsBo.setStatus(false);
                         }
