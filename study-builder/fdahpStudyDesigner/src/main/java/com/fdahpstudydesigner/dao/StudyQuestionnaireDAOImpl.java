@@ -5566,7 +5566,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public QuestionnaireBo cloneStudyQuestionnaire(
-      String questionnaireId, String studyId, SessionObject sessionObject) {
+      String questionnaireId, String studyId, SessionObject sessionObject, String anchorDateId) {
     logger.info("StudyQuestionnaireDAOImpl - copyStudyQuestionnaireBo() - Starts");
     QuestionnaireBo questionnaireBo = null;
     QuestionnaireBo newQuestionnaireBo = null;
@@ -5592,6 +5592,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newQuestionnaireBo.setShortTitle(null);
         newQuestionnaireBo.setVersion(0f);
         newQuestionnaireBo.setShortTitle(questionnaireBo.getShortTitle());
+        newQuestionnaireBo.setAnchorDateId(anchorDateId);
         session.save(newQuestionnaireBo);
 
         /** Questionnaire Schedule Purpose copying Start * */
