@@ -4931,7 +4931,6 @@
     today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
     
     $('#minDateId').datetimepicker({
-        minDate: today,
         ignoreReadonly: true,
         useCurrent: false,
       });
