@@ -3643,7 +3643,6 @@ if(document.getElementById("singleSelect").checked==true){
     });
 
   $('#maxDateId').datetimepicker({
-      minDate: today,
       ignoreReadonly: true,
       useCurrent: false,
     });

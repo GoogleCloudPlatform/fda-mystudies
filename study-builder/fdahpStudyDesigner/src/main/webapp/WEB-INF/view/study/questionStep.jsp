@@ -4936,7 +4936,6 @@
       });
 
     $('#maxDateId').datetimepicker({
-        minDate: today,
         ignoreReadonly: true,
         useCurrent: false,
       });
