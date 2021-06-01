@@ -140,7 +140,7 @@ public class StudyExportService {
         customIdsMap.put(NEW_ELIGIBILITY_ID + eligibilityBo.getId(), IdGenerator.id());
       }
 
-      List<ConsentBo> consentBoList = studyDao.getConsentList(studyBo.getId());
+      List<ConsentBo> consentBoList = studyDao.getConsentListForStudy(studyBo.getId());
 
       List<ConsentInfoBo> consentInfoBoList = studyDao.getConsentInfoList(studyBo.getId());
 

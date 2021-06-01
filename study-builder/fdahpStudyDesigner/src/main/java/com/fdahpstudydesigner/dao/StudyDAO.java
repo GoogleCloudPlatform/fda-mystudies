@@ -255,4 +255,6 @@ public interface StudyDAO {
 
   public String cloneAnchorDateBo(
       AnchorDateTypeBo anchorDateTypeBo, String studyId, Map<String, String> anchorDateMap);
+
+  public List<ConsentBo> getConsentListForStudy(String studyId);
 }

@@ -1559,11 +1559,11 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<ConsentBo> getConsentList(String studyId) {
+  public List<ConsentBo> getConsentList(String customStudyId) {
     logger.entry("StudyServiceImpl - getConsentList() - Starts");
     List<ConsentBo> consentBoList = null;
     try {
-      consentBoList = studyDAO.getConsentList(studyId);
+      consentBoList = studyDAO.getConsentList(customStudyId);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getConsentList() - ERROR ", e);
     }
@@ -1582,7 +1582,7 @@ public class StudyServiceImpl implements StudyService {
 
     EligibilityBo eligibilityBo = studyDAO.getStudyEligibiltyByStudyId(studyBo.getId());
 
-    List<ConsentBo> consentBoList = studyDAO.getConsentList(studyBo.getId());
+    List<ConsentBo> consentBoList = studyDAO.getConsentListForStudy(studyBo.getId());
 
     List<ConsentInfoBo> consentInfoBoList = studyDAO.getConsentInfoList(studyBo.getId());
 

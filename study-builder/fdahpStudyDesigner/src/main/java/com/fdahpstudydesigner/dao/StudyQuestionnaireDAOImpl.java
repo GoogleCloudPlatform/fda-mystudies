@@ -5754,13 +5754,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   newQuestionsBo.setModifiedBy(null);
                   newQuestionsBo.setModifiedOn(null);
                   newQuestionsBo.setAnchorDateId(null);
-                  if (questionsBo
-                      .getUseStasticData()
-                      .equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-                    // newQuestionsBo.setStatShortName(null);
-                    newQuestionsBo.setStatus(false);
-                    newQuestionnairesStepsBo.setStatus(false);
-                  }
                   session.save(newQuestionsBo);
 
                   // Question response Type
@@ -5871,13 +5864,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                         newQuestionsBo.setModifiedBy(null);
                         newQuestionsBo.setModifiedOn(null);
                         newQuestionsBo.setAnchorDateId(null);
-                        if (questionsBo
-                            .getUseStasticData()
-                            .equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-                          //  newQuestionsBo.setStatShortName(null);
-                          newQuestionsBo.setStatus(false);
-                          newQuestionnairesStepsBo.setStatus(false);
-                        }
 
                         session.save(newQuestionsBo);
 
