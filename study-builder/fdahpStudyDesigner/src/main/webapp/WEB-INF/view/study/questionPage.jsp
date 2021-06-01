@@ -3649,7 +3649,6 @@ if(document.getElementById("singleSelect").checked==true){
     });
 
   $('#defaultDate').datetimepicker({
-      minDate: today,
       ignoreReadonly: true,
       useCurrent: false,
     });
