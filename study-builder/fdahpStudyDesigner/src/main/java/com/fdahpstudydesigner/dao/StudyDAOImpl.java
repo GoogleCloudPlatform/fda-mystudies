@@ -7614,11 +7614,13 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public String cloneAnchorDateBo(AnchorDateTypeBo anchorDateTypeBo, String studyId) {
+  public String cloneAnchorDateBo(
+      AnchorDateTypeBo anchorDateTypeBo, String studyId, Map<String, String> anchorDateMap) {
     logger.info("StudyDAOImpl - cloneAnchorDateBo() - Starts");
     Session session = null;
     String anchorDateTypeId = "";
     try {
+      String oldAnchorDateId = anchorDateTypeBo.getId();
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
@@ -7626,6 +7628,7 @@ public class StudyDAOImpl implements StudyDAO {
       anchorDateTypeBo.setStudyId(studyId);
       anchorDateTypeBo.setCustomStudyId(null);
       anchorDateTypeId = (String) session.save(anchorDateTypeBo);
+      anchorDateMap.put(oldAnchorDateId, anchorDateTypeId);
 
       transaction.commit();
     } catch (Exception e) {

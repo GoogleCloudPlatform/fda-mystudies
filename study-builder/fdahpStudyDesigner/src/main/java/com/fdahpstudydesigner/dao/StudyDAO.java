@@ -47,6 +47,7 @@ import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -252,5 +253,6 @@ public interface StudyDAO {
 
   public String saveExportFilePath(String studyId, String destinationCustomId, String message);
 
-  public String cloneAnchorDateBo(AnchorDateTypeBo anchorDateTypeBo, String studyId);
+  public String cloneAnchorDateBo(
+      AnchorDateTypeBo anchorDateTypeBo, String studyId, Map<String, String> anchorDateMap);
 }

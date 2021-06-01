@@ -1604,14 +1604,14 @@ public class StudyServiceImpl implements StudyService {
     // replicating study
     studyDAO.cloneStudy(studyBo, sessionObject);
 
-    String anchorDateId = "";
+    Map<String, String> anchorDateMap = new HashMap<>();
     if (CollectionUtils.isNotEmpty(anchorDateList)) {
       for (AnchorDateTypeBo anchorDateTypeBo : anchorDateList) {
-        anchorDateId = studyDAO.cloneAnchorDateBo(anchorDateTypeBo, studyBo.getId());
+        studyDAO.cloneAnchorDateBo(anchorDateTypeBo, studyBo.getId(), anchorDateMap);
       }
     }
 
-    saveActiveTaskDetails(activeTaskBos, studyBo, anchorDateId);
+    saveActiveTaskDetails(activeTaskBos, studyBo, anchorDateMap);
 
     if (eligibilityBo != null) {
       studyDAO.cloneEligibility(eligibilityBo, studyBo.getId());
@@ -1640,7 +1640,7 @@ public class StudyServiceImpl implements StudyService {
     if (CollectionUtils.isNotEmpty(questionnairesList)) {
       for (QuestionnaireBo questionnaireBo : questionnairesList) {
         studyQuestionnaireDAO.cloneStudyQuestionnaire(
-            questionnaireBo.getId(), studyBo.getId(), sessionObject, anchorDateId);
+            questionnaireBo.getId(), studyBo.getId(), sessionObject, anchorDateMap);
       }
     }
 
@@ -1649,6 +1649,7 @@ public class StudyServiceImpl implements StudyService {
         resourceBO.setId(null);
         resourceBO.setStudyId(studyBo.getId());
         resourceBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+        resourceBO.setAnchorDateId(anchorDateMap.get(resourceBO.getAnchorDateId()));
         studyDAO.saveOrUpdateResource(resourceBO);
       }
     }
@@ -1666,7 +1667,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   private void saveActiveTaskDetails(
-      List<ActiveTaskBo> activeTaskBos, StudyBo studyBo, String anchorDateId) {
+      List<ActiveTaskBo> activeTaskBos, StudyBo studyBo, Map<String, String> anchorDateMap) {
 
     List<String> activeTaskIds = new ArrayList<>();
     List<String> activeTaskTypes = new ArrayList<>();
@@ -1690,7 +1691,7 @@ public class StudyServiceImpl implements StudyService {
         String oldActiveTaskId = activeTask.getId();
         activeTask.setId(null);
         activeTask.setStudyId(studyBo.getId());
-        activeTask.setAnchorDateId(anchorDateId);
+        activeTask.setAnchorDateId(anchorDateMap.get(activeTask.getAnchorDateId()));
         studyDAO.saveStudyActiveTask(activeTask);
 
         for (ActiveTaskAtrributeValuesBo active : activeTaskAtrributeValuesBos) {

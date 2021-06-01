@@ -41,6 +41,7 @@ import com.fdahpstudydesigner.bo.QuestionsBo;
 import com.fdahpstudydesigner.bo.StudyVersionBo;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -200,7 +201,10 @@ public interface StudyQuestionnaireDAO {
   public List<FormBo> getFormsByInstructionFormIds(List<String> instructionFormIds);
 
   public QuestionnaireBo cloneStudyQuestionnaire(
-      String questionnaireId, String studyId, SessionObject sessionObject, String anchorDateId);
+      String questionnaireId,
+      String studyId,
+      SessionObject sessionObject,
+      Map<String, String> anchorDateMap);
 
   public List<String> getQuestionsByFormIds(List<String> formIds);
 }
