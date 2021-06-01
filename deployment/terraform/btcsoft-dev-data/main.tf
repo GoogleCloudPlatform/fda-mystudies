@@ -189,5 +189,9 @@ module "btcsoft_dev_mystudies_sql_import" {
       member = "serviceAccount:${module.mystudies.instance_service_account_email_address}"
       role   = "roles/storage.objectViewer"
     },
+    {
+      member = "serviceAccount:study-builder-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin" 
+    },
   ]
 }
