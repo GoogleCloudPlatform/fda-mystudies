@@ -253,4 +253,6 @@ public interface StudyDAO {
   public String saveExportFilePath(String studyId, String destinationCustomId, String message);
 
   public String cloneAnchorDateBo(AnchorDateTypeBo anchorDateTypeBo, String studyId);
+
+  public List<ConsentBo> getConsentListForStudy(String studyId);
 }
