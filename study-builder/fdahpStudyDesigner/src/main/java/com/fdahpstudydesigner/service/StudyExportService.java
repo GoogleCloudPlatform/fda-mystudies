@@ -494,7 +494,7 @@ public class StudyExportService {
               activeTaskCustomScheduleBo.getFrequencyStartDate(),
               activeTaskCustomScheduleBo.getTimePeriodFromDays(),
               activeTaskCustomScheduleBo.getTimePeriodToDays(),
-              activeTaskCustomScheduleBo.isUsed(),
+              activeTaskCustomScheduleBo.isUsed() ? "Y" : "N",
               activeTaskCustomScheduleBo.isxDaysSign(),
               activeTaskCustomScheduleBo.isyDaysSign(),
               activeTaskCustomScheduleBo.getFrequencyStartTime(),
@@ -729,7 +729,7 @@ public class StudyExportService {
                   QUESTIONNAIRES_ID + questionnaireCustomScheduleBo.getQuestionnairesId()),
               questionnaireCustomScheduleBo.getTimePeriodFromDays(),
               questionnaireCustomScheduleBo.getTimePeriodToDays(),
-              questionnaireCustomScheduleBo.isUsed(),
+              questionnaireCustomScheduleBo.isUsed() ? "Y" : "N",
               questionnaireCustomScheduleBo.isxDaysSign(),
               questionnaireCustomScheduleBo.isyDaysSign(),
               questionnaireCustomScheduleBo.getFrequencyEndTime(),
@@ -811,7 +811,7 @@ public class StudyExportService {
             studyBo.getResearchSponsor(),
             studyBo.getSequenceNumber(),
             PRE_LAUNCH,
-            studyBo.isStudyPreActiveFlag(),
+            studyBo.isStudyPreActiveFlag() ? "Y" : "N",
             studyBo.getStudyTagLine(),
             studyBo.getStudyWebsite(),
             studyBo.getStudylunchDate(),
@@ -820,7 +820,7 @@ public class StudyExportService {
             studyBo.getThumbnailImage(),
             studyBo.getType(),
             studyBo.getVersion(),
-            studyBo.isEnrollmentdateAsAnchordate(),
+            studyBo.isEnrollmentdateAsAnchordate() ? "Y" : "N",
             studyBo.getCustomStudyId(),
             studyBo.getExportSignedUrl());
 
@@ -1064,7 +1064,7 @@ public class StudyExportService {
               activeTaskAtrributeValuesBo.getTimeRangeStat(),
               activeTaskAtrributeValuesBo.getTitleChat(),
               activeTaskAtrributeValuesBo.getUploadTypeStat(),
-              activeTaskAtrributeValuesBo.isUseForStatistic());
+              activeTaskAtrributeValuesBo.isUseForStatistic() ? "Y" : "N");
 
       activeTaskAtrributeInsertQueryList.add(activeTaskAtrributeInsertQuery);
     }
@@ -1162,7 +1162,7 @@ public class StudyExportService {
               eligibilityTestBo.getSequenceNo(),
               eligibilityTestBo.getShortTitle(),
               eligibilityTestBo.getStatus(),
-              eligibilityTestBo.isUsed());
+              eligibilityTestBo.isUsed() ? "Y" : "N");
 
       eligibilityTestBoInsertQueryList.add(eligibilityTestBoBoInsertQuery);
     }
