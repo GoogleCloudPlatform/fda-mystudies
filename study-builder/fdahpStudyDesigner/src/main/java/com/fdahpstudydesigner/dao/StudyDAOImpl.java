@@ -6175,14 +6175,14 @@ public class StudyDAOImpl implements StudyDAO {
 
         query =
             session.createQuery(
-                "select new com.fdahpstudydesigner.bean.DynamicFrequencyBean(a.frequencyStartDate, a.frequencyTime)"
+                "select new com.fdahpstudydesigner.bean.DynamicFrequencyBean(a.frequencyStartDate, a.frequencyStartTime)"
                     + " from ActiveTaskCustomScheduleBo a,ActiveTaskBo ab"
                     + " where a.activeTaskId=ab.id"
                     + " and ab.active IS NOT NULL"
                     + " and ab.active=1"
                     + " and ab.studyId=:impValue"
                     + " and ab.frequency=:manualSchedule and a.frequencyStartDate IS NOT NULL"
-                    + " and a.frequencyTime IS NOT NULL"
+                    + " and a.frequencyStartTime IS NOT NULL"
                     + " and a.used=false");
         query.setParameter(FdahpStudyDesignerConstants.IMP_VALUE, studyBo.getId());
         query.setParameter(
@@ -6195,7 +6195,7 @@ public class StudyDAOImpl implements StudyDAO {
             if ((obj.getStartDate() != null) && (obj.getTime() != null)) {
               String dateTime = obj.getStartDate() + " " + obj.getTime();
               if (!FdahpStudyDesignerUtil.compareDateWithCurrentDateTime(
-                  dateTime, "yyyy-MM-dd HH:mm:ss")) {
+                  dateTime, "yyyy-MM-dd HH:mm")) {
                 activitiesFalg = false;
                 break;
               }
@@ -6265,13 +6265,13 @@ public class StudyDAOImpl implements StudyDAO {
 
         query =
             session.createQuery(
-                "select new com.fdahpstudydesigner.bean.DynamicFrequencyBean(a.frequencyStartDate, a.frequencyTime)"
+                "select new com.fdahpstudydesigner.bean.DynamicFrequencyBean(a.frequencyStartDate, a.frequencyStartTime)"
                     + " from QuestionnaireCustomScheduleBo a,QuestionnaireBo ab"
                     + " where a.questionnairesId=ab.id"
                     + " and ab.active=1"
                     + " and ab.studyId=:impValue"
                     + " and ab.frequency=:manualSchedule and a.frequencyStartDate IS NOT NULL"
-                    + " and a.frequencyTime IS NOT NULL"
+                    + " and a.frequencyStartTime IS NOT NULL"
                     + " and a.used=false");
         query.setParameter(FdahpStudyDesignerConstants.IMP_VALUE, studyBo.getId());
         query.setParameter(
@@ -6284,7 +6284,7 @@ public class StudyDAOImpl implements StudyDAO {
             if ((obj.getStartDate() != null) && (obj.getTime() != null)) {
               String dateTime = obj.getStartDate() + " " + obj.getTime();
               if (!FdahpStudyDesignerUtil.compareDateWithCurrentDateTime(
-                  dateTime, "yyyy-MM-dd HH:mm:ss")) {
+                  dateTime, "yyyy-MM-dd HH:mm")) {
                 questionarriesFlag = false;
                 break;
               }
