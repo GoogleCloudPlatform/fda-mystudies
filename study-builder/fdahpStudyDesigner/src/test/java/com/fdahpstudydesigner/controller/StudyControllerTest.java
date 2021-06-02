@@ -70,7 +70,7 @@ import com.fdahpstudydesigner.common.JsonUtils;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.dao.NotificationDAOImpl;
-import com.fdahpstudydesigner.service.StudyExportService;
+import com.fdahpstudydesigner.service.StudyExportImportService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -111,7 +111,7 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Autowired NotificationDAOImpl notificationDaoImpl;
 
-  @Autowired StudyExportService studyExportService;
+  @Autowired StudyExportImportService studyExportService;
 
   private static final String OAUTH_TOKEN = "/oauth2/token";
 

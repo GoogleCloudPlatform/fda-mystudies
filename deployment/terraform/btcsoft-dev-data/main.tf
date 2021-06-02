@@ -170,8 +170,12 @@ module "btcsoft_dev_mystudies_study_resources" {
       role   = "roles/storage.objectAdmin"
     },
     {
-      member = "allUsers"
-      role   = "roles/storage.objectViewer"
+      member = "serviceAccount:study-datastore-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
+    },
+    {
+      member = "serviceAccount:participant-manager-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
     },
   ]
 }
@@ -191,7 +195,7 @@ module "btcsoft_dev_mystudies_sql_import" {
     },
     {
       member = "serviceAccount:study-builder-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
-      role   = "roles/storage.objectAdmin" 
+      role   = "roles/storage.objectAdmin"
     },
   ]
 }

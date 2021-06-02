@@ -4,12 +4,6 @@
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
 
 
-<style>
-.modal-dialog {
-    text-align: inherit !important;
-}
-</style>
-
 <!-- create Study Section Start -->
 <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md tit_con">
   <div class="md-container">

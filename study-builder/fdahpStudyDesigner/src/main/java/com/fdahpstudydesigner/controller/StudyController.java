@@ -76,7 +76,7 @@ import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
-import com.fdahpstudydesigner.service.StudyExportService;
+import com.fdahpstudydesigner.service.StudyExportImportService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.service.UsersService;
@@ -143,7 +143,7 @@ public class StudyController {
 
   @Autowired private OAuthService oauthService;
 
-  @Autowired private StudyExportService studyExportService;
+  @Autowired private StudyExportImportService studyExportImportService;
 
   @Autowired private StudyDAO studyDao;
 
@@ -5317,7 +5317,7 @@ public class StudyController {
     String message = "";
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     if (StringUtils.isNotEmpty(studyId)) {
-      message = studyExportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
+      message = studyExportImportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
     }
     JSONObject jsonobject = new JSONObject();
     if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
@@ -5350,7 +5350,7 @@ public class StudyController {
             ? ""
             : request.getParameter("signedUrl");
 
-    String message = studyExportService.importStudy(signedUrl, sessionObject);
+    String message = studyExportImportService.importStudy(signedUrl, sessionObject);
 
     if (message.contains(FdahpStudyDesignerConstants.SUCCESS)) {
       auditLogEventHelper.logEvent(STUDY_IMPORTED, auditRequest);
@@ -5363,7 +5363,7 @@ public class StudyController {
     out = response.getWriter();
     out.print(jsonobject);
 
-    logger.info("StudyController - replicateStudy() - Ends");
+    logger.info("StudyController - importStudy() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/replicate.do", method = RequestMethod.POST)

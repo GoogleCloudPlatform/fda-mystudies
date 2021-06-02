@@ -72,7 +72,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class StudyExportService {
+public class StudyExportImportService {
 
   private static final String PRE_LAUNCH = "Pre-launch";
 
@@ -92,7 +92,8 @@ public class StudyExportService {
 
   private static final String RELEASE_VERSION = "release.version";
 
-  private static XLogger logger = XLoggerFactory.getXLogger(StudyExportService.class.getName());
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(StudyExportImportService.class.getName());
 
   @Autowired private StudyDAO studyDao;
 

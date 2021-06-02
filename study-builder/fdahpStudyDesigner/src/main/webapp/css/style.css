@@ -807,7 +807,7 @@ select.bs-select-hidden, select.selectpicker {
 
 .bootbox .modal-dialog {
   width: 480px !important;
-  text-align: center;
+  text-align: center !important;
 }
 
 .bootbox .modal-dialog .modal-content .modal-footer .btn-default {
