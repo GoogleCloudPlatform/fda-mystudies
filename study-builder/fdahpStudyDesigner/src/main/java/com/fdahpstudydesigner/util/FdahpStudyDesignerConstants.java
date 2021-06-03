@@ -485,6 +485,8 @@ public class FdahpStudyDesignerConstants {
   public static final String STUDY_REPLICATTE_FAILURE_MSG =
       "Study replication failed. Please try again later.";
 
+  public static final String INVALID_URL = "Please enter a valid URL";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
