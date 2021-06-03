@@ -141,7 +141,9 @@
 	                    		  showSucMsg("Study imported successfully");
 	                    		  location.reload();
 	                    		  setTimeout(hideDisplayMessage, 5000);
-	                            } else {
+	                            } else if(message == "Please enter a valid URL"){
+	                            	 showErrMsg(message);
+	                            }else{
 	                              bootbox.alert(message);
 	                            }
 	                          },

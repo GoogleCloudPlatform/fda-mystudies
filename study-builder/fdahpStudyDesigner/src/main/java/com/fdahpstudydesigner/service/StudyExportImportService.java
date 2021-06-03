@@ -3,6 +3,7 @@ package com.fdahpstudydesigner.service;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_ALREADY_USED_URL;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.INVALID_URL;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
@@ -42,14 +43,11 @@ import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.IdGenerator;
 import com.fdahpstudydesigner.util.SessionObject;
 import com.fdahpstudydesigner.util.StudyExportSqlQueries;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.StringReader;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -62,6 +60,11 @@ import java.util.zip.Checksum;
 import javax.sql.DataSource;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -1305,6 +1308,7 @@ public class StudyExportImportService {
     List<String> questionnairesBoInsertQueryList = new ArrayList<>();
     for (QuestionnaireBo questionnaireBo : questionnairesList) {
       String questionnairesBoInsertQuery = null;
+      questionnaireBo.setIsChange(1);
       questionnairesBoInsertQuery =
           prepareInsertQuery(
               StudyExportSqlQueries.QUESTIONNAIRES,
@@ -1464,26 +1468,33 @@ public class StudyExportImportService {
   public String importStudy(String signedUrl, SessionObject sessionObject) throws Exception {
     logger.entry("StudyExportService - importStudy() - Starts");
     Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
-    String msg = null;
-    if (StringUtils.isNotBlank(signedUrl)) {
-      String filepath =
-          signedUrl.substring(signedUrl.indexOf(UNDER_DIRECTORY), signedUrl.indexOf("?"));
+    BufferedReader bufferedReader = null;
+    try {
+      HttpClient client = HttpClients.createDefault();
+      HttpGet httpGet = new HttpGet(signedUrl);
+      HttpResponse response = client.execute(httpGet);
+      HttpEntity entity = response.getEntity();
 
-      msg = validateAndExecuteQuries(signedUrl, map, filepath);
+      if (entity != null) {
+        if (!entity.getContentType().getValue().contains("application/xml")) {
+          bufferedReader = new BufferedReader(new InputStreamReader(entity.getContent()));
+        } else {
+          throw new Exception(INVALID_URL);
+        }
+      }
+    } catch (Exception e) {
+      if (e instanceof IllegalArgumentException) {
+        return INVALID_URL;
+      }
+      return e.getMessage();
     }
-    return msg;
+    return validateAndExecuteQuries(signedUrl, map, bufferedReader);
   }
 
   private String validateAndExecuteQuries(
-      String signedUrl, Map<String, String> map, String filepath) throws Exception {
-
-    String[] allowedTablesName = StudyExportSqlQueries.ALLOWED_STUDY_TABLE_NAMES;
-    Storage storage = StorageOptions.getDefaultInstance().getService();
-    Blob blob = storage.get(BlobId.of(map.get("cloud.bucket.name.export.studies"), filepath));
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    blob.downloadTo(outputStream);
-
+      String signedUrl, Map<String, String> map, BufferedReader bufferedReader) throws Exception {
     try {
+
       String path = signedUrl.substring(0, signedUrl.indexOf(".sql"));
       String[] tokens = path.split("_");
       long checksum = Long.parseLong(tokens[tokens.length - 1]);
@@ -1501,21 +1512,20 @@ public class StudyExportImportService {
       // validating tableName and insert statements
       String line;
       StringBuilder content = new StringBuilder();
-      BufferedReader bufferedReader =
-          new BufferedReader(new StringReader(new String(outputStream.toByteArray())));
-
       List<String> insertStatements = new ArrayList<>();
-      while ((line = bufferedReader.readLine()) != null) {
+      String[] allowedTablesName = StudyExportSqlQueries.ALLOWED_STUDY_TABLE_NAMES;
 
+      while ((line = bufferedReader.readLine()) != null) {
         if (!line.startsWith("INSERT")) {
           throw new Exception(IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE);
         }
+
         String tableName =
             line.substring(line.indexOf('`') + 1, line.indexOf('`', line.indexOf('`') + 1));
-
         if (!Arrays.asList(allowedTablesName).contains(tableName)) {
           throw new Exception(IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE);
         }
+
         insertStatements.add(line);
         content.append(line);
         content.append(System.lineSeparator());
