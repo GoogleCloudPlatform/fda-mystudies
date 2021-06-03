@@ -155,7 +155,6 @@
                 <c:choose>
                 <c:when test="${not empty permission}"> disabled </c:when>
                 <c:when test="${not studyPermissionBO.viewPermission}"> disabled </c:when>
-                <c:when test="${!fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}"> disabled </c:when>
                 </c:choose>>Export
         </button> <span class="sprites_icon copy copy_to_clipboard " id="copy_to_clipboard" 
                         data-toggle="tooltip" data-placement="top" data-original-title=""></span>
