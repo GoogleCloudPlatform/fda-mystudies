@@ -5353,6 +5353,7 @@ public class StudyController {
     String message = studyExportImportService.importStudy(signedUrl, sessionObject);
 
     if (message.contains(FdahpStudyDesignerConstants.SUCCESS)) {
+      auditRequest.setStudyVersion("0.0");
       auditLogEventHelper.logEvent(STUDY_IMPORTED, auditRequest);
     } else {
       auditLogEventHelper.logEvent(STUDY_IMPORT_FAILED, auditRequest);
