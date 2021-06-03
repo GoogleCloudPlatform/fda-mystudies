@@ -632,18 +632,32 @@
       chkDaysValid(false);
     });
 
-    var today, datepicker;
-    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    var startToday, endToday, datepicker;
+    
+    <c:if test="${ empty resourceBO.startDate}">
+    startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    <c:if test="${not empty resourceBO.startDate}">
+    startToday=${resourceBO.startDate};
+    </c:if>
+    
+    <c:if test="${ empty resourceBO.endDate}">
+    endToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    <c:if test="${not empty resourceBO.endDate}">
+    endToday=${resourceBO.endDate};
+    </c:if>
+
     
     $('#StartDate').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: today,
+      minDate: startToday,
       ignoreReadonly: true,
       useCurrent: false,
     });
     $('#EndDate').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: today,
+      minDate: endToday,
       ignoreReadonly: true,
       useCurrent: false,
     });
@@ -651,6 +665,7 @@
 
     
     $(".datepicker").on("click", function (e) {
+    	
       $('#StartDate').data("DateTimePicker").minDate(
           new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
       var startDate = $("#StartDate").data("DateTimePicker").date();
