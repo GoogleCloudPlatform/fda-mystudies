@@ -93,7 +93,7 @@ public class StudyExportImportService {
 
   private static final String NEW_ELIGIBILITY_ID = "NEW_ELIGIBILITY_ID_";
 
-  private static final String RELEASE_VERSION = "release.version";
+  private static final String ANCHORDATE_ID = "ANCHORDATE_ID_";
 
   private static XLogger logger =
       XLoggerFactory.getXLogger(StudyExportImportService.class.getName());
@@ -132,7 +132,14 @@ public class StudyExportImportService {
 
       StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(), userId);
       StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
-      List<AnchorDateTypeBo> anchorDate = studyDao.getAnchorDateDetails(studyBo.getId());
+
+      List<AnchorDateTypeBo> anchorDateList = studyDao.getAnchorDateDetails(studyBo.getId());
+      if (CollectionUtils.isNotEmpty(anchorDateList)) {
+        for (AnchorDateTypeBo anchorDate : anchorDateList) {
+          customIdsMap.put(ANCHORDATE_ID + anchorDate.getId(), IdGenerator.id());
+        }
+      }
+
       List<StudyPageBo> studypageList = studyDao.getOverviewStudyPagesById(studyBo.getId(), userId);
 
       EligibilityBo eligibilityBo = studyDao.getStudyEligibiltyByStudyId(studyBo.getId());
@@ -158,7 +165,7 @@ public class StudyExportImportService {
         addStudyPermissionInsertSql(studyPermissionBo, insertSqlStatements, customIdsMap);
         addStudySequenceInsertSql(studySequenceBo, insertSqlStatements, customIdsMap);
 
-        addAnchorDateInsertSql(anchorDate, insertSqlStatements, customIdsMap);
+        addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap);
         addStudypagesListInsertSql(studypageList, insertSqlStatements, customIdsMap);
 
         addEligibilityInsertSql(eligibilityBo, insertSqlStatements, customIdsMap);
@@ -791,7 +798,9 @@ public class StudyExportImportService {
         prepareInsertQuery(
             StudyExportSqlQueries.STUDIES,
             customIdsMap.get(STUDY_ID + studyBo.getId()),
-            studyBo.getAppId(),
+            studyBo.getType().equals(FdahpStudyDesignerConstants.STUDY_TYPE_SD)
+                ? null
+                : studyBo.getAppId().toUpperCase(),
             studyBo.getCategory(),
             studyBo.getCreatedBy(),
             FdahpStudyDesignerUtil.getCurrentDateTime(),
@@ -871,7 +880,7 @@ public class StudyExportImportService {
       Map<String, String> customIdsMap)
       throws Exception {
 
-    if (CollectionUtils.isNotEmpty(anchorDateList)) {
+    if (CollectionUtils.isEmpty(anchorDateList)) {
       return;
     }
 
@@ -880,7 +889,7 @@ public class StudyExportImportService {
       String anchorDateTypeInsertQuery =
           prepareInsertQuery(
               StudyExportSqlQueries.ANCHORDATE_TYPE,
-              IdGenerator.id(),
+              customIdsMap.get(ANCHORDATE_ID + anchorDate.getId()),
               customIdsMap.get(CUSTOM_STUDY_ID + anchorDate.getCustomStudyId()),
               anchorDate.getHasAnchortypeDraft(),
               anchorDate.getName(),
@@ -1012,7 +1021,7 @@ public class StudyExportImportService {
               activeTaskBo.getActive(),
               activeTaskBo.getActiveTaskLifetimeEnd(),
               activeTaskBo.getActiveTaskLifetimeStart(),
-              activeTaskBo.getAnchorDateId(),
+              customIdsMap.get(ANCHORDATE_ID + activeTaskBo.getAnchorDateId()),
               activeTaskBo.getCreatedBy(),
               activeTaskBo.getCreatedDate(),
               customIdsMap.get(CUSTOM_STUDY_ID + activeTaskBo.getCustomStudyId()),
@@ -1314,7 +1323,7 @@ public class StudyExportImportService {
               StudyExportSqlQueries.QUESTIONNAIRES,
               customIdsMap.get(QUESTIONNAIRES_ID + questionnaireBo.getId()),
               questionnaireBo.getActive(),
-              questionnaireBo.getAnchorDateId(),
+              customIdsMap.get(ANCHORDATE_ID + questionnaireBo.getAnchorDateId()),
               questionnaireBo.getBranching(),
               questionnaireBo.getCreatedBy(),
               questionnaireBo.getCreatedDate(),
