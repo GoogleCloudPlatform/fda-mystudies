@@ -36,7 +36,7 @@ public class StudyPageBean {
   private String pageId[];
   private String studyId;
   private String title[];
-  private Integer userId;
+  private String userId;
 
   public String getActionType() {
     return actionType;
@@ -110,11 +110,11 @@ public class StudyPageBean {
     this.title = title;
   }
 
-  public Integer getUserId() {
+  public String getUserId() {
     return userId;
   }
 
-  public void setUserId(Integer userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 }

@@ -27,26 +27,26 @@ import java.util.Map;
 
 public class QuestionnaireStepBean {
 
-  private Integer destinationStep;
+  private String destinationStep;
   private String destinationText;
   Map<Integer, QuestionnaireStepBean> fromMap;
   private String lineChart;
-  private Integer questionInstructionId;
+  private String questionInstructionId;
   private Integer responseType;
   private String responseTypeText;
   private Integer sequenceNo;
   private String statData;
   private Boolean status;
-  private Integer stepId;
+  private String stepId;
   private String stepType;
   private String title;
   private Boolean useAnchorDate;
 
-  public Integer getDestinationStep() {
+  public String getDestinationStep() {
     return destinationStep;
   }
 
-  public void setDestinationStep(Integer destinationStep) {
+  public void setDestinationStep(String destinationStep) {
     this.destinationStep = destinationStep;
   }
 
@@ -74,11 +74,11 @@ public class QuestionnaireStepBean {
     this.lineChart = lineChart;
   }
 
-  public Integer getQuestionInstructionId() {
+  public String getQuestionInstructionId() {
     return questionInstructionId;
   }
 
-  public void setQuestionInstructionId(Integer questionInstructionId) {
+  public void setQuestionInstructionId(String questionInstructionId) {
     this.questionInstructionId = questionInstructionId;
   }
 
@@ -122,11 +122,11 @@ public class QuestionnaireStepBean {
     this.status = status;
   }
 
-  public Integer getStepId() {
+  public String getStepId() {
     return stepId;
   }
 
-  public void setStepId(Integer stepId) {
+  public void setStepId(String stepId) {
     this.stepId = stepId;
   }
 

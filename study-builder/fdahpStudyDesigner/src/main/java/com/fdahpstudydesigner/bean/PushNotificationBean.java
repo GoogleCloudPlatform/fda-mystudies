@@ -26,7 +26,7 @@ package com.fdahpstudydesigner.bean;
 public class PushNotificationBean {
 
   private String customStudyId = "";
-  private Integer notificationId = 0;
+  private String notificationId = "";
   private String notificationSubType = "Announcement";
   private String notificationText = "";
   private String notificationTitle = "";
@@ -41,11 +41,11 @@ public class PushNotificationBean {
     this.customStudyId = customStudyId;
   }
 
-  public Integer getNotificationId() {
+  public String getNotificationId() {
     return notificationId;
   }
 
-  public void setNotificationId(Integer notificationId) {
+  public void setNotificationId(String notificationId) {
     this.notificationId = notificationId;
   }
 
