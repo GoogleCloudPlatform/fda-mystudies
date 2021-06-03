@@ -393,7 +393,7 @@
       });
     });
 
-  
+    var today, datepicker;
    <c:if test="${ empty notificationBO.scheduleDate}">
    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
    </c:if>
