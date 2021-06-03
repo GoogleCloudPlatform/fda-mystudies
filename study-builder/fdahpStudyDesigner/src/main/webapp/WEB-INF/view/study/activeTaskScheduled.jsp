@@ -1289,11 +1289,13 @@
     if ($("#schedule2").prop("checked")) {
     	 var schedule_opts = $("input[name='frequency']:checked").val();
     	 
-    	  $("#weekDaysId").hide();
-        $("#weekDaysId").find('input:text').removeAttr('required', true);
+        $("#weekDaysId").hide();
+        $("#weekDaysId").removeAttr('required');
+        $("#weekDaysId").find('input:text,select').removeAttr('required');
         $(".weeklyRegular").hide();
         $(".weeklyRegular").removeAttr('required');
-
+        $(".weeklyRegular").find('input:text,select').removeAttr('required');
+        
         $("#monthlyDateId").hide();
         $("#monthlyDateId").find('input:text').removeAttr('required', true);
         $(".monthlyRegular").hide();
@@ -1404,6 +1406,7 @@
         $(".weeklyRegular").hide();
         $(".weeklyRegular").removeAttr('required');
         $(".weeklyRegular").find('input:text,select').removeAttr('required');
+        
 
         $("#monthlyDateId").hide();
         $("#monthlyDateId").find('input:text').removeAttr('required');
