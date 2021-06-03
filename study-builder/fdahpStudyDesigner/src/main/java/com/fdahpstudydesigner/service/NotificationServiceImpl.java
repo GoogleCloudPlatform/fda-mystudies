@@ -32,6 +32,7 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class NotificationServiceImpl implements NotificationService {
 
   @Override
   public String deleteNotification(
-      int notificationIdForDelete, SessionObject sessionObject, String notificationType) {
+      String notificationIdForDelete, SessionObject sessionObject, String notificationType) {
     logger.entry("begin deleteNotification()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -64,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
-  public NotificationBO getNotification(int notificationId) {
+  public NotificationBO getNotification(String notificationId) {
     logger.entry("begin getNotification()");
     NotificationBO notificationBO = null;
     try {
@@ -102,7 +103,7 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
-  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(int notificationId) {
+  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(String notificationId) {
     logger.entry("begin getNotificationHistoryListNoDateTime()");
     List<NotificationHistoryBO> notificationHistoryListNoDateTime = null;
     try {
@@ -135,7 +136,7 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
-  public List<NotificationBO> getNotificationList(int studyId, String type) {
+  public List<NotificationBO> getNotificationList(String studyId, String type) {
     logger.entry("begin getNotificationList()");
     List<NotificationBO> notificationList = null;
     try {
@@ -148,21 +149,21 @@ public class NotificationServiceImpl implements NotificationService {
   }
 
   @Override
-  public Integer saveOrUpdateOrResendNotification(
+  public String saveOrUpdateOrResendNotification(
       NotificationBO notificationBO,
       String notificationType,
       String buttonType,
       SessionObject sessionObject,
       String customStudyId) {
     logger.entry("begin saveOrUpdateOrResendNotification()");
-    int notificationId = 0;
+    String notificationId = null;
     try {
       if (notificationBO != null) {
         notificationId =
             notificationDAO.saveOrUpdateOrResendNotification(
                 notificationBO, notificationType, buttonType, sessionObject);
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)
-            && (notificationId != 0)) {
+            && (StringUtils.isNotEmpty(notificationId))) {
           studyDAO.markAsCompleted(
               notificationBO.getStudyId(),
               FdahpStudyDesignerConstants.NOTIFICATION,

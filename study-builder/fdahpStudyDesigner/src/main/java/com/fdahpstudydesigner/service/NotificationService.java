@@ -31,15 +31,15 @@ import java.util.List;
 public interface NotificationService {
 
   public String deleteNotification(
-      int notificationIdForDelete, SessionObject sessionObject, String notificationType);
+      String notificationId, SessionObject sessionObject, String notificationType);
 
-  public NotificationBO getNotification(int notificationId);
+  public NotificationBO getNotification(String notificationId);
 
-  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(int notificationId);
+  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(String notificationId);
 
-  public List<NotificationBO> getNotificationList(int studyId, String type);
+  public List<NotificationBO> getNotificationList(String studyId, String type);
 
-  public Integer saveOrUpdateOrResendNotification(
+  public String saveOrUpdateOrResendNotification(
       NotificationBO notificationBO,
       String notificationType,
       String buttonType,

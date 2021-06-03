@@ -33,19 +33,19 @@ import java.util.List;
 public interface NotificationDAO {
 
   public String deleteNotification(
-      int notificationIdForDelete, SessionObject sessionObject, String notificationType);
+      String notificationIdForDelete, SessionObject sessionObject, String notificationType);
 
-  public NotificationBO getNotification(int notificationId);
+  public NotificationBO getNotification(String notificationId);
 
-  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(int notificationId);
+  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(String notificationId);
 
-  public List<NotificationBO> getNotificationList(int studyId, String type);
+  public List<NotificationBO> getNotificationList(String studyId, String type);
 
-  public List<NotificationBO> getNotificationList(Integer studyId);
+  public List<NotificationBO> getNotificationList(String studyId);
 
   public List<PushNotificationBean> getPushNotificationList(String scheduledTimestamp);
 
-  public Integer saveOrUpdateOrResendNotification(
+  public String saveOrUpdateOrResendNotification(
       NotificationBO notificationBO,
       String notificationType,
       String buttonType,
