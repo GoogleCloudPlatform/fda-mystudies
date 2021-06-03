@@ -1399,12 +1399,14 @@
       if (scheduletype == 'AnchorDate') {
 
         $("#weekDaysId").hide();
-        $("#weekDaysId").find('input:text').removeAttr('required', true);
+        $("#weekDaysId").removeAttr('required');
+        $("#weekDaysId").find('input:text,select').removeAttr('required');
         $(".weeklyRegular").hide();
         $(".weeklyRegular").removeAttr('required');
+        $(".weeklyRegular").find('input:text,select').removeAttr('required');
 
         $("#monthlyDateId").hide();
-        $("#monthlyDateId").find('input:text').removeAttr('required', true);
+        $("#monthlyDateId").find('input:text').removeAttr('required');
         $(".monthlyRegular").hide();
         $(".monthlyRegular").removeAttr('required');
 
