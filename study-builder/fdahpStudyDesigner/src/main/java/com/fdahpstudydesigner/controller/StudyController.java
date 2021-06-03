@@ -4512,6 +4512,8 @@ public class StudyController {
 
         if (FdahpStudyDesignerUtil.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+          System.out.println("****: " + studyBo.getCustomStudyId());
+          System.out.println("****: " + studyBo.getVersion());
           if (StringUtils.isNotEmpty(isLive)
               && isLive.equalsIgnoreCase(FdahpStudyDesignerConstants.YES)
               && (studyBo != null)) {
@@ -4773,6 +4775,8 @@ public class StudyController {
                   : 0);
       if (sesObj != null) {
         StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+        System.out.println("****: " + studyBo.getCustomStudyId());
+        System.out.println("****: " + studyBo.getVersion());
         if ((sesObj.getStudySessionBeans() != null) && !sesObj.getStudySessionBeans().isEmpty()) {
           for (StudySessionBean sessionBean : sesObj.getStudySessionBeans()) {
             if ((sessionBean != null)
