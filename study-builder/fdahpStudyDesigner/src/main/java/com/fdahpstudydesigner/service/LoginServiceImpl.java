@@ -76,9 +76,9 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Autowired private HttpServletRequest request;
 
-  private LoginDAOImpl loginDAO;
+  @Autowired private EmailNotification emailNotification;
 
-  @Autowired EmailNotification emailNotification;
+  private LoginDAOImpl loginDAO;
 
   @Override
   public String authAndAddPassword(
@@ -202,7 +202,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   public String changePassword(
-      Integer userId, String newPassword, String oldPassword, SessionObject sesObj) {
+      String userId, String newPassword, String oldPassword, SessionObject sesObj) {
     logger.entry("begin changePassword()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -467,6 +467,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                   "$passwordResetLinkExpirationInDay",
                   String.valueOf(passwordResetLinkExpirationInDay));
               keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
+
               customerCareMail = propMap.get("email.address.customer.service");
               keyValueForSubject.put("$customerCareMail", customerCareMail);
               keyValueForSubject2.put("$customerCareMail", customerCareMail);
@@ -491,6 +492,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                   auditLogEventHelper.logEvent(
                       NEW_USER_INVITATION_EMAIL_FAILED, auditRequest, values);
                 }
+
               } else if ("USER_UPDATE".equals(type) && userdetails.isEnabled()) {
                 dynamicContent =
                     FdahpStudyDesignerUtil.genarateEmailContent(
@@ -560,7 +562,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               if ("".equals(type) && (!userdetails.isEnabled())) {
                 message = propMap.get("user.inactive.msg");
               }
-
               if ("".equals(type) && StringUtils.isEmpty(userdetails.getUserPassword())) {
                 message = propMap.get("user.not.found.msg");
               }

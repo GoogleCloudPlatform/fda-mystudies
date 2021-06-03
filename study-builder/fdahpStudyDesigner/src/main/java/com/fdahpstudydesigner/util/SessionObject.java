@@ -1,24 +1,22 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+ * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.util;
@@ -46,9 +44,9 @@ public class SessionObject implements Serializable {
   private String privacyPolicyText = "";
   private List<Integer> studySession;
   private List<StudySessionBean> studySessionBeans;
-  private Integer superAdminId = 0;
+  private String superAdminId = null;
   private String termsText = "";
-  private Integer userId = 0;
+  private String userId = "";
   private String userName = "";
   private String userPermissions = "";
   private String userType = "";
@@ -57,6 +55,8 @@ public class SessionObject implements Serializable {
   private String accessLevel = "";
   private String correlationId;
   private String gcpBucketName;
+  private String storagePath;
+  private String exportStudiesBucketName;
 
   public String getCorrelationId() {
     return correlationId;
@@ -114,7 +114,7 @@ public class SessionObject implements Serializable {
     return studySessionBeans;
   }
 
-  public Integer getSuperAdminId() {
+  public String getSuperAdminId() {
     return superAdminId;
   }
 
@@ -122,7 +122,7 @@ public class SessionObject implements Serializable {
     return termsText;
   }
 
-  public Integer getUserId() {
+  public String getUserId() {
     return userId;
   }
 
@@ -206,7 +206,7 @@ public class SessionObject implements Serializable {
     this.isSuperAdmin = isSuperAdmin;
   }
 
-  public void setSuperAdminId(Integer superAdminId) {
+  public void setSuperAdminId(String superAdminId) {
     this.superAdminId = superAdminId;
   }
 
@@ -214,7 +214,7 @@ public class SessionObject implements Serializable {
     this.termsText = termsText;
   }
 
-  public void setUserId(Integer userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 
@@ -254,6 +254,14 @@ public class SessionObject implements Serializable {
     this.accessLevel = accessLevel;
   }
 
+  public String getStoragePath() {
+    return storagePath;
+  }
+
+  public void setStoragePath(String storagePath) {
+    this.storagePath = storagePath;
+  }
+
   public void setCorrelationId(String correlationId) {
     this.correlationId = correlationId;
   }
@@ -267,4 +275,13 @@ public class SessionObject implements Serializable {
   public void setGcpBucketName(String gcpBucketName) {
     this.gcpBucketName = gcpBucketName;
   }
+
+  public String getExportStudiesBucketName() {
+    return exportStudiesBucketName;
+  }
+
+  public void setExportStudiesBucketName(String exportStudiesBucketName) {
+    this.exportStudiesBucketName = exportStudiesBucketName;
+  }
+
 }

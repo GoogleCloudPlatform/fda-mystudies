@@ -69,8 +69,9 @@ public class LoginDAOImpl implements LoginDAO {
   public LoginDAOImpl() {}
 
   @Override
-  public String changePassword(Integer userId, String newPassword, String oldPassword) {
+  public String changePassword(String userId, String newPassword, String oldPassword) {
     logger.entry("begin changePassword()");
+
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     UserBO adminUserBO = null;
@@ -79,7 +80,7 @@ public class LoginDAOImpl implements LoginDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      query = session.getNamedQuery("getUserById").setInteger("userId", userId);
+      query = session.getNamedQuery("getUserById").setString("userId", userId);
       adminUserBO = (UserBO) query.uniqueResult();
       if ((null != adminUserBO)
           && FdahpStudyDesignerUtil.compareEncryptedPassword(
@@ -114,15 +115,16 @@ public class LoginDAOImpl implements LoginDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<UserPasswordHistory> getPasswordHistory(Integer userId) {
+  public List<UserPasswordHistory> getPasswordHistory(String userId) {
     logger.entry("begin updatePasswordHistory()");
+
     List<UserPasswordHistory> passwordHistories = null;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         passwordHistories =
-            session.getNamedQuery("getPaswordHistoryByUserId").setInteger("userId", userId).list();
+            session.getNamedQuery("getPaswordHistoryByUserId").setString("userId", userId).list();
       }
 
     } catch (Exception e) {
@@ -222,17 +224,18 @@ public class LoginDAOImpl implements LoginDAO {
   }
 
   @Override
-  public Boolean isFrocelyLogOutUser(Integer userId) {
+  public Boolean isFrocelyLogOutUser(String userId) {
     logger.entry("begin isFrocelyLogOutUser()");
+
     UserBO userBo = null;
     boolean result = false;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         userBo =
             (UserBO)
-                session.getNamedQuery("getUserById").setInteger("userId", userId).uniqueResult();
+                session.getNamedQuery("getUserById").setString("userId", userId).uniqueResult();
         if (userBo != null) {
           result = userBo.isForceLogout();
         }
@@ -250,17 +253,17 @@ public class LoginDAOImpl implements LoginDAO {
   }
 
   @Override
-  public Boolean isUserEnabled(Integer userId) {
+  public Boolean isUserEnabled(String userId) {
     logger.entry("begin isUserExists()");
     UserBO userBo = null;
     boolean result = false;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         userBo =
             (UserBO)
-                session.getNamedQuery("getUserById").setInteger("userId", userId).uniqueResult();
+                session.getNamedQuery("getUserById").setString("userId", userId).uniqueResult();
         if (userBo != null) {
           result = userBo.isEnabled();
         }
@@ -461,8 +464,9 @@ public class LoginDAOImpl implements LoginDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public String updatePasswordHistory(Integer userId, String userPassword) {
+  public String updatePasswordHistory(String userId, String userPassword) {
     logger.entry("begin updatePasswordHistory()");
+
     List<UserPasswordHistory> passwordHistories = null;
     UserPasswordHistory savePasswordHistory = null;
     String result = FdahpStudyDesignerConstants.FAILURE;
@@ -472,9 +476,9 @@ public class LoginDAOImpl implements LoginDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         passwordHistories =
-            session.getNamedQuery("getPaswordHistoryByUserId").setInteger("userId", userId).list();
+            session.getNamedQuery("getPaswordHistoryByUserId").setString("userId", userId).list();
         if ((passwordHistories != null)
             && (passwordHistories.size() > (passwordHistoryCount - 1))) {
           for (int i = 0; i < ((passwordHistories.size() - passwordHistoryCount) + 1); i++) {

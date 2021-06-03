@@ -30,9 +30,9 @@ import java.util.List;
 
 public interface LoginDAO {
 
-  public String changePassword(Integer userId, String newPassword, String oldPassword);
+  public String changePassword(String userId, String newPassword, String oldPassword);
 
-  public List<UserPasswordHistory> getPasswordHistory(Integer userId);
+  public List<UserPasswordHistory> getPasswordHistory(String userId);
 
   public UserAttemptsBo getUserAttempts(String userEmailId);
 
@@ -40,9 +40,9 @@ public interface LoginDAO {
 
   public UserBO getValidUserByEmail(String email);
 
-  public Boolean isFrocelyLogOutUser(Integer userId);
+  public Boolean isFrocelyLogOutUser(String userId);
 
-  public Boolean isUserEnabled(Integer userId);
+  public Boolean isUserEnabled(String userId);
 
   public void passwordLoginBlocked();
 
@@ -50,7 +50,7 @@ public interface LoginDAO {
 
   public void updateFailAttempts(String userEmailId, AuditLogEventRequest auditRequest);
 
-  public String updatePasswordHistory(Integer userId, String userPassword);
+  public String updatePasswordHistory(String userId, String userPassword);
 
   public String updateUser(UserBO userBO);
 
