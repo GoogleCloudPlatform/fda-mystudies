@@ -49,7 +49,7 @@ public class UsersDAOImpl implements UsersDAO {
 
   @Override
   public String activateOrDeactivateUser(
-      int userId, int userStatus, int loginUser, SessionObject userSession) {
+      String userId, int userStatus, String loginUser, SessionObject userSession) {
     logger.entry("begin activateOrDeactivateUser()");
     String msg = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -105,7 +105,7 @@ public class UsersDAOImpl implements UsersDAO {
       UserBO userBO, String permissions, String selectedStudies, String permissionValues) {
     logger.entry("begin addOrUpdateUserDetails()");
     Session session = null;
-    Integer userId = 0;
+    String userId = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
     Query query = null;
     UserBO userBO2 = null;
@@ -121,7 +121,7 @@ public class UsersDAOImpl implements UsersDAO {
       transaction = session.beginTransaction();
       userIdAccessLevelInfo = new UserIdAccessLevelInfo();
       if (null == userBO.getUserId()) {
-        userId = (Integer) session.save(userBO);
+        userId = (String) session.save(userBO);
         userIdAccessLevelInfo.setUserId(userId);
       } else {
         session.update(userBO);
@@ -145,7 +145,7 @@ public class UsersDAOImpl implements UsersDAO {
                     .setParameterList("permissions", permissionList)
                     .list());
         userBO2.setPermissionList(permissionSet);
-        userBO2.setAccessLevel(userBO2.getRoleId().equals(1) ? "SUPERADMIN" : "STUDY ADMIN");
+        userBO2.setAccessLevel(userBO2.getRoleId().equals("1") ? "SUPERADMIN" : "STUDY ADMIN");
         session.update(userBO2);
         userIdAccessLevelInfo.setAccessLevel(userBO2.getAccessLevel());
       } else {
@@ -161,10 +161,9 @@ public class UsersDAOImpl implements UsersDAO {
         query.executeUpdate();
       }
 
-      // Study admin flow
       if (!"".equals(selectedStudies)
           && !"".equals(permissionValues)
-          && userBO2.getRoleId().equals(2)) {
+          && userBO2.getRoleId().equals("2")) {
         selectedStudy = selectedStudies.split(",");
         permissionValue = permissionValues.split(",");
         List<String> selectedStudiesList = Arrays.asList(selectedStudies.split(","));
@@ -184,21 +183,21 @@ public class UsersDAOImpl implements UsersDAO {
                       " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
                           + " AND UBO.userId=:userId")
                   .setParameter("userId", userId)
-                  .setParameter("studyId", Integer.valueOf(selectedStudy[i]));
+                  .setParameter("studyId", selectedStudy[i]);
           studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
           if (null != studyPermissionBO) {
             studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
             session.update(studyPermissionBO);
           } else {
             studyPermissionBO = new StudyPermissionBO();
-            studyPermissionBO.setStudyId(Integer.parseInt(selectedStudy[i]));
+            studyPermissionBO.setStudyId(selectedStudy[i]);
             studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
             studyPermissionBO.setUserId(userId);
             session.save(studyPermissionBO);
           }
         }
-      } else if (userBO2.getRoleId().equals(1)) {
-        // Superadmin flow
+
+      } else if (userBO2.getRoleId().equals("1")) {
         query = session.createQuery(" FROM StudyBo SBO WHERE SBO.version = 0");
         List<StudyBo> studyBOList = query.list();
         if (CollectionUtils.isNotEmpty(studyBOList)) {
@@ -241,7 +240,7 @@ public class UsersDAOImpl implements UsersDAO {
   }
 
   @Override
-  public String enforcePasswordChange(Integer userId, String email) {
+  public String enforcePasswordChange(String userId, String email) {
     logger.entry("begin enforcePasswordChange()");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -335,7 +334,7 @@ public class UsersDAOImpl implements UsersDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<Integer> getPermissionsByUserId(Integer userId) {
+  public List<Integer> getPermissionsByUserId(String userId) {
     logger.entry("begin getPermissionsByUserId()");
     Session session = null;
     Query query = null;
@@ -407,14 +406,14 @@ public class UsersDAOImpl implements UsersDAO {
   }
 
   @Override
-  public UserBO getUserDetails(int userId) {
+  public UserBO getUserDetails(String userId) {
     logger.entry("begin getUserDetails()");
     Session session = null;
     UserBO userBO = null;
     Query query = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.getNamedQuery("getUserById").setInteger("userId", userId);
+      query = session.getNamedQuery("getUserById").setString("userId", userId);
       userBO = (UserBO) query.uniqueResult();
       if ((userBO != null) && (userBO.getRoleId() != null)) {
         String roleName =
@@ -451,13 +450,14 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
-                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id  ORDER BY u.user_id DESC ");
+                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id  "
+                  + " ORDER BY u.user_id DESC ");
       objList = query.list();
       if ((null != objList) && !objList.isEmpty()) {
         userList = new ArrayList<>();
         for (Object[] obj : objList) {
           UserBO userBO = new UserBO();
-          userBO.setUserId(null != obj[0] ? (Integer) obj[0] : 0);
+          userBO.setUserId(null != obj[0] ? (String) obj[0] : null);
           userBO.setFirstName(null != obj[1] ? String.valueOf(obj[1]) : "");
           userBO.setLastName(null != obj[2] ? String.valueOf(obj[2]) : "");
           userBO.setUserEmail(null != obj[3] ? String.valueOf(obj[3]) : "");
@@ -482,10 +482,10 @@ public class UsersDAOImpl implements UsersDAO {
   }
 
   @Override
-  public Integer getUserPermissionByUserId(Integer sessionUserId) {
+  public String getUserPermissionByUserId(String sessionUserId) {
     logger.entry("begin getUserPermissionByUserId()");
     Session session = null;
-    Integer userId = null;
+    String userId = null;
     Query query = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -497,7 +497,7 @@ public class UsersDAOImpl implements UsersDAO {
                       + "= (select up.permission_id from user_permissions up where "
                       + "up.permissions = 'ROLE_SUPERADMIN')) and u.user_id =:sessionUserId ")
               .setParameter("sessionUserId", sessionUserId);
-      userId = (Integer) query.uniqueResult();
+      userId = (String) query.uniqueResult();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserPermissionByUserId() - ERROR", e);
     }
@@ -506,14 +506,14 @@ public class UsersDAOImpl implements UsersDAO {
   }
 
   @Override
-  public RoleBO getUserRole(int roleId) {
+  public RoleBO getUserRole(String roleId) {
     logger.entry("begin getUserRole()");
     Session session = null;
     RoleBO roleBO = null;
     Query query = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.getNamedQuery("getUserRoleByRoleId").setInteger("roleId", roleId);
+      query = session.getNamedQuery("getUserRoleByRoleId").setString("roleId", roleId);
       roleBO = (RoleBO) query.uniqueResult();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserRole() - ERROR", e);
@@ -535,7 +535,7 @@ public class UsersDAOImpl implements UsersDAO {
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.createQuery(" FROM RoleBO RBO ");
+      query = session.createQuery(" FROM RoleBO RBO");
       roleBOList = query.list();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserRoleList() - ERROR", e);

@@ -82,11 +82,7 @@ public class UsersController {
       if (null != userSession) {
         msg =
             usersService.activateOrDeactivateUser(
-                Integer.valueOf(userId),
-                Integer.valueOf(userStatus),
-                userSession.getUserId(),
-                userSession,
-                request);
+                userId, Integer.valueOf(userStatus), userSession.getUserId(), userSession, request);
       }
     } catch (Exception e) {
       logger.error("UsersController - activateOrDeactivateUser() - ERROR", e);
@@ -109,7 +105,7 @@ public class UsersController {
     List<StudyBo> studyBOList = null;
     String actionPage = "";
     List<Integer> permissions = null;
-    int usrId = 0;
+    String usrId = null;
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
         String userId =
@@ -122,7 +118,7 @@ public class UsersController {
                 : request.getParameter("checkRefreshFlag");
         if (!"".equalsIgnoreCase(checkRefreshFlag)) {
           if (!"".equals(userId)) {
-            usrId = Integer.valueOf(userId);
+            usrId = userId;
             actionPage = FdahpStudyDesignerConstants.EDIT_PAGE;
             userBO = usersService.getUserDetails(usrId);
             if (null != userBO) {
@@ -193,7 +189,7 @@ public class UsersController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("ownUser"))
                 ? ""
                 : request.getParameter("ownUser");
-        if (null == userBO.getUserId()) {
+        if (StringUtils.isEmpty(userBO.getUserId())) {
           addFlag = true;
           userBO.setCreatedBy(userSession.getUserId());
           userBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
@@ -203,8 +199,8 @@ public class UsersController {
           userBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         }
 
-        // Superadmin flow
-        if (userBO.getRoleId().equals(1)) {
+        if (userBO.getRoleId().equals("1")) {
+          // Superadmin flow
           permissions = FdahpStudyDesignerConstants.SUPER_ADMIN_PERMISSIONS;
         } else {
           // Study admin flow
@@ -315,7 +311,7 @@ public class UsersController {
               : request.getParameter("emailId");
       if (null != userSession) {
         if (StringUtils.isNotEmpty(emailId) && StringUtils.isNotEmpty(changePassworduserId)) {
-          msg = usersService.enforcePasswordChange(Integer.parseInt(changePassworduserId), emailId);
+          msg = usersService.enforcePasswordChange(changePassworduserId, emailId);
           if (StringUtils.isNotEmpty(msg)
               && msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             Map<String, String> values = new HashMap<>();
@@ -441,7 +437,7 @@ public class UsersController {
                 ? ""
                 : request.getParameter("userId");
         if (StringUtils.isNotEmpty(userId)) {
-          userBo = usersService.getUserDetails(Integer.parseInt(userId));
+          userBo = usersService.getUserDetails(userId);
           if (userBo != null) {
             msg =
                 loginService.sendPasswordResetLinkToMail(
@@ -495,7 +491,7 @@ public class UsersController {
                 : request.getParameter("checkViewRefreshFlag");
         if (!"".equalsIgnoreCase(checkViewRefreshFlag)) {
           if (!"".equals(userId)) {
-            userBO = usersService.getUserDetails(Integer.valueOf(userId));
+            userBO = usersService.getUserDetails(userId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
