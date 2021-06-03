@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -45,14 +45,15 @@ public class RoleBO implements Serializable {
   private static final long serialVersionUID = -7663912527828944778L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "role_id")
-  private Integer roleId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "role_id", updatable = false, nullable = false)
+  private String roleId;
 
   @Column(name = "role_name")
   private String roleName;
 
-  public Integer getRoleId() {
+  public String getRoleId() {
     return roleId;
   }
 
@@ -60,7 +61,7 @@ public class RoleBO implements Serializable {
     return roleName;
   }
 
-  public void setRoleId(Integer roleId) {
+  public void setRoleId(String roleId) {
     this.roleId = roleId;
   }
 

@@ -28,12 +28,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "question_condtion_branching")
@@ -51,9 +51,10 @@ public class QuestionConditionBranchBo implements Serializable {
   private Boolean active;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "condition_id")
-  private Integer conditionId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "condition_id", updatable = false, nullable = false)
+  private String conditionId;
 
   @Column(name = "input_type")
   private String inputType;
@@ -67,7 +68,7 @@ public class QuestionConditionBranchBo implements Serializable {
   @Transient private List<QuestionConditionBranchBo> questionConditionBranchBos;
 
   @Column(name = "question_id")
-  private Integer questionId;
+  private String questionId;
 
   @Column(name = "sequence_no")
   private Integer sequenceNo;
@@ -76,7 +77,7 @@ public class QuestionConditionBranchBo implements Serializable {
     return active;
   }
 
-  public Integer getConditionId() {
+  public String getConditionId() {
     return conditionId;
   }
 
@@ -96,7 +97,7 @@ public class QuestionConditionBranchBo implements Serializable {
     return questionConditionBranchBos;
   }
 
-  public Integer getQuestionId() {
+  public String getQuestionId() {
     return questionId;
   }
 
@@ -108,7 +109,7 @@ public class QuestionConditionBranchBo implements Serializable {
     this.active = active;
   }
 
-  public void setConditionId(Integer conditionId) {
+  public void setConditionId(String conditionId) {
     this.conditionId = conditionId;
   }
 
@@ -129,7 +130,7 @@ public class QuestionConditionBranchBo implements Serializable {
     this.questionConditionBranchBos = questionConditionBranchBos;
   }
 
-  public void setQuestionId(Integer questionId) {
+  public void setQuestionId(String questionId) {
     this.questionId = questionId;
   }
 

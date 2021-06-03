@@ -27,10 +27,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "active_task_frequencies")
@@ -40,7 +40,7 @@ public class ActiveTaskFrequencyBo implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Column(name = "active_task_id")
-  private Integer activeTaskId;
+  private String activeTaskId;
 
   @Column(name = "frequency_date")
   private String frequencyDate;
@@ -49,8 +49,10 @@ public class ActiveTaskFrequencyBo implements Serializable {
   private String frequencyTime;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "is_launch_study")
   private Boolean isLaunchStudy = false;
@@ -72,7 +74,7 @@ public class ActiveTaskFrequencyBo implements Serializable {
 
   public ActiveTaskFrequencyBo() {}
 
-  public Integer getActiveTaskId() {
+  public String getActiveTaskId() {
     return activeTaskId;
   }
 
@@ -84,7 +86,7 @@ public class ActiveTaskFrequencyBo implements Serializable {
     return this.frequencyTime;
   }
 
-  public Long getId() {
+  public String getId() {
     return this.id;
   }
 
@@ -96,8 +98,8 @@ public class ActiveTaskFrequencyBo implements Serializable {
     return isStudyLifeTime;
   }
 
-  public void setActiveTaskId(Integer activeTaskId) {
-    this.activeTaskId = activeTaskId;
+  public void setActiveTaskId(String string) {
+    this.activeTaskId = string;
   }
 
   public void setFrequencyDate(String frequencyDate) {
@@ -108,7 +110,7 @@ public class ActiveTaskFrequencyBo implements Serializable {
     this.frequencyTime = frequencyTime;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 

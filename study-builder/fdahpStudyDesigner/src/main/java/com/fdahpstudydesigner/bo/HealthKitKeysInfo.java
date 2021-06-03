@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -49,9 +49,10 @@ public class HealthKitKeysInfo implements Serializable {
   private String displayName;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "key_text")
   private String key;
@@ -67,7 +68,7 @@ public class HealthKitKeysInfo implements Serializable {
     return displayName;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -87,7 +88,7 @@ public class HealthKitKeysInfo implements Serializable {
     this.displayName = displayName;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

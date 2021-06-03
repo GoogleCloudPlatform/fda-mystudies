@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "comprehension_test_response")
@@ -38,20 +38,21 @@ public class ComprehensionTestResponseBo implements Serializable {
   private static final long serialVersionUID = 7739882770594873383L;
 
   @Column(name = "comprehension_test_question_id")
-  private Integer comprehensionTestQuestionId;
+  private String comprehensionTestQuestionId;
 
   @Column(name = "correct_answer")
   private Boolean correctAnswer;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "response_option")
   private String responseOption;
 
-  public Integer getComprehensionTestQuestionId() {
+  public String getComprehensionTestQuestionId() {
     return comprehensionTestQuestionId;
   }
 
@@ -59,7 +60,7 @@ public class ComprehensionTestResponseBo implements Serializable {
     return correctAnswer;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -67,7 +68,7 @@ public class ComprehensionTestResponseBo implements Serializable {
     return responseOption;
   }
 
-  public void setComprehensionTestQuestionId(Integer comprehensionTestQuestionId) {
+  public void setComprehensionTestQuestionId(String comprehensionTestQuestionId) {
     this.comprehensionTestQuestionId = comprehensionTestQuestionId;
   }
 
@@ -75,7 +76,7 @@ public class ComprehensionTestResponseBo implements Serializable {
     this.correctAnswer = correctAnswer;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

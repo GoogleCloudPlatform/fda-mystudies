@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -81,12 +81,13 @@ public class Checklist implements Serializable {
   private boolean checkbox9 = false;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "checklist_id")
-  private Integer checklistId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "checklist_id", updatable = false, nullable = false)
+  private String checklistId;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
@@ -95,19 +96,19 @@ public class Checklist implements Serializable {
   private String customStudyId;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
-  public Integer getChecklistId() {
+  public String getChecklistId() {
     return checklistId;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -119,7 +120,7 @@ public class Checklist implements Serializable {
     return customStudyId;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -127,7 +128,7 @@ public class Checklist implements Serializable {
     return modifiedOn;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
@@ -227,11 +228,11 @@ public class Checklist implements Serializable {
     this.checkbox9 = checkbox9;
   }
 
-  public void setChecklistId(Integer checklistId) {
+  public void setChecklistId(String checklistId) {
     this.checklistId = checklistId;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -243,7 +244,7 @@ public class Checklist implements Serializable {
     this.customStudyId = customStudyId;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -251,7 +252,7 @@ public class Checklist implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 }

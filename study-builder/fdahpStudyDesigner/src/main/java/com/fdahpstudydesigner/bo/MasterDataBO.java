@@ -26,9 +26,9 @@ package com.fdahpstudydesigner.bo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -42,9 +42,10 @@ import org.hibernate.annotations.NamedQuery;
 public class MasterDataBO {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "privacy_policy_text")
   private String privacyPolicyText;
@@ -55,7 +56,7 @@ public class MasterDataBO {
   @Column(name = "type")
   private String type;
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -71,7 +72,7 @@ public class MasterDataBO {
     return type;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

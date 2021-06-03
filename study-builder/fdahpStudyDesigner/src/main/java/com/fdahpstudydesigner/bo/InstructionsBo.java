@@ -27,12 +27,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "instructions")
@@ -49,15 +49,16 @@ public class InstructionsBo implements Serializable {
   private Boolean active;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "instruction_text", length = 2500)
   private String instructionText;
@@ -66,12 +67,12 @@ public class InstructionsBo implements Serializable {
   private String instructionTitle;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
 
-  @Transient private Integer questionnaireId;
+  @Transient private String questionnaireId;
 
   @Transient private QuestionnairesStepsBo questionnairesStepsBo;
 
@@ -84,7 +85,7 @@ public class InstructionsBo implements Serializable {
     return active;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -92,7 +93,7 @@ public class InstructionsBo implements Serializable {
     return createdOn;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -104,7 +105,7 @@ public class InstructionsBo implements Serializable {
     return instructionTitle;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -112,7 +113,7 @@ public class InstructionsBo implements Serializable {
     return modifiedOn;
   }
 
-  public Integer getQuestionnaireId() {
+  public String getQuestionnaireId() {
     return questionnaireId;
   }
 
@@ -132,7 +133,7 @@ public class InstructionsBo implements Serializable {
     this.active = active;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -140,7 +141,7 @@ public class InstructionsBo implements Serializable {
     this.createdOn = createdOn;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -152,7 +153,7 @@ public class InstructionsBo implements Serializable {
     this.instructionTitle = instructionTitle;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -160,7 +161,7 @@ public class InstructionsBo implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public void setQuestionnaireId(Integer questionnaireId) {
+  public void setQuestionnaireId(String questionnaireId) {
     this.questionnaireId = questionnaireId;
   }
 

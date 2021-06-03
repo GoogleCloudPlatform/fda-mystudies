@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -55,15 +55,16 @@ public class ActiveTaskMasterAttributeBo implements Serializable {
   private String displayName;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "active_task_master_attr_id")
-  private Integer masterId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "active_task_master_attr_id", updatable = false, nullable = false)
+  private String masterId;
 
   @Column(name = "order_by")
   private Integer orderByTaskType;
 
   @Column(name = "task_type_id")
-  private Integer taskTypeId;
+  private String taskTypeId;
 
   public String getAttributeDataType() {
     return attributeDataType;
@@ -81,7 +82,7 @@ public class ActiveTaskMasterAttributeBo implements Serializable {
     return displayName;
   }
 
-  public Integer getMasterId() {
+  public String getMasterId() {
     return masterId;
   }
 
@@ -89,7 +90,7 @@ public class ActiveTaskMasterAttributeBo implements Serializable {
     return orderByTaskType;
   }
 
-  public Integer getTaskTypeId() {
+  public String getTaskTypeId() {
     return taskTypeId;
   }
 
@@ -117,7 +118,7 @@ public class ActiveTaskMasterAttributeBo implements Serializable {
     this.displayName = displayName;
   }
 
-  public void setMasterId(Integer masterId) {
+  public void setMasterId(String masterId) {
     this.masterId = masterId;
   }
 
@@ -125,7 +126,7 @@ public class ActiveTaskMasterAttributeBo implements Serializable {
     this.orderByTaskType = orderByTaskType;
   }
 
-  public void setTaskTypeId(Integer taskTypeId) {
+  public void setTaskTypeId(String taskTypeId) {
     this.taskTypeId = taskTypeId;
   }
 }

@@ -27,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -44,16 +44,20 @@ public class QuestionnaireCustomScheduleBo implements Serializable {
   @Column(name = "frequency_start_date")
   private String frequencyStartDate;
 
-  @Column(name = "frequency_time")
-  private String frequencyTime;
+  @Column(name = "frequency_end_time")
+  private String frequencyEndTime;
+
+  @Column(name = "frequency_start_time")
+  private String frequencyStartTime;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "questionnaires_id")
-  private Integer questionnairesId;
+  private String questionnairesId;
 
   @Column(name = "is_used")
   @Type(type = "yes_no")
@@ -79,15 +83,11 @@ public class QuestionnaireCustomScheduleBo implements Serializable {
     return frequencyStartDate;
   }
 
-  public String getFrequencyTime() {
-    return frequencyTime;
-  }
-
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public Integer getQuestionnairesId() {
+  public String getQuestionnairesId() {
     return questionnairesId;
   }
 
@@ -103,15 +103,11 @@ public class QuestionnaireCustomScheduleBo implements Serializable {
     this.frequencyStartDate = frequencyStartDate;
   }
 
-  public void setFrequencyTime(String frequencyTime) {
-    this.frequencyTime = frequencyTime;
-  }
-
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
-  public void setQuestionnairesId(Integer questionnairesId) {
+  public void setQuestionnairesId(String questionnairesId) {
     this.questionnairesId = questionnairesId;
   }
 
@@ -149,5 +145,21 @@ public class QuestionnaireCustomScheduleBo implements Serializable {
 
   public void setTimePeriodToDays(Integer timePeriodToDays) {
     this.timePeriodToDays = timePeriodToDays;
+  }
+
+  public String getFrequencyEndTime() {
+    return frequencyEndTime;
+  }
+
+  public void setFrequencyEndTime(String frequencyEndTime) {
+    this.frequencyEndTime = frequencyEndTime;
+  }
+
+  public String getFrequencyStartTime() {
+    return frequencyStartTime;
+  }
+
+  public void setFrequencyStartTime(String frequencyStartTime) {
+    this.frequencyStartTime = frequencyStartTime;
   }
 }

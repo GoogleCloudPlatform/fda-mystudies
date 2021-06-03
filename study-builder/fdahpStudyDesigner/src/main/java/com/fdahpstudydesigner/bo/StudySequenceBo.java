@@ -27,11 +27,11 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -113,18 +113,19 @@ public class StudySequenceBo implements Serializable {
   private boolean studyExcQuestionnaries = false;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "study_sequence_id")
-  private Integer studySequenceId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "study_sequence_id", updatable = false, nullable = false)
+  private String studySequenceId;
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public Integer getStudySequenceId() {
+  public String getStudySequenceId() {
     return studySequenceId;
   }
 
@@ -256,11 +257,11 @@ public class StudySequenceBo implements Serializable {
     this.studyExcQuestionnaries = studyExcQuestionnaries;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
-  public void setStudySequenceId(Integer studySequenceId) {
+  public void setStudySequenceId(String studySequenceId) {
     this.studySequenceId = studySequenceId;
   }
 }
