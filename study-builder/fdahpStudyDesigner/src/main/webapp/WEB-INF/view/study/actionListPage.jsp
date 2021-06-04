@@ -381,7 +381,7 @@
     document.execCommand("Copy");
     textArea.remove();
     $("#alertMsg").removeClass('e-box').addClass('s-box').text("URL copied to clipboard");
-    setTimeout(hideDisplayMessage, 3000);
+    setTimeout(hideDisplayMessage, 5000);
   });
 
   var expireTime = "";
