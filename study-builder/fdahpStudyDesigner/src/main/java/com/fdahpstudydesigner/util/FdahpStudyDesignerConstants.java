@@ -478,7 +478,7 @@ public class FdahpStudyDesignerConstants {
 
   public static final String STUDY_REPLICATTE_SUCCESS_MSG = "Study replicated successfully";
 
-  public static final String IMPORT_FAILURE_MSG = "Import failed.";
+  public static final String IMPORT_FAILURE_MSG = "Import failed";
 
   public static final String EXPORT_FAILURE_MSG = "Export failed. Please try again later.";
 
