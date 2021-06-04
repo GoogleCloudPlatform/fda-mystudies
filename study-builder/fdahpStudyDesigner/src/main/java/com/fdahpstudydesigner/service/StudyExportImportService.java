@@ -505,7 +505,7 @@ public class StudyExportImportService {
               activeTaskCustomScheduleBo.getFrequencyStartDate(),
               activeTaskCustomScheduleBo.getTimePeriodFromDays(),
               activeTaskCustomScheduleBo.getTimePeriodToDays(),
-              activeTaskCustomScheduleBo.isUsed() ? "Y" : "N",
+              "N", // setting isUsed value to false
               activeTaskCustomScheduleBo.isxDaysSign(),
               activeTaskCustomScheduleBo.isyDaysSign(),
               activeTaskCustomScheduleBo.getFrequencyStartTime(),
@@ -740,7 +740,7 @@ public class StudyExportImportService {
                   QUESTIONNAIRES_ID + questionnaireCustomScheduleBo.getQuestionnairesId()),
               questionnaireCustomScheduleBo.getTimePeriodFromDays(),
               questionnaireCustomScheduleBo.getTimePeriodToDays(),
-              questionnaireCustomScheduleBo.isUsed() ? "Y" : "N",
+              "N", // setting isUsed value to false
               questionnaireCustomScheduleBo.isxDaysSign(),
               questionnaireCustomScheduleBo.isyDaysSign(),
               questionnaireCustomScheduleBo.getFrequencyEndTime(),
@@ -1317,7 +1317,6 @@ public class StudyExportImportService {
     List<String> questionnairesBoInsertQueryList = new ArrayList<>();
     for (QuestionnaireBo questionnaireBo : questionnairesList) {
       String questionnairesBoInsertQuery = null;
-      questionnaireBo.setIsChange(1);
       questionnairesBoInsertQuery =
           prepareInsertQuery(
               StudyExportSqlQueries.QUESTIONNAIRES,
@@ -1330,7 +1329,7 @@ public class StudyExportImportService {
               customIdsMap.get(CUSTOM_STUDY_ID + questionnaireBo.getCustomStudyId()),
               questionnaireBo.getDayOfTheWeek(),
               questionnaireBo.getFrequency(),
-              questionnaireBo.getIsChange(),
+              1, // setting isChange value to 1
               questionnaireBo.getLive(),
               questionnaireBo.getModifiedBy(),
               questionnaireBo.getModifiedDate(),
