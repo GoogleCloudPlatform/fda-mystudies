@@ -150,7 +150,7 @@
         </div>
       </div>
  <div class="form-group mr-sm" style="white-space: normal; margin-top: -9px;">
- For studies that are live, notifications get published for scheduled delivery to participants as soon as you mark the Notifications section complete.
+ For studies that are already launched, notifications get scheduled for delivery to participants, immediately upon marking this screen as Done, not requiring an explicit 'Publish updates' action at the study level.
  </div>
     </div>
   </form:form>
