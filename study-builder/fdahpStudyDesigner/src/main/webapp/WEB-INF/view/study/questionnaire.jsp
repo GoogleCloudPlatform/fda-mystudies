@@ -1956,7 +1956,7 @@
 
           $(".monthlyanchorDiv").show();
           $(".monthlyanchorDiv").find('input:text').attr('required', true);
-        }
+        } 
         if (schedule_opts == 'Manually Schedule') {
           $(".manuallyAnchorContainer").show();
           $(".manuallyAnchorContainer").find('input:text').attr('required', true);
@@ -1976,7 +1976,6 @@
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
         $(".Selectedtooltip").hide();
-
         
         $($('.manually-anchor-option').get().reverse()).each(function () {
            var id = $(this).attr("id");	
@@ -2046,8 +2045,7 @@
         $('.anchortypeclass').removeAttr('required');
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
-
-    	
+        
         $('.manually-option').each(function () {	
            var id = $(this).attr("id");	
            var count12 = $("#"+id).find(".cusStrDate").attr("count");	
@@ -2579,7 +2577,7 @@
       minDate: serverDate(),
       useCurrent: false,
     });
-
+    
     $('#startDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       useCurrent: false,
@@ -3225,12 +3223,17 @@
   }
 
   function customStartDate(id, count) {
+	  var minimumDate = $("#StartDate0").val();
+	  if (minimumDate == null || minimumDate == '' || typeof minimumDate == 'undefined') {
+		  minimumDate = serverDate();
+	  } 
+	  
 	  $('.manually-option').find('.startTime').prop('disabled', false);
       $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
+      minDate: minimumDate,
       useCurrent: false,
-    }).on("dp.change", function (e) {
+      }).on("dp.change", function (e) {
       $("#" + id).parent().removeClass("has-danger").removeClass("has-error");
       $("#" + id).parent().find(".help-block").empty();
       $("#EndDate" + count).parent().removeClass("has-danger").removeClass("has-error");
@@ -3249,14 +3252,22 @@
         $("#EndDate" + count).parent().find(".help-block").empty();
 
       }
+    }).on("dp.show", function (e) {
+      $('.cusStrDate').data("DateTimePicker").minDate(serverDate());
     });
+      
   }
 
   function customEndDate(id, count) {
+	var minimumDate = $("#EndDate0").val();
+	if (minimumDate == null || minimumDate == '' || typeof minimumDate == 'undefined') {
+	  minimumDate = serverDate();
+	}
+	
 	$('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
+      minDate: minimumDate,
       useCurrent: false,
     }).on("dp.change", function (e) {
       $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -3275,6 +3286,8 @@
         $("#StartDate" + count).parent().removeClass("has-danger").removeClass("has-error");
         $("#StartDate" + count).parent().find(".help-block").empty();
       }
+    }).on("dp.show", function (e) {
+      $('.cusEndDate').data("DateTimePicker").minDate(serverDate());
     });
   }
 
