@@ -5,6 +5,7 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAI
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.INVALID_URL;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.YES;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
@@ -806,7 +807,7 @@ public class StudyExportImportService {
             FdahpStudyDesignerUtil.getCurrentDateTime(),
             customIdsMap.get(CUSTOM_STUDY_ID + studyBo.getCustomStudyId()),
             studyBo.getDescription(),
-            studyBo.getEnrollingParticipants(),
+            YES,
             studyBo.getFullName(),
             studyBo.getHasActivetaskDraft(),
             studyBo.getHasActivityDraft(),
