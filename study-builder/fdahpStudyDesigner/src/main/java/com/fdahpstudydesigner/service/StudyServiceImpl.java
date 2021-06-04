@@ -1705,6 +1705,7 @@ public class StudyServiceImpl implements StudyService {
           if (active.getActiveTaskId().equals(oldActiveTaskId)) {
             active.setId(null);
             active.setActiveTaskId(activeTask.getId());
+            active.setUsed(false);
             studyDAO.saveActiveTaskCustomScheduleBo(active);
           }
         }
