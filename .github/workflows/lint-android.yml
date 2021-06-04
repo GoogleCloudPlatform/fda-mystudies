@@ -3,7 +3,7 @@ name: Android-Lint
 on:
   pull_request:
     branches:
-      - develop
+      - btc-dev2dev-deployment
     paths:
       - 'Android/**'
       - '.github/workflows/lint-android.yml'

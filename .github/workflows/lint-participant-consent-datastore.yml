@@ -3,7 +3,7 @@ name: lint-participant-consent-datastore
 on:
   pull_request:
     branches:
-      - develop
+      - btc-dev2dev-deployment
     paths:
       - 'participant-datastore/consent-mgmt-module/**'
       - '.github/workflows/lint-participant-consent-datastore.yml'
