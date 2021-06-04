@@ -149,7 +149,7 @@
 	                          },
 	                   error: function status(data, status) {
 	                     $("body").removeClass("loading");
-	                     showErrMsg("Import failed.")
+	                     showErrMsg("Import failed")
 	                   }
 	                 });
 	              } 
