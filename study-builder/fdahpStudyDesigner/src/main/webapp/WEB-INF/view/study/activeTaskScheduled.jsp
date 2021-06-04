@@ -1179,7 +1179,7 @@
 
                 <span class="form-group  dis-inline vertical-align-middle pr-md"
                 style="margin-bottom: -13px"><input id="manualStartTime${customVar.index}"
-                                                    type="text" class="form-control clock"
+                                                    type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                                                     name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
                                                     value="${activeTaskCustomScheduleBo.frequencyStartTime}"
                                                     placeholder="Start time" required data-error="Please fill out this field"/>
