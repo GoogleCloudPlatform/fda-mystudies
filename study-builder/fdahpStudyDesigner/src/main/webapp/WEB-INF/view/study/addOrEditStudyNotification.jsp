@@ -289,7 +289,13 @@
     });
 
     var today, datepicker;
+    <c:if test="${ empty notificationBO.scheduleDate}">
     today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    
+    <c:if test="${not empty notificationBO.scheduleDate}">
+    today=${notificationBO.scheduleDate};
+    </c:if>
     
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
