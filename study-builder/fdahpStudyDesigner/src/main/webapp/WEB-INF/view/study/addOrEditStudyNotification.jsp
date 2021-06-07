@@ -473,7 +473,7 @@ For studies that are already launched, notifications get scheduled for delivery 
       if (dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
             '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Please select a time that has not already passed for the current date"));
+            "Please select a time that has not gone past yet"));
         valid = false;
       }
     }
