@@ -1825,7 +1825,7 @@ public class StudyDAOImpl implements StudyDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       if (StringUtils.isNotEmpty(studyId)) {
-        query = session.createQuery("from StudyPageBo where studyId=:studyId");
+        query = session.createQuery("from StudyPageBo where studyId=:studyId order by title ASC");
         query.setString("studyId", studyId);
         studyPageBo = query.list();
       }
