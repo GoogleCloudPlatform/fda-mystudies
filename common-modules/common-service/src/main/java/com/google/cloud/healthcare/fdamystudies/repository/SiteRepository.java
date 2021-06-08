@@ -154,4 +154,11 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
       nativeQuery = true)
   public List<EnrolledInvitedCount> getInvitedEnrolledCountForOpenStudy(
       @Param("userId") String userId);
+
+  @Modifying
+  @Transactional
+  @Query(
+      value = "update sites set location_id=:locationId where study_id IN (:studyIds) ",
+      nativeQuery = true)
+  public void updateForSite(String locationId, List<String> studyIds);
 }
