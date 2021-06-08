@@ -289,7 +289,13 @@
     });
 
     var today, datepicker;
+    <c:if test="${ empty notificationBO.scheduleDate}">
     today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    
+    <c:if test="${not empty notificationBO.scheduleDate}">
+    today=${notificationBO.scheduleDate};
+    </c:if>
     
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
@@ -474,7 +480,7 @@
       if (dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
             '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Please select a time that has not already passed for the current date"));
+            "Please select a time that has not gone past yet"));
         valid = false;
       }
     }

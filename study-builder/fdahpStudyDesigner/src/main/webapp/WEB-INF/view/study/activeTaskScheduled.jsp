@@ -1179,7 +1179,7 @@
 
                 <span class="form-group  dis-inline vertical-align-middle pr-md"
                 style="margin-bottom: -13px"><input id="manualStartTime${customVar.index}"
-                                                    type="text" class="form-control clock"
+                                                    type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                                                     name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
                                                     value="${activeTaskCustomScheduleBo.frequencyStartTime}"
                                                     placeholder="Start time" required data-error="Please fill out this field"/>
@@ -1851,9 +1851,20 @@
       $('.anchortypeclass').removeAttr('required');
     }
 
+    var startToday;
+    <c:if test="${ empty activeTaskBo.activeTaskFrequenciesBo.frequencyDate}">
+    startToday = serverDate();
+    </c:if>
+    
+    <c:if test="${not empty activeTaskBo.activeTaskFrequenciesBo.frequencyDate}">
+    startToday=${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}
+    </c:if>
+    
+  
+    
     $('#chooseDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
+      minDate: startToday,
       useCurrent: false
     })
         .on("dp.change", function (e) {
@@ -1861,8 +1872,16 @@
             $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
           else
             $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+        	
+        	
         });
 
+    
+    $("#chooseDate").on("click", function (e) {
+        $('#chooseDate').data("DateTimePicker").minDate(serverDate());
+      });
+    
+    
     $(document).on('change dp.change ', '.dailyClock', function () {
 
       $('.dailyContainer').find('.dailyTimeDiv').each(function () {
@@ -1897,12 +1916,40 @@
       multiTimeVal = !(a > 0);
     });
 
+    var endToday;
+    <c:if test="${ empty activeTaskBo.activeTaskLifetimeEnd}">
+    endToday = serverDate();
+    </c:if>
+    
+    <c:if test="${not empty activeTaskBo.activeTaskLifetimeEnd}">
+    endToday=${activeTaskBo.activeTaskLifetimeEnd};
+    </c:if>
+    
+    
     $('#chooseEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
+      minDate: endToday,
       useCurrent: false,
     });
-
+    
+   
+    
+    $("#chooseEndDate").on("click", function (e) {
+    	
+    	var end=$('#chooseEndDate').val();
+    	if(end!=""){
+    	var s=end.split("/");
+    	var date1=	new Date(s[2], (s[0]-1), s[1]);
+    	var date2=new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+	    	if(date1 < date2){
+	    		$('#chooseEndDate').data("DateTimePicker").minDate(serverDate());
+	    	}
+    	}
+        
+      });
+    
+    
+    
     $('#startDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       useCurrent: false,
@@ -1976,7 +2023,6 @@
 
     $('#pickStartDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-
       useCurrent: false,
       ignoreReadonly: true
     }).on("dp.change", function (e) {
@@ -3205,20 +3251,25 @@
         if (frequencyType == 'Daily') {
           var dailyTimeLength = $('.dailyContainer').find('.dailyTimeDiv').length;
           if (dailyTimeLength == 1) {
-            $("#chartId,#chartId1,#chartId2").append(
-                "<option value='Days of the current week'>Days of the current week</option>");
-            $("#chartId,#chartId1,#chartId2").append(
-                "<option value='Days of the current month'>Days of the current month</option>");
-          } else {
+        	if (!$("#chartId,#chartId1,#chartId2 option[value='Days of the current week']").length) { 
+	           $("#chartId,#chartId1,#chartId2").append(
+	               "<option value='Days of the current week'>Days of the current week</option>");
+        	}
+        	
+        	if (!$("#chartId,#chartId1,#chartId2 option[value='Days of the current month']").length) { 
+	           $("#chartId,#chartId1,#chartId2").append(
+	               "<option value='Days of the current month'>Days of the current month</option>");
+        	}
+          } else if (!$("#chartId,#chartId1,#chartId2 option[value='24 hours of current day']").length) { 
             $("#chartId,#chartId1,#chartId2").append(
                 "<option value='24 hours of current day'>24 hours of current day</option>");
           }
         }
-        if (frequencyType == 'Weekly') {
+        if (frequencyType == 'Weekly' && !$("#chartId,#chartId1,#chartId2 option[value='Weeks of the current month']").length) {
           $("#chartId,#chartId1,#chartId2").append(
               "<option value='Weeks of the current month'>Weeks of the current month</option>");
         }
-        if (frequencyType == 'Monthly') {
+        if (frequencyType == 'Monthly' && !$("#chartId,#chartId1,#chartId2 option[value='Months of the current year']").length) {
           $("#chartId,#chartId1,#chartId2").append(
               "<option value='Months of the current year'>Months of the current year</option>");
         }

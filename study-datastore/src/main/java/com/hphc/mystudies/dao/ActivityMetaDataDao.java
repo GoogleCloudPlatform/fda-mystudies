@@ -2376,7 +2376,7 @@ public class ActivityMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       StudyMetaDataConstants.STUDIES
                           + "/"
-                          + studyDto.getId()
+                          + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + reponseType.getMinImage(),
@@ -2453,7 +2453,7 @@ public class ActivityMetaDataDao {
                       propMap.get("cloud.bucket.name"),
                       StudyMetaDataConstants.STUDIES
                           + "/"
-                          + studyDto.getId()
+                          + studyDto.getCustomStudyId()
                           + "/"
                           + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                           + reponseType.getMinImage(),
@@ -2600,7 +2600,7 @@ public class ActivityMetaDataDao {
                           propMap.get("cloud.bucket.name"),
                           StudyMetaDataConstants.STUDIES
                               + "/"
-                              + studyDto.getId()
+                              + studyDto.getCustomStudyId()
                               + "/"
                               + propMap
                                   .get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE)
@@ -3170,7 +3170,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:quesResId"
-                          + " ORDER BY QCFDTO.frequencyTime")
+                          + " ORDER BY QCFDTO.frequencyStartTime")
                   .setString("quesResId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)

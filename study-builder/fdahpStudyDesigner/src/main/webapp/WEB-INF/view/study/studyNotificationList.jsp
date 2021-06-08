@@ -62,7 +62,8 @@
               <td width="60%">
                 <div class="dis-ellipsis">${fn:escapeXml(studyNotification.notificationText)}</div>
               </td>
-              <td class="wid20">${studyNotification.checkNotificationSendingStatus}</td>
+              <td class="wid20"><c:if test="${not studyNotification.notificationDone}">Draft</c:if>
+              <c:if test="${studyNotification.notificationDone}">${studyNotification.checkNotificationSendingStatus}</c:if></td>
               <td class="wid20 text-right">
                 <span class="sprites_icon preview-g mr-lg studyNotificationDetails"
                       actionType="view"
