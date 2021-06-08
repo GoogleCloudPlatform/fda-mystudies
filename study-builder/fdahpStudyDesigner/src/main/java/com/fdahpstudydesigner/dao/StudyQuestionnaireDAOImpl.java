@@ -5752,7 +5752,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   newQuestionsBo.setCreatedBy(sessionObject.getUserId());
                   newQuestionsBo.setModifiedBy(null);
                   newQuestionsBo.setModifiedOn(null);
-                  newQuestionsBo.setAnchorDateId(null);
+                  newQuestionsBo.setAnchorDateId(anchorDateMap.get(questionsBo.getAnchorDateId()));
                   session.save(newQuestionsBo);
 
                   // Question response Type
@@ -5862,7 +5862,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                         newQuestionsBo.setCreatedBy(sessionObject.getUserId());
                         newQuestionsBo.setModifiedBy(null);
                         newQuestionsBo.setModifiedOn(null);
-                        newQuestionsBo.setAnchorDateId(null);
+                        newQuestionsBo.setAnchorDateId(
+                            anchorDateMap.get(questionsBo.getAnchorDateId()));
 
                         session.save(newQuestionsBo);
 
