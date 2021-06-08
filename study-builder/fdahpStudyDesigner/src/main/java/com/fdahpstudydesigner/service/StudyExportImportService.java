@@ -1067,7 +1067,7 @@ public class StudyExportImportService {
               activeTaskAtrributeValuesBo.getActive(),
               customIdsMap.get(ACTIVETASK_ID + activeTaskAtrributeValuesBo.getActiveTaskId()),
               activeTaskAtrributeValuesBo.getActiveTaskMasterAttrId(),
-              activeTaskAtrributeValuesBo.isAddToLineChart(),
+              activeTaskAtrributeValuesBo.isAddToLineChart() ? "Y" : "N",
               activeTaskAtrributeValuesBo.getAttributeVal(),
               activeTaskAtrributeValuesBo.getDisplayNameStat(),
               activeTaskAtrributeValuesBo.getDisplayUnitStat(),
