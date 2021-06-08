@@ -90,11 +90,17 @@ public class LocationServiceImpl implements LocationService {
         locationRepository.findByCustomId(location.getCustomId());
 
     if (optLocation.isPresent()) {
+      if (optLocation.get().isDefault()) {
+        throw new ErrorCodeException(ErrorCode.LOCATION_DEFAULT_ID_UNIQUE);
+      }
       throw new ErrorCodeException(ErrorCode.LOCATION_ID_UNIQUE);
     }
 
     Optional<LocationEntity> optLocationEntity = locationRepository.findByName(location.getName());
     if (optLocationEntity.isPresent()) {
+      if (optLocationEntity.get().isDefault()) {
+        throw new ErrorCodeException(ErrorCode.LOCATION_DEFAULT_NAME_EXISTS);
+      }
       throw new ErrorCodeException(ErrorCode.LOCATION_NAME_EXISTS);
     }
 
@@ -185,6 +191,9 @@ public class LocationServiceImpl implements LocationService {
         locationRepository.findByName(locationRequest.getName());
     if (optLocationEntityForName.isPresent()
         && !locationEntity.getId().equals(optLocationEntityForName.get().getId())) {
+      if (optLocationEntityForName.get().isDefault()) {
+        throw new ErrorCodeException(ErrorCode.LOCATION_DEFAULT_NAME_EXISTS);
+      }
       throw new ErrorCodeException(ErrorCode.LOCATION_NAME_EXISTS);
     }
 

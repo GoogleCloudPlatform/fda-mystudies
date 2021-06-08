@@ -13,8 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @ConditionalOnProperty(
@@ -25,7 +27,7 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
 
   @Query(
       value =
-          "SELECT * FROM locations WHERE status = :status AND "
+          "SELECT * FROM locations WHERE is_default!='Y' AND status = :status AND "
               + "id NOT IN (SELECT DISTINCT location_id FROM sites WHERE study_id = :excludeStudyId)",
       nativeQuery = true)
   public List<LocationEntity> findByStatusAndExcludeStudyId(Integer status, String excludeStudyId);
@@ -36,7 +38,7 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
 
   @Query(
       value =
-          "SELECT * FROM locations WHERE LOWER(custom_id) LIKE %:searchTerm% OR LOWER(name) LIKE %:searchTerm% "
+          "SELECT * FROM locations WHERE is_default!='Y' AND (LOWER(custom_id) LIKE %:searchTerm% OR LOWER(name) LIKE %:searchTerm%) "
               + "ORDER BY CASE :orderByCondition WHEN 'locationId_asc' THEN custom_id END ASC, "
               + "         CASE :orderByCondition WHEN 'locationName_asc' THEN name END ASC, "
               + "         CASE :orderByCondition WHEN 'status_asc' THEN status END ASC, "
@@ -50,7 +52,24 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
 
   @Query(
       value =
-          "SELECT count(id) FROM locations WHERE custom_id LIKE %:searchTerm% OR name LIKE %:searchTerm% ",
+          "SELECT count(id) FROM locations WHERE is_default!='Y' AND (custom_id LIKE %:searchTerm% OR name LIKE %:searchTerm%) ",
       nativeQuery = true)
   public Long countLocationBySearchTerm(String searchTerm);
+
+  @Query(value = "SELECT * FROM locations WHERE is_default='Y'", nativeQuery = true)
+  public Optional<LocationEntity> findByDefault();
+
+  @Query(
+      value =
+          "SELECT study.id "
+              + "FROM sites AS site "
+              + "INNER JOIN study_info AS study "
+              + "ON site.study_id = study.id WHERE site.location_id IN (SELECT id FROM locations WHERE is_default ='Y') AND study.type=:type",
+      nativeQuery = true)
+  public List<String> findByDefaultLocationForStudy(String type);
+
+  @Modifying
+  @Transactional
+  @Query(value = "update locations set is_default='N' WHERE is_default='Y'", nativeQuery = true)
+  public void updateLocation();
 }
