@@ -603,11 +603,6 @@ public class StudyMetaDataUtil {
     try {
       if (StringUtils.isNotEmpty(input)) {
         SimpleDateFormat inputSDF = new SimpleDateFormat(inputFormat);
-        if (!input.matches(
-            "((19|20)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01]) ([2][0-3]|[0-1][0-9]|[1-9]):[0-5][0-9]:([0-5][0-9]|[6][0])$")) {
-          input = input + ":00";
-        }
-
         Date inputDate = inputSDF.parse(input);
         SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat);
         output = outputSDF.format(inputDate);
