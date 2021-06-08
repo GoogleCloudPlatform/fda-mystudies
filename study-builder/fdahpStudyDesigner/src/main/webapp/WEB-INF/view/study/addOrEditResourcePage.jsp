@@ -909,7 +909,6 @@
 
     if ($('#inlineRadio4').prop('checked') == true) {
         $('.disRadBtn1').prop('disabled', true);
-        $('.disRadBtn1').val('');
         $('.disRadBtn1').prop('checked', false);
         $('.disBtn1').prop('disabled', true);
         $('.disBtn1').val('');
