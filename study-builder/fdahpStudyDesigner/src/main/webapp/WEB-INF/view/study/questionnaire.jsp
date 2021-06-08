@@ -3163,15 +3163,10 @@
   }
 
   function customStartDate(id, count) {
-	  var minimumDate = $("#StartDate0").val();
-	  if (minimumDate == null || minimumDate == '' || typeof minimumDate == 'undefined') {
-		  minimumDate = serverDate();
-	  } 
-	  
 	  $('.manually-option').find('.cusTime').prop('disabled', false);
       $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: minimumDate,
+      minDate: serverDate(),
       useCurrent: false,
     }).on("dp.change", function (e) {
       $("#" + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -3192,21 +3187,14 @@
         $("#EndDate" + count).parent().find(".help-block").empty();
 
       }
-    }).on("dp.show", function (e) {
-      $('.cusStrDate').data("DateTimePicker").minDate(serverDate())
     });
   }
 
   function customEndDate(id, count) {
-	var minimumDate = $("#EndDate0").val();
-	if (minimumDate == null || minimumDate == '' || typeof minimumDate == 'undefined') {
-	  minimumDate = serverDate();
-	}
-		
 	$('.manually-option').find('.cusTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: minimumDate,
+      minDate: serverDate(),
       useCurrent: false,
     }).on("dp.change", function (e) {
       $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -3225,9 +3213,7 @@
         $("#StartDate" + count).parent().removeClass("has-danger").removeClass("has-error");
         $("#StartDate" + count).parent().find(".help-block").empty();
       }
-    }).on("dp.show", function (e) {
-      $('.cusEndDate').data("DateTimePicker").minDate(serverDate())
-	});
+    });
   }
 
   function toJSDate(dateTime) {
