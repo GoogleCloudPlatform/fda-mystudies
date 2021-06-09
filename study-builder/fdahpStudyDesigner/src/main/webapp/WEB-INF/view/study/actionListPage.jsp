@@ -4,6 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+
 <div class="col-sm-10 col-rc white-bg p-none">
 
   <!--  Start top tab section-->
@@ -135,7 +137,8 @@
        Once deactivated, mobile app users will no longer be able to participate in the study. Deactivated studies cannot be reactivated.
       </div>
       </div>
-    </div>
+       </div>
+
   </div>
 </div>
 <form:form
@@ -148,6 +151,7 @@
     action="/studybuilder/adminStudies/studyList.do?_S=${param._S}"
     name="studyListInfoForm" id="studyListInfoForm" method="post">
 </form:form>
+
 <script type="text/javascript">
   $(document).ready(function () {
 	$('.studyClass').addClass("active");
@@ -155,7 +159,8 @@
     $(".tenth").addClass('active');
     $("#createStudyId").show();
     $('.tenth').removeClass('cursor-none');
-  });
+
+   
 
   function validateStudyStatus(obj) {
     var buttonText = obj.id;
@@ -252,6 +257,7 @@
   }
 
   function updateStudyByAction(buttonText) {
+	  
     if (buttonText) {
       var studyId = "${studyBo.id}";
       $
@@ -288,4 +294,5 @@
           });
     }
   }
+  
 </script>

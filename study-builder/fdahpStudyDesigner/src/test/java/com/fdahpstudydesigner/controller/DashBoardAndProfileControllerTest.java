@@ -5,7 +5,6 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
@@ -18,7 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
@@ -30,7 +28,7 @@ import org.springframework.http.HttpHeaders;
 
 public class DashBoardAndProfileControllerTest extends BaseMockIT {
 
-  private static final int USER_ID = 1;
+  private static final String USER_ID = "1";
   private static final String LAST_NAME = "Last-name";
   private static final String FIRST_NAME = "First-name";
 

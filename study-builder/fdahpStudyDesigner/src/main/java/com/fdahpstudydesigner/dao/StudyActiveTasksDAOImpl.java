@@ -2,24 +2,22 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+ * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.dao;
@@ -97,7 +95,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       auditRequest.setStudyId(customStudyId);
       session = hibernateTemplate.getSessionFactory().openSession();
       if (activeTaskBo != null) {
-        Integer studyId = activeTaskBo.getStudyId();
+        String studyId = activeTaskBo.getStudyId();
 
         transaction = session.beginTransaction();
 
@@ -208,7 +206,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public ActiveTaskBo getActiveTaskById(Integer activeTaskId, String customStudyId) {
+  public ActiveTaskBo getActiveTaskById(String activeTaskId, String customStudyId) {
     logger.entry("begin getActiveTaskById()");
     ActiveTaskBo activeTaskBo = null;
     Session session = null;
@@ -350,8 +348,9 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       query =
           session
-              .createQuery(" from ActiveTaskMasterAttributeBo where taskTypeId=:activeTaskType")
-              .setParameter("activeTaskType", Integer.parseInt(activeTaskType));
+              .createQuery(
+                  " from ActiveTaskMasterAttributeBo where taskTypeId=:activeTaskType ORDER BY CAST(masterId AS int) asc")
+              .setParameter("activeTaskType", activeTaskType);
       taskMasterAttributeBos = query.list();
     } catch (Exception e) {
       logger.error("StudyActiveTasksDAOImpl - getActiveTaskMasterAttributesByType() - ERROR ", e);
@@ -438,7 +437,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           query =
               session
                   .getNamedQuery("ActiveTaskBo.getActiveTasksByByStudyId")
-                  .setInteger("studyId", Integer.parseInt(studyId));
+                  .setString("studyId", studyId);
         }
 
         activeTasks = query.list();
@@ -453,8 +452,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           for (ActiveTaskBo activeTaskBo : activeTasks) {
             if (activeTaskBo.getTaskTypeId() != null) {
               for (ActiveTaskListBo activeTaskListBo : activeTaskListBos) {
-                if (activeTaskListBo.getActiveTaskListId().intValue()
-                    == activeTaskBo.getTaskTypeId().intValue()) {
+                if (activeTaskListBo.getActiveTaskListId().equals(activeTaskBo.getTaskTypeId())) {
                   activeTaskBo.setType(activeTaskListBo.getTaskName());
                 }
               }
@@ -583,7 +581,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           query.executeUpdate();
           for (ActiveTaskCustomScheduleBo activeTaskCustomScheduleBo :
               activeTaskBo.getActiveTaskCustomScheduleBo()) {
-            if (activeTaskCustomScheduleBo.getFrequencyTime() != null) {
+            if (activeTaskCustomScheduleBo.getFrequencyStartTime() != null
+                && activeTaskCustomScheduleBo.getFrequencyEndTime() != null) {
               if (activeTaskCustomScheduleBo.getActiveTaskId() == null) {
                 activeTaskCustomScheduleBo.setActiveTaskId(activeTaskBo.getId());
               }
@@ -603,11 +602,19 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                         FdahpStudyDesignerConstants.UI_SDF_DATE,
                         FdahpStudyDesignerConstants.SD_DATE_FORMAT));
               }
-              if ((activeTaskCustomScheduleBo.getFrequencyTime() != null)
-                  && !activeTaskCustomScheduleBo.getFrequencyTime().isEmpty()) {
-                activeTaskCustomScheduleBo.setFrequencyTime(
+              if ((activeTaskCustomScheduleBo.getFrequencyStartTime() != null)
+                  && !activeTaskCustomScheduleBo.getFrequencyStartTime().isEmpty()) {
+                activeTaskCustomScheduleBo.setFrequencyStartTime(
                     FdahpStudyDesignerUtil.getFormattedDate(
-                        activeTaskCustomScheduleBo.getFrequencyTime(),
+                        activeTaskCustomScheduleBo.getFrequencyStartTime(),
+                        FdahpStudyDesignerConstants.SDF_TIME,
+                        FdahpStudyDesignerConstants.UI_SDF_TIME));
+              }
+              if ((activeTaskCustomScheduleBo.getFrequencyEndTime() != null)
+                  && !activeTaskCustomScheduleBo.getFrequencyEndTime().isEmpty()) {
+                activeTaskCustomScheduleBo.setFrequencyEndTime(
+                    FdahpStudyDesignerUtil.getFormattedDate(
+                        activeTaskCustomScheduleBo.getFrequencyEndTime(),
                         FdahpStudyDesignerConstants.SDF_TIME,
                         FdahpStudyDesignerConstants.UI_SDF_TIME));
               }
@@ -672,7 +679,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
             }
             activeTaskAtrributeValuesBo.setActiveTaskId(activeTaskBo.getId());
             activeTaskAtrributeValuesBo.setActive(1);
-            if (activeTaskAtrributeValuesBo.getAttributeValueId() == null) {
+            if (StringUtils.isEmpty(activeTaskAtrributeValuesBo.getAttributeValueId())) {
               session.save(activeTaskAtrributeValuesBo);
             } else {
               session.update(activeTaskAtrributeValuesBo);
@@ -686,7 +693,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
             (StudySequenceBo)
                 session
                     .getNamedQuery("getStudySequenceByStudyId")
-                    .setInteger("studyId", activeTaskBo.getStudyId())
+                    .setString("studyId", activeTaskBo.getStudyId())
                     .uniqueResult();
         if (studySequence != null) {
           studySequence.setStudyExcActiveTask(false);
@@ -781,7 +788,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
   @SuppressWarnings({"unchecked"})
   @Override
   public boolean validateActiveTaskAttrById(
-      Integer studyId,
+      String studyId,
       String activeTaskAttName,
       String activeTaskAttIdVal,
       String activeTaskAttIdName,
@@ -1013,7 +1020,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               questionnaireBo =
                   session
                       .getNamedQuery("checkQuestionnaireShortTitle")
-                      .setInteger("studyId", studyId)
+                      .setString("studyId", studyId)
                       .setString("shortTitle", activeTaskAttIdVal)
                       .list();
               if ((questionnaireBo != null) && !questionnaireBo.isEmpty()) {

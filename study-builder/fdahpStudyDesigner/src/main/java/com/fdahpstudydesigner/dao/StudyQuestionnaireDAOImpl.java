@@ -1,9 +1,8 @@
 /*
  * Copyright 2020-2021 Google LLC
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.dao;
@@ -95,7 +94,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public String checkFromQuestionShortTitle(
-      Integer questionnaireId,
+      String questionnaireId,
       String shortTitle,
       String questionnaireShortTitle,
       String customStudyId) {
@@ -141,7 +140,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .getNamedQuery("checkQuestionnaireStepShortTitle")
-                .setInteger("questionnaireId", questionnaireId)
+                .setString("questionnaireId", questionnaireId)
                 .setString("shortTitle", shortTitle);
         questionnairesStepsBo = query.list();
         if ((questionnairesStepsBo != null) && !questionnairesStepsBo.isEmpty()) {
@@ -155,7 +154,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               (BigInteger)
                   session
                       .createSQLQuery(searchQuery)
-                      .setInteger("questionnaireId", questionnaireId)
+                      .setString("questionnaireId", questionnaireId)
                       .setString("shortTitle", shortTitle)
                       .uniqueResult();
           if ((subCount != null) && (subCount.intValue() > 0)) {
@@ -176,7 +175,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public String checkQuestionnaireResponseTypeValidation(Integer studyId, String customStudyId) {
+  public String checkQuestionnaireResponseTypeValidation(String studyId, String customStudyId) {
     logger.entry("begin checkQuestionnaireResponseTypeValidation()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -192,7 +191,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           (BigInteger)
               session
                   .createSQLQuery(searchQuery)
-                  .setInteger("studyId", studyId)
+                  .setString("studyId", studyId)
                   .setString("questionStep", FdahpStudyDesignerConstants.QUESTION_STEP)
                   .uniqueResult();
       if ((count != null) && (count.intValue() > 0)) {
@@ -205,7 +204,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 + " and qq.active=1 and qs.step_type='Form' and qs.active=1 and f.active=1 and q.response_type=3 and q.active=1";
         questionCount =
             (BigInteger)
-                session.createSQLQuery(searchQuuery).setInteger("studyId", studyId).uniqueResult();
+                session.createSQLQuery(searchQuuery).setString("studyId", studyId).uniqueResult();
         if ((questionCount != null) && (questionCount.intValue() > 0)) {
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
@@ -225,7 +224,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public String checkQuestionnaireShortTitle(
-      Integer studyId, String shortTitle, String customStudyId) {
+      String studyId, String shortTitle, String customStudyId) {
     logger.entry("begin checkQuestionnaireShortTitle()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -264,7 +263,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .getNamedQuery("checkQuestionnaireShortTitle")
-                .setInteger("studyId", studyId)
+                .setString("studyId", studyId)
                 .setString("shortTitle", shortTitle);
         questionnaireBo = query.list();
 
@@ -275,7 +274,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           taskBo =
               session
                   .createQuery(queryString)
-                  .setInteger("studyId", studyId)
+                  .setString("studyId", studyId)
                   .setString("shortTitle", shortTitle)
                   .list();
 
@@ -298,7 +297,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public String checkQuestionnaireStepShortTitle(
-      Integer questionnaireId,
+      String questionnaireId,
       String stepType,
       String shortTitle,
       String questionnaireShortTitle,
@@ -345,7 +344,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .getNamedQuery("checkQuestionnaireStepShortTitle")
-                .setInteger("questionnaireId", questionnaireId)
+                .setString("questionnaireId", questionnaireId)
                 .setString("shortTitle", shortTitle);
         questionnairesStepsBo = query.list();
         if ((questionnairesStepsBo != null) && !questionnairesStepsBo.isEmpty()) {
@@ -359,7 +358,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               (BigInteger)
                   session
                       .createSQLQuery(searchQuery)
-                      .setInteger("questionnaireId", questionnaireId)
+                      .setString("questionnaireId", questionnaireId)
                       .setString("shortTitle", shortTitle)
                       .uniqueResult();
           if ((subCount != null) && (subCount.intValue() > 0)) {
@@ -380,7 +379,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public String checkStatShortTitle(Integer studyId, String shortTitle, String customStudyId) {
+  public String checkStatShortTitle(String studyId, String shortTitle, String customStudyId) {
     logger.entry("begin checkQuestionnaireStepShortTitle()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -444,7 +443,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     + " and QSBO.active=1) and QBO.statShortName=:shortTitle ");
         questionsBo =
             query
-                .setInteger("studyId", studyId)
+                .setString("studyId", studyId)
                 .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP)
                 .setString("shortTitle", shortTitle)
                 .list();
@@ -458,7 +457,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           questionsBo =
               session
                   .createQuery(searchQuuery)
-                  .setInteger("studyId", studyId)
+                  .setString("studyId", studyId)
                   .setString("shortTitle", shortTitle)
                   .list();
 
@@ -471,7 +470,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             List<ActiveTaskAtrributeValuesBo> activeTaskAtrributeValuesBos =
                 session
                     .createQuery(taskQuery)
-                    .setInteger("studyId", studyId)
+                    .setString("studyId", studyId)
                     .setString("shortTitle", shortTitle)
                     .list();
             if ((activeTaskAtrributeValuesBos != null) && !activeTaskAtrributeValuesBos.isEmpty()) {
@@ -495,7 +494,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public QuestionnaireBo copyStudyQuestionnaireBo(
-      Integer questionnaireId, String customStudyId, SessionObject sessionObject) {
+      String questionnaireId, String customStudyId, SessionObject sessionObject) {
     logger.entry("begin copyStudyQuestionnaireBo()");
     QuestionnaireBo questionnaireBo = null;
     QuestionnaireBo newQuestionnaireBo = null;
@@ -507,7 +506,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       transaction = session.beginTransaction();
       query = session.createQuery(" From QuestionnaireBo QBO WHERE QBO.id=:questionnaireId ");
       questionnaireBo =
-          (QuestionnaireBo) query.setInteger("questionnaireId", questionnaireId).uniqueResult();
+          (QuestionnaireBo) query.setString("questionnaireId", questionnaireId).uniqueResult();
       if (questionnaireBo != null) {
         String searchQuery = null;
         newQuestionnaireBo = SerializationUtils.clone(questionnaireBo);
@@ -532,7 +531,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             List<QuestionnaireCustomScheduleBo> questionnaireCustomScheduleList =
                 session
                     .createQuery(searchQuery)
-                    .setInteger("questionnaireId", questionnaireBo.getId())
+                    .setString("questionnaireId", questionnaireBo.getId())
                     .list();
             if ((questionnaireCustomScheduleList != null)
                 && !questionnaireCustomScheduleList.isEmpty()) {
@@ -552,7 +551,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             List<QuestionnairesFrequenciesBo> questionnairesFrequenciesList =
                 session
                     .createQuery(searchQuery)
-                    .setInteger("questionnaireId", questionnaireBo.getId())
+                    .setString("questionnaireId", questionnaireBo.getId())
                     .list();
             if ((questionnairesFrequenciesList != null)
                 && !questionnairesFrequenciesList.isEmpty()) {
@@ -571,7 +570,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
         /** Questionnaire Content purpose copying Start * */
         List<Integer> destinationList = new ArrayList<>();
-        Map<Integer, Integer> destionationMapList = new HashMap<>();
+        Map<Integer, String> destionationMapList = new HashMap<>();
 
         List<QuestionnairesStepsBo> existedQuestionnairesStepsBoList = null;
         List<QuestionnairesStepsBo> newQuestionnairesStepsBoList = new ArrayList<>();
@@ -584,14 +583,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .getNamedQuery("getQuestionnaireStepList")
-                .setInteger("questionnaireId", questionnaireBo.getId());
+                .setString("questionnaireId", questionnaireBo.getId());
         existedQuestionnairesStepsBoList = query.list();
         // copying the questionnaire steps
         if ((existedQuestionnairesStepsBoList != null)
             && !existedQuestionnairesStepsBoList.isEmpty()) {
           for (QuestionnairesStepsBo questionnairesStepsBo : existedQuestionnairesStepsBoList) {
-            Integer destionStep = questionnairesStepsBo.getDestinationStep();
-            if (destionStep.equals(0)) {
+            String destionStep = questionnairesStepsBo.getDestinationStep();
+            if ((destionStep.equals("0"))) {
               destinationList.add(-1);
             } else {
               for (int i = 0; i < existedQuestionnairesStepsBoList.size(); i++) {
@@ -624,7 +623,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     (InstructionsBo)
                         session
                             .getNamedQuery("getInstructionStep")
-                            .setInteger("id", questionnairesStepsBo.getInstructionFormId())
+                            .setString("id", questionnairesStepsBo.getInstructionFormId())
                             .uniqueResult();
                 if (instructionsBo != null) {
                   InstructionsBo newInstructionsBo = SerializationUtils.clone(instructionsBo);
@@ -646,7 +645,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     (QuestionsBo)
                         session
                             .getNamedQuery("getQuestionStep")
-                            .setInteger("stepId", questionnairesStepsBo.getInstructionFormId())
+                            .setString("stepId", questionnairesStepsBo.getInstructionFormId())
                             .uniqueResult();
                 if (questionsBo != null) {
 
@@ -654,13 +653,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
                       session
                           .getNamedQuery("getQuestionSubResponse")
-                          .setInteger("responseTypeId", questionsBo.getId())
+                          .setString("responseTypeId", questionsBo.getId())
                           .list();
 
                   List<QuestionConditionBranchBo> questionConditionBranchList =
                       session
                           .getNamedQuery("getQuestionConditionBranchList")
-                          .setInteger("questionId", questionsBo.getId())
+                          .setString("questionId", questionsBo.getId())
                           .list();
 
                   // Question response Type
@@ -668,7 +667,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       (QuestionReponseTypeBo)
                           session
                               .getNamedQuery("getQuestionResponse")
-                              .setInteger("questionsResponseTypeId", questionsBo.getId())
+                              .setString("questionsResponseTypeId", questionsBo.getId())
                               .uniqueResult();
 
                   QuestionsBo newQuestionsBo = SerializationUtils.clone(questionsBo);
@@ -745,7 +744,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     (FormBo)
                         session
                             .getNamedQuery("getFormBoStep")
-                            .setInteger("stepId", questionnairesStepsBo.getInstructionFormId())
+                            .setString("stepId", questionnairesStepsBo.getInstructionFormId())
                             .uniqueResult();
                 if (formBo != null) {
 
@@ -756,7 +755,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   List<FormMappingBo> formMappingBoList =
                       session
                           .getNamedQuery("getFormByFormId")
-                          .setInteger("formId", formBo.getFormId())
+                          .setString("formId", formBo.getFormId())
                           .list();
                   if ((formMappingBoList != null) && !formMappingBoList.isEmpty()) {
                     for (FormMappingBo formMappingBo : formMappingBoList) {
@@ -768,7 +767,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           (QuestionsBo)
                               session
                                   .getNamedQuery("getQuestionByFormId")
-                                  .setInteger("formId", formMappingBo.getQuestionId())
+                                  .setString("formId", formMappingBo.getQuestionId())
                                   .uniqueResult();
                       if (questionsBo != null) {
 
@@ -776,7 +775,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                         List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
                             session
                                 .getNamedQuery("getQuestionSubResponse")
-                                .setInteger("responseTypeId", questionsBo.getId())
+                                .setString("responseTypeId", questionsBo.getId())
                                 .list();
 
                         // Question response Type
@@ -784,7 +783,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                             (QuestionReponseTypeBo)
                                 session
                                     .getNamedQuery("getQuestionResponse")
-                                    .setInteger("questionsResponseTypeId", questionsBo.getId())
+                                    .setString("questionsResponseTypeId", questionsBo.getId())
                                     .uniqueResult();
 
                         QuestionsBo newQuestionsBo = SerializationUtils.clone(questionsBo);
@@ -847,7 +846,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         // updating the copied destination steps for questionnaire steps
         if ((destinationList != null) && !destinationList.isEmpty()) {
           for (int i = 0; i < destinationList.size(); i++) {
-            int desId = 0;
+            String desId = String.valueOf(0);
             if (destinationList.get(i) != -1) {
               desId = newQuestionnairesStepsBoList.get(destinationList.get(i)).getStepId();
             }
@@ -856,7 +855,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           }
         }
         List<Integer> sequenceSubTypeList = new ArrayList<>();
-        List<Integer> destinationResList = new ArrayList<>();
+        List<String> destinationResList = new ArrayList<>();
         // getting the list of all copied choice based destinations
         if ((existingQuestionResponseSubTypeList != null)
             && !existingQuestionResponseSubTypeList.isEmpty()) {
@@ -865,7 +864,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             if (questionResponseSubTypeBo.getDestinationStepId() == null) {
               sequenceSubTypeList.add(null);
             } else if ((questionResponseSubTypeBo.getDestinationStepId() != null)
-                && questionResponseSubTypeBo.getDestinationStepId().equals(0)) {
+                && questionResponseSubTypeBo.getDestinationStepId().equals("0")) {
               sequenceSubTypeList.add(-1);
             } else {
               if ((existedQuestionnairesStepsBoList != null)
@@ -886,11 +885,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         }
         if ((sequenceSubTypeList != null) && !sequenceSubTypeList.isEmpty()) {
           for (int i = 0; i < sequenceSubTypeList.size(); i++) {
-            Integer desId = null;
+            String desId = String.valueOf(0);
             if (sequenceSubTypeList.get(i) == null) {
               desId = null;
             } else if (sequenceSubTypeList.get(i).equals(-1)) {
-              desId = 0;
+              desId = String.valueOf(0);
             } else {
               for (QuestionnairesStepsBo questionnairesStepsBo : newQuestionnairesStepsBoList) {
                 if (sequenceSubTypeList.get(i).equals(questionnairesStepsBo.getSequenceNo())) {
@@ -911,14 +910,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         // for other type , update the destination in questionresponsetype table
         /** start * */
         List<Integer> sequenceTypeList = new ArrayList<>();
-        List<Integer> destinationResTypeList = new ArrayList<>();
+        List<String> destinationResTypeList = new ArrayList<>();
         if ((existingQuestionResponseTypeList != null)
             && !existingQuestionResponseTypeList.isEmpty()) {
           for (QuestionReponseTypeBo questionResponseTypeBo : existingQuestionResponseTypeList) {
             if (questionResponseTypeBo.getOtherDestinationStepId() == null) {
               sequenceTypeList.add(null);
             } else if ((questionResponseTypeBo.getOtherDestinationStepId() != null)
-                && questionResponseTypeBo.getOtherDestinationStepId().equals(0)) {
+                && questionResponseTypeBo.getOtherDestinationStepId().equals("0")) {
               sequenceTypeList.add(-1);
             } else {
               if ((existedQuestionnairesStepsBoList != null)
@@ -939,11 +938,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         }
         if ((sequenceTypeList != null) && !sequenceTypeList.isEmpty()) {
           for (int i = 0; i < sequenceTypeList.size(); i++) {
-            Integer desId = null;
+            String desId = String.valueOf(0);
             if (sequenceTypeList.get(i) == null) {
               desId = null;
             } else if (sequenceTypeList.get(i).equals(-1)) {
-              desId = 0;
+              desId = String.valueOf(0);
             } else {
               for (QuestionnairesStepsBo questionnairesStepsBo : newQuestionnairesStepsBoList) {
                 if (sequenceTypeList.get(i).equals(questionnairesStepsBo.getSequenceNo())) {
@@ -978,8 +977,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @Override
   public String deleteFromStepQuestion(
-      Integer formId,
-      Integer questionId,
+      String formId,
+      String questionId,
       SessionObject sessionObject,
       String customStudyId,
       AuditLogEventRequest auditRequest) {
@@ -1004,8 +1003,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .getNamedQuery("getFormQuestion")
-              .setInteger("formId", formId)
-              .setInteger("questionId", questionId);
+              .setString("formId", formId)
+              .setString("questionId", questionId);
       formMappingBo = (FormMappingBo) query.uniqueResult();
       if (formMappingBo != null) {
         String updateQuery =
@@ -1014,7 +1013,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .createQuery(updateQuery)
-                .setInteger("formId", formMappingBo.getFormId())
+                .setString("formId", formMappingBo.getFormId())
                 .setInteger("sequenceNo", formMappingBo.getSequenceNo());
         query.executeUpdate();
         // delete anchordate start
@@ -1055,35 +1054,35 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           query =
               session
                   .createQuery(deleteQuery)
-                  .setInteger("userId", sessionObject.getUserId())
+                  .setString("userId", sessionObject.getUserId())
                   .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
-                  .setInteger("questionId", questionId);
+                  .setString("questionId", questionId);
           query.executeUpdate();
 
           String deleteResponse =
               "Update QuestionReponseTypeBo QRBO set QRBO.active=0 where QRBO.questionsResponseTypeId=:questionId ";
-          query = session.createQuery(deleteResponse).setInteger("questionId", questionId);
+          query = session.createQuery(deleteResponse).setString("questionId", questionId);
           query.executeUpdate();
 
           String deleteSubResponse =
               "Update QuestionResponseSubTypeBo QRSBO set QRSBO.active=0 where QRSBO.responseTypeId=:questionId ";
 
-          query = session.createQuery(deleteSubResponse).setInteger("questionId", questionId);
+          query = session.createQuery(deleteSubResponse).setString("questionId", questionId);
           query.executeUpdate();
         } else {
           // doing the hard delete before study launched
           String deleteQuery = "delete QuestionsBo QBO where QBO.id=:questionId ";
-          query = session.createQuery(deleteQuery).setInteger("questionId", questionId);
+          query = session.createQuery(deleteQuery).setString("questionId", questionId);
           query.executeUpdate();
 
           String deleteResponse =
               "delete QuestionReponseTypeBo QRBO where QRBO.questionsResponseTypeId=:questionId ";
-          query = session.createQuery(deleteResponse).setInteger("questionId", questionId);
+          query = session.createQuery(deleteResponse).setString("questionId", questionId);
           query.executeUpdate();
 
           String deleteSubResponse =
               "delete QuestionResponseSubTypeBo QRSBO  where QRSBO.responseTypeId=:questionId ";
-          query = session.createQuery(deleteSubResponse).setInteger("questionId", questionId);
+          query = session.createQuery(deleteSubResponse).setString("questionId", questionId);
           query.executeUpdate();
 
           session.delete(formMappingBo);
@@ -1120,8 +1119,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public String deleteQuestionnaireStep(
-      Integer stepId,
-      Integer questionnaireId,
+      String stepId,
+      String questionnaireId,
       String stepType,
       SessionObject sessionObject,
       String customStudyId) {
@@ -1194,8 +1193,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             (QuestionnairesStepsBo)
                 session
                     .createQuery(searchQuery)
-                    .setInteger("stepId", stepId)
-                    .setInteger("questionnaireId", questionnaireId)
+                    .setString("stepId", stepId)
+                    .setString("questionnaireId", questionnaireId)
                     .setString("stepType", stepType)
                     .uniqueResult();
         if (questionnairesStepsBo != null) {
@@ -1207,11 +1206,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               session
                   .createSQLQuery(
                       "CALL deleteQuestionnaireStep(:questionnaireId,:modifiedOn,:modifiedBy,:sequenceNo,:stepId,:steptype)")
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("questionnaireId", questionnaireId)
                   .setString("modifiedOn", FdahpStudyDesignerUtil.getCurrentDateTime())
-                  .setInteger("modifiedBy", sessionObject.getUserId())
+                  .setString("modifiedBy", sessionObject.getUserId())
                   .setInteger("sequenceNo", 0)
-                  .setInteger("stepId", stepId)
+                  .setString("stepId", stepId)
                   .setString("steptype", stepType);
           query.executeUpdate();
 
@@ -1219,7 +1218,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               (QuestionnaireBo)
                   session
                       .createQuery("from QuestionnaireBo QBO where QBO.id=:questionnaireId")
-                      .setInteger("questionnaireId", questionnaireId)
+                      .setString("questionnaireId", questionnaireId)
                       .uniqueResult();
           if (questionnaireBo != null) {
             values.put(QUESTION_ID, questionnaireBo.getShortTitle());
@@ -1265,10 +1264,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               + " and QSBO.active=1 order by QSBO.sequenceNo ASC";
 
       questionnaireStepList =
-          session.createQuery(searchQuery).setInteger("questionnaireId", questionnaireId).list();
+          session.createQuery(searchQuery).setString("questionnaireId", questionnaireId).list();
       if ((null != questionnaireStepList) && !questionnaireStepList.isEmpty()) {
         if (questionnaireStepList.size() == 1) {
-          questionnaireStepList.get(0).setDestinationStep(0);
+          questionnaireStepList.get(0).setDestinationStep(String.valueOf(0));
           questionnaireStepList.get(0).setSequenceNo(1);
           session.update(questionnaireStepList.get(0));
         } else {
@@ -1280,7 +1279,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             questionnaireStepList.get(i).setSequenceNo(i + 1);
             session.update(questionnaireStepList.get(i));
           }
-          questionnaireStepList.get(i).setDestinationStep(0);
+          questionnaireStepList.get(i).setDestinationStep(String.valueOf(0));
           questionnaireStepList.get(i).setSequenceNo(i + 1);
           session.update(questionnaireStepList.get(i));
         }
@@ -1295,7 +1294,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           session
               .createSQLQuery(questionResponseQuery)
               .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP)
-              .setInteger("questionnaireId", questionnaireId);
+              .setString("questionnaireId", questionnaireId);
       query.executeUpdate();
 
       String questionConditionResponseQuery =
@@ -1308,7 +1307,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           session
               .createSQLQuery(questionConditionResponseQuery)
               .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP)
-              .setInteger("questionnaireId", questionnaireId);
+              .setString("questionnaireId", questionnaireId);
       query.executeUpdate();
 
       // Reset destination steps in Questionnaire Ends
@@ -1327,8 +1326,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   public String deleteQuestionnaireStep(
-      Integer stepId,
-      Integer questionnaireId,
+      String stepId,
+      String questionnaireId,
       String stepType,
       String customStudyId,
       SessionObject sessionObject,
@@ -1346,7 +1345,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           (QuestionnaireBo)
               session
                   .createQuery("from QuestionnaireBo QBO where QBO.id=:questionnaireId")
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("questionnaireId", questionnaireId)
                   .uniqueResult();
       if (questionnaireBo != null) {
         values.put(QUESTION_ID, questionnaireBo.getShortTitle());
@@ -1360,8 +1359,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           (QuestionnairesStepsBo)
               session
                   .createQuery(searchQuery)
-                  .setInteger("stepId", stepId)
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("stepId", stepId)
+                  .setString("questionnaireId", questionnaireId)
                   .setString("stepType", stepType)
                   .uniqueResult();
       if (questionnairesStepsBo != null) {
@@ -1375,65 +1374,65 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .createQuery(updateQuery)
-                .setInteger("userId", sessionObject.getUserId())
+                .setString("userId", sessionObject.getUserId())
                 .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
-                .setInteger("questionnairesId", questionnairesStepsBo.getQuestionnairesId())
+                .setString("questionnairesId", questionnairesStepsBo.getQuestionnairesId())
                 .setInteger("sequenceNo", questionnairesStepsBo.getSequenceNo());
         query.executeUpdate();
 
         if (stepType.equalsIgnoreCase(FdahpStudyDesignerConstants.INSTRUCTION_STEP)) {
           String deleteQuery = "delete InstructionsBo IBO where IBO.id=:stepId ";
-          query = session.createQuery(deleteQuery).setInteger("stepId", stepId);
+          query = session.createQuery(deleteQuery).setString("stepId", stepId);
           query.executeUpdate();
           auditLogEventHelper.logEvent(STUDY_INSTRUCTION_STEP_DELETED, auditRequest, values);
 
         } else if (stepType.equalsIgnoreCase(FdahpStudyDesignerConstants.QUESTION_STEP)) {
           String deleteQuery = "delete QuestionsBo QBO where QBO.id=:stepId ";
-          query = session.createQuery(deleteQuery).setInteger("stepId", stepId);
+          query = session.createQuery(deleteQuery).setString("stepId", stepId);
           query.executeUpdate();
           auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_DELETED, auditRequest, values);
 
           String deleteResponse =
               "delete QuestionReponseTypeBo QRBO where QRBO.questionsResponseTypeId=:stepId ";
-          query = session.createQuery(deleteResponse).setInteger("stepId", stepId);
+          query = session.createQuery(deleteResponse).setString("stepId", stepId);
           query.executeUpdate();
 
           String deleteSubResponse =
               "delete QuestionResponseSubTypeBo QRSBO  where QRSBO.responseTypeId=:stepId ";
-          query = session.createQuery(deleteSubResponse).setInteger("stepId", stepId);
+          query = session.createQuery(deleteSubResponse).setString("stepId", stepId);
           query.executeUpdate();
 
         } else if (stepType.equalsIgnoreCase(FdahpStudyDesignerConstants.FORM_STEP)) {
           String subQuery =
               "select FMBO.questionId from FormMappingBo FMBO where FMBO.formId=:stepId ";
-          query = session.createQuery(subQuery).setInteger("stepId", stepId);
+          query = session.createQuery(subQuery).setString("stepId", stepId);
           if ((query.list() != null) && !query.list().isEmpty()) {
             String deleteQuery = "delete QuestionsBo QBO where QBO.id IN (" + subQuery + ")";
-            query = session.createQuery(deleteQuery).setInteger("stepId", stepId);
+            query = session.createQuery(deleteQuery).setString("stepId", stepId);
             query.executeUpdate();
 
             String deleteResponse =
                 "delete QuestionReponseTypeBo QRBO where QRBO.questionsResponseTypeId IN ("
                     + subQuery
                     + ")";
-            query = session.createQuery(deleteResponse).setInteger("stepId", stepId);
+            query = session.createQuery(deleteResponse).setString("stepId", stepId);
             query.executeUpdate();
 
             String deleteSubResponse =
                 "delete QuestionResponseSubTypeBo QRSBO  where QRSBO.responseTypeId IN ("
                     + subQuery
                     + ")";
-            query = session.createQuery(deleteSubResponse).setInteger("stepId", stepId);
+            query = session.createQuery(deleteSubResponse).setString("stepId", stepId);
             query.executeUpdate();
           }
 
           String formMappingDelete = "delete FormMappingBo FMBO where FMBO.formId=:stepId ";
-          query = session.createQuery(formMappingDelete).setInteger("stepId", stepId);
+          query = session.createQuery(formMappingDelete).setString("stepId", stepId);
           ;
           query.executeUpdate();
 
           String formDelete = "delete FormBo FBO where FBO.formId=:stepId ";
-          query = session.createQuery(formDelete).setInteger("stepId", stepId);
+          query = session.createQuery(formDelete).setString("stepId", stepId);
           ;
           query.executeUpdate();
           auditLogEventHelper.logEvent(STUDY_FORM_STEP_DELETED, auditRequest, values);
@@ -1452,7 +1451,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @Override
   public String deleteQuestuionnaireInfo(
-      Integer studyId, Integer questionnaireId, SessionObject sessionObject, String customStudyId) {
+      String studyId, String questionnaireId, SessionObject sessionObject, String customStudyId) {
     logger.entry("begin deleteQuestuionnaireInfo()");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -1494,10 +1493,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             session
                 .createSQLQuery(
                     "CALL deleteQuestionnaire(:questionnaireId,:modifiedOn,:modifiedBy,:studyId)")
-                .setInteger("questionnaireId", questionnaireId)
+                .setString("questionnaireId", questionnaireId)
                 .setString("modifiedOn", FdahpStudyDesignerUtil.getCurrentDateTime())
-                .setInteger("modifiedBy", sessionObject.getUserId())
-                .setInteger("studyId", studyId);
+                .setString("modifiedBy", sessionObject.getUserId())
+                .setString("studyId", studyId);
         query.executeUpdate();
         message = FdahpStudyDesignerConstants.SUCCESS;
       } else {
@@ -1511,7 +1510,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               + " AND notificationSent=false";
       session
           .createQuery(queryString)
-          .setInteger("questionnaireId", questionnaireId)
+          .setString("questionnaireId", questionnaireId)
           .executeUpdate();
       transaction.commit();
     } catch (Exception e) {
@@ -1527,8 +1526,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   public String deleteQuestuionnaireInfo(
-      Integer studyId,
-      Integer questionnaireId,
+      String studyId,
+      String questionnaireId,
       String customStudyId,
       Session session,
       Transaction transaction) {
@@ -1542,7 +1541,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createQuery(deleteInsQuery)
-              .setInteger("questionnaireId", questionnaireId)
+              .setString("questionnaireId", questionnaireId)
               .setString("stepType", FdahpStudyDesignerConstants.INSTRUCTION_STEP);
       query.executeUpdate();
 
@@ -1552,7 +1551,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createQuery(deleteQuesQuery)
-              .setInteger("questionnaireId", questionnaireId)
+              .setString("questionnaireId", questionnaireId)
               .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP);
       query.executeUpdate();
 
@@ -1562,7 +1561,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createQuery(deleteResponse)
-              .setInteger("questionnaireId", questionnaireId)
+              .setString("questionnaireId", questionnaireId)
               .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP);
       query.executeUpdate();
 
@@ -1572,7 +1571,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createQuery(deleteSubResponse)
-              .setInteger("questionnaireId", questionnaireId)
+              .setString("questionnaireId", questionnaireId)
               .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP);
       query.executeUpdate();
 
@@ -1582,7 +1581,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createQuery(subQuery)
-              .setInteger("questionnaireId", questionnaireId)
+              .setString("questionnaireId", questionnaireId)
               .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
       if ((query.list() != null) && !query.list().isEmpty()) {
 
@@ -1593,7 +1592,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .createQuery(deleteFormResponse)
-                .setInteger("questionnaireId", questionnaireId)
+                .setString("questionnaireId", questionnaireId)
                 .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
         query.executeUpdate();
 
@@ -1604,7 +1603,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .createQuery(deleteFormSubResponse)
-                .setInteger("questionnaireId", questionnaireId)
+                .setString("questionnaireId", questionnaireId)
                 .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
         query.executeUpdate();
 
@@ -1612,7 +1611,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .createQuery(deleteFormQuery)
-                .setInteger("questionnaireId", questionnaireId)
+                .setString("questionnaireId", questionnaireId)
                 .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
         query.executeUpdate();
       }
@@ -1623,7 +1622,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createQuery(formMappingDelete)
-              .setInteger("questionnaireId", questionnaireId)
+              .setString("questionnaireId", questionnaireId)
               .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
       query.executeUpdate();
 
@@ -1633,13 +1632,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createQuery(formDelete)
-              .setInteger("questionnaireId", questionnaireId)
+              .setString("questionnaireId", questionnaireId)
               .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
       query.executeUpdate();
 
       String searchQuery =
           "delete QuestionnairesStepsBo QSBO where QSBO.questionnairesId=:questionnaireId";
-      query = session.createQuery(searchQuery).setInteger("questionnaireId", questionnaireId);
+      query = session.createQuery(searchQuery).setString("questionnaireId", questionnaireId);
       query.executeUpdate();
 
       String deletecustomFreQuery =
@@ -1647,12 +1646,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createSQLQuery(deletecustomFreQuery)
-              .setInteger("questionnaireId", questionnaireId);
+              .setString("questionnaireId", questionnaireId);
       query.executeUpdate();
 
       String deleteFreQuery =
           "delete from questionnaires_frequencies where questionnaires_id=:questionnaireId ";
-      query = session.createSQLQuery(deleteFreQuery).setInteger("questionnaireId", questionnaireId);
+      query = session.createSQLQuery(deleteFreQuery).setString("questionnaireId", questionnaireId);
       query.executeUpdate();
 
       String deleteQuery =
@@ -1661,8 +1660,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .createQuery(deleteQuery)
-              .setInteger("studyId", studyId)
-              .setInteger("questionnaireId", questionnaireId);
+              .setString("studyId", studyId)
+              .setString("questionnaireId", questionnaireId);
       count = query.executeUpdate();
 
       if (count > 0) {
@@ -1701,10 +1700,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @Override
   public InstructionsBo getInstructionsBo(
-      Integer instructionId,
+      String instructionId,
       String questionnaireShortTitle,
       String customStudyId,
-      Integer questionnaireId) {
+      String questionnaireId) {
     logger.entry("begin getInstructionsBo()");
     Session session = null;
     InstructionsBo instructionsBo = null;
@@ -1720,14 +1719,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       "From QuestionnairesStepsBo QSBO where QSBO.instructionFormId=:instructionFormId "
                           + " and QSBO.stepType=:stepType "
                           + " and QSBO.active=1 and QSBO.questionnairesId=:questionnaireId ")
-                  .setInteger("instructionFormId", instructionsBo.getId())
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("instructionFormId", instructionsBo.getId())
+                  .setString("questionnaireId", questionnaireId)
                   .setString("stepType", FdahpStudyDesignerConstants.INSTRUCTION_STEP);
         } else {
           query =
               session
                   .getNamedQuery("getQuestionnaireStep")
-                  .setInteger("instructionFormId", instructionsBo.getId())
+                  .setString("instructionFormId", instructionsBo.getId())
                   .setString("stepType", FdahpStudyDesignerConstants.INSTRUCTION_STEP);
         }
         questionnairesStepsBo = (QuestionnairesStepsBo) query.uniqueResult();
@@ -1772,7 +1771,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @Override
   @SuppressWarnings({"unchecked"})
   public List<QuestionConditionBranchBo> getQuestionConditionalBranchingLogic(
-      Session session, Integer questionId) {
+      Session session, String questionId) {
     logger.entry("begin getQuestionConditionalBranchingLogic()");
     List<QuestionConditionBranchBo> questionConditionBranchList = null;
     List<QuestionConditionBranchBo> newQuestionConditionBranchList = null;
@@ -1785,9 +1784,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           "From QuestionConditionBranchBo QCBO where QCBO.questionId=:questionId "
               + " order by QCBO.sequenceNo ASC";
       if (newSession != null) {
-        query = newSession.createQuery(searchQuery).setInteger("questionId", questionId);
+        query = newSession.createQuery(searchQuery).setString("questionId", questionId);
       } else {
-        query = session.createQuery(searchQuery).setInteger("questionId", questionId);
+        query = session.createQuery(searchQuery).setString("questionId", questionId);
       }
       questionConditionBranchList = query.list();
       if (session == null) {
@@ -1828,7 +1827,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId, String customStudyId) {
+  public QuestionnaireBo getQuestionnaireById(String questionnaireId, String customStudyId) {
     logger.entry("begin getQuestionnaireById()");
     Session session = null;
     QuestionnaireBo questionnaireBo = null;
@@ -1895,7 +1894,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             query =
                 session
                     .createQuery(searchQuery)
-                    .setInteger("questionnairesId", questionnaireBo.getId());
+                    .setString("questionnairesId", questionnaireBo.getId());
             List<QuestionnaireCustomScheduleBo> questionnaireCustomScheduleList = query.list();
             questionnaireBo.setQuestionnaireCustomScheduleBo(questionnaireCustomScheduleList);
           } else {
@@ -1904,7 +1903,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             query =
                 session
                     .createQuery(searchQuery)
-                    .setInteger("questionnairesId", questionnaireBo.getId());
+                    .setString("questionnairesId", questionnaireBo.getId());
             if (questionnaireBo
                 .getFrequency()
                 .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_DAILY)) {
@@ -1936,7 +1935,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public List<QuestionnairesStepsBo> getQuestionnairesStepsList(
-      Integer questionnaireId, Integer sequenceNo) {
+      String questionnaireId, Integer sequenceNo) {
     logger.entry("begin getQuestionnaireStepList()");
     Session session = null;
     List<QuestionnairesStepsBo> questionnairesStepsList = null;
@@ -1945,7 +1944,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .getNamedQuery("getForwardQuestionnaireSteps")
-              .setInteger("questionnairesId", questionnaireId)
+              .setString("questionnairesId", questionnaireId)
               .setInteger("sequenceNo", sequenceNo);
       questionnairesStepsList = query.list();
     } catch (Exception e) {
@@ -1961,11 +1960,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings({"rawtypes", "unchecked"})
   @Override
   public QuestionnairesStepsBo getQuestionnaireStep(
-      Integer stepId,
+      String stepId,
       String stepType,
       String questionnaireShortTitle,
       String customStudyId,
-      Integer questionnaireId) {
+      String questionnaireId) {
     logger.entry("begin getQuestionnaireStep()");
     Session session = null;
     QuestionnairesStepsBo questionnairesStepsBo = null;
@@ -1978,16 +1977,17 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     "From QuestionnairesStepsBo QSBO where QSBO.instructionFormId=:instructionFormId "
                         + " and QSBO.stepType=:stepType "
                         + " and QSBO.active=1 and QSBO.questionnairesId=:questionnaireId ")
-                .setInteger("instructionFormId", stepId)
+                .setString("instructionFormId", stepId)
                 .setString("stepType", stepType)
-                .setInteger("questionnaireId", questionnaireId);
+                .setString("questionnaireId", questionnaireId);
       } else {
         query =
             session
                 .getNamedQuery("getQuestionnaireStep")
-                .setInteger("instructionFormId", stepId)
+                .setString("instructionFormId", stepId)
                 .setString("stepType", stepType);
       }
+
       questionnairesStepsBo = (QuestionnairesStepsBo) query.uniqueResult();
       if ((null != questionnairesStepsBo) && (questionnairesStepsBo.getStepType() != null)) {
         if (StringUtils.isNotEmpty(questionnaireShortTitle)) {
@@ -2019,7 +2019,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             .equalsIgnoreCase(FdahpStudyDesignerConstants.QUESTION_STEP)) {
           // get the one question step of questionnaire
           QuestionsBo questionsBo = null;
-          query = session.getNamedQuery("getQuestionStep").setInteger("stepId", stepId);
+          query = session.getNamedQuery("getQuestionStep").setString("stepId", stepId);
           questionsBo = (QuestionsBo) query.uniqueResult();
           if ((questionsBo != null) && (questionsBo.getId() != null)) {
             if (StringUtils.isNotEmpty(questionnaireShortTitle)) {
@@ -2058,7 +2058,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             query =
                 session
                     .getNamedQuery("getQuestionResponse")
-                    .setInteger("questionsResponseTypeId", questionsBo.getId());
+                    .setString("questionsResponseTypeId", questionsBo.getId());
             query.setMaxResults(1);
             questionReponseTypeBo = (QuestionReponseTypeBo) query.uniqueResult();
             if ((questionReponseTypeBo != null)
@@ -2128,6 +2128,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   getQuestionConditionalBranchingLogic(session, questionsBo.getId());
               questionnairesStepsBo.setQuestionConditionBranchBoList(questionConditionBranchList);
             }
+
             if ((questionReponseTypeBo != null)
                 && StringUtils.isNotEmpty(questionReponseTypeBo.getMaxImage())) {
               questionReponseTypeBo.setSignedMaxImage(
@@ -2138,7 +2139,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                          + questionReponseTypeBo.getMaxImage()));
+                          + questionReponseTypeBo.getMaxImage(),
+                      12));
             }
 
             if ((questionReponseTypeBo != null)
@@ -2151,20 +2153,23 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + questionReponseTypeBo.getMinImage()));
+                          + questionReponseTypeBo.getMinImage(),
+                      12));
             }
+
             questionnairesStepsBo.setQuestionReponseTypeBo(questionReponseTypeBo);
 
             List<QuestionResponseSubTypeBo> questionResponseSubTypeList = null;
             query =
                 session
                     .getNamedQuery("getQuestionSubResponse")
-                    .setInteger("responseTypeId", questionsBo.getId());
+                    .setString("responseTypeId", questionsBo.getId());
             questionResponseSubTypeList = query.list();
             // appending the current date time to the image url
             if ((null != questionResponseSubTypeList) && !questionResponseSubTypeList.isEmpty()) {
               for (QuestionResponseSubTypeBo s : questionResponseSubTypeList) {
                 if (FdahpStudyDesignerUtil.isNotEmpty(s.getImage())) {
+
                   s.setSignedImage(
                       FdahpStudyDesignerUtil.getSignedUrl(
                           FdahpStudyDesignerConstants.STUDIES
@@ -2173,7 +2178,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
                               + FdahpStudyDesignerConstants.QUESTIONNAIRE
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                              + s.getImage()));
+                              + s.getImage(),
+                          12));
                 }
                 if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
                   s.setSignedSelectedImage(
@@ -2184,7 +2190,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
                               + FdahpStudyDesignerConstants.QUESTIONNAIRE
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                              + s.getSelectedImage()));
+                              + s.getSelectedImage(),
+                          12));
                 }
               }
             }
@@ -2197,7 +2204,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       session
                           .createSQLQuery(
                               "select name from anchordate_type where id=:anchorDateId ")
-                          .setInteger("anchorDateId", questionsBo.getAnchorDateId())
+                          .setString("anchorDateId", questionsBo.getAnchorDateId())
                           .uniqueResult();
               questionsBo.setAnchorDateName(name);
             }
@@ -2214,14 +2221,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               "select f.form_id,f.question_id,f.sequence_no, q.id, q.question,q.response_type,q.add_line_chart,q.use_stastic_data,q.status,q.use_anchor_date from questions q, form_mapping f where q.id=f.question_id and f.form_id=:stepId "
                   + " and f.active=1 order by f.form_id";
           Iterator iterator =
-              session.createSQLQuery(fromQuery).setInteger("stepId", stepId).list().iterator();
+              session.createSQLQuery(fromQuery).setString("stepId", stepId).list().iterator();
           TreeMap<Integer, QuestionnaireStepBean> formQuestionMap = new TreeMap<>();
           boolean isDone = true;
           while (iterator.hasNext()) {
             Object[] objects = (Object[]) iterator.next();
-            Integer formId = (Integer) objects[0];
+            String formId = (String) objects[0];
             Integer sequenceNo = (Integer) objects[2];
-            Integer questionId = (Integer) objects[3];
+            String questionId = (String) objects[3];
             String questionText = (String) objects[4];
             Integer responseType = (Integer) objects[5];
             String lineChart = (String) objects[6];
@@ -2262,26 +2269,26 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public SortedMap<Integer, QuestionnaireStepBean> getQuestionnaireStepList(
-      Integer questionnaireId) {
+      String questionnaireId) {
     logger.entry("begin getQuestionnaireStepList() - Ends");
     Session session = null;
     List<QuestionnairesStepsBo> questionnairesStepsList = null;
     Map<String, Integer> sequenceNoMap = new HashMap<>();
     SortedMap<Integer, QuestionnaireStepBean> qTreeMap = new TreeMap<>();
-    Map<Integer, String> destinationText = new HashMap<>();
+    Map<String, String> destinationText = new HashMap<>();
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       query =
           session
               .getNamedQuery("getQuestionnaireStepList")
-              .setInteger("questionnaireId", questionnaireId);
+              .setString("questionnaireId", questionnaireId);
       questionnairesStepsList = query.list();
-      List<Integer> instructionIdList = new ArrayList<>();
-      List<Integer> questionIdList = new ArrayList<>();
-      List<Integer> formIdList = new ArrayList<>();
-      Map<String, Integer> destinationMap = new HashMap<>();
-      Map<Integer, Boolean> formStatusMap = new HashMap<>();
-      destinationText.put(0, "Completion Step");
+      List<String> instructionIdList = new ArrayList<>();
+      List<String> questionIdList = new ArrayList<>();
+      List<String> formIdList = new ArrayList<>();
+      Map<String, String> destinationMap = new HashMap<>();
+      Map<String, Boolean> formStatusMap = new HashMap<>();
+      destinationText.put("0", "Completion Step");
       // setting the sequenceNo and destination steps to the map based on
       // the individual steps later using this map to set the destination
       // step name
@@ -2407,9 +2414,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           TreeMap<Integer, QuestionnaireStepBean> formQuestionMap = new TreeMap<>();
           for (int j = 0; j < result.size(); j++) {
             Object[] objects = (Object[]) result.get(j);
-            Integer formId = (Integer) objects[0];
+            String formId = (String) objects[0];
             Integer sequenceNo = (Integer) objects[2];
-            Integer questionId = (Integer) objects[3];
+            String questionId = (String) objects[3];
             String questionText = (String) objects[4];
             Integer responseType = (Integer) objects[5];
             String lineChart = (String) objects[6];
@@ -2482,7 +2489,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public QuestionsBo getQuestionsById(
-      Integer questionId, String questionnaireShortTitle, String customStudyId) {
+      String questionId, String questionnaireShortTitle, String customStudyId) {
     logger.entry("begin getQuestionsById()");
     Session session = null;
     QuestionsBo questionsBo = null;
@@ -2542,6 +2549,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         } catch (Exception e) {
           logger.error("StudyQuestionnaireDAOImpl - getQuestionsById() - SUB  ERROR ", e);
         }
+
         QuestionReponseTypeBo questionReponseTypeBo = null;
         logger.info(
             "StudyQuestionnaireDAOImpl - getQuestionnaireStep() - questionsResponseTypeId:"
@@ -2549,7 +2557,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .getNamedQuery("getQuestionResponse")
-                .setInteger("questionsResponseTypeId", questionsBo.getId());
+                .setString("questionsResponseTypeId", questionsBo.getId());
         query.setMaxResults(1);
         questionReponseTypeBo = (QuestionReponseTypeBo) query.uniqueResult();
         if ((questionReponseTypeBo != null)
@@ -2622,7 +2630,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
-                      + questionReponseTypeBo.getMinImage()));
+                      + questionReponseTypeBo.getMinImage(),
+                  12));
         }
 
         if (questionReponseTypeBo != null
@@ -2636,7 +2645,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
-                      + questionReponseTypeBo.getMaxImage()));
+                      + questionReponseTypeBo.getMaxImage(),
+                  12));
         }
         questionsBo.setQuestionReponseTypeBo(questionReponseTypeBo);
 
@@ -2644,7 +2654,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .getNamedQuery("getQuestionSubResponse")
-                .setInteger("responseTypeId", questionsBo.getId());
+                .setString("responseTypeId", questionsBo.getId());
         questionResponseSubTypeList = query.list();
         // appending the current date and time for image urls
         if ((null != questionResponseSubTypeList) && !questionResponseSubTypeList.isEmpty()) {
@@ -2658,7 +2668,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + s.getImage()));
+                          + s.getImage(),
+                      12));
             }
             if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
               s.setSignedSelectedImage(
@@ -2669,7 +2680,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + s.getSelectedImage()));
+                          + s.getSelectedImage(),
+                      12));
             }
           }
         }
@@ -2704,7 +2716,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     QuestionReponseTypeBo addOrUpdateQuestionsResponseTypeBo = null;
     try {
       if ((questionsResponseTypeBo != null) && (session != null)) {
-        if (questionsResponseTypeBo.getResponseTypeId() != null) {
+        if (StringUtils.isNotEmpty(questionsResponseTypeBo.getResponseTypeId())) {
           addOrUpdateQuestionsResponseTypeBo =
               (QuestionReponseTypeBo)
                   session.get(
@@ -3056,10 +3068,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   + " and QBO.active=1 and QBO.live=1 order by QBO.createdDate DESC";
           query = session.createQuery(searchQuery).setString("studyId", studyId);
         } else {
-          query =
-              session
-                  .getNamedQuery("getQuestionariesByStudyId")
-                  .setInteger("studyId", Integer.parseInt(studyId));
+          query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
         }
         questionnaires = query.list();
       }
@@ -3075,7 +3084,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public Boolean isAnchorDateExistsForStudy(Integer studyId, String customStudyId) {
+  public Boolean isAnchorDateExistsForStudy(String studyId, String customStudyId) {
     logger.entry("begin isAnchorDateExistsForStudy()");
     boolean isExists = false;
     Session session = null;
@@ -3120,7 +3129,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 + " and qq.active=1 and q.active=1;";
         BigInteger count =
             (BigInteger)
-                session.createSQLQuery(searchQuery).setInteger("studyId", studyId).uniqueResult();
+                session.createSQLQuery(searchQuery).setString("studyId", studyId).uniqueResult();
         if (count.intValue() > 0) {
           isExists = true;
         } else {
@@ -3132,7 +3141,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   + " and q.active=1";
           BigInteger subCount =
               (BigInteger)
-                  session.createSQLQuery(subQuery).setInteger("studyId", studyId).uniqueResult();
+                  session.createSQLQuery(subQuery).setString("studyId", studyId).uniqueResult();
           if ((subCount != null) && (subCount.intValue() > 0)) {
             isExists = true;
           }
@@ -3144,7 +3153,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .createSQLQuery(
                         "select s.enrollmentdate_as_anchordate from studies s where s.id=:studyId ")
-                    .setInteger("studyId", studyId)
+                    .setString("studyId", studyId)
                     .uniqueResult();
         if ((isEnrollAnchorExist != ' ') && (isEnrollAnchorExist == 'Y')) {
           isExists = true;
@@ -3162,7 +3171,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public Boolean isQuestionnairesCompleted(Integer studyId) {
+  public Boolean isQuestionnairesCompleted(String studyId) {
     logger.entry("begin isAnchorDateExistsForStudy()");
     boolean isExists = true;
     Session session = null;
@@ -3173,7 +3182,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               + " and active=1) and q.active=1";
       BigDecimal count =
           (BigDecimal)
-              session.createSQLQuery(searchQuery).setInteger("studyId", studyId).uniqueResult();
+              session.createSQLQuery(searchQuery).setString("studyId", studyId).uniqueResult();
       if ((count != null) && (count.intValue() > 0)) {
         isExists = false;
       }
@@ -3189,7 +3198,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public String reOrderFormStepQuestions(Integer formId, int oldOrderNumber, int newOrderNumber) {
+  public String reOrderFormStepQuestions(String formId, int oldOrderNumber, int newOrderNumber) {
     logger.entry("begin reOrderFormStepQuestions()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -3202,7 +3211,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query =
           session
               .getNamedQuery("getFromByIdAndSequenceNo")
-              .setInteger("formId", formId)
+              .setString("formId", formId)
               .setInteger("oldOrderNumber", oldOrderNumber);
       formMappingBo = (FormMappingBo) query.uniqueResult();
       if (formMappingBo != null) {
@@ -3215,7 +3224,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           query =
               session
                   .createQuery(updateQuery)
-                  .setInteger("formId", formId)
+                  .setString("formId", formId)
                   .setInteger("newOrderNumber", newOrderNumber)
                   .setInteger("oldOrderNumber", oldOrderNumber);
           count = query.executeUpdate();
@@ -3224,7 +3233,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .getNamedQuery("updateFromQuestionSequenceNo")
                     .setInteger("newOrderNumber", newOrderNumber)
-                    .setInteger("id", formMappingBo.getId());
+                    .setString("id", formMappingBo.getId());
             count = query.executeUpdate();
             message = FdahpStudyDesignerConstants.SUCCESS;
           }
@@ -3237,7 +3246,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           query =
               session
                   .createQuery(updateQuery)
-                  .setInteger("formId", formId)
+                  .setString("formId", formId)
                   .setInteger("newOrderNumber", newOrderNumber)
                   .setInteger("oldOrderNumber", oldOrderNumber);
           count = query.executeUpdate();
@@ -3246,7 +3255,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .getNamedQuery("updateFromQuestionSequenceNo")
                     .setInteger("newOrderNumber", newOrderNumber)
-                    .setInteger("id", formMappingBo.getId());
+                    .setString("id", formMappingBo.getId());
             count = query.executeUpdate();
             message = FdahpStudyDesignerConstants.SUCCESS;
           }
@@ -3268,7 +3277,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   @SuppressWarnings("unchecked")
   @Override
   public String reOrderQuestionnaireSteps(
-      Integer questionnaireId, int oldOrderNumber, int newOrderNumber) {
+      String questionnaireId, int oldOrderNumber, int newOrderNumber) {
     logger.entry("begin reOrderQuestionnaireSteps()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -3285,7 +3294,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   "From QuestionnairesStepsBo QSBO where QSBO.questionnairesId=:questionnaireId "
                       + " and QSBO.sequenceNo =:oldOrderNumber "
                       + " and QSBO.active=1")
-              .setInteger("questionnaireId", questionnaireId)
+              .setString("questionnaireId", questionnaireId)
               .setInteger("oldOrderNumber", oldOrderNumber);
       questionnairesStepsBo = (QuestionnairesStepsBo) query.uniqueResult();
       if (questionnairesStepsBo != null) {
@@ -3299,7 +3308,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           query =
               session
                   .createQuery(updateQuery)
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("questionnaireId", questionnaireId)
                   .setInteger("newOrderNumber", newOrderNumber)
                   .setInteger("oldOrderNumber", oldOrderNumber);
           count = query.executeUpdate();
@@ -3311,7 +3320,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                             + " where q.stepId=:stepId "
                             + " and q.active=1")
                     .setInteger("newOrderNumber", newOrderNumber)
-                    .setInteger("stepId", questionnairesStepsBo.getStepId());
+                    .setString("stepId", questionnairesStepsBo.getStepId());
             count = query.executeUpdate();
             message = FdahpStudyDesignerConstants.SUCCESS;
           }
@@ -3324,7 +3333,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           query =
               session
                   .createQuery(updateQuery)
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("questionnaireId", questionnaireId)
                   .setInteger("newOrderNumber", newOrderNumber)
                   .setInteger("oldOrderNumber", oldOrderNumber);
           count = query.executeUpdate();
@@ -3336,7 +3345,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                             + " where Q.stepId=:stepId "
                             + " and Q.active=1")
                     .setInteger("newOrderNumber", newOrderNumber)
-                    .setInteger("stepId", questionnairesStepsBo.getStepId());
+                    .setString("stepId", questionnairesStepsBo.getStepId());
             count = query.executeUpdate();
             message = FdahpStudyDesignerConstants.SUCCESS;
           }
@@ -3348,11 +3357,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               "From QuestionnairesStepsBo QSBO where QSBO.questionnairesId=:questionnaireId "
                   + "and QSBO.active=1 order by QSBO.sequenceNo ASC";
           Query query = session.createQuery(searchQuery);
-          query.setInteger("questionnaireId", questionnaireId);
+          query.setString("questionnaireId", questionnaireId);
           questionnaireStepList = query.list();
           if ((null != questionnaireStepList) && !questionnaireStepList.isEmpty()) {
             if (questionnaireStepList.size() == 1) {
-              questionnaireStepList.get(0).setDestinationStep(0);
+              questionnaireStepList.get(0).setDestinationStep(String.valueOf(0));
               questionnaireStepList.get(0).setSequenceNo(1);
               session.update(questionnaireStepList.get(0));
             } else {
@@ -3364,7 +3373,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 questionnaireStepList.get(i).setSequenceNo(i + 1);
                 session.update(questionnaireStepList.get(i));
               }
-              questionnaireStepList.get(i).setDestinationStep(0);
+              questionnaireStepList.get(i).setDestinationStep(String.valueOf(0));
               questionnaireStepList.get(i).setSequenceNo(i + 1);
               session.update(questionnaireStepList.get(i));
             }
@@ -3378,7 +3387,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               session
                   .createSQLQuery(questionResponseQuery)
                   .setParameter("type", FdahpStudyDesignerConstants.QUESTION_STEP)
-                  .setInteger("questionnaireId", questionnaireId);
+                  .setString("questionnaireId", questionnaireId);
           query.executeUpdate();
 
           String questionConditionResponseQuery =
@@ -3391,7 +3400,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               session
                   .createSQLQuery(questionConditionResponseQuery)
                   .setParameter("type", FdahpStudyDesignerConstants.QUESTION_STEP)
-                  .setInteger("questionnaireId", questionnaireId);
+                  .setString("questionnaireId", questionnaireId);
           query.executeUpdate();
         }
         // Reset destination steps in Questionnaire Ends
@@ -3419,14 +3428,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       if (questionnairesStepsBo != null) {
-        if (questionnairesStepsBo.getStepId() != null) {
+        if (StringUtils.isNotEmpty(questionnairesStepsBo.getStepId())) {
           addOrUpdateQuestionnairesStepsBo =
               (QuestionnairesStepsBo)
                   session.get(QuestionnairesStepsBo.class, questionnairesStepsBo.getStepId());
         } else {
           addOrUpdateQuestionnairesStepsBo = new QuestionnairesStepsBo();
           addOrUpdateQuestionnairesStepsBo.setActive(true);
-          addOrUpdateQuestionnairesStepsBo.setDestinationStep(0);
+          addOrUpdateQuestionnairesStepsBo.setDestinationStep(String.valueOf(0));
         }
         if ((questionnairesStepsBo.getStepShortTitle() != null)
             && !questionnairesStepsBo.getStepShortTitle().isEmpty()) {
@@ -3451,7 +3460,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           addOrUpdateQuestionnairesStepsBo.setQuestionnairesId(
               questionnairesStepsBo.getQuestionnairesId());
         }
-        if (questionnairesStepsBo.getInstructionFormId() != null) {
+        if (StringUtils.isNotEmpty(questionnairesStepsBo.getInstructionFormId())) {
           addOrUpdateQuestionnairesStepsBo.setInstructionFormId(
               questionnairesStepsBo.getInstructionFormId());
         }
@@ -3480,7 +3489,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .createSQLQuery(
                         "update questionnaires q set q.status=0 where q.id=:questionnaireId ")
-                    .setInteger(
+                    .setString(
                         "questionnaireId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
             query.executeUpdate();
           } else if (questionnairesStepsBo
@@ -3507,7 +3516,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           query =
               session
                   .getNamedQuery("getQuestionnaireStepSequenceNo")
-                  .setInteger(
+                  .setString(
                       "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
           query.setMaxResults(1);
           existedQuestionnairesStepsBo = (QuestionnairesStepsBo) query.uniqueResult();
@@ -3523,14 +3532,15 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String updateQuery =
               "update QuestionnairesStepsBo QSBO set QSBO.destinationStep=:stepId"
                   + " where "
-                  + "QSBO.destinationStep=0 and QSBO.sequenceNo=:sequenceNo"
+                  + "QSBO.destinationStep="
+                  + String.valueOf(0)
+                  + " and QSBO.sequenceNo=:sequenceNo"
                   + " and QSBO.questionnairesId=:questionnairesId ";
           session
               .createQuery(updateQuery)
               .setInteger("sequenceNo", (count - 1))
-              .setInteger(
-                  "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId())
-              .setInteger("stepId", addOrUpdateQuestionnairesStepsBo.getStepId())
+              .setString("questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId())
+              .setString("stepId", addOrUpdateQuestionnairesStepsBo.getStepId())
               .executeUpdate();
         }
       }
@@ -3562,7 +3572,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if ((instructionsBo != null)
           && (instructionsBo.getId() != null)
           && (instructionsBo.getQuestionnairesStepsBo() != null)) {
-        if (instructionsBo.getQuestionnairesStepsBo().getStepId() != null) {
+        if (StringUtils.isNotEmpty(instructionsBo.getQuestionnairesStepsBo().getStepId())) {
           questionnairesStepsBo =
               (QuestionnairesStepsBo)
                   session.get(
@@ -3571,7 +3581,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         } else {
           questionnairesStepsBo = new QuestionnairesStepsBo();
           questionnairesStepsBo.setActive(true);
-          questionnairesStepsBo.setDestinationStep(0);
+          questionnairesStepsBo.setDestinationStep(String.valueOf(0));
         }
         questionnairesStepsBo.setQuestionnairesId(instructionsBo.getQuestionnaireId());
         questionnairesStepsBo.setInstructionFormId(instructionsBo.getId());
@@ -3626,7 +3636,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .createSQLQuery(
                         "update questionnaires q set q.status=0 where q.id=:questionnairesId ")
-                    .setInteger("questionnairesId", questionnairesStepsBo.getQuestionnairesId());
+                    .setString("questionnairesId", questionnairesStepsBo.getQuestionnairesId());
             query.executeUpdate();
           } else if (instructionsBo
               .getType()
@@ -3640,7 +3650,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           query =
               session
                   .getNamedQuery("getQuestionnaireStepSequenceNo")
-                  .setInteger("questionnairesId", instructionsBo.getQuestionnaireId());
+                  .setString("questionnairesId", instructionsBo.getQuestionnaireId());
           query.setMaxResults(1);
           existedQuestionnairesStepsBo = (QuestionnairesStepsBo) query.uniqueResult();
           if (existedQuestionnairesStepsBo != null) {
@@ -3656,12 +3666,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String updateQuery =
               "update QuestionnairesStepsBo QSBO set QSBO.destinationStep=:stepId "
                   + " where "
-                  + "QSBO.destinationStep=0 and QSBO.sequenceNo=:sequenceNo"
+                  + "QSBO.destinationStep="
+                  + 0
+                  + " and QSBO.sequenceNo=:sequenceNo"
                   + " and QSBO.questionnairesId=:questionnairesId ";
           session
               .createQuery(updateQuery)
-              .setInteger("stepId", questionnairesStepsBo.getStepId())
-              .setInteger("questionnairesId", instructionsBo.getQuestionnaireId())
+              .setString("stepId", questionnairesStepsBo.getStepId())
+              .setString("questionnairesId", instructionsBo.getQuestionnaireId())
               .setInteger("sequenceNo", (count - 1))
               .executeUpdate();
         }
@@ -3684,13 +3696,17 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   public QuestionsBo saveOrUpdateQuestion(QuestionsBo questionsBo) {
     logger.entry("begin saveOrUpdateQuestion()");
     Session session = null;
+
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      Integer studyId = this.getStudyIdByCustomStudy(session, questionsBo.getCustomStudyId());
+
+      String studyId = this.getStudyIdByCustomStudy(session, questionsBo.getCustomStudyId());
+
       // Ancrodate text start
       if ((questionsBo.getUseAnchorDate() != null) && questionsBo.getUseAnchorDate()) {
         if (StringUtils.isNotEmpty(questionsBo.getAnchorDateName())) {
+
           AnchorDateTypeBo anchorDateTypeBo = new AnchorDateTypeBo();
           anchorDateTypeBo.setId(questionsBo.getAnchorDateId());
           anchorDateTypeBo.setCustomStudyId(questionsBo.getCustomStudyId());
@@ -3710,6 +3726,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   .setString("customStudyId", questionsBo.getCustomStudyId());
           query.setMaxResults(1);
           StudyVersionBo studyVersionBo = (StudyVersionBo) query.uniqueResult();
+
           SessionObject sessionObject = new SessionObject();
           sessionObject.setUserId(questionsBo.getModifiedBy());
           boolean isChange = false;
@@ -3737,15 +3754,17 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if ((questionsBo != null)
           && (questionsBo.getId() != null)
           && (questionsBo.getFromId() != null)) {
+
         QuestionReponseTypeBo addQuestionReponseTypeBo =
             getQuestionsResponseTypeBo(
                 questionsBo.getQuestionReponseTypeBo(), session, questionsBo.getCustomStudyId());
         if (addQuestionReponseTypeBo != null) {
-          if (addQuestionReponseTypeBo.getQuestionsResponseTypeId() == null) {
+          if (StringUtils.isEmpty(addQuestionReponseTypeBo.getQuestionsResponseTypeId())) {
             addQuestionReponseTypeBo.setQuestionsResponseTypeId(questionsBo.getId());
           }
           session.saveOrUpdate(addQuestionReponseTypeBo);
         }
+
         questionsBo.setQuestionReponseTypeBo(addQuestionReponseTypeBo);
         if ((questionsBo.getQuestionResponseSubTypeList() != null)
             && !questionsBo.getQuestionResponseSubTypeList().isEmpty()) {
@@ -3753,7 +3772,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               "Delete From QuestionResponseSubTypeBo QRSTBO where QRSTBO.responseTypeId=:responseTypeId ";
           session
               .createQuery(deletQuesry)
-              .setInteger("responseTypeId", questionsBo.getId())
+              .setString("responseTypeId", questionsBo.getId())
               .executeUpdate();
           if ((questionsBo.getResponseType() == 4)
               || (questionsBo.getResponseType() == 3)
@@ -3845,7 +3864,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               FdahpStudyDesignerConstants.FORM_STEP_SELECTEDIMAGE + i,
                               questionResponseSubTypeBo.getSelectImageFile().getOriginalFilename(),
                               String.valueOf(questionsBo.getId()));
-
                       BufferedImage newBi =
                           ImageIO.read(
                               new ByteArrayInputStream(
@@ -3908,14 +3926,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                         "From QuestionnairesStepsBo QSBO where QSBO.instructionFormId=:fromId "
                             + " and QSBO.stepType=:stepType "
                             + " and QSBO.active=1 and QSBO.questionnairesId=:questionnairesId ")
-                    .setInteger("fromId", questionsBo.getFromId())
-                    .setInteger("questionnairesId", questionsBo.getQuestionnaireId())
+                    .setString("fromId", questionsBo.getFromId())
+                    .setString("questionnairesId", questionsBo.getQuestionnaireId())
                     .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
           } else {
             query =
                 session
                     .getNamedQuery("getQuestionnaireStep")
-                    .setInteger("instructionFormId", questionsBo.getFromId())
+                    .setString("instructionFormId", questionsBo.getFromId())
                     .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
           }
 
@@ -3928,12 +3946,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .createSQLQuery(
                         "update questionnaires q set q.status=0 where q.id=:questionnairesId ")
-                    .setInteger("questionnairesId", questionnairesStepsBo.getQuestionnairesId());
+                    .setString("questionnairesId", questionnairesStepsBo.getQuestionnairesId());
             query.executeUpdate();
           }
         }
         query =
-            session.getNamedQuery("getFormMappingBO").setInteger("questionId", questionsBo.getId());
+            session.getNamedQuery("getFormMappingBO").setString("questionId", questionsBo.getId());
         FormMappingBo formMappingBo = (FormMappingBo) query.uniqueResult();
         if (formMappingBo == null) {
           formMappingBo = new FormMappingBo();
@@ -3946,7 +3964,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   .createQuery(
                       "From FormMappingBo FMBO where FMBO.formId=:formId "
                           + " and FMBO.active=1 order by FMBO.sequenceNo DESC ")
-                  .setInteger("formId", questionsBo.getFromId());
+                  .setString("formId", questionsBo.getFromId());
           query.setMaxResults(1);
           FormMappingBo existedFormMappingBo = (FormMappingBo) query.uniqueResult();
           if (existedFormMappingBo != null) {
@@ -3979,6 +3997,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+      questionnaireBo.setCustomStudyId(customStudyId);
       session.saveOrUpdate(questionnaireBo);
       if (questionnaireBo.getType().equalsIgnoreCase(FdahpStudyDesignerConstants.SCHEDULE)) {
         if ((questionnaireBo != null) && (questionnaireBo.getId() != null)) {
@@ -3987,7 +4006,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             query =
                 session
                     .createSQLQuery("CALL deleteQuestionnaireFrequencies(:questionnaireId)")
-                    .setInteger("questionnaireId", questionnaireBo.getId());
+                    .setString("questionnaireId", questionnaireBo.getId());
             query.executeUpdate();
             for (QuestionnairesFrequenciesBo questionnairesFrequenciesBo :
                 questionnaireBo.getQuestionnairesFrequenciesList()) {
@@ -4017,7 +4036,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               query =
                   session
                       .createSQLQuery("CALL deleteQuestionnaireFrequencies(:questionnaireId)")
-                      .setInteger("questionnaireId", questionnaireBo.getId());
+                      .setString("questionnaireId", questionnaireBo.getId());
               query.executeUpdate();
             }
             if ((questionnairesFrequenciesBo.getFrequencyDate() != null)
@@ -4060,11 +4079,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             query =
                 session
                     .createSQLQuery("CALL deleteQuestionnaireFrequencies(:questionnaireId)")
-                    .setInteger("questionnaireId", questionnaireBo.getId());
+                    .setString("questionnaireId", questionnaireBo.getId());
             query.executeUpdate();
             for (QuestionnaireCustomScheduleBo questionnaireCustomScheduleBo :
                 questionnaireBo.getQuestionnaireCustomScheduleBo()) {
-              if (questionnaireCustomScheduleBo.getFrequencyTime() != null) {
+              if (questionnaireCustomScheduleBo.getFrequencyEndTime() != null) {
                 if (questionnaireCustomScheduleBo.getQuestionnairesId() == null) {
                   questionnaireCustomScheduleBo.setQuestionnairesId(questionnaireBo.getId());
                 }
@@ -4084,11 +4103,20 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           FdahpStudyDesignerConstants.UI_SDF_DATE,
                           FdahpStudyDesignerConstants.SD_DATE_FORMAT));
                 }
-                if ((questionnaireCustomScheduleBo.getFrequencyTime() != null)
-                    && !questionnaireCustomScheduleBo.getFrequencyTime().isEmpty()) {
-                  questionnaireCustomScheduleBo.setFrequencyTime(
+                if ((questionnaireCustomScheduleBo.getFrequencyEndTime() != null)
+                    && !questionnaireCustomScheduleBo.getFrequencyEndTime().isEmpty()) {
+                  questionnaireCustomScheduleBo.setFrequencyEndTime(
                       FdahpStudyDesignerUtil.getFormattedDate(
-                          questionnaireCustomScheduleBo.getFrequencyTime(),
+                          questionnaireCustomScheduleBo.getFrequencyEndTime(),
+                          FdahpStudyDesignerConstants.SDF_TIME,
+                          FdahpStudyDesignerConstants.UI_SDF_TIME));
+                }
+
+                if ((questionnaireCustomScheduleBo.getFrequencyStartTime() != null)
+                    && !questionnaireCustomScheduleBo.getFrequencyStartTime().isEmpty()) {
+                  questionnaireCustomScheduleBo.setFrequencyStartTime(
+                      FdahpStudyDesignerUtil.getFormattedDate(
+                          questionnaireCustomScheduleBo.getFrequencyStartTime(),
                           FdahpStudyDesignerConstants.SDF_TIME,
                           FdahpStudyDesignerConstants.UI_SDF_TIME));
                 }
@@ -4124,7 +4152,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .createSQLQuery(updateFromQuery)
-                .setInteger("questionnaireId", questionnaireBo.getId())
+                .setString("questionnaireId", questionnaireBo.getId())
                 .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP);
         query.executeUpdate();
 
@@ -4137,7 +4165,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query =
             session
                 .createSQLQuery(updateQuestionSteps)
-                .setInteger("questionnaireId", questionnaireBo.getId())
+                .setString("questionnaireId", questionnaireBo.getId())
                 .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP);
         query.executeUpdate();
       }
@@ -4190,8 +4218,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     .setString("customStudyId", customStudyId)
                     .uniqueResult();
         if (studyBo != null) {
-          queryString = " From StudyBo where id=" + questionnaireBo.getStudyId();
-          StudyBo draftStudyBo = (StudyBo) session.createQuery(queryString).uniqueResult();
+          queryString = " From StudyBo where id=:studyId";
+          StudyBo draftStudyBo =
+              (StudyBo)
+                  session
+                      .createQuery(queryString)
+                      .setString("studyId", questionnaireBo.getStudyId())
+                      .uniqueResult();
           NotificationBO notificationBO = null;
           queryString =
               "From NotificationBO where questionnarieId=:questionnarieId "
@@ -4201,8 +4234,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   session
                       .createQuery(queryString)
                       .setMaxResults(1)
-                      .setInteger("studyId", questionnaireBo.getStudyId())
-                      .setInteger("questionnarieId", questionnaireBo.getId())
+                      .setString("studyId", questionnaireBo.getStudyId())
+                      .setString("questionnarieId", questionnaireBo.getId())
                       .uniqueResult();
           if (!questionnaireBo.getScheduleType().equalsIgnoreCase("AnchorDate")) {
             if (notificationBO == null) {
@@ -4262,16 +4295,17 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      Integer studyId = this.getStudyIdByCustomStudy(session, customStudyId);
+      String studyId = this.getStudyIdByCustomStudy(session, customStudyId);
+
       if (questionnairesStepsBo != null) {
-        if (questionnairesStepsBo.getStepId() != null) {
+        if (StringUtils.isNotEmpty(questionnairesStepsBo.getStepId())) {
           addOrUpdateQuestionnairesStepsBo =
               (QuestionnairesStepsBo)
                   session.get(QuestionnairesStepsBo.class, questionnairesStepsBo.getStepId());
         } else {
           addOrUpdateQuestionnairesStepsBo = new QuestionnairesStepsBo();
           addOrUpdateQuestionnairesStepsBo.setActive(true);
-          addOrUpdateQuestionnairesStepsBo.setDestinationStep(0);
+          addOrUpdateQuestionnairesStepsBo.setDestinationStep(String.valueOf(0));
         }
         if ((questionnairesStepsBo.getStepShortTitle() != null)
             && !questionnairesStepsBo.getStepShortTitle().isEmpty()) {
@@ -4316,7 +4350,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .createSQLQuery(
                         "update questionnaires q set q.status=0 where q.id=:questionnairesId ")
-                    .setInteger(
+                    .setString(
                         "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
             query.executeUpdate();
           } else if (questionnairesStepsBo
@@ -4363,6 +4397,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .setString("customStudyId", customStudyId);
               query.setMaxResults(1);
               StudyVersionBo studyVersionBo = (StudyVersionBo) query.uniqueResult();
+
               updateAnchordateInQuestionnaire(
                   session,
                   transaction,
@@ -4386,13 +4421,16 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           if ((questionsBo != null)
               && (questionsBo.getId() != null)
               && (questionnairesStepsBo.getQuestionReponseTypeBo() != null)) {
+
             QuestionReponseTypeBo questionResponseTypeBo =
+                questionnairesStepsBo.getQuestionReponseTypeBo();
+            if (StringUtils.isEmpty(questionResponseTypeBo.getQuestionsResponseTypeId())) {
+              questionResponseTypeBo.setQuestionsResponseTypeId(questionsBo.getId());
+            }
+            questionResponseTypeBo =
                 getQuestionsResponseTypeBo(
                     questionnairesStepsBo.getQuestionReponseTypeBo(), session, customStudyId);
             if (questionResponseTypeBo != null) {
-              if (questionResponseTypeBo.getQuestionsResponseTypeId() == null) {
-                questionResponseTypeBo.setQuestionsResponseTypeId(questionsBo.getId());
-              }
               session.saveOrUpdate(questionResponseTypeBo);
             }
             addOrUpdateQuestionnairesStepsBo.setQuestionReponseTypeBo(questionResponseTypeBo);
@@ -4402,7 +4440,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   "Delete From QuestionResponseSubTypeBo QRSTBO where QRSTBO.responseTypeId=:responseTypeId ";
               session
                   .createQuery(deletQuesry)
-                  .setInteger("responseTypeId", questionsBo.getId())
+                  .setString("responseTypeId", questionsBo.getId())
                   .executeUpdate();
               // upload the images in response level
               if ((questionnairesStepsBo.getQuestionsBo().getResponseType() == 4)
@@ -4444,7 +4482,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                                   FdahpStudyDesignerConstants.QUESTION_STEP_IMAGE + j,
                                   questionResponseSubTypeBo.getImageFile().getOriginalFilename(),
                                   String.valueOf(questionnairesStepsBo.getQuestionsBo().getId()));
-
                           BufferedImage newBi =
                               ImageIO.read(
                                   new ByteArrayInputStream(
@@ -4552,9 +4589,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               }
             } else {
               String deletQuesry =
-                  "Delete From QuestionResponseSubTypeBo QRSTBO where QRSTBO.responseTypeId="
-                      + questionsBo.getId();
-              session.createQuery(deletQuesry).executeUpdate();
+                  "Delete From response_sub_type_value  where response_type_id=:questionId ";
+              session
+                  .createSQLQuery(deletQuesry)
+                  .setString("questionId", questionsBo.getId())
+                  .executeUpdate();
             }
             // condition branching adding for the response type that
             // results in the data type 'double' and checked as
@@ -4569,7 +4608,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     "delete from question_condtion_branching where question_id=:questionId ";
                 session
                     .createSQLQuery(deleteQuery)
-                    .setInteger("questionId", questionsBo.getId())
+                    .setString("questionId", questionsBo.getId())
                     .executeUpdate();
                 for (QuestionConditionBranchBo questionConditionBranchBo :
                     questionnairesStepsBo.getQuestionConditionBranchBoList()) {
@@ -4610,7 +4649,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   "delete from question_condtion_branching where question_id=:questionId ";
               session
                   .createSQLQuery(deleteQuery)
-                  .setInteger("questionId", questionsBo.getId())
+                  .setString("questionId", questionsBo.getId())
                   .executeUpdate();
             }
           }
@@ -4626,7 +4665,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             query =
                 session
                     .getNamedQuery("getQuestionnaireStepSequenceNo")
-                    .setInteger(
+                    .setString(
                         "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
             query.setMaxResults(1);
             existedQuestionnairesStepsBo = (QuestionnairesStepsBo) query.uniqueResult();
@@ -4644,14 +4683,15 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String updateQuery =
               "update QuestionnairesStepsBo QSBO set QSBO.destinationStep=:stepId "
                   + " where "
-                  + "QSBO.destinationStep=0 and QSBO.sequenceNo=:sequenceNo"
+                  + "QSBO.destinationStep="
+                  + 0
+                  + " and QSBO.sequenceNo=:sequenceNo"
                   + " and QSBO.questionnairesId=:questionnairesId ";
           session
               .createQuery(updateQuery)
               .setInteger("sequenceNo", (count - 1))
-              .setInteger("stepId", addOrUpdateQuestionnairesStepsBo.getStepId())
-              .setInteger(
-                  "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId())
+              .setString("stepId", addOrUpdateQuestionnairesStepsBo.getStepId())
+              .setString("questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId())
               .executeUpdate();
         }
       }
@@ -4675,7 +4715,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   public String updateLineChartSchedule(
-      Integer questionnaireId,
+      String questionnaireId,
       String frequency,
       SessionObject sessionObject,
       Session session,
@@ -4701,17 +4741,17 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if (newSession != null) {
         newSession
             .createSQLQuery(searchQuery)
-            .setInteger("userId", sessionObject.getUserId())
+            .setString("userId", sessionObject.getUserId())
             .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
-            .setInteger("questionnaireId", questionnaireId)
+            .setString("questionnaireId", questionnaireId)
             .setParameterList("timeRange", Arrays.asList(timeRange))
             .executeUpdate();
       } else {
         session
             .createSQLQuery(searchQuery)
-            .setInteger("userId", sessionObject.getUserId())
+            .setString("userId", sessionObject.getUserId())
             .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
-            .setInteger("questionnaireId", questionnaireId)
+            .setString("questionnaireId", questionnaireId)
             .setParameterList("timeRange", Arrays.asList(timeRange))
             .executeUpdate();
       }
@@ -4729,17 +4769,17 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       if (newSession != null) {
         newSession
             .createSQLQuery(formQuery)
-            .setInteger("userId", sessionObject.getUserId())
+            .setString("userId", sessionObject.getUserId())
             .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
-            .setInteger("questionnaireId", questionnaireId)
+            .setString("questionnaireId", questionnaireId)
             .setParameterList("timeRange", Arrays.asList(timeRange))
             .executeUpdate();
       } else {
         session
             .createSQLQuery(formQuery)
-            .setInteger("userId", sessionObject.getUserId())
+            .setString("userId", sessionObject.getUserId())
             .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
-            .setInteger("questionnaireId", questionnaireId)
+            .setString("questionnaireId", questionnaireId)
             .setParameterList("timeRange", Arrays.asList(timeRange))
             .executeUpdate();
       }
@@ -4762,7 +4802,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public String validateLineChartSchedule(Integer questionnaireId, String frequency) {
+  public String validateLineChartSchedule(String questionnaireId, String frequency) {
     logger.entry("begin validateLineChartSchedule()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -4781,7 +4821,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               session
                   .createSQLQuery(searchQuery)
                   .setString("stepType", FdahpStudyDesignerConstants.QUESTION_STEP)
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("questionnaireId", questionnaireId)
                   .setParameterList("timeRange", Arrays.asList(timeRange))
                   .uniqueResult();
       if ((count != null) && (count.intValue() > 0)) {
@@ -4797,7 +4837,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 session
                     .createSQLQuery(searchSubQuery)
                     .setString("stepType", FdahpStudyDesignerConstants.FORM_STEP)
-                    .setInteger("questionnaireId", questionnaireId)
+                    .setString("questionnaireId", questionnaireId)
                     .setParameterList("timeRange", Arrays.asList(timeRange))
                     .uniqueResult();
         if ((subCount != null) && (subCount.intValue() > 0)) {
@@ -4816,7 +4856,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public String validateRepetableFormQuestionStats(Integer formId) {
+  public String validateRepetableFormQuestionStats(String formId) {
     logger.entry("begin validateRepetableFormQuestionStats()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -4827,7 +4867,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               + " and (q.add_line_chart = 'Yes' or q.use_stastic_data='Yes' or q.use_anchor_date=true)";
       BigInteger questionCount =
           (BigInteger)
-              session.createSQLQuery(searchQuery).setInteger("formId", formId).uniqueResult();
+              session.createSQLQuery(searchQuery).setString("formId", formId).uniqueResult();
       if ((questionCount != null) && (questionCount.intValue() > 0)) {
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
@@ -4891,14 +4931,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public Integer getStudyIdByCustomStudy(Session session, String customStudyId) {
+  public String getStudyIdByCustomStudy(Session session, String customStudyId) {
+    String studyId = null;
     logger.entry("begin getStudyIdByCustomStudy()");
-    Integer studyId = null;
     try {
       String searchQuery =
           "select id from studies where custom_study_id=:customStudyId  and is_live=0";
       studyId =
-          (Integer)
+          (String)
               session
                   .createSQLQuery(searchQuery)
                   .setString("customStudyId", customStudyId)
@@ -4950,7 +4990,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId) {
+  public boolean isAnchorDateExistByQuestionnaire(String questionnaireId) {
     logger.entry("begin isAnchorDateExistByQuestionnaire");
     Session session = null;
     Boolean isExist = false;
@@ -4965,7 +5005,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           (BigInteger)
               session
                   .createSQLQuery(searchQuery)
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("questionnaireId", questionnaireId)
                   .uniqueResult();
       if (count.intValue() > 0) {
         isExist = true;
@@ -4980,7 +5020,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             (BigInteger)
                 session
                     .createSQLQuery(subQuery)
-                    .setInteger("questionnaireId", questionnaireId)
+                    .setString("questionnaireId", questionnaireId)
                     .uniqueResult();
         if ((subCount != null) && (subCount.intValue() > 0)) {
           isExist = true;
@@ -5000,14 +5040,15 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       Session session,
       Transaction transaction,
       StudyVersionBo studyVersionBo,
-      Integer questionnaireId,
+      String questionnaireId,
       SessionObject sessionObject,
-      Integer studyId,
-      Integer stepId,
-      Integer questionId,
+      String studyId,
+      String stepId,
+      String questionId,
       String stepType,
       boolean isChange,
       String customStudyId) {
+
     logger.entry("begin updateAnchordateInQuestionnaire");
     List<Integer> anchorIds = new ArrayList<Integer>();
     List<Integer> anchorExistIds = new ArrayList<Integer>();
@@ -5026,8 +5067,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           List<Integer> aIds =
               session
                   .createSQLQuery(searchQuery)
-                  .setInteger("stepId", stepId)
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("stepId", stepId)
+                  .setString("questionnaireId", questionnaireId)
                   .list();
 
           if ((aIds != null) && (aIds.size() > 0)) {
@@ -5043,8 +5084,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           List<Integer> aaIds =
               session
                   .createSQLQuery(subQuery)
-                  .setInteger("stepId", stepId)
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("stepId", stepId)
+                  .setString("questionnaireId", questionnaireId)
                   .list();
           if ((aaIds != null) && (aaIds.size() > 0)) {
             anchorIds.addAll(aaIds);
@@ -5073,7 +5114,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         List<Integer> aIds =
             session
                 .createSQLQuery(searchQuery)
-                .setInteger("questionnaireId", questionnaireId)
+                .setString("questionnaireId", questionnaireId)
                 .list();
         if ((aIds != null) && (aIds.size() > 0)) {
           anchorIds.addAll(aIds);
@@ -5086,7 +5127,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 + " and q.active=1"
                 + " and q.anchor_date_id IS NOT NULL;";
         List<Integer> aaIds =
-            session.createSQLQuery(subQuery).setInteger("questionnaireId", questionnaireId).list();
+            session.createSQLQuery(subQuery).setString("questionnaireId", questionnaireId).list();
         if ((aaIds != null) && (aaIds.size() > 0)) {
           anchorIds.addAll(aaIds);
         }
@@ -5140,7 +5181,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 (StudySequenceBo)
                     session
                         .getNamedQuery("getStudySequenceByStudyId")
-                        .setInteger("studyId", studyId)
+                        .setString("studyId", studyId)
                         .uniqueResult();
             if (studySequence != null) {
               int count1 =
@@ -5150,7 +5191,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                               + "modified_by=:userId "
                               + ",modified_date=:currentDateAndTime"
                               + " where active=1 and anchor_date_id in( :anchorIds ) ")
-                      .setInteger("userId", sessionObject.getUserId())
+                      .setString("userId", sessionObject.getUserId())
                       .setParameterList("anchorIds", anchorIds)
                       .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
                       .executeUpdate();
@@ -5169,7 +5210,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                           "update active_task set action=0 ,anchor_date_id=null, modified_by=:userId "
                               + ",modified_date=:currentDateAndTime"
                               + " where active=1 and anchor_date_id in( :anchorIds )")
-                      .setInteger("userId", sessionObject.getUserId())
+                      .setString("userId", sessionObject.getUserId())
                       .setParameterList("anchorIds", anchorIds)
                       .setString("currentDateAndTime", FdahpStudyDesignerUtil.getCurrentDateTime())
                       .executeUpdate();
@@ -5219,7 +5260,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId) {
+  public QuestionnaireBo getQuestionnaireById(String questionnaireId) {
     logger.entry("begin getQuestionnaireById()");
     Session session = null;
     QuestionnaireBo questionnaireBo = null;
@@ -5230,7 +5271,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           (QuestionnaireBo)
               session
                   .createQuery("from QuestionnaireBo QBO where QBO.id=:questionnaireId")
-                  .setInteger("questionnaireId", questionnaireId)
+                  .setString("questionnaireId", questionnaireId)
                   .uniqueResult();
     } catch (Exception e) {
       transaction.rollback();
@@ -5245,7 +5286,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public QuestionsBo getQuestionById(Integer questionId) {
+  public QuestionsBo getQuestionById(String questionId) {
     logger.entry("begin getQuestionById()");
     Session session = null;
     QuestionsBo questionBo = null;
@@ -5256,7 +5297,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           (QuestionsBo)
               session
                   .createQuery("from QuestionsBo QBO where QBO.id=:questionId")
-                  .setInteger("questionId", questionId)
+                  .setString("questionId", questionId)
                   .uniqueResult();
     } catch (Exception e) {
       transaction.rollback();
@@ -5268,5 +5309,28 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     }
 
     return questionBo;
+  }
+
+  @Override
+  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId) {
+    logger.info("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - Starts");
+    Session session = null;
+    List<QuestionnaireBo> questionnaires = null;
+    String searchQuery = "";
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(studyId)) {
+        query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
+        questionnaires = query.list();
+      }
+    } catch (Exception e) {
+      logger.error("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    logger.info("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - Ends");
+    return questionnaires;
   }
 }

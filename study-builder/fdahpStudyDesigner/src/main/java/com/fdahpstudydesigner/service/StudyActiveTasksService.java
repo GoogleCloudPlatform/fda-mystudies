@@ -35,9 +35,9 @@ import java.util.List;
 public interface StudyActiveTasksService {
 
   public String deleteActiveTask(
-      Integer activeTaskInfoId, Integer studyId, SessionObject sesObj, String customStudyId);
+      String activeTaskInfoId, String studyId, SessionObject sesObj, String customStudyId);
 
-  public ActiveTaskBo getActiveTaskById(Integer activeTaskId, String customStudyId);
+  public ActiveTaskBo getActiveTaskById(String activeTaskId, String customStudyId);
 
   public List<ActivetaskFormulaBo> getActivetaskFormulas();
 
@@ -56,7 +56,7 @@ public interface StudyActiveTasksService {
   public ActiveTaskBo saveOrUpdateActiveTask(ActiveTaskBo activeTaskBo, String customStudyId);
 
   public boolean validateActiveTaskAttrById(
-      Integer studyId,
+      String studyId,
       String activeTaskName,
       String activeTaskAttIdVal,
       String activeTaskAttIdName,
