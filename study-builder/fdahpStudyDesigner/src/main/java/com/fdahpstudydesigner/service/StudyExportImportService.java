@@ -987,7 +987,7 @@ public class StudyExportImportService {
               false,
               NOTIFICATION_NOTIMMEDIATE,
               false,
-              false,
+              notificationBO.isNotificationStatus(),
               notificationBO.getNotificationSubType(),
               notificationBO.getNotificationText(),
               notificationBO.getNotificationType(),
