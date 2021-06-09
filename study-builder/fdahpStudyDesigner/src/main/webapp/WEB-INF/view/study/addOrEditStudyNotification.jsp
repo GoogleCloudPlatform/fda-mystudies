@@ -150,7 +150,7 @@
         </div>
       </div>
  <div class="form-group mr-sm" style="white-space: normal; margin-top: -9px;">
-For studies that are already launched, notifications get scheduled for delivery upon marking the Notifications section as complete, not requiring an explicit 'Publish updates' action.
+ For studies that are already launched, notifications get scheduled for delivery to participants, immediately upon marking this screen as Done, not requiring an explicit 'Publish updates' action at the study level.
  </div>
     </div>
   </form:form>
@@ -288,7 +288,13 @@ For studies that are already launched, notifications get scheduled for delivery 
     });
 
     var today, datepicker;
+    <c:if test="${ empty notificationBO.scheduleDate}">
     today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    
+    <c:if test="${not empty notificationBO.scheduleDate}">
+    today=${notificationBO.scheduleDate};
+    </c:if>
     
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
