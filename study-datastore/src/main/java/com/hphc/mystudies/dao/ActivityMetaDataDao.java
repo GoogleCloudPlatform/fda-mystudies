@@ -1159,14 +1159,18 @@ public class ActivityMetaDataDao {
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (ActiveTaskCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList) {
           ActivityFrequencyScheduleBean manuallyScheduleBean = new ActivityFrequencyScheduleBean();
-          String startDate =
-              customFrequencyDto.getFrequencyStartDate()
-                  + " "
-                  + customFrequencyDto.getFrequencyStartTime();
-          String endDate =
-              customFrequencyDto.getFrequencyEndDate()
-                  + " "
-                  + customFrequencyDto.getFrequencyEndTime();
+
+          String frequencyStartTime = customFrequencyDto.getFrequencyStartTime();
+          if (!frequencyStartTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyStartTime = frequencyStartTime + ":00";
+          }
+          String frequencyEndTime = customFrequencyDto.getFrequencyEndTime();
+          if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyEndTime = frequencyEndTime + ":00";
+          }
+
+          String startDate = customFrequencyDto.getFrequencyStartDate() + " " + frequencyStartTime;
+          String endDate = customFrequencyDto.getFrequencyEndDate() + " " + frequencyEndTime;
           manuallyScheduleBean.setStartTime(
               StudyMetaDataUtil.getFormattedDateTimeZone(
                   startDate,
@@ -2982,11 +2986,20 @@ public class ActivityMetaDataDao {
             }
           }
 
-          activityBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          if (null != activeTaskFrequency.getFrequencyDate()) {
+            activityBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    startDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          } else {
+            activityBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    activeTaskFrequency.getFrequencyTime(),
+                    StudyMetaDataConstants.SDF_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
+
           activityBean.setEndTime(
               StringUtils.isEmpty(endDateTime)
                   ? ""
@@ -3038,7 +3051,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                           + " where ATCFDTO.activeTaskId=:activeTaskId"
-                          + " ORDER BY ATCFDTO.frequencyTime")
+                          + " ORDER BY ATCFDTO.frequencyStartDate")
                   .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
@@ -3063,26 +3076,34 @@ public class ActivityMetaDataDao {
               }
             }
 
-            startDateTime =
-                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyStartTime();
-            endDateTime =
-                endDate
-                    + " "
-                    + activeTaskCustomFrequencyList
-                        .get(activeTaskCustomFrequencyList.size() - 1)
-                        .getFrequencyEndTime();
-          }
+            String frequencyStartTime =
+                activeTaskCustomFrequencyList.get(0).getFrequencyStartTime();
+            if (!frequencyStartTime.matches(
+                "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyStartTime = frequencyStartTime + ":00";
+            }
+            String frequencyEndTime =
+                activeTaskCustomFrequencyList
+                    .get(activeTaskCustomFrequencyList.size() - 1)
+                    .getFrequencyEndTime();
+            if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyEndTime = frequencyEndTime + ":00";
+            }
 
-          activityBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          activityBean.setEndTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  endDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            startDateTime = startDate + " " + frequencyStartTime;
+            endDateTime = endDate + " " + frequencyEndTime;
+
+            activityBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    startDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            activityBean.setEndTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    endDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
         }
       }
     } catch (Exception e) {
@@ -4419,17 +4440,23 @@ public class ActivityMetaDataDao {
         for (ActiveTaskCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList) {
           ActivityFrequencyAnchorRunsBean activityFrequencyAnchorRunsBean =
               new ActivityFrequencyAnchorRunsBean();
-          activityFrequencyAnchorRunsBean.setStartDays(
-              customFrequencyDto.isxDaysSign()
-                  ? -customFrequencyDto.getTimePeriodFromDays()
-                  : customFrequencyDto.getTimePeriodFromDays());
+
+          if (null != customFrequencyDto.getTimePeriodFromDays()) {
+            activityFrequencyAnchorRunsBean.setStartDays(
+                customFrequencyDto.isxDaysSign()
+                    ? -customFrequencyDto.getTimePeriodFromDays()
+                    : customFrequencyDto.getTimePeriodFromDays());
+          }
 
           activityFrequencyAnchorRunsBean.setStartTime(customFrequencyDto.getFrequencyStartTime());
 
-          activityFrequencyAnchorRunsBean.setEndDays(
-              customFrequencyDto.isyDaysSign()
-                  ? -customFrequencyDto.getTimePeriodToDays()
-                  : customFrequencyDto.getTimePeriodToDays());
+          if (null != customFrequencyDto.getTimePeriodToDays()) {
+            activityFrequencyAnchorRunsBean.setEndDays(
+                customFrequencyDto.isyDaysSign()
+                    ? -customFrequencyDto.getTimePeriodToDays()
+                    : customFrequencyDto.getTimePeriodToDays());
+          }
+
           activityFrequencyAnchorRunsBean.setEndTime(customFrequencyDto.getFrequencyEndTime());
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);
         }
