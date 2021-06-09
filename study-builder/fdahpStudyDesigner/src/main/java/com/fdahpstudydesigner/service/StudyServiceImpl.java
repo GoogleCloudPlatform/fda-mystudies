@@ -1659,6 +1659,12 @@ public class StudyServiceImpl implements StudyService {
         notificationBO.setNotificationId(null);
         notificationBO.setStudyId(studyBo.getId());
         notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+        notificationBO.setNotificationSent(false);
+        notificationBO.setNotificationDone(false);
+        notificationBO.setNotificationStatus(false);
+        notificationBO.setNotificationAction(false);
+        notificationBO.setNotificationScheduleType(
+            FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
         notificationDAO.saveNotification(notificationBO);
       }
     }

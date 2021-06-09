@@ -477,7 +477,15 @@
       dt.setMinutes(thisDate.getMinutes());
       $('.timepicker').parent().removeClass('has-error has-danger').find(
           '.help-block.with-errors').empty();
-      if (dt < serverDateTime()) {
+      $('.datepicker').parent().removeClass('has-error has-danger').find(
+      '.help-block.with-errors').empty();
+      if(dt < serverDate()){
+    	  $('.datepicker').parent().addClass('has-error has-danger').find(
+          '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+          "Please select a date that has not gone past yet"));
+      valid = false;
+      }
+      else if(dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
             '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             "Please select a time that has not gone past yet"));
