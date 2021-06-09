@@ -3236,8 +3236,12 @@ debugger
     
     $('.manuallyContainer').find('.manually-option').each(function () {
     	
-		$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
-		$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+    	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
+ 			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+ 		}
+		if($(this).find('.cusEndDate').data("DateTimePicker")!== undefined){
+			$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+		}
     });
   }
 
