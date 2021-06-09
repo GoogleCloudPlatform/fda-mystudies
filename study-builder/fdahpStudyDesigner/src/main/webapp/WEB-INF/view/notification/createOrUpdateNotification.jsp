@@ -438,7 +438,7 @@
         $('#timepicker1').val('');
         $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
             .empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time that has not gone past yet"));
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time in the future"));
         valid = false;
       } else {
         $('.timepicker').parent().removeClass('has-error has-danger').find(
