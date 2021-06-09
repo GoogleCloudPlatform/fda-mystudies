@@ -1851,6 +1851,18 @@
       $('.anchortypeclass').removeAttr('required');
     }
 
+    
+    
+debugger
+    
+    
+ $('.manuallyContainer').find('.manually-option').each(function () {
+	
+		$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+		$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+    });
+     
+  
     var startToday;
     <c:if test="${ empty activeTaskBo.activeTaskFrequenciesBo.frequencyDate}">
     startToday = serverDate();
@@ -2419,6 +2431,14 @@
     $('#customTime' + customCount).val("");
     
     $('#customTime' + customCount).val("");
+    
+    $('.manuallyContainer').find('.manually-option').each(function () {
+    	
+    		$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+    		$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+        });
+    
+    
   }
 
   function removeDate(param) {
@@ -2456,7 +2476,6 @@
 	  $('.manually-option').find('.startTime').prop('disabled', false);
     $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
       useCurrent: false,
     }).on("dp.change", function (e) {
       $("#" + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -2483,7 +2502,6 @@
     $('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
       useCurrent: false,
     }).on("dp.change", function (e) {
       $('#' + id).parent().removeClass("has-danger").removeClass("has-error");

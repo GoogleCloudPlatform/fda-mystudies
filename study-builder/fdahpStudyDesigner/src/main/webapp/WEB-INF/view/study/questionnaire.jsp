@@ -2168,6 +2168,12 @@
     } else {
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
+    
+    $('.manuallyContainer').find('.manually-option').each(function () {
+    	
+		$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+		$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+    });
 
     var actionPage = "${actionType}";
     var reorder = true;
@@ -3227,6 +3233,12 @@ debugger
     
     $('#customTime' + customCount).val("");
     $('#' + customCount).find('input:first').focus();
+    
+    $('.manuallyContainer').find('.manually-option').each(function () {
+    	
+		$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+		$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+    });
   }
 
   function removeDate(param) {
@@ -3263,15 +3275,11 @@ debugger
   }
 
   function customStartDate(id, count) {
-	  var minimumDate = $("#StartDate0").val();
-	  if (minimumDate == null || minimumDate == '' || typeof minimumDate == 'undefined') {
-		  minimumDate = serverDate();
-	  } 
+	 
 	  
 	  $('.manually-option').find('.startTime').prop('disabled', false);
       $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: minimumDate,
       useCurrent: false,
       }).on("dp.change", function (e) {
       $("#" + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -3299,15 +3307,10 @@ debugger
   }
 
   function customEndDate(id, count) {
-	var minimumDate = $("#EndDate0").val();
-	if (minimumDate == null || minimumDate == '' || typeof minimumDate == 'undefined') {
-	  minimumDate = serverDate();
-	}
 	
 	$('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: minimumDate,
       useCurrent: false,
     }).on("dp.change", function (e) {
       $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
