@@ -876,7 +876,7 @@ public class StudyMetaDataDao {
             consentDocumentBean.setContent(
                 StringUtils.isEmpty(consent.getConsentDocContent())
                     ? ""
-                    : StringEscapeUtils.unescapeHtml4(
+                    : StringEscapeUtils.escapeHtml4(
                         consent
                             .getConsentDocContent()
                             .replaceAll("&#34;", "'")
