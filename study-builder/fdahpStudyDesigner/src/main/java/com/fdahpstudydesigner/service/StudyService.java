@@ -22,6 +22,7 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudyIdBean;
 import com.fdahpstudydesigner.bean.StudyListBean;
@@ -201,4 +202,7 @@ public interface StudyService {
   public boolean validateStudyActions(String studyId);
 
   public StudyBo getStudyInfo(String studyId);
+
+  public StudyBo replicateStudy(
+      String studyId, SessionObject sessionObject, AuditLogEventRequest auditRequest);
 }

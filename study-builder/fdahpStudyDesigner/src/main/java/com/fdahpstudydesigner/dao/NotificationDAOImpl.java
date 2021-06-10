@@ -485,4 +485,26 @@ public class NotificationDAOImpl implements NotificationDAO {
     logger.exit("getNotificationList() - Ends");
     return null;
   }
+
+  @Override
+  public void saveNotification(NotificationBO notificationBO) {
+    logger.info("NotificationDAOImpl - saveNotification() - Starts");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      session.save(notificationBO);
+      transaction.commit();
+    } catch (Exception e) {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+      logger.error("NotificationDAOImpl - saveNotification()  - ERROR ", e);
+    } finally {
+      if ((session != null) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("NotificationDAOImpl - saveNotification()  - Ends");
+  }
 }

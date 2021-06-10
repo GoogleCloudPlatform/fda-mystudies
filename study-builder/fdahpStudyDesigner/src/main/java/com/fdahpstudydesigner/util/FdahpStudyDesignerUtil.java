@@ -1118,4 +1118,16 @@ public class FdahpStudyDesignerUtil {
       logger.error("Save Image in cloud storage failed", e);
     }
   }
+
+  public static String getSignedUrlForExportedStudy(String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo =
+          BlobInfo.newBuilder(configMap.get("cloud.bucket.name.export.studies"), filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+    } catch (Exception e) {
+      logger.error("Unable to generate signed url", e);
+    }
+    return null;
+  }
 }

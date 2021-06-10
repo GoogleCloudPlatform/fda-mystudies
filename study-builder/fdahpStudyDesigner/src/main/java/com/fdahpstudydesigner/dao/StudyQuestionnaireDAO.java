@@ -25,16 +25,23 @@ package com.fdahpstudydesigner.dao;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
+import com.fdahpstudydesigner.bo.FormBo;
+import com.fdahpstudydesigner.bo.FormMappingBo;
 import com.fdahpstudydesigner.bo.HealthKitKeysInfo;
 import com.fdahpstudydesigner.bo.InstructionsBo;
 import com.fdahpstudydesigner.bo.QuestionConditionBranchBo;
+import com.fdahpstudydesigner.bo.QuestionReponseTypeBo;
+import com.fdahpstudydesigner.bo.QuestionResponseSubTypeBo;
 import com.fdahpstudydesigner.bo.QuestionResponseTypeMasterInfoBo;
 import com.fdahpstudydesigner.bo.QuestionnaireBo;
+import com.fdahpstudydesigner.bo.QuestionnaireCustomScheduleBo;
+import com.fdahpstudydesigner.bo.QuestionnairesFrequenciesBo;
 import com.fdahpstudydesigner.bo.QuestionnairesStepsBo;
 import com.fdahpstudydesigner.bo.QuestionsBo;
 import com.fdahpstudydesigner.bo.StudyVersionBo;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -169,4 +176,35 @@ public interface StudyQuestionnaireDAO {
   public QuestionnaireBo getQuestionnaireById(String questionnaireId);
 
   public QuestionsBo getQuestionById(String questionId);
+
+  public List<QuestionnairesStepsBo> getQuestionnairesStepsList(List<String> questionnaireIds);
+
+  public List<QuestionsBo> getQuestionsByInstructionFormIds(List<String> instructionFormIds);
+
+  public List<QuestionnairesFrequenciesBo> getQuestionnairesFrequenciesBoList(
+      List<String> questionnaireIds);
+
+  public List<QuestionnaireCustomScheduleBo> getQuestionnairesCustomFrequenciesBoList(
+      List<String> questionnaireIds);
+
+  public List<FormMappingBo> getFormMappingbyInstructionFormIds(List<String> instructionFormIds);
+
+  public List<InstructionsBo> getInstructionListByInstructionFormIds(
+      List<String> instructionFormIds);
+
+  public List<QuestionResponseSubTypeBo> getQuestionResponseSubTypeBoByInstructionFormIds(
+      List<String> instructionFormIds);
+
+  public List<QuestionReponseTypeBo> getQuestionResponseTypeBoByInstructionFormIds(
+      List<String> instructionFormIds);
+
+  public List<FormBo> getFormsByInstructionFormIds(List<String> instructionFormIds);
+
+  public QuestionnaireBo cloneStudyQuestionnaire(
+      String questionnaireId,
+      String studyId,
+      SessionObject sessionObject,
+      Map<String, String> anchorDateMap);
+
+  public List<String> getQuestionsByFormIds(List<String> formIds);
 }
