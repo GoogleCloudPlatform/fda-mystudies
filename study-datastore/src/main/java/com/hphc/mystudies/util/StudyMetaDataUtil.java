@@ -27,7 +27,6 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.hphc.mystudies.bean.FailureResponse;
-import com.sun.jersey.core.util.Base64;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.internal.util.Base64;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -255,9 +255,9 @@ public class StudyMetaDataUtil {
     return "";
   }
 
-  public static String getDecodedStringByBase64(String encodedText) {
+  public static String getDecodedStringByBase64(byte[] encodedText) {
     LOGGER.entry("StudyMetaDataUtil: getDecodedStringByBase64() - Starts ");
-    if (StringUtils.isEmpty(encodedText)) {
+    if (StringUtils.isEmpty(encodedText.toString())) {
       return "";
     }
     try {
@@ -444,7 +444,8 @@ public class StudyMetaDataUtil {
     String platform = "";
     try {
       if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
-        final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
+        final byte[] encodedUserPassword =
+            authCredentials.replaceFirst("Basic" + " ", "").getBytes();
         byte[] decodedBytes = Base64.decode(encodedUserPassword);
         bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
 
@@ -452,7 +453,6 @@ public class StudyMetaDataUtil {
           final StringTokenizer tokenizer = new StringTokenizer(bundleIdAndAppToken, ":");
           final String bundleId = tokenizer.nextToken();
           final String appToken = tokenizer.nextToken();
-
           if (authPropMap.containsValue(bundleId) && authPropMap.containsValue(appToken)) {
             String appBundleId = "";
             String appTokenId = "";
@@ -647,7 +647,8 @@ public class StudyMetaDataUtil {
     String appBundleId = "";
     try {
       if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
-        final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
+        final byte[] encodedUserPassword =
+            authCredentials.replaceFirst("Basic" + " ", "").getBytes();
         byte[] decodedBytes = Base64.decode(encodedUserPassword);
         bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
         if (bundleIdAndAppToken.contains(":")) {
@@ -801,12 +802,16 @@ public class StudyMetaDataUtil {
     return fileName;
   }
 
-  public static String getSignedUrl(
-      String bucketName, String filePath, int signedUrlDurationInHours) {
+  public static String getSignedUrl(String bucketName, String filePath) {
     try {
       BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, filePath).build();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+      return storage
+          .signUrl(
+              blobInfo,
+              Integer.parseInt((String) getAppProperties().get("signed.url.duration.in.hours")),
+              TimeUnit.HOURS)
+          .toString();
     } catch (Exception e) {
       LOGGER.error("Unable to generate signed url", e);
     }

@@ -913,6 +913,8 @@ public class StudyController {
             (request.getParameter("fileName")) == null ? "" : request.getParameter("fileName");
         String fileFolder =
             (request.getParameter("fileFolder")) == null ? "" : request.getParameter("fileFolder");
+        String studyId =
+            (request.getParameter("studyId")) == null ? "" : request.getParameter("studyId");
         if (StringUtils.isNotBlank(fileName) && StringUtils.isNotBlank(fileFolder)) {
           request.getSession().setAttribute(sessionStudyCount + "fileName", fileName);
           request.getSession().setAttribute(sessionStudyCount + "fileFolder", fileFolder);
@@ -920,8 +922,19 @@ public class StudyController {
           fileName = (String) request.getSession().getAttribute(sessionStudyCount + "fileName");
           fileFolder = (String) request.getSession().getAttribute(sessionStudyCount + "fileFolder");
         }
+        StudyBo study = studyService.getStudyInfo(studyId);
+
+        String path =
+            FdahpStudyDesignerConstants.STUDIES
+                + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                + study.getCustomStudyId()
+                + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                + fileFolder
+                + "/"
+                + fileName;
+
         Storage storage = StorageOptions.getDefaultInstance().getService();
-        Blob blob = storage.get(configMap.get("cloud.bucket.name"), fileFolder + "/" + fileName);
+        Blob blob = storage.get(configMap.get("cloud.bucket.name"), path);
         ReadChannel readChannel = blob.reader();
         InputStream inputStream = Channels.newInputStream(readChannel);
         response.setContentType("application/pdf");
@@ -2156,17 +2169,15 @@ public class StudyController {
           map.addAttribute(
               "defaultOverViewImageSignedUrl",
               FdahpStudyDesignerUtil.getSignedUrl(
-                  FdahpStudyDesignerConstants.STUDTYLOGO
+                  FdahpStudyDesignerConstants.DEFAULT_IMAGES
                       + "/"
-                      + configMap.get("study.defaultImage"),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                      + configMap.get("study.defaultImage")));
           map.addAttribute(
               "defaultPageOverviewImageSignedUrl",
               FdahpStudyDesignerUtil.getSignedUrl(
-                  FdahpStudyDesignerConstants.STUDTYLOGO
+                  FdahpStudyDesignerConstants.DEFAULT_IMAGES
                       + "/"
-                      + configMap.get("study.page2.defaultImage"),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                      + configMap.get("study.page2.defaultImage")));
           mav = new ModelAndView("overviewStudyPages", map);
         } else {
           return new ModelAndView("redirect:studyList.do");
@@ -3113,8 +3124,6 @@ public class StudyController {
     logger.entry("begin saveOrUpdateBasicInfo()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
-    String fileName = "";
-    String file = "";
     String buttonText = "";
     String message = FdahpStudyDesignerConstants.FAILURE;
     ModelMap map = new ModelMap();
@@ -3142,28 +3151,7 @@ public class StudyController {
           studyBo.setStatus(FdahpStudyDesignerConstants.STUDY_PRE_LAUNCH);
         }
         studyBo.setUserId(sesObj.getUserId());
-        if ((studyBo.getFile() != null) && !studyBo.getFile().isEmpty()) {
-          if (FdahpStudyDesignerUtil.isNotEmpty(studyBo.getThumbnailImage())) {
-            file =
-                studyBo
-                    .getThumbnailImage()
-                    .replace(
-                        "."
-                            + studyBo.getThumbnailImage()
-                                .split("\\.")[studyBo.getThumbnailImage().split("\\.").length - 1],
-                        "");
-          } else {
-            file =
-                FdahpStudyDesignerUtil.getStandardFileName(
-                    "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
-          }
 
-          fileName =
-              FdahpStudyDesignerUtil.saveImage(
-                  studyBo.getFile(), file, FdahpStudyDesignerConstants.STUDTYLOGO);
-
-          studyBo.setThumbnailImage(fileName);
-        }
         studyBo.setButtonText(buttonText);
         studyBo.setDescription(StringEscapeUtils.unescapeHtml4(studyBo.getDescription()));
         message = studyService.saveOrUpdateStudy(studyBo, sesObj.getUserId(), sesObj);
@@ -3302,6 +3290,8 @@ public class StudyController {
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
               : 0;
+      String briefsummaryText = request.getParameter("briefSummary");
+      consentInfoBo.setBriefSummary(briefsummaryText);
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
@@ -3659,7 +3649,7 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Eligibility");
+                  "Error encountered. Your settings could not be saved.");
           mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
         }
       }
@@ -4562,8 +4552,13 @@ public class StudyController {
           map.addAttribute(
               "signedUrl",
               FdahpStudyDesignerUtil.getSignedUrl(
-                  FdahpStudyDesignerConstants.STUDTYLOGO + "/" + studyBo.getThumbnailImage(),
-                  FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                  FdahpStudyDesignerConstants.STUDIES
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getCustomStudyId()
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + FdahpStudyDesignerConstants.STUDTYLOGO
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getThumbnailImage()));
         }
         // grouped for Study category , Research sponsors , Data partner
         referenceMap =
@@ -4584,10 +4579,9 @@ public class StudyController {
         map.addAttribute(
             "defaultImageSignedUrl",
             FdahpStudyDesignerUtil.getSignedUrl(
-                FdahpStudyDesignerConstants.STUDTYLOGO
+                FdahpStudyDesignerConstants.DEFAULT_IMAGES
                     + "/"
-                    + configMap.get("study.basicInformation.defaultImage"),
-                FdahpStudyDesignerConstants.SIGNED_URL_DURATION_IN_HOURS));
+                    + configMap.get("study.basicInformation.defaultImage")));
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");

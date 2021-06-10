@@ -74,7 +74,6 @@
 <form:form action="" name="anchorFormId" id="anchorFormId" method="post" role="form"
            data-toggle="validator">
   <div class="anchortypeclass" style="display:none;">
-    <c:if test="${fn:length(anchorTypeList) gt 0}">
       <div class="gray-xs-f mb-sm">Select anchor date type</div>
       <div class="clearfix"></div>
       <div class="col-md-5 col-lg-5 p-none">
@@ -92,7 +91,6 @@
         </div>
       </div>
       <div class="clearfix"></div>
-    </c:if>
   </div>
 </form:form>
 <!-- Ancor date type -->
@@ -1249,10 +1247,13 @@
     if ($("#schedule2").prop("checked")) {
     	 var schedule_opts = $("input[name='frequency']:checked").val();
     	 
-    	  $("#weekDaysId").hide();
-        $("#weekDaysId").find('input:text').removeAttr('required', true);
-        $(".weeklyRegular").hide();
-        $(".weeklyRegular").removeAttr('required');
+    	 $("#weekDaysId").hide();
+         $("#weekDaysId").removeAttr('required');
+         $("#weekDaysId").find('input:text,select').removeAttr('required');
+         $(".weeklyRegular").hide();
+         $(".weeklyRegular").removeAttr('required');
+         $(".weeklyRegular").find('input:text,select').removeAttr('required');
+        
 
         $("#monthlyDateId").hide();
         $("#monthlyDateId").find('input:text').removeAttr('required', true);
@@ -1358,10 +1359,12 @@
       var schedule_opts = $("input[name='frequency']:checked").val();
       if (scheduletype == 'AnchorDate') {
 
-        $("#weekDaysId").hide();
-        $("#weekDaysId").find('input:text').removeAttr('required', true);
-        $(".weeklyRegular").hide();
-        $(".weeklyRegular").removeAttr('required');
+    	  $("#weekDaysId").hide();
+          $("#weekDaysId").removeAttr('required');
+          $("#weekDaysId").find('input:text,select').removeAttr('required');
+          $(".weeklyRegular").hide();
+          $(".weeklyRegular").removeAttr('required');
+          $(".weeklyRegular").find('input:text,select').removeAttr('required');
 
         $("#monthlyDateId").hide();
         $("#monthlyDateId").find('input:text').removeAttr('required', true);
@@ -2726,7 +2729,7 @@
         activeTaskFrequencey.frequencyTime = frequence_time;
       }
       if (frequence_time_anchor != null && frequence_time_anchor != ''
-          && typeof frequence_time_anchor != 'undefined') {
+          && typeof frequence_time_anchor != 'undefined' && activeTask.scheduleType == 'AnchorDate') {
         activeTaskFrequencey.frequencyTime = frequence_time_anchor;
       }
       if (weeklyXSign != null && weeklyXSign != '' && typeof weeklyXSign != 'undefined') {
@@ -2794,7 +2797,7 @@
       }
 
       if (frequencetime_anchor != null && frequencetime_anchor != '' && typeof frequencetime_anchor
-          != 'undefined') {
+          != 'undefined' && activeTask.scheduleType == 'AnchorDate') {
         activeTaskFrequencey.frequencyTime = frequencetime_anchor;
       }
 
@@ -2845,7 +2848,9 @@
             if (message == "SUCCESS") {
               var activeTaskId = data.activeTaskId;
               var activeTaskFrequenceId = data.activeTaskFrequenceId;
+              var activeTaskCreated=data.activeTaskCreated
               $("#activeTaskId, #taskId,#taskContentId,.activeTaskIdClass").val(activeTaskId);
+              $("#activeTaskCreated").val(activeTaskCreated);
               $("#previousFrequency").val(frequency_text);
               if (frequency_text == 'One time') {
                 $("#oneTimeFreId").val(activeTaskFrequenceId);
@@ -2887,7 +2892,9 @@
             if (message == "SUCCESS") {
               var activeTaskId = data.activeTaskId;
               var activeTaskFrequenceId = data.activeTaskFrequenceId;
+              var activeTaskCreated=data.activeTaskCreated
               $("#activeTaskId, #taskId,#taskContentId,.activeTaskIdClass").val(activeTaskId);
+              $("#activeTaskCreated").val(activeTaskCreated);
               $("#previousFrequency").val(frequency_text);
               if (frequency_text == 'One time') {
                 $("#oneTimeFreId").val(activeTaskFrequenceId);

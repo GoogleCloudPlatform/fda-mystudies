@@ -392,9 +392,19 @@
       });
     });
 
+    var today, datepicker;
+    <c:if test="${ empty notificationBO.scheduleDate}">
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    
+    <c:if test="${not empty notificationBO.scheduleDate}">
+    today=${notificationBO.scheduleDate};
+    </c:if>
+    
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false
     }).on('dp.change change', function (e) {
       validateTime();
@@ -434,7 +444,7 @@
         $('#timepicker1').val('');
         $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
             .empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time that has not already passed for the current date"));
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time in the future"));
         valid = false;
       } else {
         $('.timepicker').parent().removeClass('has-error has-danger').find(

@@ -184,7 +184,7 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Explanatory text that can be provided in a 'Learn More'
+                    Explanatory text that can be provided in a 'Learn more'
                     section
                     <span class="requiredStar">*</span>
                     <span class="filled-tooltip"
@@ -203,7 +203,7 @@
                   <a class="preview__text" href="javascript:void()"
                      data-toggle="modal" onclick="previewDataSharing();"><img
                       class="mr-xs" src="../images/icons/eye-icn.png" alt="">
-                    <span>See Screen Preview</span>
+                    <span>See screen preview</span>
                   </a>
                 </div>
               </div>
@@ -562,7 +562,7 @@
               + "${consentInfo.displayTitle}"
               + "</strong></span><br/>"
               + "<span style='display: block; overflow-wrap: break-word; width: 100%;'>"
-              + "${consentInfo.elaborated}"
+              + '${consentInfo.elaborated}'
               + "</span><br/>";
           </c:forEach>
         }
@@ -640,12 +640,12 @@
       var short_description = $("#shortDescriptionId").val();
       var long_description = $("#longDescriptionId").val();
       var learn_more_text = $('#learnMoreTextId').summernote('code');
-      learn_more_text = replaceSpecialCharacters(learn_more_text);
+      learn_more_text = $('#learnMoreTextId').text(learn_more_text).html();
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
 
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
-        consentDocumentContent = replaceSpecialCharacters(consentDocumentContent);
+        consentDocumentContent= $('#newDocumentDivId').text(consentDocumentContent).html();
       }
 
       if (item == "doneId") {

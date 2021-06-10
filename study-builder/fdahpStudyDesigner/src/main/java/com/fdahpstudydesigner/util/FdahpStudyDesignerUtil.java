@@ -26,14 +26,14 @@ import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
 import com.fdahpstudydesigner.common.UserAccessLevel;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1021,16 +1021,25 @@ public class FdahpStudyDesignerUtil {
     return UserAccessLevel.APP_STUDY_ADMIN.getValue();
   }
 
-  public static String saveImage(MultipartFile fileStream, String fileName, String underDirectory) {
+  public static String saveImage(
+      MultipartFile fileStream, String fileName, String underDirectory, String customStudyId) {
     String fileNameWithExtension =
         fileName + "." + FilenameUtils.getExtension(fileStream.getOriginalFilename());
-    String absoluteFileName = underDirectory + PATH_SEPARATOR + fileNameWithExtension;
+    String absoluteFileName =
+        FdahpStudyDesignerConstants.STUDIES
+            + PATH_SEPARATOR
+            + customStudyId
+            + PATH_SEPARATOR
+            + underDirectory
+            + PATH_SEPARATOR
+            + fileNameWithExtension;
     BlobInfo blobInfo =
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
 
     try {
+      byte[] b = fileStream.getBytes();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      storage.create(blobInfo, fileStream.getBytes());
+      storage.create(blobInfo, b);
 
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);
@@ -1051,32 +1060,87 @@ public class FdahpStudyDesignerUtil {
     }
   }
 
-  public static Timestamp getTimeStamp(String inputDate, String inputTime) {
+  public static String getTimeStamp(String inputDate, String inputTime) {
 
     String timestampInString = inputDate + " " + inputTime;
-    java.sql.Date date = null;
     try {
-      DateFormat dateFormat =
-          new SimpleDateFormat(
-              FdahpStudyDesignerConstants.DB_SDF_DATE
-                  + " "
-                  + FdahpStudyDesignerConstants.DB_SDF_TIME);
-      date = new java.sql.Date(dateFormat.parse(timestampInString).getTime());
-      return new Timestamp(date.getTime());
+      return timestampInString;
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
     }
     return null;
   }
 
-  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
+  public static String getSignedUrl(String filePath) {
     try {
       BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+      return storage
+          .signUrl(
+              blobInfo,
+              Integer.parseInt(configMap.get("signed.url.duration.in.hours")),
+              TimeUnit.HOURS)
+          .toString();
     } catch (Exception e) {
       logger.error("Unable to generate signed url", e);
     }
     return null;
+  }
+
+  public static void copyOrMoveStudyResources(
+      String fileName,
+      String underDirectory,
+      String customStudyId,
+      boolean delete,
+      boolean isOldFilePath,
+      String newCustomStudyId) {
+    String newFilePath;
+
+    String oldFilePath;
+    if (isOldFilePath) {
+      oldFilePath = underDirectory + PATH_SEPARATOR + fileName;
+      newFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + customStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+    } else {
+      oldFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + customStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+      newFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + newCustomStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+    }
+
+    try {
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), oldFilePath));
+
+      if (blob != null) {
+        blob.copyTo(configMap.get("cloud.bucket.name"), newFilePath);
+        // Delete the original blob now that we've copied to where we want it, finishing the "move"
+        // operation
+        if (delete) {
+          blob.delete();
+        }
+      }
+
+    } catch (Exception e) {
+      logger.error("Save Image in cloud storage failed", e);
+    }
   }
 }

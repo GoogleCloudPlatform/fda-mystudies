@@ -27,6 +27,7 @@
          name="actionPage">
   <input type="hidden" value="${currentPage}" id="currentPageId"
          name="currentPage">
+         <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <div class="pt-lg">
     <div class="gray-xs-f mb-sm">
       Activity short title or key

@@ -54,7 +54,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
@@ -142,7 +141,7 @@ public class SiteServiceImpl implements SiteService {
 
   private static final String CREATED = "created";
 
-  private static final int EMAIL_ADDRESS_COLUMN = 1;
+  private static final int EMAIL_ADDRESS_COLUMN = 0;
 
   private XLogger logger = XLoggerFactory.getXLogger(SiteServiceImpl.class.getName());
 
@@ -962,6 +961,10 @@ public class SiteServiceImpl implements SiteService {
       while (rows.hasNext()) {
         Row r = rows.next();
 
+        if (r.getCell(EMAIL_ADDRESS_COLUMN) == null) {
+          continue;
+        }
+
         String email = r.getCell(EMAIL_ADDRESS_COLUMN).getStringCellValue();
         if (StringUtils.isBlank(email) || !Pattern.matches(EMAIL_REGEX, email)) {
           invalidEmails.add(email);
@@ -1198,7 +1201,7 @@ public class SiteServiceImpl implements SiteService {
         StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
         studyDetail.setLogoImageUrl(
             participantManagerUtil.getSignedUrl(
-                studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+                studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
         studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
 
@@ -1246,7 +1249,7 @@ public class SiteServiceImpl implements SiteService {
           StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
           studyDetail.setLogoImageUrl(
               participantManagerUtil.getSignedUrl(
-                  studySiteInfo.getLogoImageUrl(), CommonConstants.SIGNED_URL_DURATION_IN_HOURS));
+                  studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
           studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
         StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
