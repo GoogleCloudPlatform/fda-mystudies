@@ -1298,14 +1298,14 @@
   }
     if ($("#schedule2").prop("checked")) {
     	 var schedule_opts = $("input[name='frequency']:checked").val();
-    	 
-        $("#weekDaysId").hide();
-        $("#weekDaysId").removeAttr('required');
-        $("#weekDaysId").find('input:text,select').removeAttr('required');
-        $(".weeklyRegular").hide();
-        $(".weeklyRegular").removeAttr('required');
-        $(".weeklyRegular").find('input:text,select').removeAttr('required');
-        
+
+    	 $("#weekDaysId").hide();
+         $("#weekDaysId").removeAttr('required');
+         $("#weekDaysId").find('input:text,select').removeAttr('required');
+         $(".weeklyRegular").hide();
+         $(".weeklyRegular").removeAttr('required');
+         $(".weeklyRegular").find('input:text,select').removeAttr('required');
+
         $("#monthlyDateId").hide();
         $("#monthlyDateId").find('input:text').removeAttr('required', true);
         $(".monthlyRegular").hide();
@@ -1410,13 +1410,12 @@
       var schedule_opts = $("input[name='frequency']:checked").val();
       if (scheduletype == 'AnchorDate') {
 
-        $("#weekDaysId").hide();
-        $("#weekDaysId").removeAttr('required');
-        $("#weekDaysId").find('input:text,select').removeAttr('required');
-        $(".weeklyRegular").hide();
-        $(".weeklyRegular").removeAttr('required');
-        $(".weeklyRegular").find('input:text,select').removeAttr('required');
-        
+    	  $("#weekDaysId").hide();
+          $("#weekDaysId").removeAttr('required');
+          $("#weekDaysId").find('input:text,select').removeAttr('required');
+          $(".weeklyRegular").hide();
+          $(".weeklyRegular").removeAttr('required');
+          $(".weeklyRegular").find('input:text,select').removeAttr('required');
 
         $("#monthlyDateId").hide();
         $("#monthlyDateId").find('input:text').removeAttr('required');
