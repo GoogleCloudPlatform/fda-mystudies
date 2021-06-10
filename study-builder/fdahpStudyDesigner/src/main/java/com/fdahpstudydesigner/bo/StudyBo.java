@@ -60,6 +60,14 @@ public class StudyBo implements Serializable {
 
   private static final long serialVersionUID = 2147840266295837728L;
 
+  @Deprecated
+  @Column(name = "allow_rejoin")
+  private String allowRejoin;
+
+  @Deprecated
+  @Column(name = "allow_rejoin_text")
+  private String allowRejoinText;
+
   @Transient private String buttonText;
 
   @Column(name = "category")
@@ -134,6 +142,10 @@ public class StudyBo implements Serializable {
 
   @Column(name = "research_sponsor")
   private String researchSponsor;
+
+  @Deprecated
+  @Column(name = "retain_participant")
+  private String retainParticipant;
 
   @Column(name = "sequence_number")
   private Integer sequenceNumber;
