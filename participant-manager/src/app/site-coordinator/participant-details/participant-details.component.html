@@ -16,7 +16,7 @@
             </div>
             <div class="pl-1">
               <div class="mb-xs">Participant details</div>
-              <div class="display-inline-flex overflow__auto">
+              <div class="display-inline-flex overflow__auto mob_display-inline">
                 <div
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -151,7 +151,7 @@
         <button
           [disabled]="hasCompletedEnrollment(participant.participantDetails)"
           name="sendInvite"
-          class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
+          class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14 mob_mr-10"
           (click)="sendInvitation(participant.participantDetails.siteId)"
         >
           {{ sendResend }}
@@ -174,7 +174,7 @@
 
     <section class="max__w__1280 m-none site__participant">
       <div
-        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg"
+        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg" style="overflow-x: auto;"
       >
         <div class="blue__text__md">Participant email</div>
         <div class="participant__label font26">
@@ -282,14 +282,17 @@
       </h2>
 
       <table class="table table-striped custom__table">
+
+          <thead class="custom__thead mob_tabl_wid_100">
         <tr>
-          <th>Date of enrollment</th>
+          <th >Date of enrollment</th>
           <th>Date of withdrawal</th>
-          <th>&nbsp; Last enrollment status</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
-          <th>&nbsp;</th>
+          <th>Last enrollment status</th>
+          <th  class="xs-none">&nbsp;</th>
+          <th  class="xs-none">&nbsp;</th>
+          <th  class="xs-none">&nbsp;</th>
         </tr>
+        </thead>
         <tr
           *ngFor="
             let enrollmentDetails of participant.participantDetails.enrollments
@@ -315,9 +318,9 @@
               &nbsp; {{ enrollmentDetails.enrollmentStatus }}
             </span>
           </td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
-          <td>&nbsp;</td>
+          <td class="xs-none">&nbsp;</td>
+          <td class="xs-none">&nbsp;</td>
+          <td class="xs-none">&nbsp;</td>
         </tr>
         <tr *ngIf="participant.participantDetails.enrollments.length === 0">
           <td colspan="6" class="text-center font12 txt__light-gray">

@@ -1692,3 +1692,18 @@ meter::-moz-meter-bar {
     padding-right: 10px;
   }
 }
+
+
+@media only screen and (max-width: 340px) and (min-width: 320px){
+.mob_custom_width {
+    width: 100% !important;
+}
+
+#body-container .flex__justify__space-between {
+    display: inline-block !important;
+    justify-content: space-between;
+    align-items: center;
+    outline: none;
+}
+
+}

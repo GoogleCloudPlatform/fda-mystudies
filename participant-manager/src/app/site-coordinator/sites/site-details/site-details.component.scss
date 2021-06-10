@@ -107,3 +107,7 @@ input[type="checkbox"]:checked + label::before {
 .chk_box_hidden2:before {
   display: none;
 }
+
+@media only screen and (max-width: 500px) and (min-width: 320px) {
+
+}

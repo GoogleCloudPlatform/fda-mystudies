@@ -18,5 +18,14 @@
 }
 
 .table.custom__table th {
-  width: 34%;
+  width: fit-content !important;
+}
+
+@media only screen and (max-width: 500px) and (min-width: 320px) {
+
+  .mob_display-inline { display: inline-block !important; }
+
+  .xs-none { display:  none !important; }
+  .mob_tabl_wid_100 tr th { width: fit-content !important; white-space: nowrap!important;}
+  .mob_mr-10 { margin-right: 10px;}
 }
