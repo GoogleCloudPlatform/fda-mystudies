@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "eligibility_test")
@@ -37,12 +38,13 @@ public class EligibilityTestDto implements Serializable {
   private static final long serialVersionUID = 6692773747185719256L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "eligibility_id")
-  private Integer eligibilityId;
+  private String eligibilityId;
 
   @Column(name = "short_title")
   private String shortTitle;
@@ -74,19 +76,19 @@ public class EligibilityTestDto implements Serializable {
   @Column(name = "response_no_option")
   private Boolean responseNoOption = false;
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
-  public Integer getEligibilityId() {
+  public String getEligibilityId() {
     return eligibilityId;
   }
 
-  public void setEligibilityId(Integer eligibilityId) {
+  public void setEligibilityId(String eligibilityId) {
     this.eligibilityId = eligibilityId;
   }
 
