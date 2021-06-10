@@ -3101,20 +3101,25 @@
         if (frequencyType == 'Daily') {
           var dailyTimeLength = $('.dailyContainer').find('.dailyTimeDiv').length;
           if (dailyTimeLength == 1) {
-            $("#chartId,#chartId1,#chartId2").append(
-                "<option value='Days of the current week'>Days of the current week</option>");
-            $("#chartId,#chartId1,#chartId2").append(
-                "<option value='Days of the current month'>Days of the current month</option>");
-          } else {
+          	if (!$("#chartId,#chartId1,#chartId2 option[value='Days of the current week']").length) { 
+  	           $("#chartId,#chartId1,#chartId2").append(
+  	               "<option value='Days of the current week'>Days of the current week</option>");
+          	}
+          	
+          	if (!$("#chartId,#chartId1,#chartId2 option[value='Days of the current month']").length) { 
+  	           $("#chartId,#chartId1,#chartId2").append(
+  	               "<option value='Days of the current month'>Days of the current month</option>");
+          	}
+          } else if (!$("#chartId,#chartId1,#chartId2 option[value='24 hours of current day']").length) {
             $("#chartId,#chartId1,#chartId2").append(
                 "<option value='24 hours of current day'>24 hours of current day</option>");
           }
         }
-        if (frequencyType == 'Weekly') {
+        if (frequencyType == 'Weekly' && !$("#chartId,#chartId1,#chartId2 option[value='Weeks of the current month']").length) {
           $("#chartId,#chartId1,#chartId2").append(
               "<option value='Weeks of the current month'>Weeks of the current month</option>");
         }
-        if (frequencyType == 'Monthly') {
+        if (frequencyType == 'Monthly' && !$("#chartId,#chartId1,#chartId2 option[value='Months of the current year']").length) {	
           $("#chartId,#chartId1,#chartId2").append(
               "<option value='Months of the current year'>Months of the current year</option>");
         }
