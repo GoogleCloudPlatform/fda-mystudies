@@ -3,6 +3,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
 
+<style>
+.modal-title {
+    text-align: initial !important;
+}
+</style>
 
 <!-- create Study Section Start -->
 <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md tit_con">
