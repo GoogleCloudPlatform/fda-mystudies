@@ -181,7 +181,7 @@
           {{ participant.participantDetails.email }}
         </div>
         <table class="width__100 mt-4">
-          <thead>
+          <thead class="custom__thead_2">
             <tr>
               <th>
                 <div class="blue__text__md">Onboarding status</div>
@@ -201,7 +201,7 @@
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="custom__tbody_2">
             <tr>
               <td class="font14">
                 <span
@@ -216,8 +216,7 @@
                       participant.participantDetails.onboardingStatus ==
                       onBoardingStatus.Disabled
                   }"
-                >
-                  {{ participant.participantDetails.onboardingStatus }}
+                >{{ participant.participantDetails.onboardingStatus }}
                 </span>
                 <span
                   *ngIf="
@@ -258,8 +257,7 @@
                         participant.participantDetails.enrollmentStatus ==
                         enrollmentStatus.Withdrawn
                     }"
-                  >
-                    {{ participant.participantDetails.enrollmentStatus }}
+                  >{{ participant.participantDetails.enrollmentStatus }}
                   </span>
                 </td>
                 <td class="mb__mt-sm inactive__text font14">
@@ -293,6 +291,7 @@
           <th  class="xs-none">&nbsp;</th>
         </tr>
         </thead>
+        <tbody class="custom__tbody">
         <tr
           *ngFor="
             let enrollmentDetails of participant.participantDetails.enrollments
@@ -314,8 +313,7 @@
                   enrollmentDetails.enrollmentStatus ==
                   enrollmentStatus.Withdrawn
               }"
-            >
-              &nbsp; {{ enrollmentDetails.enrollmentStatus }}
+            >{{ enrollmentDetails.enrollmentStatus }}
             </span>
           </td>
           <td class="xs-none">&nbsp;</td>
@@ -327,6 +325,7 @@
             No records found
           </td>
         </tr>
+        </tbody>
       </table>
 
       <h2 class="subheader__title text-weight-semibold mb-sm">

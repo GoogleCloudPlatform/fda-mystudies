@@ -29,3 +29,25 @@
   .mob_tabl_wid_100 tr th { width: fit-content !important; white-space: nowrap!important;}
   .mob_mr-10 { margin-right: 10px;}
 }
+
+.table.table-striped thead.custom__thead  tr th:nth-child(1), 
+.table.table-striped thead.custom__thead  tr th:nth-child(2),
+.table.table-striped thead.custom__thead  tr th:nth-child(3),
+.table.table-striped tbody.custom__tbody  tr td:nth-child(1), 
+.table.table-striped tbody.custom__tbody  tr td:nth-child(2),
+.table.table-striped tbody.custom__tbody  tr td:nth-child(3) {
+    width: 20% !important;
+}
+
+table thead.custom__thead_2  tr th:nth-child(1), 
+table thead.custom__thead_2  tr th:nth-child(2),
+table thead.custom__thead_2  tr th:nth-child(3),
+table thead.custom__thead_2  tr th:nth-child(4),
+table thead.custom__thead_2  tr th:nth-child(5),
+table tbody.custom__tbody_2  tr td:nth-child(1), 
+table tbody.custom__tbody_2  tr td:nth-child(2),
+table tbody.custom__tbody_2  tr td:nth-child(3),
+table tbody.custom__tbody_2  tr td:nth-child(4),
+table tbody.custom__tbody_2  tr td:nth-child(5) {
+    width: 20.7% !important;
+}
