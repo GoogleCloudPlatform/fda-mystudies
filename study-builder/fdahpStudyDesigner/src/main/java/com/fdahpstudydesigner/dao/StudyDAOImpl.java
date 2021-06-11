@@ -3720,7 +3720,7 @@ public class StudyDAOImpl implements StudyDAO {
           && consentBo.getConsentDocType().equalsIgnoreCase("Auto")) {
         query =
             session.createQuery(
-                " from ConsentInfoBo CIBO where CIBO.studyId=:studyId and CIBO.active=1");
+                " from ConsentInfoBo CIBO where CIBO.studyId=:studyId and CIBO.active=1 order by CIBO.sequenceNo asc");
         query.setString("studyId", consentBo.getStudyId());
         consentInfoList = query.list();
         if ((consentInfoList != null) && (consentInfoList.size() > 0)) {
