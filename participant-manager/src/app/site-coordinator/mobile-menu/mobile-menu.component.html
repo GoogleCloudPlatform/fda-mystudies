@@ -80,7 +80,7 @@
                 sites.isActive ||
                 studies.isActive ||
                 participantDetails.isActive
-            }"
+            }" (click)="hamburgerclose()"
           >
             Dashboard
           </a>
@@ -89,7 +89,7 @@
             routerLink="/coordinator/studies"
             routerLinkActive
             #studies="routerLinkActive"
-            style="display: none"
+            style="display: none" 
           >
             sites
           </a>
@@ -126,7 +126,7 @@
             *ngIf="user?.manageLocations !== null || user?.superAdmin"
             routerLink="/coordinator/locations"
             routerLinkActive="active"
-            class="nav-item nav-link"
+            class="nav-item nav-link" (click)="hamburgerclose()"
           >
             Locations
           </a>
@@ -136,7 +136,7 @@
             *ngIf="user?.superAdmin"
             routerLink="/coordinator/users"
             routerLinkActive="active"
-            class="nav-item nav-link"
+            class="nav-item nav-link" (click)="hamburgerclose()"
           >
             Admins
           </a>
@@ -145,7 +145,7 @@
           <a
             routerLink="/coordinator/accounts"
             routerLinkActive="active"
-            class="nav-item nav-link"
+            class="nav-item nav-link" (click)="hamburgerclose()"
           >
             My Account
           </a>
