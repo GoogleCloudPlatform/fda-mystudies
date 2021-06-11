@@ -397,7 +397,7 @@
           </div>
         </form:form>
         <!-- Ancor date type -->
-        <div class="gray-xs-f mb-sm">Questionnaire scheduling options</div>
+        <div class="gray-xs-f mb-sm">Scheduling options</div>
         <div class="pb-lg b-bor">
           <span class="radio radio-info radio-inline p-40"><input
               type="radio" id="inlineRadio1" class="schedule"
