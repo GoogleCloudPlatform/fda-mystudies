@@ -3024,7 +3024,7 @@ public class StudyDAOImpl implements StudyDAO {
                 && !existedQuestionnairesStepsBoList.isEmpty()) {
               for (QuestionnairesStepsBo questionnairesStepsBo : existedQuestionnairesStepsBoList) {
                 String destionStep = questionnairesStepsBo.getDestinationStep();
-                if (destionStep.equals("0")) {
+                if (destionStep.equals(String.valueOf(0))) {
                   destinationList.add(-1);
                 } else {
                   for (int i = 0; i < existedQuestionnairesStepsBoList.size(); i++) {
@@ -3320,7 +3320,7 @@ public class StudyDAOImpl implements StudyDAO {
                 if (questionResponseSubTypeBo.getDestinationStepId() == null) {
                   sequenceSubTypeList.add(null);
                 } else if ((questionResponseSubTypeBo.getDestinationStepId() != null)
-                    && questionResponseSubTypeBo.getDestinationStepId().equals("0")) {
+                    && questionResponseSubTypeBo.getDestinationStepId().equals(String.valueOf(0))) {
                   sequenceSubTypeList.add(-1);
                 } else {
                   if ((existedQuestionnairesStepsBoList != null)
@@ -3344,9 +3344,9 @@ public class StudyDAOImpl implements StudyDAO {
                 String desId = null;
                 if (sequenceSubTypeList.get(i) == null) {
                   desId = null;
-                } /*
-                   * else if (sequenceSubTypeList.get(i).equals(-1)) { desId = 0; }
-                   */ else {
+                } else if (sequenceSubTypeList.get(i).equals(-1)) {
+                  desId = String.valueOf(0);
+                } else {
                   for (QuestionnairesStepsBo questionnairesStepsBo : newQuestionnairesStepsBoList) {
                     if (sequenceSubTypeList.get(i).equals(questionnairesStepsBo.getSequenceNo())) {
                       desId = questionnairesStepsBo.getStepId();
@@ -3720,19 +3720,19 @@ public class StudyDAOImpl implements StudyDAO {
           && consentBo.getConsentDocType().equalsIgnoreCase("Auto")) {
         query =
             session.createQuery(
-                " from ConsentInfoBo CIBO where CIBO.studyId=:studyId and CIBO.active=1");
+                " from ConsentInfoBo CIBO where CIBO.studyId=:studyId and CIBO.active=1 order by CIBO.sequenceNo asc");
         query.setString("studyId", consentBo.getStudyId());
         consentInfoList = query.list();
         if ((consentInfoList != null) && (consentInfoList.size() > 0)) {
           for (ConsentInfoBo consentInfo : consentInfoList) {
 
             content +=
-                "&lt;span style=&#34;font-size:20px;&#34;&gt;&lt;strong&gt;"
+                "<span style=&#34;font-size:20px;&#34;><strong>"
                     + consentInfo.getDisplayTitle()
-                    + "&lt;/strong&gt;&lt;/span&gt;&lt;br/&gt;"
-                    + "&lt;span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;&gt;"
+                    + "</strong></span><br/>"
+                    + "<span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>"
                     + consentInfo.getElaborated()
-                    + "&lt;/span&gt;&lt;br/&gt;";
+                    + "</span><br/>";
           }
           consentBo.setConsentDocContent(content);
         }
@@ -4974,7 +4974,7 @@ public class StudyDAOImpl implements StudyDAO {
                     for (QuestionnairesStepsBo questionnairesStepsBo :
                         existedQuestionnairesStepsBoList) {
                       String destionStep = questionnairesStepsBo.getDestinationStep();
-                      if (destionStep == null) {
+                      if (destionStep.equals(String.valueOf(0))) {
                         destinationList.add(-1);
                       } else {
                         for (int i = 0; i < existedQuestionnairesStepsBoList.size(); i++) {
@@ -5249,7 +5249,9 @@ public class StudyDAOImpl implements StudyDAO {
                       if (questionResponseSubTypeBo.getDestinationStepId() == null) {
                         sequenceSubTypeList.add(null);
                       } else if ((questionResponseSubTypeBo.getDestinationStepId() != null)
-                          && questionResponseSubTypeBo.getDestinationStepId().equals("0")) {
+                          && questionResponseSubTypeBo
+                              .getDestinationStepId()
+                              .equals(String.valueOf(0))) {
                         sequenceSubTypeList.add(-1);
                       } else {
                         if ((existedQuestionnairesStepsBoList != null)
@@ -5273,9 +5275,9 @@ public class StudyDAOImpl implements StudyDAO {
                       String desId = null;
                       if (sequenceSubTypeList.get(i) == null) {
                         desId = null;
-                        /*
-                         * } else if (sequenceSubTypeList.get(i).equals(-1)) { desId = 0;
-                         */
+                      } else if (sequenceSubTypeList.get(i).equals(-1)) {
+                        desId = String.valueOf(0);
+
                       } else {
                         for (QuestionnairesStepsBo questionnairesStepsBo :
                             newQuestionnairesStepsBoList) {
@@ -5308,7 +5310,9 @@ public class StudyDAOImpl implements StudyDAO {
                       if (questionResponseTypeBo.getOtherDestinationStepId() == null) {
                         sequenceTypeList.add(null);
                       } else if ((questionResponseTypeBo.getOtherDestinationStepId() != null)
-                          && questionResponseTypeBo.getOtherDestinationStepId().equals("0")) {
+                          && questionResponseTypeBo
+                              .getOtherDestinationStepId()
+                              .equals(String.valueOf(0))) {
                         sequenceTypeList.add(-1);
                       } else {
                         if ((existedQuestionnairesStepsBoList != null)
@@ -5332,9 +5336,10 @@ public class StudyDAOImpl implements StudyDAO {
                       String desId = null;
                       if (sequenceTypeList.get(i) == null) {
                         desId = null;
-                        /*
-                         * } else if (sequenceTypeList.get(i).equals(-1)) { desId = 0;
-                         */
+
+                      } else if (sequenceTypeList.get(i).equals(-1)) {
+                        desId = String.valueOf(0);
+
                       } else {
                         for (QuestionnairesStepsBo questionnairesStepsBo :
                             newQuestionnairesStepsBoList) {
@@ -7667,5 +7672,49 @@ public class StudyDAOImpl implements StudyDAO {
     }
     logger.exit("getConsentListForStudy() - Ends");
     return consentBoList;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public void giveStudyPermission(String studyId, String userId) {
+    logger.info("StudyDAOImpl - giveStudyPermission() - Starts");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      StudyPermissionBO studyPermissionBO = new StudyPermissionBO();
+      studyPermissionBO.setUserId(userId);
+      studyPermissionBO.setStudyId(studyId);
+      studyPermissionBO.setViewPermission(true);
+      session.save(studyPermissionBO);
+
+      // give permission to all super admin Start
+      query =
+          session
+              .createSQLQuery(
+                  "Select upm.user_id from user_permission_mapping upm where upm.permission_id =:superAdminId")
+              .setInteger("superAdminId", FdahpStudyDesignerConstants.ROLE_SUPERADMIN);
+      List<String> userSuperAdminList = query.list();
+      if ((userSuperAdminList != null) && !userSuperAdminList.isEmpty()) {
+        for (String superAdminId : userSuperAdminList) {
+          if ((null != userId) && !userId.equals(superAdminId)) {
+            studyPermissionBO = new StudyPermissionBO();
+            studyPermissionBO.setUserId(superAdminId);
+            studyPermissionBO.setStudyId(studyId);
+            studyPermissionBO.setViewPermission(true);
+            session.save(studyPermissionBO);
+          }
+        }
+      }
+      transaction.commit();
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("StudyDAOImpl - giveStudyPermission() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("StudyDAOImpl - giveStudyPermission() - Ends");
   }
 }

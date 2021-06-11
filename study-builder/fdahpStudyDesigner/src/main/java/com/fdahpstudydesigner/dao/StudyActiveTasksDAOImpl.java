@@ -543,13 +543,9 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
             if (activeTaskFrequencyBo.getActiveTaskId() == null) {
               activeTaskFrequencyBo.setActiveTaskId(activeTaskBo.getId());
             }
-            if ((activeTaskBo.getActiveTaskFrequenciesBo().getFrequencyDate() != null)
-                && !activeTaskBo.getActiveTaskFrequenciesBo().getFrequencyDate().isEmpty()) {
-              activeTaskFrequencyBo.setFrequencyDate(
-                  FdahpStudyDesignerUtil.getFormattedDate(
-                      activeTaskBo.getActiveTaskFrequenciesBo().getFrequencyDate(),
-                      FdahpStudyDesignerConstants.UI_SDF_DATE,
-                      FdahpStudyDesignerConstants.SD_DATE_FORMAT));
+            if ((activeTaskBo.getActiveTaskLifetimeStart() != null)
+                && !activeTaskBo.getActiveTaskLifetimeStart().isEmpty()) {
+              activeTaskFrequencyBo.setFrequencyDate(activeTaskBo.getActiveTaskLifetimeStart());
             }
             if ((activeTaskBo.getActiveTaskFrequenciesBo().getFrequencyTime() != null)
                 && !activeTaskBo.getActiveTaskFrequenciesBo().getFrequencyTime().isEmpty()) {

@@ -60,8 +60,6 @@ public interface StudyMetaDataConstants {
   public static final String SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN =
       "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
   public static final String SDF_DATE_PATTERN = "yyyy-MM-dd";
-  public static final String SDF_TIME_PATTERN = "HH:mm:ss";
-  public static final String SDF_TIME_TIMEZONE_MILLISECONDS_PATTERN = "HH:mm:ss.SSSZ";
 
   public static final String PASS_SALT = "BTCSoft";
 

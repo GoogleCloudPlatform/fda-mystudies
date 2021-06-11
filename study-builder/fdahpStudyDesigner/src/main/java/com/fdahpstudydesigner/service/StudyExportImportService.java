@@ -132,7 +132,8 @@ public class StudyExportImportService {
       customIdsMap.put(STUDY_ID + studyBo.getId(), IdGenerator.id());
       customIdsMap.put(CUSTOM_STUDY_ID + studyBo.getCustomStudyId(), null);
 
-      StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(), userId);
+      // StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(),
+      // userId);
       StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
 
       List<AnchorDateTypeBo> anchorDateList = studyDao.getAnchorDateDetails(studyBo.getId());
@@ -164,7 +165,7 @@ public class StudyExportImportService {
       List<String> insertSqlStatements = new ArrayList<>();
       try {
         addStudiesInsertSql(studyBo, insertSqlStatements, customIdsMap);
-        addStudyPermissionInsertSql(studyPermissionBo, insertSqlStatements, customIdsMap);
+        //  addStudyPermissionInsertSql(studyPermissionBo, insertSqlStatements, customIdsMap);
         addStudySequenceInsertSql(studySequenceBo, insertSqlStatements, customIdsMap);
 
         addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap);
@@ -981,11 +982,11 @@ public class StudyExportImportService {
               customIdsMap.get(CUSTOM_STUDY_ID + notificationBO.getCustomStudyId()),
               notificationBO.getModifiedBy(),
               notificationBO.getModifiedOn(),
-              false,
-              false,
+              notificationBO.isNotificationStatus() ? notificationBO.isNotificationAction() : false,
+              notificationBO.isNotificationStatus() ? notificationBO.isNotificationDone() : false,
               NOTIFICATION_NOTIMMEDIATE,
               false,
-              false,
+              notificationBO.isNotificationStatus(),
               notificationBO.getNotificationSubType(),
               notificationBO.getNotificationText(),
               notificationBO.getNotificationType(),
@@ -1496,11 +1497,12 @@ public class StudyExportImportService {
       }
       return e.getMessage();
     }
-    return validateAndExecuteQuries(signedUrl, map, bufferedReader);
+    return validateAndExecuteQuries(signedUrl, map, bufferedReader, sessionObject.getUserId());
   }
 
   private String validateAndExecuteQuries(
-      String signedUrl, Map<String, String> map, BufferedReader bufferedReader) throws Exception {
+      String signedUrl, Map<String, String> map, BufferedReader bufferedReader, String userId)
+      throws Exception {
     try {
 
       String path = signedUrl.substring(0, signedUrl.indexOf(".sql"));
@@ -1546,9 +1548,19 @@ public class StudyExportImportService {
       }
 
       // execution
+      String insertStatementofStudy = "";
       for (String insert : insertStatements) {
+        if (insert.startsWith("INSERT INTO `studies`")) {
+          insertStatementofStudy = insert;
+        }
         jdbcTemplate.execute(insert);
       }
+
+      // study permission
+      String[] values = insertStatementofStudy.split("VALUES");
+      String StudyId = values[1].substring(values[1].indexOf("'") + 1, values[1].indexOf(",") - 1);
+      studyDao.giveStudyPermission(StudyId, userId);
+
     } catch (Exception e) {
       logger.error("StudyExportService - importStudy() - ERROR ", e);
       if (e instanceof DuplicateKeyException) {

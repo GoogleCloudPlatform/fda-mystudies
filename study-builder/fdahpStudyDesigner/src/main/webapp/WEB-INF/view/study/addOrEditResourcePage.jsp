@@ -565,12 +565,26 @@
       var thisAttr = this;
       var thisId = $(this).attr("data-imageId");
       if ((file = this.files[0])) {
+    	// file should be less than or equal to 5 mb i.e 500000 bytes
+    	  if(file.size > 5000000){
+      		  $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
+                		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File size should not exceed 5MB"));
+      		 $("#delete").click();
+      	  	}
         reader = new FileReader();
         reader.onload = function () {
           if ($.inArray($(thisAttr).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+        	  
             $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
             		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a pdf file"));
             $("#delete").click();
+            
+            // file should be less than or equal to 5 mb i.e 500000 bytes
+            if(file.size > 500000){
+      		  $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
+                		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File size should not exceed 5MB"));
+      		 $("#delete").click();
+      	  	}
           } else if ($("#uploadImg").val()) {
             $('#pdfClk').attr('href', 'javascript:void(0)').css('cursor', 'default');
             $('.pdfDiv').show();
