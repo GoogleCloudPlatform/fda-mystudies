@@ -1172,7 +1172,7 @@ public class ActivityMetaDataDao {
           String startDate = customFrequencyDto.getFrequencyStartDate() + " " + frequencyStartTime;
           String endDate = customFrequencyDto.getFrequencyEndDate() + " " + frequencyEndTime;
 
-          if (null != customFrequencyDto.getFrequencyStartDate() && null != frequencyStartTime) {
+          if (null != customFrequencyDto.getFrequencyStartDate()) {
             manuallyScheduleBean.setStartTime(
                 StudyMetaDataUtil.getFormattedDateTimeZone(
                     startDate,
@@ -1182,7 +1182,7 @@ public class ActivityMetaDataDao {
             manuallyScheduleBean.setStartTime("");
           }
 
-          if (null != customFrequencyDto.getFrequencyEndDate() && null != frequencyEndTime) {
+          if (null != customFrequencyDto.getFrequencyEndDate()) {
             manuallyScheduleBean.setEndTime(
                 StudyMetaDataUtil.getFormattedDateTimeZone(
                     endDate,
@@ -1533,7 +1533,7 @@ public class ActivityMetaDataDao {
             frequencyEndTime = frequencyEndTime + ":00";
           }
 
-          if (null != customFrequencyDto.getFrequencyEndDate() && null != frequencyEndTime) {
+          if (null != customFrequencyDto.getFrequencyEndDate()) {
             manuallyScheduleBean.setEndTime(
                 StudyMetaDataUtil.getFormattedDateTimeZone(
                     customFrequencyDto.getFrequencyEndDate() + " " + frequencyEndTime,
@@ -1543,7 +1543,7 @@ public class ActivityMetaDataDao {
             manuallyScheduleBean.setEndTime("");
           }
 
-          if (null != customFrequencyDto.getFrequencyStartDate() && null != frequencyStartTime) {
+          if (null != customFrequencyDto.getFrequencyStartDate()) {
             manuallyScheduleBean.setStartTime(
                 StudyMetaDataUtil.getFormattedDateTimeZone(
                     customFrequencyDto.getFrequencyStartDate() + " " + frequencyStartTime,
@@ -3035,8 +3035,7 @@ public class ActivityMetaDataDao {
                     + StudyMetaDataConstants.DEFAULT_MAX_TIME;
           }
 
-          if (null != activeTaskDto.getActiveTaskLifetimeStart()
-              && null != activeTaskFrequencyList.get(0).getFrequencyTime()) {
+          if (null != activeTaskDto.getActiveTaskLifetimeStart()) {
             activityBean.setStartTime(
                 StudyMetaDataUtil.getFormattedDateTimeZone(
                     startDateTime,
@@ -3109,7 +3108,7 @@ public class ActivityMetaDataDao {
             startDateTime = startDate + " " + frequencyStartTime;
             endDateTime = endDate + " " + frequencyEndTime;
 
-            if (null != startDate && null != frequencyStartTime) {
+            if (null != startDate) {
               activityBean.setStartTime(
                   StudyMetaDataUtil.getFormattedDateTimeZone(
                       startDateTime,
@@ -3119,7 +3118,7 @@ public class ActivityMetaDataDao {
               activityBean.setStartTime("");
             }
 
-            if (null != endDate && null != frequencyEndTime) {
+            if (null != endDate) {
               activityBean.setEndTime(
                   StudyMetaDataUtil.getFormattedDateTimeZone(
                       endDateTime,
@@ -3188,8 +3187,7 @@ public class ActivityMetaDataDao {
             }
           }
 
-          if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())
-              && StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())) {
+          if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())) {
             activityBean.setStartTime(
                 StudyMetaDataUtil.getFormattedDateTimeZone(
                     startDateTime,
@@ -3199,8 +3197,7 @@ public class ActivityMetaDataDao {
             activityBean.setStartTime("");
           }
 
-          if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())
-              && StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())) {
+          if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
             activityBean.setEndTime(
                 StudyMetaDataUtil.getFormattedDateTimeZone(
                     endDateTime,
@@ -3298,7 +3295,7 @@ public class ActivityMetaDataDao {
             startDateTime = startDate + " " + frequencyStartTime;
             endDateTime = endDate + " " + frequencyEndTime;
 
-            if (null != startDate && null != frequencyStartTime) {
+            if (null != startDate) {
               activityBean.setStartTime(
                   StudyMetaDataUtil.getFormattedDateTimeZone(
                       startDateTime,
@@ -3308,7 +3305,7 @@ public class ActivityMetaDataDao {
               activityBean.setStartTime("");
             }
 
-            if (null != endDate && null != frequencyEndTime) {
+            if (null != endDate) {
               activityBean.setEndTime(
                   StudyMetaDataUtil.getFormattedDateTimeZone(
                       endDateTime,

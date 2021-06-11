@@ -2010,7 +2010,7 @@
     });
     $(document).on('dp.change', '.cusStrDate', function (e) {
       if (e.date._d) {
-        var nxtDate = moment(new Date(e.date._d)).add(1, 'days');
+        var nxtDate = moment(new Date(e.date._d));
       }
       if (!$(this).parents('.manually-option').find('.cusEndDate').data("DateTimePicker")) {
         customEndDate($(this).parents('.manually-option').find('.cusEndDate').attr('id'), 0);
@@ -3080,6 +3080,7 @@
 	      var chkVal = true;
 	      var chkValFromDate=true;
 	      var chkValToDate = true;
+	      var chkValToSameDate = true;
 	      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents('.manually-option').find(
 	          '.startTime').val()) {
 	        var thisAttr = this;
@@ -3112,11 +3113,15 @@
 	              thisToDate.setHours(thisEndTime.getHours());
 	              thisToDate.setMinutes(thisEndTime.getMinutes());
 				  
-				  
+				  thisFromDate = thisFromDate.toLocaleDateString() + thisFromDate.toLocaleTimeString();
+				  fromDate = fromDate.toLocaleDateString() + fromDate.toLocaleTimeString();
+				  toDate = toDate.toLocaleDateString() + toDate.toLocaleTimeString();
+				  thisToDate = thisToDate.toLocaleDateString() + thisToDate.toLocaleTimeString();
 				  
 	            if (chkValFromDate && chkValToDate){
 	            	 chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate) 
 	            	 chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
+	            	 chkValToSameDate = !(thisToDate <= thisFromDate);
 	            }
 	             
 	          }
@@ -3133,6 +3138,11 @@
 	              'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
 	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
 	                     "Please ensure that the runs created do not have any overlapping time period."));
+	        } else if (!chkValToSameDate) {
+		        $(thisAttr).parents('.manually-option').find('.endTime').parent().addClass(
+	              'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
+	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
+	                     "End Date and Time Should not be less than Start Date and Time"));
 	        } else {
 	        $(thisAttr).parents('.manually-option').find('.startTime').parent().removeClass(
 	            'has-error has-danger').find(".help-block").addClass('with-errors').empty();
@@ -3141,9 +3151,9 @@
 	      }
 	      var a = 0;
 	      $('.manuallyContainer').find('.manually-option').each(function () {
-	        if ($(this).find('.cusStartTime').parent().find('.help-block').children().length > 0) {
+	        if ($(this).find('.startTime').parent().find('.help-block').children().length > 0) {
 	          a++;
-	          $(this).find('.cusStartTime').val('');
+	          $(this).find('.startTime').val('');
 	        }
 	      });
 	      var b = 0;
@@ -3153,7 +3163,7 @@
 	            $(this).find('.endTime').val('');
 	          }
 	        });
-	      isValidManuallySchedule = !(a > 0 &&  b>0);
+	      isValidManuallySchedule = !(a > 0 || b>0);
 	    });
 	    return isValidManuallySchedule;
 	  }
