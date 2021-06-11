@@ -207,11 +207,11 @@ class UserServices: NSObject {
       ] as [String: Any]
 
     let version = Utilities.getAppVersion()
-
+    let deviceToken = UserDefaults.standard.value(forKey: kDeviceToken) as? String ?? ""
     let info = [
       kAppVersion: version,
       kOSType: "ios",
-      kDeviceToken: "",
+      kDeviceToken: deviceToken,
     ]
 
     let params =
@@ -231,7 +231,10 @@ class UserServices: NSObject {
   ///   - deviceToken:
   ///   - delegate: Class object to receive response
   func updateUserProfile(deviceToken: String, delegate: NMWebServiceDelegate) {
-
+    let ud = UserDefaults.standard
+    ud.set(deviceToken, forKey: kDeviceToken)
+    ud.synchronize()
+    
     self.delegate = delegate
     let user = User.currentUser
     let headerParams = [kUserId: user.userId!]
