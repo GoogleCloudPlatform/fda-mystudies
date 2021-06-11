@@ -7673,4 +7673,48 @@ public class StudyDAOImpl implements StudyDAO {
     logger.exit("getConsentListForStudy() - Ends");
     return consentBoList;
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public void giveStudyPermission(String studyId, String userId) {
+    logger.info("StudyDAOImpl - giveStudyPermission() - Starts");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      StudyPermissionBO studyPermissionBO = new StudyPermissionBO();
+      studyPermissionBO.setUserId(userId);
+      studyPermissionBO.setStudyId(studyId);
+      studyPermissionBO.setViewPermission(true);
+      session.save(studyPermissionBO);
+
+      // give permission to all super admin Start
+      query =
+          session
+              .createSQLQuery(
+                  "Select upm.user_id from user_permission_mapping upm where upm.permission_id =:superAdminId")
+              .setInteger("superAdminId", FdahpStudyDesignerConstants.ROLE_SUPERADMIN);
+      List<String> userSuperAdminList = query.list();
+      if ((userSuperAdminList != null) && !userSuperAdminList.isEmpty()) {
+        for (String superAdminId : userSuperAdminList) {
+          if ((null != userId) && !userId.equals(superAdminId)) {
+            studyPermissionBO = new StudyPermissionBO();
+            studyPermissionBO.setUserId(superAdminId);
+            studyPermissionBO.setStudyId(studyId);
+            studyPermissionBO.setViewPermission(true);
+            session.save(studyPermissionBO);
+          }
+        }
+      }
+      transaction.commit();
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("StudyDAOImpl - giveStudyPermission() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("StudyDAOImpl - giveStudyPermission() - Ends");
+  }
 }
