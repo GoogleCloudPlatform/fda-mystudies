@@ -800,9 +800,7 @@ public class StudyExportImportService {
         prepareInsertQuery(
             StudyExportSqlQueries.STUDIES,
             customIdsMap.get(STUDY_ID + studyBo.getId()),
-            studyBo.getType().equals(FdahpStudyDesignerConstants.STUDY_TYPE_SD)
-                ? null
-                : studyBo.getAppId().toUpperCase(),
+            null,
             studyBo.getCategory(),
             studyBo.getCreatedBy(),
             FdahpStudyDesignerUtil.getCurrentDateTime(),
