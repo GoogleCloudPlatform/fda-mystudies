@@ -527,7 +527,7 @@ public class StudyMetaDataDao {
               sharingBean.setLearnMore(
                   StringUtils.isEmpty(consentDto.getLearnMoreText())
                       ? ""
-                      : StringEscapeUtils.unescapeHtml4(consentDto.getLearnMoreText()));
+                      : consentDto.getLearnMoreText());
               sharingBean.setLongDesc(
                   StringUtils.isEmpty(consentDto.getLongDescription())
                       ? ""
