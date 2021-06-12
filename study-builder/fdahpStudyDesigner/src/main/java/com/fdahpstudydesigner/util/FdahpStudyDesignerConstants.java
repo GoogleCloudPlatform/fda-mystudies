@@ -487,6 +487,10 @@ public class FdahpStudyDesignerConstants {
 
   public static final String INVALID_URL = "Please enter a valid URL";
 
+  public static final String STUDY_PRE_LUNCH_VERSION = "0.0";
+
+  public static final String NA = "NA";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
