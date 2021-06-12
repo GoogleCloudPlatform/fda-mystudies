@@ -3924,39 +3924,33 @@ debugger
 	              '.startTime').val()) {
 	            
 	        	  var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
-	              var startTime = moment($(this).find('.startTime').val(), "HH:mm").toDate()
+	              var startTime = moment($(this).find('.startTime').val(), "HH:mm A").toDate()
 	              fromDate.setHours(startTime.getHours());
 	              fromDate.setMinutes(startTime.getMinutes());
 	              var toDate = moment($(this).find('.cusEndDate').val(), "MM/DD/YYYY").toDate();
-	              var endTime = moment($(this).find('.endTime').val(), "HH:mm").toDate()
+	              var endTime = moment($(this).find('.endTime').val(), "HH:mm A").toDate()
 	              toDate.setHours(endTime.getHours());
 	              toDate.setMinutes(endTime.getMinutes());
 	              var thisFromDate = moment(
 	                  $(thisAttr).parents('.manually-option').find('.cusStrDate').val(),
 	                  "MM/DD/YYYY").toDate();
 	              var thisStartTime = moment($(thisAttr).parents('.manually-option').find('.startTime').val(),
-	                  "HH:mm").toDate()
+	                  "HH:mm A").toDate()
 	              thisFromDate.setHours(thisStartTime.getHours());
 	              thisFromDate.setMinutes(thisStartTime.getMinutes());
 	              var thisToDate = moment(
 	                  $(thisAttr).parents('.manually-option').find('.cusEndDate').val(),
 	                  "MM/DD/YYYY").toDate();
 	              var thisEndTime = moment($(thisAttr).parents('.manually-option').find('.endTime').val(),
-	              "HH:mm").toDate()
+	              "HH:mm A").toDate()
 	              thisToDate.setHours(thisEndTime.getHours());
 	              thisToDate.setMinutes(thisEndTime.getMinutes());
-	  
-				  thisFromDate = thisFromDate.toLocaleDateString() + thisFromDate.toLocaleTimeString();
-				  fromDate = fromDate.toLocaleDateString() + fromDate.toLocaleTimeString();
-				  toDate = toDate.toLocaleDateString() + toDate.toLocaleTimeString();
-				  thisToDate = thisToDate.toLocaleDateString() + thisToDate.toLocaleTimeString();
-		
+
 	              if (chkValFromDate && chkValToDate){
 	               	 chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate);
 	               	 chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
 	               	 chkValToSameDate = !(thisToDate <= thisFromDate);
 	               }
-	             
 	          }
 	        });
 	      }
@@ -3999,7 +3993,7 @@ debugger
 	    });
 	    return isValidManuallySchedule;
 	  }
-
+  
   function doneQuestionnaire(item, actType, callback) {
     var frequency = $('input[name="frequency"]:checked').val();
     var scheduletype = document.querySelector('input[name="scheduleType"]:checked').value;
