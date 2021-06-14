@@ -2489,8 +2489,9 @@
       var endDate = $("#EndDate" + count).val();
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
-        $("#" + id).parent().find(".help-block").text(
-        '<ul class="list-unstyled"><li>Start date and time should not be greater than end date and time</li></ul>');
+        $("#" + id).parent().find(".help-block").empty().append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Start date and time should not be greater than end date and time"));
       } else {
         $("#activeTaskId").parent().removeClass("has-danger").removeClass("has-error");
         $("#activeTaskId").parent().find(".help-block").empty();

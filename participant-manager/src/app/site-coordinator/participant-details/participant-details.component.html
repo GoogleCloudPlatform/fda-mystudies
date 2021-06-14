@@ -320,12 +320,16 @@
           <td class="xs-none">&nbsp;</td>
           <td class="xs-none">&nbsp;</td>
         </tr>
-        <tr *ngIf="participant.participantDetails.enrollments.length === 0">
-          <td colspan="6" class="text-center font12 txt__light-gray">
-            No records found
-          </td>
-        </tr>
-        </tbody>
+      </tbody>
+
+        <tfoot>
+          <tr *ngIf="participant.participantDetails.enrollments.length === 0">
+            <td colspan="6" class="text-center font12 txt__light-gray">
+              No records found
+            </td>
+          </tr>
+        </tfoot>
+
       </table>
 
       <h2 class="subheader__title text-weight-semibold mb-sm">
@@ -398,15 +402,8 @@
               </td>
             </tr>
 
-            <tr
-              *ngIf="participant.participantDetails.consentHistory.length === 0"
-            >
-              <td colspan="4" class="text-center font12 txt__light-gray">
-                No records found
-              </td>
-            </tr>
+          
           </tbody>
-
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">
@@ -414,6 +411,14 @@
               </td>
             </tr>
           </tfoot>
+<tfoot>
+  <tr *ngIf="participant.participantDetails.consentHistory.length === 0">
+    <td colspan="4" class="text-center font12 txt__light-gray">
+      No records found
+    </td>
+  </tr>
+</tfoot>
+         
         </table>
       </div>
     </section>
