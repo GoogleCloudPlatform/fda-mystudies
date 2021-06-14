@@ -4126,6 +4126,7 @@ public class ActivityMetaDataDao {
 
           if ((taskFrequencyDtoList != null) && (taskFrequencyDtoList.size() > 0)) {
             start.setTime(taskFrequencyDtoList.get(0).getFrequencyTime());
+            start.setAnchorDays(taskFrequencyDtoList.get(0).getTimePeriodFromDays());
             end.setRepeatInterval(
                 activeTaskDto.getRepeatActiveTask() == null
                     ? 0
