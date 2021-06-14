@@ -56,6 +56,9 @@ public class StudyPageBo implements Serializable {
   @Column(name = "modified_on")
   private String modifiedOn;
 
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
@@ -148,5 +151,13 @@ public class StudyPageBo implements Serializable {
 
   public void setSignedUrl(String signedUrl) {
     this.signedUrl = signedUrl;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }
