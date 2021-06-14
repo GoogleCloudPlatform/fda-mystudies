@@ -3302,7 +3302,7 @@ debugger
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
         $("#" + id).parent().find(".help-block").empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Start Date and Time Should not be greater than End Date and Time"));
+            "Start date and time should not be greater than end date and time"));
       } else {
         $("#id").parent().removeClass("has-danger").removeClass("has-error");
         $("#id").parent().find(".help-block").empty();
@@ -3332,7 +3332,7 @@ debugger
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
         $('#' + id).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "End Date and Time Should not be less than Start Date and Time"));
+            "End date and time should not be less than start date and time"));
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
         $('#' + id).parent().find(".help-block").empty();
@@ -3968,7 +3968,7 @@ debugger
 		        $(thisAttr).parents('.manually-option').find('.endTime').parent().addClass(
 	              'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
 	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
-	                     "End Date and Time Should not be less than Start Date and Time"));
+	                     "End date and time should not be less than start date and time"));
 	        } else {
 	        $(thisAttr).parents('.manually-option').find('.startTime').parent().removeClass(
 	            'has-error has-danger').find(".help-block").addClass('with-errors').empty();
