@@ -925,7 +925,8 @@ public class StudyExportImportService {
               studyPageBo.getModifiedBy(),
               studyPageBo.getModifiedOn(),
               customIdsMap.get(STUDY_ID + studyPageBo.getStudyId()),
-              studyPageBo.getTitle());
+              studyPageBo.getTitle(),
+              studyPageBo.getSequenceNumber());
 
       studyPageBoInsertQueryList.add(studyPageBoInsertQuery);
     }

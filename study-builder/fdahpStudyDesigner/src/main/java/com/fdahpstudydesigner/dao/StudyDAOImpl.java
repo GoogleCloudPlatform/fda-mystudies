@@ -1825,7 +1825,8 @@ public class StudyDAOImpl implements StudyDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       if (StringUtils.isNotEmpty(studyId)) {
-        query = session.createQuery("from StudyPageBo where studyId=:studyId");
+        query =
+            session.createQuery("from StudyPageBo where studyId=:studyId order by sequenceNumber");
         query.setString("studyId", studyId);
         studyPageBo = query.list();
       }
@@ -4119,6 +4120,7 @@ public class StudyDAOImpl implements StudyDAO {
                 FdahpStudyDesignerUtil.isEmpty(studyPageBean.getImagePath()[i])
                     ? null
                     : studyPageBean.getImagePath()[i]);
+            studyPageBo.setSequenceNumber(i);
             session.saveOrUpdate(studyPageBo);
           }
           studySequence =
