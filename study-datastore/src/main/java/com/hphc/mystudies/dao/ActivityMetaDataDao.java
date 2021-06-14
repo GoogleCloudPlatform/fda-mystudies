@@ -4224,7 +4224,13 @@ public class ActivityMetaDataDao {
                     : customFrequencyDto.getTimePeriodFromDays());
           }
 
-          activityFrequencyAnchorRunsBean.setStartTime(customFrequencyDto.getFrequencyStartTime());
+          String frequencyStartTime = customFrequencyDto.getFrequencyStartTime();
+          if (null != frequencyStartTime
+              && !frequencyStartTime.matches(
+                  "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyStartTime = frequencyStartTime + ":00";
+          }
+          activityFrequencyAnchorRunsBean.setStartTime(frequencyStartTime);
 
           if (null != customFrequencyDto.getTimePeriodToDays()) {
             activityFrequencyAnchorRunsBean.setEndDays(
@@ -4233,7 +4239,13 @@ public class ActivityMetaDataDao {
                     : customFrequencyDto.getTimePeriodToDays());
           }
 
-          activityFrequencyAnchorRunsBean.setEndTime(customFrequencyDto.getFrequencyEndTime());
+          String frequencyEndTime = customFrequencyDto.getFrequencyEndTime();
+          if (null != frequencyEndTime
+              && !frequencyEndTime.matches(
+                  "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyEndTime = frequencyEndTime + ":00";
+          }
+          activityFrequencyAnchorRunsBean.setEndTime(frequencyEndTime);
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);
         }
       }
@@ -4472,7 +4484,13 @@ public class ActivityMetaDataDao {
                     : customFrequencyDto.getTimePeriodFromDays());
           }
 
-          activityFrequencyAnchorRunsBean.setStartTime(customFrequencyDto.getFrequencyStartTime());
+          String frequencyStartTime = customFrequencyDto.getFrequencyStartTime();
+          if (null != frequencyStartTime
+              && !frequencyStartTime.matches(
+                  "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyStartTime = frequencyStartTime + ":00";
+          }
+          activityFrequencyAnchorRunsBean.setStartTime(frequencyStartTime);
 
           if (null != customFrequencyDto.getTimePeriodToDays()) {
             activityFrequencyAnchorRunsBean.setEndDays(
@@ -4481,7 +4499,13 @@ public class ActivityMetaDataDao {
                     : customFrequencyDto.getTimePeriodToDays());
           }
 
-          activityFrequencyAnchorRunsBean.setEndTime(customFrequencyDto.getFrequencyEndTime());
+          String frequencyEndTime = customFrequencyDto.getFrequencyEndTime();
+          if (null != frequencyEndTime
+              && !frequencyEndTime.matches(
+                  "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyEndTime = frequencyEndTime + ":00";
+          }
+          activityFrequencyAnchorRunsBean.setEndTime(frequencyEndTime);
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);
         }
       }
