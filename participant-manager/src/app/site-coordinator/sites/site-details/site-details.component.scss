@@ -101,8 +101,7 @@ input[type="checkbox"]:checked + label::before {
 }
 
 .chk_box_hidden:before {
-  // visibility: hidden;
-   display: none;
+  visibility: hidden;
 }
 
 .chk_box_hidden2:before {
@@ -145,6 +144,7 @@ input[type="checkbox"]:checked + label::before {
 .site__participant label:before {
     margin-right: 5px;
 }
-.table.table-striped thead.custom__thead tr th span label:before { background-color: transparent;
+.table.table-striped thead.custom__thead tr th span label:before { 
     border: 1px solid #757575; }
+
 }
