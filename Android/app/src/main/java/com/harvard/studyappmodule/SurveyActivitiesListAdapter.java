@@ -579,30 +579,36 @@ public class SurveyActivitiesListAdapter
                           .get(position)
                           .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT) || currentRunStatusForActivities
                           .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
-                    holder.date.setText(
-                            simpleDateFormatForOtherFreq.format(
-                                    simpleDateFormat5.parse(
-                                            items
-                                                    .get(position)
-                                                    .getFrequency()
-                                                    .getRuns()
-                                                    .get(pos + 1)
-                                                    .getStartTime()
-                                                    .toString()
-                                                    .split("\\.")[0]))
-                                    + " to "
-                                    + simpleDateFormatForOtherFreq.format(
-                                    simpleDateFormat5.parse(
-                                            items
-                                                    .get(position)
-                                                    .getFrequency()
-                                                    .getRuns()
-                                                    .get(pos + 1)
-                                                    .getEndTime()
-                                                    .toString()
-                                                    .split("\\.")[0])));
-                  }
+                    int modifiedPos;
+                    if (pos + 1 < items.get(position).getFrequency().getRuns().size()) {
+                      modifiedPos = pos + 1;
+                    } else {
+                      modifiedPos = pos;
+                    }
+                      holder.date.setText(
+                              simpleDateFormatForOtherFreq.format(
+                                      simpleDateFormat5.parse(
+                                              items
+                                                      .get(position)
+                                                      .getFrequency()
+                                                      .getRuns()
+                                                      .get(modifiedPos)
+                                                      .getStartTime()
+                                                      .toString()
+                                                      .split("\\.")[0]))
+                                      + " to "
+                                      + simpleDateFormatForOtherFreq.format(
+                                      simpleDateFormat5.parse(
+                                              items
+                                                      .get(position)
+                                                      .getFrequency()
+                                                      .getRuns()
+                                                      .get(modifiedPos)
+                                                      .getEndTime()
+                                                      .toString()
+                                                      .split("\\.")[0])));
 
+                  }
                 }
 
                 if (pos > 0) {
@@ -647,6 +653,12 @@ public class SurveyActivitiesListAdapter
                             .get(position)
                             .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT) || currentRunStatusForActivities
                             .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
+                      int modifiedPos;
+                      if (pos + 1 < items.get(position).getFrequency().getRuns().size()) {
+                        modifiedPos = pos + 1;
+                      } else {
+                        modifiedPos = pos;
+                      }
                       holder.date.setText(
                               simpleDateFormatForOtherFreq.format(
                                       simpleDateFormat5.parse(
@@ -654,7 +666,7 @@ public class SurveyActivitiesListAdapter
                                                       .get(position)
                                                       .getFrequency()
                                                       .getRuns()
-                                                      .get(pos + 1)
+                                                      .get(modifiedPos)
                                                       .getStartTime()
                                                       .toString()
                                                       .split("\\.")[0]))
@@ -665,7 +677,7 @@ public class SurveyActivitiesListAdapter
                                                       .get(position)
                                                       .getFrequency()
                                                       .getRuns()
-                                                      .get(pos + 1)
+                                                      .get(modifiedPos)
                                                       .getEndTime()
                                                       .toString()
                                                       .split("\\.")[0])));
@@ -674,6 +686,33 @@ public class SurveyActivitiesListAdapter
                     Logger.log(e);
                   }
                 }
+                if(status
+                        .get(position)
+                        .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)){
+                  holder.date.setText(
+                          simpleDateFormatForOtherFreq.format(
+                                  simpleDateFormat5.parse(
+                                          items
+                                                  .get(position)
+                                                  .getFrequency()
+                                                  .getRuns()
+                                                  .get(pos)
+                                                  .getStartTime()
+                                                  .toString()
+                                                  .split("\\.")[0]))
+                                  + " to "
+                                  + simpleDateFormatForOtherFreq.format(
+                                  simpleDateFormat5.parse(
+                                          items
+                                                  .get(position)
+                                                  .getFrequency()
+                                                  .getRuns()
+                                                  .get(pos)
+                                                  .getEndTime()
+                                                  .toString()
+                                                  .split("\\.")[0])));
+                }
+
               }
             }
             timePos.add(position, finalpos);
