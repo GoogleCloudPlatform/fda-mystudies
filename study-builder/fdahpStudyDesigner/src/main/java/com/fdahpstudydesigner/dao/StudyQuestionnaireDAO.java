@@ -204,7 +204,8 @@ public interface StudyQuestionnaireDAO {
       String questionnaireId,
       String studyId,
       SessionObject sessionObject,
-      Map<String, String> anchorDateMap);
+      Map<String, String> anchorDateMap,
+      Integer count);
 
   public List<String> getQuestionsByFormIds(List<String> formIds);
 }

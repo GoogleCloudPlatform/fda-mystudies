@@ -158,7 +158,7 @@ public class StudyExportImportService {
 
       List<ConsentInfoBo> consentInfoBoList = studyDao.getConsentInfoList(studyBo.getId());
 
-      List<NotificationBO> notificationBOs = notificationDAO.getNotificationList(studyBo.getId());
+      List<NotificationBO> notificationBOs = notificationDAO.getNotificationsList(studyBo.getId());
 
       List<ResourceBO> resourceBOs = studyDao.getResourceList(studyBo.getId());
 
@@ -241,10 +241,12 @@ public class StudyExportImportService {
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
 
     List<String> questionnaireIds = new ArrayList<>();
+    Integer count = 0;
     if (CollectionUtils.isNotEmpty(questionnairesList)) {
       for (QuestionnaireBo questionnaireBo : questionnairesList) {
         questionnaireIds.add(questionnaireBo.getId());
         customIdsMap.put(QUESTIONNAIRES_ID + questionnaireBo.getId(), IdGenerator.id());
+        questionnaireBo.setSequenceNumber(count++);
       }
     }
 
@@ -969,6 +971,7 @@ public class StudyExportImportService {
       return;
     }
     List<String> notificationBoBoInsertQueryList = new ArrayList<>();
+    Integer sequence = 0;
     for (NotificationBO notificationBO : notificationBOs) {
       String notificationBoInsertQuery;
       notificationBoInsertQuery =
@@ -997,7 +1000,8 @@ public class StudyExportImportService {
               notificationBO.getScheduleTime(),
               customIdsMap.get(STUDY_ID + notificationBO.getStudyId()),
               notificationBO.getxDays(),
-              notificationBO.getScheduleTimestamp());
+              notificationBO.getScheduleTimestamp(),
+              sequence++);
       notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
     }
     insertSqlStatements.addAll(notificationBoBoInsertQueryList);
@@ -1343,7 +1347,8 @@ public class StudyExportImportService {
               questionnaireBo.getStudyLifetimeEnd(),
               questionnaireBo.getStudyLifetimeStart(),
               questionnaireBo.getTitle(),
-              questionnaireBo.getVersion());
+              questionnaireBo.getVersion(),
+              questionnaireBo.getSequenceNumber());
 
       questionnairesBoInsertQueryList.add(questionnairesBoInsertQuery);
     }

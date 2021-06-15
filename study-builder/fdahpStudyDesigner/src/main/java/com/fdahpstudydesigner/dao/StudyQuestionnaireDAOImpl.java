@@ -3067,7 +3067,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         if (isLive) {
           searchQuery =
               "From QuestionnaireBo QBO WHERE QBO.customStudyId =:studyId "
-                  + " and QBO.active=1 and QBO.live=1 order by QBO.createdDate DESC";
+                  + " and QBO.active=1 and QBO.live=1 order by QBO.createdDate DESC, QBO.sequenceNumber ASC ";
           query = session.createQuery(searchQuery).setString("studyId", studyId);
         } else {
           query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
@@ -5562,7 +5562,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String questionnaireId,
       String studyId,
       SessionObject sessionObject,
-      Map<String, String> anchorDateMap) {
+      Map<String, String> anchorDateMap,
+      Integer count) {
     logger.info("StudyQuestionnaireDAOImpl - copyStudyQuestionnaireBo() - Starts");
     QuestionnaireBo questionnaireBo = null;
     QuestionnaireBo newQuestionnaireBo = null;
@@ -5581,7 +5582,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newQuestionnaireBo.setId(null);
         //   newQuestionnaireBo.setLive(0);
         newQuestionnaireBo.setStudyId(studyId);
-        newQuestionnaireBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
+        // newQuestionnaireBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
         newQuestionnaireBo.setCreatedBy(sessionObject.getUserId());
         newQuestionnaireBo.setModifiedBy(null);
         newQuestionnaireBo.setModifiedDate(null);
@@ -5589,6 +5590,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newQuestionnaireBo.setIsChange(1);
         newQuestionnaireBo.setShortTitle(questionnaireBo.getShortTitle());
         newQuestionnaireBo.setAnchorDateId(anchorDateMap.get(questionnaireBo.getAnchorDateId()));
+        newQuestionnaireBo.setSequenceNumber(count);
         session.save(newQuestionnaireBo);
 
         /** Questionnaire Schedule Purpose copying Start * */

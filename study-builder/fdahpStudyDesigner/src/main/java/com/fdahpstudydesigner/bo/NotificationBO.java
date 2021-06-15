@@ -40,6 +40,9 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(
       name = "getNotification",
       query = " From NotificationBO NBO WHERE NBO.studyId =:studyId"),
+  @NamedQuery(
+      name = "getNotificationsList",
+      query = " From NotificationBO NBO WHERE NBO.studyId =:studyId order by createdOn DESC"),
 })
 public class NotificationBO implements Serializable {
 
@@ -123,6 +126,9 @@ public class NotificationBO implements Serializable {
 
   @Column(name = "schedule_timestamp")
   private String scheduleTimestamp;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public String getActionPage() {
     return actionPage;
@@ -330,5 +336,13 @@ public class NotificationBO implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }
