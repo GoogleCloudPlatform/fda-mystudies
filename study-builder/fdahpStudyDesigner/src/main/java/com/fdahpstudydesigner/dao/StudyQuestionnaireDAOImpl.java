@@ -4000,7 +4000,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      questionnaireBo.setCustomStudyId(customStudyId);
       session.saveOrUpdate(questionnaireBo);
       if (questionnaireBo.getType().equalsIgnoreCase(FdahpStudyDesignerConstants.SCHEDULE)) {
         if ((questionnaireBo != null) && (questionnaireBo.getId() != null)) {
