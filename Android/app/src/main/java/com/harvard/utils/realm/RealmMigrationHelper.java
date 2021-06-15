@@ -27,26 +27,24 @@ public class RealmMigrationHelper implements RealmMigration {
 
   @Override
   public void migrate(final DynamicRealm realm, long oldVersion, long newVersion) {
-    {
-      RealmSchema schema = realm.getSchema();
+    RealmSchema schema = realm.getSchema();
 
-      //time separated into start and end time
-      if (oldVersion == 0) {
-        RealmObjectSchema anchorRuns = schema.get("AnchorRuns");
+    //time separated into start and end time
+    if (oldVersion == 0) {
+      RealmObjectSchema anchorRuns = schema.get("AnchorRuns");
 
-        anchorRuns
-                .addField("startTime", String.class)
-                .addField("endTime", String.class)
-                .transform(new RealmObjectSchema.Function() {
-                  @Override
-                  public void apply(DynamicRealmObject obj) {
-                    obj.set("startTime", obj.getString("time"));
-                    obj.set("endTime", obj.getString("time"));
-                  }
-                })
-                .removeField("time");
-        oldVersion++;
-      }
+      anchorRuns
+              .addField("startTime", String.class)
+              .addField("endTime", String.class)
+              .transform(new RealmObjectSchema.Function() {
+                @Override
+                public void apply(DynamicRealmObject obj) {
+                  obj.set("startTime", obj.getString("time"));
+                  obj.set("endTime", obj.getString("time"));
+                }
+              })
+              .removeField("time");
+      oldVersion++;
     }
   }
 }
