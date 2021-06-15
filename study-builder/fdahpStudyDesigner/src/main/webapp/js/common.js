@@ -221,7 +221,7 @@ $(document)
                             .empty()
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
-                            .text("The characters like (< >) are not allowed"));
+                            .text("Please use characters from the following set only: A-Z a-z 0-9 *()_+|:.-"));
                       }
                     }
                   });
