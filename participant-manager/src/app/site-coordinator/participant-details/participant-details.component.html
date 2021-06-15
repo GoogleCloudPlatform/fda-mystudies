@@ -16,7 +16,9 @@
             </div>
             <div class="pl-1">
               <div class="mb-xs">Participant details</div>
-              <div class="display-inline-flex overflow__auto mob_display-inline">
+              <div
+                class="display-inline-flex overflow__auto mob_display-inline"
+              >
                 <div
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -174,7 +176,8 @@
 
     <section class="max__w__1280 m-none site__participant">
       <div
-        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg" style="overflow-x: auto;"
+        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg"
+        style="overflow-x: auto"
       >
         <div class="blue__text__md">Participant email</div>
         <div class="participant__label font26">
@@ -216,7 +219,8 @@
                       participant.participantDetails.onboardingStatus ==
                       onBoardingStatus.Disabled
                   }"
-                >{{ participant.participantDetails.onboardingStatus }}
+                >
+                  {{ participant.participantDetails.onboardingStatus }}
                 </span>
                 <span
                   *ngIf="
@@ -233,7 +237,8 @@
                     participant.participantDetails.studyType !== studyTypes.Open
                   "
                   class="inactive__text"
-                >{{ participant.participantDetails.invitationDate }}
+                >
+                  {{ participant.participantDetails.invitationDate }}
                 </span>
                 <span
                   *ngIf="
@@ -280,52 +285,55 @@
       </h2>
 
       <table class="table table-striped custom__table">
-                <thead class="custom__thead mob_tabl_wid_100">
-                  <tr>
-                    <th>Date of enrollment</th>
-                    <th>Date of withdrawal</th>
-                    <th>Last enrollment status</th>
-                    <th class="xs-none">&nbsp;</th>
-                    <th class="xs-none">&nbsp;</th>
-                    <th class="xs-none">&nbsp;</th>
-                  </tr>
-                </thead>
-                <tbody class="custom__tbody">
-        <tr
-          *ngFor="
-            let enrollmentDetails of participant.participantDetails.enrollments
-          "
-        >
-          <td>
-            <span>{{ enrollmentDetails.enrollmentDate }}</span>
-          </td>
-          <td>
-            <span>{{ enrollmentDetails.withdrawalDate }}</span>
-          </td>
-          <td>
-            <span
-              [ngClass]="{
-                'txt__green':
-                  enrollmentDetails.enrollmentStatus ==
-                  enrollmentStatus.Enrolled,
-                'txt__light-gray':
-                  enrollmentDetails.enrollmentStatus ==
-                  enrollmentStatus.Withdrawn
-              }"
-            >{{ enrollmentDetails.enrollmentStatus }}
-            </span>
-          </td>
+        <thead class="custom__thead mob_tabl_wid_100">
+          <tr>
+            <th>Date of enrollment</th>
+            <th>Date of withdrawal</th>
+            <th>Last enrollment status</th>
+            <th class="xs-none">&nbsp;</th>
+            <th class="xs-none">&nbsp;</th>
+            <th class="xs-none">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody class="custom__tbody">
+          <tr
+            *ngFor="
+              let enrollmentDetails of participant.participantDetails
+                .enrollments
+            "
+          >
+            <td>
+              <span>{{ enrollmentDetails.enrollmentDate }}</span>
+            </td>
+            <td>
+              <span>{{ enrollmentDetails.withdrawalDate }}</span>
+            </td>
+            <td>
+              <span
+                [ngClass]="{
+                  'txt__green':
+                    enrollmentDetails.enrollmentStatus ==
+                    enrollmentStatus.Enrolled,
+                  'txt__light-gray':
+                    enrollmentDetails.enrollmentStatus ==
+                    enrollmentStatus.Withdrawn
+                }"
+              >
+                {{ enrollmentDetails.enrollmentStatus }}
+              </span>
+            </td>
             <td class="xs-none">&nbsp;</td>
             <td class="xs-none">&nbsp;</td>
             <td class="xs-none">&nbsp;</td>
-        </tr>
-     
+          </tr>
+        </tbody>
+
         <tfoot>
-  <tr *ngIf="participant.participantDetails.enrollments.length === 0">
-    <td colspan="6" class="text-center font12 txt__light-gray">
-      No records found
-    </td>
-  </tr>
+          <tr *ngIf="participant.participantDetails.enrollments.length === 0">
+            <td colspan="6" class="text-center font12 txt__light-gray">
+              No records found
+            </td>
+          </tr>
         </tfoot>
       </table>
 
@@ -398,8 +406,6 @@
                 </button>
               </td>
             </tr>
-
-          
           </tbody>
 
           <tfoot class="custom__tfoot">
@@ -411,11 +417,13 @@
           </tfoot>
 
           <tfoot>
-  <tr *ngIf="participant.participantDetails.consentHistory.length === 0">
-    <td colspan="4" class="text-center font12 txt__light-gray">
-      No records found
-    </td>
-  </tr>
+            <tr
+              *ngIf="participant.participantDetails.consentHistory.length === 0"
+            >
+              <td colspan="4" class="text-center font12 txt__light-gray">
+                No records found
+              </td>
+            </tr>
           </tfoot>
         </table>
       </div>
