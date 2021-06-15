@@ -142,10 +142,7 @@ class ConsentBuilder {
           let consentSection: ConsentSectionStep? = ConsentSectionStep()
           consentSection?.initWithDict(stepDict: sectionDict)
           consentSectionArray.append((consentSection?.createConsentSection())!)
-
-          if consentSection?.type != .custom {
-            consentHasVisualStep = true
-          }
+          consentHasVisualStep = true
         }
       }
 
