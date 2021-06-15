@@ -471,6 +471,10 @@ public class FdahpStudyDesignerConstants {
   public static final String IMPORT_FAILED_DUE_TO_ALREADY_USED_URL =
       "The URL has already been used to import a study into this Study Builder. Use the copy-into-new action to replicate the study or use a new URL generated at the point of study export.";
 
+  public static final String STUDY_PRE_LUNCH_VERSION = "0.0";
+
+  public static final String NA = "NA";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

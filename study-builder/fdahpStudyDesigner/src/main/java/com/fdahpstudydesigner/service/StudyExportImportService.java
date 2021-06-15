@@ -12,6 +12,7 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAI
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.INVALID_URL;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.YES;
 
@@ -831,9 +832,7 @@ public class StudyExportImportService {
         prepareInsertQuery(
             StudyExportSqlQueries.STUDIES,
             customIdsMap.get(STUDY_ID + studyBo.getId()),
-            studyBo.getType().equals(FdahpStudyDesignerConstants.STUDY_TYPE_SD)
-                ? null
-                : studyBo.getAppId().toUpperCase(),
+            null,
             studyBo.getCategory(),
             studyBo.getCreatedBy(),
             FdahpStudyDesignerUtil.getCurrentDateTime(),
@@ -1014,10 +1013,10 @@ public class StudyExportImportService {
               customIdsMap.get(CUSTOM_STUDY_ID + notificationBO.getCustomStudyId()),
               notificationBO.getModifiedBy(),
               notificationBO.getModifiedOn(),
-              notificationBO.isNotificationAction(),
-              notificationBO.isNotificationDone(),
-              notificationBO.getNotificationScheduleType(),
-              notificationBO.isNotificationSent(),
+              notificationBO.isNotificationStatus() ? notificationBO.isNotificationAction() : false,
+              notificationBO.isNotificationStatus() ? notificationBO.isNotificationDone() : false,
+              NOTIFICATION_NOTIMMEDIATE,
+              false,
               notificationBO.isNotificationStatus(),
               notificationBO.getNotificationSubType(),
               notificationBO.getNotificationText(),

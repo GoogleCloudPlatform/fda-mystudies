@@ -349,7 +349,7 @@
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
               $('#alertMsg').show();
               setTimeout(function () {
-                  location.reload(true);
+            	  window.location=window.location;
                   $('.copy_to_clipboard').removeClass('cursor-none');
                 }, 5000);
             } else {
