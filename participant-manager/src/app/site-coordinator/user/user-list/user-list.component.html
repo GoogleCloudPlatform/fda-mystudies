@@ -74,11 +74,6 @@
             </span>
           </td>
         </tr>
-        <tr *ngIf="manageUsers.users.length === 0">
-          <td colspan="4" class="text-center font12 txt__light-gray">
-            No records found
-          </td>
-        </tr>
       </tbody>
 
       <tfoot class="custom__tfoot">
@@ -91,6 +86,14 @@
                 (pageChange)="pageChange($event)"
               ></pagination-controls>
             </div>
+          </td>
+        </tr>
+      </tfoot>
+
+      <tfoot>
+        <tr *ngIf="manageUsers.users.length === 0">
+          <td colspan="4" class="text-center font12 txt__light-gray">
+            No records found
           </td>
         </tr>
       </tfoot>
