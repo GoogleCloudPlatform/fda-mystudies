@@ -14,7 +14,7 @@
     width: 250px !important;
 }
 
-.help-block ul {
+.help-block .list-unstyled {
       width: max-content !important;
 }
 
