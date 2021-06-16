@@ -231,6 +231,10 @@ public class ActivityMetaDataDao {
                           activeTaskDto, activityBean, session);
                 }
               }
+
+              if (activityBean.getIsStudyLifeTime()) {
+                activityBean.setEndTime("");
+              }
               /** Phase2a code for anchor date * */
               activitiesBeanList.add(activityBean);
             }
@@ -307,6 +311,9 @@ public class ActivityMetaDataDao {
                     this.getAnchordateDetailsByActivityIdForQuestionnaire(
                         questionaire, activityBean, session);
               }
+            }
+            if (activityBean.getIsStudyLifeTime()) {
+              activityBean.setEndTime("");
             }
             /** Phase2a code for anchor date * */
             activitiesBeanList.add(activityBean);
