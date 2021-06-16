@@ -879,11 +879,14 @@ public class StudyMetaDataDao {
             consentDocumentBean.setContent(
                 StringUtils.isEmpty(consent.getConsentDocContent())
                     ? ""
-                    : consent
-                        .getConsentDocContent()
-                        .replaceAll("&#34;", "'")
-                        .replaceAll("em>", "i>")
-                        .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+                    : StringEscapeUtils.escapeHtml4(
+                        StringEscapeUtils.unescapeHtml4(
+                            consent
+                                .getConsentDocContent()
+                                .replaceAll("&#34;", "'")
+                                .replaceAll("em>", "i>")
+                                .replaceAll(
+                                    "<a", "<a style='text-decoration:underline;color:blue;'"))));
             consentDocumentBean.setEnrollAgain(
                 consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
             consentDocumentResponse.setConsent(consentDocumentBean);
