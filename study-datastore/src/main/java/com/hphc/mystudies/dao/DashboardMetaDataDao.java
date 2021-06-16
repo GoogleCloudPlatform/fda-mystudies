@@ -997,7 +997,7 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questRespId"
-                          + " ORDER BY QCFDTO.frequencyStartTime")
+                          + " ORDER BY QCFDTO.frequencyStartDate")
                   .setString("questRespId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)

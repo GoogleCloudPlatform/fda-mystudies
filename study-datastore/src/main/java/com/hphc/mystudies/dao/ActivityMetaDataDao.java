@@ -3254,7 +3254,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:quesResId"
-                          + " ORDER BY QCFDTO.frequencyStartTime")
+                          + " ORDER BY QCFDTO.frequencyStartDate")
                   .setString("quesResId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
