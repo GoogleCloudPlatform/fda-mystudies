@@ -149,7 +149,7 @@
   }
   .table thead th {
     background: var(--athens-gray);
-    padding: 2px 10px !important;
+    padding: 5px 10px !important;
     margin-right: 10px;
     margin-bottom: 10px;
     border-radius: 10px !important;
@@ -222,7 +222,8 @@
     display: inline-block;
   }
   .site__participant label:before {
-    display: none;
+    // display: none;
+    display: inline-block;
   }
   .btn {
     border-radius: 5px;
@@ -402,7 +403,7 @@
   }
   .table thead th {
     background: var(--athens-gray);
-    padding: 2px 10px !important;
+    padding: 5px 10px !important;
     margin-right: 10px;
     margin-bottom: 10px;
     border-radius: 10px !important;
@@ -475,7 +476,8 @@
     display: inline-block;
   }
   .site__participant label:before {
-    display: none;
+    // display: none;
+    display: inline-block;
   }
   .btn {
     border-radius: 5px;
