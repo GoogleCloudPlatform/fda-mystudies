@@ -8,7 +8,7 @@
 	    text-transform: inherit; !important
 		}
 		
-    .help-block ul {
+    .help-block .list-unstyled {
     width: max-content !important;
     }
 </style>
