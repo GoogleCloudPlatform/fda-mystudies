@@ -38,10 +38,12 @@ class ChartsViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
-    DBHandler.loadChartsForStudy(studyId: (Study.currentStudy?.studyId)!) { (chartList) in
-      if chartList.count != 0 {
-        StudyDashboard.instance.charts = chartList
-        self.tableView?.reloadData()
+    DispatchQueue.main.async {
+      DBHandler.loadChartsForStudy(studyId: (Study.currentStudy?.studyId)!) { (chartList) in
+        if chartList.count != 0 {
+          StudyDashboard.instance.charts = chartList
+          self.tableView?.reloadData()
+        }
       }
     }
   }
