@@ -804,7 +804,7 @@ public class StudyMetaDataDao {
         }
 
         /** Get study version details by version identifier in descending order */
-        studyVersionQuery += " ORDER BY SVDTO.versionId DESC";
+        studyVersionQuery += " ORDER BY SVDTO.studyVersion DESC";
 
         if (!studyDto
             .getStatus()
@@ -873,8 +873,8 @@ public class StudyMetaDataDao {
             consentDocumentBean.setContent(
                 StringUtils.isEmpty(consent.getConsentDocContent())
                     ? ""
-            		: StringEscapeUtils.unescapeHtml4(
-            		    consent
+                    : StringEscapeUtils.unescapeHtml4(
+                        consent
                             .getConsentDocContent()
                             .replaceAll("&#34;", "'")
                             .replaceAll("em>", "i>")
