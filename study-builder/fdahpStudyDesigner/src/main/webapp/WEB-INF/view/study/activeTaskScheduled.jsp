@@ -2189,6 +2189,8 @@
               });
         }
       } else {
+    	  $("#chooseDate").val('');
+    	  $("#selectTime1").val('');
         if (scheduletype == 'AnchorDate') {
           $("#selectTime").attr("disabled", true);
           $("#selectTime").required = false;
