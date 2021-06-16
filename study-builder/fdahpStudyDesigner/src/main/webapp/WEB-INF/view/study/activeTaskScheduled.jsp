@@ -929,7 +929,7 @@
             <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="customStartTime0" type="text" count='0'
-                           class="form-control clock cusTime startTime"
+                           class="form-control clock cusTime customTime startTime"
                            name="activeTaskCustomScheduleBo[0].frequencyStartTime"
                            placeholder="Start time" onclick='timep(this.id);' disabled required data-error="Please fill out this field"/>
                     <span class='help-block with-errors red-txt'></span>
@@ -947,7 +947,7 @@
             </span>            
            
           <span class="form-group dis-inline vertical-align-middle pr-md">
-            <input id="customTime0" type="text" count='0' class="form-control clock endTime"
+            <input id="customTime0" type="text" count='0' class="form-control clock customTime endTime"
                    name="activeTaskCustomScheduleBo[0].frequencyEndTime" placeholder="End time"
                    onclick='timep(this.id);'
                    disabled required data-error="Please fill out this field"/>

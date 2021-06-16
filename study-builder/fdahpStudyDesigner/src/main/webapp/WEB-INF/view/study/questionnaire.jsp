@@ -1394,7 +1394,7 @@
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="customStartTime0" type="text" count='0'
-                           class="form-control clock cusTime startTime"
+                           class="form-control clock cusTime customTime startTime"
                            name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
                            placeholder="Start time" onclick='timep(this.id);' disabled required />
                     <span class='help-block with-errors red-txt'></span>
@@ -1417,7 +1417,7 @@
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="customTime0" type="text" count='0'
-                           class="form-control clock endTime"
+                           class="form-control clock customTime endTime"
                            name="questionnaireCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field"
                            placeholder="End time" onclick='timep(this.id);' disabled required/>
                     <span class='help-block with-errors red-txt'></span>
@@ -2615,7 +2615,7 @@ debugger
     });
     
  $("#chooseEndDate").on("click", function (e) {
-    	
+       
     	var end=$('#chooseEndDate').val();
     	if(end!=""){
     	var s=end.split("/");
@@ -3285,7 +3285,6 @@ debugger
   }
 
   function customStartDate(id, count) {
-	 
 	  
 	  $('.manually-option').find('.startTime').prop('disabled', false);
       $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
@@ -3919,10 +3918,10 @@ debugger
           '.startTime').val()) {
 	        var thisAttr = this;
 	        $(this).parents('.manuallyContainer').find('.manually-option').each(function () {
-	          if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
+		      if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
 	              '.cusStrDate').val() && $(this).find('.cusEndDate').val() && $(this).find(
 	              '.startTime').val()) {
-	            
+		    	  
 	        	  var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
 	              var startTime = moment($(this).find('.startTime').val(), "HH:mm A").toDate()
 	              fromDate.setHours(startTime.getHours());
