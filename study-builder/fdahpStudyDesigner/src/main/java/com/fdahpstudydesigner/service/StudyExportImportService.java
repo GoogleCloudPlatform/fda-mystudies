@@ -42,7 +42,6 @@ import com.fdahpstudydesigner.bo.QuestionsBo;
 import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
-import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.StudyActiveTasksDAO;
@@ -142,9 +141,6 @@ public class StudyExportImportService {
       customIdsMap.put(STUDY_ID + studyBo.getId(), IdGenerator.id());
       customIdsMap.put(CUSTOM_STUDY_ID + studyBo.getCustomStudyId(), null);
 
-      // studyPermission
-      StudyPermissionBO studyPermissionBo = studyDao.getStudyPermissionBO(studyBo.getId(), userId);
-
       // studySequence
       StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
 
@@ -190,7 +186,6 @@ public class StudyExportImportService {
 
         // prepare INSERT SQL statements
         addStudiesInsertSql(studyBo, insertSqlStatements, customIdsMap);
-        addStudyPermissionInsertSql(studyPermissionBo, insertSqlStatements, customIdsMap);
         addStudySequenceInsertSql(studySequenceBo, insertSqlStatements, customIdsMap);
 
         addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap);
@@ -1161,29 +1156,6 @@ public class StudyExportImportService {
     insertSqlStatements.addAll(resourceBoInsertQueryList);
   }
 
-  private void addStudyPermissionInsertSql(
-      StudyPermissionBO studyPermissionBo,
-      List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
-      throws Exception {
-
-    if (studyPermissionBo == null) {
-      return;
-    }
-
-    String studyPermissionsInsertQuery =
-        prepareInsertQuery(
-            StudyExportSqlQueries.STUDY_PERMISSION,
-            IdGenerator.id(),
-            studyPermissionBo.getDelFlag(),
-            studyPermissionBo.getProjectLead(),
-            customIdsMap.get(STUDY_ID + studyPermissionBo.getStudyId()),
-            studyPermissionBo.getUserId(),
-            studyPermissionBo.isViewPermission());
-
-    insertSqlStatements.add(studyPermissionsInsertQuery);
-  }
-
   private void addEligibilityTestListInsertSql(
       List<EligibilityTestBo> eligibilityTestBoList,
       List<String> insertSqlStatements,
@@ -1529,11 +1501,12 @@ public class StudyExportImportService {
       }
       return e.getMessage();
     }
-    return validateAndExecuteQuries(signedUrl, map, bufferedReader);
+    return validateAndExecuteQuries(signedUrl, map, bufferedReader, sessionObject.getUserId());
   }
 
   private String validateAndExecuteQuries(
-      String signedUrl, Map<String, String> map, BufferedReader bufferedReader) throws Exception {
+      String signedUrl, Map<String, String> map, BufferedReader bufferedReader, String userId)
+      throws Exception {
     try {
 
       String path = signedUrl.substring(0, signedUrl.indexOf(".sql"));
@@ -1579,9 +1552,19 @@ public class StudyExportImportService {
       }
 
       // execution
+      String insertStatementofStudy = "";
       for (String insert : insertStatements) {
+        if (insert.startsWith("INSERT INTO `studies`")) {
+          insertStatementofStudy = insert;
+        }
         jdbcTemplate.execute(insert);
       }
+
+      // study permission
+      String[] values = insertStatementofStudy.split("VALUES");
+      String StudyId = values[1].substring(values[1].indexOf("'") + 1, values[1].indexOf(",") - 1);
+      studyDao.giveStudyPermission(StudyId, userId);
+
     } catch (Exception e) {
       logger.error("StudyExportService - importStudy() - ERROR ", e);
       if (e instanceof DuplicateKeyException) {
