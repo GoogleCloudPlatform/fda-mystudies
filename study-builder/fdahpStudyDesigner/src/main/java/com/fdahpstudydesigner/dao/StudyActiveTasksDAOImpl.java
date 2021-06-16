@@ -562,6 +562,20 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                           FdahpStudyDesignerConstants.SDF_TIME,
                           FdahpStudyDesignerConstants.UI_SDF_TIME));
             }
+
+            if ((activeTaskBo.getActiveTaskFrequenciesBo().getFrequencyDate() != null)
+                && !activeTaskBo.getActiveTaskFrequenciesBo().getFrequencyDate().isEmpty()
+                && !FdahpStudyDesignerUtil.isValidDateFormat(
+                    activeTaskBo.getActiveTaskFrequenciesBo().getFrequencyDate(),
+                    FdahpStudyDesignerConstants.SD_DATE_FORMAT)) {
+
+              activeTaskFrequencyBo.setFrequencyDate(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskFrequencyBo.getFrequencyDate(),
+                      FdahpStudyDesignerConstants.UI_SDF_DATE,
+                      FdahpStudyDesignerConstants.SD_DATE_FORMAT));
+            }
+
             session.saveOrUpdate(activeTaskFrequencyBo);
           }
         }

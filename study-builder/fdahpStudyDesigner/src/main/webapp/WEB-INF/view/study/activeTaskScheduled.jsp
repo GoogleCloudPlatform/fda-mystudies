@@ -1802,9 +1802,30 @@
       $('.anchortypeclass').removeAttr('required');
     }
 
+    
+    $('.manuallyContainer').find('.manually-option').each(function () {
+    	
+	 	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
+ 			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+ 		}
+		if($(this).find('.cusEndDate').data("DateTimePicker")!== undefined){
+			$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+		}
+    });
+    
+    var startToday;
+    <c:if test="${ empty activeTaskBo.activeTaskFrequenciesBo.frequencyDate}">
+    startToday = serverDate();
+    </c:if>
+    
+    <c:if test="${not empty activeTaskBo.activeTaskFrequenciesBo.frequencyDate}">
+    startToday=${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}
+    </c:if>
+    
+    
     $('#chooseDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
+      minDate: startToday,
       useCurrent: false
     })
         .on("dp.change", function (e) {
@@ -1847,13 +1868,38 @@
       });
       multiTimeVal = !(a > 0);
     });
-
+    
+    var endToday;
+    <c:if test="${ empty activeTaskBo.activeTaskLifetimeEnd}">
+    endToday = serverDate();
+    </c:if>
+    
+    <c:if test="${not empty activeTaskBo.activeTaskLifetimeEnd}">
+    endToday=${activeTaskBo.activeTaskLifetimeEnd};
+    </c:if>
+    
+    
     $('#chooseEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
+      minDate: endToday,
       useCurrent: false,
     });
+    
 
+    
+    $("#chooseEndDate").on("click", function (e) {
+    	
+    	var end=$('#chooseEndDate').val();
+    	if(end!=""){
+    	var s=end.split("/");
+    	var date1=	new Date(s[2], (s[0]-1), s[1]);
+    	var date2=new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+	    	if(date1 < date2){
+	    		$('#chooseEndDate').data("DateTimePicker").minDate(serverDate());
+	    	}
+    	}
+        
+      });
     $('#startDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       useCurrent: false,
@@ -2304,6 +2350,15 @@
     customEndDate('EndDate' + customCount, customCount);
     timep('customTime' + customCount);
     $('#customTime' + customCount).val("");
+	$('.manuallyContainer').find('.manually-option').each(function () {
+    	
+    	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
+ 			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+ 		}
+		if($(this).find('.cusEndDate').data("DateTimePicker")!== undefined){
+			$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+		}
+    });
     $('#' + customCount).find('input:first').focus();
   }
 
@@ -2342,7 +2397,6 @@
 	$('.manually-option').find('.cusTime').prop('disabled', false);
     $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
       useCurrent: false,
     }).on("dp.change", function (e) {
       $("#" + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -2369,7 +2423,6 @@
     $('.manually-option').find('.cusTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
       useCurrent: false,
     }).on("dp.change", function (e) {
       $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
