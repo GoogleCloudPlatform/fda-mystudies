@@ -441,6 +441,9 @@ struct SharingConsent {
       }
       if Utilities.isValidValue(someObject: dict[kConsentSharingSteplearnMore] as AnyObject) {
         learnMore = dict[kConsentSharingSteplearnMore] as? String
+        if let learnMoreString = learnMore {
+          learnMore = learnMoreString.stringByDecodingHTMLEntities
+        }
       }
 
       if Utilities.isValidValue(someObject: dict[kConsentSharingStepText] as AnyObject) {
