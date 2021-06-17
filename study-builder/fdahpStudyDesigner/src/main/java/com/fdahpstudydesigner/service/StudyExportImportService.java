@@ -415,24 +415,39 @@ public class StudyExportImportService {
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
         studyDao.getComprehensionTestQuestionList(studyBo.getId());
 
-    List<String> comprehensionTestQuestionIds = new ArrayList<>();
+    Map<String, List<ComprehensionTestResponseBo>> comprehensionTestResponseMap = new HashMap<>();
     if (CollectionUtils.isNotEmpty(comprehensionTestQuestionBoList)) {
       for (ComprehensionTestQuestionBo comprehensionTestQuestionBo :
           comprehensionTestQuestionBoList) {
-        comprehensionTestQuestionIds.add(comprehensionTestQuestionBo.getId());
         customIdsMap.put(
             COMPREHENSION_TEST_QUESTION_ID + comprehensionTestQuestionBo.getId(), IdGenerator.id());
+
+        // get responses for each question
+        List<ComprehensionTestResponseBo> comprehensionTestResponseBoList =
+            studyDao.getComprehensionTestResponses(comprehensionTestQuestionBo.getId());
+        comprehensionTestResponseMap.put(
+            comprehensionTestQuestionBo.getId(), comprehensionTestResponseBoList);
       }
     }
 
-    List<ComprehensionTestResponseBo> comprehensionTestResponseBoList =
-        studyDao.getComprehensionTestResponseList(comprehensionTestQuestionIds);
+    List<ComprehensionTestResponseBo> comprehensionTestResponses = new ArrayList<>();
+    for (Map.Entry<String, List<ComprehensionTestResponseBo>> entry :
+        comprehensionTestResponseMap.entrySet()) {
+      Integer responseSequence = 0;
+      for (ComprehensionTestResponseBo comprehensionTestResponse : entry.getValue()) {
+        comprehensionTestResponse.setSequenceNumber(responseSequence++);
+        comprehensionTestResponses.add(comprehensionTestResponse);
+      }
+    }
+
+    /*List<ComprehensionTestResponseBo> comprehensionTestResponseBoList =
+    studyDao.getComprehensionTestResponseList(comprehensionTestQuestionIds);*/
 
     addComprehensionTestQuestionListInsertSql(
         comprehensionTestQuestionBoList, insertSqlStatements, customIdsMap);
 
     addComprehensionTestResponseBoListInsertSql(
-        comprehensionTestResponseBoList, insertSqlStatements, customIdsMap);
+        comprehensionTestResponses, insertSqlStatements, customIdsMap);
   }
 
   private void addFormsListInsertSql(
@@ -479,7 +494,8 @@ public class StudyExportImportService {
                   COMPREHENSION_TEST_QUESTION_ID
                       + comprehensionTestResponseBo.getComprehensionTestQuestionId()),
               comprehensionTestResponseBo.getCorrectAnswer(),
-              comprehensionTestResponseBo.getResponseOption());
+              comprehensionTestResponseBo.getResponseOption(),
+              comprehensionTestResponseBo.getSequenceNumber());
 
       comprehensionTestResponseBoInserQueryList.add(comprehensionTestResponseInsertQuery);
     }
@@ -1001,6 +1017,7 @@ public class StudyExportImportService {
     }
 
     List<String> studyPageBoInsertQueryList = new ArrayList<>();
+    Integer sequenceNo = 0;
     for (StudyPageBo studyPageBo : studypageList) {
       String studyPageBoInsertQuery =
           prepareInsertQuery(
@@ -1014,7 +1031,7 @@ public class StudyExportImportService {
               studyPageBo.getModifiedOn(),
               customIdsMap.get(STUDY_ID + studyPageBo.getStudyId()),
               studyPageBo.getTitle(),
-              studyPageBo.getSequenceNumber());
+              sequenceNo++);
 
       studyPageBoInsertQueryList.add(studyPageBoInsertQuery);
     }
