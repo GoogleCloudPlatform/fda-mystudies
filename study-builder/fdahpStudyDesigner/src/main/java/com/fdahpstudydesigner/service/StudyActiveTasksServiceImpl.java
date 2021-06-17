@@ -78,6 +78,8 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
       if (activeTask != null) {
         List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleList =
             studyActiveTasksDAO.getActivetaskCustomFrequencies(activeTask.getId());
+        List<ActiveTaskFrequencyBo> activeTaskFrequencyList =
+            studyActiveTasksDAO.getActiveTaskFrequency(activeTask.getId());
 
         if ((activeTask.getActiveTaskCustomScheduleBo() != null)
             && !activeTask.getActiveTaskCustomScheduleBo().isEmpty()) {
@@ -120,8 +122,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
 
         if ((activeTask.getActiveTaskFrequenciesList() != null)
             && !activeTask.getActiveTaskFrequenciesList().isEmpty()) {
-          for (ActiveTaskFrequencyBo activeTaskFrequencyBo :
-              activeTask.getActiveTaskFrequenciesList()) {
+          for (ActiveTaskFrequencyBo activeTaskFrequencyBo : activeTaskFrequencyList) {
             if (StringUtils.isNotBlank(activeTaskFrequencyBo.getFrequencyDate())) {
               activeTaskFrequencyBo.setFrequencyDate(
                   FdahpStudyDesignerUtil.getFormattedDate(
@@ -138,6 +139,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
             }
           }
         }
+        activeTask.setActiveTaskFrequenciesList(activeTaskFrequencyList);
         if ((activeTask.getActiveTaskFrequenciesBo() != null)
             && StringUtils.isNotBlank(activeTask.getActiveTaskFrequenciesBo().getFrequencyDate())) {
           activeTask

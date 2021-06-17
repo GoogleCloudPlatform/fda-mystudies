@@ -1287,4 +1287,31 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     logger.info("StudyActiveTasksDAOImpl - getActivetaskCostumFrequencies() - Ends");
     return activeTaskCustomScheduleList;
   }
+
+  @Override
+  public List<ActiveTaskFrequencyBo> getActiveTaskFrequency(String activeTaskId) {
+    logger.entry("StudyActiveTasksDAOImpl - getActiveTaskFrequency() - Starts");
+    Session session = null;
+    List<ActiveTaskFrequencyBo> activeTaskFrequencyList = new ArrayList<>();
+    try {
+
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(activeTaskId)) {
+        query =
+            session
+                .createQuery(
+                    "from ActiveTaskFrequencyBo where activeTaskId=:activeTaskId order by sequenceNumber")
+                .setString("activeTaskId", activeTaskId);
+        activeTaskFrequencyList = query.list();
+      }
+    } catch (Exception e) {
+      logger.error("StudyActiveTasksDAOImpl - getActiveTaskFrequency() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    logger.exit("StudyActiveTasksDAOImpl - getActiveTaskFrequency() - Ends");
+    return activeTaskFrequencyList;
+  }
 }

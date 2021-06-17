@@ -76,7 +76,7 @@ public class QuestionnaireCustomScheduleBo implements Serializable {
   private Integer timePeriodToDays;
 
   @Column(name = "sequence_number")
-  private Integer sequnceNumber;
+  private Integer sequenceNumber;
 
   public String getFrequencyEndDate() {
     return frequencyEndDate;
@@ -167,10 +167,10 @@ public class QuestionnaireCustomScheduleBo implements Serializable {
   }
 
   public Integer getSequnceNumber() {
-    return sequnceNumber;
+    return sequenceNumber;
   }
 
-  public void setSequnceNumber(Integer sequnceNumber) {
-    this.sequnceNumber = sequnceNumber;
+  public void setSequenceNumber(Integer sequnceNumber) {
+    this.sequenceNumber = sequnceNumber;
   }
 }
