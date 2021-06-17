@@ -80,4 +80,6 @@ public interface StudyActiveTasksDAO {
       List<String> activeTaskType);
 
   public List<ActiveTaskCustomScheduleBo> getActivetaskCustomFrequencies(String activetaskId);
+
+  public List<ActiveTaskFrequencyBo> getActiveTaskFrequency(String activetaskId);
 }

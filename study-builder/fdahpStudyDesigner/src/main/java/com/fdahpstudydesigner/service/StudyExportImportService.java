@@ -205,6 +205,7 @@ public class StudyExportImportService {
         studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
 
     Map<String, List<ActiveTaskCustomScheduleBo>> activeTaskCustomFrequencyMap = new HashMap<>();
+    Map<String, List<ActiveTaskFrequencyBo>> activeTaskFrequencyMap = new HashMap<>();
     List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleList = new ArrayList<>();
     List<String> activeTaskIds = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(activeTaskBos)) {
@@ -217,6 +218,10 @@ public class StudyExportImportService {
           List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleBoList =
               studyActiveTasksDAO.getActivetaskCustomFrequencies(activeTaskBo.getId());
           activeTaskCustomFrequencyMap.put(activeTaskBo.getId(), activeTaskCustomScheduleBoList);
+        } else {
+          List<ActiveTaskFrequencyBo> activeTaskFrequencyBoList =
+              studyActiveTasksDAO.getActiveTaskFrequency(activeTaskBo.getId());
+          activeTaskFrequencyMap.put(activeTaskBo.getId(), activeTaskFrequencyBoList);
         }
       }
     }
@@ -231,14 +236,23 @@ public class StudyExportImportService {
       }
     }
 
+    List<ActiveTaskFrequencyBo> activeTaskFrequencyList = new ArrayList<>();
+    for (Map.Entry<String, List<ActiveTaskFrequencyBo>> entry : activeTaskFrequencyMap.entrySet()) {
+      Integer seq = 0;
+      for (ActiveTaskFrequencyBo activeTaskFrequencyScheduleBo : entry.getValue()) {
+        activeTaskFrequencyScheduleBo.setSequenceNumber(seq++);
+        activeTaskFrequencyList.add(activeTaskFrequencyScheduleBo);
+      }
+    }
+
     List<ActiveTaskAtrributeValuesBo> activeTaskAtrributeValuesBos =
         studyActiveTasksDAO.getActiveTaskAtrributeValuesByActiveTaskId(activeTaskIds);
 
     /*List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleBoList =
     studyActiveTasksDAO.getActiveTaskCustomScheduleBoList(activeTaskIds);*/
 
-    List<ActiveTaskFrequencyBo> activeTaskFrequencyBoList =
-        studyActiveTasksDAO.getActiveTaskFrequencyBoList(activeTaskIds);
+    /*List<ActiveTaskFrequencyBo> activeTaskFrequencyBoList =
+    studyActiveTasksDAO.getActiveTaskFrequencyBoList(activeTaskIds);*/
 
     addStudyActiveTaskInsertSql(activeTaskBos, insertSqlStatements, customIdsMap);
 
@@ -249,7 +263,7 @@ public class StudyExportImportService {
         activeTaskcustomFrequencyList, insertSqlStatements, customIdsMap);
 
     addActiveTaskFrequencyBoInsertSqlQuery(
-        activeTaskFrequencyBoList, insertSqlStatements, customIdsMap);
+        activeTaskFrequencyList, insertSqlStatements, customIdsMap);
   }
 
   private void prepareInsertSqlQueriesForQuestionnaires(
@@ -260,6 +274,7 @@ public class StudyExportImportService {
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
 
     Map<String, List<QuestionnaireCustomScheduleBo>> customScheduleMap = new HashMap<>();
+    Map<String, List<QuestionnairesFrequenciesBo>> frequencyMap = new HashMap<>();
 
     List<String> questionnaireIds = new ArrayList<>();
     Integer count = 0;
@@ -275,7 +290,21 @@ public class StudyExportImportService {
           List<QuestionnaireCustomScheduleBo> list =
               studyQuestionnaireDAO.getQuestionnaireCustomSchedules(questionnaireBo.getId());
           customScheduleMap.put(questionnaireBo.getId(), list);
+        } else {
+          List<QuestionnairesFrequenciesBo> frequencyList =
+              studyQuestionnaireDAO.getQuestionnairesFrequencies(questionnaireBo.getId());
+          frequencyMap.put(questionnaireBo.getId(), frequencyList);
         }
+      }
+    }
+
+    List<QuestionnairesFrequenciesBo> frequencyList = new ArrayList<>();
+    for (Map.Entry<String, List<QuestionnairesFrequenciesBo>> entry : frequencyMap.entrySet()) {
+
+      Integer seq = 0;
+      for (QuestionnairesFrequenciesBo questionnairesFrequenciesBo : entry.getValue()) {
+        questionnairesFrequenciesBo.setSequenceNumber(seq++);
+        frequencyList.add(questionnairesFrequenciesBo);
       }
     }
 
@@ -285,7 +314,7 @@ public class StudyExportImportService {
 
       Integer seq = 0;
       for (QuestionnaireCustomScheduleBo questionnaireCustomScheduleBo : entry.getValue()) {
-        questionnaireCustomScheduleBo.setSequnceNumber(seq++);
+        questionnaireCustomScheduleBo.setSequenceNumber(seq++);
         customList.add(questionnaireCustomScheduleBo);
       }
     }
@@ -300,8 +329,8 @@ public class StudyExportImportService {
       }
     }
 
-    List<QuestionnairesFrequenciesBo> questionnairesFrequenciesBoList =
-        studyQuestionnaireDAO.getQuestionnairesFrequenciesBoList(questionnaireIds);
+    /*List<QuestionnairesFrequenciesBo> questionnairesFrequenciesBoList =
+    studyQuestionnaireDAO.getQuestionnairesFrequenciesBoList(questionnaireIds);*/
 
     /*  List<QuestionnaireCustomScheduleBo> questionnairesCustomFrequenciesBoList =
     studyQuestionnaireDAO.getQuestionnairesCustomFrequenciesBoList(questionnaireIds);*/
@@ -360,8 +389,7 @@ public class StudyExportImportService {
 
     addQuestionnaireBoListInsertSql(questionnairesList, insertSqlStatements, customIdsMap);
 
-    addQuestionnaireFrequenciesBoInsertSql(
-        questionnairesFrequenciesBoList, insertSqlStatements, customIdsMap);
+    addQuestionnaireFrequenciesBoInsertSql(frequencyList, insertSqlStatements, customIdsMap);
 
     addQuestionnaireCustomScheduleBoInsertSql(customList, insertSqlStatements, customIdsMap);
 
@@ -387,24 +415,39 @@ public class StudyExportImportService {
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
         studyDao.getComprehensionTestQuestionList(studyBo.getId());
 
-    List<String> comprehensionTestQuestionIds = new ArrayList<>();
+    Map<String, List<ComprehensionTestResponseBo>> comprehensionTestResponseMap = new HashMap<>();
     if (CollectionUtils.isNotEmpty(comprehensionTestQuestionBoList)) {
       for (ComprehensionTestQuestionBo comprehensionTestQuestionBo :
           comprehensionTestQuestionBoList) {
-        comprehensionTestQuestionIds.add(comprehensionTestQuestionBo.getId());
         customIdsMap.put(
             COMPREHENSION_TEST_QUESTION_ID + comprehensionTestQuestionBo.getId(), IdGenerator.id());
+
+        // get responses for each question
+        List<ComprehensionTestResponseBo> comprehensionTestResponseBoList =
+            studyDao.getComprehensionTestResponses(comprehensionTestQuestionBo.getId());
+        comprehensionTestResponseMap.put(
+            comprehensionTestQuestionBo.getId(), comprehensionTestResponseBoList);
       }
     }
 
-    List<ComprehensionTestResponseBo> comprehensionTestResponseBoList =
-        studyDao.getComprehensionTestResponseList(comprehensionTestQuestionIds);
+    List<ComprehensionTestResponseBo> comprehensionTestResponses = new ArrayList<>();
+    for (Map.Entry<String, List<ComprehensionTestResponseBo>> entry :
+        comprehensionTestResponseMap.entrySet()) {
+      Integer responseSequence = 0;
+      for (ComprehensionTestResponseBo comprehensionTestResponse : entry.getValue()) {
+        comprehensionTestResponse.setSequenceNumber(responseSequence++);
+        comprehensionTestResponses.add(comprehensionTestResponse);
+      }
+    }
+
+    /*List<ComprehensionTestResponseBo> comprehensionTestResponseBoList =
+    studyDao.getComprehensionTestResponseList(comprehensionTestQuestionIds);*/
 
     addComprehensionTestQuestionListInsertSql(
         comprehensionTestQuestionBoList, insertSqlStatements, customIdsMap);
 
     addComprehensionTestResponseBoListInsertSql(
-        comprehensionTestResponseBoList, insertSqlStatements, customIdsMap);
+        comprehensionTestResponses, insertSqlStatements, customIdsMap);
   }
 
   private void addFormsListInsertSql(
@@ -451,7 +494,8 @@ public class StudyExportImportService {
                   COMPREHENSION_TEST_QUESTION_ID
                       + comprehensionTestResponseBo.getComprehensionTestQuestionId()),
               comprehensionTestResponseBo.getCorrectAnswer(),
-              comprehensionTestResponseBo.getResponseOption());
+              comprehensionTestResponseBo.getResponseOption(),
+              comprehensionTestResponseBo.getSequenceNumber());
 
       comprehensionTestResponseBoInserQueryList.add(comprehensionTestResponseInsertQuery);
     }
@@ -535,7 +579,8 @@ public class StudyExportImportService {
               activeTaskFrquencyBo.getTimePeriodFromDays(),
               activeTaskFrquencyBo.getTimePeriodToDays(),
               activeTaskFrquencyBo.isxDaysSign(),
-              activeTaskFrquencyBo.isyDaysSign());
+              activeTaskFrquencyBo.isyDaysSign(),
+              activeTaskFrquencyBo.getSequenceNumber());
 
       activeTaskBoInsertQueryList.add(activeTaskBoInsertQuery);
     }
@@ -972,6 +1017,7 @@ public class StudyExportImportService {
     }
 
     List<String> studyPageBoInsertQueryList = new ArrayList<>();
+    Integer sequenceNo = 0;
     for (StudyPageBo studyPageBo : studypageList) {
       String studyPageBoInsertQuery =
           prepareInsertQuery(
@@ -985,7 +1031,7 @@ public class StudyExportImportService {
               studyPageBo.getModifiedOn(),
               customIdsMap.get(STUDY_ID + studyPageBo.getStudyId()),
               studyPageBo.getTitle(),
-              studyPageBo.getSequenceNumber());
+              sequenceNo++);
 
       studyPageBoInsertQueryList.add(studyPageBoInsertQuery);
     }
@@ -1438,7 +1484,8 @@ public class StudyExportImportService {
               questionnairesFrequenciesBo.getTimePeriodFromDays(),
               questionnairesFrequenciesBo.getTimePeriodToDays(),
               questionnairesFrequenciesBo.isxDaysSign(),
-              questionnairesFrequenciesBo.isyDaysSign());
+              questionnairesFrequenciesBo.isyDaysSign(),
+              questionnairesFrequenciesBo.getSequenceNumber());
       questionnairesFrequenciesBoInsertQueryList.add(questionnairesFrequenciesBoInsertQuery);
     }
 

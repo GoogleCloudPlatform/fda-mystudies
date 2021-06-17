@@ -1892,7 +1892,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getFrequency()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
             searchQuery =
-                "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:questionnairesId order by QCSBO.sequnceNumber ";
+                "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:questionnairesId order by QCSBO.sequenceNumber ";
             query =
                 session
                     .createQuery(searchQuery)
@@ -1901,7 +1901,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             questionnaireBo.setQuestionnaireCustomScheduleBo(questionnaireCustomScheduleList);
           } else {
             searchQuery =
-                "From QuestionnairesFrequenciesBo QFBO where QFBO.questionnairesId=:questionnairesId ";
+                "From QuestionnairesFrequenciesBo QFBO where QFBO.questionnairesId=:questionnairesId order by QFBO.sequenceNumber";
             query =
                 session
                     .createQuery(searchQuery)
@@ -6105,5 +6105,28 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       }
     }
     return questionResponseSubTypeList;
+  }
+
+  @Override
+  public List<QuestionnairesFrequenciesBo> getQuestionnairesFrequencies(String questionnaireId) {
+    List<QuestionnairesFrequenciesBo> questionnaireFrequency = new ArrayList<>();
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(questionnaireId)) {
+        String searchQuery =
+            "From QuestionnairesFrequenciesBo QFBO where QFBO.questionnairesId=:questionnaireId ";
+        questionnaireFrequency =
+            session.createQuery(searchQuery).setString("questionnaireId", questionnaireId).list();
+      }
+
+    } catch (Exception e) {
+      logger.error("StudyQuestionnaireDAOImpl - getFormsByInstructionFormIds() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    return questionnaireFrequency;
   }
 }
