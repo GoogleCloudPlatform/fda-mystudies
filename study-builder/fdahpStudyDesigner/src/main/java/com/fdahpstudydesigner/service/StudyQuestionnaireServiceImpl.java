@@ -14,7 +14,6 @@ import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.HealthKitKeysInfo;
 import com.fdahpstudydesigner.bo.InstructionsBo;
-import com.fdahpstudydesigner.bo.QuestionResponseSubTypeBo;
 import com.fdahpstudydesigner.bo.QuestionResponseTypeMasterInfoBo;
 import com.fdahpstudydesigner.bo.QuestionnaireBo;
 import com.fdahpstudydesigner.bo.QuestionnaireCustomScheduleBo;
@@ -352,11 +351,6 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
           }
         }
       }
-
-      List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
-          studyQuestionnaireDAO.getQuestionResponseSubTypes(
-              questionnairesStepsBo.getInstructionFormId());
-      questionnairesStepsBo.setQuestionResponseSubTypeList(questionResponseSubTypeList);
 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionnaireStep - Error", e);
