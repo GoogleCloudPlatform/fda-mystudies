@@ -194,4 +194,9 @@ public interface StudyQuestionnaireDAO {
       Integer sequenceNumber);
 
   public List<String> getQuestionsByFormIds(List<String> formIds);
+
+  public List<QuestionnaireCustomScheduleBo> getQuestionnaireCustomSchedules(
+      String questionnaireId);
+
+  public List<QuestionResponseSubTypeBo> getQuestionResponseSubTypes(String questionId);
 }

@@ -65,4 +65,6 @@ public interface StudyActiveTasksDAO {
 
   public List<ActiveTaskMasterAttributeBo> getActiveTaskMasterAttributesByType(
       List<String> activeTaskType);
+
+  public List<ActiveTaskCustomScheduleBo> getActivetaskCustomFrequencies(String activetaskId);
 }

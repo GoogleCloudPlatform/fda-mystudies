@@ -61,10 +61,14 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     try {
       activeTask = studyActiveTasksDAO.getActiveTaskById(ativeTaskId, customStudyId);
       if (activeTask != null) {
+
+        List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleList =
+            studyActiveTasksDAO.getActivetaskCustomFrequencies(activeTask.getId());
+
         if ((activeTask.getActiveTaskCustomScheduleBo() != null)
             && !activeTask.getActiveTaskCustomScheduleBo().isEmpty()) {
           for (ActiveTaskCustomScheduleBo activeTaskCustomScheduleBo :
-              activeTask.getActiveTaskCustomScheduleBo()) {
+              activeTaskCustomScheduleList) {
 
             if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyStartDate())) {
               activeTaskCustomScheduleBo.setFrequencyStartDate(
@@ -97,6 +101,9 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
             }
           }
         }
+
+        activeTask.setActiveTaskCustomScheduleBo(activeTaskCustomScheduleList);
+
         if ((activeTask.getActiveTaskFrequenciesList() != null)
             && !activeTask.getActiveTaskFrequenciesList().isEmpty()) {
           for (ActiveTaskFrequencyBo activeTaskFrequencyBo :

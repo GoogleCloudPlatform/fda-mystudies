@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
   @NamedQuery(
       name = "getQuestionSubResponse",
       query =
-          "from QuestionResponseSubTypeBo QRBO where QRBO.responseTypeId=:responseTypeId and QRBO.active=1"),
+          "from QuestionResponseSubTypeBo QRBO where QRBO.responseTypeId=:responseTypeId and QRBO.active=1  order by QRBO.sequenceNumber "),
 })
 public class QuestionResponseSubTypeBo implements Serializable {
 
@@ -80,6 +80,9 @@ public class QuestionResponseSubTypeBo implements Serializable {
   @Transient private String signedImage;
 
   @Transient private String signedSelectedImage;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public Boolean getActive() {
     return active;
@@ -207,5 +210,13 @@ public class QuestionResponseSubTypeBo implements Serializable {
 
   public void setSignedSelectedImage(String signedSelectedImage) {
     this.signedSelectedImage = signedSelectedImage;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

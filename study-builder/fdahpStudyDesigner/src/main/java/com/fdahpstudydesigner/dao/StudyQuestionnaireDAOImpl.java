@@ -1893,7 +1893,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getFrequency()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
             searchQuery =
-                "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:questionnairesId ";
+                "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:questionnairesId order by QCSBO.sequnceNumber ";
             query =
                 session
                     .createQuery(searchQuery)
@@ -6062,5 +6062,53 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       }
     }
     return questionIds;
+  }
+
+  @Override
+  public List<QuestionnaireCustomScheduleBo> getQuestionnaireCustomSchedules(
+      String questionnaireId) {
+    List<QuestionnaireCustomScheduleBo> questionnaireCustomSchedules = new ArrayList<>();
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(questionnaireId)) {
+        String searchQuery =
+            "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:questionnaireId ";
+        questionnaireCustomSchedules =
+            session.createQuery(searchQuery).setString("questionnaireId", questionnaireId).list();
+      }
+
+    } catch (Exception e) {
+      logger.error("StudyQuestionnaireDAOImpl - getFormsByInstructionFormIds() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    return questionnaireCustomSchedules;
+  }
+
+  @Override
+  public List<QuestionResponseSubTypeBo> getQuestionResponseSubTypes(String questionId) {
+    List<QuestionResponseSubTypeBo> questionResponseSubTypeList = new ArrayList<>();
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(questionId)) {
+        questionResponseSubTypeList =
+            session
+                .getNamedQuery("getQuestionSubResponse")
+                .setString("responseTypeId", questionId)
+                .list();
+      }
+
+    } catch (Exception e) {
+      logger.error("StudyQuestionnaireDAOImpl - getFormsByInstructionFormIds() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    return questionResponseSubTypeList;
   }
 }
