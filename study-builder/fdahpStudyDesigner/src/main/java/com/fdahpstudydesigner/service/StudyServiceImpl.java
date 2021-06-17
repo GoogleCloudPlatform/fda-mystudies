@@ -1563,7 +1563,7 @@ public class StudyServiceImpl implements StudyService {
     List<QuestionnaireBo> questionnairesList =
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
 
-    List<NotificationBO> notificationBOs = notificationDAO.getNotificationList(studyBo.getId());
+    List<NotificationBO> notificationBOs = notificationDAO.getNotificationsList(studyBo.getId());
 
     List<ResourceBO> resourceBOs = studyDAO.getResourceList(studyBo.getId());
 
@@ -1607,9 +1607,14 @@ public class StudyServiceImpl implements StudyService {
     }
 
     if (CollectionUtils.isNotEmpty(questionnairesList)) {
+      Integer sequenceNumber = 0;
       for (QuestionnaireBo questionnaireBo : questionnairesList) {
         studyQuestionnaireDAO.cloneStudyQuestionnaire(
-            questionnaireBo.getId(), studyBo.getId(), sessionObject, anchorDateMap);
+            questionnaireBo.getId(),
+            studyBo.getId(),
+            sessionObject,
+            anchorDateMap,
+            sequenceNumber++);
       }
     }
 
@@ -1624,10 +1629,12 @@ public class StudyServiceImpl implements StudyService {
     }
 
     if (CollectionUtils.isNotEmpty(notificationBOs)) {
+      Integer sequenceNumber = 0;
       for (NotificationBO notificationBO : notificationBOs) {
         notificationBO.setNotificationId(null);
         notificationBO.setStudyId(studyBo.getId());
         notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+        notificationBO.setSequenceNumber(sequenceNumber++);
         notificationBO.setNotificationSent(false);
         if (!notificationBO.isNotificationStatus()) {
           notificationBO.setNotificationDone(false);

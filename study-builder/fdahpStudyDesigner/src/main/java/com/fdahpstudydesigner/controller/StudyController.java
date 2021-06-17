@@ -3732,7 +3732,7 @@ public class StudyController {
               notificationBO.setStudyId(studyId);
             }
           }
-          if (notificationBO.getNotificationId() == null) {
+          if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
             notificationBO.setCreatedBy(sessionObject.getUserId());
             notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           } else {

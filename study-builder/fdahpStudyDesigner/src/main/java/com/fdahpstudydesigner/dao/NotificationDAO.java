@@ -38,4 +38,6 @@ public interface NotificationDAO {
   public List<String> getGatwayAppList();
 
   public void saveNotification(NotificationBO notificationBO);
+
+  public List<NotificationBO> getNotificationsList(String studyId);
 }
