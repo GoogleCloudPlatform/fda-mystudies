@@ -128,7 +128,6 @@ module "example_dev_mystudies_sql_import" {
   project_id = module.project.project_id
   location   = "us-central1"
 
-}
   iam_members = [
     {
       member = "serviceAccount:${module.mystudies.instance_service_account_email_address}"
