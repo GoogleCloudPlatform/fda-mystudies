@@ -199,4 +199,6 @@ public interface StudyQuestionnaireDAO {
       String questionnaireId);
 
   public List<QuestionResponseSubTypeBo> getQuestionResponseSubTypes(String questionId);
+
+  public List<QuestionnairesFrequenciesBo> getQuestionnairesFrequencies(String questionId);
 }

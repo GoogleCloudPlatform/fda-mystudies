@@ -57,6 +57,9 @@ public class ActiveTaskFrequencyBo implements Serializable {
   @Column(name = "time_period_to_days")
   private Integer timePeriodToDays;
 
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
   public ActiveTaskFrequencyBo() {}
 
   public String getActiveTaskId() {
@@ -137,5 +140,13 @@ public class ActiveTaskFrequencyBo implements Serializable {
 
   public void setTimePeriodToDays(Integer timePeriodToDays) {
     this.timePeriodToDays = timePeriodToDays;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }
