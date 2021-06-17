@@ -216,7 +216,6 @@ public class StudyExportImportService {
         studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
 
     Map<String, List<ActiveTaskCustomScheduleBo>> activeTaskCustomFrequencyMap = new HashMap<>();
-    List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleList = new ArrayList<>();
     List<String> activeTaskIds = new ArrayList<>();
 
     if (CollectionUtils.isNotEmpty(activeTaskBos)) {
