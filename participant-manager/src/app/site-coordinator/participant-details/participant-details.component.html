@@ -151,44 +151,44 @@
     >
       <div class="flex__ flex__justify__center">
         <div
-                class="mr-sm"
-                *ngIf="
-                  participant.participantDetails.onboardingStatus !==
-                    onBoardingStatus.Disabled &&
-                  participant.participantDetails.studyStatus !==
-                    studyStatus.Deactivated &&
-                  participant.participantDetails.siteStatus !== 0
-                "
-              >
-        <button
-          [disabled]="hasCompletedEnrollment(participant.participantDetails)"
-          name="sendInvite"
-          class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14 mob_mr-10"
-          (click)="sendInvitation(participant.participantDetails.siteId)"
-        >
-          {{ sendResend }}
-        </button>
-        </div>
-        <div
-                *ngIf="
-                  participant.participantDetails.studyStatus !==
-                    studyStatus.Deactivated &&
-                  participant.participantDetails.siteStatus !== 0
-                "
-              >
-        <button
-          [disabled]="hasCompletedEnrollment(participant.participantDetails)"
-          name="toggleInvite"
-          class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
-          (click)="
-            toggleInvitation(
-              participant.participantDetails.siteId,
-              participant.participantDetails.onboardingStatus
-            )
+          class="mr-sm"
+          *ngIf="
+            participant.participantDetails.onboardingStatus !==
+              onBoardingStatus.Disabled &&
+            participant.participantDetails.studyStatus !==
+              studyStatus.Deactivated &&
+            participant.participantDetails.siteStatus !== 0
           "
         >
-          {{ enableDisable }}
-        </button>
+          <button
+            [disabled]="hasCompletedEnrollment(participant.participantDetails)"
+            name="sendInvite"
+            class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14 mob_mr-10"
+            (click)="sendInvitation(participant.participantDetails.siteId)"
+          >
+            {{ sendResend }}
+          </button>
+        </div>
+        <div
+          *ngIf="
+            participant.participantDetails.studyStatus !==
+              studyStatus.Deactivated &&
+            participant.participantDetails.siteStatus !== 0
+          "
+        >
+          <button
+            [disabled]="hasCompletedEnrollment(participant.participantDetails)"
+            name="toggleInvite"
+            class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
+            (click)="
+              toggleInvitation(
+                participant.participantDetails.siteId,
+                participant.participantDetails.onboardingStatus
+              )
+            "
+          >
+            {{ enableDisable }}
+          </button>
         </div>
       </div>
     </section>
