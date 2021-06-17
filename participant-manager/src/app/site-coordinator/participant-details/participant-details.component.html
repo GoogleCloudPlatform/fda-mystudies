@@ -150,6 +150,16 @@
       class="subheader p-none pl-none mobile__view border-top__c4d1e6"
     >
       <div class="flex__ flex__justify__center">
+        <div
+                class="mr-sm"
+                *ngIf="
+                  participant.participantDetails.onboardingStatus !==
+                    onBoardingStatus.Disabled &&
+                  participant.participantDetails.studyStatus !==
+                    studyStatus.Deactivated &&
+                  participant.participantDetails.siteStatus !== 0
+                "
+              >
         <button
           [disabled]="hasCompletedEnrollment(participant.participantDetails)"
           name="sendInvite"
@@ -158,6 +168,14 @@
         >
           {{ sendResend }}
         </button>
+        </div>
+        <div
+                *ngIf="
+                  participant.participantDetails.studyStatus !==
+                    studyStatus.Deactivated &&
+                  participant.participantDetails.siteStatus !== 0
+                "
+              >
         <button
           [disabled]="hasCompletedEnrollment(participant.participantDetails)"
           name="toggleInvite"
@@ -171,6 +189,7 @@
         >
           {{ enableDisable }}
         </button>
+        </div>
       </div>
     </section>
 
