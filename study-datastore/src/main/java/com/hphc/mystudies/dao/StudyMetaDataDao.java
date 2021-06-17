@@ -746,7 +746,7 @@ public class StudyMetaDataDao {
               reviewBean.setReviewHTML(
                   StringUtils.isEmpty(consentDto.getConsentDocContent())
                       ? ""
-                      : StringEscapeUtils.unescapeHtml4(
+                      : StringEscapeUtils.escapeHtml4(
                           consentDto
                               .getConsentDocContent()
                               .replaceAll("&#34;", "'")
