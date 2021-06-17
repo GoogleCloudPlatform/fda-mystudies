@@ -922,6 +922,10 @@ template "project_data" {
           #6# iam_members = [{
           #6#   role   = "roles/storage.objectViewer"
           #6#   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          #6# },
+          #6# {
+          #6#   role   = "roles/storage.objectAdmin"
+          #6#   member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           #6# }]
         },
       ]
