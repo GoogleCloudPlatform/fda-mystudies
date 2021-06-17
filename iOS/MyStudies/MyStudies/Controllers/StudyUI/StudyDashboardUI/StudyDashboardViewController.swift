@@ -110,7 +110,6 @@ class StudyDashboardViewController: UIViewController {
 
     // show navigationbar
     self.navigationController?.setNavigationBarHidden(true, animated: true)
-    self.tableView?.reloadData()
     getResponse()
   }
 

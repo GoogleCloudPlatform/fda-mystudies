@@ -396,7 +396,7 @@
           </div>
         </form:form>
         <!-- Ancor date type -->
-        <div class="gray-xs-f mb-sm">Questionnaire scheduling options</div>
+        <div class="gray-xs-f mb-sm">Scheduling options</div>
         <div class="pb-lg b-bor">
           <span class="radio radio-info radio-inline p-40"><input
               type="radio" id="inlineRadio1" class="schedule"
@@ -2179,6 +2179,16 @@
       $('.manuallyContainer').find(".remBtnDis").addClass("hide");
     }
 
+	$('.manuallyContainer').find('.manually-option').each(function () {
+    	
+    	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
+ 			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+ 		}
+		if($(this).find('.cusEndDate').data("DateTimePicker")!== undefined){
+			$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+		}
+    });
+    
     var actionPage = "${actionType}";
     var reorder = true;
     if (actionPage == 'view') {
@@ -2538,6 +2548,16 @@
         $('.anchortypeclass').removeAttr('required');
       }
     }
+    
+    var startToday;
+    <c:if test="${ empty questionnaireBo.questionnairesFrequenciesBo.frequencyDate}">
+    startToday = serverDate();
+    </c:if>
+    
+    <c:if test="${not empty questionnaireBo.questionnairesFrequenciesBo.frequencyDate}">
+    startToday=${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}
+    </c:if>
+    
 
     var startToday;
     <c:if test="${ empty questionnaireBo.questionnairesFrequenciesBo.frequencyDate}">
@@ -2565,8 +2585,7 @@
         $('#chooseDate').data("DateTimePicker").minDate(serverDate());
       });
     
-    
-    
+
     $(document).on('change dp.change ', '.dailyClock', function () {
 
       $('.dailyContainer').find('.dailyTimeDiv').each(function () {
@@ -2597,7 +2616,7 @@
       });
       multiTimeVal = !(a > 0);
     });
-debugger
+
     var endToday;
     <c:if test="${ empty questionnaireBo.studyLifetimeEnd}">
     endToday = serverDate();
@@ -2614,7 +2633,8 @@ debugger
       useCurrent: false,
     });
     
- $("#chooseEndDate").on("click", function (e) {
+
+	$("#chooseEndDate").on("click", function (e) {
     	
     	var end=$('#chooseEndDate').val();
     	if(end!=""){
@@ -2628,6 +2648,7 @@ debugger
         
       });
     
+
     $('#startDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       useCurrent: false,
@@ -2977,7 +2998,7 @@ debugger
         }
       } else {
         $("#chooseDate").val('');
-        $("#selectTime").val('');
+        $("#selectTime1").val('');
         if (scheduletype == 'AnchorDate') {
           $("#selectTime").attr("disabled", true);
           $("#selectTime").required = false;
@@ -3237,6 +3258,15 @@ debugger
     
     $('#customTime' + customCount).val("");
     $('#' + customCount).find('input:first').focus();
+ 	$('.manuallyContainer').find('.manually-option').each(function () {
+    	
+    	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
+ 			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+ 		}
+		if($(this).find('.cusEndDate').data("DateTimePicker")!== undefined){
+			$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+		}
+    });
   }
 
   function removeDate(param) {
@@ -3281,7 +3311,7 @@ debugger
 	  $('.manually-option').find('.startTime').prop('disabled', false);
       $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: minimumDate,
+
       useCurrent: false,
       }).on("dp.change", function (e) {
       $("#" + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -3294,7 +3324,7 @@ debugger
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
         $("#" + id).parent().find(".help-block").empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Start Date and Time Should not be greater than End Date and Time"));
+            "Start date and time should not be greater than end date and time"));
       } else {
         $("#id").parent().removeClass("has-danger").removeClass("has-error");
         $("#id").parent().find(".help-block").empty();
@@ -3317,7 +3347,7 @@ debugger
 	$('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: minimumDate,
+
       useCurrent: false,
     }).on("dp.change", function (e) {
       $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -3329,7 +3359,7 @@ debugger
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
         $('#' + id).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "End Date and Time Should not be less than Start Date and Time"));
+            "End date and time should not be less than start date and time"));
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
         $('#' + id).parent().find(".help-block").empty();

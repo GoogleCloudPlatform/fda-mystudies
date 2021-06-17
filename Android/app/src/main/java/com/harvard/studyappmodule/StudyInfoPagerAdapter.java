@@ -31,6 +31,7 @@ import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyInfo;
 import com.harvard.utils.AppController;
@@ -108,12 +109,15 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
     } else {
       desc.loadData(Html.fromHtml(html).toString(), "text/html", "UTF-8");
     }
+    RequestOptions requestOptions = new RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .skipMemoryCache(false);
+
     Glide.with(context)
-        .load(info.get(pos).getImage())
-        .thumbnail(0.5f)
-        .crossFade()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .into(bgImg);
+            .load(info.get(pos).getImage())
+            .thumbnail(0.5f)
+            .apply(requestOptions)
+            .into(bgImg);
   }
 
   private void initializeXmlId(int pos, View view) {

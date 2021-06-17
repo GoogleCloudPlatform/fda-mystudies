@@ -18,7 +18,7 @@
     text-transform: inherit; !important
 	}
 	
-.help-block ul {
+.help-block .list-unstyled {
       width: max-content !important;
 }
 </style>
@@ -1188,7 +1188,7 @@
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
             $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "The characters like (< >) are not allowed"));
+                "Please use characters from the following set only: A-Z a-z 0-9 *()_+|:.-"));
           }
         }
       });

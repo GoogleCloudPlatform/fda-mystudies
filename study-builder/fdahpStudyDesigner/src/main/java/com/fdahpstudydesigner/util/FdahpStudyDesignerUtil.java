@@ -19,6 +19,7 @@ import com.google.cloud.storage.StorageOptions;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1104,5 +1105,16 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);
     }
+  }
+
+  public static boolean isValidDateFormat(String dateStr, String dateFormat) {
+    DateFormat sdf = new SimpleDateFormat(dateFormat);
+    sdf.setLenient(false);
+    try {
+      sdf.parse(dateStr);
+    } catch (ParseException e) {
+      return false;
+    }
+    return true;
   }
 }

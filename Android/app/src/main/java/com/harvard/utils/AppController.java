@@ -46,6 +46,7 @@ import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.realm.RealmEncryptionHelper;
+import com.harvard.utils.realm.RealmMigrationHelper;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.ByteArrayInputStream;
@@ -256,7 +257,8 @@ public class AppController {
       config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
-              .deleteRealmIfMigrationNeeded()
+              .schemaVersion(1)
+              .migration(new RealmMigrationHelper())
               .build();
     }
     return Realm.getInstance(config);
