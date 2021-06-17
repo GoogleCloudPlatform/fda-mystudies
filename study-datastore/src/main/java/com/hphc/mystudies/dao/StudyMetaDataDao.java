@@ -537,7 +537,7 @@ public class StudyMetaDataDao {
               sharingBean.setLearnMore(
                   StringUtils.isEmpty(consentDto.getLearnMoreText())
                       ? ""
-                      : StringEscapeUtils.unescapeHtml4(consentDto.getLearnMoreText()));
+                      : consentDto.getLearnMoreText());
               sharingBean.setLongDesc(
                   StringUtils.isEmpty(consentDto.getLongDescription())
                       ? ""
@@ -590,7 +590,8 @@ public class StudyMetaDataDao {
                             .getDisplayTitle()
                             .replaceAll("&#34;", "\"")
                             .replaceAll("&#39;", "'"));
-                if (consentInfoDto.getConsentItemTitleId() != null) {
+                if (consentInfoDto.getConsentItemTitleId() != null
+                        && !consentInfoDto.getConsentItemTitleId().isEmpty()) {
                   if ((consentMasterInfoList != null) && !consentMasterInfoList.isEmpty()) {
                     for (ConsentMasterInfoDto masterInfo : consentMasterInfoList) {
                       if (masterInfo.getId().equals(consentInfoDto.getConsentItemTitleId())) {

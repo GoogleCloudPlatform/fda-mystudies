@@ -36,8 +36,8 @@
   }
 
   .help-block ul {
-    width: 155px;
-   /* font-size: 10 px !important; */
+    width: 155px !important;
+  / / font-size: 10 px !important;
   }
 .tool-tip {
     display: inline-block;
@@ -96,7 +96,7 @@
   </div>
 </form:form>
 <!-- Ancor date type -->
-<div class="gray-xs-f mb-sm">Active task scheduling options</div>
+<div class="gray-xs-f mb-sm">Scheduling options</div>
 <div class="pb-lg b-bor">
   <span class="radio radio-info radio-inline p-40">
     <input type="radio" id="oneTimeRadio1" class="schedule" frequencytype="oneTime"
@@ -1860,6 +1860,18 @@
       $('.anchortypeclass').removeAttr('required');
     }
 
+
+    
+    $('.manuallyContainer').find('.manually-option').each(function () {
+    	
+	 	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
+ 			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+ 		}
+		if($(this).find('.cusEndDate').data("DateTimePicker")!== undefined){
+			$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+		}
+    });
+    
     var startToday;
     <c:if test="${ empty activeTaskBo.activeTaskFrequenciesBo.frequencyDate}">
     startToday = serverDate();
@@ -1869,7 +1881,7 @@
     startToday=${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}
     </c:if>
     
-  
+
     
     $('#chooseDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
@@ -1941,7 +1953,7 @@
       useCurrent: false,
     });
     
-   
+
     
     $("#chooseEndDate").on("click", function (e) {
     	
@@ -1956,9 +1968,7 @@
     	}
         
       });
-    
-    
-    
+
     $('#startDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       useCurrent: false,
@@ -2187,6 +2197,8 @@
               });
         }
       } else {
+    	  $("#chooseDate").val('');
+    	  $("#selectTime1").val('');
         if (scheduletype == 'AnchorDate') {
           $("#selectTime").attr("disabled", true);
           $("#selectTime").required = false;
@@ -2428,6 +2440,17 @@
     $('#customTime' + customCount).val("");
     
     $('#customTime' + customCount).val("");
+
+	$('.manuallyContainer').find('.manually-option').each(function () {
+    	
+    	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
+ 			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
+ 		}
+		if($(this).find('.cusEndDate').data("DateTimePicker")!== undefined){
+			$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+		}
+    });
+    $('#' + customCount).find('input:first').focus();
   }
 
   function removeDate(param) {
@@ -2465,7 +2488,6 @@
 	  $('.manually-option').find('.startTime').prop('disabled', false);
     $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
       useCurrent: false,
     }).on("dp.change", function (e) {
       $("#" + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -2476,8 +2498,10 @@
       var endDate = $("#EndDate" + count).val();
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
-        $("#" + id).parent().find(".help-block").text(
-        '<ul class="list-unstyled"><li>Start Date and Time Should not be greater than End Date and Time</li></ul>');
+
+        $("#" + id).parent().find(".help-block").empty().append(
+                $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                "Start date and time should not be greater than end date and time"));
       } else {
         $("#activeTaskId").parent().removeClass("has-danger").removeClass("has-error");
         $("#activeTaskId").parent().find(".help-block").empty();
@@ -2492,7 +2516,6 @@
     $('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
-      minDate: serverDate(),
       useCurrent: false,
     }).on("dp.change", function (e) {
       $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
@@ -2505,7 +2528,7 @@
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
         $('#' + id).parent().find(".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "End Date and Time Should not be less than Start Date and Time"));
+                      "End date and time should not be less than start date and time"));
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
         $('#' + id).parent().find(".help-block").empty();
@@ -3260,16 +3283,17 @@
         if (frequencyType == 'Daily') {
           var dailyTimeLength = $('.dailyContainer').find('.dailyTimeDiv').length;
           if (dailyTimeLength == 1) {
-        	if (!$("#chartId,#chartId1,#chartId2 option[value='Days of the current week']").length) { 
-	           $("#chartId,#chartId1,#chartId2").append(
-	               "<option value='Days of the current week'>Days of the current week</option>");
-        	}
-        	
-        	if (!$("#chartId,#chartId1,#chartId2 option[value='Days of the current month']").length) { 
-	           $("#chartId,#chartId1,#chartId2").append(
-	               "<option value='Days of the current month'>Days of the current month</option>");
-        	}
-          } else if (!$("#chartId,#chartId1,#chartId2 option[value='24 hours of current day']").length) { 
+
+          	if (!$("#chartId,#chartId1,#chartId2 option[value='Days of the current week']").length) { 
+  	           $("#chartId,#chartId1,#chartId2").append(
+  	               "<option value='Days of the current week'>Days of the current week</option>");
+          	}
+          	
+          	if (!$("#chartId,#chartId1,#chartId2 option[value='Days of the current month']").length) { 
+  	           $("#chartId,#chartId1,#chartId2").append(
+  	               "<option value='Days of the current month'>Days of the current month</option>");
+          	}
+          } else if (!$("#chartId,#chartId1,#chartId2 option[value='24 hours of current day']").length) {
             $("#chartId,#chartId1,#chartId2").append(
                 "<option value='24 hours of current day'>24 hours of current day</option>");
           }
@@ -3278,7 +3302,8 @@
           $("#chartId,#chartId1,#chartId2").append(
               "<option value='Weeks of the current month'>Weeks of the current month</option>");
         }
-        if (frequencyType == 'Monthly' && !$("#chartId,#chartId1,#chartId2 option[value='Months of the current year']").length) {
+
+        if (frequencyType == 'Monthly' && !$("#chartId,#chartId1,#chartId2 option[value='Months of the current year']").length) {	
           $("#chartId,#chartId1,#chartId2").append(
               "<option value='Months of the current year'>Months of the current year</option>");
         }

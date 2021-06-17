@@ -21,7 +21,9 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "question_responsetype_master_info")
 @NamedQueries({
-  @NamedQuery(name = "getResponseTypes", query = "from QuestionResponseTypeMasterInfoBo QRTMBO"),
+	@NamedQuery(
+		      name = "getResponseTypes",
+		      query = "from QuestionResponseTypeMasterInfoBo QRTMBO ORDER BY CAST(id AS int) ASC"),
 })
 public class QuestionResponseTypeMasterInfoBo implements Serializable {
 

@@ -860,7 +860,7 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                           + " where ATCFDTO.activeTaskId=:activeTaskId"
-                          + " ORDER BY ATCFDTO.frequencyTime")
+                          + " ORDER BY ATCFDTO.frequencyStartTime")
                   .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
@@ -998,7 +998,7 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questRespId"
-                          + " ORDER BY QCFDTO.frequencyTime")
+                          + " ORDER BY QCFDTO.frequencyStartTime")
                   .setString("questRespId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
