@@ -129,3 +129,14 @@ module "example_dev_mystudies_sql_import" {
   location   = "us-central1"
 
 }
+  iam_members = [
+    {
+      member = "serviceAccount:${module.mystudies.instance_service_account_email_address}"
+      role   = "roles/storage.objectViewer"
+    },
+    {
+      member = "serviceAccount:study-builder-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
+    },
+  ]
+}
