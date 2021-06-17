@@ -242,4 +242,6 @@ public interface StudyDAO {
       AnchorDateTypeBo anchorDateTypeBo, String studyId, Map<String, String> anchorDateMap);
 
   public List<ConsentBo> getConsentListForStudy(String studyId);
+
+  public void giveStudyPermission(String studyId, String userId);
 }
