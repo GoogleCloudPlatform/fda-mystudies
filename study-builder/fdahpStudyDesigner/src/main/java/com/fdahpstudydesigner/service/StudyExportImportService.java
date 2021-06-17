@@ -988,6 +988,7 @@ public class StudyExportImportService {
     }
 
     List<String> studyPageBoInsertQueryList = new ArrayList<>();
+    Integer sequenceNo = 0;
     for (StudyPageBo studyPageBo : studypageList) {
       String studyPageBoInsertQuery =
           prepareInsertQuery(
@@ -1001,7 +1002,7 @@ public class StudyExportImportService {
               studyPageBo.getModifiedOn(),
               customIdsMap.get(STUDY_ID + studyPageBo.getStudyId()),
               studyPageBo.getTitle(),
-              studyPageBo.getSequenceNumber());
+              sequenceNo++);
 
       studyPageBoInsertQueryList.add(studyPageBoInsertQuery);
     }

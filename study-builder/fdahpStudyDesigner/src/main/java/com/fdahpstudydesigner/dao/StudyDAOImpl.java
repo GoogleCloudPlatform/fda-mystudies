@@ -4120,7 +4120,6 @@ public class StudyDAOImpl implements StudyDAO {
                 FdahpStudyDesignerUtil.isEmpty(studyPageBean.getImagePath()[i])
                     ? null
                     : studyPageBean.getImagePath()[i]);
-            studyPageBo.setSequenceNumber(i);
             session.saveOrUpdate(studyPageBo);
           }
           studySequence =
