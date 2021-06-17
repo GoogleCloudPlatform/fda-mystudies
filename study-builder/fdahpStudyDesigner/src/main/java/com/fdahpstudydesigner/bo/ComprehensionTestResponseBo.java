@@ -37,6 +37,9 @@ public class ComprehensionTestResponseBo implements Serializable {
   @Column(name = "response_option")
   private String responseOption;
 
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
   public String getComprehensionTestQuestionId() {
     return comprehensionTestQuestionId;
   }
@@ -67,5 +70,13 @@ public class ComprehensionTestResponseBo implements Serializable {
 
   public void setResponseOption(String responseOption) {
     this.responseOption = responseOption;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

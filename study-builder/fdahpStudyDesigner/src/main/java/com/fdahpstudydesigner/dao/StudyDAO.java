@@ -244,4 +244,7 @@ public interface StudyDAO {
   public List<ConsentBo> getConsentListForStudy(String studyId);
 
   public void giveStudyPermission(String studyId, String userId);
+
+  public List<ComprehensionTestResponseBo> getComprehensionTestResponses(
+      String comprehensionTestQuestionId);
 }
