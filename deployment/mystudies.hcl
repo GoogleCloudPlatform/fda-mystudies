@@ -1054,6 +1054,7 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     consent_bucket_name               = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
     study_resources_bucket_name       = "{{.prefix}}-{{.env}}-mystudies-study-resources"
+    study_export_import_bucket_name   = "{{.prefix}}-{{.env}}-mystudies-sql-import"
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
     base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
     studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"
