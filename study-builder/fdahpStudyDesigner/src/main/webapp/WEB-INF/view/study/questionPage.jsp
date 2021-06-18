@@ -3496,6 +3496,8 @@ if(document.getElementById("singleSelect").checked==true){
             $('.textLabel' + id).text("Upload");
             if (response_type == "Scale" || response_type == "Continuous scale") {
               $("#" + id).next().addClass("hide");
+            }else if(response_type == "Image choice"){
+            	  $("#" + $(thisAttr).attr("id")).attr('required', true);
             }
           }
         };
@@ -4208,6 +4210,9 @@ if(document.getElementById("singleSelect").checked==true){
               $("#prevStatShortNameId").val(statShortName);
             }
 
+            $('.image-choice').find('.requireClass').prop('required', false);
+            $('.image-choice').parent().removeClass("has-danger").removeClass("has-error");
+            $('.image-choice').parent().find(".help-block").empty();
             $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
