@@ -127,8 +127,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    outline: none;
-    width: 330px;
+    outline: none;  
+  }
+  .flex__text {
+    width: 320px !important;
   }
   .flex__justify__center {
     justify-content: center;
