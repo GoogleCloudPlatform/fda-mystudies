@@ -37,7 +37,7 @@ public class StudyBuilderAuditEventHelper {
 
     auditRequest =
         AuditEventMapper.fromAuditLogEventEnumAndCommonPropConfig(eventEnum, auditRequest);
-    //   auditService.postAuditLogEvent(auditRequest);
+    auditService.postAuditLogEvent(auditRequest);
   }
 
   public void logEvent(
