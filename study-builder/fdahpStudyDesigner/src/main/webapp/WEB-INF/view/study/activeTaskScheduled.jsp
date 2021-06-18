@@ -3202,10 +3202,12 @@
 	              thisToDate.setMinutes(thisEndTime.getMinutes());
 				  
 	            if (chkValFromDate && chkValToDate){
-	            	 chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate) 
-	            	 chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
+	              chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate) 
+	              chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
 	            }
-	             
+              	if(chkValToDate){
+	              chkValToDate = !(thisToDate >= toDate && thisFromDate <= toDate);
+	            }
 	          }
 	        });
 	      }
