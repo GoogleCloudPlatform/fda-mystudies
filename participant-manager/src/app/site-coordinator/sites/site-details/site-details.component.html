@@ -755,17 +755,20 @@
             </tbody>
 
             <tfoot class="custom__tfoot">
-              <tr *ngIf="
-                                siteParticipants.participantRegistryDetail
-                                  .registryParticipants.length === 0
-                              ">
-                <td colspan="4" class="text-center font12 txt__light-gray">No records found</td>
-              </tr>
+             
               <tr>
                 <td colspan="4">
                   <mfBootstrapPaginator></mfBootstrapPaginator>
                 </td>
               </tr>
+            </tfoot>
+            <tfoot>
+<tr *ngIf="
+                                siteParticipants.participantRegistryDetail
+                                  .registryParticipants.length === 0
+                              ">
+  <td colspan="4" class="text-center font12 txt__light-gray">No records found</td>
+</tr>
             </tfoot>
           </table>
         </div>
