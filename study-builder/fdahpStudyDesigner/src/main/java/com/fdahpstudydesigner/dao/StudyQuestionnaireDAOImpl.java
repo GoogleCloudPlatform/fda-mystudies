@@ -3774,7 +3774,12 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           && (questionsBo.getId() != null)
           && (questionsBo.getFromId() != null)) {
 
-        QuestionReponseTypeBo addQuestionReponseTypeBo =
+        QuestionReponseTypeBo addQuestionReponseTypeBo = questionsBo.getQuestionReponseTypeBo();
+        if (StringUtils.isEmpty(addQuestionReponseTypeBo.getQuestionsResponseTypeId())) {
+          addQuestionReponseTypeBo.setQuestionsResponseTypeId(questionsBo.getId());
+        }
+
+        addQuestionReponseTypeBo =
             getQuestionsResponseTypeBo(
                 questionsBo.getQuestionReponseTypeBo(), session, questionsBo.getCustomStudyId());
         if (addQuestionReponseTypeBo != null) {
