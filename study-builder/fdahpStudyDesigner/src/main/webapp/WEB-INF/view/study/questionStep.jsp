@@ -4708,6 +4708,8 @@
               $('.textLabel' + id).text("Upload");
               if (response_type == "Scale" || response_type == "Continuous scale") {
                 $("#" + id).next().addClass("hide");
+              }else if(response_type == "Image choice"){
+              	  $("#" + $(thisAttr).attr("id")).attr('required', true);
               }
             }
           };
