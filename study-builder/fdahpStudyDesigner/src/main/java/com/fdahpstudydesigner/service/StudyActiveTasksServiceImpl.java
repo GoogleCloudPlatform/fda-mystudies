@@ -77,6 +77,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     try {
       activeTask = studyActiveTasksDAO.getActiveTaskById(ativeTaskId, customStudyId);
       if (activeTask != null) {
+
         if ((activeTask.getActiveTaskCustomScheduleBo() != null)
             && !activeTask.getActiveTaskCustomScheduleBo().isEmpty()) {
           for (ActiveTaskCustomScheduleBo activeTaskCustomScheduleBo :
@@ -96,15 +97,30 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
                       FdahpStudyDesignerConstants.DB_SDF_DATE,
                       FdahpStudyDesignerConstants.UI_SDF_DATE));
             }
-            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyTime())) {
-              activeTaskCustomScheduleBo.setFrequencyTime(
+            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyStartTime())) {
+              activeTaskCustomScheduleBo.setFrequencyStartTime(
                   FdahpStudyDesignerUtil.getFormattedDate(
-                      activeTaskCustomScheduleBo.getFrequencyTime(),
+                      activeTaskCustomScheduleBo.getFrequencyStartTime(),
+                      FdahpStudyDesignerConstants.UI_SDF_TIME,
+                      FdahpStudyDesignerConstants.SDF_TIME));
+            } else {
+              activeTaskCustomScheduleBo.setFrequencyStartTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyEndTime(),
+                      FdahpStudyDesignerConstants.UI_SDF_TIME,
+                      FdahpStudyDesignerConstants.SDF_TIME));
+            }
+
+            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyEndTime())) {
+              activeTaskCustomScheduleBo.setFrequencyEndTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyEndTime(),
                       FdahpStudyDesignerConstants.UI_SDF_TIME,
                       FdahpStudyDesignerConstants.SDF_TIME));
             }
           }
         }
+
         if ((activeTask.getActiveTaskFrequenciesList() != null)
             && !activeTask.getActiveTaskFrequenciesList().isEmpty()) {
           for (ActiveTaskFrequencyBo activeTaskFrequencyBo :
@@ -125,6 +141,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
             }
           }
         }
+
         if ((activeTask.getActiveTaskFrequenciesBo() != null)
             && StringUtils.isNotBlank(activeTask.getActiveTaskFrequenciesBo().getFrequencyDate())) {
           activeTask

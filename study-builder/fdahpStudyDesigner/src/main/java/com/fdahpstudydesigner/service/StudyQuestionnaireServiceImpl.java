@@ -286,10 +286,23 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
                       FdahpStudyDesignerConstants.DB_SDF_DATE,
                       FdahpStudyDesignerConstants.UI_SDF_DATE));
             }
-            if (StringUtils.isNotBlank(questionnaireCustomScheduleBo.getFrequencyTime())) {
-              questionnaireCustomScheduleBo.setFrequencyTime(
+            if (StringUtils.isNotBlank(questionnaireCustomScheduleBo.getFrequencyEndTime())) {
+              questionnaireCustomScheduleBo.setFrequencyEndTime(
                   FdahpStudyDesignerUtil.getFormattedDate(
-                      questionnaireCustomScheduleBo.getFrequencyTime(),
+                      questionnaireCustomScheduleBo.getFrequencyEndTime(),
+                      FdahpStudyDesignerConstants.UI_SDF_TIME,
+                      FdahpStudyDesignerConstants.SDF_TIME));
+            }
+            if (StringUtils.isNotBlank(questionnaireCustomScheduleBo.getFrequencyStartTime())) {
+              questionnaireCustomScheduleBo.setFrequencyStartTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      questionnaireCustomScheduleBo.getFrequencyStartTime(),
+                      FdahpStudyDesignerConstants.UI_SDF_TIME,
+                      FdahpStudyDesignerConstants.SDF_TIME));
+            } else {
+              questionnaireCustomScheduleBo.setFrequencyStartTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      questionnaireCustomScheduleBo.getFrequencyEndTime(),
                       FdahpStudyDesignerConstants.UI_SDF_TIME,
                       FdahpStudyDesignerConstants.SDF_TIME));
             }
@@ -360,6 +373,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
           }
         }
       }
+
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionnaireStep - Error", e);
     }

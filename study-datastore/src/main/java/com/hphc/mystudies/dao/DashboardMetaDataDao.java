@@ -861,7 +861,7 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                           + " where ATCFDTO.activeTaskId=:activeTaskId"
-                          + " ORDER BY ATCFDTO.frequencyTime")
+                          + " ORDER BY ATCFDTO.frequencyStartTime")
                   .setInteger("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
@@ -895,13 +895,13 @@ public class DashboardMetaDataDao {
             }
 
             startDateTime =
-                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyTime();
+                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyStartTime();
             endDateTime =
                 endDate
                     + " "
                     + activeTaskCustomFrequencyList
                         .get(activeTaskCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
+                        .getFrequencyEndTime();
           }
 
           activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
@@ -999,7 +999,7 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questRespId"
-                          + " ORDER BY QCFDTO.frequencyTime")
+                          + " ORDER BY QCFDTO.frequencyStartDate, QCFDTO.frequencyStartTime")
                   .setInteger("questRespId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
@@ -1035,13 +1035,13 @@ public class DashboardMetaDataDao {
             }
 
             startDateTime =
-                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyTime();
+                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyStartTime();
             endDateTime =
                 endDate
                     + " "
                     + questionnaireCustomFrequencyList
                         .get(questionnaireCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
+                        .getFrequencyEndTime();
           }
 
           questionaire.setStudyLifetimeStart(startDateTime);

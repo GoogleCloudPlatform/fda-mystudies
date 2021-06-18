@@ -142,3 +142,23 @@ UPDATE fda_hphc.active_task_list SET task_name = 'Spatial span memory' WHERE tas
 
 
 
+ALTER TABLE fda_hphc.active_task_custom_frequencies 
+RENAME COLUMN frequency_time TO frequency_end_time;
+
+ALTER TABLE fda_hphc.active_task_custom_frequencies
+  ADD frequency_start_time varchar(255) DEFAULT NULL
+  AFTER frequency_end_time;
+  
+UPDATE fda_hphc.active_task_custom_frequencies SET frequency_start_time = frequency_end_time
+  WHERE frequency_end_time IS NOT NULL;
+
+
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies 
+RENAME COLUMN frequency_time TO frequency_end_time;
+
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies
+  ADD frequency_start_time varchar(255) DEFAULT NULL
+  AFTER frequency_end_time;
+
+UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_start_time = frequency_end_time
+  WHERE frequency_end_time IS NOT NULL;

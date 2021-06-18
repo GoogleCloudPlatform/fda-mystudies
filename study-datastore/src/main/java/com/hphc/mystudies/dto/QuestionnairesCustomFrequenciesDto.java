@@ -50,8 +50,11 @@ public class QuestionnairesCustomFrequenciesDto implements Serializable {
   @Column(name = "frequency_end_date")
   private String frequencyEndDate;
 
-  @Column(name = "frequency_time")
-  private String frequencyTime;
+  @Column(name = "frequency_start_time")
+  private String frequencyStartTime;
+
+  @Column(name = "frequency_end_time")
+  private String frequencyEndTime;
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
@@ -100,12 +103,20 @@ public class QuestionnairesCustomFrequenciesDto implements Serializable {
     this.frequencyEndDate = frequencyEndDate;
   }
 
-  public String getFrequencyTime() {
-    return frequencyTime;
+  public String getFrequencyStartTime() {
+    return frequencyStartTime;
   }
 
-  public void setFrequencyTime(String frequencyTime) {
-    this.frequencyTime = frequencyTime;
+  public void setFrequencyStartTime(String frequencyStartTime) {
+    this.frequencyStartTime = frequencyStartTime;
+  }
+
+  public String getFrequencyEndTime() {
+    return frequencyEndTime;
+  }
+
+  public void setFrequencyEndTime(String frequencyEndTime) {
+    this.frequencyEndTime = frequencyEndTime;
   }
 
   public Integer getStudyVersion() {
