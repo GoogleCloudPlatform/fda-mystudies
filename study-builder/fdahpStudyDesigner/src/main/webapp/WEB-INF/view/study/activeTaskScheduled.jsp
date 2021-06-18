@@ -2549,7 +2549,7 @@
 	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
 	 var endTime = moment($("#" + item).val(), "HH:mm A").toDate();
 	 endDate.setHours(endTime.getHours());
-	 endDate.setMinutes(endTime.getMinutes());
+	 endDate.setMinutes(endTime.getMinutes() - 1);
 	 
 	 if (startDate != '' && endDate != '' && startDate > endDate) {
 	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
