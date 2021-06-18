@@ -1892,7 +1892,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getFrequency()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
             searchQuery =
-                "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:questionnairesId ";
+                "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:questionnairesId order by QCSBO.sequenceNumber ";
             query =
                 session
                     .createQuery(searchQuery)
@@ -1901,7 +1901,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             questionnaireBo.setQuestionnaireCustomScheduleBo(questionnaireCustomScheduleList);
           } else {
             searchQuery =
-                "From QuestionnairesFrequenciesBo QFBO where QFBO.questionnairesId=:questionnairesId ";
+                "From QuestionnairesFrequenciesBo QFBO where QFBO.questionnairesId=:questionnairesId order by QFBO.sequenceNumber";
             query =
                 session
                     .createQuery(searchQuery)
@@ -3067,7 +3067,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         if (isLive) {
           searchQuery =
               "From QuestionnaireBo QBO WHERE QBO.customStudyId =:studyId "
-                  + " and QBO.active=1 and QBO.live=1 order by QBO.createdDate DESC";
+                  + " and QBO.active=1 and QBO.live=1 order by QBO.createdDate DESC, QBO.sequenceNumber ASC ";
           query = session.createQuery(searchQuery).setString("studyId", studyId);
         } else {
           query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
@@ -5562,7 +5562,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       String questionnaireId,
       String studyId,
       SessionObject sessionObject,
-      Map<String, String> anchorDateMap) {
+      Map<String, String> anchorDateMap,
+      Integer count) {
     logger.info("StudyQuestionnaireDAOImpl - copyStudyQuestionnaireBo() - Starts");
     QuestionnaireBo questionnaireBo = null;
     QuestionnaireBo newQuestionnaireBo = null;
@@ -5581,7 +5582,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newQuestionnaireBo.setId(null);
         //   newQuestionnaireBo.setLive(0);
         newQuestionnaireBo.setStudyId(studyId);
-        newQuestionnaireBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
+        // newQuestionnaireBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
         newQuestionnaireBo.setCreatedBy(sessionObject.getUserId());
         newQuestionnaireBo.setModifiedBy(null);
         newQuestionnaireBo.setModifiedDate(null);
@@ -5589,6 +5590,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         newQuestionnaireBo.setIsChange(1);
         newQuestionnaireBo.setShortTitle(questionnaireBo.getShortTitle());
         newQuestionnaireBo.setAnchorDateId(anchorDateMap.get(questionnaireBo.getAnchorDateId()));
+        newQuestionnaireBo.setSequenceNumber(count);
         session.save(newQuestionnaireBo);
 
         /** Questionnaire Schedule Purpose copying Start * */
@@ -6055,5 +6057,76 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       }
     }
     return questionIds;
+  }
+
+  @Override
+  public List<QuestionnaireCustomScheduleBo> getQuestionnaireCustomSchedules(
+      String questionnaireId) {
+    List<QuestionnaireCustomScheduleBo> questionnaireCustomSchedules = new ArrayList<>();
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(questionnaireId)) {
+        String searchQuery =
+            "From QuestionnaireCustomScheduleBo QCSBO where QCSBO.questionnairesId=:questionnaireId ";
+        questionnaireCustomSchedules =
+            session.createQuery(searchQuery).setString("questionnaireId", questionnaireId).list();
+      }
+
+    } catch (Exception e) {
+      logger.error("StudyQuestionnaireDAOImpl - getFormsByInstructionFormIds() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    return questionnaireCustomSchedules;
+  }
+
+  @Override
+  public List<QuestionResponseSubTypeBo> getQuestionResponseSubTypes(String questionId) {
+    List<QuestionResponseSubTypeBo> questionResponseSubTypeList = new ArrayList<>();
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(questionId)) {
+        questionResponseSubTypeList =
+            session
+                .getNamedQuery("getQuestionSubResponse")
+                .setString("responseTypeId", questionId)
+                .list();
+      }
+
+    } catch (Exception e) {
+      logger.error("StudyQuestionnaireDAOImpl - getFormsByInstructionFormIds() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    return questionResponseSubTypeList;
+  }
+
+  @Override
+  public List<QuestionnairesFrequenciesBo> getQuestionnairesFrequencies(String questionnaireId) {
+    List<QuestionnairesFrequenciesBo> questionnaireFrequency = new ArrayList<>();
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(questionnaireId)) {
+        String searchQuery =
+            "From QuestionnairesFrequenciesBo QFBO where QFBO.questionnairesId=:questionnaireId ";
+        questionnaireFrequency =
+            session.createQuery(searchQuery).setString("questionnaireId", questionnaireId).list();
+      }
+
+    } catch (Exception e) {
+      logger.error("StudyQuestionnaireDAOImpl - getFormsByInstructionFormIds() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    return questionnaireFrequency;
   }
 }

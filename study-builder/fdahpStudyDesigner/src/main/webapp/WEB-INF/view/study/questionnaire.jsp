@@ -67,8 +67,35 @@
   /* error box css start here  */
   .help-block ul {
     width: 155px;
-   /* font-size: 10 px !important; */
   }
+  
+  .help-block-timer {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 5px 0px;
+    display: block;
+  }
+
+  .help-block-timer ul li {
+    display: none;
+  } 
+
+  .help-block-timer ul {
+    position: absolute;
+    font-size: 11px !important;
+    line-height: 12px;
+    margin: 0px;
+  }
+
+  .help-block-timer ul li:first-child {
+    display: inherit;
+  }
+
+  .help-block-timer ul {
+    width: 155px;
+  }
+  
  /* error box css end here  */
   
    
@@ -1394,10 +1421,10 @@
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="customStartTime0" type="text" count='0'
-                           class="form-control clock cusTime startTime"
+                           class="form-control clock cusTime customTime startTime"
                            name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
-                           placeholder="Start time" onclick='timep(this.id);' disabled required />
-                    <span class='help-block with-errors red-txt'></span>
+                           placeholder="Start time" onclick='startTimep(this.id,0);' disabled required />
+                    <span class='help-block-timer with-errors red-txt'></span>
                   </span>
 
                  
@@ -1417,10 +1444,10 @@
                   <span
                       class="form-group  dis-inline vertical-align-middle pr-md">
                     <input id="customTime0" type="text" count='0'
-                           class="form-control clock endTime"
+                           class="form-control clock customTime endTime"
                            name="questionnaireCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field"
-                           placeholder="End time" onclick='timep(this.id);' disabled required/>
-                    <span class='help-block with-errors red-txt'></span>
+                           placeholder="End time" onclick='endTimep(this.id,0);' disabled required/>
+                    <span class='help-block-timer with-errors red-txt'></span>
                   </span>
                   <span class="addbtn addBtnDis align-span-center mr-md"
                         onclick="addDate();">+
@@ -1468,9 +1495,9 @@
                              class="form-control clock startTime cusTime ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartTime"
                              value="${questionnaireCustomScheduleBo.frequencyStartTime}" data-error="Please fill out this field"
-                             placeholder="Start time" onclick='timep(this.id);' required disabled/>
+                             placeholder="Start time" onclick='startTimep(this.id,${customVar.index});' required disabled/>
                       <span
-                          class='help-block with-errors red-txt'></span>
+                          class='help-block-timer with-errors red-txt'></span>
 
                     </span>
                     <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -1494,9 +1521,9 @@
                              class="form-control clock cusTime endTime ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
                              name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndTime"
                              value="${questionnaireCustomScheduleBo.frequencyEndTime}"
-                             placeholder="End time" onclick='timep(this.id);' required data-error="Please fill out this field"/>
+                             placeholder="End time" onclick='endTimep(this.id,${customVar.index});' required data-error="Please fill out this field"/>
                       <span
-                          class='help-block with-errors red-txt'></span>
+                          class='help-block-timer with-errors red-txt'></span>
                     </span>
                     <span id="AddButton"
                           class="addbtn addBtnDis align-span-center mr-md cursor-display"
@@ -2615,7 +2642,7 @@ debugger
     });
     
  $("#chooseEndDate").on("click", function (e) {
-    	
+       
     	var end=$('#chooseEndDate').val();
     	if(end!=""){
     	var s=end.split("/");
@@ -2979,7 +3006,7 @@ debugger
         }
       } else {
         $("#chooseDate").val('');
-        $("#selectTime").val('');
+        $("#selectTime1").val('');
         if (scheduletype == 'AnchorDate') {
           $("#selectTime").attr("disabled", true);
           $("#selectTime").required = false;
@@ -3164,9 +3191,7 @@ debugger
     $('#time' + count).val("");
     $(document).find('.dailyClock').trigger('dp.change');
     $('#' + count).find('input:first').focus();
-    $('#time' + count).keydown(function (event) {
-      event.preventDefault();
-    });
+    
   }
 
   function removeTime(param) {
@@ -3198,8 +3223,8 @@ debugger
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customStartTime" + customCount + "' type='text' count='" + customCount
         + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
-        + "].frequencyStartTime' class='form-control clock customTime startTime cusTime' placeholder='Start time' onclick='timep(this.id);' disabled/>"
-        + "<span class='help-block with-errors red-txt'></span>"
+        + "].frequencyStartTime' class='form-control clock customTime startTime cusTime' placeholder='Start time' onclick='startTimep(this.id, " + customCount + ");' disabled/>"
+        + "<span class='help-block-timer with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='gray-xs-f mb-sm pr-md align-span-center'>"
         + "  to "
@@ -3214,8 +3239,8 @@ debugger
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
         + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
-        + "].frequencyEndTime' class='form-control clock customTime endTime' data-error='Please fill out this field'  placeholder='End time' onclick='timep(this.id);' disabled/>"
-        + "<span class='help-block with-errors red-txt'></span>"
+        + "].frequencyEndTime' class='form-control clock customTime endTime' data-error='Please fill out this field'  placeholder='End time' onclick='endTimep(this.id, " + customCount + ");' disabled/>"
+        + "<span class='help-block-timer with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
@@ -3233,8 +3258,8 @@ debugger
    
     customStartDate('StartDate' + customCount, customCount);
     customEndDate('EndDate' + customCount, customCount);
-    timep('customTime' + customCount);
-    timep('customStartTime' + customCount);
+    endTimep('customTime' + customCount, customCount);
+    startTimep('customStartTime' + customCount, customCount);
     $('#customStartTime' + customCount).val("");
     
     $('#customTime' + customCount).val("");
@@ -3283,9 +3308,68 @@ debugger
       useCurrent: false,
     });
   }
+    
+  function startTimep(item, count) {
+
+    $('#' + item).not('.cursor-none').datetimepicker({
+      format: 'h:mm a',
+      useCurrent: false,
+    }).on("dp.change", function (e) {
+	 var endDate = moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
+	 var endTime = moment($("#" + item).val(), "HH:mm A").toDate();
+	 endDate.setHours(endTime.getHours());
+	 endDate.setMinutes(endTime.getMinutes());
+	 
+	 var startDate =  moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
+	 var startTime = moment($("#customTime" + count).val(), "HH:mm A").toDate();
+	 startDate.setHours(startTime.getHours());
+	 startDate.setMinutes(startTime.getMinutes());
+	 
+	 if (startDate != '' && endDate != '' && startDate < endDate) {
+	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+	   $("#" + item).parent().find(".help-block-timer").empty().append(
+	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	       "Start date and time should not be greater than end date and time"));
+	 } else {
+	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+	   $("#" + item).parent().find(".help-block-timer").empty();
+	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+	   $("#customTime" + count).parent().find(".help-block-timer").empty();
+	 }
+	});
+  }
+  
+  function endTimep(item, count) {
+
+    $('#' + item).not('.cursor-none').datetimepicker({
+      format: 'h:mm a',
+      useCurrent: false,
+    }).on("dp.change", function (e) {
+	 var startDate =  moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
+	 var startTime = moment($("#customStartTime" + count).val(), "HH:mm A").toDate();
+	 startDate.setHours(startTime.getHours());
+	 startDate.setMinutes(startTime.getMinutes());
+	 
+	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
+	 var endTime = moment($("#" + item).val(), "HH:mm A").toDate();
+	 endDate.setHours(endTime.getHours());
+	 endDate.setMinutes(endTime.getMinutes());
+	 debugger
+	 if (startDate != '' && endDate != '' && startDate > endDate) {
+	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+	   $("#" + item).parent().find(".help-block-timer").empty().append(
+	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	       "End date and time should not be less than start date and time"));
+	 } else {
+	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+	   $("#" + item).parent().find(".help-block-timer").empty();
+	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+	   $("#customTime" + count).parent().find(".help-block-timer").empty();
+	 }
+	});
+  }
 
   function customStartDate(id, count) {
-	 
 	  
 	  $('.manually-option').find('.startTime').prop('disabled', false);
       $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
@@ -3910,19 +3994,17 @@ debugger
 
   function checkDateRange() {
 	  $(document).on('dp.change change', '.cusStrDate, .cusEndDate, .startTime, .endTime', function (e) {
-	      var chkVal = true;
-	      
+		  
 	      var chkValFromDate=true;
 	      var chkValToDate = true;
-	      var chkValToSameDate = true;
 	      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents('.manually-option').find(
           '.startTime').val()) {
 	        var thisAttr = this;
 	        $(this).parents('.manuallyContainer').find('.manually-option').each(function () {
-	          if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
+		      if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
 	              '.cusStrDate').val() && $(this).find('.cusEndDate').val() && $(this).find(
 	              '.startTime').val()) {
-	            
+		    	  
 	        	  var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
 	              var startTime = moment($(this).find('.startTime').val(), "HH:mm A").toDate()
 	              fromDate.setHours(startTime.getHours());
@@ -3949,42 +4031,32 @@ debugger
 	              if (chkValFromDate && chkValToDate){
 	               	 chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate);
 	               	 chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
-	               	 chkValToSameDate = !(thisToDate <= thisFromDate);
 	               }
 	          }
 	        });
 	      }
 	      if (!chkValFromDate) {
 	          $(thisAttr).parents('.manually-option').find('.startTime').parent().addClass(
-	              'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
+	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
 	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
 	                     "Please ensure that the runs created do not have any overlapping time period"));
 	        } else if (!chkValToDate) {
 	        $(thisAttr).parents('.manually-option').find('.endTime').parent().addClass(
-	              'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
+	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
 	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
 	                     "Please ensure that the runs created do not have any overlapping time period"));
-	        } else if (!chkValToSameDate) {
-		        $(thisAttr).parents('.manually-option').find('.endTime').parent().addClass(
-	              'has-error has-danger').find(".help-block").removeClass('with-errors').empty().append(
-	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
-	                     "End date and time should not be less than start date and time"));
-	        } else {
-	        $(thisAttr).parents('.manually-option').find('.startTime').parent().removeClass(
-	            'has-error has-danger').find(".help-block").addClass('with-errors').empty();
-	        $(thisAttr).parents('.manually-option').find('.endTime').parent().removeClass(
-	        'has-error has-danger').find(".help-block").addClass('with-errors').empty();
-	      }
+	        } 
+
 	      var a = 0;
 	      $('.manuallyContainer').find('.manually-option').each(function () {
-	        if ($(this).find('.startTime').parent().find('.help-block').children().length > 0) {
+	        if ($(this).find('.startTime').parent().find('.help-block-timer').children().length > 0) {
 	          a++;
 	          $(this).find('.startTime').val('');
 	        }
 	      });
 	      var b = 0;
 	      $('.manuallyContainer').find('.manually-option').each(function () {
-	          if ($(this).find('.endTime').parent().find('.help-block').children().length > 0) {
+	          if ($(this).find('.endTime').parent().find('.help-block-timer').children().length > 0) {
 	            b++;
 	            $(this).find('.endTime').val('');
 	          }

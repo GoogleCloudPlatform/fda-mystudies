@@ -1454,7 +1454,7 @@ public class StudyDAOImpl implements StudyDAO {
           (ComprehensionTestQuestionBo) session.get(ComprehensionTestQuestionBo.class, questionId);
       if (null != comprehensionTestQuestionBo) {
         String searchQuery =
-            "From ComprehensionTestResponseBo CRBO where CRBO.comprehensionTestQuestionId=:id";
+            "From ComprehensionTestResponseBo CRBO where CRBO.comprehensionTestQuestionId=:id ORDER BY CRBO.sequenceNumber";
         query = session.createQuery(searchQuery);
         query.setString("id", comprehensionTestQuestionBo.getId());
         comprehensionTestResponsList = query.list();
@@ -3728,12 +3728,12 @@ public class StudyDAOImpl implements StudyDAO {
           for (ConsentInfoBo consentInfo : consentInfoList) {
 
             content +=
-                "<span style=&#34;font-size:20px;&#34;><strong>"
+                "&lt;span style=&#34;font-size:20px;&#34;&gt;&lt;strong&gt;"
                     + consentInfo.getDisplayTitle()
-                    + "</strong></span><br/>"
-                    + "<span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;>"
+                    + "&lt;/strong&gt;&lt;/span&gt;&lt;br/&gt;"
+                    + "&lt;span style=&#34;display: block; overflow-wrap: break-word; width: 100%;&#34;&gt;"
                     + consentInfo.getElaborated()
-                    + "</span><br/>";
+                    + "&lt;/span&gt;&lt;br/&gt;";
           }
           consentBo.setConsentDocContent(content);
         }
@@ -4120,7 +4120,6 @@ public class StudyDAOImpl implements StudyDAO {
                 FdahpStudyDesignerUtil.isEmpty(studyPageBean.getImagePath()[i])
                     ? null
                     : studyPageBean.getImagePath()[i]);
-            studyPageBo.setSequenceNumber(i);
             session.saveOrUpdate(studyPageBo);
           }
           studySequence =
@@ -7718,5 +7717,26 @@ public class StudyDAOImpl implements StudyDAO {
       }
     }
     logger.exit("StudyDAOImpl - giveStudyPermission() - Ends");
+  }
+
+  @Override
+  public List<ComprehensionTestResponseBo> getComprehensionTestResponses(
+      String comprehensionTestQuestionId) {
+    logger.info("StudyDAOImpl - getComprehensionTestResponseList() - Starts");
+    Session session = null;
+    List<ComprehensionTestResponseBo> comprehensionTestResponseList = new ArrayList<>();
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(comprehensionTestQuestionId)) {
+        query =
+            session.createQuery(
+                "From ComprehensionTestResponseBo CTRBO where CTRBO.comprehensionTestQuestionId=:comprehensionTestQuestionId order by CTRBO.sequenceNumber");
+        query.setString("comprehensionTestQuestionId", comprehensionTestQuestionId);
+        comprehensionTestResponseList = query.list();
+      }
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getComprehensionTestResponseList() - ERROR ", e);
+    }
+    return comprehensionTestResponseList;
   }
 }

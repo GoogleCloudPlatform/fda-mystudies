@@ -232,6 +232,10 @@ public class ActivityMetaDataDao {
                           activeTaskDto, activityBean, session);
                 }
               }
+
+              if (activityBean.getIsStudyLifeTime()) {
+                activityBean.setEndTime("");
+              }
               /** Phase2a code for anchor date * */
               activitiesBeanList.add(activityBean);
             }
@@ -308,6 +312,11 @@ public class ActivityMetaDataDao {
                     this.getAnchordateDetailsByActivityIdForQuestionnaire(
                         questionaire, activityBean, session);
               }
+            }
+
+            if (activityBean.getIsStudyLifeTime()) {
+
+              activityBean.setEndTime("");
             }
             /** Phase2a code for anchor date * */
             activitiesBeanList.add(activityBean);
@@ -2989,15 +2998,11 @@ public class ActivityMetaDataDao {
             }
           }
 
-          if (null != activeTaskFrequency.getFrequencyDate()) {
-            activityBean.setStartTime(
-                StudyMetaDataUtil.getFormattedDateTimeZone(
-                    startDateTime,
-                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          } else {
-            activityBean.setStartTime("");
-          }
+          activityBean.setStartTime(
+              StudyMetaDataUtil.getFormattedDateTimeZone(
+                  startDateTime,
+                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 
           if (null != activeTaskDto.getActiveTaskLifetimeEnd()) {
             activityBean.setEndTime(
@@ -3065,7 +3070,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                           + " where ATCFDTO.activeTaskId=:activeTaskId"
-                          + " ORDER BY ATCFDTO.frequencyStartTime")
+                          + " ORDER BY ATCFDTO.frequencyStartDate")
                   .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
@@ -3249,7 +3254,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:quesResId"
-                          + " ORDER BY QCFDTO.frequencyStartTime")
+                          + " ORDER BY QCFDTO.frequencyStartDate")
                   .setString("quesResId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
@@ -4096,7 +4101,15 @@ public class ActivityMetaDataDao {
                 manuallyScheduleFrequencyList.get(0).isxDaysSign()
                     ? -manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays()
                     : manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays());
-            start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyStartTime());
+
+            String frequencyStartTime =
+                manuallyScheduleFrequencyList.get(0).getFrequencyStartTime();
+            if (!frequencyStartTime.matches(
+                "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyStartTime = frequencyStartTime + ":00";
+            }
+
+            start.setTime(frequencyStartTime);
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
@@ -4107,10 +4120,15 @@ public class ActivityMetaDataDao {
                     : manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
                         .getTimePeriodToDays());
-            end.setTime(
+
+            String frequencyEndTime =
                 manuallyScheduleFrequencyList
                     .get(manuallyScheduleFrequencyList.size() - 1)
-                    .getFrequencyEndTime());
+                    .getFrequencyEndTime();
+            if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyEndTime = frequencyEndTime + ":00";
+            }
+            end.setTime(frequencyEndTime);
           }
         } else if (activeTaskDto
             .getFrequency()
@@ -4182,6 +4200,7 @@ public class ActivityMetaDataDao {
             }
           }
         }
+
         activityAnchorDateBean.setStart(start);
         activityAnchorDateBean.setEnd(end);
         activityBean.setAnchorDate(activityAnchorDateBean);
@@ -4356,7 +4375,15 @@ public class ActivityMetaDataDao {
                 manuallyScheduleFrequencyList.get(0).isxDaysSign()
                     ? -manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays()
                     : manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays());
-            start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyStartTime());
+
+            String frequencyStartTime =
+                manuallyScheduleFrequencyList.get(0).getFrequencyStartTime();
+            if (!frequencyStartTime.matches(
+                "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyStartTime = frequencyStartTime + ":00";
+            }
+
+            start.setTime(frequencyStartTime);
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
@@ -4367,10 +4394,16 @@ public class ActivityMetaDataDao {
                     : manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
                         .getTimePeriodToDays());
-            end.setTime(
+
+            String frequencyEndTime =
                 manuallyScheduleFrequencyList
                     .get(manuallyScheduleFrequencyList.size() - 1)
-                    .getFrequencyEndTime());
+                    .getFrequencyEndTime();
+            if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyEndTime = frequencyEndTime + ":00";
+            }
+
+            end.setTime(frequencyEndTime);
           }
         } else if (questionaire
             .getFrequency()

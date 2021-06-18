@@ -367,6 +367,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
           }
         }
       }
+
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - getQuestionnaireStep - Error", e);
     }

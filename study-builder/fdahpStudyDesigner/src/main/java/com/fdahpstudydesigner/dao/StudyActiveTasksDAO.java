@@ -35,8 +35,8 @@ import java.util.List;
 
 public interface StudyActiveTasksDAO {
 
-  public String deleteActiveTask(ActiveTaskBo activeTaskBo, SessionObject sesObj,
-      String customStudyId);
+  public String deleteActiveTask(
+      ActiveTaskBo activeTaskBo, SessionObject sesObj, String customStudyId);
 
   public ActiveTaskBo getActiveTaskById(String activeTaskId, String customStudyId);
 
@@ -53,14 +53,18 @@ public interface StudyActiveTasksDAO {
 
   public ActiveTaskBo saveOrUpdateActiveTask(ActiveTaskBo addActiveTaskeBo, String customStudyId);
 
-  public ActiveTaskBo saveOrUpdateActiveTaskInfo(ActiveTaskBo activeTaskBo, SessionObject sesObj,
+  public ActiveTaskBo saveOrUpdateActiveTaskInfo(
+      ActiveTaskBo activeTaskBo, SessionObject sesObj, String customStudyId);
+
+  public boolean validateActiveTaskAttrById(
+      String studyId,
+      String activeTaskName,
+      String activeTaskAttIdVal,
+      String activeTaskAttIdName,
       String customStudyId);
 
-  public boolean validateActiveTaskAttrById(String studyId, String activeTaskName,
-      String activeTaskAttIdVal, String activeTaskAttIdName, String customStudyId);
-
-  public List<ActiveStatisticsBean> validateActiveTaskStatIds(String customStudyId,
-      List<ActiveStatisticsBean> activeStatisticsBeans);
+  public List<ActiveStatisticsBean> validateActiveTaskStatIds(
+      String customStudyId, List<ActiveStatisticsBean> activeStatisticsBeans);
 
   public List<ActiveTaskBo> getStudyActiveTaskByStudyId(String studyId);
 
@@ -74,4 +78,8 @@ public interface StudyActiveTasksDAO {
 
   public List<ActiveTaskMasterAttributeBo> getActiveTaskMasterAttributesByType(
       List<String> activeTaskType);
+
+  public List<ActiveTaskCustomScheduleBo> getActivetaskCustomFrequencies(String activetaskId);
+
+  public List<ActiveTaskFrequencyBo> getActiveTaskFrequency(String activetaskId);
 }

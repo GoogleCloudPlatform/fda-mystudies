@@ -746,13 +746,14 @@ public class StudyMetaDataDao {
               reviewBean.setReviewHTML(
                   StringUtils.isEmpty(consentDto.getConsentDocContent())
                       ? ""
-                      : StringEscapeUtils.unescapeHtml4(
-                          consentDto
-                              .getConsentDocContent()
-                              .replaceAll("&#34;", "'")
-                              .replaceAll("em>", "i>")
-                              .replaceAll(
-                                  "<a", "<a style='text-decoration:underline;color:blue;'")));
+                      : StringEscapeUtils.escapeHtml4(
+                          StringEscapeUtils.unescapeHtml4(
+                              consentDto
+                                  .getConsentDocContent()
+                                  .replaceAll("&#34;", "'")
+                                  .replaceAll("em>", "i>")
+                                  .replaceAll(
+                                      "<a", "<a style='text-decoration:underline;color:blue;'"))));
             }
             consent.setReview(reviewBean);
           }
@@ -880,11 +881,13 @@ public class StudyMetaDataDao {
                 StringUtils.isEmpty(consent.getConsentDocContent())
                     ? ""
                     : StringEscapeUtils.escapeHtml4(
-                        consent
-                            .getConsentDocContent()
-                            .replaceAll("&#34;", "'")
-                            .replaceAll("em>", "i>")
-                            .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'")));
+                        StringEscapeUtils.unescapeHtml4(
+                            consent
+                                .getConsentDocContent()
+                                .replaceAll("&#34;", "'")
+                                .replaceAll("em>", "i>")
+                                .replaceAll(
+                                    "<a", "<a style='text-decoration:underline;color:blue;'"))));
             consentDocumentBean.setEnrollAgain(
                 consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
             consentDocumentResponse.setConsent(consentDocumentBean);
