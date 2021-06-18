@@ -4029,12 +4029,17 @@ debugger
 	              thisToDate.setMinutes(thisEndTime.getMinutes());
 
 	              if (chkValFromDate && chkValToDate){
-	               	 chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate);
-	               	 chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
-	               }
+	               	chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate);
+	               	chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
+	              }
+	              
+	              if(chkValToDate){
+	                chkValToDate = !(thisToDate >= toDate && thisFromDate <= toDate);
+	              }
 	          }
 	        });
 	      }
+          
 	      if (!chkValFromDate) {
 	          $(thisAttr).parents('.manually-option').find('.startTime').parent().addClass(
 	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
