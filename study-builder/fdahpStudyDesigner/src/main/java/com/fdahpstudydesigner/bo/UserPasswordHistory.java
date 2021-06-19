@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,11 +27,11 @@ package com.fdahpstudydesigner.bo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "users_password_history")
@@ -44,12 +45,13 @@ public class UserPasswordHistory {
   private String createdDate;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "password_history_id")
-  private Integer passwordHistoryId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "password_history_id", updatable = false, nullable = false)
+  private String passwordHistoryId;
 
   @Column(name = "user_id")
-  private Integer userId;
+  private String userId;
 
   @Column(name = "password")
   private String userPassword;
@@ -58,11 +60,11 @@ public class UserPasswordHistory {
     return createdDate;
   }
 
-  public Integer getPasswordHistoryId() {
+  public String getPasswordHistoryId() {
     return passwordHistoryId;
   }
 
-  public Integer getUserId() {
+  public String getUserId() {
     return userId;
   }
 
@@ -74,11 +76,11 @@ public class UserPasswordHistory {
     this.createdDate = createdDate;
   }
 
-  public void setPasswordHistoryId(Integer passwordHistoryId) {
+  public void setPasswordHistoryId(String passwordHistoryId) {
     this.passwordHistoryId = passwordHistoryId;
   }
 
-  public void setUserId(Integer userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 

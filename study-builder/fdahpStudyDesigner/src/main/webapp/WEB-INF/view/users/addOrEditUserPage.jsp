@@ -236,7 +236,7 @@
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
                           test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged}">disabled</c:if>
-                      onclick="activateOrDeactivateUser(${userBO.userId});">
+                          onclick="activateOrDeactivateUser('${userBO.userId}');">
                     <span class="switch-label bg-transparent" data-on="On"
                           data-off="Off"></span>
                     <span class="switch-handle"></span>
@@ -594,7 +594,7 @@
         }
       });
       $('#multiple :selected').each(function (i, sel) {
-        var selVal = parseInt($(sel).val());
+    	  var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
         var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
             + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal

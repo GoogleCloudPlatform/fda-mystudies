@@ -54,7 +54,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
 
   @Override
   public String deleteActiveTask(
-      Integer activeTaskInfoId, Integer studyId, SessionObject sesObj, String customStudyId) {
+      String activeTaskInfoId, String studyId, SessionObject sesObj, String customStudyId) {
     logger.entry("begin deleteActiveTask()");
     String message = null;
     ActiveTaskBo activeTaskBo = null;
@@ -71,17 +71,22 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
   }
 
   @Override
-  public ActiveTaskBo getActiveTaskById(Integer ativeTaskId, String customStudyId) {
+  public ActiveTaskBo getActiveTaskById(String ativeTaskId, String customStudyId) {
     logger.entry("begin getActiveTaskById()");
     ActiveTaskBo activeTask = null;
     try {
       activeTask = studyActiveTasksDAO.getActiveTaskById(ativeTaskId, customStudyId);
       if (activeTask != null) {
 
+        List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleList =
+            studyActiveTasksDAO.getActivetaskCustomFrequencies(activeTask.getId());
+        List<ActiveTaskFrequencyBo> activeTaskFrequencyList =
+            studyActiveTasksDAO.getActiveTaskFrequency(activeTask.getId());
+
         if ((activeTask.getActiveTaskCustomScheduleBo() != null)
             && !activeTask.getActiveTaskCustomScheduleBo().isEmpty()) {
           for (ActiveTaskCustomScheduleBo activeTaskCustomScheduleBo :
-              activeTask.getActiveTaskCustomScheduleBo()) {
+              activeTaskCustomScheduleList) {
 
             if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyStartDate())) {
               activeTaskCustomScheduleBo.setFrequencyStartDate(
@@ -121,10 +126,11 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
           }
         }
 
+        activeTask.setActiveTaskCustomScheduleBo(activeTaskCustomScheduleList);
+
         if ((activeTask.getActiveTaskFrequenciesList() != null)
             && !activeTask.getActiveTaskFrequenciesList().isEmpty()) {
-          for (ActiveTaskFrequencyBo activeTaskFrequencyBo :
-              activeTask.getActiveTaskFrequenciesList()) {
+          for (ActiveTaskFrequencyBo activeTaskFrequencyBo : activeTaskFrequencyList) {
             if (StringUtils.isNotBlank(activeTaskFrequencyBo.getFrequencyDate())) {
               activeTaskFrequencyBo.setFrequencyDate(
                   FdahpStudyDesignerUtil.getFormattedDate(
@@ -142,6 +148,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
           }
         }
 
+        activeTask.setActiveTaskFrequenciesList(activeTaskFrequencyList);
         if ((activeTask.getActiveTaskFrequenciesBo() != null)
             && StringUtils.isNotBlank(activeTask.getActiveTaskFrequenciesBo().getFrequencyDate())) {
           activeTask
@@ -259,7 +266,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     ActiveTaskBo updateActiveTaskBo = null;
     try {
       if (activeTaskBo != null) {
-        if (activeTaskBo.getId() != null) {
+        if (StringUtils.isNotEmpty(activeTaskBo.getId())) {
           updateActiveTaskBo =
               studyActiveTasksDAO.getActiveTaskById(activeTaskBo.getId(), customStudyId);
           updateActiveTaskBo.setModifiedBy(sessionObject.getUserId());
@@ -490,7 +497,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
 
   @Override
   public boolean validateActiveTaskAttrById(
-      Integer studyId,
+      String studyId,
       String activeTaskAttName,
       String activeTaskAttIdVal,
       String activeTaskAttIdName,
