@@ -71,7 +71,7 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject sessionObj = getSessionObject();
-    sessionObj.setUserId(1);
+    sessionObj.setUserId("1");
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, sessionObj);
 
@@ -83,7 +83,7 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
             .sessionAttrs(sessionAttributes);
 
     QuestionnaireBo questionnaireBo = new QuestionnaireBo();
-    questionnaireBo.setId(2);
+    questionnaireBo.setId("2");
     questionnaireBo.setQuestionnaireCustomScheduleBo(null);
     questionnaireBo.setQuestionnairesFrequenciesBo(null);
     questionnaireBo.setQuestionnairesFrequenciesList(null);

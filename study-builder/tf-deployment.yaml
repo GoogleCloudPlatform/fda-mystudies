@@ -102,7 +102,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: study_resources_bucket_name
+                  key: study_resources_bucket_name   
+            - name: EXPORT_STUDIES_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: study_export_import_bucket_name 
             - name: ORG_NAME
               valueFrom:
                 secretKeyRef:

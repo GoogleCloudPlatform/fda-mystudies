@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,12 +28,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "study_version")
@@ -41,7 +42,7 @@ import javax.persistence.Transient;
   @NamedQuery(
       name = "getStudyByCustomStudyId",
       query =
-          " From StudyVersionBo SVBO WHERE SVBO.customStudyId =:customStudyId order by versionId DESC LIMIT 1"),
+          " From StudyVersionBo SVBO WHERE SVBO.customStudyId =:customStudyId order by studyVersion DESC LIMIT 1"),
   @NamedQuery(
       name = "getStudyVersionsByCustomStudyId",
       query =
@@ -70,9 +71,10 @@ public class StudyVersionBo implements Serializable {
   private Float studyVersion = 0f;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "version_id")
-  private Integer versionId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "version_id", updatable = false, nullable = false)
+  private String versionId;
 
   public String getActivityLVersion() {
     return activityLVersion;
@@ -102,7 +104,7 @@ public class StudyVersionBo implements Serializable {
     return studyVersion;
   }
 
-  public Integer getVersionId() {
+  public String getVersionId() {
     return versionId;
   }
 
@@ -134,7 +136,7 @@ public class StudyVersionBo implements Serializable {
     this.studyVersion = studyVersion;
   }
 
-  public void setVersionId(Integer versionId) {
+  public void setVersionId(String versionId) {
     this.versionId = versionId;
   }
 }
