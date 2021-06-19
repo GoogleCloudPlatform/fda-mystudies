@@ -5,7 +5,6 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
@@ -30,7 +29,7 @@ import org.springframework.http.HttpHeaders;
 
 public class DashBoardAndProfileControllerTest extends BaseMockIT {
 
-  private static final int USER_ID = 1;
+  private static final String USER_ID = "1";
   private static final String LAST_NAME = "Last-name";
   private static final String FIRST_NAME = "First-name";
 

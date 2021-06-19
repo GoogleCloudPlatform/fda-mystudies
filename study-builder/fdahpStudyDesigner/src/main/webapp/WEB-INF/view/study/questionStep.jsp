@@ -193,7 +193,7 @@
                       Step ${destinationStep.sequenceNo}
                       : ${destinationStep.stepShortTitle}</option>
                   </c:forEach>
-                  <option value="0" ${questionnairesStepsBo.destinationStep eq 0 ? 'selected' :''}>
+                   <option value="0" ${questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
                     Completion Step
                   </option>
                 </select>
@@ -3062,7 +3062,7 @@
                                   &gt;
                                 </option>
                                 <option
-                                    value="<" ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "<" ? 'selected' :''}>
+                                    value='<' ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "<" ? 'selected' :''}>
                                   &lt;
                                 </option>
                                 <option
@@ -3204,7 +3204,7 @@
                                           &gt;
                                         </option>
                                         <option
-                                            value="<" ${questionConditionBranchBo.inputTypeValue eq "<" ? 'selected' :''}>
+                                            value='<' ${questionConditionBranchBo.inputTypeValue eq "<" ? 'selected' :''}>
                                           &lt;
                                         </option>
                                         <option

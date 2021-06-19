@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "active_task_list")
@@ -37,9 +38,10 @@ public class ActiveTaskListDto implements Serializable {
   private static final long serialVersionUID = -4743834604812647713L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "active_task_list_id")
-  private Integer activeTaskListId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "active_task_list_id", updatable = false, nullable = false)
+  private String activeTaskListId;
 
   @Column(name = "task_name")
   private String taskName;
@@ -47,11 +49,11 @@ public class ActiveTaskListDto implements Serializable {
   @Column(name = "type")
   private String type;
 
-  public Integer getActiveTaskListId() {
+  public String getActiveTaskListId() {
     return activeTaskListId;
   }
 
-  public void setActiveTaskListId(Integer activeTaskListId) {
+  public void setActiveTaskListId(String activeTaskListId) {
     this.activeTaskListId = activeTaskListId;
   }
 

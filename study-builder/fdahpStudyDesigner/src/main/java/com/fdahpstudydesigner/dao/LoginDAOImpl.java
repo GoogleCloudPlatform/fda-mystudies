@@ -2,22 +2,24 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.dao;
@@ -69,8 +71,9 @@ public class LoginDAOImpl implements LoginDAO {
   public LoginDAOImpl() {}
 
   @Override
-  public String changePassword(Integer userId, String newPassword, String oldPassword) {
+  public String changePassword(String userId, String newPassword, String oldPassword) {
     logger.entry("begin changePassword()");
+
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     UserBO adminUserBO = null;
@@ -79,7 +82,7 @@ public class LoginDAOImpl implements LoginDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      query = session.getNamedQuery("getUserById").setInteger("userId", userId);
+      query = session.getNamedQuery("getUserById").setString("userId", userId);
       adminUserBO = (UserBO) query.uniqueResult();
       if ((null != adminUserBO)
           && FdahpStudyDesignerUtil.compareEncryptedPassword(
@@ -114,15 +117,16 @@ public class LoginDAOImpl implements LoginDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<UserPasswordHistory> getPasswordHistory(Integer userId) {
+  public List<UserPasswordHistory> getPasswordHistory(String userId) {
     logger.entry("begin updatePasswordHistory()");
+
     List<UserPasswordHistory> passwordHistories = null;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         passwordHistories =
-            session.getNamedQuery("getPaswordHistoryByUserId").setInteger("userId", userId).list();
+            session.getNamedQuery("getPaswordHistoryByUserId").setString("userId", userId).list();
       }
 
     } catch (Exception e) {
@@ -222,17 +226,18 @@ public class LoginDAOImpl implements LoginDAO {
   }
 
   @Override
-  public Boolean isFrocelyLogOutUser(Integer userId) {
+  public Boolean isFrocelyLogOutUser(String userId) {
     logger.entry("begin isFrocelyLogOutUser()");
+
     UserBO userBo = null;
     boolean result = false;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         userBo =
             (UserBO)
-                session.getNamedQuery("getUserById").setInteger("userId", userId).uniqueResult();
+                session.getNamedQuery("getUserById").setString("userId", userId).uniqueResult();
         if (userBo != null) {
           result = userBo.isForceLogout();
         }
@@ -250,17 +255,17 @@ public class LoginDAOImpl implements LoginDAO {
   }
 
   @Override
-  public Boolean isUserEnabled(Integer userId) {
+  public Boolean isUserEnabled(String userId) {
     logger.entry("begin isUserExists()");
     UserBO userBo = null;
     boolean result = false;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         userBo =
             (UserBO)
-                session.getNamedQuery("getUserById").setInteger("userId", userId).uniqueResult();
+                session.getNamedQuery("getUserById").setString("userId", userId).uniqueResult();
         if (userBo != null) {
           result = userBo.isEnabled();
         }
@@ -461,8 +466,9 @@ public class LoginDAOImpl implements LoginDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public String updatePasswordHistory(Integer userId, String userPassword) {
+  public String updatePasswordHistory(String userId, String userPassword) {
     logger.entry("begin updatePasswordHistory()");
+
     List<UserPasswordHistory> passwordHistories = null;
     UserPasswordHistory savePasswordHistory = null;
     String result = FdahpStudyDesignerConstants.FAILURE;
@@ -472,9 +478,9 @@ public class LoginDAOImpl implements LoginDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         passwordHistories =
-            session.getNamedQuery("getPaswordHistoryByUserId").setInteger("userId", userId).list();
+            session.getNamedQuery("getPaswordHistoryByUserId").setString("userId", userId).list();
         if ((passwordHistories != null)
             && (passwordHistories.size() > (passwordHistoryCount - 1))) {
           for (int i = 0; i < ((passwordHistories.size() - passwordHistoryCount) + 1); i++) {
