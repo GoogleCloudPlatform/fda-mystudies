@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,9 +28,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "study_activity_version")
@@ -53,9 +54,10 @@ public class StudyActivityVersionBo implements Serializable {
   private String shortTitle;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "study_activity_id")
-  private Integer studyActivityId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "study_activity_id", updatable = false, nullable = false)
+  private String studyActivityId;
 
   @Column(name = "study_version")
   private Float studyVersion;
@@ -80,7 +82,7 @@ public class StudyActivityVersionBo implements Serializable {
     return shortTitle;
   }
 
-  public Integer getStudyActivityId() {
+  public String getStudyActivityId() {
     return studyActivityId;
   }
 
@@ -108,7 +110,7 @@ public class StudyActivityVersionBo implements Serializable {
     this.shortTitle = shortTitle;
   }
 
-  public void setStudyActivityId(Integer studyActivityId) {
+  public void setStudyActivityId(String studyActivityId) {
     this.studyActivityId = studyActivityId;
   }
 

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -29,12 +30,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "active_task")
@@ -90,7 +91,7 @@ public class ActiveTaskBo implements Serializable {
   @Transient private String buttonText;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_date")
   private String createdDate;
@@ -113,8 +114,10 @@ public class ActiveTaskBo implements Serializable {
   private String frequency;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "instruction")
   private String instruction;
@@ -128,7 +131,7 @@ public class ActiveTaskBo implements Serializable {
   private Integer live = 0;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_date")
   private String modifiedDate;
@@ -142,14 +145,14 @@ public class ActiveTaskBo implements Serializable {
   private String shortTitle;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Transient private List<ActiveTaskAtrributeValuesBo> taskAttributeValueBos = new ArrayList<>();
 
   @Transient private List<ActiveTaskMasterAttributeBo> taskMasterAttributeBos = new ArrayList<>();
 
   @Column(name = "task_type_id")
-  private Integer taskTypeId;
+  private String taskTypeId;
 
   @Column(name = "task_title")
   private String title;
@@ -163,7 +166,7 @@ public class ActiveTaskBo implements Serializable {
   private String scheduleType = "";
 
   @Column(name = "anchor_date_id")
-  private Integer anchorDateId;
+  private String anchorDateId;
 
   @Transient private boolean versionFlag = false;
 
@@ -209,7 +212,7 @@ public class ActiveTaskBo implements Serializable {
     return buttonText;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -241,7 +244,7 @@ public class ActiveTaskBo implements Serializable {
     return frequency;
   }
 
-  public Integer getId() {
+  public String getId() {
     return this.id;
   }
 
@@ -261,7 +264,7 @@ public class ActiveTaskBo implements Serializable {
     return live;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -281,7 +284,7 @@ public class ActiveTaskBo implements Serializable {
     return shortTitle;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return this.studyId;
   }
 
@@ -293,7 +296,7 @@ public class ActiveTaskBo implements Serializable {
     return taskMasterAttributeBos;
   }
 
-  public Integer getTaskTypeId() {
+  public String getTaskTypeId() {
     return taskTypeId;
   }
 
@@ -374,7 +377,7 @@ public class ActiveTaskBo implements Serializable {
     this.buttonText = buttonText;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -406,7 +409,7 @@ public class ActiveTaskBo implements Serializable {
     this.frequency = frequency;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -426,7 +429,7 @@ public class ActiveTaskBo implements Serializable {
     this.live = live;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -446,7 +449,7 @@ public class ActiveTaskBo implements Serializable {
     this.shortTitle = shortTitle;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
@@ -458,7 +461,7 @@ public class ActiveTaskBo implements Serializable {
     this.taskMasterAttributeBos = taskMasterAttributeBos;
   }
 
-  public void setTaskTypeId(Integer taskTypeId) {
+  public void setTaskTypeId(String taskTypeId) {
     this.taskTypeId = taskTypeId;
   }
 
@@ -486,11 +489,11 @@ public class ActiveTaskBo implements Serializable {
     this.scheduleType = scheduleType;
   }
 
-  public Integer getAnchorDateId() {
+  public String getAnchorDateId() {
     return anchorDateId;
   }
 
-  public void setAnchorDateId(Integer anchorDateId) {
+  public void setAnchorDateId(String anchorDateId) {
     this.anchorDateId = anchorDateId;
   }
 
