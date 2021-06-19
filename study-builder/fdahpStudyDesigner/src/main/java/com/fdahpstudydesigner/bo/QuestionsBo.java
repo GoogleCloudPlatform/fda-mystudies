@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -28,12 +29,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "questions")
@@ -53,9 +54,10 @@ public class QuestionsBo implements Serializable {
   private static final long serialVersionUID = 7281155550929426893L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "short_title")
   private String shortTitle;
@@ -97,10 +99,10 @@ public class QuestionsBo implements Serializable {
   private String statDisplayUnits;
 
   @Column(name = "stat_type")
-  private Integer statType;
+  private String statType;
 
   @Column(name = "stat_formula")
-  private Integer statFormula;
+  private String statFormula;
 
   @Column(name = "created_on")
   private String createdOn;
@@ -109,10 +111,10 @@ public class QuestionsBo implements Serializable {
   private String modifiedOn;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "active")
   private Boolean active;
@@ -130,15 +132,15 @@ public class QuestionsBo implements Serializable {
   private String healthkitDatatype;
 
   @Column(name = "anchor_date_id")
-  private Integer anchorDateId;
+  private String anchorDateId;
 
   @Transient private String type;
 
   @Transient private String stepType;
 
-  @Transient private Integer questionnaireId;
+  @Transient private String questionnaireId;
 
-  @Transient private Integer fromId;
+  @Transient private String fromId;
 
   @Transient QuestionnairesStepsBo questionnairesStepsBo;
 
@@ -174,7 +176,7 @@ public class QuestionsBo implements Serializable {
     return chartTitle;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -186,7 +188,7 @@ public class QuestionsBo implements Serializable {
     return description;
   }
 
-  public Integer getFromId() {
+  public String getFromId() {
     return fromId;
   }
 
@@ -194,7 +196,7 @@ public class QuestionsBo implements Serializable {
     return healthkitDatatype;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -210,7 +212,7 @@ public class QuestionsBo implements Serializable {
     return lineChartTimeRange;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -222,7 +224,7 @@ public class QuestionsBo implements Serializable {
     return question;
   }
 
-  public Integer getQuestionnaireId() {
+  public String getQuestionnaireId() {
     return questionnaireId;
   }
 
@@ -258,7 +260,7 @@ public class QuestionsBo implements Serializable {
     return statDisplayUnits;
   }
 
-  public Integer getStatFormula() {
+  public String getStatFormula() {
     return statFormula;
   }
 
@@ -266,7 +268,7 @@ public class QuestionsBo implements Serializable {
     return statShortName;
   }
 
-  public Integer getStatType() {
+  public String getStatType() {
     return statType;
   }
 
@@ -310,7 +312,7 @@ public class QuestionsBo implements Serializable {
     this.chartTitle = chartTitle;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -322,7 +324,7 @@ public class QuestionsBo implements Serializable {
     this.description = description;
   }
 
-  public void setFromId(Integer fromId) {
+  public void setFromId(String fromId) {
     this.fromId = fromId;
   }
 
@@ -330,7 +332,7 @@ public class QuestionsBo implements Serializable {
     this.healthkitDatatype = healthkitDatatype;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -346,7 +348,7 @@ public class QuestionsBo implements Serializable {
     this.lineChartTimeRange = lineChartTimeRange;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -358,7 +360,7 @@ public class QuestionsBo implements Serializable {
     this.question = question;
   }
 
-  public void setQuestionnaireId(Integer questionnaireId) {
+  public void setQuestionnaireId(String questionnaireId) {
     this.questionnaireId = questionnaireId;
   }
 
@@ -395,7 +397,7 @@ public class QuestionsBo implements Serializable {
     this.statDisplayUnits = statDisplayUnits;
   }
 
-  public void setStatFormula(Integer statFormula) {
+  public void setStatFormula(String statFormula) {
     this.statFormula = statFormula;
   }
 
@@ -403,7 +405,7 @@ public class QuestionsBo implements Serializable {
     this.statShortName = statShortName;
   }
 
-  public void setStatType(Integer statType) {
+  public void setStatType(String statType) {
     this.statType = statType;
   }
 
@@ -427,11 +429,11 @@ public class QuestionsBo implements Serializable {
     this.useStasticData = useStasticData;
   }
 
-  public Integer getAnchorDateId() {
+  public String getAnchorDateId() {
     return anchorDateId;
   }
 
-  public void setAnchorDateId(Integer anchorDateId) {
+  public void setAnchorDateId(String anchorDateId) {
     this.anchorDateId = anchorDateId;
   }
 
