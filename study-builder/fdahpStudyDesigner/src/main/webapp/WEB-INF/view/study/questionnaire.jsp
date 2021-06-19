@@ -3183,9 +3183,7 @@
     $('#time' + count).val("");
     $(document).find('.dailyClock').trigger('dp.change');
     $('#' + count).find('input:first').focus();
-    $('#time' + count).keydown(function (event) {
-      event.preventDefault();
-    });
+    
   }
 
   function removeTime(param) {
