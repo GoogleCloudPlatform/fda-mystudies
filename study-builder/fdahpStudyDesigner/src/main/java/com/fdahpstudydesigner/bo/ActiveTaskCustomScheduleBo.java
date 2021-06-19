@@ -80,6 +80,9 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
   @Column(name = "time_period_to_days")
   private Integer timePeriodToDays;
 
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
   public ActiveTaskCustomScheduleBo() {
     // Do nothing
   }
@@ -170,5 +173,13 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
 
   public void setFrequencyEndTime(String frequencyEndTime) {
     this.frequencyEndTime = frequencyEndTime;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

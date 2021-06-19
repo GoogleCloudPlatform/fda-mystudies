@@ -5,6 +5,16 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<style>
+.blue-btn {
+    color: #fff;
+    background: #007cba;
+    border-color: #007cba !important;
+    padding: 4px 20px;
+    width: 230px;
+    height: 38px;
+}
+</style>
 
 <div class="col-sm-10 col-rc white-bg p-none">
 
@@ -137,7 +147,25 @@
        Once deactivated, mobile app users will no longer be able to participate in the study. Deactivated studies cannot be reactivated.
       </div>
       </div>
-       </div>
+      
+      <div class="form-group mr-sm" style="white-space: normal;">
+        <button type="button" class="btn btn-default blue-btn "
+                id="exportId" onclick="exportStudy();"
+
+                <c:choose>
+                <c:when test="${not empty permission}"> disabled </c:when>
+                <c:when test="${not studyPermissionBO.viewPermission}"> disabled </c:when>
+                </c:choose>>Export
+        </button> <span class="sprites_icon copy copy_to_clipboard " id="copy_to_clipboard" 
+                        data-toggle="tooltip" data-placement="top" data-original-title=""></span>
+                        <span class=" copy_to_clipboard " id="copy_to_clipboard"
+                         >Copy signed URL</span>
+                        
+         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
+       This action exports the study into a cloud storage location and generates a signed URL that can then be copied into the Study Builder you want to import the study into.  
+       The URL is valid for ${signedUrlExpiryTime} hours and can only be used to import the study into compatible Study Builder applications (running  platform release version ${releaseVersion} or higher).
+      </div>
+      </div>
 
   </div>
 </div>
@@ -160,7 +188,15 @@
     $("#createStudyId").show();
     $('.tenth').removeClass('cursor-none');
 
-   
+    if("${studyBo.exportSignedUrl}" == null || "${studyBo.exportSignedUrl}" == ""){
+    	$('.copy_to_clipboard').addClass('cursor-none');
+    }
+    else if(!validateExpireDate("${studyBo.exportSignedUrl}")){
+    	$('.copy_to_clipboard').addClass('cursor-none');
+    }else{
+        $('.copy_to_clipboard').removeClass('cursor-none');
+    }
+  });
 
   function validateStudyStatus(obj) {
     var buttonText = obj.id;
@@ -295,4 +331,73 @@
     }
   }
   
+  function exportStudy(){
+	  $('.copy_to_clipboard').addClass('cursor-none');
+	   var studyId = "${studyBo.id}";
+	  $
+      .ajax({
+        url: "/studybuilder/studies/${studyBo.id}/export.do",
+        type: "POST",
+        datatype: "json",
+        data: {
+          "${_csrf.parameterName}": "${_csrf.token}",
+        },
+        
+        success: function (data) {
+            var message = data.message;
+            if (message == "SUCCESS") {
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
+              $('#alertMsg').show();
+              setTimeout(function () {
+            	  window.location=window.location;
+                  $('.copy_to_clipboard').removeClass('cursor-none');
+                }, 5000);
+            } else {
+            	showErrMsg1("Export failed. Please try again later.");
+            }
+            setTimeout(hideDisplayMessage, 5000);
+          },
+          error: function (xhr, status, error) {
+            $(item).prop('disabled', false);
+            $('#alertMsg').show();
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
+            setTimeout(hideDisplayMessage, 5000);
+          }
+        }); 
+}
+  
+  
+  $('.copy_to_clipboard').on('click', function () {
+	var signedUrl = "${studyBo.exportSignedUrl}";
+	$('#copy_to_clipboard').val(signedUrl);
+	var copyText = document.getElementById("copy_to_clipboard");
+    var textArea = document.createElement("textarea");
+    textArea.value = copyText.value;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("Copy");
+    textArea.remove();
+    $('#alertMsg').show();
+    $("#alertMsg").removeClass('e-box').addClass('s-box').text("URL copied to clipboard");
+    setTimeout(hideDisplayMessage, 5000);
+  });
+
+  var expireTime = "";
+  function validateExpireDate(result){
+		 var urlArray= result.split("&");
+		 var expireTimeStamp= urlArray[1].split("=");
+		 expireTime = expireTimeStamp[1];
+		  if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
+			  return false;
+		  }
+		  return true;
+	  }
+  
+ $('.copy_to_clipboard').on('mouseover', function () {
+	  var urlExpireTime =  ${signedUrlExpiryTime};
+	  var lastGeneratedTimestamp = expireTime-(urlExpireTime*3600);
+	  var lastGeneratedTime = new Date(lastGeneratedTimestamp*1000).toLocaleString([], { hour12: true});
+	 $('#copy_to_clipboard').attr("title", "Last generated on " + lastGeneratedTime );
+	}); 
+	   
 </script>

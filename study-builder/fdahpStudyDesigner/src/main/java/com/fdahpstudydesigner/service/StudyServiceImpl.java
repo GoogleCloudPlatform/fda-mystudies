@@ -24,10 +24,16 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudyIdBean;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bean.StudyPageBean;
+import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
+import com.fdahpstudydesigner.bo.ActiveTaskBo;
+import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
+import com.fdahpstudydesigner.bo.ActiveTaskFrequencyBo;
+import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.Checklist;
 import com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo;
 import com.fdahpstudydesigner.bo.ComprehensionTestResponseBo;
@@ -37,6 +43,7 @@ import com.fdahpstudydesigner.bo.ConsentMasterInfoBo;
 import com.fdahpstudydesigner.bo.EligibilityBo;
 import com.fdahpstudydesigner.bo.EligibilityTestBo;
 import com.fdahpstudydesigner.bo.NotificationBO;
+import com.fdahpstudydesigner.bo.QuestionnaireBo;
 import com.fdahpstudydesigner.bo.ReferenceTablesBo;
 import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
@@ -62,6 +69,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -1546,5 +1554,168 @@ public class StudyServiceImpl implements StudyService {
 
   public StudyBo getStudyInfo(String studyId) {
     return studyDAO.getStudy(studyId);
+  }
+
+  @Override
+  public StudyBo replicateStudy(
+      String studyId, SessionObject sessionObject, AuditLogEventRequest auditRequest) {
+
+    StudyBo studyBo = studyDAO.getStudy(studyId);
+    auditRequest.setStudyId(studyBo.getCustomStudyId());
+    auditRequest.setStudyVersion(studyBo.getVersion().toString());
+    auditRequest.setAppId(studyBo.getAppId());
+
+    EligibilityBo eligibilityBo = studyDAO.getStudyEligibiltyByStudyId(studyBo.getId());
+
+    List<ConsentBo> consentBoList = studyDAO.getConsentListForStudy(studyBo.getId());
+
+    List<ConsentInfoBo> consentInfoBoList = studyDAO.getConsentInfoList(studyBo.getId());
+
+    List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
+        studyDAO.getComprehensionTestQuestionList(studyBo.getId());
+
+    List<AnchorDateTypeBo> anchorDateList = studyDAO.getAnchorDateDetails(studyBo.getId());
+
+    List<QuestionnaireBo> questionnairesList =
+        studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
+
+    List<NotificationBO> notificationBOs = notificationDAO.getNotificationsList(studyBo.getId());
+
+    List<ResourceBO> resourceBOs = studyDAO.getResourceList(studyBo.getId());
+
+    List<ActiveTaskBo> activeTaskBos =
+        studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
+
+    // replicating study
+    studyDAO.cloneStudy(studyBo, sessionObject);
+
+    Map<String, String> anchorDateMap = new HashMap<>();
+    if (CollectionUtils.isNotEmpty(anchorDateList)) {
+      for (AnchorDateTypeBo anchorDateTypeBo : anchorDateList) {
+        studyDAO.cloneAnchorDateBo(anchorDateTypeBo, studyBo.getId(), anchorDateMap);
+      }
+    }
+
+    saveActiveTaskDetails(activeTaskBos, studyBo, anchorDateMap);
+
+    if (eligibilityBo != null) {
+      studyDAO.cloneEligibility(eligibilityBo, studyBo.getId());
+    }
+
+    if (CollectionUtils.isNotEmpty(consentBoList)) {
+      for (ConsentBo consentBo : consentBoList) {
+        studyDAO.cloneConsent(consentBo, studyBo.getId());
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(consentInfoBoList)) {
+      for (ConsentInfoBo consentinfoBo : consentInfoBoList) {
+        studyDAO.cloneConsentInfo(consentinfoBo, studyBo.getId());
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(comprehensionTestQuestionBoList)) {
+      for (ComprehensionTestQuestionBo comprehensionTestQuestionBo :
+          comprehensionTestQuestionBoList) {
+        comprehensionTestQuestionBo.setStudyId(studyBo.getId());
+        studyDAO.cloneComprehensionTest(comprehensionTestQuestionBo, studyBo.getId());
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(questionnairesList)) {
+      Integer sequenceNumber = 0;
+      for (QuestionnaireBo questionnaireBo : questionnairesList) {
+        studyQuestionnaireDAO.cloneStudyQuestionnaire(
+            questionnaireBo.getId(),
+            studyBo.getId(),
+            sessionObject,
+            anchorDateMap,
+            sequenceNumber++);
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(resourceBOs)) {
+      for (ResourceBO resourceBO : resourceBOs) {
+        resourceBO.setId(null);
+        resourceBO.setStudyId(studyBo.getId());
+        resourceBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+        resourceBO.setAnchorDateId(anchorDateMap.get(resourceBO.getAnchorDateId()));
+        studyDAO.saveOrUpdateResource(resourceBO);
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(notificationBOs)) {
+      Integer sequenceNumber = 0;
+      for (NotificationBO notificationBO : notificationBOs) {
+        notificationBO.setNotificationId(null);
+        notificationBO.setStudyId(studyBo.getId());
+        notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+        notificationBO.setSequenceNumber(sequenceNumber++);
+        notificationBO.setNotificationSent(false);
+        if (!notificationBO.isNotificationStatus()) {
+          notificationBO.setNotificationDone(false);
+          notificationBO.setNotificationAction(false);
+        }
+        notificationBO.setNotificationScheduleType(
+            FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
+        notificationDAO.saveNotification(notificationBO);
+      }
+    }
+
+    return studyBo;
+  }
+
+  private void saveActiveTaskDetails(
+      List<ActiveTaskBo> activeTaskBos, StudyBo studyBo, Map<String, String> anchorDateMap) {
+
+    List<String> activeTaskIds = new ArrayList<>();
+    List<String> activeTaskTypes = new ArrayList<>();
+    if (CollectionUtils.isNotEmpty(activeTaskBos)) {
+      for (ActiveTaskBo activeTaskBo : activeTaskBos) {
+        activeTaskIds.add(activeTaskBo.getId());
+        activeTaskTypes.add(activeTaskBo.getTaskTypeId());
+      }
+    }
+    List<ActiveTaskAtrributeValuesBo> activeTaskAtrributeValuesBos =
+        studyActiveTasksDAO.getActiveTaskAtrributeValuesByActiveTaskId(activeTaskIds);
+
+    List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleBoList =
+        studyActiveTasksDAO.getActiveTaskCustomScheduleBoList(activeTaskIds);
+
+    List<ActiveTaskFrequencyBo> activeTaskFrequencyBoList =
+        studyActiveTasksDAO.getActiveTaskFrequencyBoList(activeTaskIds);
+
+    if (CollectionUtils.isNotEmpty(activeTaskBos)) {
+      for (ActiveTaskBo activeTask : activeTaskBos) {
+        String oldActiveTaskId = activeTask.getId();
+        activeTask.setId(null);
+        activeTask.setStudyId(studyBo.getId());
+        activeTask.setAnchorDateId(anchorDateMap.get(activeTask.getAnchorDateId()));
+        studyDAO.saveStudyActiveTask(activeTask);
+
+        for (ActiveTaskAtrributeValuesBo active : activeTaskAtrributeValuesBos) {
+          if (active.getActiveTaskId().equals(oldActiveTaskId)) {
+            active.setAttributeValueId(null);
+            active.setActiveTaskId(activeTask.getId());
+            studyDAO.saveActiveTaskAtrributeValuesBo(active);
+          }
+        }
+        for (ActiveTaskCustomScheduleBo active : activeTaskCustomScheduleBoList) {
+          if (active.getActiveTaskId().equals(oldActiveTaskId)) {
+            active.setId(null);
+            active.setActiveTaskId(activeTask.getId());
+            active.setUsed(false);
+            studyDAO.saveActiveTaskCustomScheduleBo(active);
+          }
+        }
+        for (ActiveTaskFrequencyBo active : activeTaskFrequencyBoList) {
+          if (active.getActiveTaskId().equals(oldActiveTaskId)) {
+            active.setId(null);
+            active.setActiveTaskId(activeTask.getId());
+            studyDAO.saveActiveTaskFrequencyBo(active);
+          }
+        }
+      }
+    }
   }
 }

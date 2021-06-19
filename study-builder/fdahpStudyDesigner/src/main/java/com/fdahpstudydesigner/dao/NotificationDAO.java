@@ -52,4 +52,8 @@ public interface NotificationDAO {
       SessionObject sessionObject);
 
   public List<String> getGatwayAppList();
+
+  public void saveNotification(NotificationBO notificationBO);
+
+  public List<NotificationBO> getNotificationsList(String studyId);
 }

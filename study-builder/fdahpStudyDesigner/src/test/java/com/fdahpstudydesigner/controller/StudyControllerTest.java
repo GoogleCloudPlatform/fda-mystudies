@@ -1304,4 +1304,39 @@ public class StudyControllerTest extends BaseMockIT {
         .readValue(JsonUtils.class.getResourceAsStream(filepath), JsonNode.class)
         .toString();
   }
+
+  @Test
+  public void shouldCreateInsertSqlQueries() throws Exception {
+
+    SessionObject session = new SessionObject();
+    session.setUserId("1");
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
+    mockMvc
+        .perform(
+            post("/studies/{studyId}/export.do", "f24b5b94l66b1n4286v8884w9ccb90306363")
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+  }
+
+  @Test
+  public void shouldreplicateStudies() throws Exception {
+
+    SessionObject session = new SessionObject();
+    session.setUserId("1");
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
+    mockMvc
+        .perform(
+            post("/adminStudies/replicate.do")
+                .param(FdahpStudyDesignerConstants.STUDY_ID, "f24b5b94l66b1n4286v8884w9ccb90306363")
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isFound());
+  }
 }

@@ -71,6 +71,9 @@ public class StudyPageBo implements Serializable {
 
   @Transient public String signedUrl;
 
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
   public String getCreatedBy() {
     return createdBy;
   }
@@ -149,5 +152,13 @@ public class StudyPageBo implements Serializable {
 
   public void setSignedUrl(String signedUrl) {
     this.signedUrl = signedUrl;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

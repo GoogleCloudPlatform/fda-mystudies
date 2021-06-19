@@ -206,7 +206,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         queryString =
             "from NotificationBO NBO where NBO.studyId = :studyId "
                 + " and NBO.notificationSubType = 'Announcement' and NBO.notificationType = 'ST' and NBO.notificationStatus = 0 "
-                + "order by NBO.notificationId desc";
+                + "order by createdOn DESC, NBO.sequenceNumber ";
         query = session.createQuery(queryString).setParameter("studyId", studyId);
         notificationList = query.list();
       } else {
@@ -475,6 +475,47 @@ public class NotificationDAOImpl implements NotificationDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       return session.getNamedQuery("getNotification").setString("studyId", studyId).list();
+    } catch (Exception e) {
+      logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getNotificationList() - Ends");
+    return null;
+  }
+
+  @Override
+  public void saveNotification(NotificationBO notificationBO) {
+    logger.info("NotificationDAOImpl - saveNotification() - Starts");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      session.save(notificationBO);
+      transaction.commit();
+    } catch (Exception e) {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+      logger.error("NotificationDAOImpl - saveNotification()  - ERROR ", e);
+    } finally {
+      if ((session != null) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("NotificationDAOImpl - saveNotification()  - Ends");
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<NotificationBO> getNotificationsList(String studyId) {
+    logger.entry("begin getNotificationList()");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      return session.getNamedQuery("getNotificationsList").setString("studyId", studyId).list();
     } catch (Exception e) {
       logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
     } finally {

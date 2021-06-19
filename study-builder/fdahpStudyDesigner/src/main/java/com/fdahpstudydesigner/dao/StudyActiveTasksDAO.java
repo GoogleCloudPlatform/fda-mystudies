@@ -25,7 +25,10 @@
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
+import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
+import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
+import com.fdahpstudydesigner.bo.ActiveTaskFrequencyBo;
 import com.fdahpstudydesigner.bo.ActiveTaskListBo;
 import com.fdahpstudydesigner.bo.ActiveTaskMasterAttributeBo;
 import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
@@ -65,4 +68,21 @@ public interface StudyActiveTasksDAO {
 
   public List<ActiveStatisticsBean> validateActiveTaskStatIds(
       String customStudyId, List<ActiveStatisticsBean> activeStatisticsBeans);
+
+  public List<ActiveTaskBo> getStudyActiveTaskByStudyId(String studyId);
+
+  public List<ActiveTaskAtrributeValuesBo> getActiveTaskAtrributeValuesByActiveTaskId(
+      List<String> activeTaskId);
+
+  public List<ActiveTaskCustomScheduleBo> getActiveTaskCustomScheduleBoList(
+      List<String> activeTaskId);
+
+  public List<ActiveTaskFrequencyBo> getActiveTaskFrequencyBoList(List<String> activeTaskId);
+
+  public List<ActiveTaskMasterAttributeBo> getActiveTaskMasterAttributesByType(
+      List<String> activeTaskType);
+
+  public List<ActiveTaskCustomScheduleBo> getActivetaskCustomFrequencies(String activetaskId);
+
+  public List<ActiveTaskFrequencyBo> getActiveTaskFrequency(String activetaskId);
 }

@@ -44,7 +44,7 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(
       name = "getQuestionariesByStudyId",
       query =
-          " From QuestionnaireBo QBO WHERE QBO.studyId =:studyId and QBO.active=1 order by QBO.createdDate DESC"),
+          " From QuestionnaireBo QBO WHERE QBO.studyId =:studyId and QBO.active=1 order by QBO.createdDate DESC, QBO.sequenceNumber ASC"),
   @NamedQuery(
       name = "checkQuestionnaireShortTitle",
       query = "From QuestionnaireBo QBO where QBO.studyId=:studyId and QBO.shortTitle=:shortTitle"),
@@ -153,6 +153,9 @@ public class QuestionnaireBo implements Serializable {
   private String anchorDateId;
 
   @Transient private boolean anchorQuestionnaireExist = false;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public Boolean getActive() {
     return active;
@@ -403,5 +406,13 @@ public class QuestionnaireBo implements Serializable {
 
   public void setAnchorQuestionnaireExist(boolean anchorQuestionnaireExist) {
     this.anchorQuestionnaireExist = anchorQuestionnaireExist;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

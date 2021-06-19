@@ -27,6 +27,11 @@ package com.fdahpstudydesigner.dao;
 import com.fdahpstudydesigner.bean.StudyIdBean;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bean.StudyPageBean;
+import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
+import com.fdahpstudydesigner.bo.ActiveTaskBo;
+import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
+import com.fdahpstudydesigner.bo.ActiveTaskFrequencyBo;
+import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.Checklist;
 import com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo;
 import com.fdahpstudydesigner.bo.ComprehensionTestResponseBo;
@@ -41,9 +46,11 @@ import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
+import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -217,4 +224,43 @@ public interface StudyDAO {
   public Integer getEligibilityType(String studyId);
 
   public boolean validateStudyActions(String studyId);
+
+  public StudySequenceBo getStudySequenceByStudyId(String studyId);
+
+  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId);
+
+  public List<ComprehensionTestResponseBo> getComprehensionTestResponseList(
+      List<String> comprehensionTestQuestionIds);
+
+  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject);
+
+  public void cloneEligibility(EligibilityBo eligibilityBo, String studyId);
+
+  public void cloneComprehensionTest(
+      ComprehensionTestQuestionBo comprehensionTestQuestionBo, String studyId);
+
+  public void cloneConsent(ConsentBo consentBo, String studyId);
+
+  public void cloneConsentInfo(ConsentInfoBo consentInfoBo, String studyId);
+
+  public void saveStudyActiveTask(ActiveTaskBo activeTaskBo);
+
+  public void saveActiveTaskAtrributeValuesBo(
+      ActiveTaskAtrributeValuesBo activeTaskAtrributeValuesBo);
+
+  public void saveActiveTaskCustomScheduleBo(ActiveTaskCustomScheduleBo activeTaskCustomScheduleBo);
+
+  public void saveActiveTaskFrequencyBo(ActiveTaskFrequencyBo activeTaskFrequencyBo);
+
+  public String saveExportFilePath(String studyId, String destinationCustomId, String message);
+
+  public String cloneAnchorDateBo(
+      AnchorDateTypeBo anchorDateTypeBo, String studyId, Map<String, String> anchorDateMap);
+
+  public List<ConsentBo> getConsentListForStudy(String studyId);
+
+  public void giveStudyPermission(String studyId, String userId);
+
+  public List<ComprehensionTestResponseBo> getComprehensionTestResponses(
+      String comprehensionTestQuestionId);
 }
