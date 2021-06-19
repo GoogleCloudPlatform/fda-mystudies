@@ -84,6 +84,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -545,7 +546,7 @@ public class ActivityMetaDataDao {
                   activeTaskActiveTaskStep.setText(
                       StringUtils.isEmpty(activeTaskDto.getInstruction())
                           ? ""
-                          : activeTaskDto.getInstruction());
+                          : StringEscapeUtils.escapeHtml4(activeTaskDto.getInstruction()));
 
                   switch (taskDto.getType()) {
                     case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
@@ -1634,7 +1635,7 @@ public class ActivityMetaDataDao {
           instructionBean.setText(
               StringUtils.isEmpty(instructionsDto.getInstructionText())
                   ? ""
-                  : instructionsDto.getInstructionText());
+                  : StringEscapeUtils.escapeHtml4(instructionsDto.getInstructionText()));
           instructionBean.setSkippable(
               (StringUtils.isEmpty(instructionStepDetails.getSkiappable())
                       || instructionStepDetails

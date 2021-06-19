@@ -607,11 +607,13 @@ public class StudyMetaDataDao {
                 consentBean.setHtml(
                     StringUtils.isEmpty(consentInfoDto.getElaborated())
                         ? ""
-                        : consentInfoDto
-                            .getElaborated()
-                            .replaceAll("&#34;", "'")
-                            .replaceAll("em>", "i>")
-                            .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+                        : StringEscapeUtils.escapeHtml4(
+                            consentInfoDto
+                                .getElaborated()
+                                .replaceAll("&#34;", "'")
+                                .replaceAll("em>", "i>")
+                                .replaceAll(
+                                    "<a", "<a style='text-decoration:underline;color:blue;'")));
                 consentBean.setUrl(
                     StringUtils.isEmpty(consentInfoDto.getUrl()) ? "" : consentInfoDto.getUrl());
 
@@ -741,13 +743,14 @@ public class StudyMetaDataDao {
               reviewBean.setReviewHTML(
                   StringUtils.isEmpty(consentDto.getConsentDocContent())
                       ? ""
-                      : StringEscapeUtils.unescapeHtml4(
-                          consentDto
-                              .getConsentDocContent()
-                              .replaceAll("&#34;", "'")
-                              .replaceAll("em>", "i>")
-                              .replaceAll(
-                                  "<a", "<a style='text-decoration:underline;color:blue;'")));
+                      : StringEscapeUtils.escapeHtml4(
+                          StringEscapeUtils.unescapeHtml4(
+                              consentDto
+                                  .getConsentDocContent()
+                                  .replaceAll("&#34;", "'")
+                                  .replaceAll("em>", "i>")
+                                  .replaceAll(
+                                      "<a", "<a style='text-decoration:underline;color:blue;'"))));
             }
             consent.setReview(reviewBean);
           }
@@ -874,12 +877,14 @@ public class StudyMetaDataDao {
             consentDocumentBean.setContent(
                 StringUtils.isEmpty(consent.getConsentDocContent())
                     ? ""
-                    : StringEscapeUtils.unescapeHtml4(
-                        consent
-                            .getConsentDocContent()
-                            .replaceAll("&#34;", "'")
-                            .replaceAll("em>", "i>")
-                            .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'")));
+                    : StringEscapeUtils.escapeHtml4(
+                        StringEscapeUtils.unescapeHtml4(
+                            consent
+                                .getConsentDocContent()
+                                .replaceAll("&#34;", "'")
+                                .replaceAll("em>", "i>")
+                                .replaceAll(
+                                    "<a", "<a style='text-decoration:underline;color:blue;'"))));
             consentDocumentResponse.setConsent(consentDocumentBean);
           }
           consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
