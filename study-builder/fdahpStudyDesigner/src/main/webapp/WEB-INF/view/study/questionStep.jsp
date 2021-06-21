@@ -193,7 +193,7 @@
                       Step ${destinationStep.sequenceNo}
                       : ${destinationStep.stepShortTitle}</option>
                   </c:forEach>
-                  <option value="0" ${questionnairesStepsBo.destinationStep eq 0 ? 'selected' :''}>
+                   <option value="0" ${questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
                     Completion Step
                   </option>
                 </select>
@@ -1611,7 +1611,7 @@
                           : ${destinationStep.stepShortTitle}</option>
                       </c:forEach>
                       <option
-                          value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
+                          value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                         Completion Step
                       </option>
                     </select>
@@ -1652,7 +1652,7 @@
                           : ${destinationStep.stepShortTitle}</option>
                       </c:forEach>
                       <option
-                          value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
+                          value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq '0' ? 'selected' :''}>
                         Completion Step
                       </option>
                     </select>
@@ -1879,7 +1879,7 @@
                                   : ${destinationStep.stepShortTitle}</option>
                               </c:forEach>
                               <option
-                                  value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
+                                  value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
                                 Completion Step
                               </option>
                             </select>
@@ -1948,7 +1948,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -1999,7 +1999,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2152,7 +2152,7 @@
                                   : ${destinationStep.stepShortTitle}</option>
                               </c:forEach>
                               <option
-                                  value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
+                                  value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
                                 Completion Step
                               </option>
                             </select>
@@ -2261,7 +2261,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2479,7 +2479,7 @@
                               : ${destinationStep.stepShortTitle}</option>
                           </c:forEach>
                           <option
-                              value="0" ${questionnairesStepsBo.questionReponseTypeBo.otherDestinationStepId eq 0 ? 'selected' :''}>
+                              value="0" ${questionnairesStepsBo.questionReponseTypeBo.otherDestinationStepId eq '0' ? 'selected' :''}>
                             Completion Step
                           </option>
                         </select>
@@ -2712,7 +2712,7 @@
                                   : ${destinationStep.stepShortTitle}</option>
                               </c:forEach>
                               <option
-                                  value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
+                                  value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
                                 Completion Step
                               </option>
                             </select>
@@ -2826,7 +2826,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2936,7 +2936,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2997,7 +2997,7 @@
                                 Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -3019,7 +3019,7 @@
                                 Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -3062,7 +3062,7 @@
                                   &gt;
                                 </option>
                                 <option
-                                    value="<" ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "<" ? 'selected' :''}>
+                                    value='<' ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "<" ? 'selected' :''}>
                                   &lt;
                                 </option>
                                 <option
@@ -3204,7 +3204,7 @@
                                           &gt;
                                         </option>
                                         <option
-                                            value="<" ${questionConditionBranchBo.inputTypeValue eq "<" ? 'selected' :''}>
+                                            value='<' ${questionConditionBranchBo.inputTypeValue eq "<" ? 'selected' :''}>
                                           &lt;
                                         </option>
                                         <option
@@ -4706,6 +4706,8 @@
               $('.textLabel' + id).text("Upload");
               if (response_type == "Scale" || response_type == "Continuous scale") {
                 $("#" + id).next().addClass("hide");
+              }else if(response_type == "Image choice"){
+              	  $("#" + $(thisAttr).attr("id")).attr('required', true);
               }
             }
           };
@@ -5691,6 +5693,9 @@
               $("#questionResponseTypeId").val(questionResponseId);
               $("#responseQuestionId").val(questionId);
 
+              $('.image-choice').find('.requireClass').prop('required', false);
+              $('.image-choice').parent().removeClass("has-danger").removeClass("has-error");
+              $('.image-choice').parent().find(".help-block").empty();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();

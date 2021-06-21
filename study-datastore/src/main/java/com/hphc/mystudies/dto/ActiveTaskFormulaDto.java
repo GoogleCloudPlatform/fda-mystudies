@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "activetask_formula")
@@ -37,9 +38,10 @@ public class ActiveTaskFormulaDto implements Serializable {
   private static final long serialVersionUID = 7509273488651910859L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "activetask_formula_id")
-  private Integer activetaskFormulaId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "activetask_formula_id", updatable = false, nullable = false)
+  private String activetaskFormulaId;
 
   @Column(name = "value")
   private String value;
@@ -47,11 +49,11 @@ public class ActiveTaskFormulaDto implements Serializable {
   @Column(name = "formula")
   private String formula;
 
-  public Integer getActivetaskFormulaId() {
+  public String getActivetaskFormulaId() {
     return activetaskFormulaId;
   }
 
-  public void setActivetaskFormulaId(Integer activetaskFormulaId) {
+  public void setActivetaskFormulaId(String activetaskFormulaId) {
     this.activetaskFormulaId = activetaskFormulaId;
   }
 

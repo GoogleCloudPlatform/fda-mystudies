@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -29,12 +30,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "questionnaires")
@@ -43,7 +44,7 @@ import javax.persistence.Transient;
   @NamedQuery(
       name = "getQuestionariesByStudyId",
       query =
-          " From QuestionnaireBo QBO WHERE QBO.studyId =:studyId and QBO.active=1 order by QBO.createdDate DESC"),
+          " From QuestionnaireBo QBO WHERE QBO.studyId =:studyId and QBO.active=1 order by QBO.createdDate DESC, QBO.sequenceNumber ASC"),
   @NamedQuery(
       name = "checkQuestionnaireShortTitle",
       query = "From QuestionnaireBo QBO where QBO.studyId=:studyId and QBO.shortTitle=:shortTitle"),
@@ -69,7 +70,7 @@ public class QuestionnaireBo implements Serializable {
   private Boolean branching = false;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_date")
   private String createdDate;
@@ -86,9 +87,10 @@ public class QuestionnaireBo implements Serializable {
   private String frequency;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "is_Change")
   private Integer isChange = 0;
@@ -97,7 +99,7 @@ public class QuestionnaireBo implements Serializable {
   private Integer live = 0;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_date")
   private String modifiedDate;
@@ -128,7 +130,7 @@ public class QuestionnaireBo implements Serializable {
   private Boolean status;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Column(name = "study_lifetime_end")
   private String studyLifetimeEnd;
@@ -148,9 +150,12 @@ public class QuestionnaireBo implements Serializable {
   private String scheduleType = "";
 
   @Column(name = "anchor_date_id")
-  private Integer anchorDateId;
+  private String anchorDateId;
 
   @Transient private boolean anchorQuestionnaireExist = false;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public Boolean getActive() {
     return active;
@@ -160,7 +165,7 @@ public class QuestionnaireBo implements Serializable {
     return branching;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -184,7 +189,7 @@ public class QuestionnaireBo implements Serializable {
     return this.frequency;
   }
 
-  public Integer getId() {
+  public String getId() {
     return this.id;
   }
 
@@ -196,7 +201,7 @@ public class QuestionnaireBo implements Serializable {
     return live;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -240,7 +245,7 @@ public class QuestionnaireBo implements Serializable {
     return status;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return this.studyId;
   }
 
@@ -272,7 +277,7 @@ public class QuestionnaireBo implements Serializable {
     this.branching = branching;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -296,7 +301,7 @@ public class QuestionnaireBo implements Serializable {
     this.frequency = frequency;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -308,7 +313,7 @@ public class QuestionnaireBo implements Serializable {
     this.live = live;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -355,7 +360,7 @@ public class QuestionnaireBo implements Serializable {
     this.status = status;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
@@ -387,11 +392,11 @@ public class QuestionnaireBo implements Serializable {
     this.scheduleType = scheduleType;
   }
 
-  public Integer getAnchorDateId() {
+  public String getAnchorDateId() {
     return anchorDateId;
   }
 
-  public void setAnchorDateId(Integer anchorDateId) {
+  public void setAnchorDateId(String anchorDateId) {
     this.anchorDateId = anchorDateId;
   }
 
@@ -401,5 +406,13 @@ public class QuestionnaireBo implements Serializable {
 
   public void setAnchorQuestionnaireExist(boolean anchorQuestionnaireExist) {
     this.anchorQuestionnaireExist = anchorQuestionnaireExist;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }
