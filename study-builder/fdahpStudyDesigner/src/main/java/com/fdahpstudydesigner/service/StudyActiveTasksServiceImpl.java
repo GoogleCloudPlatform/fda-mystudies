@@ -108,6 +108,12 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
                       activeTaskCustomScheduleBo.getFrequencyStartTime(),
                       FdahpStudyDesignerConstants.UI_SDF_TIME,
                       FdahpStudyDesignerConstants.SDF_TIME));
+            } else {
+              activeTaskCustomScheduleBo.setFrequencyStartTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyEndTime(),
+                      FdahpStudyDesignerConstants.UI_SDF_TIME,
+                      FdahpStudyDesignerConstants.SDF_TIME));
             }
 
             if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyEndTime())) {
@@ -141,6 +147,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
             }
           }
         }
+
         activeTask.setActiveTaskFrequenciesList(activeTaskFrequencyList);
         if ((activeTask.getActiveTaskFrequenciesBo() != null)
             && StringUtils.isNotBlank(activeTask.getActiveTaskFrequenciesBo().getFrequencyDate())) {
