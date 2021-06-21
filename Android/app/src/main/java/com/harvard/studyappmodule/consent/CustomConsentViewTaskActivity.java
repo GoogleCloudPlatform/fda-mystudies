@@ -727,7 +727,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             docBuilder.append("<br>");
             docBuilder.append(
                 "<div>"
-                    + eligibilityConsent.getConsent().getVisualScreens().get(i).getHtml()
+                    + Html.fromHtml(eligibilityConsent.getConsent().getVisualScreens().get(i).getHtml()).toString()
                     + "</div>");
             docBuilder.append("<br>");
             docBuilder.append("<br>");

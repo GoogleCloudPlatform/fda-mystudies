@@ -618,8 +618,7 @@ ALTER TABLE `response_sub_type_value` ADD `sequence_number` INT(10) DEFAULT NULL
 ALTER TABLE `comprehension_test_response` ADD `sequence_number` INT(10) DEFAULT NULL;
 ALTER TABLE `active_task_frequencies` ADD `sequence_number` INT(10) DEFAULT NULL;
 ALTER TABLE `questionnaires_frequencies` ADD `sequence_number` INT(10) DEFAULT NULL;
-
-
+ALTER TABLE `studies` ADD `isCloudStorageMoved` int(10) NULL DEFAULT 0;
 
 
 -- PROCEDURE

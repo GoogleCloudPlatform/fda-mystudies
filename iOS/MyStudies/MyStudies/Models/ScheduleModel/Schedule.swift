@@ -330,23 +330,23 @@ class Schedule {
         let endDays = timing["endDays"] as? Int ?? 0
         _ = timing["time"] as? String ?? "00:00:00"
 
-        let anchorDate = activity.anchorDate?.anchorDateValue
+        guard let anchorDate = activity.anchorDate?.anchorDateValue else { return }
 
         let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
         let endDateInterval = TimeInterval(60 * 60 * 24 * (endDays))
 
-        runStartDate = anchorDate?.addingTimeInterval(startDateInterval)
-        runEndDate = anchorDate?.addingTimeInterval(endDateInterval)
+        runStartDate = anchorDate.addingTimeInterval(startDateInterval)
+        runEndDate = anchorDate.addingTimeInterval(endDateInterval)
 
         // update start date
         var startDateString = Utilities.formatterShort?.string(from: runStartDate!)
-        let startTime = timing["time"] as? String ?? "00:00:00"
+        let startTime = timing["startTime"] as? String ?? "00:00:00"
         startDateString = (startDateString ?? "") + " " + startTime
         let startdate = Utilities.findDateFromString(dateString: startDateString ?? "")
 
         // update end date
         var endDateString = Utilities.formatterShort?.string(from: runEndDate!)
-        let endTime = timing["time"] as? String ?? "23:59:59"
+        let endTime = timing["endTime"] as? String ?? "23:59:59"
         endDateString = (endDateString ?? "") + " " + endTime
         let endDate = Utilities.findDateFromString(dateString: endDateString ?? "")
 
