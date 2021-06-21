@@ -141,15 +141,15 @@
                   <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                         data-placement="top"
                         title="View"
-                        onclick="viewComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                        onclick="viewComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                   <span
                       class="${comprehensionTestQuestion.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                       data-toggle="tooltip" data-placement="top" title="Edit"
-                      onclick="editComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                      onclick="editComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                   <span
                       class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                       data-toggle="tooltip" data-placement="top" title="Delete"
-                      onclick="deleteComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                      onclick="deleteComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                 </td>
               </tr>
             </c:forEach>
