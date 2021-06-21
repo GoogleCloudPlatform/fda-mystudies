@@ -557,7 +557,7 @@ The version of the consent document gets updated each time you mark this section
               + "${consentInfo.displayTitle}"
               + "</strong></span><br/>"
               + "<span style='display: block; overflow-wrap: break-word; width: 100%;'>"
-              + "${consentInfo.elaborated}"
+              + '${consentInfo.elaborated}'
               + "</span><br/>";
           </c:forEach>
         }
