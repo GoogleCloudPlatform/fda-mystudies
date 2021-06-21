@@ -76,7 +76,7 @@ public class DashBoardAndProfileController {
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = "";
-    int userId = 0;
+    String userId;
     try {
       HttpSession session = request.getSession();
       SessionObject sessionObject =
@@ -143,7 +143,7 @@ public class DashBoardAndProfileController {
   public ModelAndView updateProfileDetails(HttpServletRequest request, UserBO userBO) {
     logger.entry("begin updateProfileDetails()");
     ModelAndView mav = new ModelAndView();
-    Integer userId = null;
+    String userId = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
@@ -198,7 +198,7 @@ public class DashBoardAndProfileController {
     RoleBO roleBO = null;
     String sucMsg = "";
     String errMsg = "";
-    Integer userId = 0;
+    String userId = null;
     String accountManager = "";
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);

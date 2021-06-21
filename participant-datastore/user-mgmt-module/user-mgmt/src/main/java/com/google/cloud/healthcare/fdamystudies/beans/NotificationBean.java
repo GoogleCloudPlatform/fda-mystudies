@@ -27,7 +27,7 @@ public class NotificationBean {
   private String notificationTitle;
   private String notificationType;
   private String notificationSubType;
-  private Integer notificationId;
+  private String notificationId;
   private String deviceType;
   private JSONArray deviceToken;
   private String appId;

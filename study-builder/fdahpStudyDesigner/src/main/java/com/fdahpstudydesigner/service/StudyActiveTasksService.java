@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -35,9 +36,9 @@ import java.util.List;
 public interface StudyActiveTasksService {
 
   public String deleteActiveTask(
-      Integer activeTaskInfoId, Integer studyId, SessionObject sesObj, String customStudyId);
+      String activeTaskInfoId, String studyId, SessionObject sesObj, String customStudyId);
 
-  public ActiveTaskBo getActiveTaskById(Integer activeTaskId, String customStudyId);
+  public ActiveTaskBo getActiveTaskById(String activeTaskId, String customStudyId);
 
   public List<ActivetaskFormulaBo> getActivetaskFormulas();
 
@@ -56,7 +57,7 @@ public interface StudyActiveTasksService {
   public ActiveTaskBo saveOrUpdateActiveTask(ActiveTaskBo activeTaskBo, String customStudyId);
 
   public boolean validateActiveTaskAttrById(
-      Integer studyId,
+      String studyId,
       String activeTaskName,
       String activeTaskAttIdVal,
       String activeTaskAttIdName,

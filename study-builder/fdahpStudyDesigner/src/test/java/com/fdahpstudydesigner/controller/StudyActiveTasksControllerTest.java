@@ -59,7 +59,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
   public void shouldMarkActiveTaskAsCompleted() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
@@ -90,7 +90,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
@@ -100,8 +100,8 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
 
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
-    activeTaskBo.setTaskTypeId(123);
-    activeTaskBo.setStudyId(678578);
+    activeTaskBo.setTaskTypeId("123");
+    activeTaskBo.setStudyId("678578");
     activeTaskBo.setActiveTaskFrequenciesBo(null);
     activeTaskBo.setShortTitle("ActiveTaskShortTitle");
 
@@ -126,7 +126,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
@@ -136,8 +136,8 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
 
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
-    activeTaskBo.setTaskTypeId(1);
-    activeTaskBo.setStudyId(678574);
+    activeTaskBo.setTaskTypeId("1");
+    activeTaskBo.setStudyId("678574");
     activeTaskBo.setLive(1);
     activeTaskBo.setActiveTaskFrequenciesBo(null);
     activeTaskBo.setActiveTaskLifetimeStart("05/11/2020");
@@ -179,7 +179,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
@@ -189,8 +189,8 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
 
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
-    activeTaskBo.setTaskTypeId(123);
-    activeTaskBo.setStudyId(678574);
+    activeTaskBo.setTaskTypeId("123");
+    activeTaskBo.setStudyId("678574");
     activeTaskBo.setActiveTaskFrequenciesBo(null);
     activeTaskBo.setShortTitle("ActiveTaskShortTitle");
 
@@ -233,7 +233,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
-    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setUserId(USER_ID_VALUE);
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
