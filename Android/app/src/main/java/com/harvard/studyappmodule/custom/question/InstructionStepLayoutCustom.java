@@ -124,10 +124,10 @@ public class InstructionStepLayoutCustom extends FixedSubmitBarLayout implements
         });
         String all = (step.getText()).replaceAll("<", "&lt;").replaceAll(">", "&gt;");
         if (Build.VERSION.SDK_INT >= 24) {
-          summary.loadData(
-                  Html.fromHtml((all), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+          summary.loadDataWithBaseURL(null,
+                  Html.fromHtml((all), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
         } else {
-          summary.loadData(Html.fromHtml((all)).toString(), "text/html", "UTF-8");
+          summary.loadDataWithBaseURL(null, Html.fromHtml((all)).toString(), "text/html", "UTF-8", null);
         }
       }
 
