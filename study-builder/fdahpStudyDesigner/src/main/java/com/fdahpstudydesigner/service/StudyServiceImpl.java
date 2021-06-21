@@ -2,30 +2,38 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudyIdBean;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bean.StudyPageBean;
+import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
+import com.fdahpstudydesigner.bo.ActiveTaskBo;
+import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
+import com.fdahpstudydesigner.bo.ActiveTaskFrequencyBo;
+import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.Checklist;
 import com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo;
 import com.fdahpstudydesigner.bo.ComprehensionTestResponseBo;
@@ -35,12 +43,16 @@ import com.fdahpstudydesigner.bo.ConsentMasterInfoBo;
 import com.fdahpstudydesigner.bo.EligibilityBo;
 import com.fdahpstudydesigner.bo.EligibilityTestBo;
 import com.fdahpstudydesigner.bo.NotificationBO;
+import com.fdahpstudydesigner.bo.QuestionnaireBo;
 import com.fdahpstudydesigner.bo.ReferenceTablesBo;
 import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
+import com.fdahpstudydesigner.dao.NotificationDAO;
+import com.fdahpstudydesigner.dao.StudyActiveTasksDAO;
 import com.fdahpstudydesigner.dao.StudyDAO;
+import com.fdahpstudydesigner.dao.StudyQuestionnaireDAO;
 import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -57,6 +69,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -71,16 +84,22 @@ public class StudyServiceImpl implements StudyService {
 
   private static XLogger logger = XLoggerFactory.getXLogger(StudyServiceImpl.class.getName());
 
-  private StudyDAO studyDAO;
+  @Autowired private StudyDAO studyDAO;
+
+  @Autowired private StudyQuestionnaireDAO studyQuestionnaireDAO;
+
+  @Autowired private NotificationDAO notificationDAO;
+
+  @Autowired private StudyActiveTasksDAO studyActiveTasksDAO;
 
   @Override
-  public String checkActiveTaskTypeValidation(Integer studyId) {
+  public String checkActiveTaskTypeValidation(String studyId) {
     logger.entry("StudyServiceImpl - checkActiveTaskTypeValidation - Starts");
     return studyDAO.checkActiveTaskTypeValidation(studyId);
   }
 
   @Override
-  public int comprehensionTestQuestionOrder(Integer studyId) {
+  public int comprehensionTestQuestionOrder(String studyId) {
     int count = 1;
     logger.entry("StudyServiceImpl - comprehensionTestQuestionOrder() - Starts");
     try {
@@ -93,7 +112,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public int consentInfoOrder(Integer studyId) {
+  public int consentInfoOrder(String studyId) {
     int count = 1;
     logger.entry("StudyServiceImpl - consentInfoOrder() - Starts");
     try {
@@ -122,7 +141,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String deleteComprehensionTestQuestion(
-      Integer questionId, Integer studyId, SessionObject sessionObject) {
+      String questionId, String studyId, SessionObject sessionObject) {
     logger.entry("StudyServiceImpl - deleteComprehensionTestQuestion() - Starts");
     String message = null;
     try {
@@ -136,7 +155,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String deleteConsentInfo(
-      Integer consentInfoId, Integer studyId, SessionObject sessionObject, String customStudyId) {
+      String consentInfoId, String studyId, SessionObject sessionObject, String customStudyId) {
     logger.entry("StudyServiceImpl - deleteConsentInfo() - Starts");
     String message = null;
     try {
@@ -150,10 +169,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String deleteEligibilityTestQusAnsById(
-      Integer eligibilityTestId,
-      Integer studyId,
-      SessionObject sessionObject,
-      String customStudyId) {
+      String eligibilityTestId, String studyId, SessionObject sessionObject, String customStudyId) {
     logger.entry("StudyServiceImpl - deleteEligibilityTestQusAnsById - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
@@ -181,7 +197,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String deleteResourceInfo(
-      Integer resourceInfoId, SessionObject sesObj, String customStudyId, int studyId) {
+      String resourceInfoId, SessionObject sesObj, String customStudyId, String studyId) {
     logger.entry("StudyServiceImpl - deleteConsentInfo() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     ResourceBO resourceBO = null;
@@ -226,7 +242,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public Checklist getchecklistInfo(Integer studyId) {
+  public Checklist getchecklistInfo(String studyId) {
     logger.entry("StudyServiceImpl - getchecklistInfo() - Starts");
     Checklist checklist = null;
     try {
@@ -239,7 +255,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public ComprehensionTestQuestionBo getComprehensionTestQuestionById(Integer questionId) {
+  public ComprehensionTestQuestionBo getComprehensionTestQuestionById(String questionId) {
     logger.entry("StudyServiceImpl - getComprehensionTestQuestionById() - Starts");
     ComprehensionTestQuestionBo comprehensionTestQuestionBo = null;
     try {
@@ -252,7 +268,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<ComprehensionTestQuestionBo> getComprehensionTestQuestionList(Integer studyId) {
+  public List<ComprehensionTestQuestionBo> getComprehensionTestQuestionList(String studyId) {
     logger.entry("StudyServiceImpl - getComprehensionTestQuestionList() - Starts");
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionList = null;
     try {
@@ -266,7 +282,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public List<ComprehensionTestResponseBo> getComprehensionTestResponseList(
-      Integer comprehensionQuestionId) {
+      String comprehensionQuestionId) {
     logger.entry("StudyServiceImpl - getComprehensionTestResponseList() - Starts");
     List<ComprehensionTestResponseBo> comprehensionTestResponseLsit = null;
     try {
@@ -293,7 +309,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public ConsentInfoBo getConsentInfoById(Integer consentInfoId) {
+  public ConsentInfoBo getConsentInfoById(String consentInfoId) {
     logger.entry("StudyServiceImpl - getConsentInfoById() - Starts");
     ConsentInfoBo consentInfoBo = null;
     try {
@@ -327,7 +343,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<ConsentInfoBo> getConsentInfoList(Integer studyId) {
+  public List<ConsentInfoBo> getConsentInfoList(String studyId) {
     logger.entry("StudyServiceImpl - getConsentInfoList() - Starts");
     List<ConsentInfoBo> consentInfoList = null;
     try {
@@ -387,7 +403,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<StudyPageBo> getOverviewStudyPagesById(String studyId, Integer userId) {
+  public List<StudyPageBo> getOverviewStudyPagesById(String studyId, String userId) {
     logger.entry("StudyServiceImpl - getOverviewStudyPagesById() - Starts");
     List<StudyPageBo> studyPageBos = null;
     try {
@@ -405,7 +421,7 @@ public class StudyServiceImpl implements StudyService {
                     + FdahpStudyDesignerConstants.STUDTYPAGES
                     + FdahpStudyDesignerConstants.PATH_SEPARATOR
                     + s.getImagePath();
-            s.setSignedUrl(FdahpStudyDesignerUtil.getSignedUrl(path));
+            s.setSignedUrl(FdahpStudyDesignerUtil.getSignedUrl(path, 12));
             if (s.getImagePath().contains("?v=")) {
               String imagePathArr[] = s.getImagePath().split("\\?");
               s.setImagePath(imagePathArr[0] + "?v=" + new Date().getTime());
@@ -435,7 +451,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public ResourceBO getResourceInfo(Integer resourceInfoId) {
+  public ResourceBO getResourceInfo(String resourceInfoId) {
     logger.entry("StudyServiceImpl - getResourceInfo() - Starts");
     ResourceBO resourceBO = null;
     try {
@@ -466,7 +482,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<ResourceBO> getResourceList(Integer studyId) {
+  public List<ResourceBO> getResourceList(String studyId) {
     logger.entry("StudyServiceImpl - getResourceList() - Starts");
     List<ResourceBO> resourceBOList = null;
     try {
@@ -479,7 +495,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<NotificationBO> getSavedNotification(Integer studyId) {
+  public List<NotificationBO> getSavedNotification(String studyId) {
     logger.entry("StudyServiceImpl - notificationSaved() - Starts");
     List<NotificationBO> notificationSavedList = null;
     try {
@@ -492,7 +508,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public StudyBo getStudyById(String studyId, Integer userId) {
+  public StudyBo getStudyById(String studyId, String userId) {
     logger.entry("StudyServiceImpl - getStudyById() - Starts");
     StudyBo studyBo = null;
     try {
@@ -518,11 +534,11 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<StudyListBean> getStudyList(Integer userId) {
+  public List<StudyListBean> getStudyList(String userId) {
     logger.entry("StudyServiceImpl - getStudyList() - Starts");
     List<StudyListBean> studyBos = null;
     try {
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         studyBos = studyDAO.getStudyList(userId);
       }
     } catch (Exception e) {
@@ -533,7 +549,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<StudyListBean> getStudyListByUserId(Integer userId) {
+  public List<StudyListBean> getStudyListByUserId(String userId) {
     logger.entry("StudyServiceImpl - getStudyListByUserId() - Starts");
     List<StudyListBean> studyListBeans = null;
     try {
@@ -559,7 +575,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public ResourceBO getStudyProtocol(Integer studyId) {
+  public ResourceBO getStudyProtocol(String studyId) {
     logger.entry("StudyServiceImpl - getStudyProtocol() - Starts");
     ResourceBO studyprotocol = null;
     try {
@@ -573,7 +589,11 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String markAsCompleted(
-      int studyId, String markCompleted, Boolean flag, SessionObject sesObj, String customStudyId) {
+      String studyId,
+      String markCompleted,
+      Boolean flag,
+      SessionObject sesObj,
+      String customStudyId) {
     logger.entry("StudyServiceImpl - markAsCompleted() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -587,7 +607,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String markAsCompleted(
-      int studyId, String markCompleted, SessionObject sesObj, String customStudyId) {
+      String studyId, String markCompleted, SessionObject sesObj, String customStudyId) {
     logger.entry("StudyServiceImpl - markAsCompleted() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -601,7 +621,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String reOrderComprehensionTestQuestion(
-      Integer studyId, int oldOrderNumber, int newOrderNumber) {
+      String studyId, int oldOrderNumber, int newOrderNumber) {
     logger.entry("StudyServiceImpl - reOrderComprehensionTestQuestion() - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
@@ -614,7 +634,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public String reOrderConsentInfoList(Integer studyId, int oldOrderNumber, int newOrderNumber) {
+  public String reOrderConsentInfoList(String studyId, int oldOrderNumber, int newOrderNumber) {
     logger.entry("StudyServiceImpl - reOrderConsentInfoList() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -628,7 +648,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String reorderEligibilityTestQusAns(
-      Integer eligibilityId, int oldOrderNumber, int newOrderNumber, Integer studyId) {
+      String eligibilityId, int oldOrderNumber, int newOrderNumber, String studyId) {
     logger.entry("StudyServiceImpl - reorderEligibilityTestQusAns - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
@@ -643,7 +663,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public String reOrderResourceList(Integer studyId, int oldOrderNumber, int newOrderNumber) {
+  public String reOrderResourceList(String studyId, int oldOrderNumber, int newOrderNumber) {
     logger.entry("StudyServiceImpl - reOrderResourceList() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -675,7 +695,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public int resourceOrder(Integer studyId) {
+  public int resourceOrder(String studyId) {
     int count = 1;
     logger.entry("StudyServiceImpl - resourceOrder() - Starts");
     try {
@@ -688,7 +708,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<ResourceBO> resourcesSaved(Integer studyId) {
+  public List<ResourceBO> resourcesSaved(String studyId) {
     logger.entry("StudyServiceImpl - resourcesSaved() - Starts");
     List<ResourceBO> resourceBOList = null;
     try {
@@ -701,7 +721,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<ResourceBO> resourcesWithAnchorDate(Integer studyId) {
+  public List<ResourceBO> resourcesWithAnchorDate(String studyId) {
     logger.entry("StudyServiceImpl - resourcesWithAnchorDate() - Starts");
     List<ResourceBO> resourceList = null;
     try {
@@ -719,7 +739,7 @@ public class StudyServiceImpl implements StudyService {
     logger.entry("INFO: StudyServiceImpl - saveOrCompleteConsentReviewDetails() :: Starts");
     ConsentBo updateConsentBo = null;
     try {
-      if (consentBo.getId() != null) {
+      if (StringUtils.isNotEmpty(consentBo.getId())) {
         updateConsentBo = studyDAO.getConsentDetailsByStudyId(consentBo.getStudyId().toString());
       } else {
         updateConsentBo = new ConsentBo();
@@ -824,6 +844,7 @@ public class StudyServiceImpl implements StudyService {
         updateConsentBo.setComprehensionTestMinimumScore(
             consentBo.getComprehensionTestMinimumScore());
       }
+
       updateConsentBo =
           studyDAO.saveOrCompleteConsentReviewDetails(updateConsentBo, sesObj, customStudyId);
     } catch (Exception e) {
@@ -834,10 +855,10 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public Integer saveOrDoneChecklist(
+  public String saveOrDoneChecklist(
       Checklist checklist, String actionBut, SessionObject sesObj, String customStudyId) {
+    String checklistId = null;
     logger.entry("StudyServiceImpl - saveOrDoneChecklist() - Starts");
-    Integer checklistId = 0;
     Checklist checklistBO = null;
     StudyBo studyBo = null;
     try {
@@ -855,7 +876,7 @@ public class StudyServiceImpl implements StudyService {
         checklist.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       }
       checklistId = studyDAO.saveOrDoneChecklist(checklist);
-      if (!checklistId.equals(0)) {
+      if (StringUtils.isNotEmpty(checklistId)) {
         if ("save".equalsIgnoreCase(actionBut)) {
           studyDAO.markAsCompleted(
               checklist.getStudyId(),
@@ -887,7 +908,7 @@ public class StudyServiceImpl implements StudyService {
     ComprehensionTestQuestionBo updateComprehensionTestQuestionBo = null;
     try {
       if (comprehensionTestQuestionBo != null) {
-        if (comprehensionTestQuestionBo.getId() != null) {
+        if (StringUtils.isNotEmpty(comprehensionTestQuestionBo.getId())) {
           updateComprehensionTestQuestionBo =
               studyDAO.getComprehensionTestQuestionById(comprehensionTestQuestionBo.getId());
         } else {
@@ -951,7 +972,7 @@ public class StudyServiceImpl implements StudyService {
     ConsentInfoBo updateConsentInfoBo = null;
     try {
       if (consentInfoBo != null) {
-        if (consentInfoBo.getId() != null) {
+        if (StringUtils.isNotEmpty(consentInfoBo.getId())) {
           updateConsentInfoBo = studyDAO.getConsentInfoById(consentInfoBo.getId());
           updateConsentInfoBo.setModifiedBy(sessionObject.getUserId());
           updateConsentInfoBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
@@ -1010,17 +1031,17 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public Integer saveOrUpdateEligibilityTestQusAns(
+  public String saveOrUpdateEligibilityTestQusAns(
       EligibilityTestBo eligibilityTestBo,
-      Integer studyId,
+      String studyId,
       SessionObject sessionObject,
       String customStudyId) {
+    String eligibilityTestId = null;
     logger.entry("StudyServiceImpl - saveOrUpdateEligibilityTestQusAns - Starts");
-    Integer eligibilityTestId = 0;
     Integer seqCount = 0;
     try {
       if (eligibilityTestBo != null) {
-        if (null == eligibilityTestBo.getId()) {
+        if (StringUtils.isEmpty(eligibilityTestBo.getId())) {
           seqCount = studyDAO.eligibilityTestOrderCount(eligibilityTestBo.getEligibilityId());
           eligibilityTestBo.setSequenceNo(seqCount);
         }
@@ -1039,10 +1060,8 @@ public class StudyServiceImpl implements StudyService {
   public String saveOrUpdateOverviewStudyPages(StudyPageBean studyPageBean, SessionObject sesObj) {
     logger.entry("StudyServiceImpl - saveOrUpdateOverviewStudyPages() - Starts");
     String message = "";
-
     CustomMultipartFile[] customMultipart = null;
     try {
-
       // Resize Image
 
       if (studyPageBean.getMultipartFiles() != null
@@ -1086,9 +1105,10 @@ public class StudyServiceImpl implements StudyService {
 
       if ((studyPageBean.getMultipartFiles() != null)
           && (studyPageBean.getMultipartFiles().length > 0)) {
-
         String imagePath[] = new String[studyPageBean.getImagePath().length];
+
         StudyBo study = getStudyInfo(studyPageBean.getStudyId());
+
         for (int i = 0; i < studyPageBean.getMultipartFiles().length; i++) {
           String file;
           if (!studyPageBean.getMultipartFiles()[i].isEmpty()) {
@@ -1130,9 +1150,9 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public Integer saveOrUpdateResource(ResourceBO resourceBO, SessionObject sesObj) {
+  public String saveOrUpdateResource(ResourceBO resourceBO, SessionObject sesObj) {
+    String resourseId = null;
     logger.entry("StudyServiceImpl - saveOrUpdateResource() - Starts");
-    Integer resourseId = 0;
     ResourceBO resourceBO2 = null;
     String fileName = "";
     String file = "";
@@ -1142,7 +1162,7 @@ public class StudyServiceImpl implements StudyService {
     Boolean updateResource = false;
     try {
       studyBo = studyDAO.getStudyById(resourceBO.getStudyId().toString(), sesObj.getUserId());
-      if (null == resourceBO.getId()) {
+      if (StringUtils.isEmpty(resourceBO.getId())) {
         resourceBO2 = new ResourceBO();
         resourceBO2.setSequenceNo(resourceBO.getSequenceNo());
         resourceBO2.setStudyId(resourceBO.getStudyId());
@@ -1212,7 +1232,7 @@ public class StudyServiceImpl implements StudyService {
       resourceBO2.setStudyProtocol(resourceBO.isStudyProtocol());
       resourseId = studyDAO.saveOrUpdateResource(resourceBO2);
 
-      if (!resourseId.equals(0)) {
+      if (StringUtils.isNotEmpty(resourseId)) {
 
         if (!resourceBO2.isStudyProtocol()) {
           studyDAO.markAsCompleted(
@@ -1295,7 +1315,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public String saveOrUpdateStudy(StudyBo studyBo, Integer userId, SessionObject sessionObject) {
+  public String saveOrUpdateStudy(StudyBo studyBo, String userId, SessionObject sessionObject) {
     logger.entry("StudyServiceImpl - saveOrUpdateStudy() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -1369,7 +1389,7 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public String validateEligibilityTestKey(
-      Integer eligibilityTestId, String shortTitle, Integer eligibilityId) {
+      String eligibilityTestId, String shortTitle, String eligibilityId) {
     logger.entry("StudyServiceImpl - validateEligibilityTestKey - Starts");
     String message = FdahpStudyDesignerConstants.SUCCESS;
     try {
@@ -1408,7 +1428,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public List<EligibilityTestBo> viewEligibilityTestQusAnsByEligibilityId(Integer eligibilityId) {
+  public List<EligibilityTestBo> viewEligibilityTestQusAnsByEligibilityId(String eligibilityId) {
     logger.entry("StudyServiceImpl - viewEligibilityTestQusAnsByEligibilityId - Starts");
     List<EligibilityTestBo> eligibilityTestBos = null;
     try {
@@ -1421,7 +1441,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public EligibilityTestBo viewEligibilityTestQusAnsById(Integer eligibilityTestId) {
+  public EligibilityTestBo viewEligibilityTestQusAnsById(String eligibilityTestId) {
     logger.entry("StudyServiceImpl - viewEligibilityTestQusAnsById - Starts");
     EligibilityTestBo eligibilityTestBo = null;
     try {
@@ -1434,13 +1454,13 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public Boolean isAnchorDateExistForEnrollment(Integer studyId, String customStudyId) {
+  public Boolean isAnchorDateExistForEnrollment(String studyId, String customStudyId) {
     logger.entry("StudyServiceImpl - isAnchorDateExistForEnrollment - Starts");
     return studyDAO.isAnchorDateExistForEnrollment(studyId, customStudyId);
   }
 
   @Override
-  public Boolean isAnchorDateExistForEnrollmentDraftStudy(Integer studyId, String customStudyId) {
+  public Boolean isAnchorDateExistForEnrollmentDraftStudy(String studyId, String customStudyId) {
     logger.entry("StudyServiceImpl - isAnchorDateExistForEnrollmentDraftStudy - Starts");
     return studyDAO.isAnchorDateExistForEnrollmentDraftStudy(studyId, customStudyId);
   }
@@ -1453,7 +1473,7 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public StudyPermissionBO findStudyPermissionBO(int studyId, int userId) {
+  public StudyPermissionBO findStudyPermissionBO(String studyId, String userId) {
     logger.entry("StudyServiceImpl - findStudyPermissionBO() - Starts");
     return studyDAO.getStudyPermissionBO(studyId, userId);
   }
@@ -1484,7 +1504,7 @@ public class StudyServiceImpl implements StudyService {
         }
         studyDetails.setStudyStatus(studyBo.getStatus());
         if (studyBo.getCategory() != null) {
-          studyCatagory = studyDAO.getStudyCategory(Integer.valueOf(studyBo.getCategory()));
+          studyCatagory = studyDAO.getStudyCategory(studyBo.getCategory());
         }
         if (StringUtils.isNotBlank(studyCatagory)) {
           studyDetails.setStudyCategory(studyCatagory);
@@ -1533,6 +1553,169 @@ public class StudyServiceImpl implements StudyService {
   }
 
   public StudyBo getStudyInfo(String studyId) {
-    return studyDAO.getStudy(Integer.valueOf(studyId));
+    return studyDAO.getStudy(studyId);
+  }
+
+  @Override
+  public StudyBo replicateStudy(
+      String studyId, SessionObject sessionObject, AuditLogEventRequest auditRequest) {
+
+    StudyBo studyBo = studyDAO.getStudy(studyId);
+    auditRequest.setStudyId(studyBo.getCustomStudyId());
+    auditRequest.setStudyVersion(studyBo.getVersion().toString());
+    auditRequest.setAppId(studyBo.getAppId());
+
+    EligibilityBo eligibilityBo = studyDAO.getStudyEligibiltyByStudyId(studyBo.getId());
+
+    List<ConsentBo> consentBoList = studyDAO.getConsentListForStudy(studyBo.getId());
+
+    List<ConsentInfoBo> consentInfoBoList = studyDAO.getConsentInfoList(studyBo.getId());
+
+    List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
+        studyDAO.getComprehensionTestQuestionList(studyBo.getId());
+
+    List<AnchorDateTypeBo> anchorDateList = studyDAO.getAnchorDateDetails(studyBo.getId());
+
+    List<QuestionnaireBo> questionnairesList =
+        studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
+
+    List<NotificationBO> notificationBOs = notificationDAO.getNotificationsList(studyBo.getId());
+
+    List<ResourceBO> resourceBOs = studyDAO.getResourceList(studyBo.getId());
+
+    List<ActiveTaskBo> activeTaskBos =
+        studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
+
+    // replicating study
+    studyDAO.cloneStudy(studyBo, sessionObject);
+
+    Map<String, String> anchorDateMap = new HashMap<>();
+    if (CollectionUtils.isNotEmpty(anchorDateList)) {
+      for (AnchorDateTypeBo anchorDateTypeBo : anchorDateList) {
+        studyDAO.cloneAnchorDateBo(anchorDateTypeBo, studyBo.getId(), anchorDateMap);
+      }
+    }
+
+    saveActiveTaskDetails(activeTaskBos, studyBo, anchorDateMap);
+
+    if (eligibilityBo != null) {
+      studyDAO.cloneEligibility(eligibilityBo, studyBo.getId());
+    }
+
+    if (CollectionUtils.isNotEmpty(consentBoList)) {
+      for (ConsentBo consentBo : consentBoList) {
+        studyDAO.cloneConsent(consentBo, studyBo.getId());
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(consentInfoBoList)) {
+      for (ConsentInfoBo consentinfoBo : consentInfoBoList) {
+        studyDAO.cloneConsentInfo(consentinfoBo, studyBo.getId());
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(comprehensionTestQuestionBoList)) {
+      for (ComprehensionTestQuestionBo comprehensionTestQuestionBo :
+          comprehensionTestQuestionBoList) {
+        comprehensionTestQuestionBo.setStudyId(studyBo.getId());
+        studyDAO.cloneComprehensionTest(comprehensionTestQuestionBo, studyBo.getId());
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(questionnairesList)) {
+      Integer sequenceNumber = 0;
+      for (QuestionnaireBo questionnaireBo : questionnairesList) {
+        studyQuestionnaireDAO.cloneStudyQuestionnaire(
+            questionnaireBo.getId(),
+            studyBo.getId(),
+            sessionObject,
+            anchorDateMap,
+            sequenceNumber++);
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(resourceBOs)) {
+      for (ResourceBO resourceBO : resourceBOs) {
+        resourceBO.setId(null);
+        resourceBO.setStudyId(studyBo.getId());
+        resourceBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+        resourceBO.setAnchorDateId(anchorDateMap.get(resourceBO.getAnchorDateId()));
+        studyDAO.saveOrUpdateResource(resourceBO);
+      }
+    }
+
+    if (CollectionUtils.isNotEmpty(notificationBOs)) {
+      Integer sequenceNumber = 0;
+      for (NotificationBO notificationBO : notificationBOs) {
+        notificationBO.setNotificationId(null);
+        notificationBO.setStudyId(studyBo.getId());
+        notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+        notificationBO.setSequenceNumber(sequenceNumber++);
+        notificationBO.setNotificationSent(false);
+        if (!notificationBO.isNotificationStatus()) {
+          notificationBO.setNotificationDone(false);
+          notificationBO.setNotificationAction(false);
+        }
+        notificationBO.setNotificationScheduleType(
+            FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
+        notificationDAO.saveNotification(notificationBO);
+      }
+    }
+
+    return studyBo;
+  }
+
+  private void saveActiveTaskDetails(
+      List<ActiveTaskBo> activeTaskBos, StudyBo studyBo, Map<String, String> anchorDateMap) {
+
+    List<String> activeTaskIds = new ArrayList<>();
+    List<String> activeTaskTypes = new ArrayList<>();
+    if (CollectionUtils.isNotEmpty(activeTaskBos)) {
+      for (ActiveTaskBo activeTaskBo : activeTaskBos) {
+        activeTaskIds.add(activeTaskBo.getId());
+        activeTaskTypes.add(activeTaskBo.getTaskTypeId());
+      }
+    }
+    List<ActiveTaskAtrributeValuesBo> activeTaskAtrributeValuesBos =
+        studyActiveTasksDAO.getActiveTaskAtrributeValuesByActiveTaskId(activeTaskIds);
+
+    List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleBoList =
+        studyActiveTasksDAO.getActiveTaskCustomScheduleBoList(activeTaskIds);
+
+    List<ActiveTaskFrequencyBo> activeTaskFrequencyBoList =
+        studyActiveTasksDAO.getActiveTaskFrequencyBoList(activeTaskIds);
+
+    if (CollectionUtils.isNotEmpty(activeTaskBos)) {
+      for (ActiveTaskBo activeTask : activeTaskBos) {
+        String oldActiveTaskId = activeTask.getId();
+        activeTask.setId(null);
+        activeTask.setStudyId(studyBo.getId());
+        activeTask.setAnchorDateId(anchorDateMap.get(activeTask.getAnchorDateId()));
+        studyDAO.saveStudyActiveTask(activeTask);
+
+        for (ActiveTaskAtrributeValuesBo active : activeTaskAtrributeValuesBos) {
+          if (active.getActiveTaskId().equals(oldActiveTaskId)) {
+            active.setAttributeValueId(null);
+            active.setActiveTaskId(activeTask.getId());
+            studyDAO.saveActiveTaskAtrributeValuesBo(active);
+          }
+        }
+        for (ActiveTaskCustomScheduleBo active : activeTaskCustomScheduleBoList) {
+          if (active.getActiveTaskId().equals(oldActiveTaskId)) {
+            active.setId(null);
+            active.setActiveTaskId(activeTask.getId());
+            active.setUsed(false);
+            studyDAO.saveActiveTaskCustomScheduleBo(active);
+          }
+        }
+        for (ActiveTaskFrequencyBo active : activeTaskFrequencyBoList) {
+          if (active.getActiveTaskId().equals(oldActiveTaskId)) {
+            active.setId(null);
+            active.setActiveTaskId(activeTask.getId());
+            studyDAO.saveActiveTaskFrequencyBo(active);
+          }
+        }
+      }
+    }
   }
 }

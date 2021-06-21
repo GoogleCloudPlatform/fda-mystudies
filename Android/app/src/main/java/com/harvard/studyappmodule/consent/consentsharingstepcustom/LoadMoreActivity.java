@@ -35,10 +35,10 @@ public class LoadMoreActivity extends AppCompatActivity {
     WebView textView = (WebView) findViewById(R.id.content);
     String data = getIntent().getStringExtra("htmlcontent");
     if (Build.VERSION.SDK_INT >= 24) {
-      textView.loadData(
-              Html.fromHtml((data), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+      textView.loadDataWithBaseURL(null,
+              Html.fromHtml((data), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
     } else {
-      textView.loadData(Html.fromHtml((data)).toString(), "text/html", "UTF-8");
+      textView.loadDataWithBaseURL(null, Html.fromHtml((data)).toString(), "text/html", "UTF-8", null);
     }
     ImageView backBtn = (ImageView) findViewById(R.id.backBtn);
     backBtn.setOnClickListener(

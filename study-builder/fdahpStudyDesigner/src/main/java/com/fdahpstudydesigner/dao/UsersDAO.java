@@ -33,28 +33,28 @@ import java.util.List;
 public interface UsersDAO {
 
   public String activateOrDeactivateUser(
-      int userId, int userStatus, int loginUser, SessionObject userSession);
+      String userId, int userStatus, String loginUser, SessionObject userSession);
 
   public UserIdAccessLevelInfo addOrUpdateUserDetails(
       UserBO userBO, String permissions, String selectedStudies, String permissionValues);
 
-  public String enforcePasswordChange(Integer userId, String email);
+  public String enforcePasswordChange(String userId, String email);
 
   public List<String> getActiveUserEmailIds();
 
-  public List<Integer> getPermissionsByUserId(Integer userId);
+  public List<Integer> getPermissionsByUserId(String userId);
 
   public List<String> getSuperAdminList();
 
   public UserBO getSuperAdminNameByEmailId(String emailId);
 
-  public UserBO getUserDetails(int userId);
+  public UserBO getUserDetails(String userId);
 
   public List<UserBO> getUserList();
 
-  public Integer getUserPermissionByUserId(Integer sessionUserId);
+  public String getUserPermissionByUserId(String sessionUserId);
 
-  public RoleBO getUserRole(int roleId);
+  public RoleBO getUserRole(String roleId);
 
   public List<RoleBO> getUserRoleList();
 }

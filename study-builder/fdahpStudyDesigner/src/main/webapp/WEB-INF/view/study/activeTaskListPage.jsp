@@ -89,15 +89,15 @@
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
                       title="View"
-                      onclick="viewTaskInfo(${activeTasksInfo.id});"></span>
+                      onclick="viewTaskInfo('${activeTasksInfo.id}');"></span>
                 <span
                     class="${activeTasksInfo.action?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Edit" id="editTask"
-                    onclick="editTaskInfo(${activeTasksInfo.id});"></span>
+                    onclick="editTaskInfo('${activeTasksInfo.id}');"></span>
                 <span
                     class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Delete" id="delTask"
-                    onclick="deleteTaskInfo(${activeTasksInfo.id});"></span>
+                    onclick="deleteTaskInfo('${activeTasksInfo.id}');"></span>
               </td>
             </tr>
           </c:forEach>
