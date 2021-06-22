@@ -1018,17 +1018,6 @@
               <span class='help-block with-errors red-txt'></span>
             </span>
             
-            
-            <span class="form-group  dis-inline vertical-align-middle pr-md">
-              <input id="customStartTime${customVar.index}" type="text" count='${customVar.index}'
-                     class="form-control clock startTime cusTime ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                     name="activeTaskCustomScheduleBo[${customVar.index}].frequencyStartTime"
-                     value="${activeTaskCustomScheduleBo.frequencyStartTime}" placeholder="Start time"
-                     onclick='timep(this.id);'
-                     required data-error="Please fill out this field"/>
-              <span class='help-block with-errors red-txt'></span>
-            </span>
-            
             <span class="form-group  dis-inline vertical-align-middle pr-md">
               <input id="customStartTime${customVar.index}" type="text" count='${customVar.index}'
                      class="form-control clock startTime cusTime ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
