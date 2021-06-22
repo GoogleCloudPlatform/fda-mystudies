@@ -118,7 +118,7 @@
     [searchPlaceholder]="searchPlaceholder"
     [showSearchBar]="showSearchBar"
     [filterQuery]="filterQuery"
-    (keyup)="onKeyUp($event)"
+    (keyDown)="mobileFilterQuery($event)"
   ></mobile-menu>
 </header>
 
