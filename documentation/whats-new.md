@@ -8,7 +8,7 @@
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
 
 # Release 2.0.6
-* Added functionality to support study import and export.
+* Added functionality to support study import and export. For upgrading existing deployments, follow [these steps](/deployment#study-import--export-206-upgrade).
 * Bug fixes and UI refinements
 * Additional code improvements
 * The full list of bugs and features addressed in this release can be viewed [`here`](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/9?closed=1)
