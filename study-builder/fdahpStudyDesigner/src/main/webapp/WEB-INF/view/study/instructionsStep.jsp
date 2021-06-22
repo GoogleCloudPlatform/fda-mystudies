@@ -114,7 +114,7 @@
                   Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>
               </c:forEach>
               <option
-                  value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq 0 ? 'selected' :''}>
+                   value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
                 Completion Step
               </option>
             </select>
@@ -325,7 +325,7 @@
     var instruction_id = $("#id").val();
     var questionnaire_id = $("#questionnaireId").val();
     var instruction_title = $("#instructionTitle").val();
-    var instruction_text = $("#summernote").val();
+    var instruction_text = $('#summernote').summernote('code');
 
     var shortTitle = $("#shortTitleId").val();
     var destinationStep = $("#destinationStepId").val();

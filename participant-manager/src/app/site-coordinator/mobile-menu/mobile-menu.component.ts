@@ -23,6 +23,10 @@ export class MobileMenuComponent implements OnInit {
     this.navIsOpen = !this.navIsOpen;
   }
 
+  hamburgerclose(): void {
+    // any other execution
+    this.navIsOpen = !this.navIsOpen;
+  }
   mobileOnKeyDown(event: KeyboardEvent): void {
     this.keyDown.emit(event);
   }

@@ -110,7 +110,6 @@ class StudyDashboardViewController: UIViewController {
 
     // show navigationbar
     self.navigationController?.setNavigationBarHidden(true, animated: true)
-    self.tableView?.reloadData()
     getResponse()
   }
 
@@ -131,6 +130,7 @@ class StudyDashboardViewController: UIViewController {
     guard let study = Study.currentStudy else { return }
     let key = "Response" + study.studyId
     if !(UserDefaults.standard.bool(forKey: key)) {
+      DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
       self.addProgressIndicator(with: kDashSetupMessage)
       responseDataFetch?.checkUpdates { [unowned self] in
         self.loadStatsFromDB(for: study)
