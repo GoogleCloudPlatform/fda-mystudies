@@ -128,9 +128,8 @@
 		          },
 		        },
 		    callback: function (result) {
-		    	var bucketName = "${sessionObject.exportStudiesBucketName}";
 		    	var storagePath = "${sessionObject.storagePath}";
-		    	if(result !=null && !(result.startsWith(storagePath+bucketName) && result.includes("Expires="))){
+		    	if(result !=null && !(result.startsWith(storagePath) && result.includes("Expires="))){
 		    		showErrMsg("Please enter a valid URL");
 		           }else if(result !=null){
 		        	   if(validateExpireDate(result)){

@@ -1773,7 +1773,7 @@
 
             <div class="mt-md">
               <div class="gray-xs-f mb-xs">Lifetime of each run</div>
-              <div class="black-xs-f">Each run begins at the selected time on the start date and expires at the same time on the end date
+              <div class="black-xs-f">Each run begins at the selected start date and time and expires at the selected end date and time
               </div>
             </div>
           </div>
@@ -3323,13 +3323,12 @@ debugger
 	 var startDate =  moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
 	 var startTime = moment($("#customTime" + count).val(), "HH:mm A").toDate();
 	 startDate.setHours(startTime.getHours());
-	 startDate.setMinutes(startTime.getMinutes());
-	 
+	 startDate.setMinutes(startTime.getMinutes() - 1);
 	 if (startDate != '' && endDate != '' && startDate < endDate) {
 	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	       "Start date and time should not be greater than end date and time"));
+	       "Start date and time should not be greater than or equal to end date and time"));
 	 } else {
 	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty();
@@ -3353,13 +3352,12 @@ debugger
 	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
 	 var endTime = moment($("#" + item).val(), "HH:mm A").toDate();
 	 endDate.setHours(endTime.getHours());
-	 endDate.setMinutes(endTime.getMinutes());
-	 debugger
+	 endDate.setMinutes(endTime.getMinutes() - 1);
 	 if (startDate != '' && endDate != '' && startDate > endDate) {
 	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	       "End date and time should not be less than start date and time"));
+	       "End date and time should not be less than or equal to start date and time"));
 	 } else {
 	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty();
@@ -4029,12 +4027,17 @@ debugger
 	              thisToDate.setMinutes(thisEndTime.getMinutes());
 
 	              if (chkValFromDate && chkValToDate){
-	               	 chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate);
-	               	 chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
-	               }
+	               	chkValFromDate = !(thisFromDate >= fromDate && thisFromDate <= toDate);
+	               	chkValToDate = !(thisToDate >= fromDate && thisToDate <= toDate);
+	              }
+	              
+	              if(chkValToDate){
+	                chkValToDate = !(thisToDate >= toDate && thisFromDate <= toDate);
+	              }
 	          }
 	        });
 	      }
+          
 	      if (!chkValFromDate) {
 	          $(thisAttr).parents('.manually-option').find('.startTime').parent().addClass(
 	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
