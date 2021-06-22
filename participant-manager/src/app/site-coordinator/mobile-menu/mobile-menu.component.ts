@@ -12,7 +12,8 @@ export class MobileMenuComponent implements OnInit {
   navIsOpen = false;
   @Input() showSearchBar = true;
   @Input() filterQuery = '';
-  @Output() keyDown: EventEmitter<KeyboardEvent> = new EventEmitter();
+  mobileFilterQuery='';
+  @Output() keyDown: EventEmitter<string> = new EventEmitter();
   user = {} as Profile;
   showSearchOnClick = false;
   constructor(private readonly userService: UserService) {}
@@ -28,7 +29,9 @@ export class MobileMenuComponent implements OnInit {
   this.navIsOpen = !this.navIsOpen;
 }
   mobileOnKeyDown(event: KeyboardEvent): void {
-    this.keyDown.emit(event);
+    if (event.key === 'Enter' ){
+    this.keyDown.emit(this.mobileFilterQuery);
+    }
   }
   showSearchBarOnClick(): void {
     this.showSearchOnClick = true;
