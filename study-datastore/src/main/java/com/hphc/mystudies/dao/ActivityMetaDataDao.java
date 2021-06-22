@@ -2259,7 +2259,7 @@ public class ActivityMetaDataDao {
   public Map<String, Object> getQuestionaireQuestionFormatByType(
       QuestionsDto questionDto, String questionResultType, Session session, StudyDto studyDto)
       throws DAOException {
-	  LOGGER.entry("begin getQuestionaireQuestionFormatByType()");
+    LOGGER.entry("begin getQuestionaireQuestionFormatByType()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     QuestionReponseTypeDto reponseType = null;
     try {
@@ -2356,7 +2356,7 @@ public class ActivityMetaDataDao {
 
   public Map<String, Object> formatQuestionScaleDetails(
       QuestionReponseTypeDto reponseType, StudyDto studyDto) throws DAOException {
-	  LOGGER.entry("begin formatQuestionScaleDetails()");
+    LOGGER.entry("begin formatQuestionScaleDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2438,7 +2438,7 @@ public class ActivityMetaDataDao {
 
   public Map<String, Object> formatQuestionContinuousScaleDetails(
       QuestionReponseTypeDto reponseType, StudyDto studyDto) throws DAOException {
-	  LOGGER.entry("begin formatQuestionContinuousScaleDetails()");
+    LOGGER.entry("begin formatQuestionContinuousScaleDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -3000,25 +3000,19 @@ public class ActivityMetaDataDao {
             }
           }
 
-          if (StringUtils.isNotBlank(activeTaskFrequency.getFrequencyDate())) {
-            activityBean.setStartTime(
-                StudyMetaDataUtil.getFormattedDateTimeZone(
-                    startDateTime,
-                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          }
+          activityBean.setStartTime(
+              StudyMetaDataUtil.getFormattedDateTimeZone(
+                  startDateTime,
+                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 
-          if (StringUtils.isNotBlank(activeTaskDto.getActiveTaskLifetimeEnd())) {
-            activityBean.setEndTime(
-                StringUtils.isEmpty(endDateTime)
-                    ? ""
-                    : StudyMetaDataUtil.getFormattedDateTimeZone(
-                        endDateTime,
-                        StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                        StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          } else {
-            activityBean.setEndTime("");
-          }
+          activityBean.setEndTime(
+              StringUtils.isEmpty(endDateTime)
+                  ? ""
+                  : StudyMetaDataUtil.getFormattedDateTimeZone(
+                      endDateTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 
           activityBean.setIsLaunchStudy(activeTaskFrequency.isLaunchStudy());
           activityBean.setIsStudyLifeTime(activeTaskFrequency.isStudyLifeTime());
@@ -3051,8 +3045,6 @@ public class ActivityMetaDataDao {
                     startDateTime,
                     StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                     StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          } else {
-            activityBean.setStartTime("");
           }
 
           if (null != activeTaskDto.getActiveTaskLifetimeEnd()) {
@@ -3061,8 +3053,6 @@ public class ActivityMetaDataDao {
                     endDateTime,
                     StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                     StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          } else {
-            activityBean.setEndTime("");
           }
 
         } else if (activeTaskDto
@@ -3138,8 +3128,6 @@ public class ActivityMetaDataDao {
                       endDateTime,
                       StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                       StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-            } else {
-              activityBean.setEndTime("");
             }
           }
         }
@@ -4124,7 +4112,7 @@ public class ActivityMetaDataDao {
                 "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
               frequencyStartTime = frequencyStartTime + ":00";
             }
-            
+
             start.setTime(frequencyStartTime);
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
@@ -4252,6 +4240,7 @@ public class ActivityMetaDataDao {
             manuallyScheduleFrequencyList) {
           ActivityFrequencyAnchorRunsBean activityFrequencyAnchorRunsBean =
               new ActivityFrequencyAnchorRunsBean();
+
           if (null != customFrequencyDto.getTimePeriodFromDays()) {
             activityFrequencyAnchorRunsBean.setStartDays(
                 customFrequencyDto.isxDaysSign()
