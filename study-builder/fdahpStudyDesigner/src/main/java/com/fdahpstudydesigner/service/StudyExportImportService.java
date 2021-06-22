@@ -940,7 +940,7 @@ public class StudyExportImportService {
             studyBo.getVersion(),
             studyBo.isEnrollmentdateAsAnchordate() ? "Y" : "N",
             studyBo.getCustomStudyId(),
-            studyBo.getExportSignedUrl());
+            null);
 
     insertSqlStatements.add(studiesInsertQuery);
   }

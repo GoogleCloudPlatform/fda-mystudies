@@ -7167,6 +7167,7 @@ public class StudyDAOImpl implements StudyDAO {
       studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId());
       studyBo.setEnrollingParticipants(FdahpStudyDesignerConstants.YES);
       studyBo.setCustomStudyId(null);
+      studyBo.setExportSignedUrl(null);
       studyId = (String) session.save(studyBo);
 
       studyPermissionBO = new StudyPermissionBO();
