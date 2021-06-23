@@ -44,7 +44,7 @@ android {
     }
     repositories {
         maven {
-            url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo'
+            url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
         }
     }
     packagingOptions {
