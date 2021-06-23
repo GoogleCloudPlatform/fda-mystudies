@@ -7276,6 +7276,7 @@ public class StudyDAOImpl implements StudyDAO {
       studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId());
       studyBo.setEnrollingParticipants(FdahpStudyDesignerConstants.YES);
       studyBo.setCustomStudyId(null);
+      studyBo.setExportSignedUrl(null);
       studyId = (String) session.save(studyBo);
 
       studyPermissionBO = new StudyPermissionBO();
@@ -7302,12 +7303,6 @@ public class StudyDAOImpl implements StudyDAO {
           }
         }
       }
-
-      /*  StudySequenceBo studySequenceBo = getStudySequenceByStudyId(oldStudyId);
-      studySequenceBo.setStudySequenceId(null);
-      studySequenceBo.setStudyId(studyId);
-      studySequenceBo.setBasicInfo(false);
-      session.save(studySequenceBo);*/
 
       StudySequenceBo studySequenceBo = new StudySequenceBo();
       studySequenceBo.setStudyId(studyId);

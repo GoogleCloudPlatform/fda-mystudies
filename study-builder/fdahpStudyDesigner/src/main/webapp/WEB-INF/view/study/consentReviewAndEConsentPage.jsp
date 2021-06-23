@@ -257,11 +257,9 @@
               </div>
             </div>
             <div class="mt-xlg">
-              <div class="black-md-f"> Consent document <small class="pt-lg mt-xs pb-lg">(last published version: V1.0)</small> 
-<span id="requiredStarId" class="requiredStar" style="display: none;">*</span> 
-<span class="filled-tooltip" data-toggle="tooltip" data-placement="top" data-html="true" title="" 
-data-original-title="<span class='font24 text-weight-light pull-left'></span> 
-The version of the consent document gets updated each time you mark this section complete and publish updates to the study."> </span> </div>
+              <div class="black-md-f"> Consent document
+               <span id="requiredStarId" class="requiredStar" style="display: none;">*</span> 
+              </div>
               <div class="mt-lg">
                 <div class="cont_doc" id="autoCreateDivId"
                      style="display: block;">
