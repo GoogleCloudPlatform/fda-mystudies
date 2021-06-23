@@ -3175,7 +3175,8 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
-                              + " where QFDTO.questionnairesId=:quesRespId")
+                              + " where QFDTO.questionnairesId=:quesRespId"
+                              + " order by QFDTO.frequencyDate, QCFDTO.timePeriodFromDays")
                       .setString("quesRespId", questionaire.getId())
                       .uniqueResult();
           if ((questionnairesFrequency != null)
