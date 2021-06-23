@@ -145,7 +145,7 @@
 	                    	  message = data.message;
 	                    	  if (message == "SUCCESS") {
 	                    		  showSucMsg("Study imported successfully");
-	                    		  location.reload();
+	                    		  window.location=window.location;
 	                    		  setTimeout(hideDisplayMessage, 5000);
 	                            } else if(message == "Please enter a valid URL"){
 	                            	 showErrMsg(message);
