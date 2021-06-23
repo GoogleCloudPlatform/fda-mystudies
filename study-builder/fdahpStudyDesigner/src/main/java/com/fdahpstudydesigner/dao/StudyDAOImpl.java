@@ -1826,7 +1826,8 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       if (StringUtils.isNotEmpty(studyId)) {
         query =
-            session.createQuery("from StudyPageBo where studyId=:studyId order by sequenceNumber");
+            session.createQuery(
+                "from StudyPageBo where studyId=:studyId order by createdOn, sequenceNumber");
         query.setString("studyId", studyId);
         studyPageBo = query.list();
       }
@@ -7249,6 +7250,7 @@ public class StudyDAOImpl implements StudyDAO {
         for (EligibilityTestBo eligibilityTestBo : eligibilityBoList) {
           eligibilityTestBo.setId(null);
           eligibilityTestBo.setEligibilityId(eligibilityBo.getId());
+          eligibilityTestBo.setUsed(false);
           session.save(eligibilityTestBo);
         }
       }
