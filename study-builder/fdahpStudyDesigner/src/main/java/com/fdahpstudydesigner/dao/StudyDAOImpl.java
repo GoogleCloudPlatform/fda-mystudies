@@ -7249,6 +7249,7 @@ public class StudyDAOImpl implements StudyDAO {
         for (EligibilityTestBo eligibilityTestBo : eligibilityBoList) {
           eligibilityTestBo.setId(null);
           eligibilityTestBo.setEligibilityId(eligibilityBo.getId());
+          eligibilityTestBo.setUsed(false);
           session.save(eligibilityTestBo);
         }
       }
