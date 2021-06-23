@@ -823,3 +823,34 @@ DELIMITER ;
 
 
 
+UPDATE fda_hphc.active_task_custom_frequencies SET frequency_start_time = frequency_time
+  WHERE frequency_time IS NOT NULL;
+  
+UPDATE fda_hphc.active_task_custom_frequencies SET frequency_end_time = frequency_time
+  WHERE frequency_time IS NOT NULL;
+
+ALTER TABLE fda_hphc.active_task_custom_frequencies  
+  MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
+
+ALTER TABLE fda_hphc.active_task_custom_frequencies  
+  MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
+
+ALTER TABLE fda_hphc.active_task_custom_frequencies  
+  DROP COLUMN frequency_time;
+
+
+
+UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_start_time = frequency_time
+  WHERE frequency_time IS NOT NULL;
+
+UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_end_time = frequency_time
+  WHERE frequency_time IS NOT NULL;
+
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
+MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
+
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
+  MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
+
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
+  DROP COLUMN frequency_time;
