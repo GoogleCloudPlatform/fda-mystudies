@@ -4097,7 +4097,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.activeTaskId=:activeTaskId"
-                          + " order by QCFDTO.id")
+                          + " order by QCFDTO.frequencyStartDate, QCFDTO.timePeriodFromDays")
                   .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
@@ -4142,7 +4142,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskFrequencyDto QCFDTO"
                           + " where QCFDTO.activeTaskId=:activeTaskId"
-                          + " order by QCFDTO.id")
+                          + " order by QCFDTO.frequencyDate, QCFDTO.timePeriodFromDays")
                   .setString("activeTaskId", activeTaskDto.getId())
                   .list();
 
@@ -4164,7 +4164,8 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from ActiveTaskFrequencyDto QFDTO"
-                              + " where QFDTO.activeTaskId=:activeTaskId")
+                              + " where QFDTO.activeTaskId=:activeTaskId"
+                              + " order by QFDTO.frequencyDate, QFDTO.timePeriodFromDays")
                       .setString("activeTaskId", activeTaskDto.getId())
                       .uniqueResult();
           if (taskFrequencyDto != null) {
@@ -4372,7 +4373,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questId"
-                          + " order by QCFDTO.id")
+                          + " order by QCFDTO.frequencyStartDate, QCFDTO.timePeriodFromDays")
                   .setString("questId", questionaire.getId())
                   .list();
           if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
@@ -4418,7 +4419,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questId"
-                          + " order by QCFDTO.id")
+                          + " order by QCFDTO.frequencyDate, QCFDTO.timePeriodFromDays")
                   .setString("questId", questionaire.getId())
                   .list();
 
@@ -4443,7 +4444,8 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
-                              + " where QFDTO.questionnairesId=:questId")
+                              + " where QFDTO.questionnairesId=:questId"
+                              + " order by QFDTO.frequencyDate, QFDTO.timePeriodFromDays")
                       .setString("questId", questionaire.getId())
                       .uniqueResult();
           if (questionnairesFrequency != null) {
