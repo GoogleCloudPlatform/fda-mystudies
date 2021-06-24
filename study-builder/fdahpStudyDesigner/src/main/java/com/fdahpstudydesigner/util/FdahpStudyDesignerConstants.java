@@ -491,6 +491,10 @@ public class FdahpStudyDesignerConstants {
 
   public static final String NA = "NA";
 
+  public static final String DEVICE_ANDROID = "android";
+
+  public static final String DEVICE_IOS = "ios";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
