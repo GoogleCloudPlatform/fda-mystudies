@@ -126,25 +126,24 @@
 		          },
 		        },
 		    callback: function (result) {
-		    	var decodedURL = decodeURIComponent(result);
 		    	var storagePath = "${sessionObject.storagePath}";
-		    	if(decodedURL !=null && !(decodedURL.startsWith(storagePath) && decodedURL.includes("Expires="))){
+		    	if(result !=null && !(result.startsWith(storagePath) && result.includes("Expires="))){
 		    		showErrMsg("Please enter a valid URL");
-		           }else if(decodedURL !=null){
-		        	   if(validateExpireDate(decodedURL)){
+		           }else if(result !=null){
+		        	   if(validateExpireDate(result)){
 	            	    $.ajax({
 	                      url: "/studybuilder/studies/import.do?_S=${param._S}",
 	                      type: "POST",
 	                      datatype: "json",
 	                      data: {
-	                        signedUrl: decodedURL,
+	                        signedUrl: result,
 	                        "${_csrf.parameterName}": "${_csrf.token}",
 	                      },
 	                      success: function emailValid(data, status) {
 	                    	  message = data.message;
 	                    	  if (message == "SUCCESS") {
 	                    		  showSucMsg("Study imported successfully");
-	                    		  window.location=window.location;
+	                    		  location.reload();
 	                    		  setTimeout(hideDisplayMessage, 5000);
 	                            } else if(message == "Please enter a valid URL"){
 	                            	 showErrMsg(message);

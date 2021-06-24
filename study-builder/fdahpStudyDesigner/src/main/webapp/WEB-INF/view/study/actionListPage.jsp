@@ -368,7 +368,7 @@
   
   
   $('.copy_to_clipboard').on('click', function () {
-	  var signedUrl = "${exportSignedUrl}";
+	var signedUrl = "${studyBo.exportSignedUrl}";
 	$('#copy_to_clipboard').val(signedUrl);
 	var copyText = document.getElementById("copy_to_clipboard");
     var textArea = document.createElement("textarea");
