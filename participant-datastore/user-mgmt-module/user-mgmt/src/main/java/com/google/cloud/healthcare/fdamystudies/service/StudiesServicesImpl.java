@@ -236,17 +236,32 @@ public class StudiesServicesImpl implements StudiesServices {
 
     notificationBean.setNotificationType(AppConstants.GATEWAY);
     FcmPushNotificationResponse pushNotificationResponse = null;
-    if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
-        && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0) {
-      notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
-      pushNotificationResponse =
-          pushFcmNotification(
-              notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+
+    if ((allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
+            && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0)
+        || (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null
+            && allDeviceTokens.get(AppConstants.DEVICE_IOS).length() != 0)) {
+      if (notificationBean.getNotificationSubType() == "studyEvent"
+          && notificationBean.getDeviceType() == AppConstants.DEVICE_ANDROID) {
+        notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      } else if (notificationBean.getNotificationSubType() == "studyEvent"
+          && notificationBean.getDeviceType() == AppConstants.DEVICE_IOS) {
+        notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
+        pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      } else {
+        notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+
+        notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
+        pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      }
     }
-    if (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null) {
-      notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
-      pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-    }
+
     JsonNode fcmResponse =
         pushNotificationResponse != null ? pushNotificationResponse.getFcmResponse() : null;
     return new FcmPushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
