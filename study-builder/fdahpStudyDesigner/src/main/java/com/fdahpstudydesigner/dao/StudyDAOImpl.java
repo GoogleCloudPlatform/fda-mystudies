@@ -1829,7 +1829,8 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       if (StringUtils.isNotEmpty(studyId)) {
         query =
-            session.createQuery("from StudyPageBo where studyId=:studyId order by sequenceNumber");
+            session.createQuery(
+                "from StudyPageBo where studyId=:studyId order by createdOn, sequenceNumber");
         query.setString("studyId", studyId);
         studyPageBo = query.list();
       }
@@ -7276,6 +7277,7 @@ public class StudyDAOImpl implements StudyDAO {
       studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId());
       studyBo.setEnrollingParticipants(FdahpStudyDesignerConstants.YES);
       studyBo.setCustomStudyId(null);
+      studyBo.setExportSignedUrl(null);
       studyId = (String) session.save(studyBo);
 
       studyPermissionBO = new StudyPermissionBO();
@@ -7302,12 +7304,6 @@ public class StudyDAOImpl implements StudyDAO {
           }
         }
       }
-
-      /*  StudySequenceBo studySequenceBo = getStudySequenceByStudyId(oldStudyId);
-      studySequenceBo.setStudySequenceId(null);
-      studySequenceBo.setStudyId(studyId);
-      studySequenceBo.setBasicInfo(false);
-      session.save(studySequenceBo);*/
 
       StudySequenceBo studySequenceBo = new StudySequenceBo();
       studySequenceBo.setStudyId(studyId);
