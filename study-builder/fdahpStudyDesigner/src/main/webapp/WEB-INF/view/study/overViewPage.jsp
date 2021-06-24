@@ -747,7 +747,7 @@
             '.in').collapse('show');
       } else {
         if (!($(this).parents('body').find('.panel-collapse.in').find(
-            '.has-error-cust:first').length > 0)) {
+            '.has-error-cust:first').length >= 0)) {
           $(this).parents('body').find('.panel-collapse.in').collapse('hide').removeClass('in');
         }
         $(this).parents('body').find(".has-error-cust:first").parents('.panel-collapse').not(
