@@ -128,17 +128,18 @@
 		          },
 		        },
 		    callback: function (result) {
+		    	var decodedURL = decodeURIComponent(result);
 		    	var storagePath = "${sessionObject.storagePath}";
-		    	if(result !=null && !(result.startsWith(storagePath) && result.includes("Expires="))){
+		    	if(decodedURL !=null && !(decodedURL.startsWith(storagePath) && decodedURL.includes("Expires="))){
 		    		showErrMsg("Please enter a valid URL");
-		           }else if(result !=null){
-		        	   if(validateExpireDate(result)){
+		           }else if(decodedURL !=null){
+		        	   if(validateExpireDate(decodedURL)){
 	            	    $.ajax({
 	                      url: "/studybuilder/studies/import.do?_S=${param._S}",
 	                      type: "POST",
 	                      datatype: "json",
 	                      data: {
-	                        signedUrl: result,
+	                        signedUrl: decodedURL,
 	                        "${_csrf.parameterName}": "${_csrf.token}",
 	                      },
 	                      success: function emailValid(data, status) {
