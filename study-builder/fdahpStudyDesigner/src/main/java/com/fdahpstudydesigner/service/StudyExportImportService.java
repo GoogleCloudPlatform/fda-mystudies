@@ -940,7 +940,7 @@ public class StudyExportImportService {
             studyBo.getVersion(),
             studyBo.isEnrollmentdateAsAnchordate() ? "Y" : "N",
             studyBo.getCustomStudyId(),
-            studyBo.getExportSignedUrl());
+            null);
 
     insertSqlStatements.add(studiesInsertQuery);
   }
@@ -1271,6 +1271,7 @@ public class StudyExportImportService {
     }
     List<String> eligibilityTestBoInsertQueryList = new ArrayList<>();
     for (EligibilityTestBo eligibilityTestBo : eligibilityTestBoList) {
+      eligibilityTestBo.setUsed(false);
       String eligibilityTestBoBoInsertQuery =
           prepareInsertQuery(
               StudyExportSqlQueries.ELIGIBILITY_TEST,
@@ -1284,7 +1285,7 @@ public class StudyExportImportService {
               eligibilityTestBo.getSequenceNo(),
               eligibilityTestBo.getShortTitle(),
               eligibilityTestBo.getStatus(),
-              eligibilityTestBo.isUsed() ? "Y" : "N");
+              eligibilityTestBo.isUsed());
 
       eligibilityTestBoInsertQueryList.add(eligibilityTestBoBoInsertQuery);
     }
@@ -1331,8 +1332,7 @@ public class StudyExportImportService {
               customIdsMap.get(STUDY_ID + consentBo.getStudyId()),
               consentBo.getTaglineDescription(),
               consentBo.getTitle(),
-              consentBo.getVersion(),
-              consentBo.getEnrollAgain());
+              consentBo.getVersion());
       consentBoListInsertQuery.add(consentInsertSql);
     }
     insertSqlStatements.addAll(consentBoListInsertQuery);

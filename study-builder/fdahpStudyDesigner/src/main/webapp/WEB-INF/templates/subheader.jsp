@@ -128,9 +128,8 @@
 		          },
 		        },
 		    callback: function (result) {
-		    	var bucketName = "${sessionObject.exportStudiesBucketName}";
 		    	var storagePath = "${sessionObject.storagePath}";
-		    	if(result !=null && !(result.startsWith(storagePath+bucketName) && result.includes("Expires="))){
+		    	if(result !=null && !(result.startsWith(storagePath) && result.includes("Expires="))){
 		    		showErrMsg("Please enter a valid URL");
 		           }else if(result !=null){
 		        	   if(validateExpireDate(result)){
@@ -146,7 +145,7 @@
 	                    	  message = data.message;
 	                    	  if (message == "SUCCESS") {
 	                    		  showSucMsg("Study imported successfully");
-	                    		  location.reload();
+	                    		  window.location=window.location;
 	                    		  setTimeout(hideDisplayMessage, 5000);
 	                            } else if(message == "Please enter a valid URL"){
 	                            	 showErrMsg(message);

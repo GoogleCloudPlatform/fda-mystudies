@@ -179,10 +179,7 @@
     action="/studybuilder/adminStudies/studyList.do?_S=${param._S}"
     name="studyListInfoForm" id="studyListInfoForm" method="post">
 </form:form>
-<form:form
-    action="/studybuilder/adminStudies/viewBasicInfo.do?_S=${param._S}"
-    name="basicInfoForm" id="basicInfoForm" method="post">
-</form:form>
+
 <script type="text/javascript">
   $(document).ready(function () {
 	$('.studyClass').addClass("active");

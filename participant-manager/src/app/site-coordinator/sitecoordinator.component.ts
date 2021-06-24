@@ -76,6 +76,11 @@ export class SiteCoordinatorComponent implements OnInit {
     }
   }
 
+  public mobileFilterQuery(ref: string){
+    this.searchParameter.setSearchParameter(ref);
+    void this.searchBar?.search(ref);
+  }
+
   onActivate(componentRef: SearchBar): void {
     this.showSearchBar = false;
     this.filterQuery = '';
