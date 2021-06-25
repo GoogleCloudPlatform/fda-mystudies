@@ -57,11 +57,13 @@ public class VerificationStepActivity extends AppCompatActivity
   private static final int CONFIRM_REGISTER_USER_RESPONSE = 100;
   private static final int RESEND_CONFIRMATION = 101;
   private static final int JOIN_STUDY_RESPONSE = 102;
+  private static final int FORGOT_PASSWORD_REPONSE = 103;
   private String from;
   private String userId;
   private String auth;
   private String emailId;
   private String type;
+  private LoginData loginData;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -246,33 +248,43 @@ public class VerificationStepActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (responseCode == CONFIRM_REGISTER_USER_RESPONSE) {
-      LoginData loginData = (LoginData) response;
-      SharedPreferenceHelper.writePreference(
-          VerificationStepActivity.this, getString(R.string.logintype), "signUp");
-      CustomTabsIntent customTabsIntent =
-          new CustomTabsIntent.Builder()
-              .setToolbarColor(getResources().getColor(R.color.colorAccent))
-              .setShowTitle(true)
-              .setCloseButtonIcon(
-                  BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
-              .setStartAnimations(
-                  VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
-              .setExitAnimations(
-                  VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
-              .build();
-      StringBuilder loginUrl = new StringBuilder();
-      loginUrl.append(Urls.LOGIN_URL);
-      if (getIntent().getStringExtra("type") != null
-          && !getIntent().getStringExtra("type").equalsIgnoreCase("ForgotPasswordActivity")
-          && loginData.getTempRegId() != null) {
-        loginUrl.append("&tempRegId=").append(loginData.getTempRegId());
+      if (type.equalsIgnoreCase("ForgotPasswordActivity")) {
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        intent.putExtra("from", "verification");
+        startActivityForResult(intent, FORGOT_PASSWORD_REPONSE);
+      } else {
+        loginData = (LoginData) response;
+        signin();
       }
-      customTabsIntent.intent.setData(Uri.parse(loginUrl.toString()));
-      startActivity(customTabsIntent.intent);
     } else if (responseCode == RESEND_CONFIRMATION) {
       Toast.makeText(this, getResources().getString(R.string.resend_success), Toast.LENGTH_SHORT)
           .show();
     }
+  }
+
+  private void signin() {
+    SharedPreferenceHelper.writePreference(
+            VerificationStepActivity.this, getString(R.string.logintype), "signUp");
+    CustomTabsIntent customTabsIntent =
+            new CustomTabsIntent.Builder()
+                    .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                    .setShowTitle(true)
+                    .setCloseButtonIcon(
+                            BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                    .setStartAnimations(
+                            VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+                    .setExitAnimations(
+                            VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+                    .build();
+    StringBuilder loginUrl = new StringBuilder();
+    loginUrl.append(Urls.LOGIN_URL);
+    if (getIntent().getStringExtra("type") != null
+            && !getIntent().getStringExtra("type").equalsIgnoreCase("ForgotPasswordActivity")
+            && loginData.getTempRegId() != null) {
+      loginUrl.append("&tempRegId=").append(loginData.getTempRegId());
+    }
+    customTabsIntent.intent.setData(Uri.parse(loginUrl.toString()));
+    startActivity(customTabsIntent.intent);
   }
 
   @Override
@@ -324,6 +336,8 @@ public class VerificationStepActivity extends AppCompatActivity
       Intent intent = new Intent();
       setResult(RESULT_OK, intent);
       finish();
+    } else if (requestCode == FORGOT_PASSWORD_REPONSE && resultCode == RESULT_OK) {
+      signin();
     }
   }
 }
