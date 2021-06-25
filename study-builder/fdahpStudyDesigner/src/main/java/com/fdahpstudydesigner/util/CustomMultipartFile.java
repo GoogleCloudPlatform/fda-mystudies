@@ -20,6 +20,11 @@ public class CustomMultipartFile implements MultipartFile {
     this.ext = ext;
   }
 
+  public CustomMultipartFile(byte[] imageContent, String fileName) {
+    this.imgContent = imageContent;
+    this.fileName = fileName;
+  }
+
   public String getExt() {
     return ext;
   }

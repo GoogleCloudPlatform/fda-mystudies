@@ -80,6 +80,7 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.StudyExportImportService;
 import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -89,6 +90,7 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.math.BigInteger;
@@ -130,6 +132,8 @@ public class StudyDAOImpl implements StudyDAO {
   @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private NotificationDAO notificationDAO;
+
+  @Autowired private StudyExportImportService studyExportImportService;
 
   HibernateTemplate hibernateTemplate;
   private Query query = null;
@@ -7865,6 +7869,7 @@ public class StudyDAOImpl implements StudyDAO {
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
                       + questionResponseSubType.getSelectedImage());
+
           if (studyImageArray != null) {
             File convFile =
                 new File(
@@ -7904,6 +7909,7 @@ public class StudyDAOImpl implements StudyDAO {
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
                       + questionResponseSubType.getImage());
+
           if (studyImageArray != null) {
             File convFile =
                 new File(
@@ -7951,6 +7957,7 @@ public class StudyDAOImpl implements StudyDAO {
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
                       + questionResponseType.getMinImage());
+
           if (studyImageArray != null) {
             File convFile =
                 new File(
@@ -8037,6 +8044,7 @@ public class StudyDAOImpl implements StudyDAO {
                     + FdahpStudyDesignerConstants.STUDTYPAGES
                     + "/"
                     + studyPageBo.getImagePath());
+
         if (studyImageArray != null) {
           File convFile =
               new File(
