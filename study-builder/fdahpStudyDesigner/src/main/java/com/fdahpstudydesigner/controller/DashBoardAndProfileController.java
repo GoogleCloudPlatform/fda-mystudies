@@ -198,8 +198,6 @@ public class DashBoardAndProfileController {
     RoleBO roleBO = null;
     String sucMsg = "";
     String errMsg = "";
-    String userId = null;
-    String accountManager = "";
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       HttpSession session = request.getSession();
@@ -218,12 +216,6 @@ public class DashBoardAndProfileController {
         }
         if (userSession.getUserId() != null) {
           userBO = usersService.getUserDetails(userSession.getUserId());
-          userId = usersService.getUserPermissionByUserId(userSession.getUserId());
-          if ((userId != null) && userId.equals(userSession.getUserId())) {
-            accountManager = "Yes";
-          } else {
-            accountManager = "No";
-          }
           if (null != userBO) {
             studyAndPermissionList = studyService.getStudyListByUserId(userBO.getUserId());
             roleBO = usersService.getUserRole(userBO.getRoleId());
@@ -235,7 +227,6 @@ public class DashBoardAndProfileController {
         }
         map.addAttribute("studyAndPermissionList", studyAndPermissionList);
         map.addAttribute("userBO", userBO);
-        map.addAttribute("accountManager", accountManager);
         mav = new ModelAndView("myAccount", map);
       }
     } catch (Exception e) {
