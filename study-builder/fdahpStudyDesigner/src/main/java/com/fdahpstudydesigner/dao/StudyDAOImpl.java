@@ -4237,8 +4237,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       if (StringUtils.isEmpty(studyBo.getId())) {
         studyBo.setCreatedBy(studyBo.getUserId());
-        appId = studyBo.getAppId().toUpperCase();
-        studyBo.setAppId(appId);
+        //        studyBo.setAppId(studyBo.getAppId());
         studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         studyId = (String) session.save(studyBo);
 
