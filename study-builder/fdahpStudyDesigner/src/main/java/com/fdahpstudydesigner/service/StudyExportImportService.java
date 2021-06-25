@@ -39,15 +39,13 @@ import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.StudyActiveTasksDAO;
 import com.fdahpstudydesigner.dao.StudyDAO;
+import com.fdahpstudydesigner.dao.StudyDAOImpl;
 import com.fdahpstudydesigner.dao.StudyQuestionnaireDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.IdGenerator;
 import com.fdahpstudydesigner.util.SessionObject;
 import com.fdahpstudydesigner.util.StudyExportSqlQueries;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
@@ -68,11 +66,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.maven.artifact.versioning.ComparableVersion;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,7 +109,16 @@ public class StudyExportImportService {
 
   @Autowired private StudyActiveTasksDAO studyActiveTasksDAO;
 
+  @Autowired StudyDAOImpl study;
+
   private JdbcTemplate jdbcTemplate;
+
+  HibernateTemplate hibernateTemplate;
+
+  @Autowired
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.hibernateTemplate = new HibernateTemplate(sessionFactory);
+  }
 
   @Autowired
   public void setDataSource(DataSource dataSource) {
@@ -512,27 +522,31 @@ public class StudyExportImportService {
         }
       }
 
-      Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
       byte[] bytes = content.toString().getBytes();
-      String fileName =
-          studyBo.getId()
-              + "_"
-              + map.get("release.version")
-              + "_"
-              + getCRC32Checksum(bytes)
-              + ".sql";
+      Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
 
-      String absoluteFileName = UNDER_DIRECTORY + PATH_SEPARATOR + fileName;
-
+      /*String absoluteFileName =
+      FdahpStudyDesignerConstants.STUDIES
+          + PATH_SEPARATOR
+          + UNDER_DIRECTORY
+          + PATH_SEPARATOR
+          + studyBo.getCustomStudyId()
+          + PATH_SEPARATOR
+          + fileName;*/
+      Session session = hibernateTemplate.getSessionFactory().openSession();
+      /*
       Storage storage = StorageOptions.getDefaultInstance().getService();
       BlobInfo blobInfo =
           BlobInfo.newBuilder(map.get("cloud.bucket.name.export.studies"), absoluteFileName)
               .build();
-      storage.create(blobInfo, bytes);
+      storage.create(blobInfo, bytes);*/
+      studyBo.setExportSqlByte(bytes);
+      study.getResourcesFromStorage(session, studyBo);
 
       String signedUrl =
           FdahpStudyDesignerUtil.getSignedUrlForExportedStudy(
-              absoluteFileName, Integer.parseInt(map.get("signed.url.expiration.in.hour")));
+              UNDER_DIRECTORY + PATH_SEPARATOR + studyBo.getCustomStudyId() + ".zip",
+              Integer.parseInt(map.get("signed.url.expiration.in.hour")));
 
       String message =
           studyDao.saveExportFilePath(studyBo.getId(), studyBo.getCustomStudyId(), signedUrl);
