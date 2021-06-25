@@ -192,8 +192,6 @@ public class StudyBo implements Serializable {
   @Column(name = "export_signed_url")
   private String exportSignedUrl;
 
-  @Transient private byte[] exportSqlByte;
-
   public String getExportSignedUrl() {
     return exportSignedUrl;
   }
@@ -563,13 +561,5 @@ public class StudyBo implements Serializable {
 
   public void setCloudStorageMoved(Integer isCloudStorageMoved) {
     this.isCloudStorageMoved = isCloudStorageMoved;
-  }
-
-  public byte[] getExportSqlByte() {
-    return exportSqlByte;
-  }
-
-  public void setExportSqlByte(byte[] exportSqlByte) {
-    this.exportSqlByte = exportSqlByte;
   }
 }
