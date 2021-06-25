@@ -7804,16 +7804,18 @@ public class StudyDAOImpl implements StudyDAO {
                   + "/studylogo/"
                   + studyBo.getThumbnailImage());
 
-      File convFile =
-          new File(
-              context.getRealPath("/")
-                  + "/Export/"
-                  + studyBo.getCustomStudyId()
-                  + "/studylogo/"
-                  + studyBo.getThumbnailImage());
-      FileOutputStream fos = new FileOutputStream(convFile);
-      fos.write(studyImageArray);
-      fos.close();
+      if (studyImageArray != null) {
+        File convFile =
+            new File(
+                context.getRealPath("/")
+                    + "/Export/"
+                    + studyBo.getCustomStudyId()
+                    + "/studylogo/"
+                    + studyBo.getThumbnailImage());
+        FileOutputStream fos = new FileOutputStream(convFile);
+        fos.write(studyImageArray);
+        fos.close();
+      }
     }
 
     List<QuestionnairesStepsBo> questionnaireStepsList =
@@ -7868,19 +7870,20 @@ public class StudyDAOImpl implements StudyDAO {
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
                       + questionResponseSubType.getSelectedImage());
-
-          File convFile =
-              new File(
-                  context.getRealPath("/")
-                      + "/Export/"
-                      + studyBo.getCustomStudyId()
-                      + "/"
-                      + FdahpStudyDesignerConstants.QUESTIONNAIRE
-                      + "/"
-                      + questionResponseSubType.getSelectedImage());
-          FileOutputStream fos = new FileOutputStream(convFile);
-          fos.write(studyImageArray);
-          fos.close();
+          if (studyImageArray != null) {
+            File convFile =
+                new File(
+                    context.getRealPath("/")
+                        + "/Export/"
+                        + studyBo.getCustomStudyId()
+                        + "/"
+                        + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                        + "/"
+                        + questionResponseSubType.getSelectedImage());
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(studyImageArray);
+            fos.close();
+          }
         }
 
         if (questionResponseSubType.getImage() != null) {
@@ -7896,6 +7899,7 @@ public class StudyDAOImpl implements StudyDAO {
             // If you require it to make the entire directory path including parents,
             // use directory.mkdirs(); here instead.
           }
+
           byte[] studyImageArray =
               FdahpStudyDesignerUtil.getResource(
                   FdahpStudyDesignerConstants.STUDIES
@@ -7905,19 +7909,20 @@ public class StudyDAOImpl implements StudyDAO {
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
                       + questionResponseSubType.getImage());
-
-          File convFile =
-              new File(
-                  context.getRealPath("/")
-                      + "/Export/"
-                      + studyBo.getCustomStudyId()
-                      + "/"
-                      + FdahpStudyDesignerConstants.QUESTIONNAIRE
-                      + "/"
-                      + questionResponseSubType.getImage());
-          FileOutputStream fos = new FileOutputStream(convFile);
-          fos.write(studyImageArray);
-          fos.close();
+          if (studyImageArray != null) {
+            File convFile =
+                new File(
+                    context.getRealPath("/")
+                        + "/Export/"
+                        + studyBo.getCustomStudyId()
+                        + "/"
+                        + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                        + "/"
+                        + questionResponseSubType.getImage());
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(studyImageArray);
+            fos.close();
+          }
         }
       }
 
@@ -7951,19 +7956,20 @@ public class StudyDAOImpl implements StudyDAO {
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
                       + questionResponseType.getMinImage());
-
-          File convFile =
-              new File(
-                  context.getRealPath("/")
-                      + "/Export/"
-                      + studyBo.getCustomStudyId()
-                      + "/"
-                      + FdahpStudyDesignerConstants.QUESTIONNAIRE
-                      + "/"
-                      + questionResponseType.getMinImage());
-          FileOutputStream fos = new FileOutputStream(convFile);
-          fos.write(studyImageArray);
-          fos.close();
+          if (studyImageArray != null) {
+            File convFile =
+                new File(
+                    context.getRealPath("/")
+                        + "/Export/"
+                        + studyBo.getCustomStudyId()
+                        + "/"
+                        + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                        + "/"
+                        + questionResponseType.getMinImage());
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(studyImageArray);
+            fos.close();
+          }
         }
 
         if (questionResponseType.getMaxImage() != null) {
@@ -7989,18 +7995,20 @@ public class StudyDAOImpl implements StudyDAO {
                       + "/"
                       + questionResponseType.getMaxImage());
 
-          File convFile =
-              new File(
-                  context.getRealPath("/")
-                      + "/Export/"
-                      + studyBo.getCustomStudyId()
-                      + "/"
-                      + FdahpStudyDesignerConstants.QUESTIONNAIRE
-                      + "/"
-                      + questionResponseType.getMaxImage());
-          FileOutputStream fos = new FileOutputStream(convFile);
-          fos.write(studyImageArray);
-          fos.close();
+          if (studyImageArray != null) {
+            File convFile =
+                new File(
+                    context.getRealPath("/")
+                        + "/Export/"
+                        + studyBo.getCustomStudyId()
+                        + "/"
+                        + FdahpStudyDesignerConstants.QUESTIONNAIRE
+                        + "/"
+                        + questionResponseType.getMaxImage());
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(studyImageArray);
+            fos.close();
+          }
         }
       }
     }
@@ -8034,19 +8042,20 @@ public class StudyDAOImpl implements StudyDAO {
                     + FdahpStudyDesignerConstants.STUDTYPAGES
                     + "/"
                     + studyPageBo.getImagePath());
-
-        File convFile =
-            new File(
-                context.getRealPath("/")
-                    + "/Export/"
-                    + studyBo.getCustomStudyId()
-                    + "/"
-                    + FdahpStudyDesignerConstants.STUDTYPAGES
-                    + "/"
-                    + studyPageBo.getImagePath());
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(studyImageArray);
-        fos.close();
+        if (studyImageArray != null) {
+          File convFile =
+              new File(
+                  context.getRealPath("/")
+                      + "/Export/"
+                      + studyBo.getCustomStudyId()
+                      + "/"
+                      + FdahpStudyDesignerConstants.STUDTYPAGES
+                      + "/"
+                      + studyPageBo.getImagePath());
+          FileOutputStream fos = new FileOutputStream(convFile);
+          fos.write(studyImageArray);
+          fos.close();
+        }
       }
     }
 
@@ -8081,18 +8090,20 @@ public class StudyDAOImpl implements StudyDAO {
                     + "/"
                     + resourceBo.getPdfUrl());
 
-        File convFile =
-            new File(
-                context.getRealPath("/")
-                    + "/Export/"
-                    + studyBo.getCustomStudyId()
-                    + "/"
-                    + FdahpStudyDesignerConstants.RESOURCEPDFFILES
-                    + "/"
-                    + resourceBo.getPdfUrl());
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(studyImageArray);
-        fos.close();
+        if (studyImageArray != null) {
+          File convFile =
+              new File(
+                  context.getRealPath("/")
+                      + "/Export/"
+                      + studyBo.getCustomStudyId()
+                      + "/"
+                      + FdahpStudyDesignerConstants.RESOURCEPDFFILES
+                      + "/"
+                      + resourceBo.getPdfUrl());
+          FileOutputStream fos = new FileOutputStream(convFile);
+          fos.write(studyImageArray);
+          fos.close();
+        }
       }
     }
 

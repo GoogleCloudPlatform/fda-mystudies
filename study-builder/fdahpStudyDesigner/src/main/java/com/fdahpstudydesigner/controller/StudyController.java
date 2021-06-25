@@ -90,9 +90,7 @@ import com.google.cloud.storage.StorageOptions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.URLEncoder;
 import java.nio.channels.Channels;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -231,9 +229,7 @@ public class StudyController {
           map.addAttribute("markAsCompleted", markAsCompleted);
           map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.expiration.in.hour"));
           map.addAttribute("releaseVersion", propMap.get("release.version"));
-          map.addAttribute(
-              "exportSignedUrl",
-              URLEncoder.encode(studyBo.getExportSignedUrl(), StandardCharsets.UTF_8.toString()));
+          map.addAttribute("exportSignedUrl", studyBo.getExportSignedUrl());
           mav = new ModelAndView("actionList", map);
         } else {
           return new ModelAndView("redirect:/adminStudies/studyList.do");

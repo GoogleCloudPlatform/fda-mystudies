@@ -1145,7 +1145,10 @@ public class FdahpStudyDesignerUtil {
   public static byte[] getResource(String filePath) {
     Storage storage = StorageOptions.getDefaultInstance().getService();
     Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), filePath));
-    return blob.getContent();
+    if (blob != null) {
+      return blob.getContent();
+    }
+    return null;
   }
 
   public static void uplaodZip(String filePath, String customStudyId) throws IOException {
