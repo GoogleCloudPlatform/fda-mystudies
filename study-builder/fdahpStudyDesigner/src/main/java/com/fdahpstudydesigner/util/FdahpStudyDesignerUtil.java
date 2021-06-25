@@ -29,10 +29,7 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -1140,30 +1137,5 @@ public class FdahpStudyDesignerUtil {
       return false;
     }
     return true;
-  }
-
-  public static byte[] getResource(String filePath) {
-    Storage storage = StorageOptions.getDefaultInstance().getService();
-    Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), filePath));
-    if (blob != null) {
-      return blob.getContent();
-    }
-    return null;
-  }
-
-  public static void uplaodZip(String filePath, String customStudyId) throws IOException {
-    BlobInfo blobInfo =
-        BlobInfo.newBuilder(
-                configMap.get("cloud.bucket.name.export.studies"),
-                "export-studies/" + customStudyId)
-            .setContentType("application/zip")
-            .build();
-    try {
-      Storage storage = StorageOptions.getDefaultInstance().getService();
-      storage.create(blobInfo, Files.readAllBytes(Paths.get(filePath)));
-
-    } catch (Exception e) {
-      logger.error("Save Image in cloud storage failed", e);
-    }
   }
 }
