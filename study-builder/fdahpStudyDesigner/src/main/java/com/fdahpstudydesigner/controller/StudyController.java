@@ -233,7 +233,11 @@ public class StudyController {
           map.addAttribute("releaseVersion", propMap.get("release.version"));
           map.addAttribute(
               "exportSignedUrl",
-              URLEncoder.encode(studyBo.getExportSignedUrl(), StandardCharsets.UTF_8.toString()));
+              URLEncoder.encode(
+                  StringUtils.isNotEmpty(studyBo.getExportSignedUrl())
+                      ? studyBo.getExportSignedUrl()
+                      : "",
+                  StandardCharsets.UTF_8.toString()));
           mav = new ModelAndView("actionList", map);
         } else {
           return new ModelAndView("redirect:/adminStudies/studyList.do");
