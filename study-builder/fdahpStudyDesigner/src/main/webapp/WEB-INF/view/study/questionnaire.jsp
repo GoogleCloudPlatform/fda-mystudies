@@ -1042,8 +1042,7 @@
                         </span>
                       </span>
                       <br/>
-                      <span class="pr-md">Anchor
-                        Date
+                      <span class="pr-md">Anchor date
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -1271,8 +1270,7 @@
                         </span>
                       </span>
                       <br/>
-                      <span class="pr-md">Anchor
-                        Date
+                      <span class="pr-md">Anchor date
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"

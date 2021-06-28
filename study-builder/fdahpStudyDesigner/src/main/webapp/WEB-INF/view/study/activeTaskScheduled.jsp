@@ -1105,8 +1105,7 @@
               <span>
                   to
               </span>
-              Anchor
-              Date
+              Anchor date
             </span>
           </span>
           <span>
@@ -1218,8 +1217,7 @@
                 <span
                     style="padding-right: 5px; padding-left: 5px">to
                 </span>
-                Anchor
-                Date
+                Anchor date
               </span>
             </span>
             <span>
