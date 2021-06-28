@@ -44,7 +44,7 @@ android {
     }
     repositories {
         maven {
-            url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo'
+            url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
         }
     }
     packagingOptions {
@@ -91,7 +91,7 @@ dependencies {
 
     //please remove these 2 dependencies for release build
     implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.uphyca:stetho_realm:2.3.0'
+    implementation 'com.uphyca:stetho_realm:2.1.0'
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
