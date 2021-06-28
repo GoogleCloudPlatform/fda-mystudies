@@ -274,6 +274,7 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
 
               @Override
               public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.defaultthumbnail.setVisibility(View.GONE);
                 holder.studyImg.setImageDrawable(resource);
                 return false;
               }
