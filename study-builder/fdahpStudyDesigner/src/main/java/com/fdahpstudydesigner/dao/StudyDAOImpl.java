@@ -7709,6 +7709,16 @@ public class StudyDAOImpl implements StudyDAO {
           }
         }
       }
+
+      StudyBo studyBo =
+          (StudyBo)
+              session
+                  .getNamedQuery(FdahpStudyDesignerConstants.STUDY_LIST_BY_ID)
+                  .setString("id", studyId)
+                  .uniqueResult();
+      studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+      session.save(studyBo);
+
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
