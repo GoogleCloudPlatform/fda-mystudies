@@ -492,6 +492,9 @@ struct ReviewConsent {
         someObject: dict[kConsentReviewStepSignatureContent] as AnyObject
       ) {
         signatureContent = dict[kConsentReviewStepSignatureContent] as? String
+        if let reviewHTML = signatureContent {
+          signatureContent = reviewHTML.stringByDecodingHTMLEntities
+        }
       }
       if Utilities.isValidValue(
         someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject
