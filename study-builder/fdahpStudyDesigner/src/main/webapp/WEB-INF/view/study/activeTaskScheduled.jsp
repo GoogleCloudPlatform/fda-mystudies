@@ -1094,7 +1094,7 @@
                 style="margin-bottom: -13px"><input id="manualStartTime0"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
-                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"
+                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                                                     placeholder="Start time" required/>
             <span
                 class='help-block with-errors red-txt'></span>
@@ -1138,14 +1138,12 @@
             </span>
           </span>
           
-              
-                
             
           <span class="form-group  dis-inline vertical-align-middle pr-md"
                 style="margin-bottom: -13px"><input id="manualEndTime0"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field" 
-                                                    value="${activeTaskCustomScheduleBo.frequencyEndTime}"
+                                                    value="${activeTaskCustomScheduleBo.frequencyEndTime}"   onclick='ancEndTime(this.id,0);' 
                                                     placeholder="End time" required/>
             <span
                 class='help-block with-errors red-txt'></span>
@@ -1209,7 +1207,7 @@
                 style="margin-bottom: -13px"><input id="manualStartTime${customVar.index}"
                                                     type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                                                     name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
-                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"
+                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                                                     placeholder="Start time" required data-error="Please fill out this field"/>
             <span
                 class='help-block with-errors red-txt'></span>
@@ -1260,7 +1258,7 @@
                 id="manualEndTime${customVar.index}" type="text"
                 class="form-control remove_required clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndTime"
-                value="${activeTaskCustomScheduleBo.frequencyEndTime}"
+                value="${activeTaskCustomScheduleBo.frequencyEndTime}"  onclick='ancEndTime(this.id,0);' onclick='ancEndTime(this.id,0);' 
                 placeholder="End time" required data-error="Please fill out this field"/>
               <span
                   class='help-block with-errors red-txt'></span>
@@ -3543,7 +3541,7 @@
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].frequencyStartTime' placeholder='Start time' required data-error='Please fill out this field' />"
+        + "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         
@@ -3565,7 +3563,7 @@
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].frequencyEndTime' placeholder='End time' required data-error='Please fill out this field' />"
+        + "].frequencyEndTime' placeholder='End time' onclick='ancEndTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
@@ -3672,6 +3670,135 @@
     }
   }
 
+  
+  function ancStartTime(item, count) {
+	  
+     $('#' + item).not('.cursor-none').datetimepicker({
+       format: 'h:mm a',
+       useCurrent: false,
+     }).on("dp.change", function (e) {
+   	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
+   	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
+   	 
+     var pxday = $("#xdays" + count).val();
+     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
+     
+     if (pxsign === "-") {
+       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+     } else {
+       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+     }
+     
+     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+     var pyday = $("#ydays" + count).val();
+     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+     }
+     
+   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+   	   $(this).addClass("red-border");
+   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+   	   $("#" + item).parent().find(".help-block").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	 } else {
+   		 $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block").empty();
+   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+   	 }
+   	 
+     if ($('.manually-anchor-option').length > 1) {
+    	 
+     var pre_parent_id = $("#AnchorDate" + count).prev().attr("id");
+     if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
+       pre_parent_id = pre_parent_id.replace('AnchorDate','');
+     }
+     var pre_parent = parseInt(pre_parent_id);
+   	 var preEndTime =  moment($("#manualEndTime" + pre_parent).val(), "HH:mm A").toDate();
+   	 
+     var pyday = $("#ydays" + pre_parent).val();
+     var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 preEndTime.setDate(preEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 preEndTime.setDate(preEndTime.getDate() + parseInt(pyday));
+     }
+     
+     preEndTime.setMinutes(preEndTime.getMinutes() + 2);
+   	 if (preEndTime != '' && preEndTime > manualStartTime) {
+   	   $(this).addClass("red-border");
+   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+   	   $("#" + item).parent().find(".help-block").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+   	       "X should be less than Y of the current row and greater than Y of the previous row"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	 } else {
+   	   $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block").empty();
+   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+   	 }
+         
+     }
+   	});
+   }
+  
+  function ancEndTime(item, count) {
+	  
+    $('#' + item).not('.cursor-none').datetimepicker({
+      format: 'h:mm a',
+      useCurrent: false,
+    }).on("dp.change", function (e) {
+   	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
+   	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
+   	 
+     var pxday = $("#xdays" + count).val();
+     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
+     
+     if (pxsign === "-") {
+       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+     } else {
+       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+     }
+     
+     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+     var pyday = $("#ydays" + count).val();
+     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+     }
+        
+   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+   	   $(this).addClass("red-border");
+   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+   	   $("#" + item).parent().find(".help-block").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	 } else {
+   	   $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block").empty();
+   	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualStartTime" + count).parent().find(".help-block").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+   	 }
+   	});
+   }
+	  
+	  
   //# sourceURL=filename.js
 
   $(document).ready(function () {
@@ -3686,11 +3813,13 @@
       var yday = $("#ydays" + parent_id).val();
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
-
+      var startTime = $("#manualStartTime" + parent_id).val();
+      var endTime = $("#manualEndTime" + parent_id).val();
+      
       if (parent_id === "0") {
 
         if (ydayValue !== "") {
-          if (xdayValue >= ydayValue) {
+          if (xdayValue > ydayValue) {
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -3718,7 +3847,7 @@
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue <= pydayValue) {
+        if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
@@ -3730,7 +3859,7 @@
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
           $(".addbtn").addClass("not-allowed");
           if (ydayValue !== "") {
-            if (xdayValue >= ydayValue) {
+            if (xdayValue > ydayValue) {
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -3774,7 +3903,7 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue <= xdayValue) {
+      if (ydayValue < xdayValue) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -3819,7 +3948,7 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue <= xdayValue) {
+      if (ydayValue < xdayValue) {
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -3840,7 +3969,7 @@
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue <= pydayValue) {
+        if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
