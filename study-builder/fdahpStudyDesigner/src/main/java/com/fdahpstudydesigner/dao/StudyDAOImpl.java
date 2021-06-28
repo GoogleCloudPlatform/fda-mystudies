@@ -80,6 +80,7 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.StudyExportImportService;
 import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -123,6 +124,8 @@ public class StudyDAOImpl implements StudyDAO {
   @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private NotificationDAO notificationDAO;
+
+  @Autowired private StudyExportImportService studyExportImportService;
 
   HibernateTemplate hibernateTemplate;
   private Query query = null;
