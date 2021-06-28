@@ -1249,6 +1249,7 @@ public class StudyExportImportService {
     }
     List<String> eligibilityTestBoInsertQueryList = new ArrayList<>();
     for (EligibilityTestBo eligibilityTestBo : eligibilityTestBoList) {
+      eligibilityTestBo.setUsed(false);
       String eligibilityTestBoBoInsertQuery =
           prepareInsertQuery(
               StudyExportSqlQueries.ELIGIBILITY_TEST,
@@ -1262,7 +1263,7 @@ public class StudyExportImportService {
               eligibilityTestBo.getSequenceNo(),
               eligibilityTestBo.getShortTitle(),
               eligibilityTestBo.getStatus(),
-              eligibilityTestBo.isUsed() ? "Y" : "N");
+              eligibilityTestBo.isUsed());
 
       eligibilityTestBoInsertQueryList.add(eligibilityTestBoBoInsertQuery);
     }

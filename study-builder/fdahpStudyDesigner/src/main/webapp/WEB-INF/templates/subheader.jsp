@@ -126,24 +126,29 @@
 		          },
 		        },
 		    callback: function (result) {
+		    	if(result == null){
+		    		return;
+		    	}
+		    	
+		    	var decodedURL = unescape(result);
 		    	var storagePath = "${sessionObject.storagePath}";
-		    	if(result !=null && !(result.startsWith(storagePath) && result.includes("Expires="))){
+		    	if(decodedURL !=null && !(decodedURL.startsWith(storagePath) && decodedURL.includes("Expires="))){
 		    		showErrMsg("Please enter a valid URL");
-		           }else if(result !=null){
-		        	   if(validateExpireDate(result)){
+		           }else if(decodedURL !=null){
+		        	   if(validateExpireDate(decodedURL)){
 	            	    $.ajax({
 	                      url: "/studybuilder/studies/import.do?_S=${param._S}",
 	                      type: "POST",
 	                      datatype: "json",
 	                      data: {
-	                        signedUrl: result,
+	                        signedUrl: decodedURL,
 	                        "${_csrf.parameterName}": "${_csrf.token}",
 	                      },
 	                      success: function emailValid(data, status) {
 	                    	  message = data.message;
 	                    	  if (message == "SUCCESS") {
 	                    		  showSucMsg("Study imported successfully");
-	                    		  location.reload();
+	                    		  window.location=window.location;
 	                    		  setTimeout(hideDisplayMessage, 5000);
 	                            } else if(message == "Please enter a valid URL"){
 	                            	 showErrMsg(message);
