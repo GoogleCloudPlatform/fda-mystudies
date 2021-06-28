@@ -128,7 +128,10 @@
 		          },
 		        },
 		    callback: function (result) {
-		    	var decodedURL = decodeURIComponent(result);
+		    	if(result == null){
+		    		return;
+		    	}
+		    	var decodedURL = unescape(result);
 		    	var storagePath = "${sessionObject.storagePath}";
 		    	if(decodedURL !=null && !(decodedURL.startsWith(storagePath) && decodedURL.includes("Expires="))){
 		    		showErrMsg("Please enter a valid URL");
