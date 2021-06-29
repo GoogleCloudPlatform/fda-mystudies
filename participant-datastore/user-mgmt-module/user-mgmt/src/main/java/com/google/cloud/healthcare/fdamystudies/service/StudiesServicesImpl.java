@@ -241,14 +241,15 @@ public class StudiesServicesImpl implements StudiesServices {
             && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0)
         || (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null
             && allDeviceTokens.get(AppConstants.DEVICE_IOS).length() != 0)) {
-      if (notificationBean.getNotificationSubType() == "studyEvent"
-          && notificationBean.getDeviceType() == AppConstants.DEVICE_ANDROID) {
+      if (AppConstants.STUDY_EVENT.equalsIgnoreCase(notificationBean.getNotificationSubType())
+          && AppConstants.DEVICE_ANDROID.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
         pushNotificationResponse =
             pushFcmNotification(
                 notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-      } else if (notificationBean.getNotificationSubType() == "studyEvent"
-          && notificationBean.getDeviceType() == AppConstants.DEVICE_IOS) {
+      } else if (AppConstants.STUDY_EVENT.equalsIgnoreCase(
+              notificationBean.getNotificationSubType())
+          && AppConstants.DEVICE_IOS.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
         pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
       } else {
