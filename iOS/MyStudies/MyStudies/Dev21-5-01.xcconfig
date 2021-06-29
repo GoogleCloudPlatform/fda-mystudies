@@ -59,5 +59,3 @@ API_KEY = wFY3OTcV1fNSWEWi:dX6H11CF1nUq9yIP
 // should match the ones you manually set in GCP secret manager,
 // i.e. `manual-mobile-app-appid`.
 APP_ID = GCPDEV001
-
-EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
