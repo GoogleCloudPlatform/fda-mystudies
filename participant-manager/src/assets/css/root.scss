@@ -1181,9 +1181,9 @@ select {
 /* Responsive code - tab mobile start here */
 
 @media (min-width: 320px) {
-#desktop-menu {
+  #desktop-menu {
     display: none;
-}
+  }
 }
 @media only screen and (max-width: 360px) and (min-width: 320px) {
   .search_svg {
@@ -1687,25 +1687,25 @@ meter::-moz-meter-bar {
   #body-container .form-item__element--select:invalid {
     margin-left: -4px !important;
   }
-   #body-container .form-item__element--select {
+  #body-container .form-item__element--select {
     margin-left: -4px !important;
     padding-right: 10px;
   }
 }
 
-
 @media only screen and (max-width: 340px) and (min-width: 320px) {
   .mob_custom_width {
     width: 100% !important;
-}
+  }
 
-.mob_display-inline { display: inline-block !important;}
-.card-body__pad .custom__labels__radio {
+  .mob_display-inline {
+    display: inline-block !important;
+  }
+  .card-body__pad .custom__labels__radio {
     padding: 0 0px !important;
-}
-.form-group .custom__labels label {
+  }
+  .form-group .custom__labels label {
     font-size: 75% !important;
     line-height: 12px !important;
+  }
 }
-}
-

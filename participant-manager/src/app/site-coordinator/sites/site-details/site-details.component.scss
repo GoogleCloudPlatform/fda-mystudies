@@ -113,61 +113,64 @@ input[type="checkbox"]:checked + label::before {
 // }
 
 @media only screen and (max-width: 360px) and (min-width: 320px) {
-.yel__tabs li a {
-    font-size: 75.0% !important;
-}
-.yel__tabs li.active:nth-child(1) a {
-    font-size:75.0% !important;
-}
+  .yel__tabs li a {
+    font-size: 75% !important;
+  }
+  .yel__tabs li.active:nth-child(1) a {
+    font-size: 75% !important;
+  }
 
-.banner__primary__btn { 
+  .banner__primary__btn {
     padding: 5px 5px !important;
     font-size: 69% !important;
-}
- .pad__5__13 {
+  }
+  .pad__5__13 {
     padding: 5px 5px !important;
-}
- .banner__default__btn {
+  }
+  .banner__default__btn {
     padding: 5px 5px !important;
     font-size: 69% !important;
-}
-.font12 {
+  }
+  .font12 {
     font-size: 69% !important;
-}
-.table th:last-child {
+  }
+  .table th:last-child {
     border-radius: 10px !important;
-}
-.table.table-striped thead tr th:last-child {
-  border-radius: 10px !important;
-}
+  }
+  .table.table-striped thead tr th:last-child {
+    border-radius: 10px !important;
+  }
 
-.site__participant label:before {
+  .site__participant label:before {
     margin-right: 5px;
+  }
+  .table.table-striped thead.custom__thead tr th span label:before {
+    border: 1px solid #757575;
+  }
 }
-.table.table-striped thead.custom__thead tr th span label:before { 
-    border: 1px solid #757575; }
-
-}
-
-
 
 @media only screen and (max-width: 500px) and (min-width: 320px) {
-.scrollable-element {
- overflow-x: auto;
- z-index: 1
-}
+  .scrollable-element {
+    overflow-x: auto;
+    z-index: 9;
+  }
 
-.scrollable-element::-webkit-scrollbar {
-  width: 1px;
-}
- 
-.scrollable-element::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px transparent;
-}
- 
-.scrollable-element::-webkit-scrollbar-thumb {
-  // background-color: ;
-  outline: 0px solid slategrey;
+  .scrollable-element::-webkit-scrollbar {
+    width: 1px;
+  }
+
+  .scrollable-element::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px transparent;
+  }
+
+  .scrollable-element::-webkit-scrollbar-thumb {
+    // background-color: ;
+    outline: 0px solid slategrey;
+  }
+
+  .overflow__auto {
+    overflow: auto;
+    margin-bottom: 20px;
 }
 
 }

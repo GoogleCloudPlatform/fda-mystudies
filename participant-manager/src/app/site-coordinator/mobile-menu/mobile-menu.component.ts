@@ -12,7 +12,7 @@ export class MobileMenuComponent implements OnInit {
   navIsOpen = false;
   @Input() showSearchBar = true;
   @Input() filterQuery = '';
-  mobileFilterQuery='';
+  mobileFilterQuery = '';
   @Output() keyDown: EventEmitter<string> = new EventEmitter();
   user = {} as Profile;
   showSearchOnClick = false;
@@ -25,12 +25,12 @@ export class MobileMenuComponent implements OnInit {
   }
 
   hamburgerclose(): void {
-// any other execution
-  this.navIsOpen = !this.navIsOpen;
-}
+    // any other execution
+    this.navIsOpen = !this.navIsOpen;
+  }
   mobileOnKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' ){
-    this.keyDown.emit(this.mobileFilterQuery);
+    if (event.key === 'Enter') {
+      this.keyDown.emit(this.mobileFilterQuery);
     }
   }
   showSearchBarOnClick(): void {

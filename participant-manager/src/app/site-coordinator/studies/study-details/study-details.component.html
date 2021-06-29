@@ -207,7 +207,6 @@
               </td>
               <td>{{ lists.enrollmentDate }}</td>
             </tr>
-           
           </tbody>
 
           <tfoot class="custom__tfoot">
@@ -225,12 +224,16 @@
           </tfoot>
 
           <tfoot>
-<tr *ngIf="
+            <tr
+              *ngIf="
                 studyDetails.participantRegistryDetail.registryParticipants
                   .length === 0
-              ">
-  <td colspan="5" class="text-center font12 txt__light-gray">No records found</td>
-</tr>
+              "
+            >
+              <td colspan="5" class="text-center font12 txt__light-gray">
+                No records found
+              </td>
+            </tr>
           </tfoot>
         </table>
       </div>
