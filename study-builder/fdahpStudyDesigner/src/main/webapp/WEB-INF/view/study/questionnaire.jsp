@@ -1943,7 +1943,6 @@
       $("#onetimeydaysId").prop('disabled', false);
       var schedule_opts = $("input[name='frequency']:checked").val();
       if (scheduletype == 'AnchorDate') {
-
         $("#weekDaysId").hide();
         $("#weekDaysId").find('input:text').removeAttr('required', true);
         $(".weeklyRegular").hide();
@@ -2000,6 +1999,9 @@
         
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
+        $("#manualEndTime0").val("");
+        $("#manualStartTime0").val("");
+        
         $(".Selectedtooltip").hide();
         
         $($('.manually-anchor-option').get().reverse()).each(function () {
@@ -2027,6 +2029,7 @@
            }
         
       } else {
+    	
         localStorage.setItem("IsAnchorDateSelected", "false");
         localStorage.setItem("IsRegularSelected", "true");
 
@@ -2622,7 +2625,7 @@
       });
       multiTimeVal = !(a > 0);
     });
-debugger
+
     var endToday;
     <c:if test="${ empty questionnaireBo.studyLifetimeEnd}">
     endToday = serverDate();
@@ -2812,7 +2815,6 @@ debugger
       $('#startWeeklyDate').val('');
     });
     $("#doneId").click(function () {
-
       var res = localStorage.getItem("IsAnchorDateSelected");
 
       if (res === 'true') {
