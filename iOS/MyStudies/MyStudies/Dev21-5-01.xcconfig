@@ -60,3 +60,4 @@ API_KEY = wFY3OTcV1fNSWEWi:dX6H11CF1nUq9yIP
 // i.e. `manual-mobile-app-appid`.
 APP_ID = GCPDEV001
 
+EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64
