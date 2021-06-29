@@ -1105,8 +1105,7 @@
               <span>
                   to
               </span>
-              Anchor
-              Date
+              Anchor date
             </span>
           </span>
           <span>
@@ -1218,8 +1217,7 @@
                 <span
                     style="padding-right: 5px; padding-left: 5px">to
                 </span>
-                Anchor
-                Date
+                Anchor date
               </span>
             </span>
             <span>
@@ -1449,8 +1447,11 @@
           $(".onetimeanchorClass").show();
           $(".onetimeanchorClass").find('input:text').attr('required', true);
         }
+ 
         if (schedule_opts == 'Daily') {
-          $(".dailyContainer").find('input:text').val("");
+          $(".dailyContainer").children().not(':last').hide();
+          $('.dailyTimeDiv').find(".delete").css("visibility", "hidden");
+          $(".dailyTimeDiv").find('input:text').val("");
           $("#lifeTimeId").text('-');
           $("#endDateId").text('NA');
           $(".numChk").val("");
@@ -1520,6 +1521,7 @@
            }
         
       } else {
+    	window.location.reload(false);
         localStorage.setItem("IsActiveAnchorDateSelected", "false");
         localStorage.setItem("IsActiveRegularSelected", "true");
 
@@ -1546,7 +1548,7 @@
         $('.dailyStartCls').show();
         $('.dailyStartCls').find('input:text').attr('required', true);
         $(".dailyanchorDiv").hide();
-        $(".dailyanchorDiv").find('input:text').removeAttr('required', true);
+        $(".dailyanchorDiv").find('input:text').removeAttr('required', true); 
 
         $('.weeklyStartCls').show();
         $('.weeklyStartCls').find('input:text,select').attr('required', true);
