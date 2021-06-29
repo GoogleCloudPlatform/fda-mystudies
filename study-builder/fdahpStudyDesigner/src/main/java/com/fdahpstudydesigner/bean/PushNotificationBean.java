@@ -32,6 +32,7 @@ public class PushNotificationBean {
   private String notificationTitle = "";
   private String notificationType = "ST";
   private String appId = "";
+  private String deviceType = "";
 
   public String getCustomStudyId() {
     return customStudyId;
@@ -43,6 +44,14 @@ public class PushNotificationBean {
 
   public String getNotificationId() {
     return notificationId;
+  }
+
+  public String getDeviceType() {
+    return deviceType;
+  }
+
+  public void setDeviceType(String deviceType) {
+    this.deviceType = deviceType;
   }
 
   public void setNotificationId(String notificationId) {

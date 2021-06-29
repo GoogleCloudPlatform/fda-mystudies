@@ -37,7 +37,9 @@ import org.hibernate.annotations.NamedQuery;
 @NamedQueries({
   @NamedQuery(
       name = "studyPageDetailsByStudyId",
-      query = "from StudyPageDto SPDTO" + " where SPDTO.studyId =:studyId"),
+      query =
+          "from StudyPageDto SPDTO"
+              + " where SPDTO.studyId =:studyId order by createdOn, sequenceNumber"),
 })
 public class StudyPageDto implements Serializable {
 
@@ -75,6 +77,9 @@ public class StudyPageDto implements Serializable {
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public Integer getStudyVersion() {
     return studyVersion;
@@ -122,5 +127,13 @@ public class StudyPageDto implements Serializable {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

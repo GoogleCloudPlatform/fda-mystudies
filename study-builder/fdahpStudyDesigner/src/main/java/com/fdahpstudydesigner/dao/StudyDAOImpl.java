@@ -1826,7 +1826,8 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       if (StringUtils.isNotEmpty(studyId)) {
         query =
-            session.createQuery("from StudyPageBo where studyId=:studyId order by sequenceNumber");
+            session.createQuery(
+                "from StudyPageBo where studyId=:studyId order by createdOn, sequenceNumber");
         query.setString("studyId", studyId);
         studyPageBo = query.list();
       }
@@ -4236,8 +4237,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       if (StringUtils.isEmpty(studyBo.getId())) {
         studyBo.setCreatedBy(studyBo.getUserId());
-        appId = studyBo.getAppId().toUpperCase();
-        studyBo.setAppId(appId);
+        //        studyBo.setAppId(studyBo.getAppId());
         studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         studyId = (String) session.save(studyBo);
 
@@ -7249,6 +7249,7 @@ public class StudyDAOImpl implements StudyDAO {
         for (EligibilityTestBo eligibilityTestBo : eligibilityBoList) {
           eligibilityTestBo.setId(null);
           eligibilityTestBo.setEligibilityId(eligibilityBo.getId());
+          eligibilityTestBo.setUsed(false);
           session.save(eligibilityTestBo);
         }
       }
@@ -7708,6 +7709,16 @@ public class StudyDAOImpl implements StudyDAO {
           }
         }
       }
+
+      StudyBo studyBo =
+          (StudyBo)
+              session
+                  .getNamedQuery(FdahpStudyDesignerConstants.STUDY_LIST_BY_ID)
+                  .setString("id", studyId)
+                  .uniqueResult();
+      studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+      session.save(studyBo);
+
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();

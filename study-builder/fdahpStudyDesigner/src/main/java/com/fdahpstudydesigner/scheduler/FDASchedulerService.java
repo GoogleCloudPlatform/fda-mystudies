@@ -28,11 +28,13 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.PlatformComponent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.LoginDAO;
 import com.fdahpstudydesigner.dao.NotificationDAO;
+import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
@@ -95,6 +97,8 @@ public class FDASchedulerService {
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @Autowired private OAuthService oauthService;
+
+  @Autowired private StudyDAO studyDAO;
 
   @Bean()
   public ThreadPoolTaskScheduler taskScheduler() {
@@ -190,6 +194,18 @@ public class FDASchedulerService {
         }
         List<PushNotificationBean> pushNotification = new ArrayList<PushNotificationBean>();
         for (PushNotificationBean finalPushNotificationBean : finalPushNotificationBeans) {
+          StudyBo studyDetails =
+              studyDAO.getStudyByLatestVersion(finalPushNotificationBean.getCustomStudyId());
+          String deviceType = null;
+          if (studyDetails != null
+              && studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.IOS)) {
+            deviceType = FdahpStudyDesignerConstants.DEVICE_IOS;
+          } else if (studyDetails != null
+              && studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.ANDROID)) {
+            deviceType = FdahpStudyDesignerConstants.DEVICE_ANDROID;
+          }
+
+          finalPushNotificationBean.setDeviceType(deviceType);
           pushNotification.add(finalPushNotificationBean);
 
           JSONArray arrayToJson = new JSONArray(objectMapper.writeValueAsString(pushNotification));

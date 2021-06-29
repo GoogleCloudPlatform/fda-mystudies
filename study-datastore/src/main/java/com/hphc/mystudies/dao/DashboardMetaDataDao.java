@@ -126,11 +126,12 @@ public class DashboardMetaDataDao {
             if ((activeTask.getActive() != null) && (activeTask.getActive() == 1)) {
               addToDashboardFlag = true;
             } else {
-              if (StudyMetaDataConstants.SDF_DATE
-                  .parse(activeTask.getModifiedDate())
-                  .after(
-                      StudyMetaDataConstants.SDF_DATE.parse(
-                          activeTask.getActiveTaskLifetimeStart()))) {
+              if (StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart())
+                  && StudyMetaDataConstants.SDF_DATE
+                      .parse(activeTask.getModifiedDate())
+                      .after(
+                          StudyMetaDataConstants.SDF_DATE.parse(
+                              activeTask.getActiveTaskLifetimeStart()))) {
                 addToDashboardFlag = true;
               }
             }
@@ -779,6 +780,8 @@ public class DashboardMetaDataDao {
     LOGGER.entry("ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask()");
     String startDateTime = "";
     String endDateTime = "";
+    String startDate = "";
+    String endDate = "";
     String time = StudyMetaDataConstants.DEFAULT_MIN_TIME;
     try {
       startDateTime = activeTaskDto.getActiveTaskLifetimeStart() + " " + time;
@@ -823,8 +826,12 @@ public class DashboardMetaDataDao {
             }
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeStart())) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeEnd())) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         } else if (activeTaskDto
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_DAILY)) {
@@ -848,8 +855,12 @@ public class DashboardMetaDataDao {
                     + StudyMetaDataConstants.DEFAULT_MAX_TIME;
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeStart())) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeEnd())) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         } else if (activeTaskDto
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
@@ -863,8 +874,8 @@ public class DashboardMetaDataDao {
                   .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
-            String startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
-            String endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
+            startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
+            endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
             for (ActiveTaskCustomFrequenciesDto customFrequency : activeTaskCustomFrequencyList) {
 
               if (StringUtils.isNotEmpty(startDate)) {
@@ -875,8 +886,6 @@ public class DashboardMetaDataDao {
                             customFrequency.getFrequencyStartDate()))) {
                   startDate = customFrequency.getFrequencyStartDate();
                 }
-              } else {
-                startDate = "";
               }
 
               if (StringUtils.isNotEmpty(endDate)) {
@@ -887,13 +896,11 @@ public class DashboardMetaDataDao {
                             customFrequency.getFrequencyEndDate()))) {
                   endDate = customFrequency.getFrequencyEndDate();
                 }
-              } else {
-                endDate = "";
               }
             }
-
             startDateTime =
                 startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyStartTime();
+
             endDateTime =
                 endDate
                     + " "
@@ -902,8 +909,12 @@ public class DashboardMetaDataDao {
                         .getFrequencyEndTime();
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(startDate)) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(endDate)) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         }
       }
     } catch (Exception e) {
