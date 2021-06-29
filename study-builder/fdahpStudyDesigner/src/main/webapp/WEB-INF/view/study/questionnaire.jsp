@@ -1999,8 +1999,6 @@
         
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
-        $("#manualEndTime0").val("");
-        $("#manualStartTime0").val("");
         
         $(".Selectedtooltip").hide();
         
