@@ -239,7 +239,10 @@
           if (errMsg.length > 0) {
             $("#errMsg").text(errMsg);
             $("#errMsg").show("fast");
-            setTimeout(hideDisplayMessage, 5000);
+            setTimeout(function() {
+              	 hideDisplayMessage;
+              	 window.location=window.location;
+               }, 5000);
           }
         }
         var sucMsg = '${sucMsg}';
