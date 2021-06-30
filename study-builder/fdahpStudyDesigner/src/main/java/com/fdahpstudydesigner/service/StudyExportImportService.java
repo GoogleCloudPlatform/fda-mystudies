@@ -44,10 +44,16 @@ import com.fdahpstudydesigner.dao.StudyQuestionnaireDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.IdGenerator;
+import com.fdahpstudydesigner.util.ServletContextHolder;
 import com.fdahpstudydesigner.util.SessionObject;
 import com.fdahpstudydesigner.util.StudyExportSqlQueries;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -57,8 +63,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
+import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -525,21 +533,8 @@ public class StudyExportImportService {
       byte[] bytes = content.toString().getBytes();
       Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
 
-      /*String absoluteFileName =
-      FdahpStudyDesignerConstants.STUDIES
-          + PATH_SEPARATOR
-          + UNDER_DIRECTORY
-          + PATH_SEPARATOR
-          + studyBo.getCustomStudyId()
-          + PATH_SEPARATOR
-          + fileName;*/
       Session session = hibernateTemplate.getSessionFactory().openSession();
-      /*
-      Storage storage = StorageOptions.getDefaultInstance().getService();
-      BlobInfo blobInfo =
-          BlobInfo.newBuilder(map.get("cloud.bucket.name.export.studies"), absoluteFileName)
-              .build();
-      storage.create(blobInfo, bytes);*/
+
       studyBo.setExportSqlByte(bytes);
       study.getResourcesFromStorage(session, studyBo);
 
@@ -953,7 +948,7 @@ public class StudyExportImportService {
             studyBo.getType(),
             studyBo.getVersion(),
             studyBo.isEnrollmentdateAsAnchordate() ? "Y" : "N",
-            studyBo.getCustomStudyId(),
+            studyBo.getCustomStudyId() + "@Export",
             null);
 
     insertSqlStatements.add(studiesInsertQuery);
@@ -1602,6 +1597,7 @@ public class StudyExportImportService {
     logger.entry("StudyExportService - importStudy() - Starts");
     Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
     BufferedReader bufferedReader = null;
+    String sqlPath = null;
     try {
       HttpClient client = HttpClients.createDefault();
       HttpGet httpGet = new HttpGet(signedUrl);
@@ -1610,7 +1606,20 @@ public class StudyExportImportService {
 
       if (entity != null) {
         if (!entity.getContentType().getValue().contains("application/xml")) {
-          bufferedReader = new BufferedReader(new InputStreamReader(entity.getContent()));
+          String pathOfZipUrl = signedUrl.substring(0, signedUrl.indexOf(".zip"));
+          String[] tokens = pathOfZipUrl.split("/");
+          String customId = tokens[tokens.length - 1];
+
+          InputStream input = entity.getContent();
+          byte[] data = IOUtils.toByteArray(input);
+          String path = writeFileLocalImport(data, customId);
+          if (path != null) {
+            Object[] obj = FdahpStudyDesignerUtil.unzip(path, customId);
+            new File(path).deleteOnExit();
+            sqlPath = (String) obj[0];
+            bufferedReader = (BufferedReader) obj[1];
+          }
+
         } else {
           throw new Exception(INVALID_URL);
         }
@@ -1621,70 +1630,92 @@ public class StudyExportImportService {
       }
       return e.getMessage();
     }
-    return validateAndExecuteQuries(signedUrl, map, bufferedReader, sessionObject.getUserId());
+    return validateAndExecuteQuries(sqlPath, map, bufferedReader, sessionObject.getUserId());
+  }
+
+  private String writeFileLocalImport(byte[] data, String customId) {
+    ServletContext context = ServletContextHolder.getServletContext();
+    File directoryOfExport = new File(context.getRealPath("/") + "/Import");
+    if (!directoryOfExport.exists()) {
+      directoryOfExport.mkdir();
+    }
+    String zipPath = context.getRealPath("/") + "/Import/" + customId + ".zip";
+    Path path = Paths.get(zipPath);
+    try {
+      Files.write(path, data);
+      return zipPath;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   private String validateAndExecuteQuries(
-      String signedUrl, Map<String, String> map, BufferedReader bufferedReader, String userId)
+      String sqlPath, Map<String, String> map, BufferedReader bufferedReader, String userId)
       throws Exception {
     try {
 
-      String path = signedUrl.substring(0, signedUrl.indexOf(".sql"));
-      String[] tokens = path.split("_");
-      long checksum = Long.parseLong(tokens[tokens.length - 1]);
-      String version = tokens[tokens.length - 2];
+      if (sqlPath != null && bufferedReader != null) {
 
-      // validating release version
-      ComparableVersion signedUrlVersion = new ComparableVersion(version);
-      ComparableVersion releaseVersion = new ComparableVersion(map.get("release.version"));
+        String path = sqlPath.substring(0, sqlPath.indexOf(".sql"));
+        String[] tokens = path.split("_");
+        long checksum = Long.parseLong(tokens[tokens.length - 1]);
+        String version = tokens[tokens.length - 2];
 
-      if (signedUrlVersion.compareTo(releaseVersion) > 0) {
-        throw new Exception(
-            IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + " " + map.get("release.version"));
-      }
+        // validating release version
+        ComparableVersion signedUrlVersion = new ComparableVersion(version);
+        ComparableVersion releaseVersion = new ComparableVersion(map.get("release.version"));
 
-      // validating tableName and insert statements
-      String line;
-      StringBuilder content = new StringBuilder();
-      List<String> insertStatements = new ArrayList<>();
-      String[] allowedTablesName = StudyExportSqlQueries.ALLOWED_STUDY_TABLE_NAMES;
+        if (signedUrlVersion.compareTo(releaseVersion) > 0) {
+          throw new Exception(
+              IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + " " + map.get("release.version"));
+        }
 
-      while ((line = bufferedReader.readLine()) != null) {
-        if (!line.startsWith("INSERT")) {
+        // validating tableName and insert statements
+        String line;
+        StringBuilder content = new StringBuilder();
+        List<String> insertStatements = new ArrayList<>();
+        String[] allowedTablesName = StudyExportSqlQueries.ALLOWED_STUDY_TABLE_NAMES;
+
+        while ((line = bufferedReader.readLine()) != null) {
+          if (!line.startsWith("INSERT")) {
+            throw new Exception(IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE);
+          }
+
+          String tableName =
+              line.substring(line.indexOf('`') + 1, line.indexOf('`', line.indexOf('`') + 1));
+          if (!Arrays.asList(allowedTablesName).contains(tableName)) {
+            throw new Exception(IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE);
+          }
+
+          insertStatements.add(line);
+          content.append(line);
+          content.append(System.lineSeparator());
+        }
+
+        // validating checksum
+        byte[] bytes = content.toString().getBytes();
+        if (checksum != getCRC32Checksum(bytes)) {
           throw new Exception(IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE);
         }
 
-        String tableName =
-            line.substring(line.indexOf('`') + 1, line.indexOf('`', line.indexOf('`') + 1));
-        if (!Arrays.asList(allowedTablesName).contains(tableName)) {
-          throw new Exception(IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE);
+        // execution
+        String insertStatementofStudy = "";
+        for (String insert : insertStatements) {
+          if (insert.startsWith("INSERT INTO `studies`")) {
+            insertStatementofStudy = insert;
+          }
+          jdbcTemplate.execute(insert);
         }
 
-        insertStatements.add(line);
-        content.append(line);
-        content.append(System.lineSeparator());
+        // study permission
+        String[] values = insertStatementofStudy.split("VALUES");
+        String StudyId =
+            values[1].substring(values[1].indexOf("'") + 1, values[1].indexOf(",") - 1);
+        studyDao.giveStudyPermission(StudyId, userId);
+      } else {
+        return "FAILURE";
       }
-
-      // validating checksum
-      byte[] bytes = content.toString().getBytes();
-      if (checksum != getCRC32Checksum(bytes)) {
-        throw new Exception(IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE);
-      }
-
-      // execution
-      String insertStatementofStudy = "";
-      for (String insert : insertStatements) {
-        if (insert.startsWith("INSERT INTO `studies`")) {
-          insertStatementofStudy = insert;
-        }
-        jdbcTemplate.execute(insert);
-      }
-
-      // study permission
-      String[] values = insertStatementofStudy.split("VALUES");
-      String StudyId = values[1].substring(values[1].indexOf("'") + 1, values[1].indexOf(",") - 1);
-      studyDao.giveStudyPermission(StudyId, userId);
-
     } catch (Exception e) {
       logger.error("StudyExportService - importStudy() - ERROR ", e);
       if (e instanceof DuplicateKeyException) {
