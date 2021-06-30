@@ -212,7 +212,7 @@ public class NotificationDAOImpl implements NotificationDAO {
       } else {
         queryString =
             "from NotificationBO NBO where NBO.studyId IS NULL"
-                + " and NBO.notificationType = 'GT' and NBO.notificationStatus = 0 order by NBO.notificationId desc";
+                + " and NBO.notificationType = 'GT' and NBO.notificationStatus = 0 order by NBO.createdOn desc";
         query = session.createQuery(queryString);
         notificationList = query.list();
       }
