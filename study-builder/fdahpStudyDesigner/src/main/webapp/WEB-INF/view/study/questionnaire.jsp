@@ -2000,6 +2000,7 @@
         
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
+
         $(".Selectedtooltip").hide();
         
         $($('.manually-anchor-option').get().reverse()).each(function () {
@@ -2622,7 +2623,7 @@
       });
       multiTimeVal = !(a > 0);
     });
-debugger
+    
     var endToday;
     <c:if test="${ empty questionnaireBo.studyLifetimeEnd}">
     endToday = serverDate();

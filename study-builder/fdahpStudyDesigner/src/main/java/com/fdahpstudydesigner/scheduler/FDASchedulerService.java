@@ -197,11 +197,11 @@ public class FDASchedulerService {
           StudyBo studyDetails =
               studyDAO.getStudyByLatestVersion(finalPushNotificationBean.getCustomStudyId());
           String deviceType = null;
-          if (studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.IOS)) {
+          if (studyDetails != null
+              && studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.IOS)) {
             deviceType = FdahpStudyDesignerConstants.DEVICE_IOS;
-          } else if (studyDetails
-              .getPlatform()
-              .equalsIgnoreCase(FdahpStudyDesignerConstants.ANDROID)) {
+          } else if (studyDetails != null
+              && studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.ANDROID)) {
             deviceType = FdahpStudyDesignerConstants.DEVICE_ANDROID;
           }
 
