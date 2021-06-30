@@ -14,13 +14,11 @@
 //
 
 extension Array {
-  @inlinable
   init(reserveCapacity: Int) {
     self = Array<Element>()
     self.reserveCapacity(reserveCapacity)
   }
 
-  @inlinable
   var slice: ArraySlice<Element> {
     self[self.startIndex ..< self.endIndex]
   }

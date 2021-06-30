@@ -25,7 +25,6 @@ struct PKCS7Padding: PaddingProtocol {
   init() {
   }
 
-  @inlinable
   func add(to bytes: Array<UInt8>, blockSize: Int) -> Array<UInt8> {
     let padding = UInt8(blockSize - (bytes.count % blockSize))
     var withPadding = bytes
@@ -39,7 +38,6 @@ struct PKCS7Padding: PaddingProtocol {
     return withPadding
   }
 
-  @inlinable
   func remove(from bytes: Array<UInt8>, blockSize _: Int?) -> Array<UInt8> {
     guard !bytes.isEmpty, let lastByte = bytes.last else {
       return bytes

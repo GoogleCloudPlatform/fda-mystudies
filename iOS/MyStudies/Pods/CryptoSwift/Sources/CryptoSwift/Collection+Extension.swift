@@ -14,7 +14,6 @@
 //
 extension Collection where Self.Element == UInt8, Self.Index == Int {
   // Big endian order
-  @inlinable
   func toUInt32Array() -> Array<UInt32> {
     guard !isEmpty else {
       return []
@@ -34,7 +33,6 @@ extension Collection where Self.Element == UInt8, Self.Index == Int {
   }
 
   // Big endian order
-  @inlinable
   func toUInt64Array() -> Array<UInt64> {
     guard !isEmpty else {
       return []
@@ -54,8 +52,7 @@ extension Collection where Self.Element == UInt8, Self.Index == Int {
   }
 }
 
-@usableFromInline
-func strideCount(from: Int, to: Int, by: Int) -> Int {
+private func strideCount(from: Int, to: Int, by: Int) -> Int {
     let count = to - from
     return count / by + (count % by > 0 ? 1 : 0)
 }

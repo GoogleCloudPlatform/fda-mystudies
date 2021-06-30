@@ -19,7 +19,6 @@ public enum Bit: Int {
 }
 
 extension Bit {
-  @inlinable
   func inverted() -> Bit {
     self == .zero ? .one : .zero
   }

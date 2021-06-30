@@ -18,11 +18,9 @@
 //
 
 #if canImport(Darwin)
-import Darwin
-#elseif canImport(Glibc)
-import Glibc
-#elseif canImport(ucrt)
-import ucrt
+  import Darwin
+#else
+  import Glibc
 #endif
 
 public final class SHA3: DigestType {
@@ -39,12 +37,8 @@ public final class SHA3: DigestType {
   public let digestLength: Int
   public let markByte: UInt8
 
-  @usableFromInline
-  var accumulated = Array<UInt8>()
-
-
-  @usableFromInline
-  var accumulatedHash: Array<UInt64>
+  fileprivate var accumulated = Array<UInt8>()
+  fileprivate var accumulatedHash: Array<UInt64>
 
   public enum Variant {
     case sha224, sha256, sha384, sha512, keccak224, keccak256, keccak384, keccak512
@@ -87,7 +81,6 @@ public final class SHA3: DigestType {
     self.accumulatedHash = Array<UInt64>(repeating: 0, count: self.digestLength)
   }
 
-  @inlinable
   public func calculate(for bytes: Array<UInt8>) -> Array<UInt8> {
     do {
       return try update(withBytes: bytes.slice, isLast: true)
@@ -182,8 +175,7 @@ public final class SHA3: DigestType {
     a[0] ^= self.round_constants[round]
   }
 
-  @usableFromInline
-  func process(block chunk: ArraySlice<UInt64>, currentHash hh: inout Array<UInt64>) {
+  fileprivate func process(block chunk: ArraySlice<UInt64>, currentHash hh: inout Array<UInt64>) {
     // expand
     hh[0] ^= chunk[0].littleEndian
     hh[1] ^= chunk[1].littleEndian
@@ -257,8 +249,6 @@ public final class SHA3: DigestType {
 }
 
 extension SHA3: Updatable {
-
-  @inlinable
   public func update(withBytes bytes: ArraySlice<UInt8>, isLast: Bool = false) throws -> Array<UInt8> {
     self.accumulated += bytes
 

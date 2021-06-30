@@ -28,7 +28,6 @@ public extension PKCS5 {
     public enum Variant {
       case md5, sha1
 
-      @usableFromInline
       var size: Int {
         switch self {
           case .md5:
@@ -38,8 +37,7 @@ public extension PKCS5 {
         }
       }
 
-      @usableFromInline
-      func calculateHash(_ bytes: Array<UInt8>) -> Array<UInt8> {
+      fileprivate func calculateHash(_ bytes: Array<UInt8>) -> Array<UInt8> {
         switch self {
           case .sha1:
             return Digest.sha1(bytes)
@@ -49,17 +47,10 @@ public extension PKCS5 {
       }
     }
 
-    @usableFromInline
-    let iterations: Int // c
-
-    @usableFromInline
-    let variant: Variant
-
-    @usableFromInline
-    let keyLength: Int
-
-    @usableFromInline
-    let t1: Array<UInt8>
+    private let iterations: Int // c
+    private let variant: Variant
+    private let keyLength: Int
+    private let t1: Array<UInt8>
 
     /// - parameters:
     ///   - salt: salt, an eight-bytes
@@ -85,7 +76,6 @@ public extension PKCS5 {
     }
 
     /// Apply the underlying hash function Hash for c iterations
-    @inlinable
     public func calculate() -> Array<UInt8> {
       var t = self.t1
       for _ in 2...self.iterations {

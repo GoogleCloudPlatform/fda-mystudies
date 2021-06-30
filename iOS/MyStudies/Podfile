@@ -10,7 +10,7 @@ def main_pods
   pod 'SlideMenuControllerSwift', :git => 'https://github.com/AtomicSLLC/SlideMenuControllerSwift.git', :branch => 'swift5'
   pod 'SDWebImage'
   pod 'RealmSwift', '5.3.5'
-  pod 'CryptoSwift'
+  pod 'CryptoSwift', '1.3.1'
   pod 'ActionSheetPicker-3.0'
   pod 'Toast-Swift'
   pod 'ReachabilitySwift'

@@ -17,11 +17,9 @@
 //
 
 #if canImport(Darwin)
-import Darwin
-#elseif canImport(Glibc)
-import Glibc
-#elseif canImport(ucrt)
-import ucrt
+  import Darwin
+#else
+  import Glibc
 #endif
 
 /// A key derivation function.

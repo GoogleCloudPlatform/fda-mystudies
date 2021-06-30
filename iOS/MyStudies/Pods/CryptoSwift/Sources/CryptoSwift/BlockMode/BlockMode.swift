@@ -18,9 +18,7 @@ public typealias CipherOperationOnBlock = (_ block: ArraySlice<UInt8>) -> Array<
 public protocol BlockMode {
   var options: BlockModeOption { get }
   //TODO: doesn't have to be public
-  @inlinable func worker(blockSize: Int, cipherOperation: @escaping CipherOperationOnBlock, encryptionOperation: @escaping CipherOperationOnBlock) throws -> CipherModeWorker
-
-  var customBlockSize: Int? { get }
+  func worker(blockSize: Int, cipherOperation: @escaping CipherOperationOnBlock) throws -> CipherModeWorker
 }
 
 typealias StreamMode = BlockMode
