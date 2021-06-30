@@ -21,6 +21,8 @@ import SlideMenuControllerSwift
 import Toast_Swift
 import UIKit
 
+let kStoryboardIdentifierLogin = "Login"
+let kStoryboardIdentifierHomeView = "HomeViewController"
 let kLeftMenuSubtitle = "subTitle"
 let kLeftMenuTitle = "menuTitle"
 let kLeftMenuIconName = "iconName"
@@ -506,6 +508,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
     self.navigationController?.popToRootViewController(animated: true)
+    HomeViewController.setRootView()
   }
 
 }

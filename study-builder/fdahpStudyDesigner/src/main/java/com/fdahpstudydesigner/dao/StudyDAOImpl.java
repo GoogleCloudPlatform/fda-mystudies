@@ -7353,6 +7353,7 @@ public class StudyDAOImpl implements StudyDAO {
         for (EligibilityTestBo eligibilityTestBo : eligibilityBoList) {
           eligibilityTestBo.setId(null);
           eligibilityTestBo.setEligibilityId(eligibilityBo.getId());
+          eligibilityTestBo.setUsed(false);
           session.save(eligibilityTestBo);
         }
       }
@@ -7812,6 +7813,17 @@ public class StudyDAOImpl implements StudyDAO {
           }
         }
       }
+
+      // Add created time for new study
+      StudyBo studyBo =
+          (StudyBo)
+              session
+                  .getNamedQuery(FdahpStudyDesignerConstants.STUDY_LIST_BY_ID)
+                  .setString("id", studyId)
+                  .uniqueResult();
+      studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+      session.save(studyBo);
+
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
