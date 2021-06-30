@@ -535,7 +535,6 @@
 		94FF031E1E952B0A009F191B /* ReachoutOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachoutOptionCell.swift; sourceTree = "<group>"; };
 		B52121CBCA9A6B516A7A916F /* Pods_MyStudiesTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyStudiesTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8009EF16382C7D8C349B5A9 /* Pods-HPHCTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPHCTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPHCTests/Pods-HPHCTests.debug.xcconfig"; sourceTree = "<group>"; };
-		E1B9EE3D268AFEB300194BE1 /* Dev21-5-01.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Dev21-5-01.xcconfig"; sourceTree = "<group>"; };
 		E2CBDF17BAEAF30E2653E9BC /* Pods_MyStudies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyStudies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4CF7BB238C017BF7E2A6346 /* Pods_HPHCUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPHCUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDEDED5EE3A2C8D46CA2C9A0 /* Pods-MyStudies.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyStudies.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyStudies/Pods-MyStudies.release.xcconfig"; sourceTree = "<group>"; };
@@ -682,7 +681,6 @@
 			isa = PBXGroup;
 			children = (
 				6F07148824279452002749DA /* Default.xcconfig */,
-				E1B9EE3D268AFEB300194BE1 /* Dev21-5-01.xcconfig */,
 				6F10BB15234DDFDA006388E2 /* Branding */,
 				6FE00CD5238FEDE80067A7B8 /* Utils */,
 				94CD96E31E4AF61800946477 /* Networking */,
@@ -2368,7 +2366,7 @@
 /* Begin XCBuildConfiguration section */
 		6E7D2D7C1E433E8800763D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E1B9EE3D268AFEB300194BE1 /* Dev21-5-01.xcconfig */;
+			baseConfigurationReference = 6F07148824279452002749DA /* Default.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2431,7 +2429,7 @@
 		};
 		6E7D2D7D1E433E8800763D4C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E1B9EE3D268AFEB300194BE1 /* Dev21-5-01.xcconfig */;
+			baseConfigurationReference = 6F07148824279452002749DA /* Default.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
