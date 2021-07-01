@@ -444,9 +444,9 @@
           <br/>
           <input id="days" type="text"
                  class="form-control mt-sm numChk ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
-                  name="repeatActiveTask" placeholder="No of times" required data-error="Please fill out this field" 
+                 name="repeatActiveTask" placeholder="No of times" required data-error="Please fill out this field"
                  value="${activeTaskBo.repeatActiveTask}"
-                onkeypress="return isNumber(event, this)"
+                 onkeypress="return isNumber(event, this)"
                  pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
                  data-pattern-error="Please enter valid number" maxlength="3"/>
           <span class='help-block with-errors red-txt'></span>
@@ -459,7 +459,7 @@
         <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
               data-toggle="tooltip"
               data-placement="bottom"
-             title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
              </span>
       </div>
@@ -474,7 +474,7 @@
         <span class="requiredStar"> *</span>
         <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip" data-toggle="tooltip"
               data-placement="bottom" id="helpNote"
-                title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time."></span>
       </div>
       <div class="dailyContainer">
@@ -551,7 +551,7 @@
             class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-           title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
             </span>
       </span>
@@ -710,7 +710,7 @@
             class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-             title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
            </span>
       </div>
@@ -753,9 +753,10 @@
             class="ml-xs sprites_v3 filled-tooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-           title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
           </span>
+        </span>
       </span>
       <br/>
       <span class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
@@ -791,7 +792,7 @@
                 class="ml-xs sprites_v3 filled-tooltip"
                 data-toggle="tooltip"
                 data-placement="bottom"
-                 title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+                title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                </span>
           </span>
@@ -906,7 +907,7 @@
             class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
             data-toggle="tooltip"
             data-placement="bottom"
-           title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
              </span>
       </div>
@@ -1018,6 +1019,7 @@
               <span class='help-block with-errors red-txt'></span>
             </span>
             
+            
             <span class="form-group  dis-inline vertical-align-middle pr-md">
               <input id="customStartTime${customVar.index}" type="text" count='${customVar.index}'
                      class="form-control clock startTime cusTime ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
@@ -1027,6 +1029,7 @@
                      required data-error="Please fill out this field"/>
               <span class='help-block-timer with-errors red-txt'></span>
             </span>
+            
             
             <span class="gray-xs-f mb-sm pr-md align-span-center">
               to
@@ -1093,19 +1096,20 @@
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
-          <span class="mb-sm pr-md">
+          <span class="mb-sm pr-lg">
             <span
                 class="light-txt opacity06"> days
               </span>
 
                 <span class="form-group  dis-inline vertical-align-middle pr-md"
-                style="margin-bottom: -13px"><input id="manualStartTime0"
-                                                    type="text" class="form-control clock"
-                                                    name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
-                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"
-                                                    placeholder="Start time" required/>
+                style="margin-bottom: -13px">
+                <input id="manualStartTime0"
+					 type="text" class="form-control clock"
+					 name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
+					 value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
+					 placeholder="Start time" required/>
             <span
-                class='help-block with-errors red-txt'></span>
+                class='help-block-timer with-errors red-txt'></span>
           </span>
 
           <span
@@ -1113,8 +1117,7 @@
               <span>
                   to
               </span>
-              Anchor
-              Date
+              Anchor date
             </span>
           </span>
           <span>
@@ -1140,23 +1143,21 @@
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
-          <span class="mb-sm pr-md">
+          <span class="mb-sm pr-xs">
             <span
                 class="light-txt opacity06"> days
             </span>
           </span>
           
-              
-                
             
-          <span class="form-group  dis-inline vertical-align-middle pr-md"
+          <span class="form-group  dis-inline vertical-align-middle pr-sm"
                 style="margin-bottom: -13px"><input id="manualEndTime0"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field" 
-                                                    value="${activeTaskCustomScheduleBo.frequencyEndTime}"
+                                                    value="${activeTaskCustomScheduleBo.frequencyEndTime}"   onclick='ancEndTime(this.id,0);' 
                                                     placeholder="End time" required/>
             <span
-                class='help-block with-errors red-txt'></span>
+                class='help-block-timer with-errors red-txt'></span>
           </span>
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
                 onclick="addDateAnchor(0);">+
@@ -1213,14 +1214,15 @@
                   class="light-txt opacity06"> days
                   </span>
 
-                <span class="form-group  dis-inline vertical-align-middle pr-md"
-                style="margin-bottom: -13px"><input id="manualStartTime${customVar.index}"
-                                                    type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                                                    name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
-                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"
-                                                    placeholder="Start time" required data-error="Please fill out this field"/>
+                <span class="form-group  dis-inline vertical-align-middle"
+                style="margin-bottom: -13px;padding-right: 12px !important;">
+                <input id="manualStartTime${customVar.index}"
+                  type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
+                  name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
+                  value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
+                  placeholder="Start time" required data-error="Please fill out this field"/>
             <span
-                class='help-block with-errors red-txt'></span>
+                class='help-block-timer with-errors red-txt'></span>
           </span>
 
           <span
@@ -1228,8 +1230,7 @@
                 <span
                     style="padding-right: 5px; padding-left: 5px">to
                 </span>
-                Anchor
-                Date
+                Anchor date
               </span>
             </span>
             <span>
@@ -1258,20 +1259,20 @@
               <span
                   class="help-block with-errors red-txt"></span>
             </span>
-            <span class="mb-sm pr-md">
+            <span class="mb-sm pr-xs">
               <span
                   class="light-txt opacity06"> days
               </span>
             </span>
-            <span class="form-group  dis-inline vertical-align-middle pr-md"
+            <span class="form-group  dis-inline vertical-align-middle pr-sm"
                   style="margin-bottom: -13px"><input
                 id="manualEndTime${customVar.index}" type="text"
                 class="form-control remove_required clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndTime"
-                value="${activeTaskCustomScheduleBo.frequencyEndTime}"
+                value="${activeTaskCustomScheduleBo.frequencyEndTime}" onclick='ancEndTime(this.id,0);' 
                 placeholder="End time" required data-error="Please fill out this field"/>
               <span
-                  class='help-block with-errors red-txt'></span>
+                  class='help-block-timer with-errors red-txt'></span>
             </span>
             <span class="addbtn addBtnDis align-span-center mr-md "
                   onclick="addDateAnchor(${customVar.index});">+
@@ -1491,7 +1492,6 @@
         $(".Selectedtooltip").hide();
 
         $($('.manually-anchor-option').get().reverse()).each(function () {
-
            var id = $(this).attr("id");
            var count12 = $("#"+id).find(".xdays").attr("count");
            if($('#'+id).find('#xdays'+count12).val()=="" && $('.manually-anchor-option').filter(function() {
@@ -1888,8 +1888,8 @@
       $('.anchortypeclass').removeAttr('required');
     }
 
-    $('.manuallyContainer').find('.manually-option').each(function () {
- 
+ $('.manuallyContainer').find('.manually-option').each(function () {
+	
 	 	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
  			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
  		}
@@ -1897,7 +1897,8 @@
 			$(this).find('.cusEndDate').data("DateTimePicker").minDate(serverDate());
 		}
     });
-    
+     
+  
     var startToday;
     <c:if test="${ empty activeTaskBo.activeTaskFrequenciesBo.frequencyDate}">
     startToday = serverDate();
@@ -1907,19 +1908,18 @@
     startToday=${activeTaskBo.activeTaskFrequenciesBo.frequencyDate}
     </c:if>
     
+  
+    
     $('#chooseDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       minDate: startToday,
       useCurrent: false
-    })
-        .on("dp.change", function (e) {
-          if (e.date._d)
-            $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
-          else
-            $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
-        	
-        	
-        });
+    }).on("dp.change", function (e) {
+      if (e.date._d)
+        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
+      else
+        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    });
 
     
     $("#chooseDate").on("click", function (e) {
@@ -1992,7 +1992,9 @@
     	}
         
       });
-
+    
+    
+    
     $('#startDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       useCurrent: false,
@@ -2463,9 +2465,10 @@
     $('#customTime' + customCount).val("");
     
     $('#customTime' + customCount).val("");
-	  $('.manuallyContainer').find('.manually-option').each(function () {
-
-    if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
+    
+    $('.manuallyContainer').find('.manually-option').each(function () {
+    	
+    	if($(this).find('.cusStrDate').data("DateTimePicker")!== undefined){
  			$(this).find('.cusStrDate').data("DateTimePicker").minDate(serverDate());
  		}
 		if($(this).find('.cusEndDate').data("DateTimePicker")!== undefined){
@@ -2581,7 +2584,6 @@
       var endDate = $("#EndDate" + count).val();
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
-
         $("#" + id).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                 "Start date and time should not be greater than end date and time"));
@@ -3180,8 +3182,8 @@
 	          if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
 	              '.cusStrDate').val() && $(this).find('.cusEndDate').val() && $(this).find(
 	              '.startTime').val()) {
-
-				        var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
+				
+				  var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
 	              var startTime = moment($(this).find('.startTime').val(), "HH:mm A").toDate()
 	              fromDate.setHours(startTime.getHours());
 	              fromDate.setMinutes(startTime.getMinutes());
@@ -3200,7 +3202,7 @@
 	                  $(thisAttr).parents('.manually-option').find('.cusEndDate').val(),
 	                  "MM/DD/YYYY").toDate();
 	              var thisEndTime = moment($(thisAttr).parents('.manually-option').find('.endTime').val(),
-	                  "HH:mm A").toDate();
+	              "HH:mm A").toDate();
 	              thisToDate.setHours(thisEndTime.getHours());
 	              thisToDate.setMinutes(thisEndTime.getMinutes());
 				  
@@ -3377,7 +3379,6 @@
           $("#chartId,#chartId1,#chartId2").append(
               "<option value='Weeks of the current month'>Weeks of the current month</option>");
         }
-
         if (frequencyType == 'Monthly' && !$("#chartId,#chartId1,#chartId2 option[value='Months of the current year']").length) {
           $("#chartId,#chartId1,#chartId2").append(
               "<option value='Months of the current year'>Months of the current year</option>");
@@ -3528,14 +3529,15 @@
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days</span>" 
+		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span>" 
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].frequencyStartTime' placeholder='Start time' required data-error='Please fill out this field' />"
-        + "<span class='help-block with-errors red-txt'></span>"
+        + "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
+        + "<span class='help-block-timer with-errors red-txt'></span>"
         + "</span>"
+        
         +"<span class='light-txt opacity06'>"
         +"<span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
@@ -3550,12 +3552,12 @@
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
+        + "<span class='mb-sm pr-xs'><span class='light-txt opacity06'> days</span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].frequencyEndTime' placeholder='End time' required data-error='Please fill out this field' />"
-        + "<span class='help-block with-errors red-txt'></span>"
+        + "].frequencyEndTime' placeholder='End time' onclick='ancEndTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
+        + "<span class='help-block-timer with-errors red-txt'></span>"
         + "</span>"
         + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
         + "<span id='deleteAncchor' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
@@ -3661,6 +3663,142 @@
     }
   }
 
+  
+  function ancStartTime(item, count) {
+	  
+     $('#' + item).not('.cursor-none').datetimepicker({
+       format: 'h:mm a',
+       useCurrent: false,
+     }).on("dp.change", function (e) {
+   	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
+   	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
+   	 
+     var pxday = $("#xdays" + count).val();
+     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
+     
+     if (pxsign === "-") {
+       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+     } else {
+       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+     }
+     
+     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+     var pyday = $("#ydays" + count).val();
+     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+     }
+     
+   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime && $('.manually-anchor-option').length === 1) {
+   	   $('.help-block-timer').selectpicker('refresh');
+   	   $(this).addClass("red-border");
+   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	 } else if ($('.manually-anchor-option').length === 1) {
+   	   $('.help-block-timer').selectpicker('refresh');
+   	   $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty();
+   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+   	 }
+   	 
+     if ($('.manually-anchor-option').length > 1) {
+    	 
+     var pre_parent_id = $("#AnchorDate" + count).prev().attr("id");
+     if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
+       pre_parent_id = pre_parent_id.replace('AnchorDate','');
+     }
+     var pre_parent = parseInt(pre_parent_id);
+   	 var preEndTime =  moment($("#manualEndTime" + pre_parent).val(), "HH:mm A").toDate();
+   	 
+     var pyday = $("#ydays" + pre_parent).val();
+     var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 preEndTime.setDate(preEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 preEndTime.setDate(preEndTime.getDate() + parseInt(pyday));
+     }
+     
+     preEndTime.setMinutes(preEndTime.getMinutes() + 2);
+   	 if (preEndTime != '' && preEndTime > manualStartTime) {
+   	   $(this).addClass("red-border");
+   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+   	       "X should be less than Y of the current row and greater than Y of the previous row"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	   $("#manualStartTime" + count).val('');
+   	   $('.help-block-timer').selectpicker('refresh');
+   	 } else {
+   	   $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty();
+   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+   	 }
+         
+     }
+   	});
+   }
+  
+  function ancEndTime(item, count) {
+	  
+    $('#' + item).not('.cursor-none').datetimepicker({
+      format: 'h:mm a',
+      useCurrent: false,
+    }).on("dp.change", function (e) {
+   	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
+   	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
+   	 
+     var pxday = $("#xdays" + count).val();
+     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
+     
+     if (pxsign === "-") {
+       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+     } else {
+       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+     }
+     
+     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+     var pyday = $("#ydays" + count).val();
+     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+     }
+        
+   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+   	   $('.help-block-timer').selectpicker('refresh');
+   	   $(this).addClass("red-border");
+   	   $("#manualEndTime" + count).parent().addClass("has-danger").addClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	   $("#manualEndTime" + count).val('');
+   	 } else {
+   	   $('.help-block-timer').selectpicker('refresh');
+   	   $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty();
+   	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualStartTime" + count).parent().find(".help-block-timer").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+   	 }
+   	});
+   }
+	  
+	  
   //# sourceURL=filename.js
 
   $(document).ready(function () {
@@ -3675,11 +3813,13 @@
       var yday = $("#ydays" + parent_id).val();
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
-
+      var startTime = $("#manualStartTime" + parent_id).val();
+      var endTime = $("#manualEndTime" + parent_id).val();
+      
       if (parent_id === "0") {
 
         if (ydayValue !== "") {
-          if (xdayValue >= ydayValue) {
+          if (xdayValue > ydayValue) {
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -3704,10 +3844,10 @@
 
         var pre_parent = parseInt(pre_parent_id);
         var pyday = $("#ydays" + pre_parent).val();
-        var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+        var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue <= pydayValue) {
+        if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
@@ -3719,7 +3859,7 @@
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
           $(".addbtn").addClass("not-allowed");
           if (ydayValue !== "") {
-            if (xdayValue >= ydayValue) {
+            if (xdayValue > ydayValue) {
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -3763,7 +3903,7 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue <= xdayValue) {
+      if (ydayValue < xdayValue) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -3808,7 +3948,7 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue <= xdayValue) {
+      if (ydayValue < xdayValue) {
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -3826,10 +3966,10 @@
       if ($('.manually-anchor-option').length > 1) {
         var pre_parent = $("#" + parent_id).prev().attr("id").replace('AnchorDate','');
         var pyday = $("#ydays" + pre_parent).val();
-        var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+        var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue <= pydayValue) {
+        if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
