@@ -3517,7 +3517,14 @@ if(document.getElementById("singleSelect").checked==true){
               $(thisAttr).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
                   "Invalid image size or format"));
+              var id = $(thisAttr).next().attr("id");
+              $("#" + id).val('');
+              $("#" + $(thisAttr).attr("id")).val('');
+              $('.textLabel' + id).text("Upload");
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+              if(response_type == "Image choice"){
+            	  $("#" + $(thisAttr).attr("id")).attr('required', true);
+              }
          }
       }
     });
