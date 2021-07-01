@@ -76,7 +76,7 @@ public class DashBoardAndProfileController {
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = "";
-    int userId = 0;
+    String userId;
     try {
       HttpSession session = request.getSession();
       SessionObject sessionObject =
@@ -143,7 +143,7 @@ public class DashBoardAndProfileController {
   public ModelAndView updateProfileDetails(HttpServletRequest request, UserBO userBO) {
     logger.entry("begin updateProfileDetails()");
     ModelAndView mav = new ModelAndView();
-    Integer userId = null;
+    String userId = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
@@ -198,8 +198,6 @@ public class DashBoardAndProfileController {
     RoleBO roleBO = null;
     String sucMsg = "";
     String errMsg = "";
-    Integer userId = 0;
-    String accountManager = "";
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       HttpSession session = request.getSession();
@@ -218,12 +216,6 @@ public class DashBoardAndProfileController {
         }
         if (userSession.getUserId() != null) {
           userBO = usersService.getUserDetails(userSession.getUserId());
-          userId = usersService.getUserPermissionByUserId(userSession.getUserId());
-          if ((userId != null) && userId.equals(userSession.getUserId())) {
-            accountManager = "Yes";
-          } else {
-            accountManager = "No";
-          }
           if (null != userBO) {
             studyAndPermissionList = studyService.getStudyListByUserId(userBO.getUserId());
             roleBO = usersService.getUserRole(userBO.getRoleId());
@@ -235,7 +227,6 @@ public class DashBoardAndProfileController {
         }
         map.addAttribute("studyAndPermissionList", studyAndPermissionList);
         map.addAttribute("userBO", userBO);
-        map.addAttribute("accountManager", accountManager);
         mav = new ModelAndView("myAccount", map);
       }
     } catch (Exception e) {

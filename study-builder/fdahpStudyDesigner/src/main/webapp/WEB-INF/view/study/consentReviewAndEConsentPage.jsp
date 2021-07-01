@@ -257,9 +257,9 @@
               </div>
             </div>
             <div class="mt-xlg">
-<div class="black-md-f"> Consent document  
-</div>
-
+              <div class="black-md-f"> Consent document
+               <span id="requiredStarId" class="requiredStar" style="display: none;">*</span> 
+              </div>
               <div class="mt-lg">
                 <div class="cont_doc" id="autoCreateDivId"
                      style="display: block;">
@@ -406,9 +406,7 @@
       $('#newDivId .elaborateClass').addClass('linkDis');
       $('#saveId,#doneId').hide();
     }
-
     //auto select if consent Id is empty
-
     var consentId = "${consentBo.consentDocType}";
     if (consentId == null || consentId == '' || typeof consentId === 'undefined') {
       if (null != "${consentInfoList}" && "${consentInfoList}" != '' && "${consentInfoList}"
@@ -419,7 +417,6 @@
         $("#inlineRadio2").attr('checked', true);
       }
     }
-
     //active li
     $(".menuNav li").removeClass('active');
     $(".fifthConsentReview").addClass('active');
@@ -506,7 +503,6 @@
         } 
       }
     });
-
     function resetValues(shareDataPermissions) {
       if (shareDataPermissions == '' || shareDataPermissions == 'No') {
         $('#rootContainer input').val('');
@@ -523,10 +519,8 @@
         $('#learnMoreTextId').attr('required', true);
       }
     }
-
     //consent doc type div
     function consentDocumentDivType() {
-
       if ($("#inlineRadio1").is(":checked")) {
         $("#autoCreateDivId").show();
         $("#autoCreateDivId01").show();
@@ -549,7 +543,6 @@
         createNewConsentDocument();
       }
     }
-
     //check the consentinfo list
     function autoCreateConsentDocument() {
       var consentDocumentDivContent = "";
@@ -569,9 +562,7 @@
       }
       $("#autoConsentDocumentDivId").append(consentDocumentDivContent);
       $("#newDocumentDivId").val('');
-
     }
-
     function createNewConsentDocument() {
       $('#newDocumentDivId').summernote({
         placeholder: '',
@@ -594,9 +585,7 @@
       <c:if test="${permission eq 'view'}">
       $('#newDocumentDivId').summernote('disable');
       </c:if>
-
     }
-
     function newLearnMoreConsentDocument() {
       $('#learnMoreTextId').summernote({
         placeholder: '',
@@ -620,7 +609,6 @@
       $('#learnMoreTextId').summernote('disable');
       </c:if>
     }
-
     //save review and E-consent data
     function saveConsentReviewAndEConsentInfo(item) {
       var consentInfo = new Object();
@@ -633,7 +621,6 @@
       var dateTimeCB = $("#dateTimeCB").val();
       var consentDocumentContent = "";
       var consentDocType = $('input[name="consentDocType"]:checked').val();
-
       var shareDataPermissionsTxt = $('input[name="shareDataPermissions"]:checked').val();
       var title_txt = $("#titleId").val();
       var tagline_description = $("#taglineDescriptionId").val();
@@ -642,12 +629,12 @@
       var learn_more_text = $('#learnMoreTextId').summernote('code');
       learn_more_text = $('#learnMoreTextId').text(learn_more_text).html();
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-
+      
+      
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
         consentDocumentContent= $('#newDocumentDivId').text(consentDocumentContent).html();
       }
-
       if (item == "doneId") {
         consentInfo.type = "completed";
       } else {
@@ -680,7 +667,6 @@
       if (null != dateTimeCB) {
         consentInfo.eConsentDatetime = dateTimeCB;
       }
-
       if (null != shareDataPermissionsTxt) {
         consentInfo.shareDataPermissions = shareDataPermissionsTxt;
       }
@@ -702,6 +688,7 @@
       if (null != allow_Permission) {
         consentInfo.allowWithoutPermission = allow_Permission;
       }
+     
       var data = JSON.stringify(consentInfo);
       $.ajax({
         url: "/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
@@ -750,7 +737,6 @@
       });
     }
   });
-
   function goToBackPage(item) {
     <c:if test="${permission ne 'view'}">
     $(item).prop('disabled', true);
@@ -782,7 +768,6 @@
     document.body.appendChild(a).click();
     </c:if>
   }
-
   function maxLenValEditor() {
     var isValideditor = true;
     var valueEditor = $('#newDocumentDivId').summernote('code');
@@ -804,12 +789,9 @@
       $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
           "Please fill out this field"));
-
     }
-
     return isValideditor;
   }
-
   function maxLenLearnMoreEditor() {
     var isValid = true;
     var value = $('#learnMoreTextId').summernote('code');
@@ -832,12 +814,9 @@
       $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
           "Please fill out this field"));
-
     }
-
     return isValid;
   }
-
   function previewDataSharing() {
     var titleText = $("#titleId").val();
     var tagline_description = $("#taglineDescriptionId").val();
@@ -856,7 +835,6 @@
     }
     
     $("#tagLineDescriptionModalId").text(tagline_description);
-
     if (short_description != '' && short_description != null && typeof short_description
         != 'undefined') {
       short_description = 'Share my data with ' + short_description + ' and qualified researchers worldwide';
@@ -872,7 +850,6 @@
       $("#accordianNA").show();
       $("#accordion").hide();
     }
-
     if (long_descriptionId != '' && long_descriptionId != null && typeof long_descriptionId
         != 'undefined') {
      long_descriptionId = 'Only share my data with ' + long_descriptionId;
@@ -888,19 +865,16 @@
      $("#accordian1NA").show();
      $("#accordion1").hide();
    }
-
     $('.scrollbar__').scrollTop(0);
     colapseUpAndDown();
     $('#cancelButtonId').show();
     $('#doneButtonId').hide();
     $("#myModal").modal('show');
   }
-
   function previewLearnMore() {
     $('#cancelButtonId').hide();
     $('#doneButtonId').show();
     var learn_more_desc = $('#learnMoreTextId').summernote('code');
-
     $("#titleModalId").text("Learn more");
     if (learn_more_desc != ' ' && learn_more_desc != '' && learn_more_desc != null
         && typeof learn_more_desc != 'undefined') {
@@ -930,11 +904,9 @@
     $('.scrollbar__').scrollTop(0);
     colapseUpAndDown();
   }
-
   $(document).on('show.bs.collapse', '.collapse', function () {
     $('.collapse').not(this).collapse('hide').removeClass('in');
   });
-
   function colapseUpAndDown() {
     $('.collapse').on('shown.bs.collapse', function () {
       $(this).parent().find(".glyphicon-chevron-right").removeClass(
@@ -944,12 +916,10 @@
           "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
     });
   }
-
   var sucMsg = '${sucMsg}';
   if (sucMsg.length > 0) {
     showSucMsg(sucMsg);
   }
-
   function showSucMsg(message) {
 	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
 	 $('#alertMsg').show('5000');

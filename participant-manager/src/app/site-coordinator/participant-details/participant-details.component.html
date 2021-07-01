@@ -150,34 +150,52 @@
       class="subheader p-none pl-none mobile__view border-top__c4d1e6"
     >
       <div class="flex__ flex__justify__center">
-        <button
-          [disabled]="hasCompletedEnrollment(participant.participantDetails)"
-          name="sendInvite"
-          class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14 mob_mr-10"
-          (click)="sendInvitation(participant.participantDetails.siteId)"
-        >
-          {{ sendResend }}
-        </button>
-        <button
-          [disabled]="hasCompletedEnrollment(participant.participantDetails)"
-          name="toggleInvite"
-          class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
-          (click)="
-            toggleInvitation(
-              participant.participantDetails.siteId,
-              participant.participantDetails.onboardingStatus
-            )
+        <div
+          class="mr-sm"
+          *ngIf="
+            participant.participantDetails.onboardingStatus !==
+              onBoardingStatus.Disabled &&
+            participant.participantDetails.studyStatus !==
+              studyStatus.Deactivated &&
+            participant.participantDetails.siteStatus !== 0
           "
         >
-          {{ enableDisable }}
-        </button>
+          <button
+            [disabled]="hasCompletedEnrollment(participant.participantDetails)"
+            name="sendInvite"
+            class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14 mob_mr-10"
+            (click)="sendInvitation(participant.participantDetails.siteId)"
+          >
+            {{ sendResend }}
+          </button>
+        </div>
+        <div
+          *ngIf="
+            participant.participantDetails.studyStatus !==
+              studyStatus.Deactivated &&
+            participant.participantDetails.siteStatus !== 0
+          "
+        >
+          <button
+            [disabled]="hasCompletedEnrollment(participant.participantDetails)"
+            name="toggleInvite"
+            class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
+            (click)="
+              toggleInvitation(
+                participant.participantDetails.siteId,
+                participant.participantDetails.onboardingStatus
+              )
+            "
+          >
+            {{ enableDisable }}
+          </button>
+        </div>
       </div>
     </section>
 
     <section class="max__w__1280 m-none site__participant">
       <div
-        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg"
-        style="overflow-x: auto"
+        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg scrollable-element"
       >
         <div class="blue__text__md">Participant email</div>
         <div class="participant__label font26">
@@ -187,20 +205,22 @@
           <thead class="custom__thead_2">
             <tr>
               <th>
-                <div class="blue__text__md">Onboarding status</div>
+                <div class="blue__text__md mob_textpre">Onboarding status</div>
               </th>
               <th>
-                <div class="blue__text__md">Last invitation sent</div>
+                <div class="blue__text__md mob_textpre">
+                  Last invitation sent
+                </div>
               </th>
 
               <th>
-                <div class="blue__text__md">Enrollment status</div>
+                <div class="blue__text__md mob_textpre">Enrollment status</div>
               </th>
               <th class="mb__mt-sm">
-                <div class="blue__text__md">Date of enrollment</div>
+                <div class="blue__text__md mob_textpre">Date of enrollment</div>
               </th>
               <th class="mb__mt-sm">
-                <div class="blue__text__md">Date of withdrawal</div>
+                <div class="blue__text__md mob_textpre">Date of withdrawal</div>
               </th>
             </tr>
           </thead>

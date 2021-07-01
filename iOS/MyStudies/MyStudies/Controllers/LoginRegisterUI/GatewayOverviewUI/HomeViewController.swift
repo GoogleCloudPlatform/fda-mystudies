@@ -231,3 +231,31 @@ extension HomeViewController: PageViewControllerDelegate {
     }
   }
 }
+
+extension HomeViewController {
+  /// To set HomeViewController as Root ViewController
+  static func setRootView() {
+    
+    let storyboard = UIStoryboard(name: kStoryboardIdentifierLogin, bundle: nil)
+    let homeVC =
+      storyboard.instantiateViewController(
+        withIdentifier: kStoryboardIdentifierHomeView
+      ) as! HomeViewController
+    
+    let navC = UINavigationController.init(rootViewController: homeVC)
+    navC.navigationBar.isHidden = true
+    guard let window = UIApplication.shared.keyWindow else { return }
+    guard let rootViewController = window.rootViewController else { return }
+    
+    homeVC.view.frame = rootViewController.view.frame
+    homeVC.view.layoutIfNeeded()
+    
+    UIView.transition(
+      with: window,
+      duration: 0.5,
+      options: .transitionCrossDissolve,
+      animations: { window.rootViewController = navC },
+      completion: { _ in }
+    )
+  }
+}

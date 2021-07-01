@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "active_task_select_options")
@@ -37,29 +38,30 @@ public class ActiveTaskSelectOptionsDto implements Serializable {
   private static final long serialVersionUID = 3788580522549249379L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "active_task_select_options_id")
-  private Integer activeTaskSelectOptionsId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "active_task_select_options_id", updatable = false, nullable = false)
+  private String activeTaskSelectOptionsId;
 
   @Column(name = "active_task_master_attr_id")
-  private Integer activeTaskMasterAttrId;
+  private String activeTaskMasterAttrId;
 
   @Column(name = "option_val")
   private String optionVal;
 
-  public Integer getActiveTaskSelectOptionsId() {
+  public String getActiveTaskSelectOptionsId() {
     return activeTaskSelectOptionsId;
   }
 
-  public void setActiveTaskSelectOptionsId(Integer activeTaskSelectOptionsId) {
+  public void setActiveTaskSelectOptionsId(String activeTaskSelectOptionsId) {
     this.activeTaskSelectOptionsId = activeTaskSelectOptionsId;
   }
 
-  public Integer getActiveTaskMasterAttrId() {
+  public String getActiveTaskMasterAttrId() {
     return activeTaskMasterAttrId;
   }
 
-  public void setActiveTaskMasterAttrId(Integer activeTaskMasterAttrId) {
+  public void setActiveTaskMasterAttrId(String activeTaskMasterAttrId) {
     this.activeTaskMasterAttrId = activeTaskMasterAttrId;
   }
 

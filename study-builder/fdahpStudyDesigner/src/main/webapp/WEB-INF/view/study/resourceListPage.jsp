@@ -78,15 +78,15 @@
                 <span class="sprites_icon preview-g mr-lg"
                       data-toggle="tooltip"
                       data-placement="top" title="View" id="viewRes"
-                      onclick="viewResourceInfo(${resourceInfo.id});"></span>
+                      onclick="viewResourceInfo('${resourceInfo.id}');"></span>
                 <span
                     class="${resourceInfo.action?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Edit" id="editRes"
-                    onclick="editResourceInfo(${resourceInfo.id});"></span>
+                    onclick="editResourceInfo('${resourceInfo.id}');"></span>
                 <span
                     class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Delete" id="delRes"
-                    onclick="deleteResourceInfo(${resourceInfo.id});"></span>
+                    onclick="deleteResourceInfo('${resourceInfo.id}');"></span>
               </td>
             </tr>
           </c:forEach>
@@ -132,15 +132,15 @@
     } else {
       reorder = true;
     }
-
+  
     var resourcesSavedListSize = ${resourcesSavedList.size()};
     if(resourcesSavedListSize > 0){
     	 $('#spanMarkAsComp')
          .attr(
              'data-original-title',
              'Please ensure individual list items are marked Done, before marking the section as Complete');
-    }
-    
+        }
+
     var dataTable = $('#resource_list').DataTable({
       "paging": false,
       "info": false,
@@ -315,23 +315,25 @@
           } else {
             datarow.push(obj.title);
           }
-          var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewResourceInfo("
-              + parseInt(obj.id) + ");'></span>";
-          if (obj.action) {
-            actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo(" + parseInt(obj.id)
-                + ");'></span>"
+          
+          var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewResourceInfo(&#34;"
+              + obj.id + "&#34;);'></span>";
+          if (obj.status) {
+            actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo(&#34;" + obj.id
+                + "&#34;);'></span>"
+
           } else {
-            actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo("
-                + parseInt(obj.id) + ");'></span>";
+            actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editResourceInfo(&#34;"
+                + obj.id + "&#34;);'></span>";
           }
-          actions += "<span class='sprites_icon copy delete'  data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteResourceInfo(" + parseInt(obj.id)
-              + ");'></span>";
+          actions += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteResourceInfo(&#34;" + obj.id
+              + "&#34;);'></span>";
           datarow.push(actions);
           $('#resource_list').DataTable().row.add(datarow);
 
         }
       });
-      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete=='') {
+      if (typeof markAsComplete != 'undefined' && markAsComplete != null && markAsComplete == '') {
         $("#markAsComp").attr("disabled", false);
       }
       $('#resource_list').DataTable().draw();

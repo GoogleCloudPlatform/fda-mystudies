@@ -113,6 +113,7 @@
           </span>
           <div class="help-block with-errors red-txt"></div>
           <c:if test="${not empty notificationHistoryNoDateTime}">
+          <div class="gray-xs-f mb-xs mt-xs">Previously sent on: </div>
             <c:forEach items="${notificationHistoryNoDateTime}" var="notificationHistory">
               <span
                   class="lastSendDateTime">${notificationHistory.notificationSentdtTime}</span>

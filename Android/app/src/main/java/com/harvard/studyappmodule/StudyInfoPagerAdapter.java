@@ -104,10 +104,10 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
     }
     String html = "&lt;font color=\"" + txtcolor + "\"&gt;" + (info.get(pos).getText()) + "&lt;/font&gt;";
     if (Build.VERSION.SDK_INT >= 24) {
-      desc.loadData(
-              Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+      desc.loadDataWithBaseURL(null,
+              Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
     } else {
-      desc.loadData(Html.fromHtml(html).toString(), "text/html", "UTF-8");
+      desc.loadDataWithBaseURL(null, Html.fromHtml(html).toString(), "text/html", "UTF-8", null);
     }
     RequestOptions requestOptions = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)

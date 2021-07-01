@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
@@ -48,12 +49,13 @@ public class ActiveTaskMasterAttributeDto implements Serializable {
   private static final long serialVersionUID = 3945410061495684065L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "active_task_master_attr_id")
-  private Integer masterId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "active_task_master_attr_id", updatable = false, nullable = false)
+  private String masterId;
 
   @Column(name = "task_type_id")
-  private Integer taskTypeId;
+  private String taskTypeId;
 
   @Column(name = "order_by")
   private Integer orderByTaskType;
@@ -77,19 +79,19 @@ public class ActiveTaskMasterAttributeDto implements Serializable {
   @Column(name = "study_version")
   private Integer studyVersion = 1;
 
-  public Integer getMasterId() {
+  public String getMasterId() {
     return masterId;
   }
 
-  public void setMasterId(Integer masterId) {
+  public void setMasterId(String masterId) {
     this.masterId = masterId;
   }
 
-  public Integer getTaskTypeId() {
+  public String getTaskTypeId() {
     return taskTypeId;
   }
 
-  public void setTaskTypeId(Integer taskTypeId) {
+  public void setTaskTypeId(String taskTypeId) {
     this.taskTypeId = taskTypeId;
   }
 

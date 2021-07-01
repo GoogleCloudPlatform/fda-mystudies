@@ -1,9 +1,25 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -82,11 +98,7 @@ public class UsersController {
       if (null != userSession) {
         msg =
             usersService.activateOrDeactivateUser(
-                Integer.valueOf(userId),
-                Integer.valueOf(userStatus),
-                userSession.getUserId(),
-                userSession,
-                request);
+                userId, Integer.valueOf(userStatus), userSession.getUserId(), userSession, request);
       }
     } catch (Exception e) {
       logger.error("UsersController - activateOrDeactivateUser() - ERROR", e);
@@ -109,7 +121,7 @@ public class UsersController {
     List<StudyBo> studyBOList = null;
     String actionPage = "";
     List<Integer> permissions = null;
-    int usrId = 0;
+    String usrId = null;
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
         String userId =
@@ -122,7 +134,7 @@ public class UsersController {
                 : request.getParameter("checkRefreshFlag");
         if (!"".equalsIgnoreCase(checkRefreshFlag)) {
           if (!"".equals(userId)) {
-            usrId = Integer.valueOf(userId);
+            usrId = userId;
             actionPage = FdahpStudyDesignerConstants.EDIT_PAGE;
             userBO = usersService.getUserDetails(usrId);
             if (null != userBO) {
@@ -193,7 +205,7 @@ public class UsersController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("ownUser"))
                 ? ""
                 : request.getParameter("ownUser");
-        if (null == userBO.getUserId()) {
+        if (StringUtils.isEmpty(userBO.getUserId())) {
           addFlag = true;
           userBO.setCreatedBy(userSession.getUserId());
           userBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
@@ -203,8 +215,8 @@ public class UsersController {
           userBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         }
 
-        // Superadmin flow
-        if (userBO.getRoleId().equals(1)) {
+        if (userBO.getRoleId().equals("1")) {
+          // Superadmin flow
           permissions = FdahpStudyDesignerConstants.SUPER_ADMIN_PERMISSIONS;
         } else {
           // Study admin flow
@@ -315,7 +327,7 @@ public class UsersController {
               : request.getParameter("emailId");
       if (null != userSession) {
         if (StringUtils.isNotEmpty(emailId) && StringUtils.isNotEmpty(changePassworduserId)) {
-          msg = usersService.enforcePasswordChange(Integer.parseInt(changePassworduserId), emailId);
+          msg = usersService.enforcePasswordChange(changePassworduserId, emailId);
           if (StringUtils.isNotEmpty(msg)
               && msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             Map<String, String> values = new HashMap<>();
@@ -441,7 +453,7 @@ public class UsersController {
                 ? ""
                 : request.getParameter("userId");
         if (StringUtils.isNotEmpty(userId)) {
-          userBo = usersService.getUserDetails(Integer.parseInt(userId));
+          userBo = usersService.getUserDetails(userId);
           if (userBo != null) {
             msg =
                 loginService.sendPasswordResetLinkToMail(
@@ -495,7 +507,7 @@ public class UsersController {
                 : request.getParameter("checkViewRefreshFlag");
         if (!"".equalsIgnoreCase(checkViewRefreshFlag)) {
           if (!"".equals(userId)) {
-            userBO = usersService.getUserDetails(Integer.valueOf(userId));
+            userBO = usersService.getUserDetails(userId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());

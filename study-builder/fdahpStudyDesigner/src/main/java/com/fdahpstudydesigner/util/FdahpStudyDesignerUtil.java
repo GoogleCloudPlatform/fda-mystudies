@@ -2,30 +2,30 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package com.fdahpstudydesigner.util;
 
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
-import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -55,7 +55,6 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -78,8 +77,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FdahpStudyDesignerUtil {
 
-  private static Map<String, String> appProperties = null;
   /* Read Properties file */
+  private static Map<String, String> appProperties = null;
+
   private static XLogger logger = XLoggerFactory.getXLogger(FdahpStudyDesignerUtil.class.getName());
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -259,7 +259,6 @@ public class FdahpStudyDesignerUtil {
       return appProperties;
     }
     appProperties = new HashMap<>();
-
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
     Resource resource = null;
@@ -1006,22 +1005,6 @@ public class FdahpStudyDesignerUtil {
     return generatedHash;
   }
 
-  public static String getUserAccessLevel(Set<UserPermissions> userPermission) {
-    if (CollectionUtils.isNotEmpty(userPermission)) {
-      for (UserPermissions up : userPermission) {
-        if (FdahpStudyDesignerConstants.ROLE_SUPERADMIN_NAME.equals(up.getPermissions())) {
-          return UserAccessLevel.SUPER_ADMIN.getValue();
-        } else if (FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW_NAME.equals(
-                up.getPermissions())
-            || FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT_NAME.equals(
-                up.getPermissions())) {
-          return UserAccessLevel.STUDY_BUILDER_ADMIN.getValue();
-        }
-      }
-    }
-    return UserAccessLevel.APP_STUDY_ADMIN.getValue();
-  }
-
   public static String saveImage(
       MultipartFile fileStream, String fileName, String underDirectory, String customStudyId) {
     String fileNameWithExtension =
@@ -1038,14 +1021,24 @@ public class FdahpStudyDesignerUtil {
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
 
     try {
-      byte[] b = fileStream.getBytes();
       Storage storage = StorageOptions.getDefaultInstance().getService();
-      storage.create(blobInfo, b);
+      storage.create(blobInfo, fileStream.getBytes());
 
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);
     }
     return fileNameWithExtension;
+  }
+
+  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+    } catch (Exception e) {
+      logger.error("Unable to generate signed url", e);
+    }
+    return null;
   }
 
   public static void saveDefaultImageToCloudStorage(
@@ -1068,22 +1061,6 @@ public class FdahpStudyDesignerUtil {
       return timestampInString;
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
-    }
-    return null;
-  }
-
-  public static String getSignedUrl(String filePath) {
-    try {
-      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
-      Storage storage = StorageOptions.getDefaultInstance().getService();
-      return storage
-          .signUrl(
-              blobInfo,
-              Integer.parseInt(configMap.get("signed.url.duration.in.hours")),
-              TimeUnit.HOURS)
-          .toString();
-    } catch (Exception e) {
-      logger.error("Unable to generate signed url", e);
     }
     return null;
   }
@@ -1143,6 +1120,18 @@ public class FdahpStudyDesignerUtil {
     } catch (Exception e) {
       logger.error("Save Image in cloud storage failed", e);
     }
+  }
+
+  public static String getSignedUrlForExportedStudy(String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo =
+          BlobInfo.newBuilder(configMap.get("cloud.bucket.name.export.studies"), filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+    } catch (Exception e) {
+      logger.error("Unable to generate signed url", e);
+    }
+    return null;
   }
 
   public static boolean isValidDateFormat(String dateStr, String dateFormat) {

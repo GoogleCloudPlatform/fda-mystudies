@@ -110,6 +110,12 @@ class StudyDashboardViewController: UIViewController {
 
     // show navigationbar
     self.navigationController?.setNavigationBarHidden(true, animated: true)
+    
+    guard let study = Study.currentStudy else { return }
+    let key = "Response" + study.studyId
+    if !(UserDefaults.standard.bool(forKey: key)) {
+      DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
+    }
     getResponse()
   }
 
@@ -130,10 +136,16 @@ class StudyDashboardViewController: UIViewController {
     guard let study = Study.currentStudy else { return }
     let key = "Response" + study.studyId
     if !(UserDefaults.standard.bool(forKey: key)) {
+      DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
+      StudyDashboard.instance.dashboardResponse = []
+      
       self.addProgressIndicator(with: kDashSetupMessage)
       responseDataFetch?.checkUpdates { [unowned self] in
-        self.loadStatsFromDB(for: study)
-        self.removeProgressIndicator()
+        
+        DispatchQueue.main.async {
+          self.loadStatsFromDB(for: study)
+          self.removeProgressIndicator()
+        }
       }
     } else {
       loadStatsFromDB(for: study)
