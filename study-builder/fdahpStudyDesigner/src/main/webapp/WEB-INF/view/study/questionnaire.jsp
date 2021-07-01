@@ -1574,7 +1574,7 @@
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
-                  <span class="mb-sm pr-md">
+                  <span class="mb-sm"  style="padding-right: 12px !important;">
                     <span
                         class="light-txt opacity06"> days
                      </span>                        
@@ -1619,14 +1619,14 @@
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
-                  <span class="mb-sm pr-md">
+                  <span class="mb-sm pr-xs">
                     <span
                         class="light-txt opacity06"> days
                     </span>
                   </span>
                   
                   <span
-                      class="form-group  dis-inline vertical-align-middle pr-md"
+                      class="form-group  dis-inline vertical-align-middle pr-sm"
                       style="margin-bottom: -13px"><input id="manualEndTime0"
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field"

@@ -1085,17 +1085,18 @@
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
-          <span class="mb-sm pr-md">
+          <span class="mb-sm pr-lg">
             <span
                 class="light-txt opacity06"> days
               </span>
 
                 <span class="form-group  dis-inline vertical-align-middle pr-md"
-                style="margin-bottom: -13px"><input id="manualStartTime0"
-                                                    type="text" class="form-control clock"
-                                                    name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
-                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
-                                                    placeholder="Start time" required/>
+                style="margin-bottom: -13px">
+                <input id="manualStartTime0"
+					 type="text" class="form-control clock"
+					 name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
+					 value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
+					 placeholder="Start time" required/>
             <span
                 class='help-block-timer with-errors red-txt'></span>
           </span>
@@ -1131,14 +1132,14 @@
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
-          <span class="mb-sm pr-md">
+          <span class="mb-sm pr-xs">
             <span
                 class="light-txt opacity06"> days
             </span>
           </span>
           
             
-          <span class="form-group  dis-inline vertical-align-middle pr-md"
+          <span class="form-group  dis-inline vertical-align-middle pr-sm"
                 style="margin-bottom: -13px"><input id="manualEndTime0"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field" 
