@@ -1,10 +1,10 @@
 <ng-container *ngIf="studyDetail$ | async as studyDetails">
   <div *ngIf="studyDetails && studyDetails.participantRegistryDetail">
     <div class="subheader p-none p-3 study-participant-registry">
-      <div class="max__w__1280 m-none flex__justify__space-between">
+      <div class="max__w__1280 m-none flex__justify__space-between scrollable-element">
         <div class="flex__justify__space-between">
           <div
-            class="subheader__title flex__justify__space-between align__items__baseline"
+            class="subheader__title flex__justify__space-between align__items__baseline overflow__auto"
           >
             <div>
               <a (click)="backClicked()" class="cursor__pointer">
@@ -38,14 +38,14 @@
                   "
                   class="pr-xlg"
                 >
-                  <div class="banner__label">Site</div>
-                  <div class="banner__text">NA (Open study)</div>
+                  <div class="banner__label mob_textpre">Site</div>
+                  <div class="banner__text mob_textpre">NA (Open study)</div>
                 </div>
                 <div class="pr-xlg">
-                  <div class="banner__label">
+                  <div class="banner__label mob_textpre">
                     {{ studyDetails.participantRegistryDetail.customStudyId }}
                     -
-                    <span
+                    <span class="mob_textpre"
                       [ngClass]="{
                         active_text:
                           studyDetails.participantRegistryDetail.studyStatus ===
@@ -61,15 +61,15 @@
                       {{ studyDetails.participantRegistryDetail.studyStatus }}
                     </span>
                   </div>
-                  <div class="banner__text">
+                  <div class="banner__text mob_textpre">
                     {{ studyDetails.participantRegistryDetail.studyName }}
                   </div>
                 </div>
                 <div class="pr-xlg">
-                  <div class="banner__label">
+                  <div class="banner__label mob_textpre">
                     {{ studyDetails.participantRegistryDetail.customAppId }}
                   </div>
-                  <div class="banner__text">
+                  <div class="banner__text mob_textpre">
                     {{ studyDetails.participantRegistryDetail.appName }}
                   </div>
                 </div>
@@ -84,7 +84,7 @@
           class="pt-1"
         >
           <div class="enrollment-label mt-4">
-            <span class="btn mt-2 enrol_btn p-none cursor__text">
+            <span class="btn mt-2 enrol_btn p-none cursor__text mob_textpre">
               Enrollment target:
               {{ studyDetails.participantRegistryDetail.targetEnrollment }}
             </span>
