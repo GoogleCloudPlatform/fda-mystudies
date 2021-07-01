@@ -219,6 +219,40 @@
                 </div>
               </div>
             </c:forEach>
+            <c:if test="${fn:length(comprehensionQuestionBo.responseList) eq 1}">
+            <div class="ans-opts col-md-12 p-none" id="1">
+              <div class='col-md-6 pl-none'>
+                <div class='form-group'>
+                  <input type='text' class='form-control' name="responseList[1].responseOption"
+                         id="responseOptionId1" required maxlength="150" data-error="Please fill out this field"
+                         onblur="validateForUniqueValue(this,function(){});"
+                         onkeypress="resetValue(this);"/>
+                  <div class='help-block with-errors red-txt'></div>
+                </div>
+              </div>
+              <div class='col-md-3'>
+                <div class="form-group">
+                  <select class='selectpicker wid100' name="responseList[1].correctAnswer"
+                          id="correctAnswerId1" required data-error='Please choose one option'>
+                    <option value=''>Select</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                  </select>
+                  <div class='help-block with-errors red-txt'></div>
+                </div>
+              </div>
+              <div class="col-md-3 pl-none">
+                <div class="clearfix"></div>
+                <div class="mt-xs formgroup">
+                  <span class="addBtnDis addbtn mr-sm align-span-center"
+                        onclick='addAns();'>+
+                  </span>
+                  <span class="delete vertical-align-middle remBtnDis hide pl-md align-span-center"
+                        onclick='removeAns(this);'></span>
+                </div>
+              </div>
+            </div>
+            </c:if>
           </c:if>
         </div>
       </div>

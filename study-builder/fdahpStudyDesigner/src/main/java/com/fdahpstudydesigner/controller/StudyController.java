@@ -4596,6 +4596,17 @@ public class StudyController {
                   12));
         } else if (StringUtils.isEmpty(studyBo.getCustomStudyId())
             && StringUtils.isNotEmpty(studyBo.getDestinationCustomStudyId())) {
+
+          String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
+          String customId = "";
+          if (copyCustomIdArray[1].equalsIgnoreCase("COPY")) {
+            customId = copyCustomIdArray[0];
+            studyBo.setDestinationCustomStudyId(customId);
+          } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
+            customId = copyCustomIdArray[0];
+            studyBo.setDestinationCustomStudyId(customId + "@Export");
+          }
+
           map.addAttribute(
               "signedUrl",
               FdahpStudyDesignerUtil.getSignedUrl(

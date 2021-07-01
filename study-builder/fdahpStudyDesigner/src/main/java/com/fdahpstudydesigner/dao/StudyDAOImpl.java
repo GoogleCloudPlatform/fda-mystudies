@@ -80,14 +80,21 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.StudyExportImportService;
 import com.fdahpstudydesigner.util.CustomMultipartFile;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.ImageUtility;
+import com.fdahpstudydesigner.util.ServletContextHolder;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -95,9 +102,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileDeleteStrategy;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -114,6 +125,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class StudyDAOImpl implements StudyDAO {
+  private static final String EXPORT = "/Export/";
+
   private static XLogger logger = XLoggerFactory.getXLogger(StudyDAOImpl.class.getName());
 
   @Autowired private HttpServletRequest request;
@@ -123,6 +136,8 @@ public class StudyDAOImpl implements StudyDAO {
   @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private NotificationDAO notificationDAO;
+
+  @Autowired private StudyExportImportService studyExportImportService;
 
   HibernateTemplate hibernateTemplate;
   private Query query = null;
@@ -4293,16 +4308,41 @@ public class StudyDAOImpl implements StudyDAO {
 
           if (StringUtils.isNotEmpty(dbStudyBo.getDestinationCustomStudyId())
               && StringUtils.isEmpty(dbStudyBo.getCustomStudyId())) {
-            StudyBo study =
-                (StudyBo)
-                    session
-                        .createQuery(
-                            "From StudyBo SBO WHERE SBO.live=0 AND customStudyId=:customStudyId")
-                        .setString("customStudyId", dbStudyBo.getDestinationCustomStudyId())
-                        .uniqueResult();
-            if (study != null) {
-              moveOrCopyCloudStorage(session, study, false, false, studyBo.getCustomStudyId());
+
+            String[] copyCustomIdArray = dbStudyBo.getDestinationCustomStudyId().split("@");
+            String customId = "";
+            if (copyCustomIdArray[1].equalsIgnoreCase("COPY")) {
+              customId = copyCustomIdArray[0];
+              StudyBo study =
+                  (StudyBo)
+                      session
+                          .createQuery(
+                              "From StudyBo SBO WHERE SBO.live=0 AND customStudyId=:customStudyId")
+                          .setString("customStudyId", customId)
+                          .uniqueResult();
+              if (study != null) {
+                moveOrCopyCloudStorage(session, study, false, false, studyBo.getCustomStudyId());
+              }
+            } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
+              customId = copyCustomIdArray[0];
+              StudyBo studyOfImport =
+                  (StudyBo)
+                      session
+                          .createQuery(
+                              "From StudyBo SBO WHERE SBO.live=0 AND customStudyId=:customStudyId")
+                          .setString("customStudyId", customId)
+                          .uniqueResult();
+              if (studyOfImport != null) {
+                moveOrCopyCloudStorageForExportStudy(
+                    session,
+                    studyOfImport,
+                    false,
+                    false,
+                    studyBo.getCustomStudyId(),
+                    studyOfImport.getCustomStudyId() + "@Export");
+              }
             }
+
           } else if (!dbStudyBo.getCustomStudyId().equals(studyBo.getCustomStudyId())) {
             moveOrCopyCloudStorage(session, dbStudyBo, true, false, studyBo.getCustomStudyId());
           }
@@ -7164,7 +7204,7 @@ public class StudyDAOImpl implements StudyDAO {
               ? null
               : studyBo.getAppId().toUpperCase());
       studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-      studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId());
+      studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId() + "@COPY");
       studyBo.setEnrollingParticipants(FdahpStudyDesignerConstants.YES);
       studyBo.setCustomStudyId(null);
       studyBo.setExportSignedUrl(null);
@@ -7466,7 +7506,7 @@ public class StudyDAOImpl implements StudyDAO {
                     .uniqueResult();
       }
       if (studyBo != null) {
-        studyBo.setDestinationCustomStudyId(destinationCustomId);
+        studyBo.setDestinationCustomStudyId(destinationCustomId + "@Export");
         studyBo.setExportSignedUrl(signedUrl);
         session.update(studyBo);
         message = FdahpStudyDesignerConstants.SUCCESS;
@@ -7622,6 +7662,144 @@ public class StudyDAOImpl implements StudyDAO {
     }
   }
 
+  @SuppressWarnings("unchecked")
+  public void moveOrCopyCloudStorageForExportStudy(
+      Session session,
+      StudyBo studyBo,
+      boolean delete,
+      boolean oldFilePath,
+      String newCustomStudyId,
+      String oldCustomStudyId) {
+    if (studyBo.getThumbnailImage() != null) {
+      FdahpStudyDesignerUtil.copyOrMoveImage(
+          studyBo.getThumbnailImage(),
+          FdahpStudyDesignerConstants.STUDTYLOGO,
+          oldCustomStudyId,
+          delete,
+          oldFilePath,
+          newCustomStudyId);
+    }
+
+    List<QuestionnairesStepsBo> questionnaireStepsList =
+        session
+            .createQuery(
+                "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
+            .setString("studyId", studyBo.getId())
+            .list();
+    List<String> questionIds = new ArrayList();
+    for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
+      if (questionnaireSteps.getStepType().equals("Form")) {
+        List<String> questionIdList =
+            session
+                .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
+                .setString("formId", questionnaireSteps.getInstructionFormId())
+                .list();
+        questionIds.addAll(questionIdList);
+      } else if (questionnaireSteps.getStepType().equals("Question")) {
+        questionIds.add(questionnaireSteps.getInstructionFormId());
+      }
+    }
+    if (!CollectionUtils.isEmpty(questionIds)) {
+
+      List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
+          session
+              .createQuery(
+                  "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
+
+        if (questionResponseSubType.getSelectedImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseSubType.getSelectedImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              oldCustomStudyId,
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+
+        if (questionResponseSubType.getImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseSubType.getImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              oldCustomStudyId,
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+      }
+
+      List<QuestionReponseTypeBo> questionResponseTypeList =
+          session
+              .createQuery(
+                  "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
+        if (questionResponseType.getMinImage() != null) {
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseType.getMinImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              oldCustomStudyId,
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+
+        if (questionResponseType.getMaxImage() != null) {
+
+          FdahpStudyDesignerUtil.copyOrMoveImage(
+              questionResponseType.getMaxImage(),
+              FdahpStudyDesignerConstants.QUESTIONNAIRE,
+              oldCustomStudyId,
+              delete,
+              oldFilePath,
+              newCustomStudyId);
+        }
+      }
+    }
+    List<StudyPageBo> studyPageBoList =
+        session
+            .createQuery("from StudyPageBo where studyId=:studyId")
+            .setString("studyId", studyBo.getId())
+            .list();
+
+    for (StudyPageBo studyPageBo : studyPageBoList) {
+
+      if (studyPageBo.getImagePath() != null) {
+        FdahpStudyDesignerUtil.copyOrMoveImage(
+            studyPageBo.getImagePath(),
+            FdahpStudyDesignerConstants.STUDTYPAGES,
+            oldCustomStudyId,
+            delete,
+            oldFilePath,
+            newCustomStudyId);
+      }
+    }
+
+    List<ResourceBO> resourceBoList =
+        session
+            .createQuery("from ResourceBO where studyId=:studyId")
+            .setString("studyId", studyBo.getId())
+            .list();
+
+    for (ResourceBO resourceBo : resourceBoList) {
+
+      if (resourceBo.getPdfUrl() != null) {
+        FdahpStudyDesignerUtil.copyOrMoveImage(
+            resourceBo.getPdfUrl(),
+            FdahpStudyDesignerConstants.RESOURCEPDFFILES,
+            oldCustomStudyId,
+            delete,
+            oldFilePath,
+            newCustomStudyId);
+      }
+    }
+  }
+
   @Override
   public String cloneAnchorDateBo(
       AnchorDateTypeBo anchorDateTypeBo, String studyId, Map<String, String> anchorDateMap) {
@@ -7750,5 +7928,321 @@ public class StudyDAOImpl implements StudyDAO {
       logger.error("StudyDAOImpl - getComprehensionTestResponseList() - ERROR ", e);
     }
     return comprehensionTestResponseList;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void getResourcesFromStorage(Session session, StudyBo studyBo) throws Exception {
+    ServletContext context = ServletContextHolder.getServletContext();
+    writeSqlFileToLocalExport(studyBo, context);
+
+    if (studyBo.getThumbnailImage() != null) {
+
+      File directoryImage =
+          new File(
+              context.getRealPath("/")
+                  + EXPORT
+                  + studyBo.getCustomStudyId()
+                  + "/"
+                  + FdahpStudyDesignerConstants.STUDTYLOGO);
+      if (!directoryImage.exists()) {
+        directoryImage.mkdir();
+      }
+
+      writeToFileExport(
+          studyBo.getCustomStudyId(),
+          studyBo.getThumbnailImage(),
+          context,
+          FdahpStudyDesignerConstants.STUDTYLOGO);
+    }
+
+    List<QuestionnairesStepsBo> questionnaireStepsList =
+        session
+            .createQuery(
+                "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
+            .setString("studyId", studyBo.getId())
+            .list();
+    List<String> questionIds = new ArrayList();
+    for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
+      if (questionnaireSteps.getStepType().equals("Form")) {
+        List<String> questionIdList =
+            session
+                .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
+                .setString("formId", questionnaireSteps.getInstructionFormId())
+                .list();
+        questionIds.addAll(questionIdList);
+      } else if (questionnaireSteps.getStepType().equals("Question")) {
+        questionIds.add(questionnaireSteps.getInstructionFormId());
+      }
+    }
+    if (!CollectionUtils.isEmpty(questionIds)) {
+
+      List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
+          session
+              .createQuery(
+                  "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
+
+        if (questionResponseSubType.getSelectedImage() != null) {
+          File directoryImage =
+              new File(
+                  context.getRealPath("/")
+                      + EXPORT
+                      + studyBo.getCustomStudyId()
+                      + "/"
+                      + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+          if (!directoryImage.exists()) {
+            directoryImage.mkdir();
+          }
+
+          writeToFileExport(
+              studyBo.getCustomStudyId(),
+              questionResponseSubType.getSelectedImage(),
+              context,
+              FdahpStudyDesignerConstants.QUESTIONNAIRE);
+        }
+
+        if (questionResponseSubType.getImage() != null) {
+          File directoryImage =
+              new File(
+                  context.getRealPath("/")
+                      + EXPORT
+                      + studyBo.getCustomStudyId()
+                      + "/"
+                      + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+          if (!directoryImage.exists()) {
+            directoryImage.mkdir();
+          }
+
+          writeToFileExport(
+              studyBo.getCustomStudyId(),
+              questionResponseSubType.getImage(),
+              context,
+              FdahpStudyDesignerConstants.QUESTIONNAIRE);
+        }
+      }
+
+      List<QuestionReponseTypeBo> questionResponseTypeList =
+          session
+              .createQuery(
+                  "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
+              .setParameterList("responseTypeId", questionIds)
+              .list();
+
+      for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
+        if (questionResponseType.getMinImage() != null) {
+          File directoryImage =
+              new File(
+                  context.getRealPath("/")
+                      + EXPORT
+                      + studyBo.getCustomStudyId()
+                      + "/"
+                      + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+          if (!directoryImage.exists()) {
+            directoryImage.mkdir();
+          }
+
+          writeToFileExport(
+              studyBo.getCustomStudyId(),
+              questionResponseType.getMinImage(),
+              context,
+              FdahpStudyDesignerConstants.QUESTIONNAIRE);
+        }
+
+        if (questionResponseType.getMaxImage() != null) {
+          File directoryImage =
+              new File(
+                  context.getRealPath("/")
+                      + EXPORT
+                      + studyBo.getCustomStudyId()
+                      + "/"
+                      + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+          if (!directoryImage.exists()) {
+            directoryImage.mkdir();
+          }
+
+          writeToFileExport(
+              studyBo.getCustomStudyId(),
+              questionResponseType.getMaxImage(),
+              context,
+              FdahpStudyDesignerConstants.QUESTIONNAIRE);
+        }
+      }
+    }
+    List<StudyPageBo> studyPageBoList =
+        session
+            .createQuery("from StudyPageBo where studyId=:studyId")
+            .setString("studyId", studyBo.getId())
+            .list();
+
+    for (StudyPageBo studyPageBo : studyPageBoList) {
+
+      if (studyPageBo.getImagePath() != null) {
+        File directoryImage =
+            new File(
+                context.getRealPath("/")
+                    + EXPORT
+                    + studyBo.getCustomStudyId()
+                    + "/"
+                    + FdahpStudyDesignerConstants.STUDTYPAGES);
+        if (!directoryImage.exists()) {
+          directoryImage.mkdir();
+        }
+
+        writeToFileExport(
+            studyBo.getCustomStudyId(),
+            studyPageBo.getImagePath(),
+            context,
+            FdahpStudyDesignerConstants.STUDTYPAGES);
+      }
+    }
+
+    List<ResourceBO> resourceBoList =
+        session
+            .createQuery("from ResourceBO where studyId=:studyId")
+            .setString("studyId", studyBo.getId())
+            .list();
+
+    for (ResourceBO resourceBo : resourceBoList) {
+
+      if (resourceBo.getPdfUrl() != null) {
+        File directoryImage =
+            new File(
+                context.getRealPath("/")
+                    + EXPORT
+                    + studyBo.getCustomStudyId()
+                    + "/"
+                    + FdahpStudyDesignerConstants.RESOURCEPDFFILES);
+        if (!directoryImage.exists()) {
+          directoryImage.mkdir();
+        }
+
+        writeToFileExport(
+            studyBo.getCustomStudyId(),
+            resourceBo.getPdfUrl(),
+            context,
+            FdahpStudyDesignerConstants.RESOURCEPDFFILES);
+      }
+    }
+
+    FileOutputStream fos =
+        new FileOutputStream(
+            context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId() + ".zip");
+
+    ZipOutputStream zos = new ZipOutputStream(fos);
+    addDirToZipArchive(
+        zos, new File(context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId()), null);
+    zos.flush();
+    fos.flush();
+    zos.close();
+    fos.close();
+
+    removeDir(new File(context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId()));
+
+    FdahpStudyDesignerUtil.uplaodZip(
+        context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId() + ".zip",
+        studyBo.getCustomStudyId());
+  }
+
+  public void writeSqlFileToLocalExport(StudyBo studyBo, ServletContext context)
+      throws FileNotFoundException, IOException {
+    Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
+    byte[] exportSqlBytes = studyBo.getExportSqlByte();
+    String fileName =
+        studyBo.getId()
+            + "_"
+            + map.get("release.version")
+            + "_"
+            + studyExportImportService.getCRC32Checksum(exportSqlBytes)
+            + ".sql";
+
+    File directoryOfExport = new File(context.getRealPath("/") + "/Export");
+    if (!directoryOfExport.exists()) {
+      directoryOfExport.mkdir();
+    }
+    File directory = new File(context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId());
+    if (!directory.exists()) {
+      directory.mkdir();
+    }
+
+    File sqlFile =
+        new File(context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId() + "/" + fileName);
+    FileOutputStream fosExportSql = new FileOutputStream(sqlFile);
+    fosExportSql.write(exportSqlBytes);
+    fosExportSql.close();
+  }
+
+  public void writeToFileExport(
+      String customId, String fileName, ServletContext context, String underDirectory)
+      throws FileNotFoundException, IOException {
+    byte[] studyImageArray =
+        FdahpStudyDesignerUtil.getResource(
+            FdahpStudyDesignerConstants.STUDIES
+                + "/"
+                + customId
+                + "/"
+                + underDirectory
+                + "/"
+                + fileName);
+
+    if (studyImageArray != null) {
+      File convFile =
+          new File(
+              context.getRealPath("/") + EXPORT + customId + "/" + underDirectory + "/" + fileName);
+      FileOutputStream fos = new FileOutputStream(convFile);
+      fos.write(studyImageArray);
+      fos.close();
+    }
+  }
+
+  public static void removeDir(File dir) {
+    try {
+
+      if (dir.isDirectory()) {
+        File[] files = dir.listFiles();
+        if (files != null && files.length > 0) {
+          for (File aFile : files) {
+            System.gc();
+            Thread.sleep(2000);
+            FileDeleteStrategy.FORCE.delete(aFile);
+          }
+        }
+        dir.delete();
+      } else {
+        dir.delete();
+      }
+    } catch (Exception e) {
+      logger.error("removeDir failed", e);
+    }
+  }
+
+  public static void addDirToZipArchive(
+      ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
+    if (fileToZip == null || !fileToZip.exists()) {
+      return;
+    }
+
+    String zipEntryName = fileToZip.getName();
+    if (parrentDirectoryName != null && !parrentDirectoryName.isEmpty()) {
+      zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
+    }
+
+    if (fileToZip.isDirectory()) {
+      for (File file : fileToZip.listFiles()) {
+        addDirToZipArchive(zos, file, zipEntryName);
+      }
+    } else {
+      byte[] buffer = new byte[1024];
+      FileInputStream fis = new FileInputStream(fileToZip);
+      zos.putNextEntry(new ZipEntry(zipEntryName));
+      int length;
+      while ((length = fis.read(buffer)) > 0) {
+        zos.write(buffer, 0, length);
+      }
+      zos.closeEntry();
+      fis.close();
+    }
   }
 }
