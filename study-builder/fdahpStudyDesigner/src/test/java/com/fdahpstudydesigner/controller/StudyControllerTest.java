@@ -72,7 +72,6 @@ import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.dao.NotificationDAOImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import com.fdahpstudydesigner.util.ServletContextHolder;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -81,14 +80,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import javax.servlet.ServletContext;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -1308,7 +1305,7 @@ public class StudyControllerTest extends BaseMockIT {
         .toString();
   }
 
-  @Test
+  /*@Test
   public void shouldCreateInsertSqlQueries() throws Exception {
 
     SessionObject session = new SessionObject();
@@ -1326,7 +1323,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isOk());
-  }
+  }*/
 
   @Test
   public void shouldreplicateStudies() throws Exception {
