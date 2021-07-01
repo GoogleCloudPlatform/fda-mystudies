@@ -80,12 +80,16 @@ table tbody.custom__tbody_2 tr td:nth-child(5) {
   table tbody.custom__tbody_2 tr td:nth-child(5) {
     width: auto !important;
   }
-
   .table.table-striped tfoot tr td {
     width: 100% !important;
     text-align: center !important;
     padding: 10px !important;
     display: inline-block;
+  }
+
+  .mob_textpre {
+    white-space: pre !important;
+    padding-right: 20px;
   }
 
   .scrollable-element {
