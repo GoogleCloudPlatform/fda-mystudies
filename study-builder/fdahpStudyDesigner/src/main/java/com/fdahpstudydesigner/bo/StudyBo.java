@@ -203,7 +203,7 @@ public class StudyBo implements Serializable {
   @Column(name = "destination_custom_study_id")
   private String destinationCustomStudyId;
 
-  @Column(name = "export_signed_url")
+  @Column(name = "export_signed_url", length = 1012)
   private String exportSignedUrl;
 
   @Transient private byte[] exportSqlByte;
