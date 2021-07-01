@@ -1145,7 +1145,7 @@
                                                     value="${activeTaskCustomScheduleBo.frequencyEndTime}"   onclick='ancEndTime(this.id,0);' 
                                                     placeholder="End time" required/>
             <span
-                class='help-block with-errors red-txt'></span>
+                class='help-block-timer with-errors red-txt'></span>
           </span>
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
                 onclick="addDateAnchor(0);">+
@@ -1202,12 +1202,13 @@
                   class="light-txt opacity06"> days
                   </span>
 
-                <span class="form-group  dis-inline vertical-align-middle pr-md"
-                style="margin-bottom: -13px"><input id="manualStartTime${customVar.index}"
-                                                    type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
-                                                    name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
-                                                    value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
-                                                    placeholder="Start time" required data-error="Please fill out this field"/>
+                <span class="form-group  dis-inline vertical-align-middle"
+                style="margin-bottom: -13px;padding-right: 12px !important;">
+                <input id="manualStartTime${customVar.index}"
+                  type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
+                  name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
+                  value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
+                  placeholder="Start time" required data-error="Please fill out this field"/>
             <span
                 class='help-block-timer with-errors red-txt'></span>
           </span>
@@ -1246,12 +1247,12 @@
               <span
                   class="help-block with-errors red-txt"></span>
             </span>
-            <span class="mb-sm pr-md">
+            <span class="mb-sm pr-xs">
               <span
                   class="light-txt opacity06"> days
               </span>
             </span>
-            <span class="form-group  dis-inline vertical-align-middle pr-md"
+            <span class="form-group  dis-inline vertical-align-middle pr-sm"
                   style="margin-bottom: -13px"><input
                 id="manualEndTime${customVar.index}" type="text"
                 class="form-control remove_required clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
@@ -3534,7 +3535,7 @@
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days</span>" 
+		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span>" 
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
@@ -3557,7 +3558,7 @@
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
+        + "<span class='mb-sm pr-xs'><span class='light-txt opacity06'> days</span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
@@ -3698,12 +3699,14 @@
      }
      
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime && $('.manually-anchor-option').length === 1) {
+   	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
    	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty().append(
    	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
    	   $("#addbtn" + count).addClass("not-allowed");
    	 } else if ($('.manually-anchor-option').length === 1) {
+   	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
    	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty();
@@ -3782,13 +3785,15 @@
      }
         
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+   	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
-   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
-   	   $("#" + item).parent().find(".help-block-timer").empty().append(
+   	   $("#manualEndTime" + count).parent().addClass("has-danger").addClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty().append(
    	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
    	   $("#addbtn" + count).addClass("not-allowed");
    	   $("#manualEndTime" + count).val('');
    	 } else {
+   	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
    	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty();
