@@ -19,7 +19,7 @@ jobs:
       - name: Build
         run: |
           cd iOS/MyStudies
-          xcodebuild clean build -workspace MyStudies.xcworkspace -scheme MyStudies -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO EXCLUDED_ARCHS[sdk=iphonesimulator*]=arm64 ONLY_ACTIVE_ARCH=YES
+          xcodebuild clean build -workspace MyStudies.xcworkspace -scheme MyStudies -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO EXCLUDED_ARCHS[sdk=iphonesimulator*]=arm64 ONLY_ACTIVE_ARCH=YES -v
         env: 
          destination: ${{ matrix.destination }}
       - name: Test
