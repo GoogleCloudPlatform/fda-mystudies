@@ -7923,6 +7923,7 @@ public class StudyDAOImpl implements StudyDAO {
   @SuppressWarnings("unchecked")
   public void getResourcesFromStorage(Session session, StudyBo studyBo) throws Exception {
     ServletContext context = ServletContextHolder.getServletContext();
+
     if (context != null) {
 
       writeSqlFileToLocalExport(studyBo, context);
