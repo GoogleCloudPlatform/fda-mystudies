@@ -1933,6 +1933,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $('.addLineChartBlock_Score_spatial').css("display", "");
         $('.addLineChartBlock_Score_spatial').find('.requireClass').attr('required', true);
         $('#Score_spatial_chart_id').val(true);
+        $("#inlineRadio2").prop("checked", true);
         $('.selectpicker').selectpicker('refresh');
       } else {
         $('.addLineChartBlock_Score_spatial').css("display", "none");
@@ -1961,6 +1962,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $('.addLineChartBlock_Number_of_Games_spatial').find('.requireClass').attr('required',
             true);
         $('#Number_of_Games_spatial_chart_id').val(true);
+        $("#inlineRadio4").prop("checked", true);
         $('.selectpicker').selectpicker('refresh');
       } else {
         $('.addLineChartBlock_Number_of_Games_spatial').css("display", "none");
@@ -1994,6 +1996,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
         $('.addLineChartBlock_Number_of_Failures_spatial').find('.requireClass').attr('required',
             true);
         $('#Number_of_Failures_spatial_chart_id').val(true);
+        $("#inlineRadio6").prop("checked", true);
         $('.selectpicker').selectpicker('refresh');
       } else {
         $('.addLineChartBlock_Number_of_Failures_spatial').css("display", "none");
