@@ -204,6 +204,7 @@
     $('[data-toggle="tooltip"]').tooltip();
     $("#doneId").click(function () {
       //$("#doneId").attr("disabled", true);
+      validateTitle();
       validatesummernote();
            validateShortTitle('', function (val) {
         if (val) {
@@ -279,6 +280,17 @@
 	   return true;
 	 }
 	}
+  
+  function validateTitle(){
+	  var titleValue = $('#instructionTitle').val();
+      if (null == titleValue || titleValue == '' || typeof titleValue == 'undefined'){
+    	  $('#instructionTitle')
+	       .parent()
+	       .find(".help-block")
+	       .append(
+	           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
+      }
+  }
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var questionnaireId = $("#questionnaireId").val();
@@ -356,6 +368,7 @@
       questionnaireStep.destinationStep = destinationStep
       instruction.questionnairesStepsBo = questionnaireStep;
 
+      $('#basicInfoFormId').validator('destroy').validator();
       var data = JSON.stringify(instruction);
       $.ajax({
         url: "/studybuilder/adminStudies/saveInstructionStep.do?_S=${param._S}",

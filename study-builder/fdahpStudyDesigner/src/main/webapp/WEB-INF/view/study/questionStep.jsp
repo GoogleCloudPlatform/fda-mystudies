@@ -5670,7 +5670,16 @@
 
       questionnaireStep.questionReponseTypeBo = questionReponseTypeBo;
       if (quesstionnaireId && shortTitle) {
-
+          
+    	$('#questionStepId').validator('destroy').validator();
+		$("#scaleMinDescriptionId").parent().find(".help-block").empty();
+		$("#scaleMaxDescriptionId").parent().find(".help-block").empty();
+		$("#scaleMaxImageFileId").parent().find(".help-block").empty();
+		$("#scaleMinImageFileId").parent().find(".help-block").empty();
+		$("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
+		$("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
+		$("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
+		$("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
         formData.append("questionnaireStepInfo", JSON.stringify(questionnaireStep));
         var data = JSON.stringify(questionnaireStep);
         $.ajax({

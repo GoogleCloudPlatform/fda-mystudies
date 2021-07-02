@@ -151,8 +151,12 @@ input[type="checkbox"]:checked + label::before {
 
 @media only screen and (max-width: 500px) and (min-width: 320px) {
   .scrollable-element {
-    overflow-x: auto;
-    z-index: 9;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+
+  .scrollable-element:hover {
+    overflow-x: scroll;
   }
 
   .scrollable-element::-webkit-scrollbar {
