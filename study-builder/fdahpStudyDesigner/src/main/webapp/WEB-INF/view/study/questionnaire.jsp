@@ -409,7 +409,7 @@
                 <div class="form-group">
                   <select id="anchorDateId"
                           class="selectpicker ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          required name="anchorDateId">   
+                          required name="anchorDateId">
                     <option value=''>Select</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
                       <option value="${anchorTypeInfo.id}"
@@ -1000,7 +1000,7 @@
               
               <span
                   class="form-group m-none dis-inline vertical-align-middle pr-md ml-lg">
-                 <input id="selectWeeklyTime" type="text" data-error="Please fill out this field" 
+                <input id="selectWeeklyTime" type="text"
                        class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
                        required data-error="Please fill out this field" onclick="timep(this.id)" placeholder="Time"
                        name="questionnairesFrequenciesBo.frequencyTime"
@@ -1047,12 +1047,11 @@
                         </span>
                       </span>
                       <br/>
-                      <span class="pr-md">Anchor
-                        Date
+                      <span class="pr-md">Anchor date
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                         title="Select" name="questionnairesFrequenciesBo.xDaysSign" data-error="Please fill out this field" 
+                          title="Select" name="questionnairesFrequenciesBo.xDaysSign" data-error="Please fill out this field" 
                           id="weeklyXSign">
                         <option value="0"
                           ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+
@@ -1064,7 +1063,7 @@
                       </span>
                       <span
                           class="form-group m-none dis-inline vertical-align-middle">
-                         <input id="weeklyxdaysId" type="text" data-error="Please fill out this field" 
+                        <input id="weeklyxdaysId" type="text"
                                class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                                placeholder="X"
                                name="questionnairesFrequenciesBo.timePeriodFromDays"
@@ -1193,9 +1192,10 @@
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                     title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+                    title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                      </span>
+                </span>
               </span>
               <br/>
               <span
@@ -1233,7 +1233,7 @@
                         class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
                         data-placement="bottom"
-                          title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+                        title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                   </span>
                   </span>
@@ -1279,8 +1279,7 @@
                         </span>
                       </span>
                       <br/>
-                      <span class="pr-md">Anchor
-                        Date
+                      <span class="pr-md">Anchor date
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -1358,7 +1357,7 @@
                     class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                   title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+                    title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                    </span>
               </div>
@@ -1403,7 +1402,7 @@
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                   data-toggle="tooltip"
                   data-placement="bottom"
-                   title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+                  title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
               2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                  </span>
             </div>
@@ -1586,7 +1585,7 @@
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
-                  <span class="mb-sm pr-md">
+                  <span class="mb-sm"  style="padding-right: 12px !important;">
                     <span
                         class="light-txt opacity06"> days
                      </span>                        
@@ -1595,10 +1594,10 @@
                       style="margin-bottom: -13px"><input id="manualStartTime0"
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
-                                                          value="${questionnaireCustomScheduleBo.frequencyStartTime}"
+                                                          value="${questionnaireCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                                                           placeholder="Start time" required/>
                     <span
-                        class='help-block with-errors red-txt'></span>
+                        class='help-block-timer with-errors red-txt'></span>
                   </span>                       
 
                         <span class="light-txt opacity06">
@@ -1631,21 +1630,21 @@
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
-                  <span class="mb-sm pr-md">
+                  <span class="mb-sm pr-xs">
                     <span
                         class="light-txt opacity06"> days
                     </span>
                   </span>
                   
                   <span
-                      class="form-group  dis-inline vertical-align-middle pr-md"
+                      class="form-group  dis-inline vertical-align-middle pr-sm"
                       style="margin-bottom: -13px"><input id="manualEndTime0"
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field"
-                                                          value="${questionnaireCustomScheduleBo.frequencyEndTime}"
+                                                          value="${questionnaireCustomScheduleBo.frequencyEndTime}"  onclick='ancEndTime(this.id,0);' 
                                                           placeholder="End time" required data-error="Please fill out this field"/>
                     <span
-                        class='help-block with-errors red-txt'></span>
+                        class='help-block-timer with-errors red-txt'></span>
                   </span>
                   <span id="addbtn0"
                         class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
@@ -1710,15 +1709,15 @@
                           class="light-txt opacity06"> days
                         </span>
                           <span
-                        class="form-group  dis-inline vertical-align-middle pr-md"
-                        style="margin-bottom: -13px"><input
+                        class="form-group  dis-inline vertical-align-middle"
+                        style="margin-bottom: -13px;padding-right: 12px !important;"><input
                         id="manualStartTime${customVar.index}" type="text"
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartTime"
-                        value="${questionnaireCustomScheduleBo.frequencyStartTime}"
+                        value="${questionnaireCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                         placeholder="Start time" required data-error="Please fill out this field"/>
                       <span
-                          class='help-block with-errors red-txt'></span>
+                          class='help-block-timer with-errors red-txt'></span>
                     </span>
                          <span
                           class="light-txt opacity06">  
@@ -1751,21 +1750,21 @@
                              data-pattern-error="Please enter valid number" required/>
                       <span class="help-block with-errors red-txt"></span>
                     </span>
-                    <span class="mb-sm pr-md">
+                    <span class="mb-sm pr-xs">
                       <span
                           class="light-txt opacity06"> days
                       </span>
                     </span>
                     <span
-                        class="form-group  dis-inline vertical-align-middle pr-md"
+                        class="form-group  dis-inline vertical-align-middle pr-sm"
                         style="margin-bottom: -13px"><input
                         id="manualEndTime${customVar.index}" type="text"
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndTime"
-                        value="${questionnaireCustomScheduleBo.frequencyEndTime}"
+                        value="${questionnaireCustomScheduleBo.frequencyEndTime}" onclick='ancEndTime(this.id,0);' 
                         placeholder="End time" required data-error="Please fill out this field"/>
                       <span
-                          class='help-block with-errors red-txt'></span>
+                          class='help-block-timer with-errors red-txt'></span>
                     </span>
                     <span id="addbtn${customVar.index}"
                           class="addbtn addBtnDis align-span-center mr-sm cursor-display"
@@ -2012,6 +2011,7 @@
         
         $(".manuallyContainer").hide();
         $(".manuallyContainer").find('input:text').removeAttr('required');
+
         $(".Selectedtooltip").hide();
         
         $($('.manually-anchor-option').get().reverse()).each(function () {
@@ -2088,14 +2088,14 @@
            if($('#'+id).find('#StartDate'+count12).val()=="" && $('.manually-option').filter(function() {	
                return $(this).css('display') !== 'none';	
            }).length !== 1){	
-             $("#"+id).remove();	
-             $("#"+id).find('input:text').removeAttr('required', true);	
-             $("#AddButton").show();	
-             $("#AddButton").attr('required', true);	
-           }else {	
-               $("#AddButton").hide();	
-               $("#AddButton").attr('required', false);	
-           }	
+               $("#"+id).remove();	
+               $("#"+id).find('input:text').removeAttr('required', true);	
+               $("#AddButton").show();	
+               $("#AddButton").attr('required', true);	
+             }else {	
+                 $("#AddButton").hide();	
+                 $("#AddButton").attr('required', false);	
+             }	
         });
         
         if( $('.manually-option').filter(function() {	
@@ -2637,7 +2637,7 @@
       });
       multiTimeVal = !(a > 0);
     });
-
+    
     var endToday;
     <c:if test="${ empty questionnaireBo.studyLifetimeEnd}">
     endToday = serverDate();
@@ -2654,8 +2654,8 @@
       useCurrent: false,
     });
     
-	$("#chooseEndDate").on("click", function (e) {
-    	
+ $("#chooseEndDate").on("click", function (e) {
+       
     	var end=$('#chooseEndDate').val();
     	if(end!=""){
     	var s=end.split("/");
@@ -2665,7 +2665,8 @@
 	    		$('#chooseEndDate').data("DateTimePicker").minDate(serverDate());
 	    	}
     	}
-    });
+        
+      });
     
     $('#startDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
@@ -3322,7 +3323,7 @@
       useCurrent: false,
     });
   }
-    
+  
   function startTimep(item, count) {
 
     $('#' + item).not('.cursor-none').datetimepicker({
@@ -3414,7 +3415,7 @@
 
   function customEndDate(id, count) {
 	
-	  $('.manually-option').find('.endTime').prop('disabled', false);
+	$('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       useCurrent: false,
@@ -4006,6 +4007,7 @@
 
   function checkDateRange() {
 	  $(document).on('dp.change change', '.cusStrDate, .cusEndDate, .startTime, .endTime', function (e) {
+		  
 	      var chkValFromDate=true;
 	      var chkValToDate = true;
 	      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents('.manually-option').find(
@@ -4035,7 +4037,7 @@
 	                  $(thisAttr).parents('.manually-option').find('.cusEndDate').val(),
 	                  "MM/DD/YYYY").toDate();
 	              var thisEndTime = moment($(thisAttr).parents('.manually-option').find('.endTime').val(),
-	              "HH:mm A").toDate()
+	              "HH:mm A").toDate();
 	              thisToDate.setHours(thisEndTime.getHours());
 	              thisToDate.setMinutes(thisEndTime.getMinutes());
 
@@ -4081,7 +4083,7 @@
 	    });
 	    return isValidManuallySchedule;
 	  }
-
+  
   function doneQuestionnaire(item, actType, callback) {
     var frequency = $('input[name="frequency"]:checked').val();
     var scheduletype = document.querySelector('input[name="scheduleType"]:checked').value;
@@ -4661,13 +4663,13 @@
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days</span>"
+		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span>"
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
        	+ "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
        	+ "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
-      	+ "].frequencyStartTime' placeholder='Start time' required data-error='Please fill out this field'/>"
-       	+ "<span class='help-block with-errors red-txt'></span>"
+      	+ "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field'/>"
+       	+ "<span class='help-block-timer with-errors red-txt'></span>"
       	+ "</span>"
        
       	+"<span class='light-txt opacity06'>"
@@ -4685,12 +4687,12 @@
         + "name='questionnaireCustomScheduleBo[" + customAnchorCount
         + "].timePeriodToDays' maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
+        + "<span class='mb-sm pr-xs'><span class='light-txt opacity06'> days</span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
-        + "].frequencyEndTime' placeholder='End time' required data-error='Please fill out this field'/>"
-        + "<span class='help-block with-errors red-txt'></span>"
+        + "].frequencyEndTime' placeholder='End time' onclick='ancEndTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field'/>"
+        + "<span class='help-block-timer with-errors red-txt'></span>"
         + "</span>"
         + "<span id='addbtn" + customAnchorCount
         + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
@@ -4798,6 +4800,143 @@
     }
   }
 
+  function ancStartTime(item, count) {
+ 
+     $('#' + item).not('.cursor-none').datetimepicker({
+       format: 'h:mm a',
+       useCurrent: false,
+     }).on("dp.change", function (e) {
+   	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
+   	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
+   	 
+     var pxday = $("#xdays" + count).val();
+     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
+     
+     if (pxsign === "-") {
+       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+     } else {
+       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+     }
+     
+     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+     var pyday = $("#ydays" + count).val();
+     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+     }
+     
+   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime && $('.manually-anchor-option').length === 1) {
+   	   $('.help-block-timer').selectpicker('refresh');
+   	   $(this).addClass("red-border");
+   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	 } else if ($('.manually-anchor-option').length === 1) {
+   	   $('.help-block-timer').selectpicker('refresh');
+   	   $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty();
+   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+
+   	 }
+   	 
+     if ($('.manually-anchor-option').length > 1) {
+    	 
+     var pre_parent_id = $("#AnchorDate" + count).prev().attr("id");
+     if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
+       pre_parent_id = pre_parent_id.replace('AnchorDate','');
+     }
+     var pre_parent = parseInt(pre_parent_id);
+   	 var preEndTime =  moment($("#manualEndTime" + pre_parent).val(), "HH:mm A").toDate();
+   	 
+     var pyday = $("#ydays" + pre_parent).val();
+     var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 preEndTime.setDate(preEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 preEndTime.setDate(preEndTime.getDate() + parseInt(pyday));
+     }
+     
+     preEndTime.setMinutes(preEndTime.getMinutes() + 2);
+   	 if (preEndTime != '' && preEndTime > manualStartTime) {
+   	   $(this).addClass("red-border");
+   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+   	       "X should be less than Y of the current row and greater than Y of the previous row"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	   $("#manualStartTime" + count).val('');
+   	   $('.help-block-timer').selectpicker('refresh');
+   	 } else {
+   	   $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty();
+   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+   	 }
+         
+     }
+   	});
+   }
+  
+  function ancEndTime(item, count) {
+	  
+    $('#' + item).not('.cursor-none').datetimepicker({
+      format: 'h:mm a',
+      useCurrent: false,
+    }).on("dp.change", function (e) {
+	 
+   	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
+   	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
+   	 
+     var pxday = $("#xdays" + count).val();
+     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
+     
+     if (pxsign === "-") {
+       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+     } else {
+       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+     }
+     
+     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+     var pyday = $("#ydays" + count).val();
+     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+     }
+        
+   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+   	   $('.help-block-timer').selectpicker('refresh');
+   	   $(this).addClass("red-border");
+   	   $("#manualEndTime" + count).parent().addClass("has-danger").addClass("has-error");
+   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty().append(
+   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+   	   $("#addbtn" + count).addClass("not-allowed");
+   	   $("#manualEndTime" + count).val('');
+   	  
+   	 } else {
+   	   $('.help-block-timer').selectpicker('refresh');
+   	   $(this).removeClass("red-border");
+   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#" + item).parent().find(".help-block-timer").empty();
+   	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+   	   $("#manualStartTime" + count).parent().find(".help-block-timer").empty();
+   	   $("#addbtn" + count).removeClass("not-allowed");
+   	 }
+   	});
+   }
+  
   $(document).ready(function () {
 
     jQuery(document).on("keyup", ".xdays", function () {
@@ -4811,15 +4950,18 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
       
+      var startTime = $("#manualStartTime" + parent_id).val();
+      var endTime = $("#manualEndTime" + parent_id).val();
+      
       if (parent_id === "0") {
 
         if (ydayValue !== "") {
-          if (xdayValue >= ydayValue) {
+          if (xdayValue > ydayValue) {
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Y should be greater than X"));
+                "Y should be greater than or equal to X"));
             $("#addbtn" + parent_id).addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
@@ -4837,15 +4979,15 @@
         }
         var pre_parent = parseInt(pre_parent_id);
         var pyday = $("#ydays" + pre_parent).val();
-        var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+        var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
         
-        if (xdayValue <= pydayValue) {
+        if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current row and greater than Y of the previous row"));
+              "X should be less than or equal to Y of the current row and greater than or equal to Y of the previous row"));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -4853,12 +4995,12 @@
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
           $("#addbtn" + parent_id).addClass("not-allowed");
           if (ydayValue !== "") {
-            if (xdayValue >= ydayValue) {
+            if (xdayValue > ydayValue) {
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
                   ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Y should be greater than X"));
+                  "Y should be greater than or equal to X"));
               $("#addbtn" + parent_id).addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
@@ -4898,12 +5040,12 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
       
-      if (ydayValue <= xdayValue) {
+      if (ydayValue < xdayValue) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X"));
+            "Y should be greater than or equal to X"));
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -4942,12 +5084,12 @@
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-      if (ydayValue <= xdayValue) {
+      if (ydayValue < xdayValue) {
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than X"));
+            "Y should be greater than or equal to X"));
         $("#addbtn" + parent_id).addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");
@@ -4960,15 +5102,15 @@
       if ($('.manually-anchor-option').length > 1) {
         var pre_parent = $("#" + parent_id).prev().attr("id").replace('AnchorDate','');
         var pyday = $("#ydays" + pre_parent).val();
-        var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+        var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-        if (xdayValue <= pydayValue) {
+        if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
               ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than Y of the current row and greater than Y of the previous row"));
+              "X should be less than or equal to Y of the current row and greater than or equal to Y of the previous row"));
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
