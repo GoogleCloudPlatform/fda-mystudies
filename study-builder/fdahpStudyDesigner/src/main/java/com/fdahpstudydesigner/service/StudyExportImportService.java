@@ -516,6 +516,7 @@ public class StudyExportImportService {
 
   public String saveFileToCloudStorage(StudyBo studyBo, List<String> insertSqlStatements) {
     StringBuilder content = new StringBuilder();
+    String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       for (String insertSqlStatement : insertSqlStatements) {
         if (StringUtils.isNotEmpty(insertSqlStatement)) {
@@ -536,8 +537,7 @@ public class StudyExportImportService {
           FdahpStudyDesignerUtil.getSignedUrlForExportedStudy(
               UNDER_DIRECTORY + PATH_SEPARATOR + studyBo.getCustomStudyId() + ".zip", 12);
 
-      String message =
-          studyDao.saveExportFilePath(studyBo.getId(), studyBo.getCustomStudyId(), signedUrl);
+      message = studyDao.saveExportFilePath(studyBo.getId(), studyBo.getCustomStudyId(), signedUrl);
 
       if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)
           && StringUtils.isNotEmpty(signedUrl)) {
@@ -548,7 +548,7 @@ public class StudyExportImportService {
       logger.error("Save file to cloud storage failed", e);
       return e.getMessage();
     }
-    return null;
+    return message;
   }
 
   public long getCRC32Checksum(byte[] bytes) {
