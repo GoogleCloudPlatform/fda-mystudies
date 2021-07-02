@@ -439,7 +439,7 @@ public class AppMetaDataDao {
                 session
                     .createQuery(
                         "from ConsentDto CDTO"
-                            + " where CDTO.customStudyId= :customStudyId ORDER BY CDTO.id DESC")
+                            + " where CDTO.customStudyId= :customStudyId ORDER BY CDTO.modifiedOn DESC")
                     .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                     .setMaxResults(1)
                     .uniqueResult();
