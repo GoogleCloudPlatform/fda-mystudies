@@ -14,8 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Force XCode 12.2
-        run: sudo xcode-select -switch /Applications/Xcode_12.2.app
+      - name: Force XCode 12.4
+        run: sudo xcode-select -switch /Applications/Xcode_12.4.app
       - name: Build
         run: |
           cd iOS/MyStudies
