@@ -4103,7 +4103,9 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.activeTaskId=:activeTaskId"
-                          + " order by QCFDTO.frequencyStartDate, QCFDTO.timePeriodFromDays")
+                          + " order by"
+                          + " case QCFDTO.xDaysSign when '1' then QCFDTO.timePeriodFromDays END DESC"
+                          + " case QCFDTO.xDaysSign when '0' then QCFDTO.timePeriodFromDays END ASC")
                   .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
@@ -4240,7 +4242,9 @@ public class ActivityMetaDataDao {
               .createQuery(
                   "from QuestionnairesCustomFrequenciesDto QCFDTO"
                       + " where QCFDTO.questionnairesId=:quesResId"
-                      + " ORDER BY QCFDTO.frequencyStartDate ASC, QCFDTO.frequencyStartTime")
+                      + " ORDER BY"
+                      + " case QCFDTO.xDaysSign when '1' then QCFDTO.timePeriodFromDays END DESC"
+                      + " case QCFDTO.xDaysSign when '0' then QCFDTO.timePeriodFromDays END ASC")
               .setString("quesResId", questionaire.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
@@ -4379,7 +4383,9 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questId"
-                          + " order by QCFDTO.frequencyStartDate, QCFDTO.timePeriodFromDays")
+                          + " ORDER BY"
+                          + " case QCFDTO.xDaysSign when '1' then QCFDTO.timePeriodFromDays END DESC"
+                          + " case QCFDTO.xDaysSign when '0' then QCFDTO.timePeriodFromDays END ASC")
                   .setString("questId", questionaire.getId())
                   .list();
           if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
@@ -4517,7 +4523,9 @@ public class ActivityMetaDataDao {
               .createQuery(
                   "from ActiveTaskCustomFrequenciesDto QCFDTO"
                       + " where QCFDTO.activeTaskId=:activeTaskId"
-                      + " ORDER BY QCFDTO.frequencyStartDate ASC, QCFDTO.frequencyStartTime")
+                      + " ORDER BY"
+                      + " case QCFDTO.xDaysSign when '1' then QCFDTO.timePeriodFromDays END DESC"
+                      + " case QCFDTO.xDaysSign when '0' then QCFDTO.timePeriodFromDays END ASC")
               .setString("activeTaskId", activeTaskDto.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
