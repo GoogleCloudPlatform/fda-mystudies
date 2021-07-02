@@ -4324,23 +4324,13 @@ public class StudyDAOImpl implements StudyDAO {
                 moveOrCopyCloudStorage(session, study, false, false, studyBo.getCustomStudyId());
               }
             } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
-              customId = copyCustomIdArray[0];
-              StudyBo studyOfImport =
-                  (StudyBo)
-                      session
-                          .createQuery(
-                              "From StudyBo SBO WHERE SBO.live=0 AND customStudyId=:customStudyId")
-                          .setString("customStudyId", customId)
-                          .uniqueResult();
-              if (studyOfImport != null) {
-                moveOrCopyCloudStorageForExportStudy(
-                    session,
-                    studyOfImport,
-                    false,
-                    false,
-                    studyBo.getCustomStudyId(),
-                    studyOfImport.getCustomStudyId() + "@Export");
-              }
+              moveOrCopyCloudStorageForExportStudy(
+                  session,
+                  dbStudyBo,
+                  false,
+                  false,
+                  studyBo.getCustomStudyId(),
+                  dbStudyBo.getDestinationCustomStudyId());
             }
 
           } else if (!dbStudyBo.getCustomStudyId().equals(studyBo.getCustomStudyId())) {
