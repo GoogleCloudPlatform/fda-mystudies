@@ -2,22 +2,24 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.service;
@@ -32,14 +34,17 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
 
-  private static Logger logger = Logger.getLogger(NotificationServiceImpl.class);
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(NotificationServiceImpl.class.getName());
 
   @Autowired private NotificationDAO notificationDAO;
 
@@ -47,8 +52,8 @@ public class NotificationServiceImpl implements NotificationService {
 
   @Override
   public String deleteNotification(
-      int notificationIdForDelete, SessionObject sessionObject, String notificationType) {
-    logger.info("NotificationServiceImpl - deleteNotification - Starts");
+      String notificationIdForDelete, SessionObject sessionObject, String notificationType) {
+    logger.entry("begin deleteNotification()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message =
@@ -57,13 +62,13 @@ public class NotificationServiceImpl implements NotificationService {
     } catch (Exception e) {
       logger.error("NotificationServiceImpl - deleteNotification - ERROR", e);
     }
-    logger.info("NotificationServiceImpl - deleteNotification - Ends");
+    logger.exit("deleteNotification() - Ends");
     return message;
   }
 
   @Override
-  public NotificationBO getNotification(int notificationId) {
-    logger.info("NotificationServiceImpl - getNotification - Starts");
+  public NotificationBO getNotification(String notificationId) {
+    logger.entry("begin getNotification()");
     NotificationBO notificationBO = null;
     try {
       notificationBO = notificationDAO.getNotification(notificationId);
@@ -84,17 +89,24 @@ public class NotificationServiceImpl implements NotificationService {
                         FdahpStudyDesignerConstants.DB_SDF_TIME,
                         FdahpStudyDesignerConstants.SDF_TIME))
                 : "");
+
+        notificationBO.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
       }
     } catch (Exception e) {
       logger.error("NotificationServiceImpl - getNotification - ERROR", e);
     }
-    logger.info("NotificationServiceImpl - getNotification - Ends");
+    logger.exit("getNotification() - Ends");
     return notificationBO;
   }
 
   @Override
-  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(int notificationId) {
-    logger.info("NotificationServiceImpl - getNotificationHistoryListNoDateTime() - Starts");
+  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(String notificationId) {
+    logger.entry("begin getNotificationHistoryListNoDateTime()");
     List<NotificationHistoryBO> notificationHistoryListNoDateTime = null;
     try {
       notificationHistoryListNoDateTime =
@@ -121,39 +133,39 @@ public class NotificationServiceImpl implements NotificationService {
     } catch (Exception e) {
       logger.error("NotificationServiceImpl - getNotificationHistoryListNoDateTime - ERROR", e);
     }
-    logger.info("NotificationServiceImpl - getNotificationHistoryListNoDateTime - Ends");
+    logger.exit("getNotificationHistoryListNoDateTime() - Ends");
     return notificationHistoryListNoDateTime;
   }
 
   @Override
-  public List<NotificationBO> getNotificationList(int studyId, String type) {
-    logger.info("NotificationServiceImpl - getNotificationList() - Starts");
+  public List<NotificationBO> getNotificationList(String studyId, String type) {
+    logger.entry("begin getNotificationList()");
     List<NotificationBO> notificationList = null;
     try {
       notificationList = notificationDAO.getNotificationList(studyId, type);
     } catch (Exception e) {
       logger.error("NotificationServiceImpl - getNotificationList() - ERROR ", e);
     }
-    logger.info("NotificationServiceImpl - getNotificationList() - Ends , e");
+    logger.exit("getNotificationList() - Ends");
     return notificationList;
   }
 
   @Override
-  public Integer saveOrUpdateOrResendNotification(
+  public String saveOrUpdateOrResendNotification(
       NotificationBO notificationBO,
       String notificationType,
       String buttonType,
       SessionObject sessionObject,
       String customStudyId) {
-    logger.info("NotificationServiceImpl - saveOrUpdateNotification - Starts");
-    int notificationId = 0;
+    logger.entry("begin saveOrUpdateOrResendNotification()");
+    String notificationId = null;
     try {
       if (notificationBO != null) {
         notificationId =
             notificationDAO.saveOrUpdateOrResendNotification(
                 notificationBO, notificationType, buttonType, sessionObject);
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)
-            && (notificationId != 0)) {
+            && (StringUtils.isNotEmpty(notificationId))) {
           studyDAO.markAsCompleted(
               notificationBO.getStudyId(),
               FdahpStudyDesignerConstants.NOTIFICATION,
@@ -165,7 +177,7 @@ public class NotificationServiceImpl implements NotificationService {
     } catch (Exception e) {
       logger.error("NotificationServiceImpl - saveOrUpdateNotification - ERROR", e);
     }
-    logger.info("NotificationServiceImpl - saveOrUpdateNotification - Ends");
+    logger.exit("saveOrUpdateOrResendNotification() - Ends");
     return notificationId;
   }
 
@@ -175,9 +187,9 @@ public class NotificationServiceImpl implements NotificationService {
 
   @Override
   public List<String> getGatwayAppList() {
-    logger.info("NotificationServiceImpl - saveOrUpdateNotification - Starts");
+    logger.entry("begin getGatwayAppList()");
     List<String> gatewayAppList = new ArrayList<>(new HashSet(notificationDAO.getGatwayAppList()));
-    logger.info("NotificationServiceImpl - saveOrUpdateNotification - Ends");
+    logger.exit("getGatwayAppList() - Ends");
     return gatewayAppList;
   }
 }

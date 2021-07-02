@@ -19,10 +19,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
@@ -36,13 +34,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -55,13 +53,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class EnrollmentTokenController {
 
-  private static final Logger logger = LoggerFactory.getLogger(EnrollmentTokenController.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(EnrollmentTokenController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @Autowired EnrollmentTokenService enrollmentTokenfService;
-
-  @Autowired CommonService commonService;
-
-  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Autowired private EnrollmentManagementUtil enrollManagementUtil;
 
@@ -76,7 +75,7 @@ public class EnrollmentTokenController {
       @Valid @RequestBody EnrollmentBean enrollmentBean,
       @Context HttpServletResponse response,
       @Context HttpServletRequest request) {
-    logger.info("ValidateEnrollmentTokenController validateEnrollmentToken() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     ErrorBean errorBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     StudyEntity studyDetails = enrollmentTokenfService.getStudyDetails(enrollmentBean.getStudyId());
@@ -133,7 +132,7 @@ public class EnrollmentTokenController {
     errorBean.setSiteId(siteId);
     errorBean.setMessage(ErrorResponseUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
-    logger.info("EnrollmentTokenController validateEnrollmentToken() - Ends ");
+    logger.exit(String.format(STATUS_LOG, errorBean.getCode()));
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
@@ -147,7 +146,7 @@ public class EnrollmentTokenController {
       @Valid @RequestBody EnrollmentBean enrollmentBean,
       @Context HttpServletResponse response,
       @Context HttpServletRequest request) {
-    logger.info("EnrollmentTokenController enrollParticipant() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     EnrollmentResponseBean respBean = null;
     ErrorBean errorBean = null;
     String tokenValue = "";
@@ -269,7 +268,7 @@ public class EnrollmentTokenController {
       enrollAuditEventHelper.logEvent(STUDY_ENROLLMENT_FAILED, auditRequest);
       throw e;
     }
-    logger.info("EnrollmentTokenController enrollParticipant() - Ends ");
+    logger.exit(String.format(STATUS_LOG, respBean.getCode()));
     return new ResponseEntity<>(respBean, HttpStatus.OK);
   }
 }

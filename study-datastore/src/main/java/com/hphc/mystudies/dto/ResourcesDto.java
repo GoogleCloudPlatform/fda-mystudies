@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -47,12 +48,13 @@ public class ResourcesDto implements Serializable {
   private static final long serialVersionUID = -5367238661369825902L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Column(name = "title")
   private String title;
@@ -97,13 +99,13 @@ public class ResourcesDto implements Serializable {
   private boolean status;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
@@ -130,21 +132,21 @@ public class ResourcesDto implements Serializable {
   private Integer sequenceNo;
 
   @Column(name = "anchor_date_id")
-  private Integer anchorDateId;
+  private String anchorDateId;
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
@@ -260,11 +262,11 @@ public class ResourcesDto implements Serializable {
     this.status = status;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -276,11 +278,11 @@ public class ResourcesDto implements Serializable {
     this.createdOn = createdOn;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -348,11 +350,11 @@ public class ResourcesDto implements Serializable {
     this.sequenceNo = sequenceNo;
   }
 
-  public Integer getAnchorDateId() {
+  public String getAnchorDateId() {
     return anchorDateId;
   }
 
-  public void setAnchorDateId(Integer anchorDateId) {
+  public void setAnchorDateId(String anchorDateId) {
     this.anchorDateId = anchorDateId;
   }
 }

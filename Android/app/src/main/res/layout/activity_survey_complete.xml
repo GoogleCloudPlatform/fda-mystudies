@@ -42,9 +42,9 @@
                 android:layout_above="@+id/success_img"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="30dp"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="30dp"
                 android:text="@string/surveycompletedmsg"
                 android:textColor="@color/colorPrimaryBlack" />
 

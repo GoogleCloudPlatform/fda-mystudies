@@ -48,7 +48,7 @@
           <tr>
             <th id="">Notification</th>
             <th id="" class="linkDis">Status</th>
-            <th id="" class="linkDis">ACTIONS</th>
+            <th id="" class="linkDis text-right" style="padding-right: 3% !important;">ACTIONS</th>
           </tr>
         </thead>
         <tbody>
@@ -58,7 +58,7 @@
                 <div class="dis-ellipsis lg-ellipsis">${fn:escapeXml(notification.notificationText)}</div>
               </td>
               <td>${notification.checkNotificationSendingStatus}</td>
-              <td>
+              <td class="text-right" style="padding-right: 3% !important;">
                 <span class="sprites_icon preview-g mr-lg notificationDetailsToView"
                       actionType="view"
                       notificationId="${notification.notificationId}"
@@ -140,7 +140,7 @@
       "info": false,
       "lengthChange": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "searching": false,
       "pageLength": 15,

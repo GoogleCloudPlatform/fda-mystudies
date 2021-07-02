@@ -908,8 +908,12 @@ template "project_data" {
             member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           },
           {
-            role   = "roles/storage.objectViewer"
-            member = "allUsers"
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:study-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          },
+          {
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
@@ -918,6 +922,10 @@ template "project_data" {
           #6# iam_members = [{
           #6#   role   = "roles/storage.objectViewer"
           #6#   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          #6# },
+          #6# {
+          #6#   role   = "roles/storage.objectAdmin"
+          #6#   member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           #6# }]
         },
       ]
@@ -1046,6 +1054,7 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     consent_bucket_name               = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
     study_resources_bucket_name       = "{{.prefix}}-{{.env}}-mystudies-study-resources"
+    study_export_import_bucket_name   = "{{.prefix}}-{{.env}}-mystudies-sql-import"
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
     base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
     studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"

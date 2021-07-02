@@ -25,8 +25,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +46,11 @@ public class ParticipantIdController {
 
   @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
-  private static final Logger logger = LoggerFactory.getLogger(ParticipantIdController.class);
+  private XLogger logger = XLoggerFactory.getXLogger(ParticipantIdController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @ApiOperation(value = "Generate participant id from response datastore")
   @PostMapping("/participant/add")
@@ -54,7 +58,7 @@ public class ParticipantIdController {
       @RequestHeader("appId") String applicationId,
       @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean,
       HttpServletRequest request) {
-    logger.info("ParticipantIdController addParticipantIdentifier() - starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     if (enrollmentTokenIdentifierBean == null
@@ -81,7 +85,7 @@ public class ParticipantIdController {
       auditRequest.setAppId(applicationId);
       auditRequest.setParticipantId(particpantUniqueIdentifier);
       responseServerAuditLogHelper.logEvent(PARTICIPANT_ID_GENERATED, auditRequest);
-      logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
+      logger.exit(String.format(STATUS_LOG, HttpStatus.OK.value()));
       return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);
     } catch (Exception e) {
       ErrorBean errorBean =

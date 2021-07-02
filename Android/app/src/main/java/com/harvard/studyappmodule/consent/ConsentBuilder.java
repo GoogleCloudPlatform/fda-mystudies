@@ -16,6 +16,7 @@
 package com.harvard.studyappmodule.consent;
 
 import android.content.Context;
+import android.text.Html;
 import com.harvard.R;
 import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
@@ -55,7 +56,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -68,7 +69,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -81,7 +82,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -94,7 +95,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -107,7 +108,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -120,7 +121,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -133,7 +134,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -146,7 +147,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -159,7 +160,7 @@ public class ConsentBuilder {
               consentSection.setTitle(consent.getVisualScreens().get(i).getTitle());
               consentSection.setContent(consent.getVisualScreens().get(i).getDescription());
               consentSection.setSummary(consent.getVisualScreens().get(i).getText());
-              consentSection.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+              consentSection.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
 
               visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getType());
               visualStep.setStepTitle(R.string.notxt);
@@ -176,7 +177,7 @@ public class ConsentBuilder {
           consentSection1.setTitle(consent.getVisualScreens().get(i).getTitle());
           consentSection1.setContent(consent.getVisualScreens().get(i).getDescription());
           consentSection1.setSummary(consent.getVisualScreens().get(i).getText());
-          consentSection1.setHtmlContent(consent.getVisualScreens().get(i).getHtml());
+          consentSection1.setHtmlContent(Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString());
           consentSection1.setCustomImageName("task_img2");
 
           visualStep = new ConsentVisualStep(consent.getVisualScreens().get(i).getTitle() + "_" + i);
@@ -250,7 +251,7 @@ public class ConsentBuilder {
       docBuilder.append("</div></br>");
       docBuilder.append("<div> <h2 style=\"color:#007cba;\"> " + pdftitle + "<h2> </div>");
       docBuilder.append("</div></br>");
-      docBuilder.append("<div>" + consent.getReview().getReviewHTML() + "</div>");
+      docBuilder.append("<div>" + Html.fromHtml(consent.getReview().getReviewHTML()).toString() + "</div>");
 
       ConsentDocumentStep documentStep = new ConsentDocumentStepCustom("review");
       documentStep.setConsentHTML(docBuilder.toString());
@@ -281,7 +282,7 @@ public class ConsentBuilder {
                   + consent.getVisualScreens().get(i).getTitle()
                   + "<h3> </div>");
           docBuilder.append("</br>");
-          docBuilder.append("<div>" + consent.getVisualScreens().get(i).getHtml() + "</div>");
+          docBuilder.append("<div>" + Html.fromHtml(consent.getVisualScreens().get(i).getHtml()).toString() + "</div>");
           docBuilder.append("</br>");
         }
         ConsentDocumentStep documentStep = new ConsentDocumentStepCustom("review");
@@ -301,7 +302,7 @@ public class ConsentBuilder {
     QuestionStepCustom firstName =
             new QuestionStepCustom(
                     context.getResources().getString(R.string.first_name),
-                    context.getResources().getString(R.string.first_name),
+                    context.getResources().getString(R.string.first_name_2),
                     textAnswerFormat);
     firstName.setPlaceholder(context.getResources().getString(R.string.required));
     firstName.setAnswerFormat1(textAnswerFormat);
@@ -310,7 +311,7 @@ public class ConsentBuilder {
     QuestionStepCustom lastName =
             new QuestionStepCustom(
                     context.getResources().getString(R.string.last_name),
-                    context.getResources().getString(R.string.last_name),
+                    context.getResources().getString(R.string.last_name_2),
                     textAnswerFormat);
     lastName.setPlaceholder(context.getResources().getString(R.string.required));
     lastName.setAnswerFormat1(textAnswerFormat);

@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -219,15 +220,7 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="p79-PH-HnS">
                                 <rect key="frame" x="13.666666666666657" y="307" width="363.66666666666674" height="139"/>
-                                <attributedString key="attributedText">
-                                    <fragment content="Collection of participant-provided information through a mobile device app for use in drup safety research">
-                                        <attributes>
-                                            <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <font key="NSFont" size="18" name="HelveticaNeue"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
+                                <attributedString key="attributedText"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G9Y-IJ-Woi">
@@ -272,6 +265,19 @@
                                     <action selector="visitWebsiteButtonAction:" destination="BSo-U7-UDQ" eventType="touchUpInside" id="yD7-RQ-N3L"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="txy-JD-gi0">
+                                <rect key="frame" x="13.666666666666657" y="307" width="363.66666666666674" height="139"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Collection of participant-provided information through a mobile device app for use in drup safety research">
+                                        <attributes>
+                                            <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <font key="NSFont" size="18" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Gay-ct-EKw"/>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -282,6 +288,7 @@
                             <constraint firstItem="zeM-Up-qJV" firstAttribute="width" secondItem="TSo-a1-wV3" secondAttribute="width" multiplier="120/375" id="A9r-LL-ah3"/>
                             <constraint firstItem="udp-H9-2Ar" firstAttribute="top" secondItem="TSo-a1-wV3" secondAttribute="top" id="EfT-jb-xIm"/>
                             <constraint firstItem="w0M-Dz-kSR" firstAttribute="centerX" secondItem="Gay-ct-EKw" secondAttribute="centerX" id="Eo9-Dp-UZJ"/>
+                            <constraint firstItem="txy-JD-gi0" firstAttribute="width" secondItem="p79-PH-HnS" secondAttribute="width" id="JDc-Uk-jTp"/>
                             <constraint firstItem="Gay-ct-EKw" firstAttribute="trailing" secondItem="d2e-7Y-Ifc" secondAttribute="trailing" id="Khk-sd-0R2"/>
                             <constraint firstItem="G9Y-IJ-Woi" firstAttribute="width" secondItem="TSo-a1-wV3" secondAttribute="width" multiplier="119/375" id="Ljt-mA-NFZ"/>
                             <constraint firstItem="d2e-7Y-Ifc" firstAttribute="leading" secondItem="Gay-ct-EKw" secondAttribute="leading" id="NBb-JO-eZa"/>
@@ -290,10 +297,12 @@
                             <constraint firstItem="w0M-Dz-kSR" firstAttribute="width" secondItem="TSo-a1-wV3" secondAttribute="width" multiplier="280/375" constant="50" id="S8d-i7-H7o"/>
                             <constraint firstItem="zeM-Up-qJV" firstAttribute="centerY" secondItem="TSo-a1-wV3" secondAttribute="centerY" multiplier="1.85307" priority="900" id="WWb-ZB-Uym"/>
                             <constraint firstItem="d2e-7Y-Ifc" firstAttribute="top" secondItem="TSo-a1-wV3" secondAttribute="top" id="biD-Zi-2wf"/>
+                            <constraint firstItem="txy-JD-gi0" firstAttribute="centerX" secondItem="p79-PH-HnS" secondAttribute="centerX" id="cvI-dE-ebW"/>
                             <constraint firstItem="G9Y-IJ-Woi" firstAttribute="centerY" secondItem="TSo-a1-wV3" secondAttribute="centerY" multiplier="1.28186" constant="-21" id="ddr-h8-28g"/>
                             <constraint firstItem="p79-PH-HnS" firstAttribute="width" secondItem="TSo-a1-wV3" secondAttribute="width" multiplier="345/375" constant="5" id="e3X-T8-lsk"/>
                             <constraint firstItem="p79-PH-HnS" firstAttribute="centerX" secondItem="Gay-ct-EKw" secondAttribute="centerX" constant="0.5" id="fCT-O8-pl1"/>
                             <constraint firstItem="udp-H9-2Ar" firstAttribute="leading" secondItem="Gay-ct-EKw" secondAttribute="leading" id="hQH-Fb-sBh"/>
+                            <constraint firstItem="txy-JD-gi0" firstAttribute="centerY" secondItem="p79-PH-HnS" secondAttribute="centerY" id="iV9-L2-K8E"/>
                             <constraint firstItem="zeM-Up-qJV" firstAttribute="height" secondItem="TSo-a1-wV3" secondAttribute="height" multiplier="30/667" id="kCG-Pq-TUo"/>
                             <constraint firstItem="5NQ-r5-mSz" firstAttribute="width" secondItem="TSo-a1-wV3" secondAttribute="width" multiplier="152/375" id="mOA-gE-yoQ"/>
                             <constraint firstAttribute="bottom" secondItem="udp-H9-2Ar" secondAttribute="bottom" id="mWB-Y2-ROT"/>
@@ -301,6 +310,7 @@
                             <constraint firstItem="p79-PH-HnS" firstAttribute="height" secondItem="TSo-a1-wV3" secondAttribute="height" multiplier="110/667" id="r7C-HX-KVM"/>
                             <constraint firstItem="w0M-Dz-kSR" firstAttribute="centerY" secondItem="TSo-a1-wV3" secondAttribute="centerY" multiplier="0.580195" constant="-1.5" id="rTP-Fm-aCR"/>
                             <constraint firstItem="p79-PH-HnS" firstAttribute="centerY" secondItem="TSo-a1-wV3" secondAttribute="centerY" multiplier="0.892054" id="s4b-3V-qdY"/>
+                            <constraint firstItem="txy-JD-gi0" firstAttribute="height" secondItem="p79-PH-HnS" secondAttribute="height" id="tNk-SV-Wdf"/>
                             <constraint firstItem="5NQ-r5-mSz" firstAttribute="centerY" secondItem="TSo-a1-wV3" secondAttribute="centerY" multiplier="1.65967" id="u0X-9x-dyp"/>
                             <constraint firstAttribute="bottom" secondItem="d2e-7Y-Ifc" secondAttribute="bottom" id="uPy-JZ-QQx"/>
                             <constraint firstItem="Gay-ct-EKw" firstAttribute="trailing" secondItem="udp-H9-2Ar" secondAttribute="trailing" id="yux-Ra-VYZ"/>
@@ -314,6 +324,7 @@
                         <outlet property="imageViewStudy" destination="d2e-7Y-Ifc" id="47I-kg-kwD"/>
                         <outlet property="labelDescription" destination="p79-PH-HnS" id="y7b-ds-QJQ"/>
                         <outlet property="labelTitle" destination="w0M-Dz-kSR" id="Qkd-Oc-wCb"/>
+                        <outlet property="textViewDescription" destination="txy-JD-gi0" id="N8q-Ph-7nF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r3M-3Q-4Mx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -351,9 +362,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jau-h2-6iA">
                                 <rect key="frame" x="0.0" y="352.66666666666674" width="390" height="457.33333333333326"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="cQm-5R-c9C">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="cQm-5R-c9C">
                                         <rect key="frame" x="18.333333333333343" y="18.333333333333329" width="353.33333333333326" height="228.33333333333337"/>
-                                        <string key="text">The data captured from pregnant women (e.g. medical product exposures, outcomes etc.) will be linked with data from an organization, such as a clinical practise, that has access to electronic health data and this will help provide insights into the efficacy and safety of medical products.</string>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="19"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -428,6 +438,19 @@
                                             <constraint firstAttribute="trailing" secondItem="mud-v9-9iS" secondAttribute="trailing" constant="8" id="qRX-9K-BQY"/>
                                         </constraints>
                                     </view>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UqP-4S-8rP">
+                                        <rect key="frame" x="18.333333333333343" y="18.333333333333329" width="353.33333333333326" height="228.33333333333337"/>
+                                        <attributedString key="attributedText">
+                                            <fragment>
+                                                <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                <attributes>
+                                                    <color key="NSColor" systemColor="labelColor"/>
+                                                    <font key="NSFont" metaFont="system" size="14"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -439,9 +462,14 @@
                                     <constraint firstItem="lIT-J9-U7S" firstAttribute="centerX" secondItem="jau-h2-6iA" secondAttribute="centerX" id="QZe-Nd-phq"/>
                                     <constraint firstItem="cQm-5R-c9C" firstAttribute="centerX" secondItem="jau-h2-6iA" secondAttribute="centerX" id="SBl-U4-Ye1"/>
                                     <constraint firstItem="lIT-J9-U7S" firstAttribute="height" secondItem="jau-h2-6iA" secondAttribute="height" multiplier="40/380" id="SQw-yv-nCc"/>
+                                    <constraint firstItem="UqP-4S-8rP" firstAttribute="centerX" secondItem="cQm-5R-c9C" secondAttribute="centerX" id="XTS-x5-uZc"/>
+                                    <constraint firstItem="UqP-4S-8rP" firstAttribute="width" secondItem="cQm-5R-c9C" secondAttribute="width" id="c60-MM-3hr"/>
                                     <constraint firstAttribute="trailing" secondItem="JGI-bD-7Bw" secondAttribute="trailing" id="fEf-hF-kd5"/>
                                     <constraint firstAttribute="bottom" secondItem="JGI-bD-7Bw" secondAttribute="bottom" id="gWL-YQ-ctc"/>
+                                    <constraint firstItem="UqP-4S-8rP" firstAttribute="centerX" secondItem="jau-h2-6iA" secondAttribute="centerX" id="i5t-jY-g9y"/>
                                     <constraint firstItem="cQm-5R-c9C" firstAttribute="height" secondItem="jau-h2-6iA" secondAttribute="height" multiplier="190/380" id="pJp-PF-mlP"/>
+                                    <constraint firstItem="UqP-4S-8rP" firstAttribute="height" secondItem="cQm-5R-c9C" secondAttribute="height" id="viu-BH-9hE"/>
+                                    <constraint firstItem="UqP-4S-8rP" firstAttribute="centerY" secondItem="cQm-5R-c9C" secondAttribute="centerY" id="vsa-4S-KSP"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -477,6 +505,7 @@
                         <outlet property="imageViewStudy" destination="yw2-aH-SLQ" id="QEU-LZ-zOP"/>
                         <outlet property="labelDescription" destination="cQm-5R-c9C" id="SNl-aY-2nJ"/>
                         <outlet property="labelTitle" destination="3EU-2E-MZV" id="3vW-F5-GXh"/>
+                        <outlet property="textViewDescription" destination="UqP-4S-8rP" id="6E4-KP-FcL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zXt-yf-Ky1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1962,5 +1991,8 @@
         <image name="staticIcon1" width="24" height="24"/>
         <image name="surveyIcon" width="21.333333969116211" height="21.333333969116211"/>
         <image name="watchVideo" width="79.666664123535156" height="18"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>

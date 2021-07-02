@@ -45,8 +45,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,7 +62,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LoginController {
 
-  private static Logger logger = Logger.getLogger(LoginController.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(LoginController.class.getName());
 
   @Autowired private DashBoardAndProfileService dashBoardAndProfileService;
 
@@ -71,11 +72,12 @@ public class LoginController {
 
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
-    logger.info("LoginController - addPassword() - Starts");
+    logger.entry("begin addPassword()");
     ModelAndView mv = new ModelAndView("redirect:sessionOut.do");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String sucMsg = "";
     try {
+
       HttpSession session = request.getSession(false);
       SessionObject sesObj =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -112,7 +114,8 @@ public class LoginController {
     } catch (Exception e) {
       logger.error("LoginController - addPassword() - ERROR ", e);
     }
-    logger.info("LoginController - addPassword() - Ends");
+
+    logger.exit("addPassword() - Ends");
     return mv;
   }
 
@@ -124,7 +127,7 @@ public class LoginController {
 
   @RequestMapping(value = "/profile/changeExpiredPassword.do")
   public ModelAndView changeExpiredPassword(HttpServletRequest request) {
-    logger.info("LoginController - changeExpiredPassword() - Starts");
+    logger.entry("begin changeExpiredPassword()");
     ModelAndView mv = new ModelAndView("loginPage");
     String errMsg = null;
     String sucMsg = null;
@@ -145,16 +148,16 @@ public class LoginController {
     } catch (Exception e) {
       logger.error("LoginController - changeExpiredPassword() - ERROR ", e);
     }
-    logger.info("LoginController - changeExpiredPassword() - Ends");
+    logger.exit("changeExpiredPassword() - Ends");
     return mv;
   }
 
   @RequestMapping(value = "/changePassword.do")
   public ModelAndView changePassword(HttpServletRequest request) {
-    logger.info("LoginController - changePassword() - Starts");
+    logger.entry("begin changePassword()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;
-    int userId = 0;
+    String userId;
     ModelAndView mv = new ModelAndView("redirect:login.do");
     SessionObject sesObj = null;
     HttpSession session = null;
@@ -186,7 +189,7 @@ public class LoginController {
     } catch (Exception e) {
       logger.error("LoginController - changePassword() - ERROR ", e);
     }
-    logger.info("LoginController - changePassword() - Ends");
+    logger.exit("changePassword() - Ends");
     return mv;
   }
 
@@ -226,7 +229,7 @@ public class LoginController {
 
   @RequestMapping(value = "/forgotPassword.do")
   public ModelAndView forgotPassword(HttpServletRequest request) {
-    logger.info("LoginController - forgotPassword() - Starts");
+    logger.entry("begin forgotPassword()");
     ModelAndView mav = new ModelAndView("redirect:login.do");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -245,7 +248,7 @@ public class LoginController {
     } catch (Exception e) {
       logger.error("LoginController - forgotPassword() - ERROR ", e);
     }
-    logger.info("LoginController - forgotPassword() - Ends");
+    logger.exit("forgotPassword() - Ends");
     return mav;
   }
 
@@ -272,24 +275,24 @@ public class LoginController {
 
   @RequestMapping("/privacyPolicy.do")
   public ModelAndView privacyPolicy() {
-    logger.info("LoginController - privacyPolicy() - Starts");
+    logger.entry("begin privacyPolicy()");
     ModelMap map = new ModelMap();
-    logger.info("LoginController - privacyPolicy() - Ends");
+    logger.exit("privacyPolicy() - Ends");
     return new ModelAndView("privacypolicy", map);
   }
 
   @RequestMapping("/terms.do")
   public ModelAndView termsAndConditions() {
-    logger.info("LoginController - termsAndConditions() - Starts");
+    logger.entry("begin termsAndConditions()");
     ModelMap map = new ModelMap();
-    logger.info("LoginController - termsAndConditions() - Ends");
+    logger.exit("termsAndConditions() - Ends");
     return new ModelAndView("termsAndCondition", map);
   }
 
   @RequestMapping("/validateSecurityToken.do")
   public ModelAndView securityTokenValidate(HttpServletRequest request) {
     ModelMap map = new ModelMap();
-    logger.info("LoginController - createPassword() - Starts");
+    logger.entry("begin createPassword()");
     String securityToken = null;
     boolean checkSecurityToken = false;
     UserBO userBO = null;
@@ -317,7 +320,7 @@ public class LoginController {
     } catch (Exception e) {
       logger.error("LoginController - createPassword() - ERROR ", e);
     }
-    logger.info("LoginController - createPassword() - Ends");
+    logger.exit("createPassword() - Ends");
     return mv;
   }
 
@@ -327,7 +330,7 @@ public class LoginController {
       HttpServletResponse response,
       @RequestParam(value = "msg", required = false) String msg,
       @RequestParam(value = "sucMsg", required = false) String sucMsg) {
-    logger.info("LoginController - sessionOut() - Starts");
+    logger.entry("begin sessionOut()");
     SessionObject sesObj = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     sesObj =
@@ -351,7 +354,7 @@ public class LoginController {
       auditRequest.setDestination(USER_SIGNOUT_FAILED.getDestination().getValue());
       auditLogEventHelper.logEvent(USER_SIGNOUT_FAILED, auditRequest);
     }
-    logger.info("LoginController - sessionOut() - Ends");
+    logger.exit("sessionOut() - Ends");
     return new ModelAndView("redirect:login.do");
   }
 
@@ -362,21 +365,21 @@ public class LoginController {
 
   @RequestMapping("/termsAndCondition.do")
   public ModelAndView termsAndCondition() {
-    logger.info("LoginController - termsAndCondition() - Starts");
+    logger.entry("begin termsAndCondition()");
     ModelMap map = new ModelMap();
-    logger.info("LoginController - termsAndCondition() - Ends");
+    logger.exit("termsAndCondition() - Ends");
     return new ModelAndView("termsAndCondition", map);
   }
 
   @RequestMapping(value = "/unauthorized.do")
   public ModelAndView unauthorized() {
-    logger.info("LoginController - unauthorized()");
+    logger.entry("begin unauthorized()");
     return new ModelAndView("unauthorized");
   }
 
   @RequestMapping("/validateEmailChangeVerification.do")
   public ModelAndView validateEmailChangeVerification(HttpServletRequest request) {
-    logger.info("LoginController - addPassword() - Starts");
+    logger.entry("begin addPassword()");
     String securityToken = null;
     ModelAndView mv = new ModelAndView("redirect:login.do");
     try {
@@ -388,13 +391,13 @@ public class LoginController {
     } catch (Exception e) {
       logger.error("LoginController - addPassword() - ERROR ", e);
     }
-    logger.info("LoginController - addPassword() - Ends");
+    logger.exit("addPassword() - Ends");
     return mv;
   }
 
   @RequestMapping("/createPassword.do")
   public ModelAndView validateSecurityToken(HttpServletRequest request) {
-    logger.info("LoginController - createPassword() - Starts");
+    logger.entry("begin createPassword()");
     ModelAndView mv = new ModelAndView("redirect:login.do");
     Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
@@ -433,7 +436,7 @@ public class LoginController {
     } catch (Exception e) {
       logger.error("LoginController - createPassword() - ERROR ", e);
     }
-    logger.info("LoginController - createPassword() - Ends");
+    logger.exit("createPassword() - Ends");
     return mv;
   }
 }

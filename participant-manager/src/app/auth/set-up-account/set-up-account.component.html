@@ -113,6 +113,23 @@
           </div>
         </div>
       </section>
+      <div
+        class="col-xs-6 col-md-6 p-1 p-lg-0 cursor__pointer passCriteria"
+        data-toggle="tooltip"
+        title="{{ passCriteria }}"
+      >
+        <a class="subheader__title float-right">
+          <span>
+            <img
+              class="mr-xs helpout_svg cursor__pointer"
+              src="assets/svgs/help_outline.svg"
+              alt="Go back"
+            />
+          </span>
+
+          <span class="subheader__title font12">Password criteria</span>
+        </a>
+      </div>
       <h2 class="subheader__title mb-sm">Create password</h2>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="row">
@@ -141,12 +158,6 @@
                 *ngIf="f.password.dirty || f.password.touched"
               >
                 <div *ngIf="f.password.dirty">
-                  <meter
-                    low="{{ passwordMeterLow }}"
-                    optimum="{{ passwordMeterOptimum }}"
-                    high="{{ passwordMeterHigh }}"
-                    value="{{ passwordMeterValue }}"
-                  ></meter>
                   <span
                     [ngClass]="
                       meterStatus == 'Weak'
@@ -160,19 +171,32 @@
                   >
                     {{ meterStatus }}
                   </span>
+                  <meter
+                    low="{{ passwordMeterLow }}"
+                    optimum="{{ passwordMeterOptimum }}"
+                    high="{{ passwordMeterHigh }}"
+                    value="{{ passwordMeterValue }}"
+                  ></meter>
                 </div>
-                <div *ngIf="f.password.errors?.passwordlength">
+                <div
+                  class="text-left"
+                  *ngIf="f.password.errors?.passwordlength"
+                >
                   {{ getError("EC_0084") }}
                 </div>
                 <div
+                  class="text-left"
                   *ngIf="f.password.errors?.consecutiveCharactErrorwhitespace"
                 >
                   {{ getError("EC_0081") }}
                 </div>
-                <div *ngIf="f.password.errors?.userNameError">
+                <div class="text-left" *ngIf="f.password.errors?.userNameError">
                   {{ getError("EC_0082") }}
                 </div>
-                <div *ngIf="f.password.errors?.serviceNameError">
+                <div
+                  class="text-left"
+                  *ngIf="f.password.errors?.serviceNameError"
+                >
                   {{ getError("EC_0083") }}
                 </div>
                 <!-- <span
@@ -183,7 +207,7 @@
                   lower case, upper case, numeric and special characters.
                 </span> -->
                 <span
-                  class="help-block with-errors error__msg"
+                  class="help-block with-errors error__msg text-left"
                   *ngIf="f.password.errors?.required"
                 >
                   Enter a password

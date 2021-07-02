@@ -35,31 +35,36 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/seekbarlayout"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/maxlayout"
+            android:layout_height="wrap_content">
+
         <com.harvard.utils.VerticalSeekBar
             android:id="@+id/seekbar"
             android:layout_width="wrap_content"
             android:layout_height="300dp"
-            android:layout_below="@id/maxlayout"
-            android:layout_centerHorizontal="true"
             android:thumb="@drawable/thumb_image"/>
 
         <LinearLayout
             android:id="@+id/scaleValue"
             android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            android:layout_toRightOf="@+id/seekbar"
-            android:layout_below="@id/maxlayout"
+            android:layout_height="280dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:orientation="vertical">
 
+        </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/minlayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/seekbar"
-            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/seekbarlayout"
             android:orientation="vertical"
             android:visibility="gone">
 

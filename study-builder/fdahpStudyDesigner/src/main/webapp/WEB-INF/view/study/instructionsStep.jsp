@@ -12,16 +12,16 @@
              id="basicInfoFormId" method="post" data-toggle="validator" role="form">
     <div class="right-content-head">
       <div class="text-right">
-        <div class="black-md-f text-uppercase dis-line pull-left line34">
+        <div class="black-md-f dis-line pull-left line34">
           <span
               class="mr-xs cur-pointer"
               onclick="goToBackPage(this);"><img
               src="../images/icons/back-b.png" alt=""/></span>
-          <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Instruction Step</c:if>
-          <c:if test="${actionTypeForQuestionPage == 'view'}">View Instruction Step <c:set
+          <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit instruction step</c:if>
+          <c:if test="${actionTypeForQuestionPage == 'view'}">View instruction step <c:set
               var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
           </c:if>
-          <c:if test="${actionTypeForQuestionPage == 'add'}">Add Instruction Step</c:if>
+          <c:if test="${actionTypeForQuestionPage == 'add'}">Add instruction step</c:if>
         </div>
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn" onclick="goToBackPage(this);">
@@ -64,7 +64,7 @@
           <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
                  name="questionnairesStepsBo.stepShortTitle" id="shortTitleId"
                  value="${fn:escapeXml(instructionsBo.questionnairesStepsBo.stepShortTitle)}"
-                 required="required"
+                 required="required" data-error="Please fill out this field" 
                  maxlength="15" <c:if
               test="${not empty instructionsBo.questionnairesStepsBo.isShorTitleDuplicate && (instructionsBo.questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
           <div class="help-block with-errors red-txt"></div>
@@ -81,19 +81,19 @@
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" required name="instructionTitle"
+        <input type="text" class="form-control" required data-error="Please fill out this field"  name="instructionTitle"
                id="instructionTitle"
                value="${fn:escapeXml(instructionsBo.instructionTitle)}" maxlength="250"/>
         <div class="help-block with-errors red-txt"></div>
       </div>
       <div class="clearfix"></div>
 
-      <div class="gray-xs-f mb-xs">Instruction text
+      <div class="gray-xs-f mb-xs">Instruction text (500 characters max)
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
         <textarea class="form-control" rows="5" id="summernote" name="instructionText"
-                  required
+                  required data-error="Please fill out this field" 
                   maxlength="500">${instructionsBo.instructionText}</textarea>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -107,14 +107,14 @@
           </div>
           <div class="form-group">
             <select name="questionnairesStepsBo.destinationStep" id="destinationStepId"
-                    data-error="Please choose one title" class="selectpicker" required>
+                    data-error="Please choose one title" class="selectpicker" required data-error="Please fill out this field" >
               <c:forEach items="${destinationStepList}" var="destinationStep">
                 <option
                     value="${destinationStep.stepId}" ${instructionsBo.questionnairesStepsBo.destinationStep eq destinationStep.stepId ? 'selected' :''}>
                   Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>
               </c:forEach>
               <option
-                  value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq 0 ? 'selected' :''}>
+                   value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
                 Completion Step
               </option>
             </select>
@@ -147,10 +147,37 @@
     	validatesummernote();
       });
   //summernote editor initialization
+ 	var maxwords=500;
     $('#summernote')
         .summernote(
             {
               placeholder: '',
+              callbacks: {
+                  onKeydown: function(e) {
+                    var t = e.currentTarget.innerText;
+                    if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                   onKeyup: function(e) {
+                      var t = e.currentTarget.innerText;
+                     if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                  onPaste: function(e) {
+                	  var t = e.currentTarget.innerText;
+                      var bufferText = ((e.originalEvent || e).clipboardData || 
+                                         window.clipboardData).getData('Text');
+                      e.preventDefault();
+                      var all = t + bufferText;
+                      var array = bufferText.slice(0, (maxwords-t.length))
+                      document.execCommand('insertText', false, array);
+                 
+               	  }
+     		  },
               tabsize: 2,
               height: 200,
               toolbar: [
@@ -177,6 +204,7 @@
     $('[data-toggle="tooltip"]').tooltip();
     $("#doneId").click(function () {
       //$("#doneId").attr("disabled", true);
+      validateTitle();
       validatesummernote();
            validateShortTitle('', function (val) {
         if (val) {
@@ -198,9 +226,18 @@
   function saveIns() {
     $("body").addClass("loading");
     $("#saveId").attr("disabled", true);
-    validatesummernote();
+    
+    var valid = validatesummernote();
+    var richTextVal = $('#summernote').val();
+    if (null == richTextVal || richTextVal == '' || typeof richTextVal == 'undefined' || richTextVal == '<p><br></p>'){
+    	valid = true;
+ 	       $('#summernote').attr('required', false);
+ 		   $('#summernote').parent().removeClass("has-danger").removeClass("has-error");
+ 		   $('#summernote').parent().find(".help-block").html("");
+    }
+    
     validateShortTitle('', function (val) {
-      if (val && validatesummernote()) {
+      if (val && valid) {
         saveInstruction();
       } else {
         $("#saveId").attr("disabled", false);
@@ -209,6 +246,7 @@
       
     });
   }
+  
   function validatesummernote(){
 	  var richTextVal = $('#summernote').val();
 	  if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
@@ -228,7 +266,7 @@
 	       .find(".help-block")
 	       .empty()
 	       .append(
-	           '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+	           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
 	   return false;
 	 } else {
 	   $('#summernote').attr(
@@ -243,6 +281,18 @@
 	   return true;
 	 }
 	}
+  
+  function validateTitle(){
+	  var titleValue = $('#instructionTitle').val();
+      if (null == titleValue || titleValue == '' || typeof titleValue == 'undefined'){
+    	  $('#instructionTitle')
+	       .parent()
+	       .find(".help-block")
+	       .append(
+	           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
+      }
+  }
+  
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var questionnaireId = $("#questionnaireId").val();
@@ -280,7 +330,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -298,7 +348,7 @@
     var instruction_id = $("#id").val();
     var questionnaire_id = $("#questionnaireId").val();
     var instruction_title = $("#instructionTitle").val();
-    var instruction_text = $("#summernote").val();
+    var instruction_text = $('#summernote').summernote('code');
 
     var shortTitle = $("#shortTitleId").val();
     var destinationStep = $("#destinationStepId").val();
@@ -337,7 +387,7 @@
             var stepId = data.stepId;
             $("#id").val(instructionId);
             $("#stepId").val(stepId);
-            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $("#saveId").attr("disabled", false);
             $('#alertMsg').show();
@@ -365,7 +415,7 @@
       if (!$('#shortTitleId')[0].checkValidity()) {
         $("#shortTitleId").parent().addClass('has-error has-danger').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "This is a required field."));
+            "This is a required field"));
       }
     }
   }

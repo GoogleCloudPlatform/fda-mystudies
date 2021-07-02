@@ -762,6 +762,10 @@ table.dataTable thead th, table.dataTable thead td {
   outline: none;
 }
 
+	tbody > tr:last-child > td {	
+  border-bottom: 1px solid #ddd;	
+}
+
 #comprehension_list thead th:last-child, .dragtbl thead th:last-child, .tbl_rightalign thead th:last-child {
   padding-right: 0px;
 }
@@ -803,7 +807,7 @@ select.bs-select-hidden, select.selectpicker {
 
 .bootbox .modal-dialog {
   width: 480px !important;
-  text-align: center;
+  text-align: center !important;
 }
 
 .bootbox .modal-dialog .modal-content .modal-footer .btn-default {
@@ -2219,10 +2223,6 @@ option:first-child {
   text-transform: capitalize !important;
 }
 
-.filter-option {
-  text-transform: capitalize;
-}
-
 .numeric__row > span {
   width: 50px;
 }
@@ -2710,8 +2710,21 @@ td span.eye-inc:hover {
 }
     
     
+   
 .tooltip > .tooltip-inner {
 text-align: left !important;
 align-items: left !important;
-width:100%
+max-width: 400px !important;
+width:100% !important;
 }
+
+.dataTables_empty {
+	font-size: 12px;
+    color: #7c868d;
+    padding-top: 12px !important;
+    }
+.tooltip-inner {
+    max-width: 400px !important;
+}
+
+    

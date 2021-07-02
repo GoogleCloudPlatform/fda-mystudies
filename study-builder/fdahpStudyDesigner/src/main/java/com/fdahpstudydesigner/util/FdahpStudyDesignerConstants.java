@@ -13,22 +13,22 @@ public class FdahpStudyDesignerConstants {
 
   public static final String ACTION_DEACTIVATE = "deactivateId";
   public static final String ACTION_DEACTIVATE_SUCCESS_MSG =
-      "The study has been successfully deactivated.";
+      "The study has been successfully deactivated";
 
   public static final String ACTION_LUNCH = "lunchId";
   public static final String ACTION_LUNCH_SUCCESS_MSG =
-      "The study has been launched and is now available to participants in the mobile applications.";
+      "The study has been launched and is now available to participants in the mobile applications";
   public static final String ACTION_ON = "actionOn";
   public static final String ACTION_PAGE = "actionPage";
   public static final String ACTION_PAUSE = "pauseId";
-  public static final String ACTION_PAUSE_SUCCESS_MSG = "The study has been paused.";
+  public static final String ACTION_PAUSE_SUCCESS_MSG = "The study has been paused";
   // Action buttons
   public static final String ACTION_PUBLISH = "publishId";
   // Action success Messages
   public static final String ACTION_PUBLISH_SUCCESS_MSG =
       "The study has been published as an upcoming study.";
   public static final String ACTION_RESUME = "resumeId";
-  public static final String ACTION_RESUME_SUCCESS_MSG = "The study has been resumed.";
+  public static final String ACTION_RESUME_SUCCESS_MSG = "The study has been resumed";
 
   public static final String ACTION_SUC_MSG = "actionSucMsg";
   public static final String ACTION_TYPE = "actionType";
@@ -41,7 +41,7 @@ public class FdahpStudyDesignerConstants {
   public static final String ACTION_UNPUBLISH_SUCCESS_MSG =
       "The study has been removed from the list of upcoming studies.";
   public static final String ACTION_UPDATES = "updatesId";
-  public static final String ACTION_UPDATES_SUCCESS_MSG = "Study updates have been published.";
+  public static final String ACTION_UPDATES_SUCCESS_MSG = "Study updates have been published";
 
   public static final String ACTIVE = "active";
   public static final int ACTIVE_STATUS = 1;
@@ -156,7 +156,7 @@ public class FdahpStudyDesignerConstants {
   public static final String FDA_ENV_UATL = "uat";
 
   public static final String FDA_SALT = "BTCSoft";
-  public static final String FETAL_KICK_COUNTER = "Fetal Kick Counter";
+  public static final String FETAL_KICK_COUNTER = "Fetal kick counter";
 
   public static final String FORM_ID = "formId";
   public static final String FORM_STEP = "Form";
@@ -293,7 +293,7 @@ public class FdahpStudyDesignerConstants {
   public static final String QUESTIONSTEP_SAVED = "Question step saved";
   public static final String REDIRECT_SESSION_PARAM_NAME = "sessionUserId=";
   public static final String REFERENCE_TYPE_CATEGORIES = "Categories";
-  public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research Sponsors";
+  public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research sponsors";
   public static final String REQUIRED_DATE_TIME = "MM/dd/yyyy HH:mm";
   public static final String REQUIRED_DATE_TIME_FOR_DATE_DIFF = "MM/dd/yyyy HH:mm:ss";
   public static final String REQUIRED_TIME = "HH:mm";
@@ -352,7 +352,7 @@ public class FdahpStudyDesignerConstants {
   // Active task attribute name
   public static final String SHORT_TITLE = "shortTitle";
 
-  public static final String SPATIAL_SPAN_MEMORY = "Spatial Span Memory";
+  public static final String SPATIAL_SPAN_MEMORY = "Spatial span memory";
   public static final String SPECIALCHARACTERS = "specialcharacters";
   public static final String STAT_INFO_LIST = "statisticsInfoList";
   public static final boolean STATUS_ACTIVE = true;
@@ -393,7 +393,7 @@ public class FdahpStudyDesignerConstants {
   public static final String SUC_MSG = "sucMsg";
   public static final String SUCCESS = "SUCCESS";
 
-  public static final String TOWER_OF_HANOI = "Tower Of Hanoi";
+  public static final String TOWER_OF_HANOI = "Tower of hanoi";
   public static final String UI_DISPLAY_DATE = "EEE, MMM dd, yyyy";
   public static final String UI_SDF_DATE = "MM/dd/yyyy";
   public static final String UI_SDF_DATE_FORMAT = "dd/MM/yyyy";
@@ -417,7 +417,7 @@ public class FdahpStudyDesignerConstants {
 
   public static final String YES = "Yes";
 
-  public static final String ANCHOR_TYPE_ENROLLMENTDATE = "Enrollment Date";
+  public static final String ANCHOR_TYPE_ENROLLMENTDATE = "Enrollment date";
   public static final String SCHEDULETYPE_REGULAR = "Regular";
   public static final String SCHEDULETYPE_ANCHORDATE = "AnchorDate";
   public static final String ANCHOR_ERROR_MSG =
@@ -437,6 +437,47 @@ public class FdahpStudyDesignerConstants {
 
   public static final String SUPER_ADMIN_PERMISSIONS =
       "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW,ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT,ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW";
+
+  public static final String PATH_SEPARATOR = "/";
+
+  public static final String STUDIES = "studies";
+
+  public static final String DEFAULT_IMAGES = "defaultImages";
+
+  public static final String EXPORT_SUCCESS_MSG = "Study exported successfully";
+
+  public static final String IMPORT_SUCCESS_MSG = "Study imported successfully";
+
+  public static final String STUDY_REPLICATTE_SUCCESS_MSG = "Study replicated successfully";
+
+  public static final String IMPORT_FAILURE_MSG = "Import failed";
+
+  public static final String EXPORT_FAILURE_MSG = "Export failed. Please try again later.";
+
+  public static final String STUDY_REPLICATTE_FAILURE_MSG =
+      "Study replication failed. Please try again later.";
+
+  public static final String INVALID_URL = "Please enter a valid URL";
+
+  public static final String FAILURE_EXPORT_STUDY_MESSAGE =
+      "Sorry, a technical error occurred and the study could not be exported.";
+
+  public static final String IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE =
+      "Import failed due to anomalies detected in the exported study file. Please try again with a new signed URL generated at the point of export in the origin Study Builder.";
+
+  public static final String IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION =
+      "Import failed. Studies can only be imported from compatible Study Builder applications (running a platform release version of 2.0.6 or higher, and lower than or equal to the destination platform version  which is";
+
+  public static final String IMPORT_FAILED_DUE_TO_ALREADY_USED_URL =
+      "The URL has already been used to import a study into this Study Builder. Use the copy-into-new action to replicate the study or use a new URL generated at the point of study export.";
+
+  public static final String STUDY_PRE_LUNCH_VERSION = "0.0";
+
+  public static final String NA = "NA";
+
+  public static final String DEVICE_ANDROID = "android";
+
+  public static final String DEVICE_IOS = "ios";
 
   private FdahpStudyDesignerConstants() {
     // Do nothing

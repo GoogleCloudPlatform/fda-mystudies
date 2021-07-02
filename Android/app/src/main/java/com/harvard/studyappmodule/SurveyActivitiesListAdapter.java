@@ -149,8 +149,8 @@ public class SurveyActivitiesListAdapter
   }
 
   @Override
-  public void onBindViewHolder(final Holder holder, final int position) {
-    final ArrayList<String> mScheduledTime = new ArrayList<>();
+  public void onBindViewHolder(final Holder holder, int position) {
+   final ArrayList<String> mScheduledTime = new ArrayList<>();
     timePos.add(-1);
     GradientDrawable bgShape = (GradientDrawable) holder.process.getBackground();
     if (status
@@ -235,22 +235,22 @@ public class SurveyActivitiesListAdapter
               .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
         holder.run.setVisibility(View.GONE);
       } else {
-        if (currentRunStatusForActivities.get(position).getCurrentRunId() == 0) {
+        if (currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
           holder.process.setVisibility(View.GONE);
         }
         holder.run.setVisibility(View.VISIBLE);
         holder.run.setText(
                 context.getResources().getString(R.string.run)
                         + ": "
-                        + currentRunStatusForActivities.get(position).getCurrentRunId()
-                        + "/"
-                        + currentRunStatusForActivities.get(position).getTotalRun()
+                        + currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId()
+                        + " of "
+                        + currentRunStatusForActivities.get(holder.getAdapterPosition()).getTotalRun()
                         + ", "
-                        + currentRunStatusForActivities.get(position).getCompletedRun()
+                        + currentRunStatusForActivities.get(holder.getAdapterPosition()).getCompletedRun()
                         + " "
                         + context.getResources().getString(R.string.done2)
                         + ", "
-                        + currentRunStatusForActivities.get(position).getMissedRun()
+                        + currentRunStatusForActivities.get(holder.getAdapterPosition()).getMissedRun()
                         + " "
                         + context.getResources().getString(R.string.missed));
       }
@@ -258,10 +258,10 @@ public class SurveyActivitiesListAdapter
       if (status
               .get(holder.getAdapterPosition())
               .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
-        int missedRunVal = currentRunStatusForActivities.get(position).getMissedRun();
-        int currentRunVal = currentRunStatusForActivities.get(position).getCurrentRunId();
-        int totalRunVal = currentRunStatusForActivities.get(position).getTotalRun();
-        int completedRunVal = currentRunStatusForActivities.get(position).getCompletedRun();
+        int missedRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getMissedRun();
+        int currentRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId();
+        int totalRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getTotalRun();
+        int completedRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getCompletedRun();
         if (missedRunVal == 0 && currentRunVal == 0 && totalRunVal == 0 && completedRunVal == 0) {
           holder.process.setVisibility(View.VISIBLE);
           holder.process.setText(R.string.expired);
@@ -278,13 +278,13 @@ public class SurveyActivitiesListAdapter
         }
       }
 
-      holder.surveyTitle.setText(items.get(position).getTitle());
-      if (items.get(position).getFrequency().getType().equalsIgnoreCase("Manually Schedule")) {
+      holder.surveyTitle.setText(items.get(holder.getAdapterPosition()).getTitle());
+      if (items.get(holder.getAdapterPosition()).getFrequency().getType().equalsIgnoreCase("Manually Schedule")) {
         holder.whenWasSurvey.setText(context.getResources().getString(R.string.as_scheduled));
-      } else if (items.get(position).getFrequency().getType().equalsIgnoreCase("One time")) {
+      } else if (items.get(holder.getAdapterPosition()).getFrequency().getType().equalsIgnoreCase("One time")) {
         holder.whenWasSurvey.setText(context.getResources().getString(R.string.onetime));
       } else {
-        holder.whenWasSurvey.setText(items.get(position).getFrequency().getType());
+        holder.whenWasSurvey.setText(items.get(holder.getAdapterPosition()).getFrequency().getType());
       }
       Date startDate = null;
       Date endDate = null;
@@ -296,30 +296,30 @@ public class SurveyActivitiesListAdapter
       SimpleDateFormat simpleDateFormatForOtherFreq = AppController.getDateFormatForOtherFreq();
       SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUtcNoZone();
       try {
-        if (!items.get(position).getStartTime().equalsIgnoreCase("")) {
-          startDate = simpleDateFormat5.parse(items.get(position).getStartTime().split("\\.")[0]);
+        if (!items.get(holder.getAdapterPosition()).getStartTime().equalsIgnoreCase("")) {
+          startDate = simpleDateFormat5.parse(items.get(holder.getAdapterPosition()).getStartTime().split("\\.")[0]);
         } else {
           startDate = new Date();
         }
-        endDate = simpleDateFormat5.parse(items.get(position).getEndTime().split("\\.")[0]);
+        endDate = simpleDateFormat5.parse(items.get(holder.getAdapterPosition()).getEndTime().split("\\.")[0]);
 
       } catch (ParseException e) {
         Logger.log(e);
       }
       if (items
-              .get(position)
+              .get(holder.getAdapterPosition())
               .getFrequency()
               .getType()
               .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_DAILY)) {
         try {
           String abc = "";
-          if (!items.get(position).getFrequency().getRuns().isEmpty()) {
+          if (!items.get(holder.getAdapterPosition()).getFrequency().getRuns().isEmpty()) {
 
-            for (int i = 0; i < items.get(position).getFrequency().getRuns().size(); i++) {
+            for (int i = 0; i < items.get(holder.getAdapterPosition()).getFrequency().getRuns().size(); i++) {
 
               try {
                 String dateString =
-                        items.get(position).getFrequency().getRuns().get(i).getStartTime().toString();
+                        items.get(holder.getAdapterPosition()).getFrequency().getRuns().get(i).getStartTime().toString();
                 SimpleDateFormat sdf = AppController.getHourMinuteSecondFormat();
                 Date date = sdf.parse(dateString);
                 SimpleDateFormat dateFormat = AppController.getHourAmPmFormat1();
@@ -349,12 +349,12 @@ public class SurveyActivitiesListAdapter
         }
         holder.more.setVisibility(View.GONE);
       } else if (items
-              .get(position)
+              .get(holder.getAdapterPosition())
               .getFrequency()
               .getType()
               .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MONTHLY)) {
         try {
-          String dateString = items.get(position).getStartTime().toString();
+          String dateString = items.get(holder.getAdapterPosition()).getStartTime().toString();
           Date date = simpleDateFormat5.parse(dateString.split("\\.")[0]);
           SimpleDateFormat dateFormat1 = AppController.getHourAmPmFormat1();
           String formattedDate1 = dateFormat1.format(date).toString();
@@ -382,12 +382,12 @@ public class SurveyActivitiesListAdapter
         }
         holder.more.setVisibility(View.GONE);
       } else if (items
-              .get(position)
+              .get(holder.getAdapterPosition())
               .getFrequency()
               .getType()
               .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_WEEKLY)) {
         try {
-          String dateString = items.get(position).getStartTime().toString();
+          String dateString = items.get(holder.getAdapterPosition()).getStartTime().toString();
           Date date = simpleDateFormat5.parse(dateString.split("\\.")[0]);
           SimpleDateFormat dateFormat1 = AppController.getHourAmPmFormat1();
           String formattedDate1 = dateFormat1.format(date).toString();
@@ -408,27 +408,27 @@ public class SurveyActivitiesListAdapter
         }
         holder.more.setVisibility(View.GONE);
       } else if (items
-              .get(position)
+              .get(holder.getAdapterPosition())
               .getFrequency()
               .getType()
               .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
         try {
-          holder.date.setText(getDateRange(items, endDate, position, startDate, joiningDate, context, status));
+          holder.date.setText(getDateRange(items, endDate, holder.getAdapterPosition(), startDate, joiningDate, context, status));
         } catch (Exception e) {
           Logger.log(e);
         }
         holder.time.setVisibility(View.GONE);
         holder.more.setVisibility(View.GONE);
       } else if (items
-              .get(position)
+              .get(holder.getAdapterPosition())
               .getFrequency()
               .getType()
               .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
         try {
 
           /// Scheduled
-          if (!items.get(position).getFrequency().getRuns().isEmpty()) {
-            int size = items.get(position).getFrequency().getRuns().size();
+          if (!items.get(holder.getAdapterPosition()).getFrequency().getRuns().isEmpty()) {
+            int size = items.get(holder.getAdapterPosition()).getFrequency().getRuns().size();
             String startTime = "";
             String endTime = "";
             String finalTime;
@@ -436,7 +436,7 @@ public class SurveyActivitiesListAdapter
             int pos = -1;
             for (int i = 0; i < size; i++) {
               if (!items
-                      .get(position)
+                      .get(holder.getAdapterPosition())
                       .getFrequency()
                       .getRuns()
                       .get(i)
@@ -446,7 +446,7 @@ public class SurveyActivitiesListAdapter
                 startTime =
                         getDateFormatedString(
                                 items
-                                        .get(position)
+                                        .get(holder.getAdapterPosition())
                                         .getFrequency()
                                         .getRuns()
                                         .get(i)
@@ -455,7 +455,7 @@ public class SurveyActivitiesListAdapter
                                         .split("\\.")[0]);
               }
               if (!items
-                      .get(position)
+                      .get(holder.getAdapterPosition())
                       .getFrequency()
                       .getRuns()
                       .get(i)
@@ -465,7 +465,7 @@ public class SurveyActivitiesListAdapter
                 endTime =
                         getDateFormatedString(
                                 items
-                                        .get(position)
+                                        .get(holder.getAdapterPosition())
                                         .getFrequency()
                                         .getRuns()
                                         .get(i)
@@ -474,17 +474,17 @@ public class SurveyActivitiesListAdapter
                                         .split("\\.")[0]);
               }
               if (i < items
-                      .get(position)
+                      .get(holder.getAdapterPosition())
                       .getFrequency()
                       .getRuns().size() - 1) {
                 pos = checkCurrentTimeInBetweenDates(items
-                        .get(position)
+                        .get(holder.getAdapterPosition())
                         .getFrequency()
                         .getRuns()
                         .get(i)
                         .getStartTime()
                         .split("\\.")[0], items
-                        .get(position)
+                        .get(holder.getAdapterPosition())
                         .getFrequency()
                         .getRuns()
                         .get(i + 1)
@@ -492,13 +492,13 @@ public class SurveyActivitiesListAdapter
                         .split("\\.")[0], i);
               } else {
                 pos = checkCurrentTimeInBetweenDates(items
-                        .get(position)
+                        .get(holder.getAdapterPosition())
                         .getFrequency()
                         .getRuns()
                         .get(i)
                         .getStartTime()
                         .split("\\.")[0], items
-                        .get(position)
+                        .get(holder.getAdapterPosition())
                         .getFrequency()
                         .getRuns()
                         .get(i)
@@ -513,12 +513,12 @@ public class SurveyActivitiesListAdapter
                       .get(holder.getAdapterPosition())
                       .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
                 try {
-                  finalpos = size - 1;
+                  finalpos = i;
                   holder.date.setText(
                           simpleDateFormatForOtherFreq.format(
                                   simpleDateFormat5.parse(
                                           items
-                                                  .get(position)
+                                                  .get(holder.getAdapterPosition())
                                                   .getFrequency()
                                                   .getRuns()
                                                   .get(i)
@@ -529,7 +529,7 @@ public class SurveyActivitiesListAdapter
                                   + simpleDateFormatForOtherFreq.format(
                                   simpleDateFormat5.parse(
                                           items
-                                                  .get(position)
+                                                  .get(holder.getAdapterPosition())
                                                   .getFrequency()
                                                   .getRuns()
                                                   .get(i)
@@ -541,12 +541,13 @@ public class SurveyActivitiesListAdapter
                 }
               } else {
                 if (i == 0) {
+                  finalpos = i;
                   // if only 0 then show
                   holder.date.setText(
                           simpleDateFormatForOtherFreq.format(
                                   simpleDateFormat5.parse(
                                           items
-                                                  .get(position)
+                                                  .get(holder.getAdapterPosition())
                                                   .getFrequency()
                                                   .getRuns()
                                                   .get(i)
@@ -557,7 +558,7 @@ public class SurveyActivitiesListAdapter
                                   + simpleDateFormatForOtherFreq.format(
                                   simpleDateFormat5.parse(
                                           items
-                                                  .get(position)
+                                                  .get(holder.getAdapterPosition())
                                                   .getFrequency()
                                                   .getRuns()
                                                   .get(i)
@@ -566,52 +567,58 @@ public class SurveyActivitiesListAdapter
                                                   .split("\\.")[0])));
 
                   if ((currentRunStatusForActivities
-                          .get(position)
+                          .get(holder.getAdapterPosition())
                           .getStatus()
                           .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
-                          .get(position)
+                          .get(holder.getAdapterPosition())
                           .getStatus()
                           .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) && pos < items
-                          .get(position)
+                          .get(holder.getAdapterPosition())
                           .getFrequency()
                           .getRuns()
                           .size() && status
-                          .get(position)
+                          .get(holder.getAdapterPosition())
                           .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT) || currentRunStatusForActivities
                           .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
-                    holder.date.setText(
-                            simpleDateFormatForOtherFreq.format(
-                                    simpleDateFormat5.parse(
-                                            items
-                                                    .get(position)
-                                                    .getFrequency()
-                                                    .getRuns()
-                                                    .get(pos + 1)
-                                                    .getStartTime()
-                                                    .toString()
-                                                    .split("\\.")[0]))
-                                    + " to "
-                                    + simpleDateFormatForOtherFreq.format(
-                                    simpleDateFormat5.parse(
-                                            items
-                                                    .get(position)
-                                                    .getFrequency()
-                                                    .getRuns()
-                                                    .get(pos + 1)
-                                                    .getEndTime()
-                                                    .toString()
-                                                    .split("\\.")[0])));
-                  }
+                    int modifiedPos;
+                    if (pos + 1 < items.get(holder.getAdapterPosition()).getFrequency().getRuns().size()) {
+                      modifiedPos = pos + 1;
+                    } else {
+                      modifiedPos = pos;
+                    }
+                    finalpos = modifiedPos;
+                      holder.date.setText(
+                              simpleDateFormatForOtherFreq.format(
+                                      simpleDateFormat5.parse(
+                                              items
+                                                      .get(holder.getAdapterPosition())
+                                                      .getFrequency()
+                                                      .getRuns()
+                                                      .get(modifiedPos)
+                                                      .getStartTime()
+                                                      .toString()
+                                                      .split("\\.")[0]))
+                                      + " to "
+                                      + simpleDateFormatForOtherFreq.format(
+                                      simpleDateFormat5.parse(
+                                              items
+                                                      .get(holder.getAdapterPosition())
+                                                      .getFrequency()
+                                                      .getRuns()
+                                                      .get(modifiedPos)
+                                                      .getEndTime()
+                                                      .toString()
+                                                      .split("\\.")[0])));
 
+                  }
                 }
 
                 if (pos > 0) {
-                  finalpos = pos;
                   try {
                     final Date d1 =
                             simpleDateFormat5.parse(
                                     items
-                                            .get(position)
+                                            .get(holder.getAdapterPosition())
                                             .getFrequency()
                                             .getRuns()
                                             .get(i)
@@ -621,40 +628,48 @@ public class SurveyActivitiesListAdapter
                     final Date d2 =
                             simpleDateFormat5.parse(
                                     items
-                                            .get(position)
+                                            .get(holder.getAdapterPosition())
                                             .getFrequency()
                                             .getRuns()
                                             .get(i)
                                             .getEndTime()
                                             .toString()
                                             .split("\\.")[0]);
+                    finalpos = i;
                     holder.date.setText(
                             simpleDateFormatForOtherFreq.format(d1)
                                     + " to "
                                     + simpleDateFormatForOtherFreq.format(d2));
 
                     if ((currentRunStatusForActivities
-                            .get(position)
+                            .get(holder.getAdapterPosition())
                             .getStatus()
                             .equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED) || currentRunStatusForActivities
-                            .get(position)
+                            .get(holder.getAdapterPosition())
                             .getStatus()
                             .equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)) && pos < items
-                            .get(position)
+                            .get(holder.getAdapterPosition())
                             .getFrequency()
                             .getRuns()
                             .size() && status
-                            .get(position)
+                            .get(holder.getAdapterPosition())
                             .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT) || currentRunStatusForActivities
                             .get(holder.getAdapterPosition()).getCurrentRunId() == 0) {
+                      int modifiedPos;
+                      if (pos + 1 < items.get(holder.getAdapterPosition()).getFrequency().getRuns().size()) {
+                        modifiedPos = pos + 1;
+                      } else {
+                        modifiedPos = pos;
+                      }
+                      finalpos = modifiedPos;
                       holder.date.setText(
                               simpleDateFormatForOtherFreq.format(
                                       simpleDateFormat5.parse(
                                               items
-                                                      .get(position)
+                                                      .get(holder.getAdapterPosition())
                                                       .getFrequency()
                                                       .getRuns()
-                                                      .get(pos + 1)
+                                                      .get(modifiedPos)
                                                       .getStartTime()
                                                       .toString()
                                                       .split("\\.")[0]))
@@ -662,10 +677,10 @@ public class SurveyActivitiesListAdapter
                                       + simpleDateFormatForOtherFreq.format(
                                       simpleDateFormat5.parse(
                                               items
-                                                      .get(position)
+                                                      .get(holder.getAdapterPosition())
                                                       .getFrequency()
                                                       .getRuns()
-                                                      .get(pos + 1)
+                                                      .get(modifiedPos)
                                                       .getEndTime()
                                                       .toString()
                                                       .split("\\.")[0])));
@@ -674,9 +689,36 @@ public class SurveyActivitiesListAdapter
                     Logger.log(e);
                   }
                 }
+                if (status
+                        .get(holder.getAdapterPosition())
+                        .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)) {
+                  finalpos = pos;
+                  holder.date.setText(
+                          simpleDateFormatForOtherFreq.format(
+                                  simpleDateFormat5.parse(
+                                          items
+                                                  .get(holder.getAdapterPosition())
+                                                  .getFrequency()
+                                                  .getRuns()
+                                                  .get(pos)
+                                                  .getStartTime()
+                                                  .toString()
+                                                  .split("\\.")[0]))
+                                  + " to "
+                                  + simpleDateFormatForOtherFreq.format(
+                                  simpleDateFormat5.parse(
+                                          items
+                                                  .get(holder.getAdapterPosition())
+                                                  .getFrequency()
+                                                  .getRuns()
+                                                  .get(pos)
+                                                  .getEndTime()
+                                                  .toString()
+                                                  .split("\\.")[0])));
+                }
               }
             }
-            timePos.add(position, finalpos);
+            timePos.set(holder.getAdapterPosition(), finalpos);
 
             try {
               if (mScheduledTime.size() > 1) {
@@ -707,8 +749,8 @@ public class SurveyActivitiesListAdapter
       holder.container.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-          int currentRunVal = currentRunStatusForActivities.get(position).getCurrentRunId();
-          int totalRunVal = currentRunStatusForActivities.get(position).getTotalRun();
+          int currentRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId();
+          int totalRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getTotalRun();
           if (click) {
             click = false;
             new Handler().postDelayed(new Runnable() {
@@ -778,7 +820,7 @@ public class SurveyActivitiesListAdapter
         public void onClick(View view) {
           int p = 0;
           try {
-            p = timePos.get(position);
+            p = timePos.get(holder.getAdapterPosition());
           } catch (Exception e) {
             Logger.log(e);
           }
@@ -808,19 +850,19 @@ public class SurveyActivitiesListAdapter
             holder.box1.setAlpha(.5f);
             holder.box2.setAlpha(.5f);
 
-            if (currentRunStatusForActivities.get(position).getCurrentRunId() <= currentRunStatusForActivities.get(position).getTotalRun()) {
+            if (currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId() <= currentRunStatusForActivities.get(holder.getAdapterPosition()).getTotalRun()) {
               holder.run.setText(
                       context.getResources().getString(R.string.run)
                               + ": "
-                              + (currentRunStatusForActivities.get(position).getCurrentRunId() + 1)
-                              + "/"
-                              + currentRunStatusForActivities.get(position).getTotalRun()
+                              + (currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId() + 1)
+                              + " of "
+                              + currentRunStatusForActivities.get(holder.getAdapterPosition()).getTotalRun()
                               + ", "
-                              + currentRunStatusForActivities.get(position).getCompletedRun()
+                              + currentRunStatusForActivities.get(holder.getAdapterPosition()).getCompletedRun()
                               + " "
                               + context.getResources().getString(R.string.done2)
                               + ", "
-                              + currentRunStatusForActivities.get(position).getMissedRun()
+                              + currentRunStatusForActivities.get(holder.getAdapterPosition()).getMissedRun()
                               + " "
                               + context.getResources().getString(R.string.missed));
               holder.process.setText(R.string.start);

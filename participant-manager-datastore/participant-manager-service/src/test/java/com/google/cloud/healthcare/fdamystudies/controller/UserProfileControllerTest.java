@@ -13,12 +13,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_BY_USER;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_BY_ADMIN;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ADMIN_REACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_DEACTIVATED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_DELETED;
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_FIRST_NAME;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_LAST_NAME;
@@ -230,13 +230,13 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(
-        ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION
+        ParticipantManagerEvent.ADMIN_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION
             .getEventCode(),
         auditRequest);
 
     verifyAuditEventCall(
         auditEventMap,
-        ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION);
+        ParticipantManagerEvent.ADMIN_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION);
   }
 
   @Test
@@ -267,9 +267,9 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(ACCOUNT_UPDATE_BY_USER.getEventCode(), auditRequest);
+    auditEventMap.put(ACCOUNT_UPDATE_BY_ADMIN.getEventCode(), auditRequest);
 
-    verifyAuditEventCall(auditEventMap, ACCOUNT_UPDATE_BY_USER);
+    verifyAuditEventCall(auditEventMap, ACCOUNT_UPDATE_BY_ADMIN);
   }
 
   @Test
@@ -459,9 +459,9 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditRequest.setUserId(user.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_DEACTIVATED.getEventCode(), auditRequest);
+    auditEventMap.put(ADMIN_DEACTIVATED.getEventCode(), auditRequest);
 
-    verifyAuditEventCall(auditEventMap, USER_DEACTIVATED);
+    verifyAuditEventCall(auditEventMap, ADMIN_DEACTIVATED);
   }
 
   @Test
@@ -502,9 +502,9 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditRequest.setUserId(user.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_REACTIVATED.getEventCode(), auditRequest);
+    auditEventMap.put(ADMIN_REACTIVATED.getEventCode(), auditRequest);
 
-    verifyAuditEventCall(auditEventMap, USER_REACTIVATED);
+    verifyAuditEventCall(auditEventMap, ADMIN_REACTIVATED);
   }
 
   @Test
@@ -595,9 +595,9 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditRequest.setUserId(userRegAdminEntity.getId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_DELETED.getEventCode(), auditRequest);
+    auditEventMap.put(ADMIN_DELETED.getEventCode(), auditRequest);
 
-    verifyAuditEventCall(auditEventMap, USER_DELETED);
+    verifyAuditEventCall(auditEventMap, ADMIN_DELETED);
   }
 
   @Test

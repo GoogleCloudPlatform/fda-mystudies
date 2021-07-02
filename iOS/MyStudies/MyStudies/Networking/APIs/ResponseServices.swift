@@ -239,6 +239,12 @@ class ResponseServices: NSObject {
           // created date
           let data = dataDictArr[safe: 2] ?? [:]
           let dataCount = dataDictArr[safe: 3] ?? [:]
+          
+          //Spacial
+          let dataScore = dataDictArr[safe: 2] ?? [:]
+          let dataCountNumberofGames = dataDictArr[safe: 3] ?? [:]
+          let dataCountNumberofFailures = dataDictArr[safe: 4] ?? [:]
+          
           var date: String = ""
 
           if let createdDict = dataDictArr[safe: 1],
@@ -268,57 +274,51 @@ class ResponseServices: NSObject {
             let responseData1 = DashboardResponse(with: activityId, and: "duration")
             responseData1.values.append(valueDetail)
             dashBoardResponse.append(responseData1)
-
-          } else if data["NumberofFailures"] != nil && data["NumberofGames"] != nil
-            && data[
-              "Score"
-            ]
-              != nil
+            
+          } else if dataCountNumberofFailures["NumberofFailures"] != nil && dataCountNumberofGames["NumberofGames"] != nil
+                      && dataScore[
+                        "Score"
+                      ]
+                      != nil
           {
-
-            for responseData in dashBoardResponse {
-              if responseData.key == "NumberofFailures" {
-                // numberOfFailuresDetail
-                let numberOfFailuresDetail = data["NumberofFailures"] as? [String: Any]
-                let numberOfFailures = (numberOfFailuresDetail?["value"] as? Float)!
-
-                let valueDetail1 =
-                  [
-                    "value": numberOfFailures,
-                    "count": Float(0.0),
-                    "date": date,
-                  ] as [String: Any]
-                responseData.values.append(valueDetail1)
-
-              } else if responseData.key == "NumberofGames" {
-                // numberOfGames
-                let numberOfGamesDetail = data["NumberofGames"] as? [String: Any]
-                let numberOfGames = (numberOfGamesDetail?["value"] as? Float)!
-
-                let valueDetail3 =
-                  [
-                    "value": numberOfGames,
-                    "count": Float(0.0),
-                    "date": date,
-                  ] as [String: Any]
-
-                responseData.values.append(valueDetail3)
-              } else if responseData.key == "Score" {
-                // score
-                let scoreDetail = data["Score"] as? [String: Any]
-                let score = (scoreDetail?["value"] as? Float)!
-
-                let valueDetail2 =
-                  [
-                    "value": score,
-                    "count": Float(0.0),
-                    "date": date,
-                  ] as [String: Any]
-
-                responseData.values.append(valueDetail2)
-              }
-            }
-
+            let numberOfFailuresDetail = dataCountNumberofFailures["NumberofFailures"] as? [String: Any]
+            let numberOfFailures = (numberOfFailuresDetail?["value"] as? Double)!
+            let valueDetail1 =
+              [
+                "value": numberOfFailures,
+                "count": Float(0.0),
+                "date": date,
+              ] as [String: Any]
+            let responseData1 = DashboardResponse(with: activityId, and: "Numberoffailures")
+            responseData1.values.append(valueDetail1)
+            dashBoardResponse.append(responseData1)
+            
+            // numberOfGames
+            let numberOfGamesDetail = dataCountNumberofGames["NumberofGames"] as? [String: Any]
+            let numberOfGames = (numberOfGamesDetail?["value"] as? Double)!
+            let valueDetail3 =
+              [
+                "value": numberOfGames,
+                "count": Float(0.0),
+                "date": date,
+              ] as [String: Any]
+            let responseData3 = DashboardResponse(with: activityId, and: "Numberofgames")
+            responseData3.values.append(valueDetail3)
+            dashBoardResponse.append(responseData3)
+            
+            // score
+            let scoreDetail = dataScore["Score"] as? [String: Any]
+            let score = (scoreDetail?["value"] as? Double)!
+            
+            let valueDetail2 =
+              [
+                "value": score,
+                "count": Float(0.0),
+                "date": date,
+              ] as [String: Any]
+            let responseData2 = DashboardResponse(with: activityId, and: "Score")
+            responseData2.values.append(valueDetail2)
+            dashBoardResponse.append(responseData2)
           } else {
             for (index, dict) in dataDictArr.enumerated() {
               guard index > 1,

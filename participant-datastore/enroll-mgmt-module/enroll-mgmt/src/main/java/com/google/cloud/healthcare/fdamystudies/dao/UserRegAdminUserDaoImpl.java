@@ -14,22 +14,23 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(StudyStateServiceImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(StudyStateServiceImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
   @Override
   @SuppressWarnings("unchecked")
   public UserDetailsEntity getRecord(String userId) {
-    logger.info("(Service)...UserRegAdminUserDaoImpl.getRecord()...Started");
+    logger.entry("Begin getRecord()");
     List<UserDetailsEntity> userList = null;
     UserDetailsEntity user = null;
 
@@ -42,7 +43,7 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
     if (userList != null && !userList.isEmpty()) {
       user = userList.get(0);
     }
-    logger.info("(DAO)...UserRegAdminUserDaoImpl.getRecord()...Ended ");
+    logger.exit("getRecord() Ended ");
     return user;
   }
 }

@@ -7,9 +7,19 @@
  * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
  * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 package com.hphc.mystudies.dao;
 
@@ -71,14 +81,16 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.text.StringEscapeUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class StudyMetaDataDao {
 
-  private static final Logger LOGGER = Logger.getLogger(StudyMetaDataDao.class);
+  private static final XLogger LOGGER = XLoggerFactory.getXLogger(StudyMetaDataDao.class.getName());
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -91,7 +103,7 @@ public class StudyMetaDataDao {
   String queryString = "";
 
   public boolean isValidAuthorizationId(String authorization) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Starts");
+    LOGGER.entry("begin isValidAuthorizationId()");
     boolean hasValidAuthorization = false;
     String bundleIdAndAppToken = null;
     try {
@@ -106,13 +118,13 @@ public class StudyMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - isValidAuthorizationId() :: ERROR", e);
     }
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
+    LOGGER.exit("StudyMetaDataOrchestration - isValidAuthorizationId() :: Ends");
     return hasValidAuthorization;
   }
 
   @SuppressWarnings("unchecked")
   public GatewayInfoResponse gatewayAppResourcesInfo(String authorization) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - gatewayAppResourcesInfo() :: Starts");
+    LOGGER.entry("begin gatewayAppResourcesInfo()");
     Session session = null;
     GatewayInfoResponse gatewayInfoResponse = new GatewayInfoResponse();
     GatewayInfoDto gatewayInfo = null;
@@ -137,10 +149,10 @@ public class StudyMetaDataDao {
             infoBean.setImage(
                 StringUtils.isEmpty(gatewayWelcomeInfo.getImagePath())
                     ? ""
-                    : propMap.get("fda.imgDisplaydPath")
-                        + propMap.get("cloud.bucket.name")
-                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + gatewayWelcomeInfo.getImagePath());
+                    : StudyMetaDataUtil.getSignedUrl(
+                        propMap.get("cloud.bucket.name"),
+                        propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                            + gatewayWelcomeInfo.getImagePath()));
             infoBean.setText(
                 StringUtils.isEmpty(gatewayWelcomeInfo.getDescription())
                     ? ""
@@ -194,14 +206,18 @@ public class StudyMetaDataDao {
               resourceBean.setContent(
                   StringUtils.isEmpty(resource.getPdfUrl())
                       ? ""
-                      : propMap.get("fda.imgDisplaydPath")
-                          + propMap.get("cloud.bucket.name")
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH)
-                          + resource.getPdfUrl());
+                      : StudyMetaDataUtil.getSignedUrl(
+                          propMap.get("cloud.bucket.name"),
+                          StudyMetaDataConstants.STUDIES
+                              + "/"
+                              + resource.getCustomStudyId()
+                              + "/"
+                              + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH).trim()
+                              + resource.getPdfUrl()));
             }
 
             resourceBean.setResourcesId(
-                resource.getId() == null ? "" : String.valueOf(resource.getId()));
+                StringUtils.isEmpty(resource.getId()) ? "" : String.valueOf(resource.getId()));
             resourceBeanList.add(resourceBean);
           }
           gatewayInfoResponse.setResources(resourceBeanList);
@@ -216,13 +232,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - gatewayAppResourcesInfo() :: Ends");
+    LOGGER.exit("gatewayAppResourcesInfo() :: Ends");
     return gatewayInfoResponse;
   }
 
   @SuppressWarnings("unchecked")
   public StudyResponse studyList(String authorization, String applicationId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - studyList() :: Starts");
+    LOGGER.entry("begin studyList()");
     Session session = null;
     StudyResponse studyResponse = new StudyResponse();
     List<StudyDto> studiesList = null;
@@ -282,10 +298,16 @@ public class StudyMetaDataDao {
             studyBean.setLogo(
                 StringUtils.isEmpty(studyDto.getThumbnailImage())
                     ? ""
-                    : propMap.get("fda.imgDisplaydPath")
-                        + propMap.get("cloud.bucket.name")
-                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + studyDto.getThumbnailImage());
+                    : StudyMetaDataUtil.getSignedUrl(
+                        propMap.get("cloud.bucket.name"),
+                        StudyMetaDataConstants.STUDIES
+                            + "/"
+                            + studyDto.getCustomStudyId()
+                            + "/"
+                            + propMap
+                                .get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                                .trim()
+                            + studyDto.getThumbnailImage()));
             studyBean.setStudyId(
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
@@ -353,13 +375,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - studyList() :: Ends");
+    LOGGER.exit("studyList() :: Ends");
     return studyResponse;
   }
 
   @SuppressWarnings("unchecked")
   public EligibilityConsentResponse eligibilityConsentMetadata(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - eligibilityConsentMetadata() :: Starts");
+    LOGGER.entry("begin eligibilityConsentMetadata()");
     Session session = null;
     EligibilityConsentResponse eligibilityConsentResponse = new EligibilityConsentResponse();
     EligibilityDto eligibilityDto = null;
@@ -396,7 +418,7 @@ public class StudyMetaDataDao {
             (StudySequenceDto)
                 session
                     .getNamedQuery("getStudySequenceDetailsByStudyId")
-                    .setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+                    .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                     .uniqueResult();
         if (studySequenceDto != null) {
 
@@ -408,7 +430,7 @@ public class StudyMetaDataDao {
                 (EligibilityDto)
                     session
                         .getNamedQuery("eligibilityDtoByStudyId")
-                        .setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+                        .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                         .uniqueResult();
             if (eligibilityDto != null) {
 
@@ -441,7 +463,7 @@ public class StudyMetaDataDao {
                               + " where ETDTO.eligibilityId=:eligId"
                               + " and ETDTO.status=true and ETDTO.active=true"
                               + " ORDER BY ETDTO.sequenceNo")
-                      .setInteger("eligId", eligibilityDto.getId())
+                      .setString("eligId", eligibilityDto.getId())
                       .list();
               if ((eligibilityTestList != null) && !eligibilityTestList.isEmpty()) {
                 List<QuestionnaireActivityStepsBean> test = new ArrayList<>();
@@ -568,11 +590,11 @@ public class StudyMetaDataDao {
                             .getDisplayTitle()
                             .replaceAll("&#34;", "\"")
                             .replaceAll("&#39;", "'"));
-                if (consentInfoDto.getConsentItemTitleId() != null) {
+                if (consentInfoDto.getConsentItemTitleId() != null
+                    && !consentInfoDto.getConsentItemTitleId().isEmpty()) {
                   if ((consentMasterInfoList != null) && !consentMasterInfoList.isEmpty()) {
                     for (ConsentMasterInfoDto masterInfo : consentMasterInfoList) {
-                      if (masterInfo.getId().intValue()
-                          == consentInfoDto.getConsentItemTitleId().intValue()) {
+                      if (masterInfo.getId().equals(consentInfoDto.getConsentItemTitleId())) {
                         consentBean.setType(masterInfo.getCode());
                         break;
                       }
@@ -585,11 +607,13 @@ public class StudyMetaDataDao {
                 consentBean.setHtml(
                     StringUtils.isEmpty(consentInfoDto.getElaborated())
                         ? ""
-                        : consentInfoDto
-                            .getElaborated()
-                            .replaceAll("&#34;", "'")
-                            .replaceAll("em>", "i>")
-                            .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+                        : StringEscapeUtils.escapeHtml4(
+                            consentInfoDto
+                                .getElaborated()
+                                .replaceAll("&#34;", "'")
+                                .replaceAll("em>", "i>")
+                                .replaceAll(
+                                    "<a", "<a style='text-decoration:underline;color:blue;'")));
                 consentBean.setUrl(
                     StringUtils.isEmpty(consentInfoDto.getUrl()) ? "" : consentInfoDto.getUrl());
 
@@ -619,7 +643,7 @@ public class StudyMetaDataDao {
             comprehensionQuestionList =
                 session
                     .getNamedQuery("comprehensionQuestionByStudyId")
-                    .setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+                    .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                     .list();
             if ((null != comprehensionQuestionList) && !comprehensionQuestionList.isEmpty()) {
               ComprehensionDetailsBean comprehensionDetailsBean = new ComprehensionDetailsBean();
@@ -649,7 +673,7 @@ public class StudyMetaDataDao {
                 List<ComprehensionTestResponseDto> comprehensionTestResponseList =
                     session
                         .getNamedQuery("comprehensionQuestionResponseByCTID")
-                        .setInteger("comprehensionTestQuestionId", comprehensionQuestionDto.getId())
+                        .setString("comprehensionTestQuestionId", comprehensionQuestionDto.getId())
                         .list();
                 if ((comprehensionTestResponseList != null)
                     && !comprehensionTestResponseList.isEmpty()) {
@@ -719,11 +743,14 @@ public class StudyMetaDataDao {
               reviewBean.setReviewHTML(
                   StringUtils.isEmpty(consentDto.getConsentDocContent())
                       ? ""
-                      : consentDto
-                          .getConsentDocContent()
-                          .replaceAll("&#34;", "'")
-                          .replaceAll("em>", "i>")
-                          .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+                      : StringEscapeUtils.escapeHtml4(
+                          StringEscapeUtils.unescapeHtml4(
+                              consentDto
+                                  .getConsentDocContent()
+                                  .replaceAll("&#34;", "'")
+                                  .replaceAll("em>", "i>")
+                                  .replaceAll(
+                                      "<a", "<a style='text-decoration:underline;color:blue;'"))));
             }
             consent.setReview(reviewBean);
           }
@@ -741,14 +768,14 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - eligibilityConsentMetadata() :: Ends");
+    LOGGER.exit("eligibilityConsentMetadata() :: Ends");
     return eligibilityConsentResponse;
   }
 
   public ConsentDocumentResponse consentDocument(
       String studyId, String consentVersion, String activityId, String activityVersion)
       throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Starts");
+    LOGGER.entry("begin consentDocument()");
     Session session = null;
     ConsentDocumentResponse consentDocumentResponse = new ConsentDocumentResponse();
     ConsentDto consent = null;
@@ -781,7 +808,7 @@ public class StudyMetaDataDao {
         }
 
         /** Get study version details by version identifier in descending order */
-        studyVersionQuery += " ORDER BY SVDTO.versionId DESC";
+        studyVersionQuery += " ORDER BY SVDTO.studyVersion DESC";
 
         if (!studyDto
             .getStatus()
@@ -836,7 +863,7 @@ public class StudyMetaDataDao {
                 (ConsentDto)
                     session
                         .getNamedQuery("consentDtoByStudyId")
-                        .setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+                        .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                         .uniqueResult();
           }
 
@@ -850,11 +877,16 @@ public class StudyMetaDataDao {
             consentDocumentBean.setContent(
                 StringUtils.isEmpty(consent.getConsentDocContent())
                     ? ""
-                    : consent
-                        .getConsentDocContent()
-                        .replaceAll("&#34;", "'")
-                        .replaceAll("em>", "i>")
-                        .replaceAll("<a", "<a style='text-decoration:underline;color:blue;'"));
+                    : StringEscapeUtils.escapeHtml4(
+                        StringEscapeUtils.unescapeHtml4(
+                            consent
+                                .getConsentDocContent()
+                                .replaceAll("&#34;", "'")
+                                .replaceAll("em>", "i>")
+                                .replaceAll(
+                                    "<a", "<a style='text-decoration:underline;color:blue;'"))));
+            consentDocumentBean.setEnrollAgain(
+                consent.getEnrollAgain() != null ? consent.getEnrollAgain() : false);
             consentDocumentResponse.setConsent(consentDocumentBean);
           }
           consentDocumentResponse.setMessage(StudyMetaDataConstants.SUCCESS);
@@ -869,13 +901,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - consentDocument() :: Ends");
+    LOGGER.exit("consentDocument() :: Ends");
     return consentDocumentResponse;
   }
 
   @SuppressWarnings("unchecked")
   public ResourcesResponse resourcesForStudy(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Starts");
+    LOGGER.entry("begin resourcesForStudy()");
     Session session = null;
     ResourcesResponse resourcesResponse = new ResourcesResponse();
     List<ResourcesDto> resourcesDtoList = null;
@@ -894,7 +926,7 @@ public class StudyMetaDataDao {
         resourcesDtoList =
             session
                 .getNamedQuery("getResourcesListByStudyId")
-                .setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+                .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                 .list();
         if ((null != resourcesDtoList) && !resourcesDtoList.isEmpty()) {
 
@@ -919,13 +951,19 @@ public class StudyMetaDataDao {
               resourcesBean.setContent(
                   StringUtils.isEmpty(resourcesDto.getPdfUrl())
                       ? ""
-                      : propMap.get("fda.imgDisplaydPath")
-                          + propMap.get("cloud.bucket.name")
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH)
-                          + resourcesDto.getPdfUrl());
+                      : StudyMetaDataUtil.getSignedUrl(
+                          propMap.get("cloud.bucket.name"),
+                          StudyMetaDataConstants.STUDIES
+                              + "/"
+                              + studyDto.getCustomStudyId()
+                              + "/"
+                              + propMap.get(StudyMetaDataConstants.FDA_SMD_RESOURCE_PDF_PATH).trim()
+                              + resourcesDto.getPdfUrl()));
             }
             resourcesBean.setResourcesId(
-                resourcesDto.getId() == null ? "" : String.valueOf(resourcesDto.getId()));
+                StringUtils.isEmpty(resourcesDto.getId())
+                    ? ""
+                    : String.valueOf(resourcesDto.getId()));
 
             if (!resourcesDto.isResourceVisibility()) {
               Map<String, Object> availability = new LinkedHashMap<>();
@@ -994,7 +1032,7 @@ public class StudyMetaDataDao {
                             .setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
                             .setString(
                                 "frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
-                            .setInteger("anchorDate", resourcesDto.getAnchorDateId())
+                            .setString("anchorDate", resourcesDto.getAnchorDateId())
                             .list();
                     if ((null != result) && !result.isEmpty()) {
                       Object[] objects = (Object[]) result.get(0);
@@ -1024,7 +1062,7 @@ public class StudyMetaDataDao {
                                   "scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
                               .setString(
                                   "frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
-                              .setInteger("anchorDate", resourcesDto.getAnchorDateId())
+                              .setString("anchorDate", resourcesDto.getAnchorDateId())
                               .list();
                       if ((null != result1) && !result1.isEmpty()) {
                         Object[] objects = (Object[]) result1.get(0);
@@ -1067,13 +1105,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - resourcesForStudy() :: Ends");
+    LOGGER.exit("resourcesForStudy() :: Ends");
     return resourcesResponse;
   }
 
   @SuppressWarnings("unchecked")
   public StudyInfoResponse studyInfo(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Starts");
+    LOGGER.entry("begin studyInfo()");
     Session session = null;
     StudyInfoResponse studyInfoResponse = new StudyInfoResponse();
     List<StudyPageDto> studyPageDtoList = null;
@@ -1104,7 +1142,7 @@ public class StudyMetaDataDao {
         studyPageDtoList =
             session
                 .getNamedQuery("studyPageDetailsByStudyId")
-                .setInteger(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+                .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                 .list();
         if ((null != studyPageDtoList) && !studyPageDtoList.isEmpty()) {
           for (StudyPageDto studyPageInfo : studyPageDtoList) {
@@ -1124,10 +1162,14 @@ public class StudyMetaDataDao {
             info.setImage(
                 StringUtils.isEmpty(studyPageInfo.getImagePath())
                     ? ""
-                    : propMap.get("fda.imgDisplaydPath")
-                        + propMap.get("cloud.bucket.name")
-                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_PAGE_PATH)
-                        + studyPageInfo.getImagePath());
+                    : StudyMetaDataUtil.getSignedUrl(
+                        propMap.get("cloud.bucket.name"),
+                        StudyMetaDataConstants.STUDIES
+                            + "/"
+                            + studyDto.getCustomStudyId()
+                            + "/"
+                            + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_PAGE_PATH).trim()
+                            + studyPageInfo.getImagePath()));
             info.setText(
                 StringUtils.isEmpty(studyPageInfo.getDescription())
                     ? ""
@@ -1151,10 +1193,14 @@ public class StudyMetaDataDao {
           info.setImage(
               StringUtils.isEmpty(studyDto.getThumbnailImage())
                   ? ""
-                  : propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                      + studyDto.getThumbnailImage());
+                  : StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      StudyMetaDataConstants.STUDIES
+                          + "/"
+                          + studyDto.getCustomStudyId()
+                          + "/"
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH).trim()
+                          + studyDto.getThumbnailImage()));
           info.setText(StringUtils.isEmpty(studyDto.getFullName()) ? "" : studyDto.getFullName());
           infoList.add(info);
         }
@@ -1174,11 +1220,11 @@ public class StudyMetaDataDao {
                   .list();
           if ((questionnairesList != null) && !questionnairesList.isEmpty()) {
 
-            List<Integer> questionnaireIdsList = new ArrayList<>();
-            Map<Integer, QuestionnairesDto> questionnaireMap = new TreeMap<>();
+            List<String> questionnaireIdsList = new ArrayList<>();
+            Map<String, QuestionnairesDto> questionnaireMap = new TreeMap<>();
             Map<String, QuestionnairesStepsDto> stepsMap = new TreeMap<>();
-            Map<Integer, QuestionsDto> questionsMap = null;
-            Map<Integer, FormMappingDto> formMappingMap = new TreeMap<>();
+            Map<String, QuestionsDto> questionsMap = null;
+            Map<String, FormMappingDto> formMappingMap = new TreeMap<>();
 
             for (QuestionnairesDto questionnaire : questionnairesList) {
               questionnaireIdsList.add(questionnaire.getId());
@@ -1187,8 +1233,8 @@ public class StudyMetaDataDao {
 
             if (!questionnaireIdsList.isEmpty()) {
 
-              List<Integer> questionIdsList = new ArrayList<>();
-              List<Integer> formIdsList = new ArrayList<>();
+              List<String> questionIdsList = new ArrayList<>();
+              List<String> formIdsList = new ArrayList<>();
               List<QuestionnairesStepsDto> questionnairesStepsList =
                   session
                       .createQuery(
@@ -1243,7 +1289,7 @@ public class StudyMetaDataDao {
 
                 if ((questionsMap == null) && !formIdsList.isEmpty()) {
 
-                  List<Integer> formQuestionsList = new ArrayList<>();
+                  List<String> formQuestionsList = new ArrayList<>();
                   List<FormMappingDto> formMappingList =
                       session
                           .createQuery(
@@ -1287,7 +1333,7 @@ public class StudyMetaDataDao {
                 if (questionsMap != null) {
                   AnchorDateBean anchorDate = new AnchorDateBean();
                   anchorDate.setType(StudyMetaDataConstants.ANCHORDATE_TYPE_QUESTION);
-                  for (Map.Entry<Integer, QuestionsDto> map : questionsMap.entrySet()) {
+                  for (Map.Entry<String, QuestionsDto> map : questionsMap.entrySet()) {
                     QuestionsDto questionDto = map.getValue();
                     if (questionDto != null) {
                       QuestionnairesStepsDto questionnairesSteps;
@@ -1345,12 +1391,12 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - studyInfo() :: Ends");
+    LOGGER.exit("studyInfo() :: Ends");
     return studyInfoResponse;
   }
 
   public boolean isValidStudy(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Starts");
+    LOGGER.entry("begin isValidStudy()");
     Session session = null;
     boolean isValidStudy = false;
     StudyDto studyDto = null;
@@ -1362,7 +1408,7 @@ public class StudyMetaDataDao {
                   .createQuery(
                       "from StudyDto SDTO"
                           + " where SDTO.customStudyId= :customStudyId"
-                          + " ORDER BY SDTO.id DESC")
+                          + " ORDER BY SDTO.modifiedOn DESC")
                   .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                   .setMaxResults(1)
                   .uniqueResult();
@@ -1374,13 +1420,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidStudy() :: Ends");
+    LOGGER.exit("StudyMetaDataOrchestration - isValidStudy() :: Ends");
     return isValidStudy;
   }
 
   public boolean isValidActivity(String activityId, String studyId, String activityVersion)
       throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Starts");
+    LOGGER.entry("begin isValidActivity()");
     Session session = null;
     boolean isValidActivity = false;
     ActiveTaskDto activeTaskDto = null;
@@ -1394,7 +1440,7 @@ public class StudyMetaDataDao {
                       "from ActiveTaskDto ATDTO"
                           + " where ATDTO.shortTitle= :shortTitle"
                           + " and ROUND(ATDTO.version, 1)= :version and ATDTO.customStudyId= :customStudyId"
-                          + " ORDER BY ATDTO.id DESC")
+                          + " ORDER BY ATDTO.modifiedDate DESC")
                   .setString(
                       StudyMetaDataEnum.QF_SHORT_TITLE.value(),
                       StudyMetaDataUtil.replaceSingleQuotes(activityId))
@@ -1412,7 +1458,7 @@ public class StudyMetaDataDao {
                         "from QuestionnairesDto QDTO"
                             + " where QDTO.shortTitle= :shortTitle"
                             + " and ROUND(QDTO.version, 1)= :version and QDTO.customStudyId= :customStudyId"
-                            + " ORDER BY QDTO.id DESC")
+                            + " ORDER BY QDTO.modifiedDate DESC")
                     .setString(
                         StudyMetaDataEnum.QF_SHORT_TITLE.value(),
                         StudyMetaDataUtil.replaceSingleQuotes(activityId))
@@ -1430,13 +1476,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isValidActivity() :: Ends");
+    LOGGER.exit("StudyMetaDataOrchestration - isValidActivity() :: Ends");
     return isValidActivity;
   }
 
   public boolean isActivityTypeQuestionnaire(
       String activityId, String studyId, String activityVersion) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Starts");
+    LOGGER.entry("begin isActivityTypeQuestionnaire()");
     Session session = null;
     boolean isActivityTypeQuestionnaire = true;
     ActiveTaskDto activeTaskDto = null;
@@ -1449,7 +1495,7 @@ public class StudyMetaDataDao {
                       "from ActiveTaskDto ATDTO"
                           + " where ATDTO.shortTitle= :shortTitle"
                           + " and ROUND(ATDTO.version, 1)= :version and ATDTO.customStudyId= :customStudyId"
-                          + " ORDER BY ATDTO.id DESC")
+                          + " ORDER BY ATDTO.modifiedDate DESC")
                   .setString(
                       StudyMetaDataEnum.QF_SHORT_TITLE.value(),
                       StudyMetaDataUtil.replaceSingleQuotes(activityId))
@@ -1467,12 +1513,12 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
+    LOGGER.exit("StudyMetaDataOrchestration - isActivityTypeQuestionnaire() :: Ends");
     return isActivityTypeQuestionnaire;
   }
 
   public String getconsentDocumentDisplayTitle(String displaytitle) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Starts");
+    LOGGER.entry("begin getconsentDocumentDisplayTitle()");
     String consentTitle = "";
     try {
       switch (displaytitle) {
@@ -1510,12 +1556,12 @@ public class StudyMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataDao - getconsentDocumentDisplayTitle() :: ERROR", e);
     }
-    LOGGER.info("INFO: StudyMetaDataDao - getconsentDocumentDisplayTitle() :: Ends");
+    LOGGER.exit("getconsentDocumentDisplayTitle() :: Ends");
     return consentTitle;
   }
 
   public boolean isValidToken(String token) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Starts");
+    LOGGER.entry("begin isValidToken()");
     Session session = null;
     boolean isValidStudy = false;
     EnrollmentTokenDto tokenDto = null;
@@ -1541,13 +1587,13 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - isValidToken() :: Ends");
+    LOGGER.exit("isValidToken() :: Ends");
     return isValidStudy;
   }
 
   @SuppressWarnings("unchecked")
   public StudyResponse study(String studyId) throws DAOException {
-    LOGGER.info("INFO: StudyMetaDataDao - study() :: Starts");
+    LOGGER.entry("begin study()");
     Session session = null;
     StudyResponse studyResponse = new StudyResponse();
     List<StudyDto> studiesList = null;
@@ -1599,10 +1645,16 @@ public class StudyMetaDataDao {
             studyBean.setLogo(
                 StringUtils.isEmpty(studyDto.getThumbnailImage())
                     ? ""
-                    : propMap.get("fda.imgDisplaydPath")
-                        + propMap.get("cloud.bucket.name")
-                        + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
-                        + studyDto.getThumbnailImage());
+                    : StudyMetaDataUtil.getSignedUrl(
+                        propMap.get("cloud.bucket.name"),
+                        StudyMetaDataConstants.STUDIES
+                            + "/"
+                            + studyDto.getCustomStudyId()
+                            + "/"
+                            + propMap
+                                .get(StudyMetaDataConstants.FDA_SMD_STUDY_THUMBNAIL_PATH)
+                                .trim()
+                            + studyDto.getThumbnailImage()));
             studyBean.setStudyId(
                 StringUtils.isEmpty(studyDto.getCustomStudyId())
                     ? ""
@@ -1671,7 +1723,7 @@ public class StudyMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: StudyMetaDataDao - study() :: Ends");
+    LOGGER.exit("study() :: Ends");
     return studyResponse;
   }
 }

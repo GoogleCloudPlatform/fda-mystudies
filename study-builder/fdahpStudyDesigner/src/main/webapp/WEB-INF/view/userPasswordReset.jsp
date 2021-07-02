@@ -59,6 +59,9 @@
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
 		.hover_text_white:focus { color:#fff !important;}
+		.arrowLeftSugg {
+    			top: 82px; !important;
+    	}
 	</style>
 
   </head>
@@ -69,7 +72,10 @@
     <div id="lg-container" class="lg-container">
 
       <div class="logo__space">
-        <img src="images/logo/logo_landing_welcome.png" alt=""/>
+        <a id="login" class="gray-link backToLogin white__text hover_text_white"
+                 href="javascript:void(0)">
+        	<img src="images/logo/logo_landing_welcome.png" alt=""/>
+        </a>
       </div>
 
       <div class="login__container">
@@ -83,12 +89,11 @@
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${not isInactiveUser && isValidToken}">
               <div>
-              <p class="white__text">Please set up your new password using
-                this form.</p>
+              <p class="white__text">Create new password</p>
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input"
                        id="password" tabindex="2" maxlength="64" data-minlength="8"
-                       placeholder="Password*" required
+                       placeholder="New password*" required data-error="Please fill out this field" 
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                        data-error="Password is invalid" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
@@ -101,7 +106,7 @@
                        id="cfnPassword" tabindex="3" name="" maxlength="64"
                        data-match="#password"
                        data-match-error="Passwords do not match"
-                       placeholder="Confirm new password*" required autocomplete="off"/>
+                       placeholder="Confirm new password*" required data-error="Please fill out this field" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">

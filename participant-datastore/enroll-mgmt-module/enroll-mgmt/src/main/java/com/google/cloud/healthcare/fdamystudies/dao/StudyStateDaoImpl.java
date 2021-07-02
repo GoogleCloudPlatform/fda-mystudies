@@ -25,21 +25,22 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class StudyStateDaoImpl implements StudyStateDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(StudyStateDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(StudyStateDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
   @Override
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
-    logger.info("StudyStateDaoImpl saveParticipantStudies() - Starts ");
+    logger.entry("Begin saveParticipantStudies()");
     Session session = this.sessionFactory.getCurrentSession();
     for (ParticipantStudyEntity participantStudy : participantStudiesList) {
       if (StringUtils.isEmpty(participantStudy.getId())) {
@@ -48,13 +49,13 @@ public class StudyStateDaoImpl implements StudyStateDao {
         session.update(participantStudy);
       }
     }
-    logger.info("StudyStateDaoImpl saveParticipantStudies() - Ends ");
+    logger.exit("saveParticipantStudies() - Ends ");
     return MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
   }
 
   @Override
   public String getEnrollTokenForParticipant(String participantRegistryId) {
-    logger.info("StudyStateDaoImpl getEnrollTokenForParticipant() - Starts ");
+    logger.entry("Begin getEnrollTokenForParticipant()");
     String enrolledToken = "";
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<ParticipantRegistrySiteEntity> criteriaQuery = null;
@@ -75,13 +76,13 @@ public class StudyStateDaoImpl implements StudyStateDao {
       enrolledToken = participantRegistrySite.getEnrollmentToken();
     }
 
-    logger.info("StudyStateDaoImpl getEnrollTokenForParticipant() - Ends ");
+    logger.exit("getEnrollTokenForParticipant() - Ends ");
     return enrolledToken;
   }
 
   @Override
   public String withdrawFromStudy(String participantId, String studyId) {
-    logger.info("StudyStateDaoImpl withdrawFromStudy() - Ends ");
+    logger.entry("Begin withdrawFromStudy()");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     CriteriaBuilder criteriaBuilder = null;
 
@@ -122,7 +123,7 @@ public class StudyStateDaoImpl implements StudyStateDao {
       }
     }
 
-    logger.info("StudyStateDaoImpl withdrawFromStudy() - Ends ");
+    logger.exit("withdrawFromStudy() - Ends ");
     return message;
   }
 }

@@ -76,24 +76,24 @@
               <td>
                 <div class="dis-ellipsis pr-100">${questionnaryInfo.title}</div>
               </td>
-              <td>${questionnaryInfo.frequency == 'Manually Schedule' ? 'Custom Schedule' :questionnaryInfo.frequency}</td>
+              <td>${questionnaryInfo.frequency == 'Manually Schedule' ? 'Custom schedule' :questionnaryInfo.frequency}</td>
               <td style="width:200px !important;">
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
                       title="View"
-                      onclick="viewQuestionnaires(${questionnaryInfo.id});"></span>
+                      onclick="viewQuestionnaires('${questionnaryInfo.id}');"></span>
                 <span
                     class="${questionnaryInfo.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Edit"
-                    onclick="editQuestionnaires(${questionnaryInfo.id});"></span>
+                    onclick="editQuestionnaires('${questionnaryInfo.id}')"></span>
                 <span
                     class="sprites_icon copy  mr-lg<c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Copy"
-                    onclick="copyQuestionnaire(${questionnaryInfo.id});"></span>
+                    onclick="copyQuestionnaire('${questionnaryInfo.id}');"></span>
                 <span
                     class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Delete"
-                    onclick="deleteQuestionnaire(${questionnaryInfo.id});"></span>
+                    onclick="deleteQuestionnaire('${questionnaryInfo.id}');"></span>
               </td>
             </tr>
           </c:forEach>
@@ -128,7 +128,7 @@
         {"bSortable": true}
       ],
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "order": [[0, "desc"]],
       "info": false,
@@ -272,22 +272,22 @@
         if (typeof obj.frequency === "undefined" && typeof obj.frequency === "undefined") {
           datarow.push(' ');
         } else {
-          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom Schedule' : obj.frequency);
+          datarow.push(obj.frequency == 'Manually Schedule' ? 'Custom schedule' : obj.frequency);
         }
-        var actionDiv = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewQuestionnaires("
-            + parseInt(obj.id) + ");'></span>";
+        var actionDiv = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewQuestionnaires(&#34;"
+            + obj.id + "&#34;);'></span>";
         if (obj.status) {
-          actionDiv += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editQuestionnaires("
-              + parseInt(obj.id) + ");'></span>";
+          actionDiv += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editQuestionnaires(&#34;"
+              + obj.id + "&#34;);'></span>";
         } else {
-          actionDiv += "<span class='edit-inc-draft mr-md mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editQuestionnaires("
-              + parseInt(obj.id) + ");'></span>";
+          actionDiv += "<span class='edit-inc-draft mr-md mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editQuestionnaires(&#34;"
+              + obj.id + "&#34;);'></span>";
         }
-        actionDiv += "<span class='sprites_icon copy  mr-lg' data-toggle='tooltip' data-placement='top' title='Copy' onclick='copyQuestionnaire("
-            + parseInt(obj.id) + ");'></span>";
+        actionDiv += "<span class='sprites_icon copy  mr-lg' data-toggle='tooltip' data-placement='top' title='Copy' onclick='copyQuestionnaire(&#34;"
+            + obj.id + "&#34;);'></span>";
 
-        actionDiv += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteQuestionnaire("
-            + parseInt(obj.id) + ");'></span>";
+        actionDiv += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteQuestionnaire(&#34;"
+            + obj.id + "&#34;);'></span>";
         datarow.push(actionDiv);
         $('#questionnaire_list').DataTable().row.add(datarow);
       });
@@ -304,6 +304,23 @@
     document.questionnaireInfoForm.action = "/studybuilder/adminStudies/questionnaireMarkAsCompleted.do?_S=${param._S}";
     document.questionnaireInfoForm.submit();
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
+	    }, 5000);
+	  }else{
+	    	setTimeout(hideDisplayMessage, 5000);
+	  }
+	}
 </script>     
         
         

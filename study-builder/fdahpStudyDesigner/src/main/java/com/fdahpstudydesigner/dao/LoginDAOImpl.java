@@ -2,22 +2,24 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.dao;
@@ -41,12 +43,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.security.authentication.LockedException;
@@ -55,7 +58,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LoginDAOImpl implements LoginDAO {
 
-  private static Logger logger = Logger.getLogger(LoginDAOImpl.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(LoginDAOImpl.class.getName());
 
   @Autowired private LoginService loginService;
 
@@ -68,8 +71,9 @@ public class LoginDAOImpl implements LoginDAO {
   public LoginDAOImpl() {}
 
   @Override
-  public String changePassword(Integer userId, String newPassword, String oldPassword) {
-    logger.info("LoginDAOImpl - changePassword() - Starts");
+  public String changePassword(String userId, String newPassword, String oldPassword) {
+    logger.entry("begin changePassword()");
+
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     UserBO adminUserBO = null;
@@ -78,7 +82,7 @@ public class LoginDAOImpl implements LoginDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      query = session.getNamedQuery("getUserById").setInteger("userId", userId);
+      query = session.getNamedQuery("getUserById").setString("userId", userId);
       adminUserBO = (UserBO) query.uniqueResult();
       if ((null != adminUserBO)
           && FdahpStudyDesignerUtil.compareEncryptedPassword(
@@ -107,21 +111,22 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - changePassword() - Ends");
+    logger.exit("changePassword() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<UserPasswordHistory> getPasswordHistory(Integer userId) {
-    logger.info("LoginDAOImpl - updatePasswordHistory() - Starts");
+  public List<UserPasswordHistory> getPasswordHistory(String userId) {
+    logger.entry("begin updatePasswordHistory()");
+
     List<UserPasswordHistory> passwordHistories = null;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         passwordHistories =
-            session.getNamedQuery("getPaswordHistoryByUserId").setInteger("userId", userId).list();
+            session.getNamedQuery("getPaswordHistoryByUserId").setString("userId", userId).list();
       }
 
     } catch (Exception e) {
@@ -131,13 +136,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - updatePasswordHistory() - Ends");
+    logger.exit("updatePasswordHistory() - Ends");
     return passwordHistories;
   }
 
   @Override
   public UserAttemptsBo getUserAttempts(String userEmailId) {
-    logger.info("LoginDAOImpl - getUserAttempts() - Starts");
+    logger.entry("begin getUserAttempts()");
     Session session = null;
     UserAttemptsBo attemptsBo = null;
     try {
@@ -152,13 +157,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - getUserAttempts() - Ends");
+    logger.exit("getUserAttempts() - Ends");
     return attemptsBo;
   }
 
   @Override
   public UserBO getUserBySecurityToken(String securityToken) {
-    logger.info("LoginDAOImpl - getUserBySecurityToken() - Starts");
+    logger.entry("begin getUserBySecurityToken()");
     Session session = null;
     UserBO userBO = null;
     try {
@@ -179,13 +184,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - getUserBySecurityToken() - Ends");
+    logger.exit("getUserBySecurityToken() - Ends");
     return userBO;
   }
 
   @Override
   public UserBO getValidUserByEmail(String email) {
-    logger.info("LoginDAOImpl - getValidUserByEmail() - Starts");
+    logger.entry("begin getValidUserByEmail()");
     UserBO userBo = null;
     Session session = null;
     try {
@@ -216,22 +221,23 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - getValidUserByEmail() - Ends");
+    logger.exit("getValidUserByEmail() - Ends");
     return userBo;
   }
 
   @Override
-  public Boolean isFrocelyLogOutUser(Integer userId) {
-    logger.info("LoginDAOImpl - isFrocelyLogOutUser() - Starts");
+  public Boolean isFrocelyLogOutUser(String userId) {
+    logger.entry("begin isFrocelyLogOutUser()");
+
     UserBO userBo = null;
     boolean result = false;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         userBo =
             (UserBO)
-                session.getNamedQuery("getUserById").setInteger("userId", userId).uniqueResult();
+                session.getNamedQuery("getUserById").setString("userId", userId).uniqueResult();
         if (userBo != null) {
           result = userBo.isForceLogout();
         }
@@ -244,22 +250,22 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - isFrocelyLogOutUser() - Ends");
+    logger.exit("isFrocelyLogOutUser() - Ends");
     return result;
   }
 
   @Override
-  public Boolean isUserEnabled(Integer userId) {
-    logger.info("LoginDAOImpl - isUserExists() - Starts");
+  public Boolean isUserEnabled(String userId) {
+    logger.entry("begin isUserExists()");
     UserBO userBo = null;
     boolean result = false;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         userBo =
             (UserBO)
-                session.getNamedQuery("getUserById").setInteger("userId", userId).uniqueResult();
+                session.getNamedQuery("getUserById").setString("userId", userId).uniqueResult();
         if (userBo != null) {
           result = userBo.isEnabled();
         }
@@ -272,12 +278,12 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - isUserExists() - Ends");
+    logger.exit("isUserExists() - Ends");
     return result;
   }
 
   private boolean isUserExists(String userEmail) {
-    logger.info("LoginDAOImpl - isUserExists() - Starts");
+    logger.entry("begin isUserExists()");
     UserBO userBo = null;
     boolean result = false;
     try {
@@ -288,14 +294,14 @@ public class LoginDAOImpl implements LoginDAO {
     } catch (Exception e) {
       logger.error("LoginDAOImpl - isUserExists() - ERROR ", e);
     }
-    logger.info("LoginDAOImpl - isUserExists() - Ends");
+    logger.exit("isUserExists() - Ends");
     return result;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public void passwordLoginBlocked() {
-    logger.info("LoginDAOImpl - passwordLoginBlocked() - Starts");
+    logger.entry("begin passwordLoginBlocked()");
     Session session = null;
     List<Integer> userBOList = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -334,12 +340,12 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - passwordLoginBlocked() - Ends");
+    logger.exit("passwordLoginBlocked() - Ends");
   }
 
   @Override
   public void resetFailAttempts(String userEmailId) {
-    logger.info("LoginDAOImpl - resetFailAttempts() - Starts");
+    logger.entry("begin resetFailAttempts()");
     Session session = null;
     UserAttemptsBo attemptsBo = null;
     try {
@@ -360,7 +366,7 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - resetFailAttempts() - Ends");
+    logger.exit("resetFailAttempts() - Ends");
   }
 
   @Autowired
@@ -370,7 +376,7 @@ public class LoginDAOImpl implements LoginDAO {
 
   @Override
   public void updateFailAttempts(String userEmailId, AuditLogEventRequest auditRequest) {
-    logger.info("LoginDAOImpl - updateUser() - Starts");
+    logger.entry("begin updateUser()");
     Session session = null;
     UserAttemptsBo attemptsBo = null;
     boolean isAcountLocked = false;
@@ -455,13 +461,14 @@ public class LoginDAOImpl implements LoginDAO {
       loginService.sendLockedAccountPasswordResetLinkToMail(userEmailId, auditRequest);
       throw new LockedException(propMap.get("account.lock.msg"));
     }
-    logger.info("LoginDAOImpl - updateUser() - Ends");
+    logger.exit("updateUser() - Ends");
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public String updatePasswordHistory(Integer userId, String userPassword) {
-    logger.info("LoginDAOImpl - updatePasswordHistory() - Starts");
+  public String updatePasswordHistory(String userId, String userPassword) {
+    logger.entry("begin updatePasswordHistory()");
+
     List<UserPasswordHistory> passwordHistories = null;
     UserPasswordHistory savePasswordHistory = null;
     String result = FdahpStudyDesignerConstants.FAILURE;
@@ -471,9 +478,9 @@ public class LoginDAOImpl implements LoginDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      if ((userId != null) && (userId != 0)) {
+      if (StringUtils.isNotEmpty(userId)) {
         passwordHistories =
-            session.getNamedQuery("getPaswordHistoryByUserId").setInteger("userId", userId).list();
+            session.getNamedQuery("getPaswordHistoryByUserId").setString("userId", userId).list();
         if ((passwordHistories != null)
             && (passwordHistories.size() > (passwordHistoryCount - 1))) {
           for (int i = 0; i < ((passwordHistories.size() - passwordHistoryCount) + 1); i++) {
@@ -498,13 +505,13 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - updatePasswordHistory() - Ends");
+    logger.exit("updatePasswordHistory() - Ends");
     return result;
   }
 
   @Override
   public String updateUser(UserBO userBO) {
-    logger.info("LoginDAOImpl - updateUser() - Starts");
+    logger.entry("begin updateUser()");
     Session session = null;
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -524,14 +531,14 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - updateUser() - Ends");
+    logger.exit("updateUser() - Ends");
     return result;
   }
 
   @Override
   // Reset the user details as part of account locking flow
   public String updateUserForResetPassword(UserBO userBO) {
-    logger.info("LoginDAOImpl - updateUserForResetPassword() - Starts");
+    logger.entry("begin updateUserForResetPassword()");
     Session session = null;
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -550,7 +557,7 @@ public class LoginDAOImpl implements LoginDAO {
         session.close();
       }
     }
-    logger.info("LoginDAOImpl - updateUserForResetPassword() - Ends");
+    logger.exit("updateUserForResetPassword() - Ends");
     return result;
   }
 }

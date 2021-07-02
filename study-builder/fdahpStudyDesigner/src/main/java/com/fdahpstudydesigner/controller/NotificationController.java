@@ -1,9 +1,25 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -23,7 +39,10 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.log4j.Logger;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,7 +52,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class NotificationController {
 
-  private static Logger logger = Logger.getLogger(NotificationController.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(NotificationController.class.getName());
 
   @Autowired private NotificationService notificationService;
 
@@ -41,7 +60,7 @@ public class NotificationController {
 
   @RequestMapping("/adminNotificationEdit/deleteNotification.do")
   public ModelAndView deleteNotification(HttpServletRequest request) {
-    logger.info("NotificationController - deleteNotification - Starts");
+    logger.entry("begin deleteNotification");
     ModelAndView mav = new ModelAndView();
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -60,8 +79,7 @@ public class NotificationController {
         // notification(global/study) that has been requested for
         // delete.
         message =
-            notificationService.deleteNotification(
-                Integer.parseInt(notificationId), sessionObject, notificationType);
+            notificationService.deleteNotification(notificationId, sessionObject, notificationType);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           request
               .getSession()
@@ -85,7 +103,7 @@ public class NotificationController {
 
   @RequestMapping("/adminNotificationEdit/getNotificationToEdit.do")
   public ModelAndView getNotificationToEdit(HttpServletRequest request) {
-    logger.info("NotificationController - getNotificationToEdit - Starts");
+    logger.entry("begin getNotificationToEdit");
     ModelMap map = new ModelMap();
     NotificationBO notificationBO = null;
     ModelAndView mav = new ModelAndView();
@@ -117,12 +135,11 @@ public class NotificationController {
         if (!"".equals(notificationId)) {
           // Fetching notification detail from notification table by
           // Id.
-          notificationBO = notificationService.getNotification(Integer.parseInt(notificationId));
+          notificationBO = notificationService.getNotification((notificationId));
           // Fetching notification history of last sent detail from
           // notification table by Id.
           notificationHistoryNoDateTime =
-              notificationService.getNotificationHistoryListNoDateTime(
-                  Integer.parseInt(notificationId));
+              notificationService.getNotificationHistoryListNoDateTime(notificationId);
           // Spring security reason we have different method for
           // edit/resend/addOrCopy of notification as these section
           // are editable.
@@ -132,6 +149,7 @@ public class NotificationController {
             if (notificationBO.isNotificationSent()) {
               notificationBO.setScheduleDate("");
               notificationBO.setScheduleTime("");
+              notificationBO.setScheduleTimestamp(null);
             }
             notificationBO.setActionPage("resend");
           }
@@ -152,13 +170,13 @@ public class NotificationController {
     } catch (Exception e) {
       logger.error("NotificationController - getNotificationToEdit - ERROR", e);
     }
-    logger.info("NotificationController - getNotificationToEdit - Ends");
+    logger.exit("getNotificationToEdit - Ends");
     return mav;
   }
 
   @RequestMapping("/adminNotificationView/getNotificationToView.do")
   public ModelAndView getNotificationToView(HttpServletRequest request) {
-    logger.info("NotificationController - getNotification - Starts");
+    logger.entry("begin getNotificationToView()");
     ModelMap map = new ModelMap();
     NotificationBO notificationBO = null;
     ModelAndView mav = new ModelAndView();
@@ -183,12 +201,11 @@ public class NotificationController {
         if (!"".equals(notificationId)) {
           // Fetching notification detail from notification table by
           // Id
-          notificationBO = notificationService.getNotification(Integer.parseInt(notificationId));
+          notificationBO = notificationService.getNotification(notificationId);
           // Fetching notification history of last sent detail from
           // notification table by Id
           notificationHistoryNoDateTime =
-              notificationService.getNotificationHistoryListNoDateTime(
-                  Integer.parseInt(notificationId));
+              notificationService.getNotificationHistoryListNoDateTime(notificationId);
           // Spring security reason we have different method for view
           // section
           if ("view".equals(actionType)) {
@@ -204,15 +221,16 @@ public class NotificationController {
     } catch (Exception e) {
       logger.error("NotificationController - getNotification - ERROR", e);
     }
-    logger.info("NotificationController - getNotification - Ends");
+    logger.exit("getNotificationToView() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminNotificationEdit/saveOrUpdateNotification.do")
   public ModelAndView saveOrUpdateOrResendNotification(
       HttpServletRequest request, NotificationBO notificationBO) {
-    logger.info("NotificationController - saveOrUpdateOrResendNotification - Starts");
-    Integer notificationId = 0;
+
+    logger.info("begin saveOrUpdateOrResendNotification()");
+    String notificationId = null;
     ModelAndView mav = new ModelAndView();
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
@@ -245,19 +263,31 @@ public class NotificationController {
                         FdahpStudyDesignerConstants.SDF_TIME,
                         FdahpStudyDesignerConstants.DB_SDF_TIME))
                 : "");
+        notificationBO.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
+
         notificationBO.setNotificationScheduleType(
             FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
       } else if (FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE.equals(currentDateTime)) {
         notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
         notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
+        notificationBO.setScheduleTimestamp(
+            FdahpStudyDesignerUtil.getTimeStamp(
+                notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
+
         notificationBO.setNotificationScheduleType(
             FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE);
       } else {
         notificationBO.setScheduleDate("");
         notificationBO.setScheduleTime("");
+        notificationBO.setScheduleTimestamp(null);
         notificationBO.setNotificationScheduleType("0");
       }
-      if (null == notificationBO.getNotificationId()) {
+      if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
         notificationBO.setCreatedBy(sessionObject.getUserId());
         notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       } else {
@@ -267,14 +297,15 @@ public class NotificationController {
       notificationId =
           notificationService.saveOrUpdateOrResendNotification(
               notificationBO, notificationType, buttonType, sessionObject, "");
-      if (!notificationId.equals(0)) {
-        if ((notificationBO.getNotificationId() == null) && "add".equalsIgnoreCase(buttonType)) {
+      if (StringUtils.isNotEmpty(notificationId)) {
+        if (StringUtils.isEmpty(notificationBO.getNotificationId())
+            && "add".equalsIgnoreCase(buttonType)) {
           request
               .getSession()
               .setAttribute(
                   FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get("save.notification.success.message"));
-        } else if ((notificationBO.getNotificationId() != null)
+        } else if ((StringUtils.isNotEmpty(notificationBO.getNotificationId()))
             && "update".equalsIgnoreCase(buttonType)) {
           request
               .getSession()
@@ -289,7 +320,8 @@ public class NotificationController {
                   propMap.get("resend.notification.success.message"));
         }
       } else {
-        if ((notificationBO.getNotificationId() == null) && "add".equalsIgnoreCase(buttonType)) {
+        if (StringUtils.isEmpty(notificationBO.getNotificationId())
+            && "add".equalsIgnoreCase(buttonType)) {
           request
               .getSession()
               .setAttribute(
@@ -314,13 +346,13 @@ public class NotificationController {
     } catch (Exception e) {
       logger.error("NotificationController - saveOrUpdateOrResendNotification - ERROR", e);
     }
-    logger.info("NotificationController - saveOrUpdateOrResendNotification - Ends");
+    logger.exit("saveOrUpdateOrResendNotification() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminNotificationView/viewNotificationList.do")
   public ModelAndView viewNotificationList(HttpServletRequest request) {
-    logger.info("NotificationController - viewNotificationList() - Starts");
+    logger.entry("begin viewNotificationList()");
     String sucMsg = "";
     String errMsg = "";
     ModelMap map = new ModelMap();
@@ -342,20 +374,22 @@ public class NotificationController {
        * Passing 0 in below param as notifications are independent from
        * study and empty string to define it is as global notification
        */
-      notificationList = notificationService.getNotificationList(0, "");
-      for (NotificationBO notification : notificationList) {
-        if (!notification.isNotificationSent()
-            && notification
-                .getNotificationScheduleType()
-                .equals(FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE)) {
-          notification.setCheckNotificationSendingStatus("Scheduled");
-        } else if (!notification.isNotificationSent()
-            && notification
-                .getNotificationScheduleType()
-                .equals(FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE)) {
-          notification.setCheckNotificationSendingStatus("Sending");
-        } else if (notification.isNotificationSent()) {
-          notification.setCheckNotificationSendingStatus("Sent");
+      notificationList = notificationService.getNotificationList(null, "");
+      if (CollectionUtils.isNotEmpty(notificationList)) {
+        for (NotificationBO notification : notificationList) {
+          if (!notification.isNotificationSent()
+              && notification
+                  .getNotificationScheduleType()
+                  .equals(FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE)) {
+            notification.setCheckNotificationSendingStatus("Scheduled");
+          } else if (!notification.isNotificationSent()
+              && notification
+                  .getNotificationScheduleType()
+                  .equals(FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE)) {
+            notification.setCheckNotificationSendingStatus("Sending");
+          } else if (notification.isNotificationSent()) {
+            notification.setCheckNotificationSendingStatus("Sent");
+          }
         }
       }
       map.addAttribute("notificationList", notificationList);
@@ -364,7 +398,7 @@ public class NotificationController {
     } catch (Exception e) {
       logger.error("NotificationController - viewNotificationList() - ERROR ", e);
     }
-    logger.info("NotificationController - viewNotificationList() - ends");
+    logger.exit("viewNotificationList() - ends");
     return mav;
   }
 }

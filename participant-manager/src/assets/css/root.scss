@@ -1180,6 +1180,12 @@ select {
 
 /* Responsive code - tab mobile start here */
 
+@media (min-width: 320px) {
+  #desktop-menu {
+    display: none;
+  }
+}
+
 @media only screen and (max-width: 360px) and (min-width: 320px) {
   .search_svg {
     background: transparent;
@@ -1542,6 +1548,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .active_text {
   color: var(--light-green);
@@ -1555,6 +1562,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .paused_text {
   color: var(--orange-red);
@@ -1568,6 +1576,7 @@ select {
   display: inline-block;
   border-radius: 58px;
   line-height: 100%;
+  vertical-align: text-top;
 }
 .deactivated_text {
   color: var(--light-red);
@@ -1600,5 +1609,107 @@ select {
 @media screen and (max-width: 1440px) {
   #toast-container > div {
     font-size: 13px !important;
+  }
+}
+
+meter,
+progress {
+  width: 100%;
+  height: 10px;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+}
+
+@-moz-document url-prefix() {
+  meter {
+    font-size: 6px;
+  }
+}
+@supports (-moz-appearance: none) {
+  meter {
+    font-size: 6px;
+  }
+}
+meter::-webkit-meter-optimum-value {
+  font-size: 6px;
+}
+
+meter::-webkit-meter-high-value {
+  font-size: 6px;
+}
+.weakPwd {
+  color: var(--light-red);
+}
+.fairPwd {
+  color: var(--yellow);
+}
+.goodPwd {
+  color: var(--green);
+}
+.strongPwd {
+  color: var(--green);
+}
+
+.weakPwd,
+.fairPwd,
+.goodPwd,
+.strongPwd {
+  font-size: 12px;
+}
+
+meter::-webkit-meter-bar {
+  background: none; /* Required to get rid of the default background property */
+  background-color: var(--aqua-gray);
+  box-shadow: none;
+  border: none;
+  width: 100%;
+  height: 10px;
+}
+
+meter::-moz-meter-bar {
+  height: 10px;
+  box-shadow: none;
+}
+::-moz-meter-bar {
+  -moz-appearance: meterchunk;
+  width: 100%;
+  height: 10px;
+  border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-top-left-radius: 50px;
+  box-shadow: none;
+}
+:-moz-meter-optimum::-moz-meter-bar {
+  border-radius: 9px;
+  box-shadow: none;
+}
+
+@-moz-document url-prefix() {
+  #body-container .form-item__element--select:invalid {
+    margin-left: -4px !important;
+  }
+  #body-container .form-item__element--select {
+    margin-left: -4px !important;
+    padding-right: 10px;
+  }
+}
+
+@media only screen and (max-width: 340px) and (min-width: 320px) {
+  .mob_custom_width {
+    width: 100% !important;
+  }
+
+  .mob_display-inline {
+    display: inline-block !important;
+  }
+  .card-body__pad .custom__labels__radio {
+    padding: 0 0px !important;
+  }
+  .form-group .custom__labels label {
+    font-size: 75% !important;
+    line-height: 12px !important;
   }
 }

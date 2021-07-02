@@ -14,16 +14,16 @@
       role="form">
     <div class="right-content-head">
       <div class="text-right">
-        <div class="black-md-f text-uppercase dis-line pull-left line34">
+        <div class="black-md-f dis-line pull-left line34">
           <span
               class="mr-xs cur-pointer"
               onclick="goToBackPage(this);"><img
               src="../images/icons/back-b.png" alt=""/></span>
-          <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Eligibility Question</c:if>
-          <c:if test="${actionTypeForQuestionPage == 'view'}">View Eligibility Question <c:set
+          <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit eligibility question</c:if>
+          <c:if test="${actionTypeForQuestionPage == 'view'}">View eligibility question <c:set
               var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
           </c:if>
-          <c:if test="${actionTypeForQuestionPage == 'add'}">Add Eligibility Question</c:if>
+          <c:if test="${actionTypeForQuestionPage == 'add'}">Add eligibility question</c:if>
         </div>
         <input type="hidden" value="${actionTypeForQuestionPage}" name="actionTypeForQuestionPage">
         <div class="dis-line form-group mb-none mr-sm">
@@ -63,7 +63,7 @@
                  class="form-control ${eligibilityTest.used ? 'cursor-none-disabled-event' : ''}"
                  name="shortTitle" id="shortTitleId"
                  value="${fn:escapeXml(eligibilityTest.shortTitle)}"
-                 required="required"
+                 required="required" data-error="Please fill out this field" 
                  maxlength="15" ${eligibilityTest.used ? 'readonly' : ''} />
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -75,7 +75,7 @@
         </span>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" required name="question" id="question"
+        <input type="text" class="form-control" required data-error="Please fill out this field" name="question" id="question"
                value="${fn:escapeXml(eligibilityTest.question)}" maxlength="250"/>
         <div class="help-block with-errors red-txt"></div>
       </div>
@@ -100,7 +100,7 @@
             <input type="text" class="form-control" name="tentativeDuration" value="Yes" disabled/>
           </div>
           <div class="form-group col-md-6 pr-none">
-            <select class="selectpicker elaborateClass" required title="Select"
+            <select class="selectpicker elaborateClass" required data-error="Please fill out this field"  title="Select"
                     name="responseYesOption"
                     id="resYesOptId" onchange="chkValidChoosedOption()">
               <option value="true" ${eligibilityTest.responseYesOption ? 'selected':''}>Pass
@@ -118,7 +118,7 @@
             <input type="text" class="form-control" name="tentativeDuration" value="No" disabled/>
           </div>
           <div class="form-group col-md-6 pr-none">
-            <select class="selectpicker elaborateClass form-control" required title="Select"
+            <select class="selectpicker elaborateClass form-control" required data-error="Please fill out this field"  title="Select"
                     name="responseNoOption" id="resNoOptId" onchange="chkValidChoosedOption()">
               <option value="true" ${eligibilityTest.responseNoOption ? 'selected':''} >Pass
               </option>
@@ -188,7 +188,7 @@
             $('#shortTitleId').parent().addClass('has-error has-danger').find(
                 ".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "This is a required field."));
+                "This is a required field"));
           }
           $('#saveId').prop("disabled", false);
           return false;
@@ -231,7 +231,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },

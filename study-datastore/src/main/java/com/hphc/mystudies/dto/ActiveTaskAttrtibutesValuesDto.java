@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,10 +27,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -39,15 +40,16 @@ public class ActiveTaskAttrtibutesValuesDto implements Serializable {
   private static final long serialVersionUID = -6725947033876179386L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "active_task_attribute_id")
-  private Integer attributeValueId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "active_task_attribute_id", updatable = false, nullable = false)
+  private String attributeValueId;
 
   @Column(name = "active_task_id")
-  private Integer activeTaskId;
+  private String activeTaskId;
 
   @Column(name = "active_task_master_attr_id")
-  private Integer activeTaskMasterAttrId;
+  private String activeTaskMasterAttrId;
 
   @Column(name = "attribute_val")
   private String attributeVal;
@@ -101,27 +103,27 @@ public class ActiveTaskAttrtibutesValuesDto implements Serializable {
 
   @Transient private String activityStepKey;
 
-  public Integer getAttributeValueId() {
+  public String getAttributeValueId() {
     return attributeValueId;
   }
 
-  public void setAttributeValueId(Integer attributeValueId) {
+  public void setAttributeValueId(String attributeValueId) {
     this.attributeValueId = attributeValueId;
   }
 
-  public Integer getActiveTaskId() {
+  public String getActiveTaskId() {
     return activeTaskId;
   }
 
-  public void setActiveTaskId(Integer activeTaskId) {
+  public void setActiveTaskId(String activeTaskId) {
     this.activeTaskId = activeTaskId;
   }
 
-  public Integer getActiveTaskMasterAttrId() {
+  public String getActiveTaskMasterAttrId() {
     return activeTaskMasterAttrId;
   }
 
-  public void setActiveTaskMasterAttrId(Integer activeTaskMasterAttrId) {
+  public void setActiveTaskMasterAttrId(String activeTaskMasterAttrId) {
     this.activeTaskMasterAttrId = activeTaskMasterAttrId;
   }
 

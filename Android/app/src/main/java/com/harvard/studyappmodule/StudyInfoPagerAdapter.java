@@ -17,7 +17,9 @@ package com.harvard.studyappmodule;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -25,9 +27,11 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyInfo;
 import com.harvard.utils.AppController;
@@ -38,7 +42,7 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
 
   private int size;
   private AppCompatTextView title;
-  private AppCompatTextView desc;
+  private WebView desc;
   private RelativeLayout watchVideo;
   private AppCompatTextView watchVideoLabel;
   private Context context;
@@ -91,25 +95,41 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
 
   private void setData(int pos) {
     title.setText(info.get(pos).getTitle());
-    desc.setText(Html.fromHtml(info.get(pos).getText()));
+    desc.setBackgroundColor(Color.TRANSPARENT);
+    String txtcolor;
+    if (info.get(pos).getType().equalsIgnoreCase("video")) {
+      txtcolor = "white";
+    } else {
+      txtcolor = "black";
+    }
+    String html = "&lt;font color=\"" + txtcolor + "\"&gt;" + (info.get(pos).getText()) + "&lt;/font&gt;";
+    if (Build.VERSION.SDK_INT >= 24) {
+      desc.loadDataWithBaseURL(null,
+              Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
+    } else {
+      desc.loadDataWithBaseURL(null, Html.fromHtml(html).toString(), "text/html", "UTF-8", null);
+    }
+    RequestOptions requestOptions = new RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .skipMemoryCache(false);
+
     Glide.with(context)
-        .load(info.get(pos).getImage())
-        .thumbnail(0.5f)
-        .crossFade()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .into(bgImg);
+            .load(info.get(pos).getImage())
+            .thumbnail(0.5f)
+            .apply(requestOptions)
+            .into(bgImg);
   }
 
   private void initializeXmlId(int pos, View view) {
     if (info.get(pos).getType().equalsIgnoreCase("video")) {
       title = (AppCompatTextView) view.findViewById(R.id.title);
-      desc = (AppCompatTextView) view.findViewById(R.id.desc);
+      desc = (WebView) view.findViewById(R.id.desc);
       watchVideo = (RelativeLayout) view.findViewById(R.id.watch_video);
       watchVideoLabel = (AppCompatTextView) view.findViewById(R.id.watchVideoLabel);
       bgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
     } else {
       title = (AppCompatTextView) view.findViewById(R.id.title);
-      desc = (AppCompatTextView) view.findViewById(R.id.desc);
+      desc = (WebView) view.findViewById(R.id.desc);
       bgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
     }
   }
@@ -118,11 +138,9 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
     try {
       if (info.get(pos).getType().equalsIgnoreCase("video")) {
         title.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
-        desc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
         watchVideoLabel.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
       } else {
         title.setTypeface(AppController.getTypeface(view.getContext(), "thin"));
-        desc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
       }
     } catch (Exception e) {
       Logger.log(e);

@@ -39,6 +39,7 @@ import com.hphc.mystudies.bean.DestinationBean;
 import com.hphc.mystudies.bean.FetalKickCounterFormatBean;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityStepsBean;
+import com.hphc.mystudies.bean.QuestionnaireStepsBean;
 import com.hphc.mystudies.bean.SpatialSpanMemoryFormatBean;
 import com.hphc.mystudies.bean.TowerOfHanoiFormatBean;
 import com.hphc.mystudies.bean.appendix.QuestionnaireActivityStructureBean;
@@ -83,15 +84,18 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.text.StringEscapeUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class ActivityMetaDataDao {
 
-  private static final Logger LOGGER = Logger.getLogger(ActivityMetaDataDao.class);
+  private static final XLogger LOGGER =
+      XLoggerFactory.getXLogger(ActivityMetaDataDao.class.getName());
 
   @SuppressWarnings("unchecked")
   HashMap<String, String> propMap = StudyMetaDataUtil.getAppProperties();
@@ -105,7 +109,7 @@ public class ActivityMetaDataDao {
   @SuppressWarnings("unchecked")
   public ActivityResponse studyActivityList(String studyId, String authorization)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - studyActivityList() :: Starts");
+    LOGGER.entry("begin studyActivityList()");
     Session session = null;
     ActivityResponse activityResponse = new ActivityResponse();
     List<ActiveTaskDto> activeTaskDtoList = null;
@@ -151,7 +155,7 @@ public class ActivityMetaDataDao {
 
             /** Allow spatial span memory and tower of hanoi active tasks only for iOS platform */
             if (deviceType.equalsIgnoreCase(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)
-                && !activeTaskDto.getTaskTypeId().equals(1)) {
+                && !activeTaskDto.getTaskTypeId().equals(String.valueOf(1))) {
               isSupporting = false;
             }
 
@@ -206,12 +210,12 @@ public class ActivityMetaDataDao {
               activityBean.setActivityId(activeTaskDto.getShortTitle());
 
               if (null != activeTaskDto.getTaskTypeId()) {
-                if (1 == activeTaskDto.getTaskTypeId().intValue()) {
+                if ("1".equals(activeTaskDto.getTaskTypeId())) {
                   activityBean.setTaskSubType(
                       StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER);
-                } else if (2 == activeTaskDto.getTaskTypeId().intValue()) {
+                } else if ("2".equals(activeTaskDto.getTaskTypeId())) {
                   activityBean.setTaskSubType(StudyMetaDataConstants.ACTIVITY_AT_TOWER_OF_HANOI);
-                } else if (3 == activeTaskDto.getTaskTypeId().intValue()) {
+                } else if ("3".equals(activeTaskDto.getTaskTypeId())) {
                   activityBean.setTaskSubType(
                       StudyMetaDataConstants.ACTIVITY_AT_SPATIAL_SPAN_MEMORY);
                 }
@@ -227,6 +231,10 @@ public class ActivityMetaDataDao {
                       this.getAnchordateDetailsByActivityIdForActivetask(
                           activeTaskDto, activityBean, session);
                 }
+              }
+
+              if (activityBean.getIsStudyLifeTime()) {
+                activityBean.setEndTime("");
               }
               /** Phase2a code for anchor date * */
               activitiesBeanList.add(activityBean);
@@ -305,6 +313,11 @@ public class ActivityMetaDataDao {
                         questionaire, activityBean, session);
               }
             }
+
+            if (activityBean.getIsStudyLifeTime()) {
+
+              activityBean.setEndTime("");
+            }
             /** Phase2a code for anchor date * */
             activitiesBeanList.add(activityBean);
           }
@@ -322,13 +335,13 @@ public class ActivityMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - studyActivityList() :: Ends");
+    LOGGER.exit("studyActivityList() :: Ends");
     return activityResponse;
   }
 
   public ActiveTaskActivityMetaDataResponse studyActiveTaskActivityMetadata(
       String studyId, String activityId, String activityVersion) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - studyActiveTaskActivityMetadata() :: Starts");
+    LOGGER.entry("begin studyActiveTaskActivityMetadata()");
     Session session = null;
     ActiveTaskActivityMetaDataResponse activeTaskActivityMetaDataResponse =
         new ActiveTaskActivityMetaDataResponse();
@@ -358,13 +371,13 @@ public class ActivityMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - studyActiveTaskActivityMetadata() :: Ends");
+    LOGGER.exit("studyActiveTaskActivityMetadata() :: Ends");
     return activeTaskActivityMetaDataResponse;
   }
 
   public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(
       String studyId, String activityId, String activityVersion) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - studyQuestionnaireActivityMetadata() :: Starts");
+    LOGGER.entry("begin studyQuestionnaireActivityMetadata()");
     Session session = null;
     QuestionnaireActivityMetaDataResponse activityMetaDataResponse =
         new QuestionnaireActivityMetaDataResponse();
@@ -394,7 +407,7 @@ public class ActivityMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - studyQuestionnaireActivityMetadata() :: Ends");
+    LOGGER.exit("studyQuestionnaireActivityMetadata() :: Ends");
     return activityMetaDataResponse;
   }
 
@@ -402,7 +415,7 @@ public class ActivityMetaDataDao {
   public ActiveTaskActivityStructureBean activeTaskMetadata(
       String studyId, String activityId, Session session, String activityVersion)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - activeTaskMetadata() :: Starts");
+    LOGGER.entry("begin activeTaskMetadata()");
     ActiveTaskActivityStructureBean activeTaskActivityStructureBean =
         new ActiveTaskActivityStructureBean();
     ActiveTaskDto activeTaskDto = null;
@@ -418,7 +431,7 @@ public class ActivityMetaDataDao {
                           + " where ATDTO.action=true and ATDTO.customStudyId= :customStudyId"
                           + " and ATDTO.shortTitle= :shortTitle"
                           + " and ROUND(ATDTO.version, 1)= :version"
-                          + " ORDER BY ATDTO.id DESC")
+                          + " ORDER BY ATDTO.modifiedDate DESC")
                   .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                   .setString(
                       StudyMetaDataEnum.QF_SHORT_TITLE.value(),
@@ -428,7 +441,7 @@ public class ActivityMetaDataDao {
                   .uniqueResult();
       if (activeTaskDto != null) {
 
-        List<Integer> taskMasterAttrIdList = new ArrayList<>();
+        List<String> taskMasterAttrIdList = new ArrayList<>();
         List<ActiveTaskAttrtibutesValuesDto> activeTaskAttrtibuteValuesList;
         List<ActiveTaskMasterAttributeDto> activeTaskMaterList = null;
 
@@ -476,7 +489,7 @@ public class ActivityMetaDataDao {
                         + " from ActiveTaskMasterAttributeDto ATMADTO"
                         + " where ATMADTO.attributeType=:attributeType)"
                         + " ORDER BY ATAVDTO.activeTaskMasterAttrId")
-                .setInteger("activeTaskId", activeTaskDto.getId())
+                .setString("activeTaskId", activeTaskDto.getId())
                 .setString(
                     "attributeType", StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE)
                 .list();
@@ -502,8 +515,7 @@ public class ActivityMetaDataDao {
                           .createQuery(
                               "from ActiveTaskListDto ATDTO"
                                   + " where ATDTO.activeTaskListId=:activeTaskListId")
-                          .setInteger(
-                              "activeTaskListId", activeTaskMaterList.get(0).getTaskTypeId())
+                          .setString("activeTaskListId", activeTaskMaterList.get(0).getTaskTypeId())
                           .uniqueResult();
             }
           }
@@ -536,7 +548,7 @@ public class ActivityMetaDataDao {
                   activeTaskActiveTaskStep.setText(
                       StringUtils.isEmpty(activeTaskDto.getInstruction())
                           ? ""
-                          : activeTaskDto.getInstruction());
+                          : StringEscapeUtils.escapeHtml4(activeTaskDto.getInstruction()));
 
                   switch (taskDto.getType()) {
                     case StudyMetaDataConstants.ACTIVITY_AT_FETAL_KICK_COUNTER:
@@ -594,7 +606,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - activeTaskMetadata() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - activeTaskMetadata() :: Ends");
+    LOGGER.exit("activeTaskMetadata() :: Ends");
     return activeTaskActivityStructureBean;
   }
 
@@ -602,7 +614,7 @@ public class ActivityMetaDataDao {
   public QuestionnaireActivityStructureBean questionnaireMetadata(
       String studyId, String activityId, Session session, String activityVersion)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Starts");
+    LOGGER.entry("begin questionnaireMetadata()");
     QuestionnaireActivityStructureBean activityStructureBean =
         new QuestionnaireActivityStructureBean();
     Map<String, Integer> sequenceNoMap = new HashMap<>();
@@ -620,7 +632,7 @@ public class ActivityMetaDataDao {
                       "from QuestionnairesDto QDTO"
                           + " where QDTO.customStudyId= :customStudyId and QDTO.shortTitle= :shortTitle"
                           + " and QDTO.status=true and ROUND(QDTO.version, 1)= :version"
-                          + " ORDER BY QDTO.id DESC")
+                          + " ORDER BY QDTO.modifiedDate DESC")
                   .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                   .setString(
                       StudyMetaDataEnum.QF_SHORT_TITLE.value(),
@@ -675,18 +687,18 @@ public class ActivityMetaDataDao {
                         + " where QSDTO.questionnairesId=:questRespId"
                         + " and QSDTO.status=true"
                         + " ORDER BY QSDTO.sequenceNo")
-                .setInteger("questRespId", questionnaireDto.getId())
+                .setString("questRespId", questionnaireDto.getId())
                 .list();
         if ((questionaireStepsList != null) && !questionaireStepsList.isEmpty()) {
 
-          List<Integer> instructionIdList = new ArrayList<>();
-          List<Integer> questionIdList = new ArrayList<>();
-          List<Integer> formIdList = new ArrayList<>();
+          List<String> instructionIdList = new ArrayList<>();
+          List<String> questionIdList = new ArrayList<>();
+          List<String> formIdList = new ArrayList<>();
 
           for (int i = 0; i < questionaireStepsList.size(); i++) {
             if (!questionnaireDto.getBranching()) {
               if ((questionaireStepsList.size() - 1) == i) {
-                questionaireStepsList.get(i).setDestinationStep(0);
+                questionaireStepsList.get(i).setDestinationStep(String.valueOf(0));
               } else {
                 questionaireStepsList
                     .get(i)
@@ -739,6 +751,12 @@ public class ActivityMetaDataDao {
 
           questionResponseTypeMasterInfoList =
               session.createQuery("from QuestionResponsetypeMasterInfoDto").list();
+          StudyDto studyDto =
+              (StudyDto)
+                  session
+                      .getNamedQuery("getLiveStudyIdByCustomStudyId")
+                      .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
+                      .uniqueResult();
 
           if (!instructionIdList.isEmpty()) {
             List<InstructionsDto> instructionsDtoList =
@@ -749,6 +767,7 @@ public class ActivityMetaDataDao {
                     .setParameterList("instructionIdList", instructionIdList)
                     .list();
             if ((instructionsDtoList != null) && !instructionsDtoList.isEmpty()) {
+
               stepsSequenceTreeMap =
                   (TreeMap<Integer, QuestionnaireActivityStepsBean>)
                       this.getStepsInfoForQuestionnaires(
@@ -762,7 +781,8 @@ public class ActivityMetaDataDao {
                           questionnaireStepDetailsMap,
                           null,
                           questionaireStepsList,
-                          questionnaireDto);
+                          questionnaireDto,
+                          studyDto);
             }
           }
 
@@ -789,12 +809,13 @@ public class ActivityMetaDataDao {
                           questionnaireStepDetailsMap,
                           questionResponseTypeMasterInfoList,
                           questionaireStepsList,
-                          questionnaireDto);
+                          questionnaireDto,
+                          studyDto);
             }
           }
 
           if (!formIdList.isEmpty()) {
-            for (Integer formId : formIdList) {
+            for (String formId : formIdList) {
               List<FormMappingDto> formList =
                   session
                       .createQuery(
@@ -804,7 +825,7 @@ public class ActivityMetaDataDao {
                               + " where FDTO.formId=:formId"
                               + ") and FMDTO.active=true"
                               + " ORDER BY FMDTO.sequenceNo ")
-                      .setInteger("formId", formId)
+                      .setString("formId", formId)
                       .list();
               if ((formList != null) && !formList.isEmpty()) {
                 stepsSequenceTreeMap =
@@ -820,7 +841,8 @@ public class ActivityMetaDataDao {
                             questionnaireStepDetailsMap,
                             questionResponseTypeMasterInfoList,
                             questionaireStepsList,
-                            questionnaireDto);
+                            questionnaireDto,
+                            studyDto);
               }
             }
           }
@@ -835,14 +857,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - questionnaireMetadata() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Ends");
+    LOGGER.exit("questionnaireMetadata() :: Ends");
     return activityStructureBean;
   }
 
   public ActivityFrequencyBean getFrequencyRunsDetailsForActiveTasks(
       ActiveTaskDto activeTask, ActivityFrequencyBean frequencyDetails, Session session)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: Starts");
+    LOGGER.entry("begin getFrequencyRunsDetailsForActiveTasks()");
     List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<>();
     List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean = new ArrayList<>();
     try {
@@ -869,14 +891,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getFrequencyRunsDetailsForActiveTasks() :: Ends");
+    LOGGER.exit("getFrequencyRunsDetailsForActiveTasks() :: Ends");
     return frequencyDetails;
   }
 
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForOneTime(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForOneTime() :: Starts");
+    LOGGER.entry("begin getActiveTaskFrequencyDetailsForOneTime()");
     try {
       if (activeTask != null) {
         ActivityFrequencyScheduleBean oneTimeBean = new ActivityFrequencyScheduleBean();
@@ -895,7 +917,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getActiveTaskFrequencyDetailsForOneTime() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForOneTime() :: Ends");
+    LOGGER.exit("getActiveTaskFrequencyDetailsForOneTime() :: Ends");
     return runDetailsBean;
   }
 
@@ -903,7 +925,7 @@ public class ActivityMetaDataDao {
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForDaily(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForDaily() :: Starts");
+    LOGGER.entry("begin getActiveTaskFrequencyDetailsForDaily()");
     try {
       if ((activeTask.getScheduleType() != null)
           && !activeTask.getScheduleType().isEmpty()
@@ -914,7 +936,7 @@ public class ActivityMetaDataDao {
                     "from ActiveTaskFrequencyDto ATFDTO"
                         + " where ATFDTO.activeTaskId= :activeTaskId"
                         + " ORDER BY ATFDTO.frequencyTime ")
-                .setInteger(StudyMetaDataEnum.QF_ACTIVE_TASK_ID.value(), activeTask.getId())
+                .setString(StudyMetaDataEnum.QF_ACTIVE_TASK_ID.value(), activeTask.getId())
                 .list();
         if ((activeTaskDailyFrequencyList != null) && !activeTaskDailyFrequencyList.isEmpty()) {
           for (int i = 0; i < activeTaskDailyFrequencyList.size(); i++) {
@@ -949,7 +971,7 @@ public class ActivityMetaDataDao {
                       "from ActiveTaskFrequencyDto ATFDTO"
                           + " where ATFDTO.activeTaskId= :activeTaskId"
                           + " ORDER BY ATFDTO.frequencyTime ")
-                  .setInteger(StudyMetaDataEnum.QF_ACTIVE_TASK_ID.value(), activeTask.getId())
+                  .setString(StudyMetaDataEnum.QF_ACTIVE_TASK_ID.value(), activeTask.getId())
                   .list();
           if ((activeTaskDailyFrequencyList != null) && !activeTaskDailyFrequencyList.isEmpty()) {
             for (int i = 0; i < activeTaskDailyFrequencyList.size(); i++) {
@@ -981,14 +1003,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getActiveTaskFrequencyDetailsForDaily() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForDaily() :: Ends");
+    LOGGER.exit("getActiveTaskFrequencyDetailsForDaily() :: Ends");
     return runDetailsBean;
   }
 
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForWeekly(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForWeekly() :: Starts");
+    LOGGER.entry("begin getActiveTaskFrequencyDetailsForWeekly()");
     try {
       if (StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart())
           && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd())
@@ -1061,14 +1083,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getActiveTaskFrequencyDetailsForWeekly() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForWeekly() :: Ends");
+    LOGGER.exit("getActiveTaskFrequencyDetailsForWeekly() :: Ends");
     return runDetailsBean;
   }
 
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForMonthly(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForMonthly() :: Starts");
+    LOGGER.entry("begin getActiveTaskFrequencyDetailsForMonthly()");
     try {
       if (StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart())
           && StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeEnd())) {
@@ -1126,7 +1148,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getActiveTaskFrequencyDetailsForMonthly() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForMonthly() :: Ends");
+    LOGGER.exit("getActiveTaskFrequencyDetailsForMonthly() :: Ends");
     return runDetailsBean;
   }
 
@@ -1134,38 +1156,55 @@ public class ActivityMetaDataDao {
   public List<ActivityFrequencyScheduleBean> getActiveTaskFrequencyDetailsForManuallySchedule(
       ActiveTaskDto activeTask, List<ActivityFrequencyScheduleBean> runDetailsBean, Session session)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForManuallySchedule() :: Starts");
+    LOGGER.entry("begin getActiveTaskFrequencyDetailsForManuallySchedule()");
     try {
       List<ActiveTaskCustomFrequenciesDto> manuallyScheduleFrequencyList =
           session
               .createQuery(
                   "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                       + " where ATCFDTO.activeTaskId=:activeTaskId"
-                      + " ORDER BY frequencyStartDate ASC")
-              .setInteger("activeTaskId", activeTask.getId())
+                      + " ORDER BY ATCFDTO.frequencyStartDate ASC, ATCFDTO.frequencyStartTime")
+              .setString("activeTaskId", activeTask.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (ActiveTaskCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList) {
           ActivityFrequencyScheduleBean manuallyScheduleBean = new ActivityFrequencyScheduleBean();
-          String startDate =
-              customFrequencyDto.getFrequencyStartDate()
-                  + " "
-                  + customFrequencyDto.getFrequencyTime();
-          String endDate =
-              customFrequencyDto.getFrequencyEndDate()
-                  + " "
-                  + customFrequencyDto.getFrequencyTime();
-          manuallyScheduleBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDate,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          manuallyScheduleBean.setEndTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  endDate,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+
+          String frequencyStartTime = customFrequencyDto.getFrequencyStartTime();
+          if (!frequencyStartTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyStartTime = frequencyStartTime + ":00";
+          }
+          String frequencyEndTime = customFrequencyDto.getFrequencyEndTime();
+          if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyEndTime = frequencyEndTime + ":00";
+          }
+
+          String startDate = customFrequencyDto.getFrequencyStartDate() + " " + frequencyStartTime;
+          String endDate = customFrequencyDto.getFrequencyEndDate() + " " + frequencyEndTime;
+
+          if (StringUtils.isNotBlank(customFrequencyDto.getFrequencyStartDate())) {
+            manuallyScheduleBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    startDate,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          } else if (StringUtils.isNotBlank(customFrequencyDto.getFrequencyEndDate())) {
+            manuallyScheduleBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    endDate,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
+
+          if (StringUtils.isNotBlank(customFrequencyDto.getFrequencyEndDate())) {
+            manuallyScheduleBean.setEndTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    endDate,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          } else {
+            manuallyScheduleBean.setEndTime("");
+          }
           runDetailsBean.add(manuallyScheduleBean);
         }
       }
@@ -1173,15 +1212,14 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getActiveTaskFrequencyDetailsForManuallySchedule() :: ERROR", e);
     }
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getActiveTaskFrequencyDetailsForManuallySchedule() :: Ends");
+    LOGGER.exit("getActiveTaskFrequencyDetailsForManuallySchedule() :: Ends");
     return runDetailsBean;
   }
 
   public ActivityFrequencyBean getFrequencyRunsDetailsForQuestionaires(
       QuestionnairesDto questionaire, ActivityFrequencyBean frequencyDetails, Session session)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: Starts");
+    LOGGER.entry("begin getFrequencyRunsDetailsForQuestionaires()");
     List<ActivityFrequencyScheduleBean> runDetailsBean = new ArrayList<>();
     List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean = new ArrayList<>();
     try {
@@ -1208,15 +1246,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getFrequencyRunsDetailsForQuestionaires() :: Ends");
+    LOGGER.exit("getFrequencyRunsDetailsForQuestionaires() :: Ends");
     return frequencyDetails;
   }
 
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForOneTime(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForOneTime() :: Starts");
+    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForOneTime()");
     try {
       if (questionaire != null) {
         ActivityFrequencyScheduleBean oneTimeBean = new ActivityFrequencyScheduleBean();
@@ -1236,7 +1273,7 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForOneTime() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForOneTime() :: Ends");
+    LOGGER.exit("getQuestionnaireFrequencyDetailsForOneTime() :: Ends");
     return runDetailsBean;
   }
 
@@ -1246,7 +1283,7 @@ public class ActivityMetaDataDao {
       List<ActivityFrequencyScheduleBean> runDetailsBean,
       Session session)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForDaily() :: Starts");
+    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForDaily()");
     List<QuestionnairesFrequenciesDto> dailyFrequencyList = null;
     try {
       if ((questionaire.getScheduleType() != null)
@@ -1260,7 +1297,7 @@ public class ActivityMetaDataDao {
                     "from QuestionnairesFrequenciesDto QFDTO"
                         + " where QFDTO.questionnairesId= :questRespId"
                         + " ORDER BY QFDTO.frequencyTime")
-                .setInteger("questRespId", questionaire.getId())
+                .setString("questRespId", questionaire.getId())
                 .list();
         if ((dailyFrequencyList != null) && !dailyFrequencyList.isEmpty()) {
           for (int i = 0; i < dailyFrequencyList.size(); i++) {
@@ -1295,7 +1332,7 @@ public class ActivityMetaDataDao {
                       "from QuestionnairesFrequenciesDto QFDTO"
                           + " where QFDTO.questionnairesId= :questRespId"
                           + " ORDER BY QFDTO.frequencyTime")
-                  .setInteger("questRespId", questionaire.getId())
+                  .setString("questRespId", questionaire.getId())
                   .list();
           if ((dailyFrequencyList != null) && !dailyFrequencyList.isEmpty()) {
             for (int i = 0; i < dailyFrequencyList.size(); i++) {
@@ -1327,15 +1364,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForDaily() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForDaily() :: Ends");
+    LOGGER.exit("getQuestionnaireFrequencyDetailsForDaily() :: Ends");
     return runDetailsBean;
   }
 
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForWeekly(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForWeekly() :: Starts");
+    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForWeekly()");
     try {
       if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())
           && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())
@@ -1409,15 +1445,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForWeekly() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForWeekly() :: Ends");
+    LOGGER.exit("getQuestionnaireFrequencyDetailsForWeekly() :: Ends");
     return runDetailsBean;
   }
 
   public List<ActivityFrequencyScheduleBean> getQuestionnaireFrequencyDetailsForMonthly(
       QuestionnairesDto questionaire, List<ActivityFrequencyScheduleBean> runDetailsBean)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForMonthly() :: Starts");
+    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForMonthly()");
     try {
       if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())
           && StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
@@ -1475,7 +1510,7 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForMonthly() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForMonthly() :: Ends");
+    LOGGER.exit("getQuestionnaireFrequencyDetailsForMonthly() :: Ends");
     return runDetailsBean;
   }
 
@@ -1485,8 +1520,9 @@ public class ActivityMetaDataDao {
       List<ActivityFrequencyScheduleBean> runDetailsBean,
       Session session)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForManuallySchedule() :: Starts");
+    LOGGER.entry("begin getQuestionnaireFrequencyDetailsForManuallySchedule()");
+    String frequencyEndTime = "";
+    String frequencyStartTime = "";
     try {
 
       List<QuestionnairesCustomFrequenciesDto> manuallyScheduleFrequencyList =
@@ -1494,27 +1530,47 @@ public class ActivityMetaDataDao {
               .createQuery(
                   "from QuestionnairesCustomFrequenciesDto QCFDTO"
                       + " where QCFDTO.questionnairesId=:questRespId"
-                      + " ORDER BY frequencyStartDate ASC")
-              .setInteger("questRespId", questionaire.getId())
+                      + " ORDER BY QCFDTO.frequencyStartDate ASC, QCFDTO.frequencyStartTime")
+              .setString("questRespId", questionaire.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (QuestionnairesCustomFrequenciesDto customFrequencyDto :
             manuallyScheduleFrequencyList) {
           ActivityFrequencyScheduleBean manuallyScheduleBean = new ActivityFrequencyScheduleBean();
-          manuallyScheduleBean.setEndTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  customFrequencyDto.getFrequencyEndDate()
-                      + " "
-                      + customFrequencyDto.getFrequencyTime(),
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          manuallyScheduleBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  customFrequencyDto.getFrequencyStartDate()
-                      + " "
-                      + customFrequencyDto.getFrequencyTime(),
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          frequencyEndTime = customFrequencyDto.getFrequencyEndTime();
+          frequencyStartTime = customFrequencyDto.getFrequencyStartTime();
+
+          if (!frequencyStartTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyStartTime = frequencyStartTime + ":00";
+          }
+          if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyEndTime = frequencyEndTime + ":00";
+          }
+
+          if (StringUtils.isNotBlank(customFrequencyDto.getFrequencyEndDate())) {
+            manuallyScheduleBean.setEndTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    customFrequencyDto.getFrequencyEndDate() + " " + frequencyEndTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          } else {
+            manuallyScheduleBean.setEndTime("");
+          }
+
+          if (StringUtils.isNotBlank(customFrequencyDto.getFrequencyStartDate())) {
+            manuallyScheduleBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    customFrequencyDto.getFrequencyStartDate() + " " + frequencyStartTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          } else if (StringUtils.isNotBlank(customFrequencyDto.getFrequencyEndDate())) {
+            manuallyScheduleBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    customFrequencyDto.getFrequencyEndDate() + " " + frequencyEndTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
+
           runDetailsBean.add(manuallyScheduleBean);
         }
       }
@@ -1523,8 +1579,7 @@ public class ActivityMetaDataDao {
           "ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForManuallySchedule() :: ERROR",
           e);
     }
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyDetailsForManuallySchedule() :: Ends");
+    LOGGER.exit("getQuestionnaireFrequencyDetailsForManuallySchedule() :: Ends");
     return runDetailsBean;
   }
 
@@ -1539,9 +1594,10 @@ public class ActivityMetaDataDao {
       Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap,
       List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList,
       List<QuestionnairesStepsDto> questionaireStepsList,
-      QuestionnairesDto questionnaireDto)
+      QuestionnairesDto questionnaireDto,
+      StudyDto studyDto)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: Starts");
+    LOGGER.entry("begin getStepsInfoForQuestionnaires()");
     TreeMap<Integer, QuestionnaireActivityStepsBean> stepsOrderSequenceTreeMap = new TreeMap<>();
     try {
       switch (type) {
@@ -1565,7 +1621,8 @@ public class ActivityMetaDataDao {
                       questionnaireStepDetailsMap,
                       questionResponseTypeMasterInfoList,
                       questionaireStepsList,
-                      questionnaireDto);
+                      questionnaireDto,
+                      studyDto);
           break;
         case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM:
           stepsOrderSequenceTreeMap =
@@ -1576,7 +1633,8 @@ public class ActivityMetaDataDao {
                       session,
                       stepsSequenceTreeMap,
                       questionnaireStepDetailsMap,
-                      questionResponseTypeMasterInfoList);
+                      questionResponseTypeMasterInfoList,
+                      studyDto);
           break;
         default:
           break;
@@ -1584,7 +1642,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: Ends");
+    LOGGER.exit("getStepsInfoForQuestionnaires() :: Ends");
     return stepsOrderSequenceTreeMap;
   }
 
@@ -1594,7 +1652,7 @@ public class ActivityMetaDataDao {
       SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap,
       Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getInstructionDetailsForQuestionnaire() :: Starts");
+    LOGGER.entry("begin getInstructionDetailsForQuestionnaire()");
     try {
       if ((instructionsDtoList != null) && !instructionsDtoList.isEmpty()) {
         for (InstructionsDto instructionsDto : instructionsDtoList) {
@@ -1619,7 +1677,7 @@ public class ActivityMetaDataDao {
           instructionBean.setText(
               StringUtils.isEmpty(instructionsDto.getInstructionText())
                   ? ""
-                  : instructionsDto.getInstructionText());
+                  : StringEscapeUtils.escapeHtml4(instructionsDto.getInstructionText()));
           instructionBean.setSkippable(
               (StringUtils.isEmpty(instructionStepDetails.getSkiappable())
                       || instructionStepDetails
@@ -1656,7 +1714,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getInstructionDetailsForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getInstructionDetailsForQuestionnaire() :: Ends");
+    LOGGER.exit("getInstructionDetailsForQuestionnaire() :: Ends");
     return stepsSequenceTreeMap;
   }
 
@@ -1669,9 +1727,10 @@ public class ActivityMetaDataDao {
       Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap,
       List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList,
       List<QuestionnairesStepsDto> questionaireStepsList,
-      QuestionnairesDto questionnaireDto)
+      QuestionnairesDto questionnaireDto,
+      StudyDto studyDto)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: Starts");
+    LOGGER.entry("begin getQuestionDetailsForQuestionnaire()");
     List<QuestionResponseSubTypeDto> destinationConditionList = null;
     Transaction transaction = null;
     try {
@@ -1692,7 +1751,7 @@ public class ActivityMetaDataDao {
                 questionBean.setResultType(masterInfo.getResponseTypeCode());
                 questionBean.setFormat(
                     this.getQuestionaireQuestionFormatByType(
-                        questionsDto, masterInfo.getResponseTypeCode(), session));
+                        questionsDto, masterInfo.getResponseTypeCode(), session, studyDto));
                 break;
               }
             }
@@ -1729,13 +1788,13 @@ public class ActivityMetaDataDao {
            * Choice based branching allowed only for textchoice, textscale, imagechoice, boolean
            * response types
            */
-          if (!questionsDto.getResponseType().equals(4)) {
+          if (!questionsDto.getResponseType().equals(String.valueOf(4))) {
             destinationConditionList =
                 session
                     .createQuery(
                         "from QuestionResponseSubTypeDto QRSTDTO"
                             + " where QRSTDTO.responseTypeId= :responseTypeId")
-                    .setInteger(StudyMetaDataEnum.QF_RESPONSE_TYPE_ID.value(), questionsDto.getId())
+                    .setString(StudyMetaDataEnum.QF_RESPONSE_TYPE_ID.value(), questionsDto.getId())
                     .list();
             if ((destinationConditionList != null) && !destinationConditionList.isEmpty()) {
               for (QuestionResponseSubTypeDto destinationDto : destinationConditionList) {
@@ -1756,12 +1815,12 @@ public class ActivityMetaDataDao {
 
                 if (questionnaireDto.getBranching()) {
                   if ((destinationDto.getDestinationStepId() != null)
-                      && (destinationDto.getDestinationStepId().intValue() > 0)) {
+                      && (!destinationDto.getDestinationStepId().equals(String.valueOf(0)))) {
                     destination =
                         this.getDestinationStepTypeForResponseSubType(
                             destination, destinationDto, questionaireStepsList);
                   } else if ((destinationDto.getDestinationStepId() != null)
-                      && destinationDto.getDestinationStepId().equals(0)) {
+                      && destinationDto.getDestinationStepId().equals(String.valueOf(0))) {
                     destination.setDestination("");
                   } else {
                     destination.setDestination(
@@ -1792,7 +1851,7 @@ public class ActivityMetaDataDao {
                             "from QuestionReponseTypeDto QRTDTO"
                                 + " where QRTDTO.questionsResponseTypeId=:questRespType"
                                 + " ORDER BY QRTDTO.responseTypeId DESC")
-                        .setInteger("questRespType", questionsDto.getId())
+                        .setString("questRespType", questionsDto.getId())
                         .setMaxResults(1)
                         .uniqueResult();
             if ((reponseType != null)
@@ -1860,7 +1919,7 @@ public class ActivityMetaDataDao {
                           "from QuestionReponseTypeDto QRTDTO"
                               + " where QRTDTO.questionsResponseTypeId=:questRespType"
                               + " ORDER BY QRTDTO.responseTypeId DESC")
-                      .setInteger("questRespType", questionsDto.getId())
+                      .setString("questRespType", questionsDto.getId())
                       .setMaxResults(1)
                       .uniqueResult();
 
@@ -1876,7 +1935,7 @@ public class ActivityMetaDataDao {
 
             if (questionnaireDto.getBranching()) {
               if ((otherReponseSubType.getOtherDestinationStepId() != null)
-                  && (otherReponseSubType.getOtherDestinationStepId().intValue() > 0)) {
+                  && (!otherReponseSubType.getOtherDestinationStepId().equals(String.valueOf(0)))) {
                 for (QuestionnairesStepsDto stepsDto : questionaireStepsList) {
                   if (otherReponseSubType
                       .getOtherDestinationStepId()
@@ -1889,7 +1948,7 @@ public class ActivityMetaDataDao {
                   }
                 }
               } else if ((otherReponseSubType.getOtherDestinationStepId() != null)
-                  && otherReponseSubType.getOtherDestinationStepId().equals(0)) {
+                  && otherReponseSubType.getOtherDestinationStepId().equals(String.valueOf(0))) {
                 otherDestination.setDestination("");
               } else {
                 otherDestination.setDestination(
@@ -1929,7 +1988,7 @@ public class ActivityMetaDataDao {
       }
       LOGGER.error("ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: Ends");
+    LOGGER.exit("getQuestionDetailsForQuestionnaire() :: Ends");
     return stepsSequenceTreeMap;
   }
 
@@ -1940,13 +1999,14 @@ public class ActivityMetaDataDao {
       Session session,
       SortedMap<Integer, QuestionnaireActivityStepsBean> stepsSequenceTreeMap,
       Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap,
-      List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList)
+      List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList,
+      StudyDto studyDto)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: Starts");
+    LOGGER.entry("begin getFormDetailsForQuestionnaire()");
     try {
       if ((formsList != null) && !formsList.isEmpty()) {
-        List<Integer> formQuestionIdsList = new ArrayList<>();
-        TreeMap<Integer, Integer> formQuestionMap = new TreeMap<>();
+        List<String> formQuestionIdsList = new ArrayList<>();
+        TreeMap<Integer, String> formQuestionMap = new TreeMap<>();
         for (FormMappingDto formDto : formsList) {
           formQuestionIdsList.add(formDto.getQuestionId());
           formQuestionMap.put(formDto.getSequenceNo(), formDto.getQuestionId());
@@ -1959,8 +2019,8 @@ public class ActivityMetaDataDao {
                           + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
                       .toString());
           QuestionnaireActivityStepsBean formBean = new QuestionnaireActivityStepsBean();
-          List<QuestionnaireActivityStepsBean> formSteps = new ArrayList<>();
-          HashMap<Integer, QuestionnaireActivityStepsBean> formStepsMap = new HashMap<>();
+          List<QuestionnaireStepsBean> formSteps = new ArrayList<>();
+          HashMap<String, QuestionnaireStepsBean> formStepsMap = new HashMap<>();
 
           formBean.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM.toLowerCase());
           formBean.setResultType(StudyMetaDataConstants.RESULT_TYPE_GROUPED);
@@ -2008,8 +2068,7 @@ public class ActivityMetaDataDao {
                   .list();
           if ((formQuestionsList != null) && !formQuestionsList.isEmpty()) {
             for (QuestionsDto formQuestionDto : formQuestionsList) {
-              QuestionnaireActivityStepsBean formQuestionBean =
-                  new QuestionnaireActivityStepsBean();
+              QuestionnaireStepsBean formQuestionBean = new QuestionnaireStepsBean();
               formQuestionBean.setType(
                   StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION.toLowerCase());
               if (formQuestionDto.getResponseType() != null) {
@@ -2019,7 +2078,7 @@ public class ActivityMetaDataDao {
                     formQuestionBean.setResultType(masterInfo.getResponseTypeCode());
                     formQuestionBean.setFormat(
                         this.getQuestionaireQuestionFormatByType(
-                            formQuestionDto, masterInfo.getResponseTypeCode(), session));
+                            formQuestionDto, masterInfo.getResponseTypeCode(), session, studyDto));
                     break;
                   }
                 }
@@ -2077,7 +2136,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getFormDetailsForQuestionnaire() :: Ends");
+    LOGGER.exit("getFormDetailsForQuestionnaire() :: Ends");
     return stepsSequenceTreeMap;
   }
 
@@ -2086,7 +2145,7 @@ public class ActivityMetaDataDao {
       ActiveTaskMasterAttributeDto masterAttributeValue,
       FetalKickCounterFormatBean fetalKickCounterFormat)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - fetalKickCounterDetails() :: Starts");
+    LOGGER.entry("begin fetalKickCounterDetails()");
     try {
       if (masterAttributeValue.getOrderByTaskType().equals(1)) {
         if (StringUtils.isNotEmpty(attributeValues.getAttributeVal())) {
@@ -2113,7 +2172,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - fetalKickCounterDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - fetalKickCounterDetails() :: Ends");
+    LOGGER.exit("fetalKickCounterDetails() :: Ends");
     return fetalKickCounterFormat;
   }
 
@@ -2122,7 +2181,7 @@ public class ActivityMetaDataDao {
       ActiveTaskMasterAttributeDto masterAttributeValue,
       SpatialSpanMemoryFormatBean spatialSpanMemoryFormat)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - spatialSpanMemoryDetails() :: Starts");
+    LOGGER.entry("begin spatialSpanMemoryDetails()");
     try {
       switch (masterAttributeValue.getAttributeName().trim()) {
         case StudyMetaDataConstants.SSM_INITIAL:
@@ -2174,12 +2233,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - spatialSpanMemoryDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - spatialSpanMemoryDetails() :: Ends");
+    LOGGER.exit("spatialSpanMemoryDetails() :: Ends");
     return spatialSpanMemoryFormat;
   }
 
   public String[] activeTaskOptions() {
-    LOGGER.info("INFO: ActivityMetaDataDao - activeTaskOptions() :: Starts");
+    LOGGER.entry("begin activeTaskOptions()");
     String[] activeTaskOptionsArray = new String[8];
     try {
       activeTaskOptionsArray[0] = "excludeInstructions";
@@ -2193,13 +2252,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - activeTaskOptions() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - activeTaskOptions() :: Ends");
+    LOGGER.exit("activeTaskOptions() :: Ends");
     return activeTaskOptionsArray;
   }
 
   public Map<String, Object> getQuestionaireQuestionFormatByType(
-      QuestionsDto questionDto, String questionResultType, Session session) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Starts");
+      QuestionsDto questionDto, String questionResultType, Session session, StudyDto studyDto)
+      throws DAOException {
+    LOGGER.entry("begin getQuestionaireQuestionFormatByType()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     QuestionReponseTypeDto reponseType = null;
     try {
@@ -2211,15 +2271,15 @@ public class ActivityMetaDataDao {
                         "from QuestionReponseTypeDto QRTDTO"
                             + " where QRTDTO.questionsResponseTypeId=:questionsResponseTypeId"
                             + " ORDER BY QRTDTO.responseTypeId DESC")
-                    .setInteger("questionsResponseTypeId", questionDto.getId())
+                    .setString("questionsResponseTypeId", questionDto.getId())
                     .setMaxResults(1)
                     .uniqueResult();
         switch (questionResultType) {
           case StudyMetaDataConstants.QUESTION_SCALE:
-            questionFormat = this.formatQuestionScaleDetails(reponseType);
+            questionFormat = this.formatQuestionScaleDetails(reponseType, studyDto);
             break;
           case StudyMetaDataConstants.QUESTION_CONTINUOUS_SCALE:
-            questionFormat = this.formatQuestionContinuousScaleDetails(reponseType);
+            questionFormat = this.formatQuestionContinuousScaleDetails(reponseType, studyDto);
             break;
           case StudyMetaDataConstants.QUESTION_TEXT_SCALE:
             questionFormat = this.formatQuestionTextScaleDetails(questionDto, reponseType, session);
@@ -2228,7 +2288,7 @@ public class ActivityMetaDataDao {
             questionFormat = this.formatQuestionValuePickerDetails(questionDto, session);
             break;
           case StudyMetaDataConstants.QUESTION_IMAGE_CHOICE:
-            questionFormat = this.formatQuestionImageChoiceDetails(questionDto, session);
+            questionFormat = this.formatQuestionImageChoiceDetails(questionDto, session, studyDto);
             break;
           case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
             questionFormat =
@@ -2290,13 +2350,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Ends");
+    LOGGER.exit("getQuestionaireQuestionFormatByType() :: Ends");
     return questionFormat;
   }
 
-  public Map<String, Object> formatQuestionScaleDetails(QuestionReponseTypeDto reponseType)
-      throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
+  public Map<String, Object> formatQuestionScaleDetails(
+      QuestionReponseTypeDto reponseType, StudyDto studyDto) throws DAOException {
+    LOGGER.entry("begin formatQuestionScaleDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2348,29 +2408,37 @@ public class ActivityMetaDataDao {
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMaxImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                      + reponseType.getMaxImage()));
+                  StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      StudyMetaDataConstants.STUDIES
+                          + "/"
+                          + studyDto.getCustomStudyId()
+                          + "/"
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + reponseType.getMaxImage())));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                      + reponseType.getMinImage()));
+                  StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      StudyMetaDataConstants.STUDIES
+                          + "/"
+                          + studyDto.getCustomStudyId()
+                          + "/"
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + reponseType.getMinImage())));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Ends");
+    LOGGER.exit("formatQuestionScaleDetails() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionContinuousScaleDetails(
-      QuestionReponseTypeDto reponseType) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
+      QuestionReponseTypeDto reponseType, StudyDto studyDto) throws DAOException {
+    LOGGER.entry("begin formatQuestionContinuousScaleDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2415,23 +2483,31 @@ public class ActivityMetaDataDao {
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMaxImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                      + reponseType.getMaxImage()));
+                  StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      StudyMetaDataConstants.STUDIES
+                          + "/"
+                          + studyDto.getCustomStudyId()
+                          + "/"
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + reponseType.getMaxImage())));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
               ? ""
               : this.getBase64Image(
-                  propMap.get("fda.imgDisplaydPath")
-                      + propMap.get("cloud.bucket.name")
-                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                      + reponseType.getMinImage()));
+                  StudyMetaDataUtil.getSignedUrl(
+                      propMap.get("cloud.bucket.name"),
+                      StudyMetaDataConstants.STUDIES
+                          + "/"
+                          + studyDto.getCustomStudyId()
+                          + "/"
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + reponseType.getMinImage())));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Ends");
+    LOGGER.exit("formatQuestionContinuousScaleDetails() :: Ends");
     return questionFormat;
   }
 
@@ -2439,7 +2515,7 @@ public class ActivityMetaDataDao {
   public Map<String, Object> formatQuestionTextScaleDetails(
       QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextScaleDetails() :: Starts");
+    LOGGER.entry("begin formatQuestionTextScaleDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
     List<LinkedHashMap<String, Object>> textChoicesList = new ArrayList<>();
@@ -2449,7 +2525,7 @@ public class ActivityMetaDataDao {
               .createQuery(
                   "from QuestionResponseSubTypeDto QRSTDTO"
                       + " where QRSTDTO.responseTypeId= :respType")
-              .setInteger("respType", questionDto.getId())
+              .setString("respType", questionDto.getId())
               .list();
       if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
@@ -2482,14 +2558,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionTextScaleDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextScaleDetails() :: Ends");
+    LOGGER.exit("formatQuestionTextScaleDetails() :: Ends");
     return questionFormat;
   }
 
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionValuePickerDetails(
       QuestionsDto questionDto, Session session) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionValuePickerDetails() :: Starts");
+    LOGGER.entry("begin formatQuestionValuePickerDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
     List<LinkedHashMap<String, Object>> valuePickerList = new ArrayList<>();
@@ -2499,7 +2575,7 @@ public class ActivityMetaDataDao {
               .createQuery(
                   "from QuestionResponseSubTypeDto QRSTDTO"
                       + " where QRSTDTO.responseTypeId= :respType")
-              .setInteger("respType", questionDto.getId())
+              .setString("respType", questionDto.getId())
               .list();
       if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
@@ -2523,13 +2599,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionValuePickerDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionValuePickerDetails() :: Ends");
+    LOGGER.exit("formatQuestionValuePickerDetails() :: Ends");
     return questionFormat;
   }
 
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionImageChoiceDetails(
-      QuestionsDto questionDto, Session session) throws DAOException {
+      QuestionsDto questionDto, Session session, StudyDto studyDto) throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
@@ -2540,7 +2616,7 @@ public class ActivityMetaDataDao {
               .createQuery(
                   "from QuestionResponseSubTypeDto QRSTDTO"
                       + " where QRSTDTO.responseTypeId=:respType")
-              .setInteger("respType", questionDto.getId())
+              .setString("respType", questionDto.getId())
               .list();
       if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
@@ -2550,19 +2626,31 @@ public class ActivityMetaDataDao {
               StringUtils.isEmpty(subType.getImage())
                   ? ""
                   : this.getBase64Image(
-                      propMap.get("fda.imgDisplaydPath")
-                          + propMap.get("cloud.bucket.name")
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + subType.getImage()));
+                      StudyMetaDataUtil.getSignedUrl(
+                          propMap.get("cloud.bucket.name"),
+                          StudyMetaDataConstants.STUDIES
+                              + "/"
+                              + studyDto.getCustomStudyId()
+                              + "/"
+                              + propMap
+                                  .get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE)
+                                  .trim()
+                              + subType.getImage())));
           imageChoiceMap.put(
               "selectedImage",
               StringUtils.isEmpty(subType.getSelectedImage())
                   ? ""
                   : this.getBase64Image(
-                      propMap.get("fda.imgDisplaydPath")
-                          + propMap.get("cloud.bucket.name")
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + subType.getSelectedImage()));
+                      StudyMetaDataUtil.getSignedUrl(
+                          propMap.get("cloud.bucket.name"),
+                          StudyMetaDataConstants.STUDIES
+                              + "/"
+                              + studyDto.getCustomStudyId()
+                              + "/"
+                              + propMap
+                                  .get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE)
+                                  .trim()
+                              + subType.getSelectedImage())));
           imageChoiceMap.put(
               "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
           imageChoiceMap.put(
@@ -2574,7 +2662,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionImageChoiceDetails() :: Ends");
+    LOGGER.exit("formatQuestionImageChoiceDetails() :: Ends");
     return questionFormat;
   }
 
@@ -2582,7 +2670,7 @@ public class ActivityMetaDataDao {
   public Map<String, Object> formatQuestionTextChoiceDetails(
       QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Starts");
+    LOGGER.entry("begin formatQuestionTextChoiceDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
     List<LinkedHashMap<String, Object>> textChoiceMapList = new ArrayList<>();
@@ -2592,7 +2680,7 @@ public class ActivityMetaDataDao {
               .createQuery(
                   "from QuestionResponseSubTypeDto QRSTDTO"
                       + " where QRSTDTO.responseTypeId=:respType")
-              .setInteger("respType", questionDto.getId())
+              .setString("respType", questionDto.getId())
               .list();
       if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
@@ -2621,7 +2709,7 @@ public class ActivityMetaDataDao {
                       "from QuestionReponseTypeDto QRTDTO"
                           + " where QRTDTO.questionsResponseTypeId=:quesRespId"
                           + " ORDER BY QRTDTO.responseTypeId DESC")
-                  .setInteger("quesRespId", questionDto.getId())
+                  .setString("quesRespId", questionDto.getId())
                   .setMaxResults(1)
                   .uniqueResult();
 
@@ -2698,13 +2786,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Ends");
+    LOGGER.exit("formatQuestionTextChoiceDetails() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionNumericDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Starts");
+    LOGGER.entry("begin formatQuestionNumericDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2751,13 +2839,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionNumericDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionNumericDetails() :: Ends");
+    LOGGER.exit("formatQuestionNumericDetails() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionDateDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Starts");
+    LOGGER.entry("begin formatQuestionDateDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     String dateFormat = "";
     try {
@@ -2808,13 +2896,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionDateDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionDateDetails() :: Ends");
+    LOGGER.exit("formatQuestionDateDetails() :: Ends");
     return questionFormat;
   }
 
   public Map<String, Object> formatQuestionTextDetails(QuestionReponseTypeDto reponseType)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextDetails() :: Starts");
+    LOGGER.entry("begin formatQuestionTextDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2847,7 +2935,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionTextDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextDetails() :: Ends");
+    LOGGER.exit("formatQuestionTextDetails() :: Ends");
     return questionFormat;
   }
 
@@ -2855,7 +2943,7 @@ public class ActivityMetaDataDao {
   public ActivitiesBean getTimeDetailsByActivityIdForActiveTask(
       ActiveTaskDto activeTaskDto, ActivitiesBean activityBean, Session session)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Starts");
+    LOGGER.entry("begin getTimeDetailsByActivityIdForActiveTask()");
     String startDateTime = "";
     String endDateTime = "";
     try {
@@ -2886,7 +2974,7 @@ public class ActivityMetaDataDao {
                       .createQuery(
                           "from ActiveTaskFrequencyDto ATFDTO"
                               + " where ATFDTO.activeTaskId=:activeTaskId")
-                      .setInteger("activeTaskId", activeTaskDto.getId())
+                      .setString("activeTaskId", activeTaskDto.getId())
                       .uniqueResult();
           if ((activeTaskFrequency != null)
               && StringUtils.isNotEmpty(activeTaskFrequency.getFrequencyTime())) {
@@ -2917,6 +3005,7 @@ public class ActivityMetaDataDao {
                   startDateTime,
                   StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                   StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+
           activityBean.setEndTime(
               StringUtils.isEmpty(endDateTime)
                   ? ""
@@ -2924,6 +3013,7 @@ public class ActivityMetaDataDao {
                       endDateTime,
                       StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                       StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+
           activityBean.setIsLaunchStudy(activeTaskFrequency.isLaunchStudy());
           activityBean.setIsStudyLifeTime(activeTaskFrequency.isStudyLifeTime());
         } else if (activeTaskDto
@@ -2936,7 +3026,7 @@ public class ActivityMetaDataDao {
                       "from ActiveTaskFrequencyDto ATFDTO"
                           + " where ATFDTO.activeTaskId=:activeTaskId"
                           + " ORDER BY ATFDTO.frequencyTime")
-                  .setInteger("activeTaskId", activeTaskDto.getId())
+                  .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskFrequencyList != null) && !activeTaskFrequencyList.isEmpty()) {
             startDateTime =
@@ -2949,16 +3039,22 @@ public class ActivityMetaDataDao {
                     + StudyMetaDataConstants.DEFAULT_MAX_TIME;
           }
 
-          activityBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          activityBean.setEndTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  endDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          if (null != activeTaskDto.getActiveTaskLifetimeStart()) {
+            activityBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    startDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
+
+          if (null != activeTaskDto.getActiveTaskLifetimeEnd()) {
+            activityBean.setEndTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    endDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
+
         } else if (activeTaskDto
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
@@ -2968,57 +3064,78 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                           + " where ATCFDTO.activeTaskId=:activeTaskId"
-                          + " ORDER BY ATCFDTO.frequencyTime")
-                  .setInteger("activeTaskId", activeTaskDto.getId())
+                          + " ORDER BY ATCFDTO.frequencyStartDate, ATCFDTO.frequencyStartTime")
+                  .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
             String startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
             String endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
 
             for (ActiveTaskCustomFrequenciesDto customFrequency : activeTaskCustomFrequencyList) {
-              if (StudyMetaDataConstants.SDF_DATE
-                  .parse(startDate)
-                  .after(
-                      StudyMetaDataConstants.SDF_DATE.parse(
-                          customFrequency.getFrequencyStartDate()))) {
+              if (null != startDate
+                  && StudyMetaDataConstants.SDF_DATE
+                      .parse(startDate)
+                      .after(
+                          StudyMetaDataConstants.SDF_DATE.parse(
+                              customFrequency.getFrequencyStartDate()))) {
                 startDate = customFrequency.getFrequencyStartDate();
               }
 
-              if (StudyMetaDataConstants.SDF_DATE
-                  .parse(endDate)
-                  .before(
-                      StudyMetaDataConstants.SDF_DATE.parse(
-                          customFrequency.getFrequencyEndDate()))) {
+              if (null != endDate
+                  && StudyMetaDataConstants.SDF_DATE
+                      .parse(endDate)
+                      .before(
+                          StudyMetaDataConstants.SDF_DATE.parse(
+                              customFrequency.getFrequencyEndDate()))) {
                 endDate = customFrequency.getFrequencyEndDate();
               }
             }
 
-            startDateTime =
-                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyTime();
-            endDateTime =
-                endDate
-                    + " "
-                    + activeTaskCustomFrequencyList
-                        .get(activeTaskCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
-          }
+            String frequencyStartTime =
+                activeTaskCustomFrequencyList.get(0).getFrequencyStartTime();
+            if (!frequencyStartTime.matches(
+                "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyStartTime = frequencyStartTime + ":00";
+            }
+            String frequencyEndTime =
+                activeTaskCustomFrequencyList
+                    .get(activeTaskCustomFrequencyList.size() - 1)
+                    .getFrequencyEndTime();
+            if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyEndTime = frequencyEndTime + ":00";
+            }
 
-          activityBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          activityBean.setEndTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  endDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            startDateTime = startDate + " " + frequencyStartTime;
+            endDateTime = endDate + " " + frequencyEndTime;
+
+            if (StringUtils.isNotBlank(startDate)) {
+              activityBean.setStartTime(
+                  StudyMetaDataUtil.getFormattedDateTimeZone(
+                      startDateTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            } else if (StringUtils.isNotBlank(endDate)) {
+              activityBean.setStartTime(
+                  StudyMetaDataUtil.getFormattedDateTimeZone(
+                      endDateTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            }
+
+            if (StringUtils.isNotBlank(endDate)) {
+              activityBean.setEndTime(
+                  StudyMetaDataUtil.getFormattedDateTimeZone(
+                      endDateTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            }
+          }
         }
       }
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Ends");
+    LOGGER.exit("getTimeDetailsByActivityIdForActiveTask() :: Ends");
     return activityBean;
   }
 
@@ -3026,8 +3143,7 @@ public class ActivityMetaDataDao {
   public ActivitiesBean getTimeDetailsByActivityIdForQuestionnaire(
       QuestionnairesDto questionaire, ActivitiesBean activityBean, Session session)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Starts");
+    LOGGER.entry("begin getTimeDetailsByActivityIdForQuestionnaire()");
     String startDateTime = "";
     String endDateTime = "";
     try {
@@ -3054,7 +3170,7 @@ public class ActivityMetaDataDao {
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
                               + " where QFDTO.questionnairesId=:quesRespId")
-                      .setInteger("quesRespId", questionaire.getId())
+                      .setString("quesRespId", questionaire.getId())
                       .uniqueResult();
           if ((questionnairesFrequency != null)
               && StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())) {
@@ -3073,18 +3189,29 @@ public class ActivityMetaDataDao {
             }
           }
 
-          activityBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          activityBean.setEndTime(
-              StringUtils.isEmpty(endDateTime)
-                  ? ""
-                  : StudyMetaDataUtil.getFormattedDateTimeZone(
-                      endDateTime,
-                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())) {
+            activityBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    startDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          } else if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
+            activityBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    endDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
+
+          if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
+            activityBean.setEndTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    endDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          } else {
+            activityBean.setEndTime("");
+          }
           activityBean.setIsLaunchStudy(questionnairesFrequency.getIsLaunchStudy());
           activityBean.setIsStudyLifeTime(questionnairesFrequency.getIsStudyLifeTime());
         } else if (questionaire
@@ -3097,7 +3224,7 @@ public class ActivityMetaDataDao {
                       "from QuestionnairesFrequenciesDto QFDTO"
                           + " where QFDTO.questionnairesId=:quesRespId"
                           + " ORDER BY QFDTO.frequencyTime")
-                  .setInteger("quesRespId", questionaire.getId())
+                  .setString("quesRespId", questionaire.getId())
                   .list();
           if ((questionnairesFrequencyList != null) && !questionnairesFrequencyList.isEmpty()) {
             startDateTime =
@@ -3127,8 +3254,8 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:quesResId"
-                          + " ORDER BY QCFDTO.frequencyTime")
-                  .setInteger("quesResId", questionaire.getId())
+                          + " ORDER BY QCFDTO.frequencyStartDate, QCFDTO.frequencyStartTime")
+                  .setString("quesResId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
               && !questionnaireCustomFrequencyList.isEmpty()) {
@@ -3138,56 +3265,79 @@ public class ActivityMetaDataDao {
 
             for (QuestionnairesCustomFrequenciesDto customFrequency :
                 questionnaireCustomFrequencyList) {
-              if (StudyMetaDataConstants.SDF_DATE
-                  .parse(startDate)
-                  .after(
-                      StudyMetaDataConstants.SDF_DATE.parse(
-                          customFrequency.getFrequencyStartDate()))) {
+              if (null != startDate
+                  && StudyMetaDataConstants.SDF_DATE
+                      .parse(startDate)
+                      .after(
+                          StudyMetaDataConstants.SDF_DATE.parse(
+                              customFrequency.getFrequencyStartDate()))) {
                 startDate = customFrequency.getFrequencyStartDate();
               }
 
-              if (StudyMetaDataConstants.SDF_DATE
-                  .parse(endDate)
-                  .before(
-                      StudyMetaDataConstants.SDF_DATE.parse(
-                          customFrequency.getFrequencyEndDate()))) {
+              if (null != endDate
+                  && StudyMetaDataConstants.SDF_DATE
+                      .parse(endDate)
+                      .before(
+                          StudyMetaDataConstants.SDF_DATE.parse(
+                              customFrequency.getFrequencyEndDate()))) {
                 endDate = customFrequency.getFrequencyEndDate();
               }
             }
 
-            startDateTime =
-                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyTime();
-            endDateTime =
-                endDate
-                    + " "
-                    + questionnaireCustomFrequencyList
-                        .get(questionnaireCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
-          }
+            String frequencyStartTime =
+                questionnaireCustomFrequencyList.get(0).getFrequencyStartTime();
+            if (!frequencyStartTime.matches(
+                "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyStartTime = frequencyStartTime + ":00";
+            }
+            String frequencyEndTime =
+                questionnaireCustomFrequencyList
+                    .get(questionnaireCustomFrequencyList.size() - 1)
+                    .getFrequencyEndTime();
+            if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyEndTime = frequencyEndTime + ":00";
+            }
 
-          activityBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          activityBean.setEndTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  endDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            startDateTime = startDate + " " + frequencyStartTime;
+            endDateTime = endDate + " " + frequencyEndTime;
+
+            if (StringUtils.isNotBlank(startDate)) {
+              activityBean.setStartTime(
+                  StudyMetaDataUtil.getFormattedDateTimeZone(
+                      startDateTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            } else if (StringUtils.isNotBlank(endDate)) {
+              activityBean.setStartTime(
+                  StudyMetaDataUtil.getFormattedDateTimeZone(
+                      endDateTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            }
+
+            if (StringUtils.isNotBlank(endDate)) {
+              activityBean.setEndTime(
+                  StudyMetaDataUtil.getFormattedDateTimeZone(
+                      endDateTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            } else {
+              activityBean.setEndTime("");
+            }
+          }
         }
       }
     } catch (Exception e) {
       LOGGER.error(
           "ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Ends");
+    LOGGER.exit("getTimeDetailsByActivityIdForQuestionnaire() :: Ends");
     return activityBean;
   }
 
   public List<QuestionnairesStepsDto> getDestinationStepType(
       List<QuestionnairesStepsDto> questionaireStepsList) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepType() :: Starts");
+    LOGGER.entry("begin getDestinationStepType()");
     List<QuestionnairesStepsDto> questionnaireStepsTypeList = new ArrayList<>();
     try {
       for (QuestionnairesStepsDto questionnaireStepsDto : questionaireStepsList) {
@@ -3205,7 +3355,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getDestinationStepType() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepType() :: Ends");
+    LOGGER.exit("getDestinationStepType() :: Ends");
     return questionnaireStepsTypeList;
   }
 
@@ -3214,7 +3364,7 @@ public class ActivityMetaDataDao {
       QuestionResponseSubTypeDto destinationDto,
       List<QuestionnairesStepsDto> questionaireStepsList)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepTypeForResponseSubType() :: Starts");
+    LOGGER.entry("begin getDestinationStepTypeForResponseSubType()");
     try {
       for (QuestionnairesStepsDto stepsDto : questionaireStepsList) {
         if (destinationDto.getDestinationStepId().equals(stepsDto.getStepId())) {
@@ -3228,12 +3378,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getDestinationStepTypeForResponseSubType() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getDestinationStepTypeForResponseSubType() :: Ends");
+    LOGGER.exit("getDestinationStepTypeForResponseSubType() :: Ends");
     return destinationBean;
   }
 
   public String getBase64Image(String imagePath) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Starts");
+    LOGGER.entry("begin getBase64Image()");
     String base64Image = "";
     byte[] imageBytes = null;
     try {
@@ -3250,13 +3400,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getBase64Image() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getBase64Image() :: Ends");
+    LOGGER.exit("getBase64Image() :: Ends");
     return base64Image;
   }
 
   public Integer getScaleStepCount(Integer step, Integer maxValue, Integer minValue)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepCount() :: Starts");
+    LOGGER.entry("begin getScaleStepCount()");
     Integer scaleStepCount = 1;
     Integer maxStepCount = 13;
     List<Integer> stepCountList = new ArrayList<>();
@@ -3276,26 +3426,26 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getScaleStepCount() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepCount() :: Ends");
+    LOGGER.exit("getScaleStepCount() :: Ends");
     return scaleStepCount;
   }
 
   public Integer getScaleStepSize(Integer step, Integer maxValue, Integer minValue)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepSize() :: Starts");
+    LOGGER.entry("begin getScaleStepSize()");
     Integer scaleStepCount = step;
     try {
       scaleStepCount = (maxValue - minValue) / step;
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getScaleStepSize() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getScaleStepSize() :: Ends");
+    LOGGER.exit("getScaleStepSize() :: Ends");
     return scaleStepCount;
   }
 
   public Integer getScaleDefaultValue(
       Integer step, Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getScaleDefaultValue() :: Starts");
+    LOGGER.entry("begin getScaleDefaultValue()");
     Integer stepSize = (maxValue - minValue) / step;
     Integer scaleDefaultValue = minValue;
     try {
@@ -3303,13 +3453,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getScaleDefaultValue() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getScaleDefaultValue() :: Ends");
+    LOGGER.exit("getScaleDefaultValue() :: Ends");
     return scaleDefaultValue;
   }
 
   public Integer getContinuousScaleMaxFractionDigits(
       Integer maxValue, Integer minValue, Integer actualFractionDigits) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Starts");
+    LOGGER.entry("begin getContinuousScaleMaxFractionDigits()");
     Integer maxFracDigits = 0;
     Integer minTemp = 0;
     Integer maxTemp = 0;
@@ -3346,13 +3496,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleMaxFractionDigits() :: Ends");
+    LOGGER.exit("getContinuousScaleMaxFractionDigits() :: Ends");
     return maxFracDigits;
   }
 
   public Integer getContinuousScaleDefaultValue(
       Integer maxValue, Integer minValue, Integer defaultValue) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleDefaultValue() :: Starts");
+    LOGGER.entry("begin getContinuousScaleDefaultValue()");
     Integer continuousScaleDefaultValue = minValue;
     try {
       if ((defaultValue != null) && (defaultValue >= minValue) && (defaultValue <= maxValue)) {
@@ -3361,12 +3511,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getContinuousScaleDefaultValue() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getContinuousScaleDefaultValue() :: Ends");
+    LOGGER.exit("getContinuousScaleDefaultValue() :: Ends");
     return continuousScaleDefaultValue;
   }
 
   public Integer getTimeIntervalStep(Integer stepValue) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeIntervalStep() :: Starts");
+    LOGGER.entry("begin getTimeIntervalStep()");
     Integer step = 1;
     Integer[] stepArray = {1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30};
     try {
@@ -3381,12 +3531,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getTimeIntervalStep() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeIntervalStep() :: Ends");
+    LOGGER.exit("getTimeIntervalStep() :: Ends");
     return step;
   }
 
   public Long getTimeInSeconds(String time) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Starts");
+    LOGGER.entry("begin getTimeInSeconds()");
     Long defaultTime = 0L;
     try {
       String[] timeArray = time.split(":");
@@ -3395,7 +3545,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getTimeInSeconds() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeInSeconds() :: Ends");
+    LOGGER.exit("getTimeInSeconds() :: Ends");
     return defaultTime;
   }
 
@@ -3404,7 +3554,7 @@ public class ActivityMetaDataDao {
       List<DestinationBean> destinationsList,
       QuestionnaireActivityStepsBean questionBean)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Starts");
+    LOGGER.entry("begin getConditionalBranchingDestinations()");
     ScriptEngineManager mgr = new ScriptEngineManager();
     ScriptEngine engine = mgr.getEngineByName("JavaScript");
 
@@ -3594,13 +3744,13 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getConditionalBranchingDestinations() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingDestinations() :: Ends");
+    LOGGER.exit("getConditionalBranchingDestinations() :: Ends");
     return updatedDestinationsList;
   }
 
   public Map<String, Object> conditionalBranchingPrerequisites(
       QuestionnaireActivityStepsBean questionBean) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - conditionalBranchingPrerequisites() :: Starts");
+    LOGGER.entry("begin conditionalBranchingPrerequisites()");
     Map<String, Object> prerequisitesMap = new HashMap<>();
     Double maxFractionDigit = 1D;
     Double minValue = 0D;
@@ -3683,12 +3833,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - conditionalBranchingPrerequisites() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - conditionalBranchingPrerequisites() :: Ends");
+    LOGGER.exit("conditionalBranchingPrerequisites() :: Ends");
     return prerequisitesMap;
   }
 
   public String getOperatorFromConditionalFormula(String conditionFormula) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getOperatorFromConditionalFormula() :: Starts");
+    LOGGER.entry("begin getOperatorFromConditionalFormula()");
     String operator = "";
     try {
       if (conditionFormula.contains(StudyMetaDataConstants.CBO_OPERATOR_EQUAL)) {
@@ -3703,7 +3853,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getOperatorFromConditionalFormula() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getOperatorFromConditionalFormula() :: Ends");
+    LOGGER.exit("getOperatorFromConditionalFormula() :: Ends");
     return operator;
   }
 
@@ -3713,7 +3863,7 @@ public class ActivityMetaDataDao {
       String trueOperator,
       String falseOperator)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingFormat() :: Starts");
+    LOGGER.entry("begin getConditionalBranchingFormat()");
     try {
       if ((destinationsList != null)
           && !destinationsList.isEmpty()
@@ -3727,14 +3877,14 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getConditionalBranchingFormat() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getConditionalBranchingFormat() :: Ends");
+    LOGGER.exit("getConditionalBranchingFormat() :: Ends");
     return destinationsList;
   }
 
   public List<DestinationBean> formatValueOfX(
       List<DestinationBean> destinationsList, QuestionnaireActivityStepsBean questionBean)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfX() :: Starts");
+    LOGGER.entry("begin formatValueOfX()");
     List<DestinationBean> updatedDestinationsList = destinationsList;
     try {
       if ((destinationsList != null)
@@ -3788,7 +3938,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatValueOfX() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfX() :: Ends");
+    LOGGER.exit("formatValueOfX() :: Ends");
     return updatedDestinationsList;
   }
 
@@ -3797,7 +3947,7 @@ public class ActivityMetaDataDao {
       String stringFormat,
       QuestionnaireActivityStepsBean questionBean)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfXByStringFormat() :: Starts");
+    LOGGER.entry("begin formatValueOfXByStringFormat()");
     try {
       if ((destinationsList != null)
           && !destinationsList.isEmpty()
@@ -3831,12 +3981,12 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatValueOfXByStringFormat() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - formatValueOfXByStringFormat() :: Ends");
+    LOGGER.exit("formatValueOfXByStringFormat() :: Ends");
     return destinationsList;
   }
 
   public String getDateRangeType(String dateRange) {
-    LOGGER.info("INFO: ActivityMetaDataDao - getDateRangeType() :: Starts");
+    LOGGER.entry("begin getDateRangeType()");
     String dateRangeType = "";
     try {
       switch (dateRange) {
@@ -3855,7 +4005,7 @@ public class ActivityMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getDateRangeType() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getDateRangeType() :: Ends");
+    LOGGER.exit("getDateRangeType() :: Ends");
     return dateRangeType;
   }
 
@@ -3863,8 +4013,7 @@ public class ActivityMetaDataDao {
   public ActivitiesBean getAnchordateDetailsByActivityIdForActivetask(
       ActiveTaskDto activeTaskDto, ActivitiesBean activityBean, Session session)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: Starts");
+    LOGGER.entry("ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire()");
     String searchQuery = "";
     try {
       ActivityAnchorDateBean activityAnchorDateBean = new ActivityAnchorDateBean();
@@ -3873,7 +4022,7 @@ public class ActivityMetaDataDao {
           (AnchorDateTypeDto)
               session
                   .createQuery(searchQuery)
-                  .setInteger("anchorDateId", activeTaskDto.getAnchorDateId())
+                  .setString("anchorDateId", activeTaskDto.getAnchorDateId())
                   .uniqueResult();
       if (anchorDateTypeDto != null) {
         if (!anchorDateTypeDto
@@ -3898,7 +4047,7 @@ public class ActivityMetaDataDao {
                   .setString("custStudyId", activeTaskDto.getCustomStudyId())
                   .setString("schedulerType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
                   .setString("freqType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
-                  .setInteger("anchorDateId", activeTaskDto.getAnchorDateId())
+                  .setString("anchorDateId", activeTaskDto.getAnchorDateId())
                   .list();
           if ((null != result) && !result.isEmpty()) {
             Object[] objects = (Object[]) result.get(0);
@@ -3922,7 +4071,7 @@ public class ActivityMetaDataDao {
             List<?> result1 =
                 session
                     .createQuery(query)
-                    .setInteger("anchorDateId", activeTaskDto.getAnchorDateId())
+                    .setString("anchorDateId", activeTaskDto.getAnchorDateId())
                     .setString("custStudyId", activeTaskDto.getCustomStudyId())
                     .setString("schedulerType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
                     .setString("freqType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
@@ -3948,15 +4097,23 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.activeTaskId=:activeTaskId"
-                          + " order by QCFDTO.id")
-                  .setInteger("activeTaskId", activeTaskDto.getId())
+                          + " order by QCFDTO.frequencyStartDate, QCFDTO.timePeriodFromDays")
+                  .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
             start.setAnchorDays(
                 manuallyScheduleFrequencyList.get(0).isxDaysSign()
                     ? -manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays()
                     : manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays());
-            start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyTime());
+
+            String frequencyStartTime =
+                manuallyScheduleFrequencyList.get(0).getFrequencyStartTime();
+            if (!frequencyStartTime.matches(
+                "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyStartTime = frequencyStartTime + ":00";
+            }
+
+            start.setTime(frequencyStartTime);
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
@@ -3967,10 +4124,15 @@ public class ActivityMetaDataDao {
                     : manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
                         .getTimePeriodToDays());
-            end.setTime(
+
+            String frequencyEndTime =
                 manuallyScheduleFrequencyList
                     .get(manuallyScheduleFrequencyList.size() - 1)
-                    .getFrequencyTime());
+                    .getFrequencyEndTime();
+            if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyEndTime = frequencyEndTime + ":00";
+            }
+            end.setTime(frequencyEndTime);
           }
         } else if (activeTaskDto
             .getFrequency()
@@ -3980,12 +4142,13 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskFrequencyDto QCFDTO"
                           + " where QCFDTO.activeTaskId=:activeTaskId"
-                          + " order by QCFDTO.id")
-                  .setInteger("activeTaskId", activeTaskDto.getId())
+                          + " order by QCFDTO.frequencyDate, QCFDTO.timePeriodFromDays")
+                  .setString("activeTaskId", activeTaskDto.getId())
                   .list();
 
           if ((taskFrequencyDtoList != null) && (taskFrequencyDtoList.size() > 0)) {
             start.setTime(taskFrequencyDtoList.get(0).getFrequencyTime());
+            start.setAnchorDays(taskFrequencyDtoList.get(0).getTimePeriodFromDays());
             end.setRepeatInterval(
                 activeTaskDto.getRepeatActiveTask() == null
                     ? 0
@@ -4001,8 +4164,9 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from ActiveTaskFrequencyDto QFDTO"
-                              + " where QFDTO.activeTaskId=:activeTaskId")
-                      .setInteger("activeTaskId", activeTaskDto.getId())
+                              + " where QFDTO.activeTaskId=:activeTaskId"
+                              + " order by QFDTO.frequencyDate, QFDTO.timePeriodFromDays")
+                      .setString("activeTaskId", activeTaskDto.getId())
                       .uniqueResult();
           if (taskFrequencyDto != null) {
             if (taskFrequencyDto.getTimePeriodFromDays() != null) {
@@ -4041,6 +4205,7 @@ public class ActivityMetaDataDao {
             }
           }
         }
+
         activityAnchorDateBean.setStart(start);
         activityAnchorDateBean.setEnd(end);
         activityBean.setAnchorDate(activityAnchorDateBean);
@@ -4050,8 +4215,7 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: Ends");
+    LOGGER.exit("getAnchordateDetailsByActivityIdForQuestionnaire() :: Ends");
     return activityBean;
   }
 
@@ -4062,30 +4226,52 @@ public class ActivityMetaDataDao {
           List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean,
           Session session)
           throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: Starts");
+    LOGGER.entry(
+        "ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule()");
     try {
       List<QuestionnairesCustomFrequenciesDto> manuallyScheduleFrequencyList =
           session
               .createQuery(
                   "from QuestionnairesCustomFrequenciesDto QCFDTO"
-                      + " where QCFDTO.questionnairesId=:quesResId")
-              .setInteger("quesResId", questionaire.getId())
+                      + " where QCFDTO.questionnairesId=:quesResId"
+                      + " ORDER BY QCFDTO.frequencyStartDate ASC, QCFDTO.frequencyStartTime")
+              .setString("quesResId", questionaire.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (QuestionnairesCustomFrequenciesDto customFrequencyDto :
             manuallyScheduleFrequencyList) {
           ActivityFrequencyAnchorRunsBean activityFrequencyAnchorRunsBean =
               new ActivityFrequencyAnchorRunsBean();
-          activityFrequencyAnchorRunsBean.setStartDays(
-              customFrequencyDto.isxDaysSign()
-                  ? -customFrequencyDto.getTimePeriodFromDays()
-                  : customFrequencyDto.getTimePeriodFromDays());
-          activityFrequencyAnchorRunsBean.setEndDays(
-              customFrequencyDto.isyDaysSign()
-                  ? -customFrequencyDto.getTimePeriodToDays()
-                  : customFrequencyDto.getTimePeriodToDays());
-          activityFrequencyAnchorRunsBean.setTime(customFrequencyDto.getFrequencyTime());
+
+          if (null != customFrequencyDto.getTimePeriodFromDays()) {
+            activityFrequencyAnchorRunsBean.setStartDays(
+                customFrequencyDto.isxDaysSign()
+                    ? -customFrequencyDto.getTimePeriodFromDays()
+                    : customFrequencyDto.getTimePeriodFromDays());
+          }
+
+          String frequencyStartTime = customFrequencyDto.getFrequencyStartTime();
+          if (StringUtils.isNotBlank(frequencyStartTime)
+              && !frequencyStartTime.matches(
+                  "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyStartTime = frequencyStartTime + ":00";
+          }
+          activityFrequencyAnchorRunsBean.setStartTime(frequencyStartTime);
+
+          if (null != customFrequencyDto.getTimePeriodToDays()) {
+            activityFrequencyAnchorRunsBean.setEndDays(
+                customFrequencyDto.isyDaysSign()
+                    ? -customFrequencyDto.getTimePeriodToDays()
+                    : customFrequencyDto.getTimePeriodToDays());
+          }
+
+          String frequencyEndTime = customFrequencyDto.getFrequencyEndTime();
+          if (StringUtils.isNotBlank(frequencyEndTime)
+              && !frequencyEndTime.matches(
+                  "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyEndTime = frequencyEndTime + ":00";
+          }
+          activityFrequencyAnchorRunsBean.setEndTime(frequencyEndTime);
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);
         }
       }
@@ -4094,8 +4280,8 @@ public class ActivityMetaDataDao {
           "ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: ERROR",
           e);
     }
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: Ends");
+    LOGGER.exit(
+        "ActivityMetaDataDao - getQuestionnaireFrequencyAncorDetailsForManuallySchedule() :: Ends");
     return anchorRunDetailsBean;
   }
 
@@ -4103,8 +4289,7 @@ public class ActivityMetaDataDao {
   public ActivitiesBean getAnchordateDetailsByActivityIdForQuestionnaire(
       QuestionnairesDto questionaire, ActivitiesBean activityBean, Session session)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: Starts");
+    LOGGER.entry("ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire()");
     String searchQuery = "";
     try {
       ActivityAnchorDateBean activityAnchorDateBean = new ActivityAnchorDateBean();
@@ -4138,7 +4323,7 @@ public class ActivityMetaDataDao {
                   .setString("customStudyId", questionaire.getCustomStudyId())
                   .setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
                   .setString("frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
-                  .setInteger("anchorDateId", questionaire.getAnchorDateId())
+                  .setString("anchorDateId", questionaire.getAnchorDateId())
                   .list();
           if ((null != result) && !result.isEmpty()) {
             Object[] objects = (Object[]) result.get(0);
@@ -4162,7 +4347,7 @@ public class ActivityMetaDataDao {
             List<?> result1 =
                 session
                     .createQuery(query)
-                    .setInteger("anchorDateId", questionaire.getAnchorDateId())
+                    .setString("anchorDateId", questionaire.getAnchorDateId())
                     .setString("customStudyId", questionaire.getCustomStudyId())
                     .setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
                     .setString("frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
@@ -4188,15 +4373,23 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questId"
-                          + " order by QCFDTO.id")
-                  .setInteger("questId", questionaire.getId())
+                          + " order by QCFDTO.frequencyStartDate, QCFDTO.timePeriodFromDays")
+                  .setString("questId", questionaire.getId())
                   .list();
           if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
             start.setAnchorDays(
                 manuallyScheduleFrequencyList.get(0).isxDaysSign()
                     ? -manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays()
                     : manuallyScheduleFrequencyList.get(0).getTimePeriodFromDays());
-            start.setTime(manuallyScheduleFrequencyList.get(0).getFrequencyTime());
+
+            String frequencyStartTime =
+                manuallyScheduleFrequencyList.get(0).getFrequencyStartTime();
+            if (!frequencyStartTime.matches(
+                "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyStartTime = frequencyStartTime + ":00";
+            }
+
+            start.setTime(frequencyStartTime);
             end.setAnchorDays(
                 manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
@@ -4207,10 +4400,16 @@ public class ActivityMetaDataDao {
                     : manuallyScheduleFrequencyList
                         .get(manuallyScheduleFrequencyList.size() - 1)
                         .getTimePeriodToDays());
-            end.setTime(
+
+            String frequencyEndTime =
                 manuallyScheduleFrequencyList
                     .get(manuallyScheduleFrequencyList.size() - 1)
-                    .getFrequencyTime());
+                    .getFrequencyEndTime();
+            if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+              frequencyEndTime = frequencyEndTime + ":00";
+            }
+
+            end.setTime(frequencyEndTime);
           }
         } else if (questionaire
             .getFrequency()
@@ -4220,8 +4419,8 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questId"
-                          + " order by QCFDTO.id")
-                  .setInteger("questId", questionaire.getId())
+                          + " order by QCFDTO.frequencyDate, QCFDTO.timePeriodFromDays")
+                  .setString("questId", questionaire.getId())
                   .list();
 
           if ((QuestionnairesFrequenciesDtoList != null)
@@ -4245,8 +4444,9 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
-                              + " where QFDTO.questionnairesId=:questId")
-                      .setInteger("questId", questionaire.getId())
+                              + " where QFDTO.questionnairesId=:questId"
+                              + " order by QFDTO.frequencyDate, QFDTO.timePeriodFromDays")
+                      .setString("questId", questionaire.getId())
                       .uniqueResult();
           if (questionnairesFrequency != null) {
             if (questionnairesFrequency.getTimePeriodFromDays() != null) {
@@ -4294,8 +4494,7 @@ public class ActivityMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getAnchordateDetailsByActivityIdForQuestionnaire() :: Ends");
+    LOGGER.exit("getAnchordateDetailsByActivityIdForQuestionnaire() :: Ends");
     return activityBean;
   }
 
@@ -4305,29 +4504,50 @@ public class ActivityMetaDataDao {
       List<ActivityFrequencyAnchorRunsBean> anchorRunDetailsBean,
       Session session)
       throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getAcivetaskFrequencyAncorDetailsForManuallySchedule() :: Starts");
+    LOGGER.entry("begin getAcivetaskFrequencyAncorDetailsForManuallySchedule()");
     try {
       List<ActiveTaskCustomFrequenciesDto> manuallyScheduleFrequencyList =
           session
               .createQuery(
                   "from ActiveTaskCustomFrequenciesDto QCFDTO"
-                      + " where QCFDTO.activeTaskId=:activeTaskId")
-              .setInteger("activeTaskId", activeTaskDto.getId())
+                      + " where QCFDTO.activeTaskId=:activeTaskId"
+                      + " ORDER BY QCFDTO.frequencyStartDate ASC, QCFDTO.frequencyStartTime")
+              .setString("activeTaskId", activeTaskDto.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (ActiveTaskCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList) {
           ActivityFrequencyAnchorRunsBean activityFrequencyAnchorRunsBean =
               new ActivityFrequencyAnchorRunsBean();
-          activityFrequencyAnchorRunsBean.setStartDays(
-              customFrequencyDto.isxDaysSign()
-                  ? -customFrequencyDto.getTimePeriodFromDays()
-                  : customFrequencyDto.getTimePeriodFromDays());
-          activityFrequencyAnchorRunsBean.setEndDays(
-              customFrequencyDto.isyDaysSign()
-                  ? -customFrequencyDto.getTimePeriodToDays()
-                  : customFrequencyDto.getTimePeriodToDays());
-          activityFrequencyAnchorRunsBean.setTime(customFrequencyDto.getFrequencyTime());
+
+          if (null != customFrequencyDto.getTimePeriodFromDays()) {
+            activityFrequencyAnchorRunsBean.setStartDays(
+                customFrequencyDto.isxDaysSign()
+                    ? -customFrequencyDto.getTimePeriodFromDays()
+                    : customFrequencyDto.getTimePeriodFromDays());
+          }
+
+          String frequencyStartTime = customFrequencyDto.getFrequencyStartTime();
+          if (null != frequencyStartTime
+              && !frequencyStartTime.matches(
+                  "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyStartTime = frequencyStartTime + ":00";
+          }
+          activityFrequencyAnchorRunsBean.setStartTime(frequencyStartTime);
+
+          if (null != customFrequencyDto.getTimePeriodToDays()) {
+            activityFrequencyAnchorRunsBean.setEndDays(
+                customFrequencyDto.isyDaysSign()
+                    ? -customFrequencyDto.getTimePeriodToDays()
+                    : customFrequencyDto.getTimePeriodToDays());
+          }
+
+          String frequencyEndTime = customFrequencyDto.getFrequencyEndTime();
+          if (null != frequencyEndTime
+              && !frequencyEndTime.matches(
+                  "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
+            frequencyEndTime = frequencyEndTime + ":00";
+          }
+          activityFrequencyAnchorRunsBean.setEndTime(frequencyEndTime);
           anchorRunDetailsBean.add(activityFrequencyAnchorRunsBean);
         }
       }
@@ -4336,8 +4556,7 @@ public class ActivityMetaDataDao {
           "ActivityMetaDataDao - getAcivetaskFrequencyAncorDetailsForManuallySchedule() :: ERROR",
           e);
     }
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getAcivetaskFrequencyAncorDetailsForManuallySchedule() :: Ends");
+    LOGGER.exit("getAcivetaskFrequencyAncorDetailsForManuallySchedule() :: Ends");
     return anchorRunDetailsBean;
   }
 }

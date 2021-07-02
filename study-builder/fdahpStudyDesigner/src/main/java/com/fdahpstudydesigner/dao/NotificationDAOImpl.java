@@ -45,18 +45,18 @@ import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
@@ -64,7 +64,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class NotificationDAOImpl implements NotificationDAO {
 
-  private static Logger logger = Logger.getLogger(NotificationDAOImpl.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(NotificationDAOImpl.class.getName());
 
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
@@ -78,8 +78,8 @@ public class NotificationDAOImpl implements NotificationDAO {
 
   @Override
   public String deleteNotification(
-      int notificationIdForDelete, SessionObject sessionObject, String notificationType) {
-    logger.info("NotificationDAOImpl - deleteNotification() - Starts");
+      String notificationIdForDelete, SessionObject sessionObject, String notificationType) {
+    logger.entry("begin deleteNotification()");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     String queryString = "";
@@ -87,7 +87,7 @@ public class NotificationDAOImpl implements NotificationDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      if (notificationIdForDelete != 0) {
+      if (notificationIdForDelete != null) {
         queryString =
             "update NotificationBO NBO set NBO.modifiedBy = :userId "
                 + ", NBO.modifiedOn = now(), NBO.notificationStatus = 1 ,NBO.notificationDone = 1 ,NBO.notificationAction = 1 where NBO.notificationId =:notificationId";
@@ -111,13 +111,13 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.info("NotificationDAOImpl - deleteNotification - Ends");
+    logger.exit("deleteNotification - Ends");
     return message;
   }
 
   @Override
-  public NotificationBO getNotification(int notificationId) {
-    logger.info("NotificationDAOImpl - getNotification() - Starts");
+  public NotificationBO getNotification(String notificationId) {
+    logger.entry("begin getNotification()");
     Session session = null;
     String queryString = null;
     NotificationBO notificationBO = null;
@@ -128,7 +128,7 @@ public class NotificationDAOImpl implements NotificationDAO {
       notificationBO = (NotificationBO) query.uniqueResult();
       if (null != notificationBO) {
         notificationBO.setNotificationId(
-            null != notificationBO.getNotificationId() ? notificationBO.getNotificationId() : 0);
+            null != notificationBO.getNotificationId() ? notificationBO.getNotificationId() : null);
         notificationBO.setNotificationText(
             null != notificationBO.getNotificationText()
                 ? notificationBO.getNotificationText()
@@ -137,6 +137,13 @@ public class NotificationDAOImpl implements NotificationDAO {
             null != notificationBO.getScheduleDate() ? notificationBO.getScheduleDate() : "");
         notificationBO.setScheduleTime(
             null != notificationBO.getScheduleTime() ? notificationBO.getScheduleTime() : "");
+        notificationBO.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
+
         notificationBO.setNotificationSent(notificationBO.isNotificationSent());
         notificationBO.setNotificationScheduleType(
             null != notificationBO.getNotificationScheduleType()
@@ -146,6 +153,7 @@ public class NotificationDAOImpl implements NotificationDAO {
             notificationBO.getNotificationScheduleType())) {
           notificationBO.setScheduleDate("");
           notificationBO.setScheduleTime("");
+          notificationBO.setScheduleTimestamp(null);
         }
       }
     } catch (Exception e) {
@@ -155,14 +163,14 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.info("NotificationDAOImpl - getNotification - Ends");
+    logger.exit("getNotification - Ends");
     return notificationBO;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(int notificationId) {
-    logger.info("NotificationDAOImpl - getNotificationHistoryListNoDateTime() - Starts");
+  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(String notificationId) {
+    logger.entry("begin getNotificationHistoryListNoDateTime()");
     Session session = null;
     String queryString = null;
     List<NotificationHistoryBO> notificationHistoryListNoDateTime = null;
@@ -180,31 +188,32 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.info("NotificationDAOImpl - getNotificationHistoryListNoDateTime - Ends");
+    logger.exit("getNotificationHistoryListNoDateTime - Ends");
     return notificationHistoryListNoDateTime;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<NotificationBO> getNotificationList(int studyId, String type) {
-    logger.info("NotificationDAOImpl - getNotificationList() - Starts");
+  public List<NotificationBO> getNotificationList(String studyId, String type) {
+    logger.entry("begin getNotificationList()");
     List<NotificationBO> notificationList = null;
     Session session = null;
     String queryString = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if (FdahpStudyDesignerConstants.STUDYLEVEL.equals(type) && (studyId != 0)) {
+      if (FdahpStudyDesignerConstants.STUDYLEVEL.equals(type)
+          && (StringUtils.isNotEmpty(studyId))) {
         queryString =
             "from NotificationBO NBO where NBO.studyId = :studyId "
                 + " and NBO.notificationSubType = 'Announcement' and NBO.notificationType = 'ST' and NBO.notificationStatus = 0 "
-                + "order by NBO.notificationId desc";
+                + "order by createdOn DESC, NBO.sequenceNumber ";
         query = session.createQuery(queryString).setParameter("studyId", studyId);
         notificationList = query.list();
       } else {
         queryString =
-            "from NotificationBO NBO where NBO.studyId = :studyId "
-                + " and NBO.notificationType = 'GT' and NBO.notificationStatus = 0 order by NBO.notificationId desc";
-        query = session.createQuery(queryString).setParameter("studyId", studyId);
+            "from NotificationBO NBO where NBO.studyId IS NULL"
+                + " and NBO.notificationType = 'GT' and NBO.notificationStatus = 0 order by NBO.createdOn desc";
+        query = session.createQuery(queryString);
         notificationList = query.list();
       }
     } catch (Exception e) {
@@ -214,26 +223,23 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.info("NotificationDAOImpl - getNotificationList() - Ends");
+    logger.exit("getNotificationList() - Ends");
     return notificationList;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<PushNotificationBean> getPushNotificationList(String date, String time) {
-    logger.info("NotificationDAOImpl - getPushNotificationList - Starts");
+  public List<PushNotificationBean> getPushNotificationList(String scheduledTimestamp) {
+    logger.entry("begin getPushNotificationList");
     Session session = null;
     String sb = "";
     List<PushNotificationBean> pushNotificationBeans = null;
-    List<Integer> notificationIds;
-    Transaction trans = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      trans = session.beginTransaction();
       sb =
           "select n.notification_id as notificationId, n.notification_text as notificationText, s.custom_study_id as customStudyId, n.notification_type as notificationType, n.notification_subType as notificationSubType,n.app_id as appId"
-              + " from (notification as n) LEFT OUTER JOIN studies as s ON s.id = n.study_id where n.schedule_date =:date"
-              + " AND n.is_anchor_date = false AND n.notification_done = true AND n.schedule_time like concat('%', :time, '%')"
+              + " from (notification as n) LEFT OUTER JOIN studies as s ON s.id = n.study_id where n.schedule_timestamp <=:scheduledTimestamp"
+              + " AND n.is_anchor_date = false AND n.notification_done = true AND n.notification_sent=false"
               + " AND (n.notification_subType=:subType OR n.notification_type =:type OR s.status =:status)";
 
       query =
@@ -245,67 +251,40 @@ public class NotificationDAOImpl implements NotificationDAO {
               .addScalar("notificationType")
               .addScalar("notificationSubType")
               .addScalar("appId")
-              .setParameter("time", time)
-              .setParameter("date", date)
+              .setParameter("scheduledTimestamp", scheduledTimestamp)
               .setParameter("subType", FdahpStudyDesignerConstants.STUDY_EVENT)
               .setParameter("type", FdahpStudyDesignerConstants.NOTIFICATION_GT)
               .setParameter("status", FdahpStudyDesignerConstants.STUDY_ACTIVE);
       pushNotificationBeans =
           query.setResultTransformer(Transformers.aliasToBean(PushNotificationBean.class)).list();
-      if ((null != pushNotificationBeans) && !pushNotificationBeans.isEmpty()) {
-        notificationIds = new ArrayList<>();
-        for (PushNotificationBean pushNotificationBean : pushNotificationBeans) {
-          notificationIds.add(pushNotificationBean.getNotificationId());
-          if ((pushNotificationBean.getNotificationSubType() == null)
-              || ((pushNotificationBean.getNotificationSubType() != null)
-                  && !FdahpStudyDesignerConstants.RESOURCE.equals(
-                      pushNotificationBean.getNotificationSubType())
-                  && !FdahpStudyDesignerConstants.STUDY_EVENT.equals(
-                      pushNotificationBean.getNotificationSubType()))) {
-            NotificationHistoryBO historyBO = new NotificationHistoryBO();
-            historyBO.setNotificationId(pushNotificationBean.getNotificationId());
-            historyBO.setNotificationSentDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
-            session.save(historyBO);
-          }
-        }
-        sb =
-            "update NotificationBO NBO set NBO.notificationSent = true  where NBO.notificationId in (:notificationIds )";
-        ;
-        session
-            .createQuery(sb)
-            .setParameterList("notificationIds", notificationIds)
-            .executeUpdate();
-      }
-      trans.commit();
+
     } catch (Exception e) {
-      if (null != trans) {
-        trans.rollback();
-      }
+
       logger.error("NotificationDAOImpl - getPushNotificationList - ERROR", e);
     } finally {
       if (null != session) {
         session.close();
       }
     }
-    logger.info("NotificationDAOImpl - getPushNotificationList - Ends");
+    logger.exit("getPushNotificationList - Ends");
     return pushNotificationBeans;
   }
 
   @Override
-  public Integer saveOrUpdateOrResendNotification(
+  public String saveOrUpdateOrResendNotification(
       NotificationBO notificationBO,
       String notificationType,
       String buttonType,
       SessionObject sessionObject) {
-    logger.info("NotificationDAOImpl - saveOrUpdateOrResendNotification() - Starts");
+    logger.entry("begin saveOrUpdateOrResendNotification()");
     Session session = null;
     NotificationBO notificationBOUpdate = null;
-    Integer notificationId = 0;
+    String notificationId = null;
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      if (notificationBO.getNotificationId() == null) {
+      if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
         notificationBOUpdate = new NotificationBO();
         notificationBOUpdate.setNotificationText(notificationBO.getNotificationText().trim());
         notificationBOUpdate.setCreatedBy(notificationBO.getCreatedBy());
@@ -323,6 +302,13 @@ public class NotificationDAOImpl implements NotificationDAO {
           notificationBOUpdate.setScheduleDate(notificationBO.getScheduleDate());
         }
 
+        notificationBOUpdate.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
+
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
@@ -331,7 +317,7 @@ public class NotificationDAOImpl implements NotificationDAO {
           notificationBOUpdate.setNotificationAction(notificationBO.isNotificationAction());
         } else {
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_GT);
-          notificationBOUpdate.setStudyId(0);
+          notificationBOUpdate.setStudyId(null);
           notificationBOUpdate.setCustomStudyId("");
           notificationBOUpdate.setNotificationAction(false);
           notificationBOUpdate.setNotificationDone(true);
@@ -341,7 +327,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         }
         notificationBOUpdate.setNotificationSubType(
             FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_ANNOUNCEMENT);
-        notificationId = (Integer) session.save(notificationBOUpdate);
+        notificationId = (String) session.save(notificationBOUpdate);
       } else {
         query =
             session
@@ -372,6 +358,12 @@ public class NotificationDAOImpl implements NotificationDAO {
         } else {
           notificationBOUpdate.setScheduleDate(null);
         }
+        notificationBOUpdate.setScheduleTimestamp(
+            (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                    && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                ? FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                : null);
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
@@ -439,7 +431,7 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.info("NotificationDAOImpl - saveOrUpdateOrResendNotification - Ends");
+    logger.exit("saveOrUpdateOrResendNotification - Ends");
     return notificationId;
   }
 
@@ -451,7 +443,7 @@ public class NotificationDAOImpl implements NotificationDAO {
   @SuppressWarnings("unchecked")
   @Override
   public List<String> getGatwayAppList() {
-    logger.info("NotificationDAOImpl - getGatwayAppList() - Starts");
+    logger.entry("begin getGatwayAppList()");
     List<String> gatewayAppList = null;
     Session session = null;
     String queryString = null;
@@ -471,17 +463,18 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.info("NotificationDAOImpl - getGatwayAppList - Ends");
+    logger.exit("getGatwayAppList - Ends");
     return gatewayAppList;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public List<NotificationBO> getNotificationList(Integer studyId) {
-    logger.info("NotificationDAOImpl - getNotificationList() - Starts");
+  public List<NotificationBO> getNotificationList(String studyId) {
+    logger.entry("begin getNotificationList()");
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      return session.getNamedQuery("getNotification").setInteger("studyId", studyId).list();
+      return session.getNamedQuery("getNotification").setString("studyId", studyId).list();
     } catch (Exception e) {
       logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
     } finally {
@@ -489,7 +482,48 @@ public class NotificationDAOImpl implements NotificationDAO {
         session.close();
       }
     }
-    logger.info("NotificationDAOImpl - getNotificationList() - Ends");
+    logger.exit("getNotificationList() - Ends");
+    return null;
+  }
+
+  @Override
+  public void saveNotification(NotificationBO notificationBO) {
+    logger.info("NotificationDAOImpl - saveNotification() - Starts");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      session.save(notificationBO);
+      transaction.commit();
+    } catch (Exception e) {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+      logger.error("NotificationDAOImpl - saveNotification()  - ERROR ", e);
+    } finally {
+      if ((session != null) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("NotificationDAOImpl - saveNotification()  - Ends");
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<NotificationBO> getNotificationsList(String studyId) {
+    logger.entry("begin getNotificationList()");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      return session.getNamedQuery("getNotificationsList").setString("studyId", studyId).list();
+    } catch (Exception e) {
+      logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getNotificationList() - Ends");
     return null;
   }
 }

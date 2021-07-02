@@ -62,6 +62,9 @@
       .has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label {
         color: #fff !important;
       }
+      .arrowLeftSugg {
+        top: 153px; !important;
+      }
     </style>
   </head>
   <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
@@ -77,16 +80,11 @@
     </form>
 
     <div id="lg-container" class="lg-container">
-      <div class="logout">
-        <div class="dis-line pull-right ml-md line34">
-          <a href="/studybuilder/sessionOut.do"
-             class="blue-link text-weight-normal text-uppercase">
-            <span class="white__text">sign Out</span>
-          </a>
-        </div>
-      </div>
       <div class="logo__space">
-        <img src="../images/logo/logo_innerScreens.png" alt=""/>
+        <a href="/studybuilder/sessionOut.do"
+             class="blue-link text-weight-normal text-uppercase">
+        	<img src="../images/logo/logo_landing_welcome.png" alt=""/>
+        </a>
       </div>
       <div class="pwdexp__container">
         <!--container-->
@@ -99,23 +97,21 @@
             <div>
               <div id="errMsg" class="error_msg">${errMsg}</div>
               <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
-              <p class="white__text">Your password has expired. You need to reset your password to
-                proceed
-                further.</p>
+              <p class="white__text">Your password has expired. Please create a new password.</p>
               <div class="mb-lg form-group">
                 <input type="password" class="form-control input-field wow_input" id="oldPassword"
                        name=""
-                       maxlength="14" data-minlength="8" placeholder="Old Password"
-                       data-error="Invalid old password." required
+                       maxlength="14" data-minlength="8" placeholder="Previous password"
+                       data-error="Invalid previous password" required data-error="Please fill out this field" 
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
                 <input type="hidden" name="oldPassword" id="hideOldPass"/>
               </div>
               <div class="mb-lg form-group">
                 <input type="password" class="form-control input-field wow_input" id="password" name=""
-                       maxlength="14" data-minlength="8" placeholder="Password"
+                       maxlength="14" data-minlength="8" placeholder="New password"
                        data-error="Password is invalid"
-                       required
+                       required data-error="Please fill out this field" 
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,14}"
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
@@ -127,7 +123,7 @@
                        maxlength="14" data-match="#password"
                        data-match-error="Passwords do not match"
                        placeholder="Confirm new password"
-                       required autocomplete="off"/>
+                       required data-error="Please fill out this field" autocomplete="off"/>
                 <div class="help-block with-errors"></div>
               </div>
               <div class="mb-lg form-group">

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,9 +28,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "study_page")
@@ -38,7 +40,7 @@ public class StudyPageBo implements Serializable {
   private static final long serialVersionUID = 3736160119532905474L;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
@@ -50,23 +52,29 @@ public class StudyPageBo implements Serializable {
   private String imagePath;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "page_id")
-  private Integer pageId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "page_id", updatable = false, nullable = false)
+  private String pageId;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Column(name = "title")
   private String title;
 
-  public Integer getCreatedBy() {
+  @Transient public String signedUrl;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -82,7 +90,7 @@ public class StudyPageBo implements Serializable {
     return imagePath;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -90,11 +98,11 @@ public class StudyPageBo implements Serializable {
     return modifiedOn;
   }
 
-  public Integer getPageId() {
+  public String getPageId() {
     return pageId;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
@@ -102,7 +110,7 @@ public class StudyPageBo implements Serializable {
     return title;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -118,7 +126,7 @@ public class StudyPageBo implements Serializable {
     this.imagePath = imagePath;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -126,15 +134,31 @@ public class StudyPageBo implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public void setPageId(Integer pageId) {
+  public void setPageId(String pageId) {
     this.pageId = pageId;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public String getSignedUrl() {
+    return signedUrl;
+  }
+
+  public void setSignedUrl(String signedUrl) {
+    this.signedUrl = signedUrl;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

@@ -29,10 +29,10 @@
           <span class="pr-sm cur-pointer" onclick="goToBackPage(this);">
             <img src="../images/icons/back-b.png" alt=""/>
           </span>
-          <c:if test="${empty consentInfoBo.id}"> Add Consent Section</c:if>
+          <c:if test="${empty consentInfoBo.id}"> Add consent section</c:if>
           <c:if
-              test="${not empty consentInfoBo.id && actionPage eq 'addEdit'}">Edit Consent Section</c:if>
-          <c:if test="${not empty consentInfoBo.id && actionPage eq 'view'}">View Consent Section
+              test="${not empty consentInfoBo.id && actionPage eq 'addEdit'}">Edit consent section</c:if>
+          <c:if test="${not empty consentInfoBo.id && actionPage eq 'view'}">View consent section
             <c:set
                 var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
           </c:if>
@@ -86,7 +86,7 @@
         <div class="col-md-5 p-none form-group elaborateClass consentTitle">
           <select class="selectpicker" id="consentItemTitleId"
                   name="consentItemTitleId" required
-                  data-error="Please choose one title">
+                  data-error="Please select a topic">
             <option value="">Select</option>
             <c:forEach items="${consentMasterInfoList}" var="consentMaster">
               <option value="${consentMaster.id}"
@@ -112,7 +112,7 @@
         </div>
         <div class="form-group">
           <input autofocus="autofocus" type="text" id="displayTitle"
-                 class="form-control" name="displayTitle" required
+                 class="form-control" name="displayTitle" required data-error="Please fill out this field" 
                  value="${fn:escapeXml(consentInfoBo.displayTitle)}" maxlength="75">
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -127,7 +127,7 @@
         </div>
         <div class="form-group">
           <textarea class="form-control" rows="7" id="briefSummary"
-                    name="briefSummary" required
+                    name="briefSummary" required data-error="Please fill out this field" 
                     maxlength="500">${consentInfoBo.briefSummary}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -142,7 +142,7 @@
         </div>
         <div class="form-group">
           <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE"
-                    required>${consentInfoBo.elaborated}</textarea>
+                    required data-error="Please fill out this field" >${consentInfoBo.elaborated}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -159,7 +159,7 @@
           <span class="radio radio-info radio-inline p-45"><input
               class="" type="radio" id="inlineRadio3" value="Yes"
               name="visualStep" required
-              data-error="Please choose one visual step"
+              data-error="Please select one of the above options"
             ${consentInfoBo.visualStep=='Yes'?'checked':''}> <label
               for="inlineRadio3">Yes</label>
           </span>
@@ -168,7 +168,7 @@
                                                        value="No"
                                                        name="visualStep"
                                                        required
-                                                       data-error="Please choose one visual step"
+                                                       data-error="Please select one of the above options"
             ${consentInfoBo.visualStep=='No'?'checked':''}> <label
               for="inlineRadio4">No</label>
           </span>
@@ -349,10 +349,10 @@
                 var elaboratedContent = $(
                     '#elaboratedRTE')
                     .summernote('code');
-                elaboratedContent = replaceSpecialCharacters(elaboratedContent);
                 var briefSummaryText = replaceSpecialCharacters($(
                     "#briefSummary")
                     .val());
+                elaboratedContent = $('#elaboratedRTE').text(elaboratedContent).html();
                 $("#elaborated").val(
                     elaboratedContent);
                 $("#briefSummary").val(
@@ -374,7 +374,7 @@
                     .find(".help-block")
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                        "Please choose one visual step"));
+                        "Please select one of the above options"));
                 $("#doneId").prop(
                     'disabled', false);
               }
@@ -401,9 +401,7 @@
 
     var visual_step = $('input[name="visualStep"]:checked').val();
 
-    var valid = maxLenValEditor();
-    if (valid
-        && (study_id != null && study_id != '' && typeof study_id != 'undefined')
+    if ((study_id != null && study_id != '' && typeof study_id != 'undefined')
         && (displayTitleText != null && displayTitleText != '' && typeof displayTitleText
             != 'undefined')) {
       $(item).prop('disabled', true);
@@ -451,7 +449,7 @@
                 $("#id").val(consentInfoId);
                 $("#alertMsg").removeClass('e-box').addClass(
                     's-box')
-                    .text("Content saved as draft.");
+                    .text("Content saved as draft");
                 $(item).prop('disabled', false);
                 $('#alertMsg').show();
               } else {
@@ -478,7 +476,7 @@
             .find(".help-block")
             .empty()
             .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "This is a required field."));
+                "This is a required field"));
         setTimeout(hideDisplayMessage, 5000);
       }
 
@@ -605,35 +603,39 @@
   </c:if>
 
   function maxLenValEditor() {
-    var isValid = true;
-    var value = $('#elaboratedRTE').summernote('code');
-    if (value != '<p><br></p>') {
-      if (value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
-        if (isValid) {
-          isValid = false;
-        }
-        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 15000 characters are allowed."));
+	    var isValid = true;
+	    var value = $('#elaboratedRTE').summernote('code');
+	    if (value == '<br>' || value == '<p><br></p>') {
+	    	value = '';
+	    }
+	    
+	    if (value != '') {
+	      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
+	        if (isValid) {
+	          isValid = false;
+	        }
+	        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
+	        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	            "Maximum 15000 characters are allowed"));
 
-      } else {
-        $('#elaboratedRTE').parent().removeClass("has-danger")
-            .removeClass("has-error");
-        $('#elaboratedRTE').parent().find(".help-block").empty();
-      }
-    } else {
-      isValid = false;
-      $('#elaboratedRTE')
-          .parent()
-          .addClass('has-error has-danger')
-          .find(".help-block")
-          .empty()
-          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field."));
+	      } else {
+	        $('#elaboratedRTE').parent().removeClass("has-danger")
+	            .removeClass("has-error");
+	        $('#elaboratedRTE').parent().find(".help-block").empty();
+	      }
+	    } else {
+	      isValid = false;
+	      $('#elaboratedRTE')
+	          .parent()
+	          .addClass('has-error has-danger')
+	          .find(".help-block")
+	          .empty()
+	          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	              "Please fill out this field"));
 
-    }
-    return isValid;
-  }
+	    }
+	    return isValid;
+	  }
 
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");

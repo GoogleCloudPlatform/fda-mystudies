@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -55,21 +56,23 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 public class DashboardMetaDataDao {
 
-  private static final Logger LOGGER = Logger.getLogger(DashboardMetaDataDao.class);
+  private static final XLogger LOGGER =
+      XLoggerFactory.getXLogger(DashboardMetaDataDao.class.getName());
 
   SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
   Query query = null;
 
   @SuppressWarnings("unchecked")
   public StudyDashboardResponse studyDashboardInfo(String studyId) throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - studyDashboardInfo() :: Starts");
+    LOGGER.entry("begin studyDashboardInfo()");
     Session session = null;
     StudyDashboardResponse studyDashboardResponse = new StudyDashboardResponse();
     DashboardBean dashboard = new DashboardBean();
@@ -77,14 +80,14 @@ public class DashboardMetaDataDao {
     List<StatisticsBean> statisticsList = new ArrayList<>();
     Map<String, Object> activityMap = new LinkedHashMap<>();
     Map<String, Object> questionnaireMap = new LinkedHashMap<>();
-    List<Integer> activeTaskIdsList = new ArrayList<>();
-    List<Integer> questionnaireIdsList = new ArrayList<>();
+    List<String> activeTaskIdsList = new ArrayList<>();
+    List<String> questionnaireIdsList = new ArrayList<>();
     List<ActiveTaskDto> activeTaskList = null;
     List<QuestionnairesDto> questionnaireList = null;
     List<ActiveTaskAttrtibutesValuesDto> activeTaskValuesList = null;
     List<QuestionnairesStepsDto> questionnaireStepsList = null;
-    List<Integer> questionIdsList = new ArrayList<>();
-    List<Integer> formIdsList = new ArrayList<>();
+    List<String> questionIdsList = new ArrayList<>();
+    List<String> formIdsList = new ArrayList<>();
     List<ActiveTaskFormulaDto> formulaDtoList = null;
     List<StatisticImageListDto> statisticImageList = null;
     StudyDto studyDto = null;
@@ -124,11 +127,12 @@ public class DashboardMetaDataDao {
             if ((activeTask.getActive() != null) && (activeTask.getActive() == 1)) {
               addToDashboardFlag = true;
             } else {
-              if (StudyMetaDataConstants.SDF_DATE
-                  .parse(activeTask.getModifiedDate())
-                  .after(
-                      StudyMetaDataConstants.SDF_DATE.parse(
-                          activeTask.getActiveTaskLifetimeStart()))) {
+              if (StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart())
+                  && StudyMetaDataConstants.SDF_DATE
+                      .parse(activeTask.getModifiedDate())
+                      .after(
+                          StudyMetaDataConstants.SDF_DATE.parse(
+                              activeTask.getActiveTaskLifetimeStart()))) {
                 addToDashboardFlag = true;
               }
             }
@@ -237,9 +241,9 @@ public class DashboardMetaDataDao {
                   .list();
           if ((activeTaskValuesList != null) && !activeTaskValuesList.isEmpty()) {
             int taskTypeId = 0;
-            Map<Integer, Integer> activeTaskMasterAttrIdsMap = new HashMap<>();
-            Map<Integer, String> activeTaskMasterAttrIdNameMap = new HashMap<>();
-            List<Integer> activeTaskMasterAttrIdList = new ArrayList<>();
+            Map<String, String> activeTaskMasterAttrIdsMap = new HashMap<>();
+            Map<String, String> activeTaskMasterAttrIdNameMap = new HashMap<>();
+            List<String> activeTaskMasterAttrIdList = new ArrayList<>();
 
             for (ActiveTaskAttrtibutesValuesDto activeTaskAttrDto : activeTaskValuesList) {
               activeTaskMasterAttrIdsMap.put(
@@ -247,7 +251,7 @@ public class DashboardMetaDataDao {
                   activeTaskAttrDto.getActiveTaskMasterAttrId());
             }
 
-            for (Integer activeTaskMasterAttrId : activeTaskMasterAttrIdsMap.keySet()) {
+            for (String activeTaskMasterAttrId : activeTaskMasterAttrIdsMap.keySet()) {
               activeTaskMasterAttrIdList.add(activeTaskMasterAttrId);
             }
 
@@ -278,7 +282,7 @@ public class DashboardMetaDataDao {
                               + activeTaskAttrDto.getActiveTaskId());
               if (activeTaskDto != null) {
                 if ((null != activeTaskDto.getTaskTypeId())
-                    && (3 == activeTaskDto.getTaskTypeId().intValue())) {
+                    && ("3".equals(activeTaskDto.getTaskTypeId()))) {
                   taskTypeId = 3;
                 }
                 activeTaskAttrDto.setActivityType(StudyMetaDataConstants.DASHBOARD_ACTIVE_TASK);
@@ -398,7 +402,7 @@ public class DashboardMetaDataDao {
                   .list();
           if ((formDtoList != null) && !formDtoList.isEmpty()) {
             for (FormDto form : formDtoList) {
-              List<Integer> formQuestionIdsList = new ArrayList<>();
+              List<String> formQuestionIdsList = new ArrayList<>();
               List<FormMappingDto> formMappingDtoList;
               formMappingDtoList =
                   session
@@ -406,7 +410,7 @@ public class DashboardMetaDataDao {
                           "from FormMappingDto FMDTO"
                               + " where FMDTO.formId=:formId"
                               + " order by FMDTO.sequenceNo")
-                      .setInteger("formId", form.getFormId())
+                      .setString("formId", form.getFormId())
                       .list();
               if ((formMappingDtoList != null) && !formMappingDtoList.isEmpty()) {
                 for (FormMappingDto formMappingDto : formMappingDtoList) {
@@ -508,7 +512,7 @@ public class DashboardMetaDataDao {
         session.close();
       }
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - studyDashboardInfo() :: Ends");
+    LOGGER.exit("studyDashboardInfo() :: Ends");
     return studyDashboardResponse;
   }
 
@@ -522,7 +526,7 @@ public class DashboardMetaDataDao {
       int taskTypeId,
       Map activeTaskMasterAttrIdNameMap)
       throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - getChartDetails() :: Starts");
+    LOGGER.entry("begin getChartDetails()");
     ChartsBean chart = new ChartsBean();
     ChartDataSourceBean dataSource = new ChartDataSourceBean();
     DashboardActivityBean activity = new DashboardActivityBean();
@@ -601,7 +605,7 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - getChartDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - getChartDetails() :: Ends");
+    LOGGER.exit("getChartDetails() :: Ends");
     return chartsList;
   }
 
@@ -616,7 +620,7 @@ public class DashboardMetaDataDao {
       int taskTypeId,
       Map activeTaskMasterAttrIdNameMap)
       throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsDetails() :: Starts");
+    LOGGER.entry("begin getStatisticsDetails()");
     StatisticsBean statistics = new StatisticsBean();
     StatisticsDataSourceBean dataSource = new StatisticsDataSourceBean();
     DashboardActivityBean activity = new DashboardActivityBean();
@@ -633,8 +637,7 @@ public class DashboardMetaDataDao {
         statistics.setStatType(
             StringUtils.isEmpty(activeTask.getUploadTypeStat())
                 ? ""
-                : this.getStatisticsType(
-                    Integer.parseInt(activeTask.getUploadTypeStat()), statisticImageList));
+                : this.getStatisticsType(activeTask.getUploadTypeStat(), statisticImageList));
         statistics.setUnit(
             StringUtils.isEmpty(activeTask.getDisplayUnitStat())
                 ? ""
@@ -642,8 +645,7 @@ public class DashboardMetaDataDao {
         statistics.setCalculation(
             StringUtils.isEmpty(activeTask.getFormulaAppliedStat())
                 ? ""
-                : this.getFormulaType(
-                    Integer.parseInt(activeTask.getFormulaAppliedStat()), formulaDtoList));
+                : this.getFormulaType(activeTask.getFormulaAppliedStat(), formulaDtoList));
 
         activity.setActivityId(activeTask.getActivityId());
         activity.setVersion(activeTask.getActivityVersion());
@@ -696,12 +698,12 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - getStatisticsDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsDetails() :: Ends");
+    LOGGER.exit("getStatisticsDetails() :: Ends");
     return statisticsList;
   }
 
   public String getTimeRangeType(String timeRange) throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - getTimeRangeType() :: Starts");
+    LOGGER.entry("begin getTimeRangeType()");
     String type = timeRange;
     try {
       switch (timeRange) {
@@ -729,18 +731,18 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - getTimeRangeType() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - getTimeRangeType() :: Ends");
+    LOGGER.exit("getTimeRangeType() :: Ends");
     return type;
   }
 
   public String getStatisticsType(
-      Integer statisticTypeId, List<StatisticImageListDto> statisticImageList) throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsType() :: Starts");
+      String statisticTypeId, List<StatisticImageListDto> statisticImageList) throws DAOException {
+    LOGGER.entry("begin getStatisticsType()");
     String statisticType = "";
     try {
       if ((statisticImageList != null) && !statisticImageList.isEmpty()) {
         for (StatisticImageListDto statistic : statisticImageList) {
-          if (statisticTypeId.intValue() == statistic.getStatisticImageId().intValue()) {
+          if (statisticTypeId.equals(statistic.getStatisticImageId())) {
             statisticType = statistic.getValue();
             break;
           }
@@ -749,18 +751,18 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - getStatisticsType() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - getStatisticsType() :: Ends");
+    LOGGER.exit("getStatisticsType() :: Ends");
     return statisticType;
   }
 
-  public String getFormulaType(Integer formulaTypeId, List<ActiveTaskFormulaDto> formulaDtoList)
+  public String getFormulaType(String formulaTypeId, List<ActiveTaskFormulaDto> formulaDtoList)
       throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - getFormulaType() :: Starts");
+    LOGGER.entry("begin getFormulaType()");
     String formulaType = "";
     try {
       if ((formulaDtoList != null) && !formulaDtoList.isEmpty()) {
         for (ActiveTaskFormulaDto formulaDto : formulaDtoList) {
-          if (formulaTypeId.intValue() == formulaDto.getActivetaskFormulaId().intValue()) {
+          if (formulaTypeId.equals(formulaDto.getActivetaskFormulaId())) {
             formulaType = formulaDto.getFormula();
             break;
           }
@@ -769,16 +771,18 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - getFormulaType() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - getFormulaType() :: Ends");
+    LOGGER.exit("getFormulaType() :: Ends");
     return formulaType;
   }
 
   @SuppressWarnings("unchecked")
   public ActiveTaskDto getTimeDetailsByActivityIdForActiveTask(
       ActiveTaskDto activeTaskDto, Session session) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Starts");
+    LOGGER.entry("ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask()");
     String startDateTime = "";
     String endDateTime = "";
+    String startDate = "";
+    String endDate = "";
     String time = StudyMetaDataConstants.DEFAULT_MIN_TIME;
     try {
       startDateTime = activeTaskDto.getActiveTaskLifetimeStart() + " " + time;
@@ -804,7 +808,7 @@ public class DashboardMetaDataDao {
                       .createQuery(
                           "from ActiveTaskFrequencyDto ATFDTO"
                               + " where ATFDTO.activeTaskId=:activeTaskId")
-                      .setInteger("activeTaskId", activeTaskDto.getId())
+                      .setString("activeTaskId", activeTaskDto.getId())
                       .uniqueResult();
           if ((activeTaskFrequency != null)
               && StringUtils.isNotEmpty(activeTaskFrequency.getFrequencyTime())) {
@@ -823,8 +827,12 @@ public class DashboardMetaDataDao {
             }
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeStart())) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeEnd())) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         } else if (activeTaskDto
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_DAILY)) {
@@ -835,7 +843,7 @@ public class DashboardMetaDataDao {
                       "from ActiveTaskFrequencyDto ATFDTO"
                           + " where ATFDTO.activeTaskId=:activeTaskId"
                           + " ORDER BY ATFDTO.frequencyTime")
-                  .setInteger("activeTaskId", activeTaskDto.getId())
+                  .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskFrequencyList != null) && !activeTaskFrequencyList.isEmpty()) {
             startDateTime =
@@ -848,8 +856,12 @@ public class DashboardMetaDataDao {
                     + StudyMetaDataConstants.DEFAULT_MAX_TIME;
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeStart())) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeEnd())) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         } else if (activeTaskDto
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
@@ -859,12 +871,12 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                           + " where ATCFDTO.activeTaskId=:activeTaskId"
-                          + " ORDER BY ATCFDTO.frequencyTime")
-                  .setInteger("activeTaskId", activeTaskDto.getId())
+                          + " ORDER BY ATCFDTO.frequencyStartTime")
+                  .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
-            String startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
-            String endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
+            startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
+            endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
             for (ActiveTaskCustomFrequenciesDto customFrequency : activeTaskCustomFrequencyList) {
 
               if (StringUtils.isNotEmpty(startDate)) {
@@ -875,8 +887,6 @@ public class DashboardMetaDataDao {
                             customFrequency.getFrequencyStartDate()))) {
                   startDate = customFrequency.getFrequencyStartDate();
                 }
-              } else {
-                startDate = "";
               }
 
               if (StringUtils.isNotEmpty(endDate)) {
@@ -887,37 +897,38 @@ public class DashboardMetaDataDao {
                             customFrequency.getFrequencyEndDate()))) {
                   endDate = customFrequency.getFrequencyEndDate();
                 }
-              } else {
-                endDate = "";
               }
             }
-
             startDateTime =
-                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyTime();
+                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyStartTime();
+
             endDateTime =
                 endDate
                     + " "
                     + activeTaskCustomFrequencyList
                         .get(activeTaskCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
+                        .getFrequencyEndTime();
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(startDate)) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(endDate)) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         }
       }
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Ends");
+    LOGGER.exit("ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask() :: Ends");
     return activeTaskDto;
   }
 
   @SuppressWarnings("unchecked")
   public QuestionnairesDto getTimeDetailsByActivityIdForQuestionnaire(
       QuestionnairesDto questionaire, Session session) throws DAOException {
-    LOGGER.info(
-        "INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Starts");
+    LOGGER.entry("ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire()");
     String startDateTime = "";
     String endDateTime = "";
     String time = StudyMetaDataConstants.DEFAULT_MIN_TIME;
@@ -945,7 +956,7 @@ public class DashboardMetaDataDao {
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
                               + " where QFDTO.questionnairesId=:questRespId")
-                      .setInteger("questRespId", questionaire.getId())
+                      .setString("questRespId", questionaire.getId())
                       .uniqueResult();
           if ((questionnairesFrequency != null)
               && StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())) {
@@ -976,7 +987,7 @@ public class DashboardMetaDataDao {
                       "from QuestionnairesFrequenciesDto QFDTO"
                           + " where QFDTO.questionnairesId=:questRespId"
                           + " ORDER BY QFDTO.frequencyTime")
-                  .setInteger("questRespId", questionaire.getId())
+                  .setString("questRespId", questionaire.getId())
                   .list();
           if ((questionnairesFrequencyList != null) && !questionnairesFrequencyList.isEmpty()) {
             startDateTime =
@@ -998,8 +1009,8 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questRespId"
-                          + " ORDER BY QCFDTO.frequencyTime")
-                  .setInteger("questRespId", questionaire.getId())
+                          + " ORDER BY QCFDTO.frequencyStartDate, QCFDTO.frequencyStartTime")
+                  .setString("questRespId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
               && !questionnaireCustomFrequencyList.isEmpty()) {
@@ -1034,13 +1045,13 @@ public class DashboardMetaDataDao {
             }
 
             startDateTime =
-                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyTime();
+                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyStartTime();
             endDateTime =
                 endDate
                     + " "
                     + questionnaireCustomFrequencyList
                         .get(questionnaireCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
+                        .getFrequencyEndTime();
           }
 
           questionaire.setStudyLifetimeStart(startDateTime);
@@ -1051,12 +1062,12 @@ public class DashboardMetaDataDao {
       LOGGER.error(
           "ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: ERROR", e);
     }
-    LOGGER.info("INFO: ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Ends");
+    LOGGER.exit("ActivityMetaDataDao - getTimeDetailsByActivityIdForQuestionnaire() :: Ends");
     return questionaire;
   }
 
   public Map<String, Object> singleLineChartDetails() throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - singleLineChartDetails() :: Starts");
+    LOGGER.entry("begin singleLineChartDetails()");
     Map<String, Object> configuration = new LinkedHashMap<>();
     try {
       configuration.put("subType", "single");
@@ -1088,12 +1099,12 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - singleLineChartDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - singleLineChartDetails() :: Ends");
+    LOGGER.exit("singleLineChartDetails() :: Ends");
     return configuration;
   }
 
   public Map<String, Object> multipleLineChartDetails() throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - multipleLineChartDetails() :: Starts");
+    LOGGER.entry("begin multipleLineChartDetails()");
     Map<String, Object> configuration = new LinkedHashMap<>();
     try {
       configuration.put("subType", "multiple");
@@ -1125,12 +1136,12 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - multipleLineChartDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - multipleLineChartDetails() :: Ends");
+    LOGGER.exit("multipleLineChartDetails() :: Ends");
     return configuration;
   }
 
   public Map<String, Object> uniquePieChartDetails() throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - uniquePieChartDetails() :: Starts");
+    LOGGER.entry("begin uniquePieChartDetails()");
     Map<String, Object> configuration = new LinkedHashMap<>();
     try {
       configuration.put("subType", "unique-responses");
@@ -1147,12 +1158,12 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - uniquePieChartDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - uniquePieChartDetails() :: Ends");
+    LOGGER.exit("uniquePieChartDetails() :: Ends");
     return configuration;
   }
 
   public Map<String, Object> rangePieChartDetails() throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - rangePieChartDetails() :: Starts");
+    LOGGER.entry("begin rangePieChartDetails()");
     Map<String, Object> configuration = new LinkedHashMap<>();
     try {
       configuration.put("subType", "range-responses");
@@ -1169,12 +1180,12 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - rangePieChartDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - rangePieChartDetails() :: Ends");
+    LOGGER.exit("rangePieChartDetails() :: Ends");
     return configuration;
   }
 
   public Map<String, Object> singleBarChartDetails() throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - singleBarChartDetails() :: Starts");
+    LOGGER.entry("begin singleBarChartDetails()");
     Map<String, Object> configuration = new LinkedHashMap<>();
     try {
       configuration.put("subType", "single");
@@ -1194,12 +1205,12 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - singleBarChartDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - singleBarChartDetails() :: Ends");
+    LOGGER.exit("singleBarChartDetails() :: Ends");
     return configuration;
   }
 
   public Map<String, Object> multipleBarChartDetails() throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - multipleBarChartDetails() :: Starts");
+    LOGGER.entry("begin multipleBarChartDetails()");
     Map<String, Object> configuration = new LinkedHashMap<>();
     try {
       configuration.put("subType", "multiple");
@@ -1219,13 +1230,13 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - multipleBarChartDetails() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - multipleBarChartDetails() :: Ends");
+    LOGGER.exit("multipleBarChartDetails() :: Ends");
     return configuration;
   }
 
   public String getChartDataSourceNameByMasterId(Integer masterId, String displayName)
       throws DAOException {
-    LOGGER.info("INFO: DashboardMetaDataDao - getChartDataSourceNameByMasterId() :: Starts");
+    LOGGER.entry("begin getChartDataSourceNameByMasterId()");
     String dataSourceName = "";
     try {
       switch (masterId) {
@@ -1245,7 +1256,7 @@ public class DashboardMetaDataDao {
     } catch (Exception e) {
       LOGGER.error("DashboardMetaDataDao - getChartDataSourceNameByMasterId() :: ERROR", e);
     }
-    LOGGER.info("INFO: DashboardMetaDataDao - getChartDataSourceNameByMasterId() :: Ends");
+    LOGGER.exit("getChartDataSourceNameByMasterId() :: Ends");
     return dataSourceName;
   }
 }

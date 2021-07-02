@@ -72,13 +72,6 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
     RelativeLayout closeBtnLayout = (RelativeLayout) findViewById(R.id.mCloseBtnLayout);
     closeBtnLayout.setOnClickListener(this);
     LinearLayout l = (LinearLayout) findViewById(R.id.lin_layout_hours);
-    if (status
-            .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
-            && (activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED)
-            || activityStatus.getStatus().equalsIgnoreCase(SurveyActivitiesFragment.INCOMPLETE)
-            || activityStatus.getCurrentRunId() == 0)) {
-      selectedTime++;
-    }
     for (int i = 0; i < scheduledTime.size(); i++) {
       TextView textDynamic = new TextView(getContext());
       textDynamic.setLayoutParams(

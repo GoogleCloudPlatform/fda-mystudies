@@ -109,7 +109,7 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass"
+                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
                            placeholde="" id="titleId" name="title"
                            value="${consentBo.title}" maxlength="250"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -133,7 +133,7 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass"
+                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
                            placeholder="" maxlength="250" name="taglineDescription"
                            id="taglineDescriptionId"
                            value="${consentBo.taglineDescription}"/>
@@ -155,7 +155,7 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <input type="text" class="form-control requiredClass"
+                    <input type="text" class="form-control requiredClass" data-error="Please fill out this field" 
                            placeholder="" maxlength="250" name="shortDescription"
                            id="shortDescriptionId" value="${consentBo.shortDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -176,7 +176,7 @@
             		</span>
                   </div>
                   <div class="form-group custom-form">
-                    <textarea class="form-control requiredClass" rows="5"
+                    <textarea class="form-control requiredClass" rows="5" data-error="Please fill out this field" 
                               maxlength="500" placeholder="" name="longDescription"
                               id="longDescriptionId">${consentBo.longDescription}</textarea>
                     <div class="help-block with-errors red-txt"></div>
@@ -184,7 +184,7 @@
                 </div>
                 <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
-                    Explanatory text that can be provided in a 'Learn More'
+                    Explanatory text that can be provided in a 'Learn more'
                     section
                     <span class="requiredStar">*</span>
                     <span class="filled-tooltip"
@@ -195,7 +195,7 @@
                   </div>
                   <div class="form-group">
                     <textarea id="learnMoreTextId" name="learnMoreText"
-                              required>${consentBo.learnMoreText}</textarea>
+                              required data-error="Please fill out this field" >${consentBo.learnMoreText}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -203,7 +203,7 @@
                   <a class="preview__text" href="javascript:void()"
                      data-toggle="modal" onclick="previewDataSharing();"><img
                       class="mr-xs" src="../images/icons/eye-icn.png" alt="">
-                    <span>See Screen Preview</span>
+                    <span>See screen preview</span>
                   </a>
                 </div>
               </div>
@@ -220,7 +220,7 @@
                 <div id="consentDocTypeDivId">
                   <span class="radio radio-info radio-inline p-45"><input
                       type="radio" id="inlineRadio1" value="Auto"
-                      name="consentDocType" required
+                      name="consentDocType" required 
                       data-error="Please choose consent document type"
                     ${consentBo.consentDocType=='Auto'?'checked':''}> <label
                       for="inlineRadio1">Auto-created consent document</label>
@@ -256,10 +256,29 @@
                 </small>
               </div>
             </div>
+            <c:if  test="${status ne 'Pre-launch'}"> 
+            <div class="pt-lg mt-xs pb-lg">
+        		<span class="checkbox checkbox-inline">
+          		<input type="checkbox" id="consentAgain" name="enrollAgain" <c:if test="${consentBo.enrollAgain eq 'true'}">checked</c:if>>	
+          		<label for="consentAgain">Enforce e-consent flow again for enrolled participants</label>
+          		</span>
+          		<span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Check this box if you want enrolled participants to undergo consent in the mobile app again with the latest version of the consent document. New participants will always see the latest version of the consent document.">
+            	</span>	
+      		</div>
+      		</c:if>
             <div class="mt-xlg">
-              <div class="blue-lg-f text-uppercase">
-                CONSENT DOCUMENT
+              <div class="black-md-f">
+                Consent document
+                <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
                 <span id="requiredStarId" class="requiredStar">*</span>
+                <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> The version of the consent document gets updated each time you mark this section complete and publish updates to the study.">
+            	</span>	
               </div>
               <div class="mt-lg">
                 <div class="cont_doc" id="autoCreateDivId"
@@ -407,9 +426,7 @@
       $('#newDivId .elaborateClass').addClass('linkDis');
       $('#saveId,#doneId').hide();
     }
-
     //auto select if consent Id is empty
-
     var consentId = "${consentBo.consentDocType}";
     if (consentId == null || consentId == '' || typeof consentId === 'undefined') {
       if (null != "${consentInfoList}" && "${consentInfoList}" != '' && "${consentInfoList}"
@@ -420,7 +437,6 @@
         $("#inlineRadio2").attr('checked', true);
       }
     }
-
     //active li
     $(".menuNav li").removeClass('active');
     $(".fifthConsentReview").addClass('active');
@@ -481,7 +497,7 @@
                   $("#newDocumentDivId").parent().find(".help-block").empty();
                   $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
                       ".help-block").append(
-                      '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+                      '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
                 }
               }
           } else {
@@ -507,7 +523,6 @@
         } 
       }
     });
-
     function resetValues(shareDataPermissions) {
       if (shareDataPermissions == '' || shareDataPermissions == 'No') {
         $('#rootContainer input').val('');
@@ -524,10 +539,8 @@
         $('#learnMoreTextId').attr('required', true);
       }
     }
-
     //consent doc type div
     function consentDocumentDivType() {
-
       if ($("#inlineRadio1").is(":checked")) {
         $("#autoCreateDivId").show();
         $("#autoCreateDivId01").show();
@@ -550,7 +563,6 @@
         createNewConsentDocument();
       }
     }
-
     //check the consentinfo list
     function autoCreateConsentDocument() {
       var consentDocumentDivContent = "";
@@ -563,16 +575,14 @@
               + "${consentInfo.displayTitle}"
               + "</strong></span><br/>"
               + "<span style='display: block; overflow-wrap: break-word; width: 100%;'>"
-              + "${consentInfo.elaborated}"
+              + '${consentInfo.elaborated}'
               + "</span><br/>";
           </c:forEach>
         }
       }
       $("#autoConsentDocumentDivId").append(consentDocumentDivContent);
       $("#newDocumentDivId").val('');
-
     }
-
     function createNewConsentDocument() {
       $('#newDocumentDivId').summernote({
         placeholder: '',
@@ -595,9 +605,7 @@
       <c:if test="${permission eq 'view'}">
       $('#newDocumentDivId').summernote('disable');
       </c:if>
-
     }
-
     function newLearnMoreConsentDocument() {
       $('#learnMoreTextId').summernote({
         placeholder: '',
@@ -621,7 +629,6 @@
       $('#learnMoreTextId').summernote('disable');
       </c:if>
     }
-
     //save review and E-consent data
     function saveConsentReviewAndEConsentInfo(item) {
       var consentInfo = new Object();
@@ -634,21 +641,23 @@
       var dateTimeCB = $("#dateTimeCB").val();
       var consentDocumentContent = "";
       var consentDocType = $('input[name="consentDocType"]:checked').val();
-
       var shareDataPermissionsTxt = $('input[name="shareDataPermissions"]:checked').val();
       var title_txt = $("#titleId").val();
       var tagline_description = $("#taglineDescriptionId").val();
       var short_description = $("#shortDescriptionId").val();
       var long_description = $("#longDescriptionId").val();
       var learn_more_text = $('#learnMoreTextId').summernote('code');
-      learn_more_text = replaceSpecialCharacters(learn_more_text);
+      learn_more_text = $('#learnMoreTextId').text(learn_more_text).html();
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-
+      var enrollAgain;
+      <c:if test="${status ne 'Pre-launch'}">
+       enrollAgain = document.getElementById("consentAgain").checked;
+      </c:if>
+      
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
-        consentDocumentContent = replaceSpecialCharacters(consentDocumentContent);
+        consentDocumentContent= $('#newDocumentDivId').text(consentDocumentContent).html();
       }
-
       if (item == "doneId") {
         consentInfo.type = "completed";
       } else {
@@ -681,7 +690,6 @@
       if (null != dateTimeCB) {
         consentInfo.eConsentDatetime = dateTimeCB;
       }
-
       if (null != shareDataPermissionsTxt) {
         consentInfo.shareDataPermissions = shareDataPermissionsTxt;
       }
@@ -703,6 +711,10 @@
       if (null != allow_Permission) {
         consentInfo.allowWithoutPermission = allow_Permission;
       }
+      if (null != enrollAgain) {
+        consentInfo.enrollAgain = enrollAgain;
+      }
+
       var data = JSON.stringify(consentInfo);
       $.ajax({
         url: "/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
@@ -732,7 +744,7 @@
               a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
               document.body.appendChild(a).click();
             } else {
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
               if ($('.fifthConsentReview').find('span').hasClass(
@@ -751,7 +763,6 @@
       });
     }
   });
-
   function goToBackPage(item) {
     <c:if test="${permission ne 'view'}">
     $(item).prop('disabled', true);
@@ -769,7 +780,7 @@
       callback: function (result) {
         if (result) {
           var a = document.createElement('a');
-          a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
+          a.href = "/studybuilder/adminStudies/studyList.do";
           document.body.appendChild(a).click();
         } else {
           $(item).prop('disabled', false);
@@ -783,7 +794,6 @@
     document.body.appendChild(a).click();
     </c:if>
   }
-
   function maxLenValEditor() {
     var isValideditor = true;
     var valueEditor = $('#newDocumentDivId').summernote('code');
@@ -794,7 +804,7 @@
         }
         $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 70000 characters are allowed."));
+            "Maximum 70000 characters are allowed"));
       } else {
         $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
         $('#newDocumentDivId').parent().find(".help-block").empty();
@@ -804,13 +814,10 @@
       $('#newDocumentDivId').attr('required', true);
       $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-          "Please fill out this field."));
-
+          "Please fill out this field"));
     }
-
     return isValideditor;
   }
-
   function maxLenLearnMoreEditor() {
     var isValid = true;
     var value = $('#learnMoreTextId').summernote('code');
@@ -822,7 +829,7 @@
         }
         $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 70000 characters are allowed."));
+            "Maximum 70000 characters are allowed"));
       } else {
         $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
         $('#learnMoreTextId').parent().find(".help-block").empty();
@@ -832,13 +839,10 @@
       $('#learnMoreTextId').attr('required', true);
       $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-          "Please fill out this field."));
-
+          "Please fill out this field"));
     }
-
     return isValid;
   }
-
   function previewDataSharing() {
     var titleText = $("#titleId").val();
     var tagline_description = $("#taglineDescriptionId").val();
@@ -857,7 +861,6 @@
     }
     
     $("#tagLineDescriptionModalId").text(tagline_description);
-
     if (short_description != '' && short_description != null && typeof short_description
         != 'undefined') {
       short_description = 'Share my data with ' + short_description + ' and qualified researchers worldwide';
@@ -873,7 +876,6 @@
       $("#accordianNA").show();
       $("#accordion").hide();
     }
-
     if (long_descriptionId != '' && long_descriptionId != null && typeof long_descriptionId
         != 'undefined') {
      long_descriptionId = 'Only share my data with ' + long_descriptionId;
@@ -889,19 +891,16 @@
      $("#accordian1NA").show();
      $("#accordion1").hide();
    }
-
     $('.scrollbar__').scrollTop(0);
     colapseUpAndDown();
     $('#cancelButtonId').show();
     $('#doneButtonId').hide();
     $("#myModal").modal('show');
   }
-
   function previewLearnMore() {
     $('#cancelButtonId').hide();
     $('#doneButtonId').show();
     var learn_more_desc = $('#learnMoreTextId').summernote('code');
-
     $("#titleModalId").text("Learn more");
     if (learn_more_desc != ' ' && learn_more_desc != '' && learn_more_desc != null
         && typeof learn_more_desc != 'undefined') {
@@ -931,11 +930,9 @@
     $('.scrollbar__').scrollTop(0);
     colapseUpAndDown();
   }
-
   $(document).on('show.bs.collapse', '.collapse', function () {
     $('.collapse').not(this).collapse('hide').removeClass('in');
   });
-
   function colapseUpAndDown() {
     $('.collapse').on('shown.bs.collapse', function () {
       $(this).parent().find(".glyphicon-chevron-right").removeClass(
@@ -944,5 +941,16 @@
       $(this).parent().find(".glyphicon-chevron-down").removeClass(
           "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
     });
+  }
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+  function showSucMsg(message) {
+	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	 $('#alertMsg').show('5000');
+	   window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+	    }, 5000);
   }
 </script>

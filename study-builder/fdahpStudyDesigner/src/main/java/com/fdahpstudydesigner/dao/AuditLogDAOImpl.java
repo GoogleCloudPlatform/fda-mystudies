@@ -25,27 +25,25 @@
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AuditLogDAOImpl implements AuditLogDAO {
 
-  private static Logger logger = Logger.getLogger(AuditLogDAOImpl.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(AuditLogDAOImpl.class.getName());
 
   HibernateTemplate hibernateTemplate;
 
   @Override
   public String updateDraftToEditedStatus(
-      Session session,
-      Transaction transaction,
-      Integer userId,
-      String actionType,
-      Integer studyId) {
+      Session session, Transaction transaction, String userId, String actionType, String studyId) {
     logger.info("AuditLogDAOImpl - updateDraftToEditedStatus() - Starts");
+
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session newSession = null;
     String queryString;
@@ -103,7 +101,7 @@ public class AuditLogDAOImpl implements AuditLogDAO {
         newSession.close();
       }
     }
-    logger.info("AuditLogDAOImpl - updateDraftToEditedStatus - Ends");
+    logger.exit("updateDraftToEditedStatus - Ends");
     return message;
   }
 }

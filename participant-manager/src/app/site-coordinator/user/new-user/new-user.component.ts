@@ -19,6 +19,7 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
 @Component({
   selector: 'user-new',
   templateUrl: './new-user.component.html',
+  styleUrls: ['./new-user.component.scss'],
 })
 export class AddNewUserComponent
   extends UnsubscribeOnDestroyAdapter

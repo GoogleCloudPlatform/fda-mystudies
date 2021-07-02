@@ -88,7 +88,6 @@ The deployment process takes the following approach:
 1. Confirm you have access to a user account with the following Cloud IAM roles:
     - `roles/resourcemanager.folderAdmin` for the folder you created
     - `roles/resourcemanager.projectCreator` for the folder you created
-    - `roles/compute.xpnAdmin` for the folder you created
     - `roles/billing.admin` for the billing account that you will use
 1. Use the [groups manager](https://console.cloud.google.com/identity/groups) to [create](https://support.google.com/a/answer/33343?hl=en) the following
     administrative [IAM](https://cloud.google.com/iam/docs/overview#concepts_related_identity) groups that will be used during deployment:
@@ -182,6 +181,12 @@ The deployment process takes the following approach:
     cd $GIT_ROOT/deployment/terraform/cicd
     terraform init && terraform apply
     ```
+1. The Cloud Build service account will need to be a Shared VPC Admin (XPN Admin) at the organization level as this permission cannot be granted at the folder level.
+    1. Open [Cloud IAM](https://console.cloud.google.com/iam-admin/iam) in your `{PREFIX}-{ENV}-devops` project, and copy the Member name of the service account with the role `Cloud Build Service Agent`. The format should be `############@cloudbuild.gserviceaccount.com`
+    1. At the top of the page change from the `{PREFIX}-{ENV}-devops` project to the organization containing your folder and projects.
+    1. Click Add to add a new member to the organization
+    1. Enter the Cloud Build service account in the New members field and add the role `Compute Shared VPC Admin` and click `Save`.
+
 ### Deploy your platform infrastructure
 
 1. Commit your local git working directory (which now represents your desired infrastructure state) to a new branch in your cloned FDA MyStudies repository, for example using:
@@ -489,6 +494,62 @@ app record will appear in the [`Participant manager`](/participant-manager/) use
 ### Database Migration
 
 When updating FDA MyStudies it may be necessary to migrate the databases to support the new version. Detailed instructions can be found in the [Database Migration README](/db-migration/README.md).
+
+### Study Resources in Cloud Storage (2.0.5 upgrade)
+
+Release 2.0.5 changed permissions for the Cloud Storage buckets used for study resources to remove public access and use signed URLs. New deployments will use this behavior automatically. When upgrading a prior release to 2.0.5 or greater, you will need to change permissions to the storage bucket using one of the following processes.
+
+#### Manual process:
+Go to Data Project ({prefix}-{env}-data) and remove `AllUser` access from the ({prefix}-{env}-mystudies-study-resources) storage bucket and provide access to the service accounts below with storage.objectAdmin role
+
+*  serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com
+*  serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com
+*  serviceAccount:study-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com
+
+#### Script process:
+In the Terraform/{prefix}-{env}-data /main.tf file, please replace the existing `module "{prefix}_{env}_mystudies_study_resources>"` with the values below, replacing with your prefix and env values
+
+```
+module "{prefix}_{env}_mystudies_study_resources" {
+source = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+version = "~> 1.4"
+
+name = "{prefix}-{env}-mystudies-study-resources"
+project_id = module.project.project_id
+location = "us-east1"
+
+iam_members = [
+{
+member = "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+role = "roles/storage.objectAdmin"
+},
+{
+member = "serviceAccount:study-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+role = "roles/storage.objectAdmin"
+},
+{
+member = "serviceAccount:participant-manager-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+role = "roles/storage.objectAdmin"
+},
+]
+}
+```
+
+#### tfengine process:
+
+Pull the latest code (2.0.5+) and run the following commands
+
+```
+cd $GIT_ROOT
+tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
+git checkout -b bucket-permissions
+git add $GIT_ROOT/deployment/terraform
+git commit -m "bucket-permissions"
+git push origin bucket-permissions
+```
+
+Then create a pull request from `bucket-permissions` branch to your target branch
+Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to trigger terraform apply(you can view the status of the operation in the Cloud Build history of your devops project)
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>

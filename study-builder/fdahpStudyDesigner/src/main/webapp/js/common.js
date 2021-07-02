@@ -118,7 +118,7 @@ $(document)
                           .empty()
                           .append($("<ul><li> </li></ul>")
                           .attr("class","list-unstyled")
-                          .text("Special characters such as #^}{ are not allowed."));
+                          .text("Special characters such as #^}{ are not allowed"));
                     } else {
                       $(this).parent()
                           .find(".help-block").empty();
@@ -154,7 +154,7 @@ $(document)
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
                             .attr("style","white-space:nowrap")
-                            .text("Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and -(minus)."));
+                            .text("Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and -(minus)"));
                       }
                     }
                   });       
@@ -186,7 +186,7 @@ $(document)
                             .empty()
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
-                            .text("Special characters such as #^}{ are not allowed."));
+                            .text("Special characters such as #^}{ are not allowed"));
                       }
                     }
                   });
@@ -221,7 +221,7 @@ $(document)
                             .empty()
                             .append($("<ul><li> </li></ul>")
                             .attr("class","list-unstyled")
-                            .text("The characters like (< >) are not allowed."));
+                            .text("Please use characters from the following set only: A-Z a-z 0-9 *()_+|:.-"));
                       }
                     }
                   });
@@ -245,7 +245,7 @@ $(document)
                           .empty()
                           .append($("<ul><li> </li></ul>")
                           .attr("class","list-unstyled")
-                          .text("Special characters such as #^}{ are not allowed."));
+                          .text("Special characters such as #^}{ are not allowed"));
                     } else {
                       $(this).parents().eq(2)
                           .find(".help-block").empty();
@@ -343,7 +343,7 @@ $(document)
                                           ".help-block")
                                       .append($("<ul><li> </li></ul>")
                                       .attr("class","list-unstyled").text(email
-                                          + " already exists."));
+                                          + " already exists"));
                                 }
                               }
                             });
@@ -354,7 +354,7 @@ $(document)
           document.onkeypress = function (event) {
             event = (event || window.event);
             if (event.keyCode == 123) {
-              alert("This action is disabled.")
+              alert("This action is disabled")
               return false;
             }
           }
@@ -362,33 +362,33 @@ $(document)
           document.onmousedown = function (event) {
             event = (event || window.event);
             if (event.keyCode == 123) {
-              alert("This action is disabled.")
+              alert("This action is disabled")
               return false;
             }
           }
 
           document.onkeydown = function (e) {
             if (e.keyCode == 123) {
-              alert("This action is disabled.");
+              alert("This action is disabled");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'I'.charCodeAt(0)) {
-              alert("This action is disabled.");
+              alert("This action is disabled");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'J'.charCodeAt(0)) {
-              alert("This action is disabled.");
+              alert("This action is disabled");
               return false;
             }
             if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
-              alert("This action is disabled.");
+              alert("This action is disabled");
               return false;
             }
             if (e.ctrlKey && e.shiftKey
                 && e.keyCode == 'C'.charCodeAt(0)) {
-              alert("This action is disabled.");
+              alert("This action is disabled");
               return false;
             }
           }

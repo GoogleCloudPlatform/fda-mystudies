@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PushNotificationResponse {
+public class FcmPushNotificationResponse {
 
   private JsonNode fcmResponse;
 

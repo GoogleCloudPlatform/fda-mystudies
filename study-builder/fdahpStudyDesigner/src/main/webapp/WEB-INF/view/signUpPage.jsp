@@ -91,7 +91,11 @@
 
     <script src="/studybuilder/js/underscore-min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
-
+	<style>
+	  .arrowLeftSugg {
+	    left: 95.5%; !important;
+	    }
+  	</style>
   </head>
   <body class="loading background__img">
     <div id="loader">
@@ -122,7 +126,7 @@
                     <input type="text" class="input-field wow_input" id=""
                            name="firstName" placeholder="First Name"
                            value="${fn:escapeXml(userBO.firstName)}" maxlength="50"
-                           required autocomplete="off"/>
+                           required data-error="Please fill out this field" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -132,7 +136,7 @@
                     <input type="text" class="input-field wow_input" id=""
                            name="lastName" placeholder="Last Name"
                            value="${fn:escapeXml(userBO.lastName)}" maxlength="50"
-                           required autocomplete="off"/>
+                           required data-error="Please fill out this field" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -144,7 +148,7 @@
                            value="${userBO.userEmail}" oldVal="${userBO.userEmail}"
                            pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                            data-pattern-error="Email address is invalid" maxlength="100"
-                           required readonly="readonly" autocomplete="off"/>
+                           required data-error="Please fill out this field" readonly="readonly" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -161,7 +165,7 @@
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="password" maxlength="64" data-minlength="8"
-                           placeholder="Password*" required
+                           placeholder="Password*" required data-error="Please fill out this field" 
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                            autocomplete="off" data-error="Password is invalid"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -175,7 +179,7 @@
                            id="cfnPassword" name="" maxlength="64"
                            data-match="#password"
                            data-match-error="Passwords do not match"
-                           placeholder="Confirm password*" required autocomplete="off"/>
+                           placeholder="Confirm password*" required data-error="Please fill out this field" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -183,7 +187,7 @@
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required"> <label for="inlineCheckbox">
+                        required="required" data-error="Please fill out this field" > <label for="inlineCheckbox">
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"

@@ -207,14 +207,6 @@
               </td>
               <td>{{ lists.enrollmentDate }}</td>
             </tr>
-            <tr
-              *ngIf="
-                studyDetails.participantRegistryDetail.registryParticipants
-                  .length === 0
-              "
-            >
-              <td colspan="5" class="text-center">No records found</td>
-            </tr>
           </tbody>
 
           <tfoot class="custom__tfoot">
@@ -227,6 +219,19 @@
                     (pageChange)="pageChange($event)"
                   ></pagination-controls>
                 </div>
+              </td>
+            </tr>
+          </tfoot>
+
+          <tfoot>
+            <tr
+              *ngIf="
+                studyDetails.participantRegistryDetail.registryParticipants
+                  .length === 0
+              "
+            >
+              <td colspan="5" class="text-center font12 txt__light-gray">
+                No records found
               </td>
             </tr>
           </tfoot>

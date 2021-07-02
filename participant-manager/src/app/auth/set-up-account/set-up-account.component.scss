@@ -3,13 +3,12 @@
 .has-error input[type="radio"],
 .has-error input[type="text"],
 .has-error input[type="password"] {
-  border-color: rgb(216, 12, 12);
-  color: rgb(230, 14, 14);
+  border-color: var(--light-red);
+  color: var(--light-red);
 }
 
 .help-block {
-  color: red;
-  font-size: small;
+  color: var(--light-red);
 }
 input[type="number"] {
   -moz-appearance: textfield !important;
@@ -77,6 +76,9 @@ div p a {
   color: var(--light-blue);
   cursor: pointer;
   background: #fff;
+}
+.passCriteria {
+  float: right;
 }
 /* 
 meter::-webkit-meter-bar {background: #e6e6e9;} 

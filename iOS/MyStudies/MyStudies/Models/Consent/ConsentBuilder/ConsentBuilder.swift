@@ -142,10 +142,7 @@ class ConsentBuilder {
           let consentSection: ConsentSectionStep? = ConsentSectionStep()
           consentSection?.initWithDict(stepDict: sectionDict)
           consentSectionArray.append((consentSection?.createConsentSection())!)
-
-          if consentSection?.type != .custom {
-            consentHasVisualStep = true
-          }
+          consentHasVisualStep = true
         }
       }
 
@@ -444,6 +441,9 @@ struct SharingConsent {
       }
       if Utilities.isValidValue(someObject: dict[kConsentSharingSteplearnMore] as AnyObject) {
         learnMore = dict[kConsentSharingSteplearnMore] as? String
+        if let learnMoreString = learnMore {
+          learnMore = learnMoreString.stringByDecodingHTMLEntities
+        }
       }
 
       if Utilities.isValidValue(someObject: dict[kConsentSharingStepText] as AnyObject) {
@@ -492,6 +492,9 @@ struct ReviewConsent {
         someObject: dict[kConsentReviewStepSignatureContent] as AnyObject
       ) {
         signatureContent = dict[kConsentReviewStepSignatureContent] as? String
+        if let reviewHTML = signatureContent {
+          signatureContent = reviewHTML.stringByDecodingHTMLEntities
+        }
       }
       if Utilities.isValidValue(
         someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject

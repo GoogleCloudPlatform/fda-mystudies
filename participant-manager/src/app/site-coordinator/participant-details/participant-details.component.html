@@ -16,7 +16,9 @@
             </div>
             <div class="pl-1">
               <div class="mb-xs">Participant details</div>
-              <div class="display-inline-flex overflow__auto">
+              <div
+                class="display-inline-flex overflow__auto mob_display-inline"
+              >
                 <div
                   *ngIf="
                     participant.participantDetails.studyType !== studyTypes.Open
@@ -148,60 +150,81 @@
       class="subheader p-none pl-none mobile__view border-top__c4d1e6"
     >
       <div class="flex__ flex__justify__center">
-        <button
-          [disabled]="hasCompletedEnrollment(participant.participantDetails)"
-          name="sendInvite"
-          class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
-          (click)="sendInvitation(participant.participantDetails.siteId)"
-        >
-          {{ sendResend }}
-        </button>
-        <button
-          [disabled]="hasCompletedEnrollment(participant.participantDetails)"
-          name="toggleInvite"
-          class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
-          (click)="
-            toggleInvitation(
-              participant.participantDetails.siteId,
-              participant.participantDetails.onboardingStatus
-            )
+        <div
+          class="mr-sm"
+          *ngIf="
+            participant.participantDetails.onboardingStatus !==
+              onBoardingStatus.Disabled &&
+            participant.participantDetails.studyStatus !==
+              studyStatus.Deactivated &&
+            participant.participantDetails.siteStatus !== 0
           "
         >
-          {{ enableDisable }}
-        </button>
+          <button
+            [disabled]="hasCompletedEnrollment(participant.participantDetails)"
+            name="sendInvite"
+            class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14 mob_mr-10"
+            (click)="sendInvitation(participant.participantDetails.siteId)"
+          >
+            {{ sendResend }}
+          </button>
+        </div>
+        <div
+          *ngIf="
+            participant.participantDetails.studyStatus !==
+              studyStatus.Deactivated &&
+            participant.participantDetails.siteStatus !== 0
+          "
+        >
+          <button
+            [disabled]="hasCompletedEnrollment(participant.participantDetails)"
+            name="toggleInvite"
+            class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
+            (click)="
+              toggleInvitation(
+                participant.participantDetails.siteId,
+                participant.participantDetails.onboardingStatus
+              )
+            "
+          >
+            {{ enableDisable }}
+          </button>
+        </div>
       </div>
     </section>
 
     <section class="max__w__1280 m-none site__participant">
       <div
-        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg"
+        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg scrollable-element"
       >
         <div class="blue__text__md">Participant email</div>
         <div class="participant__label font26">
           {{ participant.participantDetails.email }}
         </div>
         <table class="width__100 mt-4">
-          <thead>
+          <thead class="custom__thead_2">
             <tr>
               <th>
-                <div class="blue__text__md">Onboarding status</div>
+                <div class="blue__text__md mob_textpre">Onboarding status</div>
               </th>
               <th>
-                <div class="blue__text__md">Last invitation sent</div>
+                <div class="blue__text__md mob_textpre">
+                  Last invitation sent
+                </div>
               </th>
 
               <th>
-                <div class="blue__text__md">Enrollment status</div>
+                <div class="blue__text__md mob_textpre">Enrollment status</div>
               </th>
               <th class="mb__mt-sm">
-                <div class="blue__text__md">Date of enrollment</div>
+                <div class="blue__text__md mob_textpre">Date of enrollment</div>
               </th>
               <th class="mb__mt-sm">
-                <div class="blue__text__md">Date of withdrawal</div>
+                <div class="blue__text__md mob_textpre">Date of withdrawal</div>
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="custom__tbody_2">
             <tr>
               <td class="font14">
                 <span
@@ -281,49 +304,59 @@
         Enrollment history
       </h2>
 
-      <div class="cards1 m-none">
-        <table class="table table-striped custom__table">
-          <thead class="custom__thead">
-            <tr>
-              <th>Date of enrollment</th>
-              <th>Date of withdrawal</th>
-              <th>Last enrollment status</th>
-            </tr>
-          </thead>
-          <tbody class="custom__tbody">
-            <tr
-              *ngFor="
-                let enrollmentDetails of participant.participantDetails
-                  .enrollments
-              "
-            >
-              <td>
-                <span>{{ enrollmentDetails.enrollmentDate }}</span>
-              </td>
-              <td>
-                <span>{{ enrollmentDetails.withdrawalDate }}</span>
-              </td>
-              <td>
-                <span
-                  [ngClass]="{
-                    'txt__green':
-                      enrollmentDetails.enrollmentStatus ==
-                      enrollmentStatus.Enrolled,
-                    'txt__light-gray':
-                      enrollmentDetails.enrollmentStatus ==
-                      enrollmentStatus.Withdrawn
-                  }"
-                >
-                  {{ enrollmentDetails.enrollmentStatus }}
-                </span>
-              </td>
-            </tr>
-            <tr *ngIf="participant.participantDetails.enrollments.length === 0">
-              <td colspan="3" class="text-center">No records found</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <table class="table table-striped custom__table">
+        <thead class="custom__thead mob_tabl_wid_100">
+          <tr>
+            <th>Date of enrollment</th>
+            <th>Date of withdrawal</th>
+            <th>Last enrollment status</th>
+            <th class="xs-none">&nbsp;</th>
+            <th class="xs-none">&nbsp;</th>
+            <th class="xs-none">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody class="custom__tbody">
+          <tr
+            *ngFor="
+              let enrollmentDetails of participant.participantDetails
+                .enrollments
+            "
+          >
+            <td>
+              <span>{{ enrollmentDetails.enrollmentDate }}</span>
+            </td>
+            <td>
+              <span>{{ enrollmentDetails.withdrawalDate }}</span>
+            </td>
+            <td>
+              <span
+                [ngClass]="{
+                  'txt__green':
+                    enrollmentDetails.enrollmentStatus ==
+                    enrollmentStatus.Enrolled,
+                  'txt__light-gray':
+                    enrollmentDetails.enrollmentStatus ==
+                    enrollmentStatus.Withdrawn
+                }"
+              >
+                {{ enrollmentDetails.enrollmentStatus }}
+              </span>
+            </td>
+            <td class="xs-none">&nbsp;</td>
+            <td class="xs-none">&nbsp;</td>
+            <td class="xs-none">&nbsp;</td>
+          </tr>
+        </tbody>
+
+        <tfoot>
+          <tr *ngIf="participant.participantDetails.enrollments.length === 0">
+            <td colspan="6" class="text-center font12 txt__light-gray">
+              No records found
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
       <h2 class="subheader__title text-weight-semibold mb-sm">
         Consent history
       </h2>
@@ -393,18 +426,22 @@
                 </button>
               </td>
             </tr>
-
-            <tr
-              *ngIf="participant.participantDetails.consentHistory.length === 0"
-            >
-              <td colspan="4" class="text-center">No records found</td>
-            </tr>
           </tbody>
 
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">
                 <mfBootstrapPaginator></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+
+          <tfoot>
+            <tr
+              *ngIf="participant.participantDetails.consentHistory.length === 0"
+            >
+              <td colspan="4" class="text-center font12 txt__light-gray">
+                No records found
               </td>
             </tr>
           </tfoot>

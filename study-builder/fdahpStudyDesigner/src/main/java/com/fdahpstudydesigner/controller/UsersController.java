@@ -1,9 +1,25 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -44,8 +60,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -56,7 +73,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class UsersController {
 
-  private static Logger logger = Logger.getLogger(UsersController.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(UsersController.class.getName());
 
   @Autowired private LoginService loginService;
 
@@ -70,7 +87,7 @@ public class UsersController {
   public void activateOrDeactivateUser(
       HttpServletRequest request, HttpServletResponse response, String userId, String userStatus)
       throws IOException {
-    logger.info("UsersController - activateOrDeactivateUser() - Starts");
+    logger.entry("begin activateOrDeactivateUser()");
     String msg = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out;
@@ -81,16 +98,12 @@ public class UsersController {
       if (null != userSession) {
         msg =
             usersService.activateOrDeactivateUser(
-                Integer.valueOf(userId),
-                Integer.valueOf(userStatus),
-                userSession.getUserId(),
-                userSession,
-                request);
+                userId, Integer.valueOf(userStatus), userSession.getUserId(), userSession, request);
       }
     } catch (Exception e) {
       logger.error("UsersController - activateOrDeactivateUser() - ERROR", e);
     }
-    logger.info("UsersController - activateOrDeactivateUser() - Ends");
+    logger.exit("activateOrDeactivateUser() - Ends");
     jsonobject.put("message", msg);
     response.setContentType("application/json");
     out = response.getWriter();
@@ -99,7 +112,7 @@ public class UsersController {
 
   @RequestMapping("/adminUsersEdit/addOrEditUserDetails.do")
   public ModelAndView addOrEditUserDetails(HttpServletRequest request) {
-    logger.info("UsersController - addOrEditUserDetails() - Starts");
+    logger.entry("begin addOrEditUserDetails()");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     UserBO userBO = null;
@@ -108,7 +121,7 @@ public class UsersController {
     List<StudyBo> studyBOList = null;
     String actionPage = "";
     List<Integer> permissions = null;
-    int usrId = 0;
+    String usrId = null;
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
         String userId =
@@ -121,7 +134,7 @@ public class UsersController {
                 : request.getParameter("checkRefreshFlag");
         if (!"".equalsIgnoreCase(checkRefreshFlag)) {
           if (!"".equals(userId)) {
-            usrId = Integer.valueOf(userId);
+            usrId = userId;
             actionPage = FdahpStudyDesignerConstants.EDIT_PAGE;
             userBO = usersService.getUserDetails(usrId);
             if (null != userBO) {
@@ -147,14 +160,14 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - addOrEditUserDetails() - ERROR", e);
     }
-    logger.info("UsersController - addOrEditUserDetails() - Ends");
+    logger.exit("addOrEditUserDetails() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersEdit/addOrUpdateUserDetails.do")
   public ModelAndView addOrUpdateUserDetails(
       HttpServletRequest request, UserBO userBO, BindingResult result) {
-    logger.info("UsersController - addOrUpdateUserDetails() - Starts");
+    logger.entry("begin addOrUpdateUserDetails()");
     ModelAndView mav = new ModelAndView();
     String msg = "";
     String permissions = "";
@@ -192,7 +205,7 @@ public class UsersController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("ownUser"))
                 ? ""
                 : request.getParameter("ownUser");
-        if (null == userBO.getUserId()) {
+        if (StringUtils.isEmpty(userBO.getUserId())) {
           addFlag = true;
           userBO.setCreatedBy(userSession.getUserId());
           userBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
@@ -202,8 +215,8 @@ public class UsersController {
           userBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         }
 
-        // Superadmin flow
-        if (userBO.getRoleId().equals(1)) {
+        if (userBO.getRoleId().equals("1")) {
+          // Superadmin flow
           permissions = FdahpStudyDesignerConstants.SUPER_ADMIN_PERMISSIONS;
         } else {
           // Study admin flow
@@ -288,13 +301,13 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - addOrUpdateUserDetails() - ERROR", e);
     }
-    logger.info("UsersController - addOrUpdateUserDetails() - Ends");
+    logger.exit("addOrUpdateUserDetails() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersEdit/enforcePasswordChange.do")
   public ModelAndView enforcePasswordChange(HttpServletRequest request) {
-    logger.info("UsersController - enforcePasswordChange() - Starts");
+    logger.entry("begin enforcePasswordChange()");
     ModelAndView mav = new ModelAndView();
     String msg = "";
     List<String> emails = null;
@@ -314,7 +327,7 @@ public class UsersController {
               : request.getParameter("emailId");
       if (null != userSession) {
         if (StringUtils.isNotEmpty(emailId) && StringUtils.isNotEmpty(changePassworduserId)) {
-          msg = usersService.enforcePasswordChange(Integer.parseInt(changePassworduserId), emailId);
+          msg = usersService.enforcePasswordChange(changePassworduserId, emailId);
           if (StringUtils.isNotEmpty(msg)
               && msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             Map<String, String> values = new HashMap<>();
@@ -381,13 +394,13 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - enforcePasswordChange() - ERROR", e);
     }
-    logger.info("UsersController - enforcePasswordChange() - Ends");
+    logger.exit("enforcePasswordChange() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersView/getUserList.do")
   public ModelAndView getUserList(HttpServletRequest request) {
-    logger.info("UsersController - getUserList() - Starts");
+    logger.entry("begin getUserList()");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     List<UserBO> userList = null;
@@ -418,13 +431,13 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - getUserList() - ERROR", e);
     }
-    logger.info("UsersController - getUserList() - Ends");
+    logger.exit("getUserList() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersEdit/resendActivateDetailsLink.do")
   public ModelAndView resendActivateDetailsLink(HttpServletRequest request) {
-    logger.info("UsersController - resendActivateDetailsLink() - Starts");
+    logger.entry("begin resendActivateDetailsLink()");
     ModelAndView mav = new ModelAndView();
     String msg = "";
     UserBO userBo = null;
@@ -440,7 +453,7 @@ public class UsersController {
                 ? ""
                 : request.getParameter("userId");
         if (StringUtils.isNotEmpty(userId)) {
-          userBo = usersService.getUserDetails(Integer.parseInt(userId));
+          userBo = usersService.getUserDetails(userId);
           if (userBo != null) {
             msg =
                 loginService.sendPasswordResetLinkToMail(
@@ -464,13 +477,13 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - resendActivateDetailsLink() - ERROR", e);
     }
-    logger.info("UsersController - resendActivateDetailsLink() - Ends");
+    logger.exit("resendActivateDetailsLink() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminUsersView/viewUserDetails.do")
   public ModelAndView viewUserDetails(HttpServletRequest request) {
-    logger.info("UsersController - viewUserDetails() - Starts");
+    logger.entry("begin viewUserDetails()");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     UserBO userBO = null;
@@ -494,7 +507,7 @@ public class UsersController {
                 : request.getParameter("checkViewRefreshFlag");
         if (!"".equalsIgnoreCase(checkViewRefreshFlag)) {
           if (!"".equals(userId)) {
-            userBO = usersService.getUserDetails(Integer.valueOf(userId));
+            userBO = usersService.getUserDetails(userId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
@@ -526,7 +539,7 @@ public class UsersController {
     } catch (Exception e) {
       logger.error("UsersController - viewUserDetails() - ERROR", e);
     }
-    logger.info("UsersController - viewUserDetails() - Ends");
+    logger.exit("viewUserDetails() - Ends");
     return mav;
   }
 }

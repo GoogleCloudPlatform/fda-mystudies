@@ -65,7 +65,7 @@
             <th id="">
               <span class="marL10">#</span>
             </th>
-            <th id="">Consent Title</th>
+            <th id="">Section Title</th>
             <th id="">visual step</th>
             <th id="">
               <div class="dis-line form-group mb-none">
@@ -88,15 +88,15 @@
               <td>
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
-                      title="View" onclick="viewConsentInfo(${consentInfo.id});"></span>
+                      title="View" onclick="viewConsentInfo('${consentInfo.id}');"></span>
                 <span
                     class="${consentInfo.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Edit"
-                    onclick="editConsentInfo(${consentInfo.id});"></span>
+                    onclick="editConsentInfo('${consentInfo.id}');"></span>
                 <span
                     class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Delete"
-                    onclick="deleteConsentInfo(${consentInfo.id});"></span>
+                    onclick="deleteConsentInfo('${consentInfo.id}');"></span>
               </td>
             </tr>
           </c:forEach>
@@ -141,7 +141,7 @@
       "filter": false,
       rowReorder: reorder,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
       "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -193,7 +193,7 @@
               reloadConsentInfoDataTable(data.consentInfoList, null);
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
               if ($('.fifthConsent').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.fifthConsent').find('span').removeClass(
@@ -243,7 +243,7 @@
               var status = data.message;
               if (status == "SUCCESS") {
                 $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                    "Consent Section deleted successfully.");
+                    "Consent section deleted successfully");
                 $('#alertMsg').show();
                 reloadData(studyId);
                 if ($('.fifthConsent').find('span').hasClass(
@@ -329,17 +329,17 @@
         } else {
           datarow.push(obj.visualStep);
         }
-        var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewConsentInfo("
-            + parseInt(obj.id) + ");'></span>";
+        var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewConsentInfo(&#34;"
+            + obj.id + "&#34;);'></span>";
         if (obj.status) {
-          actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo(" + parseInt(obj.id)
-              + ");'></span>"
+          actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo(&#34;" +  obj.id
+              + "&#34;);'></span>"
         } else {
-          actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo("
-              + parseInt(obj.id) + ");'></span>";
+          actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo(&#34;"
+              +  obj.id + "&#34;);'></span>";
         }
-        actions += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteConsentInfo(" + parseInt(obj.id)
-            + ");'></span>";
+        actions += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteConsentInfo(&#34;" +  obj.id
+            + "&#34;);'></span>";
         datarow.push(actions);
         $('#consent_list').DataTable().row.add(datarow);
       });
@@ -392,6 +392,22 @@
       $("#consentInfoForm").submit();
     }
   }
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+		$("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+		$('#alertMsg').show('5000');
+		if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
+		    }, 5000);
+		 }else{
+	    	setTimeout(hideDisplayMessage, 5000);
+	     }
+	  }
 </script>
 
 <script>

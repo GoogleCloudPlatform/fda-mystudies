@@ -1,9 +1,25 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -13,8 +29,14 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_STUDY_CRE
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACCESSED_IN_EDIT_MODE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_SECTIONS_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COPIED_INTO_NEW;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COPY_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_EXPORTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_EXPORT_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_IMPORTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_IMPORT_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LIST_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_METADATA_SEND_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_METADATA_SEND_OPERATION_FAILED;
@@ -53,9 +75,11 @@ import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
+import com.fdahpstudydesigner.service.StudyExportImportService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.service.UsersService;
@@ -69,7 +93,9 @@ import com.google.cloud.storage.StorageOptions;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.nio.channels.Channels;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,10 +106,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -93,16 +120,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class StudyController {
 
-  private static Logger logger = Logger.getLogger(StudyController.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(StudyController.class.getName());
 
   @Autowired private NotificationService notificationService;
 
@@ -116,11 +146,15 @@ public class StudyController {
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
+  @Autowired private StudyExportImportService studyExportImportService;
+
+  @Autowired private StudyDAO studyDao;
+
   @Autowired private OAuthService oauthService;
 
   @RequestMapping("/adminStudies/actionList.do")
   public ModelAndView actionList(HttpServletRequest request) {
-    logger.info("StudyController - actionList - Starts");
+    logger.entry("begin actionList()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     String errMsg = "";
@@ -129,6 +163,7 @@ public class StudyController {
     String actionSucMsg = "";
     StudyPermissionBO studyPermissionBO = null;
     boolean markAsCompleted = false;
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -197,6 +232,15 @@ public class StudyController {
           map.addAttribute("liveStudyBo", liveStudyBo);
           map.addAttribute("studyPermissionBO", studyPermissionBO);
           map.addAttribute("markAsCompleted", markAsCompleted);
+          map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.duration.in.hours"));
+          map.addAttribute("releaseVersion", propMap.get("release.version"));
+          map.addAttribute(
+              "exportSignedUrl",
+              URLEncoder.encode(
+                  StringUtils.isNotEmpty(studyBo.getExportSignedUrl())
+                      ? studyBo.getExportSignedUrl()
+                      : "",
+                  StandardCharsets.UTF_8.toString()));
           mav = new ModelAndView("actionList", map);
         } else {
           return new ModelAndView("redirect:/adminStudies/studyList.do");
@@ -205,153 +249,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - actionList - ERROR", e);
     }
-    logger.info("StudyController - actionList - Ends");
-    return mav;
-  }
-
-  @RequestMapping("/adminStudies/addOrEditResource.do")
-  public ModelAndView addOrEditResource(HttpServletRequest request) {
-    logger.info("StudyController - addOrEditResource() - Starts");
-    ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
-    ModelMap map = new ModelMap();
-    ResourceBO resourceBO = null;
-    StudyBo studyBo = null;
-    String sucMsg = "";
-    String errMsg = "";
-    List<AnchorDateTypeBo> anchorTypeList = new ArrayList<>();
-    try {
-      SessionObject sesObj =
-          (SessionObject)
-              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-      Integer sessionStudyCount =
-          StringUtils.isNumeric(request.getParameter("_S"))
-              ? Integer.parseInt(request.getParameter("_S"))
-              : 0;
-      if ((sesObj != null)
-          && (sesObj.getStudySession() != null)
-          && sesObj.getStudySession().contains(sessionStudyCount)) {
-        if (null
-            != request
-                .getSession()
-                .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG)) {
-          sucMsg =
-              (String)
-                  request
-                      .getSession()
-                      .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG);
-          map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
-          request
-              .getSession()
-              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG);
-        }
-        if (null
-            != request
-                .getSession()
-                .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG)) {
-          errMsg =
-              (String)
-                  request
-                      .getSession()
-                      .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG);
-          map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
-          request
-              .getSession()
-              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG);
-        }
-        String studyId =
-            (String)
-                request
-                    .getSession()
-                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
-        if (StringUtils.isEmpty(studyId)) {
-          studyId =
-              FdahpStudyDesignerUtil.isEmpty(
-                      request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
-                  ? ""
-                  : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
-        }
-        String resourceInfoId =
-            (String)
-                request
-                    .getSession()
-                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
-        if (StringUtils.isEmpty(resourceInfoId)) {
-          resourceInfoId =
-              FdahpStudyDesignerUtil.isEmpty(
-                      request.getParameter(FdahpStudyDesignerConstants.RESOURCE_INFO_ID))
-                  ? ""
-                  : request.getParameter(FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
-        }
-        String studyProtocol =
-            (String)
-                request
-                    .getSession()
-                    .getAttribute(
-                        sessionStudyCount + FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
-        if (StringUtils.isEmpty(studyProtocol)) {
-          studyProtocol =
-              FdahpStudyDesignerUtil.isEmpty(
-                      request.getParameter(FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL))
-                  ? ""
-                  : request.getParameter(FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
-        }
-        String action =
-            (String)
-                request
-                    .getSession()
-                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ACTION_ON);
-        if (StringUtils.isEmpty(action)) {
-          action =
-              FdahpStudyDesignerUtil.isEmpty(
-                      request.getParameter(FdahpStudyDesignerConstants.ACTION_ON))
-                  ? ""
-                  : request.getParameter(FdahpStudyDesignerConstants.ACTION_ON);
-        }
-        map.addAttribute("_S", sessionStudyCount);
-        if (!FdahpStudyDesignerUtil.isEmpty(action)) {
-          if (!("").equals(resourceInfoId)) {
-            resourceBO = studyService.getResourceInfo(Integer.parseInt(resourceInfoId));
-            request
-                .getSession()
-                .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
-          }
-          if ((null != studyProtocol)
-              && !("").equals(studyProtocol)
-              && (FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL).equalsIgnoreCase(studyProtocol)) {
-            map.addAttribute(
-                FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL,
-                FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
-            request
-                .getSession()
-                .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
-          }
-          studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-          map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
-          map.addAttribute("resourceBO", resourceBO);
-          map.addAttribute(FdahpStudyDesignerConstants.ACTION_ON, action);
-          if ((studyBo != null) && !studyBo.getCustomStudyId().isEmpty()) {
-            anchorTypeList =
-                studyQuestionnaireService.getAnchorTypesByStudyId(studyBo.getCustomStudyId());
-          }
-          map.addAttribute("anchorTypeList", anchorTypeList);
-          request
-              .getSession()
-              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ACTION_ON);
-          mav = new ModelAndView("addOrEditResourcePage", map);
-        } else {
-          mav = new ModelAndView("redirect:getResourceList.do", map);
-        }
-      }
-    } catch (Exception e) {
-      logger.error("StudyController - addOrEditResource() - ERROR", e);
-    }
-    logger.info("StudyController - addOrEditResource() - Ends");
+    logger.exit("actionList() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/comprehensionTestMarkAsCompleted.do")
   public ModelAndView comprehensionTestMarkAsCompleted(HttpServletRequest request) {
-    logger.info("StudyController - comprehensionTestMarkAsCompleted() - Starts");
+    logger.entry("begin comprehensionTestMarkAsCompleted()");
     ModelAndView mav = new ModelAndView("redirect:studyList.do");
     ModelMap map = new ModelMap();
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -387,18 +291,16 @@ public class StudyController {
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         message =
             studyService.markAsCompleted(
-                Integer.parseInt(studyId),
-                FdahpStudyDesignerConstants.COMPREHENSION_TEST,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.COMPREHENSION_TEST, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           request
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-          mav = new ModelAndView("redirect:consentReview.do", map);
+          mav = new ModelAndView("redirect:comprehensionQuestionList.do", map);
         } else {
           request
               .getSession()
@@ -411,13 +313,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - comprehensionTestMarkAsCompleted() - ERROR", e);
     }
-    logger.info("StudyController - comprehensionTestMarkAsCompleted() - Ends");
+    logger.exit("comprehensionTestMarkAsCompleted() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/consentMarkAsCompleted.do")
   public ModelAndView consentMarkAsCompleted(HttpServletRequest request) {
-    logger.info("StudyController - consentMarkAsCompleted() - Starts");
+    logger.entry("begin consentMarkAsCompleted()");
     ModelAndView mav = new ModelAndView("redirect:studyList.do");
     ModelMap map = new ModelMap();
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -455,10 +357,7 @@ public class StudyController {
         auditRequest.setStudyId(customStudyId);
         message =
             studyService.markAsCompleted(
-                Integer.parseInt(studyId),
-                FdahpStudyDesignerConstants.CONESENT,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.CONESENT, sesObj, customStudyId);
         StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
@@ -470,7 +369,8 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           map.addAttribute("_S", sessionStudyCount);
-          mav = new ModelAndView("redirect:comprehensionQuestionList.do", map);
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
+          mav = new ModelAndView("redirect:consentListPage.do", map);
         } else {
           request
               .getSession()
@@ -484,13 +384,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - consentMarkAsCompleted() - ERROR", e);
     }
-    logger.info("StudyController - consentMarkAsCompleted() - Ends");
+    logger.exit("consentMarkAsCompleted() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/consentReviewMarkAsCompleted.do")
   public ModelAndView consentReviewMarkAsCompleted(HttpServletRequest request) {
-    logger.info("StudyController - consentReviewMarkAsCompleted() - Starts");
+    logger.entry("begin consentReviewMarkAsCompleted()");
     ModelAndView mav = new ModelAndView("redirect:studyList.do");
     ModelMap map = new ModelMap();
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -526,10 +426,7 @@ public class StudyController {
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         message =
             studyService.markAsCompleted(
-                Integer.parseInt(studyId),
-                FdahpStudyDesignerConstants.CONESENT_REVIEW,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.CONESENT_REVIEW, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           request
@@ -537,7 +434,7 @@ public class StudyController {
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-          mav = new ModelAndView("redirect:viewStudyQuestionnaires.do", map);
+          mav = new ModelAndView("redirect:consentReview.do", map);
         } else {
           request
               .getSession()
@@ -550,13 +447,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - consentReviewMarkAsCompleted() - ERROR", e);
     }
-    logger.info("StudyController - consentReviewMarkAsCompleted() - Ends");
+    logger.exit("consentReviewMarkAsCompleted() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/crateNewStudy.do")
   public ModelAndView crateNewStudy(HttpServletRequest request) {
-    logger.info("StudyController - crateNewStudy() - Starts");
+    logger.entry("begin crateNewStudy()");
     new ModelMap();
     ModelAndView modelAndView = new ModelAndView("redirect:/adminStudies/studyList.do");
     boolean flag = false;
@@ -588,14 +485,14 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - crateNewStudy - ERROR", e);
     }
-    logger.info("StudyController - crateNewStudy() - Ends");
+    logger.exit("crateNewStudy() - Ends");
     return modelAndView;
   }
 
   @RequestMapping("/adminStudies/deleteComprehensionQuestion.do")
   public void deleteComprehensionTestQuestion(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - deleteComprehensionTestQuestion - Starts");
+    logger.entry("begin deleteComprehensionTestQuestion()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -617,7 +514,7 @@ public class StudyController {
         if (StringUtils.isNotEmpty(comprehensionQuestionId) && StringUtils.isNotEmpty(studyId)) {
           message =
               studyService.deleteComprehensionTestQuestion(
-                  Integer.valueOf(comprehensionQuestionId), Integer.valueOf(studyId), sesObj);
+                  comprehensionQuestionId, studyId, sesObj);
         }
       }
       jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
@@ -627,12 +524,12 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - deleteComprehensionTestQuestion - ERROR", e);
     }
-    logger.info("StudyController - deleteComprehensionTestQuestion - Ends");
+    logger.exit("deleteComprehensionTestQuestion() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/deleteConsentInfo.do", method = RequestMethod.POST)
   public void deleteConsentInfo(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - deleteConsentInfo - Starts");
+    logger.entry("begin deleteConsentInfo()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -664,9 +561,7 @@ public class StudyController {
                     .getSession()
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         if (!consentInfoId.isEmpty() && !studyId.isEmpty()) {
-          message =
-              studyService.deleteConsentInfo(
-                  Integer.valueOf(consentInfoId), Integer.valueOf(studyId), sesObj, customStudyId);
+          message = studyService.deleteConsentInfo(consentInfoId, studyId, sesObj, customStudyId);
         }
       }
       jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
@@ -676,14 +571,14 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - deleteConsentInfo - ERROR", e);
     }
-    logger.info("StudyController - deleteConsentInfo - Ends");
+    logger.exit("deleteConsentInfo() - Ends");
   }
 
   @RequestMapping(
       value = "/adminStudies/deleteEligibiltyTestQusAns.do",
       method = RequestMethod.POST)
   public void deleteEligibiltyTestQusAns(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - deleteEligibiltyTestQusAns - Starts");
+    logger.entry("begin deleteEligibiltyTestQusAns()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -722,14 +617,9 @@ public class StudyController {
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         message =
             studyService.deleteEligibilityTestQusAnsById(
-                Integer.parseInt(eligibilityTestId),
-                Integer.parseInt(studyId),
-                sesObj,
-                customStudyId);
+                eligibilityTestId, studyId, sesObj, customStudyId);
         if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-          testBos =
-              studyService.viewEligibilityTestQusAnsByEligibilityId(
-                  Integer.parseInt(eligibilityId));
+          testBos = studyService.viewEligibilityTestQusAnsByEligibilityId(eligibilityId);
           if ((testBos != null) && !testBos.isEmpty()) {
             eligibilityTestJsonArray = new JSONArray(mapper.writeValueAsString(testBos));
           }
@@ -743,12 +633,12 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - deleteEligibiltyTestQusAns - ERROR", e);
     }
-    logger.info("StudyController - deleteEligibiltyTestQusAns - Ends");
+    logger.exit("deleteEligibiltyTestQusAns() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/deleteResourceInfo", method = RequestMethod.POST)
   public void deleteResourceInfo(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - deleteResourceInfo() - Starts");
+    logger.entry("begin deleteResourceInfo()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -788,11 +678,9 @@ public class StudyController {
                     .getSession()
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         if (!resourceInfoId.isEmpty()) {
-          message =
-              studyService.deleteResourceInfo(
-                  Integer.valueOf(resourceInfoId), sesObj, customStudyId, Integer.valueOf(studyId));
+          message = studyService.deleteResourceInfo(resourceInfoId, sesObj, customStudyId, studyId);
         }
-        resourcesSavedList = studyService.resourcesSaved(Integer.valueOf(studyId));
+        resourcesSavedList = studyService.resourcesSaved(studyId);
         if (!resourcesSavedList.isEmpty()) {
           jsonobject.put("resourceSaved", true);
         } else {
@@ -806,12 +694,12 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - deleteResourceInfo() - ERROR", e);
     }
-    logger.info("StudyController - deleteConsentInfo() - Ends");
+    logger.exit("deleteConsentInfo() - Ends");
   }
 
   @RequestMapping("/deleteStudy.do")
   public ModelAndView deleteStudy(HttpServletRequest request) {
-    logger.info("StudyController - deleteStudy - Starts");
+    logger.entry("begin deleteStudy()");
     ModelAndView mav = new ModelAndView("redirect:login.do");
     boolean flag = false;
     try {
@@ -832,13 +720,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - deleteStudy - ERROR", e);
     }
-    logger.info("StudyController - deleteStudy - Ends");
+    logger.exit("deleteStudy() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/deleteStudyNotification.do")
   public ModelAndView deleteStudyNotification(HttpServletRequest request) {
-    logger.info("StudyController - deleteStudyNotification - Starts");
+    logger.entry("begin deleteStudyNotification()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -863,7 +751,7 @@ public class StudyController {
           String notificationType = FdahpStudyDesignerConstants.STUDYLEVEL;
           message =
               notificationService.deleteNotification(
-                  Integer.parseInt(notificationId), sessionObject, notificationType);
+                  notificationId, sessionObject, notificationType);
           if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
             request
                 .getSession()
@@ -890,7 +778,7 @@ public class StudyController {
   @RequestMapping(value = "/downloadPdf.do")
   public ModelAndView downloadPdf(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    logger.info("StudyController - downloadPdf - Starts");
+    logger.entry("begin downloadPdf()");
     Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     InputStream is = null;
     SessionObject sesObj =
@@ -909,6 +797,8 @@ public class StudyController {
             (request.getParameter("fileName")) == null ? "" : request.getParameter("fileName");
         String fileFolder =
             (request.getParameter("fileFolder")) == null ? "" : request.getParameter("fileFolder");
+        String studyId =
+            (request.getParameter("studyId")) == null ? "" : request.getParameter("studyId");
         if (StringUtils.isNotBlank(fileName) && StringUtils.isNotBlank(fileFolder)) {
           request.getSession().setAttribute(sessionStudyCount + "fileName", fileName);
           request.getSession().setAttribute(sessionStudyCount + "fileFolder", fileFolder);
@@ -916,8 +806,19 @@ public class StudyController {
           fileName = (String) request.getSession().getAttribute(sessionStudyCount + "fileName");
           fileFolder = (String) request.getSession().getAttribute(sessionStudyCount + "fileFolder");
         }
+
+        StudyBo study = studyService.getStudyInfo(studyId);
+
+        String path =
+            FdahpStudyDesignerConstants.STUDIES
+                + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                + study.getCustomStudyId()
+                + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                + fileFolder
+                + "/"
+                + fileName;
         Storage storage = StorageOptions.getDefaultInstance().getService();
-        Blob blob = storage.get(configMap.get("cloud.bucket.name"), fileFolder + "/" + fileName);
+        Blob blob = storage.get(configMap.get("cloud.bucket.name"), path);
         ReadChannel readChannel = blob.reader();
         InputStream inputStream = Channels.newInputStream(readChannel);
         response.setContentType("application/pdf");
@@ -936,13 +837,13 @@ public class StudyController {
         is.close();
       }
     }
-    logger.info("StudyController - downloadPdf() - Starts");
+    logger.exit("downloadPdf() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/getChecklist.do")
   public ModelAndView getChecklist(HttpServletRequest request) {
-    logger.info("StudyController - getChecklist() - Starts");
+    logger.entry("begin getChecklist()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     String sucMsg = "";
@@ -1008,7 +909,7 @@ public class StudyController {
         }
         if (StringUtils.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-          checklist = studyService.getchecklistInfo(Integer.valueOf(studyId));
+          checklist = studyService.getchecklistInfo(studyId);
         }
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("checklist", checklist);
@@ -1018,13 +919,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - getChecklist() - ERROR", e);
     }
-    logger.info("StudyController - getChecklist() - Ends");
+    logger.exit("getChecklist() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/comprehensionQuestionList.do")
   public ModelAndView getComprehensionQuestionList(HttpServletRequest request) {
-    logger.info("StudyController - getComprehensionQuestionList - Starts");
+    logger.entry("begin getComprehensionQuestionList()");
     ModelAndView mav = new ModelAndView("comprehensionListPage");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
@@ -1115,8 +1016,7 @@ public class StudyController {
           } else {
             consentBo = studyService.getConsentDetailsByStudyId(studyId);
           }
-          comprehensionTestQuestionList =
-              studyService.getComprehensionTestQuestionList(Integer.valueOf(studyId));
+          comprehensionTestQuestionList = studyService.getComprehensionTestQuestionList(studyId);
           boolean markAsComplete = true;
           if ((comprehensionTestQuestionList != null) && !comprehensionTestQuestionList.isEmpty()) {
             for (ComprehensionTestQuestionBo comprehensionTestQuestionBo :
@@ -1148,13 +1048,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - getComprehensionQuestionList - ERROR", e);
     }
-    logger.info("StudyController - getComprehensionQuestionList - Ends");
+    logger.exit("getComprehensionQuestionList() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/comprehensionQuestionPage.do")
   public ModelAndView getComprehensionQuestionPage(HttpServletRequest request) {
-    logger.info("StudyController - getConsentPage - Starts");
+    logger.entry("begin getComprehensionQuestionPage()");
     ModelAndView mav = new ModelAndView("comprehensionQuestionPage");
     ModelMap map = new ModelMap();
     ComprehensionTestQuestionBo comprehensionTestQuestionBo = null;
@@ -1246,8 +1146,7 @@ public class StudyController {
         }
         if (StringUtils.isNotEmpty(comprehensionQuestionId)) {
           comprehensionTestQuestionBo =
-              studyService.getComprehensionTestQuestionById(
-                  Integer.valueOf(comprehensionQuestionId));
+              studyService.getComprehensionTestQuestionById(comprehensionQuestionId);
           request
               .getSession()
               .setAttribute(
@@ -1260,13 +1159,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - getConsentPage - Error", e);
     }
-    logger.info("StudyController - getConsentPage - Ends");
+    logger.exit("getComprehensionQuestionPage() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/consentListPage.do")
   public ModelAndView getConsentListPage(HttpServletRequest request) {
-    logger.info("StudyController - getConsentListPage - Starts");
+    logger.entry("begin getConsentListPage()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
@@ -1350,9 +1249,9 @@ public class StudyController {
         if (StringUtils.isNotEmpty(studyId)) {
           boolean markAsComplete = true;
           if (StringUtils.isNotEmpty(consentStudyId)) {
-            consentInfoList = studyService.getConsentInfoList(Integer.valueOf(consentStudyId));
+            consentInfoList = studyService.getConsentInfoList(consentStudyId);
           } else {
-            consentInfoList = studyService.getConsentInfoList(Integer.valueOf(studyId));
+            consentInfoList = studyService.getConsentInfoList(studyId);
           }
           if ((consentInfoList != null) && !consentInfoList.isEmpty()) {
             for (ConsentInfoBo conInfoBo : consentInfoList) {
@@ -1389,13 +1288,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - getConsentListPage - ERROR", e);
     }
-    logger.info("StudyController - getConsentListPage - Ends");
+    logger.exit("getConsentListPage() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/consentInfo.do")
   public ModelAndView getConsentPage(HttpServletRequest request) {
-    logger.info("StudyController - getConsentPage - Starts");
+    logger.entry("begin getConsentPage()");
     ModelAndView mav = new ModelAndView(FdahpStudyDesignerConstants.CONSENT_INFO_PAGE);
     ModelMap map = new ModelMap();
     ConsentInfoBo consentInfoBo = null;
@@ -1500,9 +1399,9 @@ public class StudyController {
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_ID, studyId);
         if (!studyId.isEmpty()) {
           if (StringUtils.isNotEmpty(consentStudyId)) {
-            consentInfoList = studyService.getConsentInfoList(Integer.valueOf(consentStudyId));
+            consentInfoList = studyService.getConsentInfoList(consentStudyId);
           } else {
-            consentInfoList = studyService.getConsentInfoList(Integer.valueOf(studyId));
+            consentInfoList = studyService.getConsentInfoList(studyId);
           }
           if (("view").equals(actionType)) {
             map.addAttribute(FdahpStudyDesignerConstants.ACTION_PAGE, "view");
@@ -1518,7 +1417,7 @@ public class StudyController {
           }
         }
         if ((consentInfoId != null) && !consentInfoId.isEmpty()) {
-          consentInfoBo = studyService.getConsentInfoById(Integer.valueOf(consentInfoId));
+          consentInfoBo = studyService.getConsentInfoById(consentInfoId);
           map.addAttribute("consentInfoBo", consentInfoBo);
         }
         map.addAttribute("_S", sessionStudyCount);
@@ -1527,18 +1426,21 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - getConsentPage - Error", e);
     }
-    logger.info("StudyController - getConsentPage - Ends");
+    logger.exit("getConsentPage - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/consentReview.do")
   public ModelAndView getConsentReviewAndEConsentPage(HttpServletRequest request) {
-    logger.info("INFO: StudyController - getConsentReviewAndEConsentPage() :: Starts");
+    logger.entry("begin getConsentReviewAndEConsentPage()");
     ModelAndView mav = new ModelAndView(FdahpStudyDesignerConstants.CONSENT_INFO_PAGE);
     ModelMap map = new ModelMap();
     SessionObject sesObj = null;
     String studyId = "";
     List<ConsentInfoBo> consentInfoBoList = null;
+    List<ConsentBo> consentBoList = null;
+    String lastPublishedVersion = null;
+
     StudyBo studyBo = null;
     ConsentBo consentBo = null;
     String sucMsg = "";
@@ -1638,6 +1540,13 @@ public class StudyController {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
 
+          consentBoList = studyService.getConsentList(studyBo.getCustomStudyId());
+          if (!CollectionUtils.isEmpty(consentBoList)) {
+            lastPublishedVersion = 'V' + String.valueOf(consentBoList.get(0).getVersion());
+          } else {
+            lastPublishedVersion = "N/A";
+          }
+
           if (consentBo != null) {
             request
                 .getSession()
@@ -1660,18 +1569,20 @@ public class StudyController {
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_ID, studyId);
         map.addAttribute("consentBo", consentBo);
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("status", studyBo.getStatus());
+        map.addAttribute("lastPublishedVersion", lastPublishedVersion);
         mav = new ModelAndView("consentReviewAndEConsentPage", map);
       }
     } catch (Exception e) {
       logger.error("StudyController - getConsentReviewAndEConsentPage() - ERROR ", e);
     }
-    logger.info("INFO: StudyController - getConsentReviewAndEConsentPage() :: Ends");
+    logger.exit("getConsentReviewAndEConsentPage() :: Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/getResourceList.do")
   public ModelAndView getResourceList(HttpServletRequest request) {
-    logger.info("StudyController - getResourceList() - Starts");
+    logger.entry("begin getResourceList()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     String sucMsg = "";
@@ -1737,9 +1648,9 @@ public class StudyController {
                     .getSession()
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.PERMISSION);
         if (StringUtils.isNotEmpty(studyId)) {
-          resourceBOList = studyService.getResourceList(Integer.valueOf(studyId));
-          studyProtocolResourceBO = studyService.getStudyProtocol(Integer.valueOf(studyId));
-          resourcesSavedList = studyService.resourcesSaved(Integer.valueOf(studyId));
+          resourceBOList = studyService.getResourceList(studyId);
+          studyProtocolResourceBO = studyService.getStudyProtocol(studyId);
+          resourcesSavedList = studyService.resourcesSaved(studyId);
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute("resourceBOList", resourceBOList);
@@ -1753,13 +1664,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - getResourceList() - ERROR", e);
     }
-    logger.info("StudyController - getResourceList() - Ends");
+    logger.exit("getResourceList() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/studyList.do")
   public ModelAndView getStudies(HttpServletRequest request) {
-    logger.info("StudyController - getStudies - Starts");
+    logger.entry("begin getStudies()");
     ModelAndView mav = new ModelAndView("loginPage");
     ModelMap map = new ModelMap();
     List<StudyListBean> studyBos = null;
@@ -1824,13 +1735,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - getStudies - ERROR", e);
     }
-    logger.info("StudyController - getStudies - Ends");
+    logger.exit("getStudies() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/getStudyNotification.do")
   public ModelAndView getStudyNotification(HttpServletRequest request) {
-    logger.info("StudyController - getStudyNotification - Starts");
+    logger.entry("begin getStudyNotification()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     NotificationBO notificationBO = null;
@@ -1936,12 +1847,11 @@ public class StudyController {
           if (!"".equals(notificationId)) {
             // Fetching notification detail from notification table by
             // Id.
-            notificationBO = notificationService.getNotification(Integer.parseInt(notificationId));
+            notificationBO = notificationService.getNotification(notificationId);
             // Fetching notification history of last sent detail from
             // notification table by Id.
             notificationHistoryNoDateTime =
-                notificationService.getNotificationHistoryListNoDateTime(
-                    Integer.parseInt(notificationId));
+                notificationService.getNotificationHistoryListNoDateTime(notificationId);
             if ("edit".equals(actionType)) {
               notificationBO.setActionPage("edit");
             } else if (FdahpStudyDesignerConstants.ADDORCOPY.equals(actionType)) {
@@ -1985,13 +1895,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - getStudyNotification - ERROR", e);
     }
-    logger.info("StudyController - getStudyNotification - Ends");
+    logger.exit("getStudyNotification - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/notificationMarkAsCompleted.do")
   public ModelAndView notificationMarkAsCompleted(HttpServletRequest request) {
-    logger.info("StudyController - notificationMarkAsCompleted() - Starts");
+    logger.entry("begin notificationMarkAsCompleted()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -2031,15 +1941,14 @@ public class StudyController {
         auditRequest.setStudyId(customStudyId);
         // markCompleted in param specify that notification to update it
         // as completed in table StudySequenceBo
-        message =
-            studyService.markAsCompleted(
-                Integer.parseInt(studyId), markCompleted, sesObj, customStudyId);
+        message = studyService.markAsCompleted(studyId, markCompleted, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE, auditRequest);
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           request
               .getSession()
               .setAttribute(
@@ -2047,7 +1956,7 @@ public class StudyController {
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           StudyBuilderAuditEvent auditLogEvent = STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE;
           auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
-          mav = new ModelAndView("redirect:actionList.do", map);
+          mav = new ModelAndView("redirect:viewStudyNotificationList.do", map);
         } else {
           request
               .getSession()
@@ -2060,13 +1969,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - notificationMarkAsCompleted() - ERROR", e);
     }
-    logger.info("StudyController - notificationMarkAsCompleted() - Ends");
+    logger.exit("notificationMarkAsCompleted() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/overviewStudyPages.do")
   public ModelAndView overviewStudyPages(HttpServletRequest request) {
-    logger.info("StudyController - overviewStudyPages - Starts");
+    logger.entry("begin overviewStudyPages()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     List<StudyPageBo> studyPageBos = null;
@@ -2075,6 +1984,7 @@ public class StudyController {
     String errMsg = "";
     StudyPageBean studyPageBean = new StudyPageBean();
     String user = "";
+    Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -2141,12 +2051,28 @@ public class StudyController {
           studyPageBos = studyService.getOverviewStudyPagesById(studyId, sesObj.getUserId());
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           studyPageBean.setStudyId(studyBo.getId().toString());
+
           map.addAttribute("studyPageBos", studyPageBos);
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute("studyPageBean", studyPageBean);
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
           map.addAttribute("_S", sessionStudyCount);
           map.addAttribute("user", user);
+          map.addAttribute(
+              "defaultOverViewImageSignedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.DEFAULT_IMAGES
+                      + "/"
+                      + configMap.get("study.defaultImage"),
+                  12));
+          map.addAttribute(
+              "defaultPageOverviewImageSignedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.DEFAULT_IMAGES
+                      + "/"
+                      + configMap.get("study.page2.defaultImage"),
+                  12));
+
           mav = new ModelAndView("overviewStudyPages", map);
         } else {
           return new ModelAndView("redirect:studyList.do");
@@ -2155,13 +2081,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - overviewStudyPages - ERROR", e);
     }
-    logger.info("StudyController - overviewStudyPages - Ends");
+    logger.exit("overviewStudyPages() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/questionnaireMarkAsCompleted.do")
   public ModelAndView questionnaireMarkAsCompleted(HttpServletRequest request) {
-    logger.info("StudyController - questionnaireMarkAsCompleted() - Starts");
+    logger.entry("begin questionnaireMarkAsCompleted()");
     ModelAndView mav = new ModelAndView("redirect:studyList.do");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -2199,10 +2125,7 @@ public class StudyController {
         auditRequest.setStudyId(customStudyId);
         message =
             studyService.markAsCompleted(
-                Integer.parseInt(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, sesObj, customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           if (studyBo != null) {
@@ -2216,7 +2139,8 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                   propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
           map.addAttribute("_S", sessionStudyCount);
-          mav = new ModelAndView("redirect:viewStudyActiveTasks.do", map);
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
+          mav = new ModelAndView("redirect:viewStudyQuestionnaires.do", map);
         } else {
           request
               .getSession()
@@ -2230,14 +2154,14 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - questionnaireMarkAsCompleted() - ERROR", e);
     }
-    logger.info("StudyController - questionnaireMarkAsCompleted() - Ends");
+    logger.exit("questionnaireMarkAsCompleted() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/reloadComprehensionQuestionListPage.do")
   public void reloadComprehensionQuestionListPage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - reloadConsentListPage - Starts");
+    logger.entry("begin reloadComprehensionQuestionListPage()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -2255,8 +2179,7 @@ public class StudyController {
                 ? ""
                 : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
         if (StringUtils.isNotEmpty(studyId)) {
-          comprehensionTestQuestionList =
-              studyService.getComprehensionTestQuestionList(Integer.valueOf(studyId));
+          comprehensionTestQuestionList = studyService.getComprehensionTestQuestionList(studyId);
           if ((comprehensionTestQuestionList != null) && !comprehensionTestQuestionList.isEmpty()) {
             comprehensionJsonArray =
                 new JSONArray(mapper.writeValueAsString(comprehensionTestQuestionList));
@@ -2277,12 +2200,12 @@ public class StudyController {
         out.print(jsonobject);
       }
     }
-    logger.info("StudyController - reloadConsentListPage - Ends");
+    logger.exit("reloadComprehensionQuestionListPage() - Ends");
   }
 
   @RequestMapping("/adminStudies/reloadConsentListPage.do")
   public void reloadConsentListPage(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - reloadConsentListPage - Starts");
+    logger.entry("begin reloadConsentListPage()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -2300,7 +2223,7 @@ public class StudyController {
                 ? ""
                 : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
         if (StringUtils.isNotEmpty(studyId)) {
-          consentInfoList = studyService.getConsentInfoList(Integer.valueOf(studyId));
+          consentInfoList = studyService.getConsentInfoList(studyId);
           if ((consentInfoList != null) && !consentInfoList.isEmpty()) {
             boolean markAsComplete = true;
             consentJsonArray = new JSONArray(mapper.writeValueAsString(consentInfoList));
@@ -2330,12 +2253,12 @@ public class StudyController {
         out.print(jsonobject);
       }
     }
-    logger.info("StudyController - reloadConsentListPage - Ends");
+    logger.exit("reloadConsentListPage() - Ends");
   }
 
   @RequestMapping("/adminStudies/reloadResourceListPage.do")
   public void reloadResourceListPage(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - reloadResourceListPage - Starts");
+    logger.entry("begin reloadResourceListPage()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -2353,7 +2276,7 @@ public class StudyController {
                 ? ""
                 : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
         if (StringUtils.isNotEmpty(studyId)) {
-          resourceList = studyService.getResourceList(Integer.valueOf(studyId));
+          resourceList = studyService.getResourceList(studyId);
           if ((resourceList != null) && !resourceList.isEmpty()) {
             boolean markAsComplete = true;
             resourceJsonArray = new JSONArray(mapper.writeValueAsString(resourceList));
@@ -2383,13 +2306,13 @@ public class StudyController {
         out.print(jsonobject);
       }
     }
-    logger.info("StudyController - reloadResourceListPage - Ends");
+    logger.exit("reloadResourceListPage() - Ends");
   }
 
   @RequestMapping("/adminStudies/reOrderComprehensionTestQuestion.do")
   public void reOrderComprehensionTestQuestion(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - reOrderComprehensionTestQuestion - Starts");
+    logger.entry("begin reOrderComprehensionTestQuestion()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2426,7 +2349,7 @@ public class StudyController {
           newOrderNumber = Integer.valueOf(newOrderNo);
           message =
               studyService.reOrderComprehensionTestQuestion(
-                  Integer.valueOf(studyId), oldOrderNumber, newOrderNumber);
+                  studyId, oldOrderNumber, newOrderNumber);
         }
       }
       jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
@@ -2436,12 +2359,12 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - reOrderComprehensionTestQuestion - ERROR", e);
     }
-    logger.info("StudyController - reOrderComprehensionTestQuestion - Ends");
+    logger.exit("reOrderComprehensionTestQuestion() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/reOrderConsentInfo.do", method = RequestMethod.POST)
   public void reOrderConsentInfo(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - reOrderConsentInfo - Starts");
+    logger.entry("begin reOrderConsentInfo()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2488,11 +2411,9 @@ public class StudyController {
             && !newOrderNo.isEmpty()) {
           oldOrderNumber = Integer.valueOf(oldOrderNo);
           newOrderNumber = Integer.valueOf(newOrderNo);
-          message =
-              studyService.reOrderConsentInfoList(
-                  Integer.valueOf(studyId), oldOrderNumber, newOrderNumber);
+          message = studyService.reOrderConsentInfoList(studyId, oldOrderNumber, newOrderNumber);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-            consentInfoList = studyService.getConsentInfoList(Integer.valueOf(studyId));
+            consentInfoList = studyService.getConsentInfoList(studyId);
             if ((consentInfoList != null) && !consentInfoList.isEmpty()) {
               consentJsonArray = new JSONArray(mapper.writeValueAsString(consentInfoList));
             }
@@ -2507,12 +2428,12 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - reOrderConsentInfo - ERROR", e);
     }
-    logger.info("StudyController - reOrderConsentInfo - Ends");
+    logger.exit("reOrderConsentInfo() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/reOrderResourceList.do", method = RequestMethod.POST)
   public void reOrderResourceList(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - reOrderResourceList - Starts");
+    logger.entry("begin reOrderResourceList()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2559,11 +2480,9 @@ public class StudyController {
             && !newOrderNo.isEmpty()) {
           oldOrderNumber = Integer.valueOf(oldOrderNo);
           newOrderNumber = Integer.valueOf(newOrderNo);
-          message =
-              studyService.reOrderResourceList(
-                  Integer.valueOf(studyId), oldOrderNumber, newOrderNumber);
+          message = studyService.reOrderResourceList(studyId, oldOrderNumber, newOrderNumber);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-            resourceList = studyService.getResourceList(Integer.valueOf(studyId));
+            resourceList = studyService.getResourceList(studyId);
             if ((resourceList != null) && !resourceList.isEmpty()) {
               resourceJsonArray = new JSONArray(mapper.writeValueAsString(resourceList));
             }
@@ -2578,7 +2497,7 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - reOrderResourceList - ERROR", e);
     }
-    logger.info("StudyController - reOrderResourceList - Ends");
+    logger.exit("reOrderResourceList() - Ends");
   }
 
   @RequestMapping(
@@ -2586,11 +2505,11 @@ public class StudyController {
       method = RequestMethod.POST)
   public void reOrderStudyEligibiltyTestQusAns(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - reOrderStudyEligibiltyTestQusAns - Starts");
+    logger.entry("begin reOrderStudyEligibiltyTestQusAns()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
-    Integer eligibilityId = null;
+    String eligibilityId = null;
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -2618,8 +2537,8 @@ public class StudyController {
         }
         eligibilityId =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("eligibilityId"))
-                ? 0
-                : Integer.parseInt(request.getParameter("eligibilityId"));
+                ? ""
+                : request.getParameter("eligibilityId");
         String oldOrderNo =
             FdahpStudyDesignerUtil.isEmpty(
                     request.getParameter(FdahpStudyDesignerConstants.OLD_ORDER_NUMBER))
@@ -2637,7 +2556,7 @@ public class StudyController {
           newOrderNumber = Integer.valueOf(newOrderNo);
           message =
               studyService.reorderEligibilityTestQusAns(
-                  eligibilityId, oldOrderNumber, newOrderNumber, Integer.valueOf(studyId));
+                  eligibilityId, oldOrderNumber, newOrderNumber, studyId);
         }
       }
       jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
@@ -2647,12 +2566,12 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - reOrderStudyEligibiltyTestQusAns - ERROR", e);
     }
-    logger.info("StudyController - reOrderStudyEligibiltyTestQusAns - Ends");
+    logger.exit("reOrderStudyEligibiltyTestQusAns() - Ends");
   }
 
   @RequestMapping("/resetStudy.do")
   public ModelAndView resetStudy(HttpServletRequest request) {
-    logger.info("StudyController - resetStudy - Starts");
+    logger.entry("resetStudy()");
     ModelAndView mav = new ModelAndView("redirect:login.do");
     boolean flag = false;
     try {
@@ -2672,13 +2591,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - resetStudy - ERROR", e);
     }
-    logger.info("StudyController - resetStudy - Ends");
+    logger.exit("resetStudy() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/resourceMarkAsCompleted.do")
   public ModelAndView resourceMarkAsCompleted(HttpServletRequest request) {
-    logger.info("StudyController - saveOrUpdateResource() - Starts");
+    logger.entry("begin saveOrUpdateResource()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -2716,11 +2635,10 @@ public class StudyController {
                     .getSession()
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         auditRequest.setStudyId(customStudyId);
-        resourceList = studyService.resourcesWithAnchorDate(Integer.parseInt(studyId));
+        resourceList = studyService.resourcesWithAnchorDate(studyId);
         if ((resourceList != null) && !resourceList.isEmpty()) {
           isAnchorDateExistsForStudy =
-              studyQuestionnaireService.isAnchorDateExistsForStudy(
-                  Integer.parseInt(studyId), customStudyId);
+              studyQuestionnaireService.isAnchorDateExistsForStudy(studyId, customStudyId);
           if (isAnchorDateExistsForStudy) {
             message = FdahpStudyDesignerConstants.SUCCESS;
           }
@@ -2731,21 +2649,19 @@ public class StudyController {
         if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
           message =
               studyService.markAsCompleted(
-                  Integer.parseInt(studyId),
-                  FdahpStudyDesignerConstants.RESOURCE,
-                  sesObj,
-                  customStudyId);
+                  studyId, FdahpStudyDesignerConstants.RESOURCE, sesObj, customStudyId);
           if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
             StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
             auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_RESOURCE_SECTION_MARKED_COMPLETE, auditRequest);
+            map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            mav = new ModelAndView("redirect:viewStudyNotificationList.do", map);
+            mav = new ModelAndView("redirect:getResourceList.do", map);
           } else {
             request
                 .getSession()
@@ -2766,14 +2682,14 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - resourceMarkAsCompleted() - ERROR", e);
     }
-    logger.info("StudyController - resourceMarkAsCompleted() - Ends");
+    logger.exit("resourceMarkAsCompleted() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/saveComprehensionTestQuestion.do")
   public void saveComprehensionTestQuestion(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveQuestion - Starts");
+    logger.entry("begin saveComprehensionTestQuestion()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2808,7 +2724,7 @@ public class StudyController {
               mapper.readValue(comprehensionQuestion, ComprehensionTestQuestionBo.class);
 
           if (comprehensionTestQuestionBo != null) {
-            if (comprehensionTestQuestionBo.getId() != null) {
+            if (StringUtils.isNotEmpty(comprehensionTestQuestionBo.getId())) {
               comprehensionTestQuestionBo.setModifiedBy(sesObj.getUserId());
               comprehensionTestQuestionBo.setModifiedOn(
                   FdahpStudyDesignerUtil.getCurrentDateTime());
@@ -2833,7 +2749,7 @@ public class StudyController {
           message = FdahpStudyDesignerConstants.SUCCESS;
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
+                studyId,
                 FdahpStudyDesignerConstants.COMPREHENSION_TEST,
                 false,
                 sesObj,
@@ -2848,12 +2764,12 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveQuestion - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveQuestion - Ends");
+    logger.exit("saveComprehensionTestQuestion() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveConsentInfo.do")
   public void saveConsentInfo(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - saveConsentInfo - Starts");
+    logger.entry("begin saveConsentInfo()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2878,7 +2794,8 @@ public class StudyController {
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
         if (consentInfoBo != null) {
-          if ((consentInfoBo.getStudyId() != null) && (consentInfoBo.getId() == null)) {
+          if ((consentInfoBo.getStudyId() != null)
+              && (StringUtils.isEmpty(consentInfoBo.getId()))) {
             int order = studyService.consentInfoOrder(consentInfoBo.getStudyId());
             consentInfoBo.setSequenceNo(order);
           }
@@ -2903,13 +2820,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - saveConsentInfo - ERROR", e);
     }
-    logger.info("StudyController - saveConsentInfo - Ends");
+    logger.exit("saveConsentInfo() - Ends");
   }
 
   @RequestMapping("/adminStudies/saveConsentReviewAndEConsentInfo.do")
   public void saveConsentReviewAndEConsentInfo(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("INFO: StudyController - saveConsentReviewAndEConsentInfo() :: Starts");
+    logger.entry("begin saveConsentReviewAndEConsentInfo()");
     ConsentBo consentBo = null;
     String consentInfoParamName = "";
     ObjectMapper mapper = new ObjectMapper();
@@ -2965,7 +2882,7 @@ public class StudyController {
               if ((comprehensionTest != null)
                   && comprehensionTest.equalsIgnoreCase(FdahpStudyDesignerConstants.SAVE_BUTTON)) {
                 studyService.markAsCompleted(
-                    Integer.valueOf(studyId),
+                    studyId,
                     FdahpStudyDesignerConstants.COMPREHENSION_TEST,
                     false,
                     sesObj,
@@ -2984,14 +2901,14 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - saveConsentReviewAndEConsentInfo() - ERROR ", e);
     }
-    logger.info("INFO: StudyController - saveConsentReviewAndEConsentInfo() :: Ends");
+    logger.exit("saveConsentReviewAndEConsentInfo() :: Ends");
   }
 
   @RequestMapping("/adminStudies/saveOrDoneChecklist.do")
   public ModelAndView saveOrDoneChecklist(HttpServletRequest request, Checklist checklist) {
-    logger.info("StudyController - saveOrDoneChecklist() - Starts");
+    logger.entry("begin saveOrDoneChecklist()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
-    Integer checklistId = 0;
+    String checklistId = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customStudyId = "";
     ModelMap map = new ModelMap();
@@ -3022,7 +2939,7 @@ public class StudyController {
                   ? ""
                   : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
         }
-        checklist.setStudyId(Integer.valueOf(studyId));
+        checklist.setStudyId(studyId);
         customStudyId =
             (String)
                 request
@@ -3030,7 +2947,7 @@ public class StudyController {
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         checklistId = studyService.saveOrDoneChecklist(checklist, actionBut, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
-        if (!checklistId.equals(0)) {
+        if (StringUtils.isNotEmpty(checklistId)) {
           if (checklist.getChecklistId() == null) {
             if (("save").equalsIgnoreCase(actionBut)) {
               request
@@ -3080,7 +2997,7 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - saveOrDoneChecklist() - ERROR", e);
     }
-    logger.info("StudyController - saveOrDoneChecklist() - Ends");
+    logger.exit("saveOrDoneChecklist() - Ends");
     return mav;
   }
 
@@ -3088,7 +3005,7 @@ public class StudyController {
   public ModelAndView saveOrUpdateBasicInfo(
       HttpServletRequest request,
       @ModelAttribute(FdahpStudyDesignerConstants.STUDY_BO) StudyBo studyBo) {
-    logger.info("StudyController - saveOrUpdateBasicInfo - Starts");
+    logger.entry("begin saveOrUpdateBasicInfo()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     String fileName = "";
@@ -3113,38 +3030,19 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        if (studyBo.getId() == null) {
+        if (StringUtils.isEmpty(studyBo.getId())) {
           StudySequenceBo studySequenceBo = new StudySequenceBo();
           studySequenceBo.setBasicInfo(true);
           studyBo.setStudySequenceBo(studySequenceBo);
           studyBo.setStatus(FdahpStudyDesignerConstants.STUDY_PRE_LAUNCH);
         }
         studyBo.setUserId(sesObj.getUserId());
-        if ((studyBo.getFile() != null) && !studyBo.getFile().isEmpty()) {
-          if (FdahpStudyDesignerUtil.isNotEmpty(studyBo.getThumbnailImage())) {
-            file =
-                studyBo
-                    .getThumbnailImage()
-                    .replace(
-                        "."
-                            + studyBo.getThumbnailImage()
-                                .split("\\.")[studyBo.getThumbnailImage().split("\\.").length - 1],
-                        "");
-          } else {
-            file =
-                FdahpStudyDesignerUtil.getStandardFileName(
-                    "STUDY", studyBo.getName(), studyBo.getCustomStudyId());
-          }
 
-          fileName =
-              FdahpStudyDesignerUtil.saveImage(
-                  studyBo.getFile(), file, FdahpStudyDesignerConstants.STUDTYLOGO);
-
-          studyBo.setThumbnailImage(fileName);
-        }
         studyBo.setButtonText(buttonText);
         studyBo.setDescription(StringEscapeUtils.unescapeHtml4(studyBo.getDescription()));
+
         message = studyService.saveOrUpdateStudy(studyBo, sesObj.getUserId(), sesObj);
+
         request
             .getSession()
             .setAttribute(
@@ -3162,12 +3060,13 @@ public class StudyController {
                     studyBo.getCustomStudyId());
           }
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            map.addAttribute("buttonText", buttonText);
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:viewSettingAndAdmins.do", map);
+            return new ModelAndView("redirect:viewBasicInfo.do", map);
           } else {
             request
                 .getSession()
@@ -3181,21 +3080,21 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set BasicInfo.");
+                  "Error in set BasicInfo");
           return new ModelAndView("redirect:viewBasicInfo.do", map);
         }
       }
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateBasicInfo - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateBasicInfo - Ends");
+    logger.exit("saveOrUpdateBasicInfo() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateComprehensionTestQuestion.do")
   public ModelAndView saveOrUpdateComprehensionTestQuestionPage(
       HttpServletRequest request, ComprehensionTestQuestionBo comprehensionTestQuestionBo) {
-    logger.info("StudyController - saveOrUpdateComprehensionTestQuestionPage - Starts");
+    logger.entry("begin saveOrUpdateComprehensionTestQuestionPage()");
     ModelAndView mav = new ModelAndView(FdahpStudyDesignerConstants.CONSENT_INFO_LIST_PAGE);
     ComprehensionTestQuestionBo addComprehensionTestQuestionBo = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -3213,7 +3112,7 @@ public class StudyController {
           && sesObj.getStudySession().contains(sessionStudyCount)) {
         int order = 0;
         if (comprehensionTestQuestionBo != null) {
-          if (comprehensionTestQuestionBo.getId() != null) {
+          if (StringUtils.isNotEmpty(comprehensionTestQuestionBo.getId())) {
             comprehensionTestQuestionBo.setModifiedBy(sesObj.getUserId());
             comprehensionTestQuestionBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
             comprehensionTestQuestionBo.setStatus(true);
@@ -3232,7 +3131,7 @@ public class StudyController {
               studyService.saveOrUpdateComprehensionTestQuestion(comprehensionTestQuestionBo);
           map.addAttribute("_S", sessionStudyCount);
           if (addComprehensionTestQuestionBo != null) {
-            if (addComprehensionTestQuestionBo.getId() != null && order == 0) {
+            if (StringUtils.isNotEmpty(addComprehensionTestQuestionBo.getId()) && order == 0) {
               request
                   .getSession()
                   .setAttribute(
@@ -3249,7 +3148,7 @@ public class StudyController {
           } else {
             request
                 .getSession()
-                .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Unable to add Question added.");
+                .setAttribute(FdahpStudyDesignerConstants.SUC_MSG, "Unable to add Question added");
             return new ModelAndView("redirect:/adminStudies/comprehensionQuestionList.do", map);
           }
         }
@@ -3257,14 +3156,14 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateComprehensionTestQuestionPage - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateComprehensionTestQuestionPage - Ends");
+    logger.exit("saveOrUpdateComprehensionTestQuestionPage - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateConsentInfo.do")
   public ModelAndView saveOrUpdateConsentInfo(
       HttpServletRequest request, ConsentInfoBo consentInfoBo) {
-    logger.info("StudyController - saveOrUpdateConsentInfo - Starts");
+    logger.entry("begin saveOrUpdateConsentInfo");
     ModelAndView mav = new ModelAndView(FdahpStudyDesignerConstants.CONSENT_INFO_LIST_PAGE);
     ConsentInfoBo addConsentInfoBo = null;
     ModelMap map = new ModelMap();
@@ -3279,11 +3178,15 @@ public class StudyController {
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
               : 0;
+      String briefsummaryText = request.getParameter("briefSummary");
+      consentInfoBo.setBriefSummary(briefsummaryText);
+
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
         if (consentInfoBo != null) {
-          if ((consentInfoBo.getStudyId() != null) && (consentInfoBo.getId() == null)) {
+          if ((consentInfoBo.getStudyId() != null)
+              && (StringUtils.isEmpty(consentInfoBo.getId()))) {
             int order = studyService.consentInfoOrder(consentInfoBo.getStudyId());
             consentInfoBo.setSequenceNo(order);
           }
@@ -3300,7 +3203,7 @@ public class StudyController {
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
             auditRequest.setAppId(studyBo.getAppId());
             auditLogEventHelper.logEvent(STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED, auditRequest);
-            if (consentInfoBo.getId() != null) {
+            if (StringUtils.isNotEmpty(consentInfoBo.getId())) {
               request
                   .getSession()
                   .setAttribute(
@@ -3320,7 +3223,7 @@ public class StudyController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Consent not added successfully.");
+                    "Consent not added successfully");
             map.addAttribute("_S", sessionStudyCount);
             mav = new ModelAndView("redirect:/adminStudies/consentListPage.do", map);
           }
@@ -3329,15 +3232,15 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateConsentInfo - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateConsentInfo - Ends");
+    logger.exit("saveOrUpdateConsentInfo - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateResource.do")
   public ModelAndView saveOrUpdateResource(HttpServletRequest request, ResourceBO resourceBO) {
-    logger.info("StudyController - saveOrUpdateResource() - Starts");
+    logger.entry("begin saveOrUpdateResource()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
-    Integer resourseId = 0;
+    String resourseId = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ModelMap map = new ModelMap();
     Map<String, String> values = new HashMap<>();
@@ -3403,7 +3306,7 @@ public class StudyController {
           } else {
             resourceBO.setStudyProtocol(false);
           }
-          resourceBO.setStudyId(Integer.parseInt(studyId));
+          resourceBO.setStudyId(studyId);
           resourceBO.setTextOrPdf(("0").equals(textOrPdfParam) ? false : true);
           resourceBO.setResourceVisibility(("0").equals(resourceVisibilityParam) ? false : true);
           if (!resourceBO.isResourceVisibility()) {
@@ -3412,17 +3315,17 @@ public class StudyController {
             resourceBO.setResourceType(false);
           }
           if ((resourceBO.getStudyId() != null)
-              && (resourceBO.getId() == null)
+              && (StringUtils.isEmpty(resourceBO.getId()))
               && !resourceBO.isStudyProtocol()) {
             int order = studyService.resourceOrder(resourceBO.getStudyId());
             resourceBO.setSequenceNo(order);
           }
           resourseId = studyService.saveOrUpdateResource(resourceBO, sesObj);
         }
-        if (!resourseId.equals(0)) {
+        if (StringUtils.isNotEmpty(resourseId)) {
           values.put("resource_id", resourseId.toString());
           auditLogEventHelper.logEvent(STUDY_NEW_RESOURCE_CREATED, auditRequest, values);
-          if ((resourceBO != null) && (resourceBO.getId() == null)) {
+          if ((resourceBO != null) && (StringUtils.isEmpty(resourceBO.getId()))) {
             if (("save").equalsIgnoreCase(buttonText)) {
               auditLogEventHelper.logEvent(STUDY_RESOURCE_SAVED_OR_UPDATED, auditRequest, values);
               request
@@ -3436,7 +3339,7 @@ public class StudyController {
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                      "Resource successfully added.");
+                      "Resource successfully added");
             }
           } else {
             if (("save").equalsIgnoreCase(buttonText)) {
@@ -3452,7 +3355,7 @@ public class StudyController {
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                      "Resource successfully updated.");
+                      "Resource successfully updated");
             }
           }
         } else {
@@ -3461,13 +3364,13 @@ public class StudyController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Failed to add resource.");
+                    "Failed to add resource");
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Failed to update resource.");
+                    "Failed to update resource");
           }
         }
         map.addAttribute("_S", sessionStudyCount);
@@ -3493,13 +3396,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateResource() - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateResource() - Ends");
+    logger.exit("saveOrUpdateResource() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateSettingAndAdmins.do")
   public ModelAndView saveOrUpdateSettingAndAdmins(HttpServletRequest request, StudyBo studyBo) {
-    logger.info("StudyController - saveOrUpdateSettingAndAdmins - Starts");
+    logger.entry("begin saveOrUpdateSettingAndAdmins()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -3531,12 +3434,13 @@ public class StudyController {
         map.addAttribute("_S", sessionStudyCount);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            map.addAttribute("buttonText", buttonText);
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:overviewStudyPages.do", map);
+            return new ModelAndView("redirect:viewSettingAndAdmins.do", map);
           } else {
             request
                 .getSession()
@@ -3550,21 +3454,21 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Setting and Admins.");
+                  "Error encountered. Your settings could not be saved.");
           return new ModelAndView("redirect:viewSettingAndAdmins.do", map);
         }
       }
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateSettingAndAdmins - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateSettingAndAdmins - Ends");
+    logger.exit("saveOrUpdateSettingAndAdmins() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateStudyEligibilty.do")
   public ModelAndView saveOrUpdateStudyEligibilty(
       HttpServletRequest request, EligibilityBo eligibilityBo) {
-    logger.info("StudyController - saveOrUpdateStudyEligibilty - Starts");
+    logger.entry("begin saveOrUpdateStudyEligibilty");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     String result = FdahpStudyDesignerConstants.FAILURE;
@@ -3583,7 +3487,7 @@ public class StudyController {
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
         if (eligibilityBo != null) {
-          if (eligibilityBo.getId() != null) {
+          if (StringUtils.isNotEmpty(eligibilityBo.getId())) {
             eligibilityBo.setModifiedBy(sesObj.getUserId());
             eligibilityBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           } else {
@@ -3622,36 +3526,37 @@ public class StudyController {
             mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           } else {
             auditLogEventHelper.logEvent(STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE, auditRequest);
+            map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            mav = new ModelAndView("redirect:consentListPage.do", map);
+            mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
           }
         } else {
           request
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Eligibility.");
+                  "Error in set Eligibility");
           mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
         }
       }
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateStudyEligibilty - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateStudyEligibilty - Ends");
+    logger.exit("saveOrUpdateStudyEligibilty - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateStudyEligibiltyTestQusAns.do")
   public ModelAndView saveOrUpdateStudyEligibiltyTestQusAns(
       HttpServletRequest request, EligibilityTestBo eligibilityTestBo) {
-    logger.info("StudyController - saveOrUpdateStudyEligibiltyTestQusAns - Starts");
+    logger.entry("begin saveOrUpdateStudyEligibiltyTestQusAns");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
-    Integer result = 0;
+    String result = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customStudyId = "";
     try {
@@ -3676,7 +3581,7 @@ public class StudyController {
           && sesObj.getStudySession().contains(sessionStudyCount)) {
         int seqCount = 0;
         if (eligibilityTestBo != null) {
-          if (eligibilityTestBo.getId() != null) {
+          if (StringUtils.isNotEmpty(eligibilityTestBo.getId())) {
             seqCount = eligibilityTestBo.getSequenceNo();
           }
           customStudyId =
@@ -3687,10 +3592,10 @@ public class StudyController {
                           sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
           result =
               studyService.saveOrUpdateEligibilityTestQusAns(
-                  eligibilityTestBo, Integer.parseInt(studyId), sesObj, customStudyId);
+                  eligibilityTestBo, studyId, sesObj, customStudyId);
         }
         map.addAttribute("_S", sessionStudyCount);
-        if (result > 0) {
+        if (StringUtils.isNotEmpty(result)) {
           if ((eligibilityTestBo != null)
               && (FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)
                   .equals(eligibilityTestBo.getType())) {
@@ -3734,24 +3639,24 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in set Eligibility Questions.");
+                  "Error in set Eligibility Questions");
           mav = new ModelAndView("redirect:viewStudyEligibilty.do", map);
         }
       }
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateStudyEligibiltyTestQusAns - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateStudyEligibiltyTestQusAns - Ends");
+    logger.exit("saveOrUpdateStudyEligibiltyTestQusAns - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateStudyNotification.do")
   public ModelAndView saveOrUpdateStudyNotification(
       HttpServletRequest request, NotificationBO notificationBO) {
-    logger.info("StudyController - saveOrUpdateStudyNotification - Starts");
+    logger.entry("begin saveOrUpdateStudyNotification");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
-    Integer notificationId = 0;
+    String notificationId = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customStudyId = "";
 
@@ -3821,16 +3726,28 @@ public class StudyController {
                             FdahpStudyDesignerConstants.SDF_TIME,
                             FdahpStudyDesignerConstants.DB_SDF_TIME))
                     : "");
+
+            notificationBO.setScheduleTimestamp(
+                (FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleDate())
+                        && FdahpStudyDesignerUtil.isNotEmpty(notificationBO.getScheduleTime()))
+                    ? FdahpStudyDesignerUtil.getTimeStamp(
+                        notificationBO.getScheduleDate(), notificationBO.getScheduleTime())
+                    : null);
             notificationBO.setNotificationScheduleType(
                 FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
           } else if (FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE.equals(currentDateTime)) {
             notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
             notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
+            notificationBO.setScheduleTimestamp(
+                FdahpStudyDesignerUtil.getTimeStamp(
+                    notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
+
             notificationBO.setNotificationScheduleType(
                 FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE);
           } else {
             notificationBO.setScheduleDate("");
             notificationBO.setScheduleTime("");
+            notificationBO.setScheduleTimestamp(null);
             notificationBO.setNotificationScheduleType("0");
           }
           String studyId =
@@ -3846,13 +3763,13 @@ public class StudyController {
                     : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
           }
           if (StringUtils.isNotEmpty(studyId)) {
-            StudyBo studyBo = studyService.getStudyById(studyId, 0);
+            StudyBo studyBo = studyService.getStudyById(studyId, null);
             if (studyBo != null) {
               notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
-              notificationBO.setStudyId(Integer.valueOf(studyId));
+              notificationBO.setStudyId(studyId);
             }
           }
-          if (notificationBO.getNotificationId() == null) {
+          if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
             notificationBO.setCreatedBy(sessionObject.getUserId());
             notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           } else {
@@ -3863,8 +3780,8 @@ public class StudyController {
               notificationService.saveOrUpdateOrResendNotification(
                   notificationBO, notificationType, buttonType, sessionObject, customStudyId);
         }
-        if (!notificationId.equals(0)) {
-          if (notificationBO.getNotificationId() == null) {
+        if (StringUtils.isNotEmpty(notificationId)) {
+          if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
             if ("save".equalsIgnoreCase(buttonType)) {
               request
                   .getSession()
@@ -3961,14 +3878,25 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateStudyNotification - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateStudyNotification - Ends");
+    logger.exit("saveOrUpdateStudyNotification - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateStudyOverviewPage.do")
   public ModelAndView saveOrUpdateStudyOverviewPage(
       HttpServletRequest request, StudyPageBean studyPageBean) {
-    logger.info("StudyController - saveOrUpdateStudyOverviewPage - Starts");
+    logger.entry("begin saveOrUpdateStudyOverviewPage");
+
+    if (request instanceof MultipartHttpServletRequest) {
+      MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+      Map<String, String[]> m = multipartRequest.getParameterMap();
+      for (Map.Entry<String, String[]> entry : m.entrySet()) {
+        if (entry.getKey().equals("description")) {
+          String[] descriptions = entry.getValue();
+          studyPageBean.setDescription(descriptions);
+        }
+      }
+    }
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
@@ -3990,12 +3918,13 @@ public class StudyController {
         map.addAttribute("_S", sessionStudyCount);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
           if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            map.addAttribute("buttonText", buttonText);
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:viewStudyEligibilty.do", map);
+            return new ModelAndView("redirect:overviewStudyPages.do", map);
           } else {
             request
                 .getSession()
@@ -4009,20 +3938,20 @@ public class StudyController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Error in setting Overview.");
+                  "Error in setting Overview");
           return new ModelAndView("redirect:overviewStudyPages.do", map);
         }
       }
     } catch (Exception e) {
       logger.error("StudyController - saveOrUpdateStudyOverviewPage - ERROR", e);
     }
-    logger.info("StudyController - saveOrUpdateStudyOverviewPage - Ends");
+    logger.exit("saveOrUpdateStudyOverviewPage - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/studyPlatformValidation", method = RequestMethod.POST)
   public void studyPlatformValidation(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - studyPlatformValidation() - Starts");
+    logger.entry("begin studyPlatformValidation()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -4064,7 +3993,7 @@ public class StudyController {
         }
         message =
             studyQuestionnaireService.checkQuestionnaireResponseTypeValidation(
-                Integer.parseInt(studyId), customStudyId);
+                studyId, customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           errorMessage = FdahpStudyDesignerConstants.PLATFORM_ERROR_MSG_ANDROID;
         }
@@ -4077,7 +4006,7 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - studyPlatformValidation() - ERROR", e);
     }
-    logger.info("StudyController - studyPlatformValidation() - Ends");
+    logger.exit("studyPlatformValidation() - Ends");
   }
 
   @RequestMapping(
@@ -4085,7 +4014,7 @@ public class StudyController {
       method = RequestMethod.POST)
   public void studyPlatformValidationforActiveTask(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - studyPlatformValidationforActiveTask() - Starts");
+    logger.entry("begin studyPlatformValidationforActiveTask()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -4113,7 +4042,7 @@ public class StudyController {
                   ? ""
                   : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
         }
-        message = studyService.checkActiveTaskTypeValidation(Integer.parseInt(studyId));
+        message = studyService.checkActiveTaskTypeValidation(studyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           errorMessage = FdahpStudyDesignerConstants.PLATFORM_ACTIVETASK_ERROR_MSG_ANDROID;
         }
@@ -4126,13 +4055,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - studyPlatformValidationforActiveTask() - ERROR", e);
     }
-    logger.info("StudyController - studyPlatformValidationforActiveTask() - Ends");
+    logger.exit("studyPlatformValidationforActiveTask() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/updateStudyAction", method = RequestMethod.POST)
   public ModelAndView updateStudyActionOnAction(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - updateStudyActionOnAction() - Starts");
+    logger.entry("begin updateStudyActionOnAction()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -4219,7 +4148,7 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - updateStudyActionOnAction() - ERROR", e);
     }
-    logger.info("StudyController - updateStudyActionOnAction() - Ends");
+    logger.exit("updateStudyActionOnAction() - Ends");
     return null;
   }
 
@@ -4227,12 +4156,12 @@ public class StudyController {
       value = "/adminStudies/validateEligibilityTestKey.do",
       method = RequestMethod.POST)
   public void validateEligibilityTestKey(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyController - validateEligibilityTestKey() - Starts");
+    logger.entry("begin validateEligibilityTestKey()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
-    Integer eligibilityTestId;
-    Integer eligibilityId;
+    String eligibilityTestId;
+    String eligibilityId;
     String shortTitle;
     try {
       SessionObject sesObj =
@@ -4243,17 +4172,17 @@ public class StudyController {
               ? Integer.parseInt(request.getParameter("_S"))
               : 0;
       eligibilityTestId =
-          StringUtils.isNumeric(request.getParameter("eligibilityTestId"))
-              ? Integer.parseInt(request.getParameter("eligibilityTestId"))
-              : 0;
+          StringUtils.isNotEmpty(request.getParameter("eligibilityTestId"))
+              ? request.getParameter("eligibilityTestId")
+              : "";
       shortTitle =
           StringUtils.isNotBlank(request.getParameter("shortTitle"))
               ? request.getParameter("shortTitle")
               : "";
       eligibilityId =
-          StringUtils.isNumeric(request.getParameter("eligibilityId"))
-              ? Integer.parseInt(request.getParameter("eligibilityId"))
-              : 0;
+          StringUtils.isNotEmpty(request.getParameter("eligibilityId"))
+              ? request.getParameter("eligibilityId")
+              : "";
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
@@ -4267,13 +4196,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - validateEligibilityTestKey() - ERROR", e);
     }
-    logger.info("StudyController - validateEligibilityTestKey() - Ends");
+    logger.exit("validateEligibilityTestKey() - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateStudyAction.do", method = RequestMethod.POST)
   public void validateStudyAction(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    logger.info("StudyActiveTasksController - validateStudyAction() - Starts ");
+    logger.entry("StudyActiveTasksController - validateStudyAction()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -4319,7 +4248,7 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - validateStudyAction() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksController - validateStudyAction() - Ends ");
+    logger.exit("StudyActiveTasksController - validateStudyAction() - Ends ");
     jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
     response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
     out = response.getWriter();
@@ -4329,7 +4258,7 @@ public class StudyController {
   @RequestMapping(value = "/adminStudies/validateStudyId.do", method = RequestMethod.POST)
   public void validateStudyId(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    logger.info("StudyController - validateStudyId() - Starts ");
+    logger.entry("begin validateStudyId()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -4351,7 +4280,7 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - validateStudyId() - ERROR ", e);
     }
-    logger.info("StudyController - validateStudyId() - Ends ");
+    logger.exit("validateStudyId() - Ends ");
     jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
     response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
     out = response.getWriter();
@@ -4360,7 +4289,7 @@ public class StudyController {
 
   @RequestMapping("/adminStudies/viewBasicInfo.do")
   public ModelAndView viewBasicInfo(HttpServletRequest request) {
-    logger.info("StudyController - viewBasicInfo - Starts");
+    logger.entry("begin viewBasicInfo");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     HashMap<String, List<ReferenceTablesBo>> referenceMap = null;
@@ -4370,6 +4299,7 @@ public class StudyController {
     String errMsg = "";
     ConsentBo consentBo = null;
     StudyIdBean studyIdBean = null;
+    Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
     try {
       SessionObject sesObj =
           (SessionObject)
@@ -4511,7 +4441,55 @@ public class StudyController {
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID,
                   studyBo.getCustomStudyId());
+
+          /*FdahpStudyDesignerUtil.copyImage(
+          studyBo.getThumbnailImage(),
+          FdahpStudyDesignerConstants.STUDTYLOGO,
+          studyBo.getCustomStudyId());*/
+
+          map.addAttribute(
+              "signedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDIES
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getCustomStudyId()
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + FdahpStudyDesignerConstants.STUDTYLOGO
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getThumbnailImage(),
+                  12));
+        } else if (StringUtils.isEmpty(studyBo.getCustomStudyId())
+            && StringUtils.isNotEmpty(studyBo.getDestinationCustomStudyId())) {
+
+          String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
+          String customId = "";
+          if (copyCustomIdArray[1].equalsIgnoreCase("COPY")) {
+            customId = copyCustomIdArray[0];
+            studyBo.setDestinationCustomStudyId(customId);
+          } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
+            customId = copyCustomIdArray[0];
+            studyBo.setDestinationCustomStudyId(customId + "@Export");
+          }
+
+          map.addAttribute(
+              "signedUrl",
+              FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerConstants.STUDIES
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getDestinationCustomStudyId()
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + FdahpStudyDesignerConstants.STUDTYLOGO
+                      + FdahpStudyDesignerConstants.PATH_SEPARATOR
+                      + studyBo.getThumbnailImage(),
+                  12));
         }
+        map.addAttribute(
+            "defaultImageSignedUrl",
+            FdahpStudyDesignerUtil.getSignedUrl(
+                FdahpStudyDesignerConstants.DEFAULT_IMAGES
+                    + "/"
+                    + configMap.get("study.basicInformation.defaultImage"),
+                12));
         // grouped for Study category , Research Sponsors , Data partner
         referenceMap =
             (HashMap<String, List<ReferenceTablesBo>>) studyService.getreferenceListByCategory();
@@ -4538,13 +4516,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - viewBasicInfo - ERROR", e);
     }
-    logger.info("StudyController - viewBasicInfo - Ends");
+    logger.exit("viewBasicInfo - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/viewSettingAndAdmins.do")
   public ModelAndView viewSettingAndAdmins(HttpServletRequest request) {
-    logger.info("StudyController - viewSettingAndAdmins - Starts");
+    logger.entry("begin viewSettingAndAdmins");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
@@ -4642,7 +4620,7 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - viewSettingAndAdmins - ERROR", e);
     }
-    logger.info("StudyController - viewSettingAndAdmins - Ends");
+    logger.exit("viewSettingAndAdmins - Ends");
     return mav;
   }
 
@@ -4752,7 +4730,7 @@ public class StudyController {
 
   @RequestMapping("/adminStudies/viewStudyEligibilty.do")
   public ModelAndView viewStudyEligibilty(HttpServletRequest request) {
-    logger.info("StudyController - viewStudyEligibilty - Starts");
+    logger.entry("begin viewStudyEligibilty()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null, liveStudyBo = null;
@@ -4828,7 +4806,7 @@ public class StudyController {
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           if (eligibilityBo == null) {
             eligibilityBo = new EligibilityBo();
-            eligibilityBo.setStudyId(Integer.parseInt(studyId));
+            eligibilityBo.setStudyId(studyId);
             eligibilityBo.setInstructionalText(
                 FdahpStudyDesignerConstants.ELIGIBILITY_TOKEN_TEXT_DEFAULT);
           }
@@ -4847,13 +4825,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - viewStudyEligibilty - ERROR", e);
     }
-    logger.info("StudyController - viewStudyEligibilty - Ends");
+    logger.exit("viewStudyEligibilty() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/viewStudyEligibiltyTestQusAns.do")
   public ModelAndView viewStudyEligibiltyTestQusAns(HttpServletRequest request) {
-    logger.info("StudyController - viewStudyEligibiltyTestQusAns - Starts");
+    logger.entry("begin viewStudyEligibiltyTestQusAns");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     String sucMsg = "";
@@ -4909,14 +4887,14 @@ public class StudyController {
                 request
                     .getSession()
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
-        Integer eligibilityTestId =
+        String eligibilityTestId =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("eligibilityTestId"))
-                ? 0
-                : Integer.parseInt(request.getParameter("eligibilityTestId"));
-        Integer eligibilityId =
+                ? ""
+                : request.getParameter("eligibilityTestId");
+        String eligibilityId =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("eligibilityId"))
-                ? 0
-                : Integer.parseInt(request.getParameter("eligibilityId"));
+                ? ""
+                : request.getParameter("eligibilityId");
         if (StringUtils.isEmpty(studyId)) {
           studyId =
               FdahpStudyDesignerUtil.isEmpty(
@@ -4932,14 +4910,14 @@ public class StudyController {
                       .getAttribute(sessionStudyCount + "actionTypeForQuestionPage");
           request.getSession().removeAttribute(sessionStudyCount + "actionTypeForQuestionPage");
         }
-        if (eligibilityTestId.equals(0)) {
+        if (eligibilityTestId.equals("")) {
           eligibilityTestId =
-              (Integer) request.getSession().getAttribute(sessionStudyCount + "eligibilityTestId");
+              (String) request.getSession().getAttribute(sessionStudyCount + "eligibilityTestId");
           request.getSession().removeAttribute(sessionStudyCount + "eligibilityTestId");
         }
-        if (eligibilityId.equals(0)) {
+        if (eligibilityId.equals("")) {
           eligibilityId =
-              (Integer) request.getSession().getAttribute(sessionStudyCount + "eligibilityId");
+              (String) request.getSession().getAttribute(sessionStudyCount + "eligibilityId");
           request.getSession().removeAttribute(sessionStudyCount + "eligibilityId");
         }
         String permission =
@@ -4964,13 +4942,13 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - viewStudyEligibiltyTestQusAns - ERROR", e);
     }
-    logger.info("StudyController - viewStudyEligibiltyTestQusAns - Ends");
+    logger.exit("viewStudyEligibiltyTestQusAns - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/viewStudyNotificationList.do")
   public ModelAndView viewStudyNotificationList(HttpServletRequest request) {
-    logger.info("StudyController - viewNotificationList() - Starts");
+    logger.entry("begin viewNotificationList()");
     ModelMap map = new ModelMap();
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     String sucMsg = "";
@@ -5038,11 +5016,10 @@ public class StudyController {
         }
         if (StringUtils.isNotEmpty(studyId)) {
           /*
-           * Passing studyId in the param to fetch study related notification list and
-           * type to define study notification in service level
+           * Passing studyId in the param to fetch study related notification list and type to
+           * define study notification in service level
            */
-          notificationList =
-              notificationService.getNotificationList(Integer.valueOf(studyId), type);
+          notificationList = notificationService.getNotificationList(studyId, type);
           for (NotificationBO notification : notificationList) {
             if (!notification.isNotificationSent()
                 && notification
@@ -5065,7 +5042,7 @@ public class StudyController {
           } else {
             studyLive = studyBo;
           }
-          notificationSavedList = studyService.getSavedNotification(Integer.valueOf(studyId));
+          notificationSavedList = studyService.getSavedNotification(studyId);
           map.addAttribute("notificationList", notificationList);
           map.addAttribute("studyLive", studyLive);
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
@@ -5079,14 +5056,14 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - viewStudyNotificationList() - ERROR ", e);
     }
-    logger.info("StudyController - viewStudyNotificationList() - ends");
+    logger.exit("viewStudyNotificationList() - ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/validateAppId.do", method = RequestMethod.POST)
   public void validateAppId(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    logger.info("StudyController - validateAppId() - Starts ");
+    logger.entry("begin validateAppId()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -5110,7 +5087,11 @@ public class StudyController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("studyType"))
                 ? ""
                 : request.getParameter("studyType");
-        flag = studyService.validateAppId(customStudyId, appId, studyType);
+        String dbCustomStudyId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("dbcustomStudyId"))
+                ? ""
+                : request.getParameter("dbcustomStudyId");
+        flag = studyService.validateAppId(customStudyId, appId, studyType, dbCustomStudyId);
         if (flag) {
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
@@ -5118,7 +5099,7 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - validateAppId() - ERROR ", e);
     }
-    logger.info("StudyController - validateAppId() - Ends ");
+    logger.exit("validateAppId() - Ends ");
     jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
     response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
     out = response.getWriter();
@@ -5127,7 +5108,7 @@ public class StudyController {
 
   private void submitResponseToUserRegistrationServer(
       String customStudyId, HttpServletRequest request) {
-    logger.info("StudyController - submitResponseToUserRegistrationServer() - Starts ");
+    logger.entry("begin submitResponseToUserRegistrationServer()");
     HttpHeaders headers = null;
     HttpEntity<StudyDetailsBean> requestEntity = null;
     ResponseEntity<?> userRegistrationResponseEntity = null;
@@ -5165,11 +5146,11 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - submitResponseToUserRegistrationServer() - ERROR ", e);
     }
-    logger.info("StudyController - submitResponseToUserRegistrationServer() - Ends ");
+    logger.exit("submitResponseToUserRegistrationServer() - Ends ");
   }
 
   private void submitResponseToResponseServer(String customStudyId, HttpServletRequest request) {
-    logger.info("StudyController - submitResponseToResponseServer() - Starts ");
+    logger.entry("begin submitResponseToResponseServer()");
     HttpHeaders headers = null;
     HttpEntity<StudyDetailsBean> requestEntity = null;
     ResponseEntity<?> responseServerResponseEntity = null;
@@ -5204,6 +5185,247 @@ public class StudyController {
     } catch (Exception e) {
       logger.error("StudyController - submitResponseToResponseServer() - ERROR ", e);
     }
-    logger.info("StudyController - submitResponseToResponseServer() - Ends ");
+    logger.exit("submitResponseToResponseServer() - Ends ");
+  }
+
+  @RequestMapping("/adminStudies/addOrEditResource.do")
+  public ModelAndView addOrEditResource(HttpServletRequest request) {
+    logger.entry("begin addOrEditResource()");
+    ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
+    ModelMap map = new ModelMap();
+    ResourceBO resourceBO = null;
+    StudyBo studyBo = null;
+    String sucMsg = "";
+    String errMsg = "";
+    List<AnchorDateTypeBo> anchorTypeList = new ArrayList<>();
+    try {
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      Integer sessionStudyCount =
+          StringUtils.isNumeric(request.getParameter("_S"))
+              ? Integer.parseInt(request.getParameter("_S"))
+              : 0;
+      if ((sesObj != null)
+          && (sesObj.getStudySession() != null)
+          && sesObj.getStudySession().contains(sessionStudyCount)) {
+        if (null
+            != request
+                .getSession()
+                .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG)) {
+          sucMsg =
+              (String)
+                  request
+                      .getSession()
+                      .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG);
+          map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
+          request
+              .getSession()
+              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG);
+        }
+        if (null
+            != request
+                .getSession()
+                .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG)) {
+          errMsg =
+              (String)
+                  request
+                      .getSession()
+                      .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG);
+          map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
+          request
+              .getSession()
+              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG);
+        }
+        String studyId =
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
+        if (StringUtils.isEmpty(studyId)) {
+          studyId =
+              FdahpStudyDesignerUtil.isEmpty(
+                      request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
+                  ? ""
+                  : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
+        }
+        String resourceInfoId =
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
+        if (StringUtils.isEmpty(resourceInfoId)) {
+          resourceInfoId =
+              FdahpStudyDesignerUtil.isEmpty(
+                      request.getParameter(FdahpStudyDesignerConstants.RESOURCE_INFO_ID))
+                  ? ""
+                  : request.getParameter(FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
+        }
+        String studyProtocol =
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(
+                        sessionStudyCount + FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
+        if (StringUtils.isEmpty(studyProtocol)) {
+          studyProtocol =
+              FdahpStudyDesignerUtil.isEmpty(
+                      request.getParameter(FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL))
+                  ? ""
+                  : request.getParameter(FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
+        }
+        String action =
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ACTION_ON);
+        if (StringUtils.isEmpty(action)) {
+          action =
+              FdahpStudyDesignerUtil.isEmpty(
+                      request.getParameter(FdahpStudyDesignerConstants.ACTION_ON))
+                  ? ""
+                  : request.getParameter(FdahpStudyDesignerConstants.ACTION_ON);
+        }
+        map.addAttribute("_S", sessionStudyCount);
+        if (!FdahpStudyDesignerUtil.isEmpty(action)) {
+          if (!("").equals(resourceInfoId)) {
+            resourceBO = studyService.getResourceInfo(resourceInfoId);
+            request
+                .getSession()
+                .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
+          }
+          if ((null != studyProtocol)
+              && !("").equals(studyProtocol)
+              && (FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL).equalsIgnoreCase(studyProtocol)) {
+            map.addAttribute(
+                FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL,
+                FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
+            request
+                .getSession()
+                .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
+          }
+          studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+          map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
+          map.addAttribute("resourceBO", resourceBO);
+          map.addAttribute(FdahpStudyDesignerConstants.ACTION_ON, action);
+          if ((studyBo != null) && !studyBo.getCustomStudyId().isEmpty()) {
+            anchorTypeList =
+                studyQuestionnaireService.getAnchorTypesByStudyId(studyBo.getCustomStudyId());
+          }
+          map.addAttribute("anchorTypeList", anchorTypeList);
+          request
+              .getSession()
+              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ACTION_ON);
+          mav = new ModelAndView("addOrEditResourcePage", map);
+        } else {
+          mav = new ModelAndView("redirect:getResourceList.do", map);
+        }
+      }
+    } catch (Exception e) {
+      logger.error("StudyController - addOrEditResource() - ERROR", e);
+    }
+    logger.exit("addOrEditResource() - Ends");
+    return mav;
+  }
+
+  @RequestMapping(value = "/studies/{studyId}/export.do", method = RequestMethod.POST)
+  public void exportStudy(
+      HttpServletRequest request, HttpServletResponse response, @PathVariable String studyId)
+      throws IOException {
+    logger.info("StudyController - exportStudy() - Starts");
+
+    SessionObject sesObj =
+        (SessionObject)
+            request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+
+    String message = "";
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    if (StringUtils.isNotEmpty(studyId)) {
+      // export study to google cloud storage
+      message = studyExportImportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
+    }
+    JSONObject jsonobject = new JSONObject();
+    if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
+      jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
+      auditLogEventHelper.logEvent(STUDY_EXPORTED, auditRequest);
+    } else {
+      auditLogEventHelper.logEvent(STUDY_EXPORT_FAILED, auditRequest);
+    }
+
+    response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+    PrintWriter out = response.getWriter();
+    out.print(jsonobject);
+
+    logger.info("StudyController - exportStudy() - Ends");
+  }
+
+  @RequestMapping(value = "/studies/import.do", method = RequestMethod.POST)
+  public void importStudy(HttpServletRequest request, HttpServletResponse response)
+      throws Exception {
+    logger.info("StudyController - importStudy() - Starts");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    HttpSession session = request.getSession();
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
+    SessionObject sessionObject =
+        (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+
+    String signedUrl =
+        FdahpStudyDesignerUtil.isEmpty(request.getParameter("signedUrl"))
+            ? ""
+            : request.getParameter("signedUrl");
+
+    String message = studyExportImportService.importStudy(signedUrl, sessionObject);
+
+    if (message.contains(FdahpStudyDesignerConstants.SUCCESS)) {
+      auditRequest.setStudyVersion(FdahpStudyDesignerConstants.STUDY_PRE_LUNCH_VERSION);
+      auditRequest.setAppId(FdahpStudyDesignerConstants.NA);
+      auditLogEventHelper.logEvent(STUDY_IMPORTED, auditRequest);
+    } else {
+      auditLogEventHelper.logEvent(STUDY_IMPORT_FAILED, auditRequest);
+    }
+
+    jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
+    response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+    out = response.getWriter();
+    out.print(jsonobject);
+
+    logger.info("StudyController - importStudy() - Ends");
+  }
+
+  @RequestMapping(value = "/adminStudies/replicate.do", method = RequestMethod.POST)
+  public ModelAndView replicateStudy(HttpServletRequest request, HttpServletResponse response)
+      throws IOException {
+    logger.info("StudyController - replicateStudy() - Starts");
+    HttpSession session = request.getSession();
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    SessionObject sessionObject =
+        (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+
+    String studyId =
+        FdahpStudyDesignerUtil.isEmpty(request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
+            ? ""
+            : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
+
+    StudyBo study = studyService.replicateStudy(studyId, sessionObject, auditRequest);
+
+    if (study != null) {
+      auditLogEventHelper.logEvent(STUDY_COPIED_INTO_NEW, auditRequest);
+      request
+          .getSession()
+          .setAttribute(
+              FdahpStudyDesignerConstants.SUC_MSG,
+              FdahpStudyDesignerConstants.STUDY_REPLICATTE_SUCCESS_MSG);
+    } else {
+      auditLogEventHelper.logEvent(STUDY_COPY_FAILED, auditRequest);
+      request
+          .getSession()
+          .setAttribute(
+              FdahpStudyDesignerConstants.ERR_MSG,
+              FdahpStudyDesignerConstants.STUDY_REPLICATTE_FAILURE_MSG);
+    }
+
+    logger.info("StudyController - replicateStudy() - Ends");
+    return new ModelAndView("redirect:/adminStudies/studyList.do");
   }
 }

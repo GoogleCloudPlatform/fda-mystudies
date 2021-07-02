@@ -96,6 +96,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepositor
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -140,7 +141,7 @@ public class SiteServiceImpl implements SiteService {
 
   private static final String CREATED = "created";
 
-  private static final int EMAIL_ADDRESS_COLUMN = 1;
+  private static final int EMAIL_ADDRESS_COLUMN = 0;
 
   private XLogger logger = XLoggerFactory.getXLogger(SiteServiceImpl.class.getName());
 
@@ -173,6 +174,8 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private InviteParticipantsEmailRepository invitedParticipantsEmailRepository;
 
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
+
+  @Autowired private ParticipantManagerUtil participantManagerUtil;
 
   @Override
   @Transactional
@@ -958,6 +961,10 @@ public class SiteServiceImpl implements SiteService {
       while (rows.hasNext()) {
         Row r = rows.next();
 
+        if (r.getCell(EMAIL_ADDRESS_COLUMN) == null) {
+          continue;
+        }
+
         String email = r.getCell(EMAIL_ADDRESS_COLUMN).getStringCellValue();
         if (StringUtils.isBlank(email) || !Pattern.matches(EMAIL_REGEX, email)) {
           invalidEmails.add(email);
@@ -1191,7 +1198,11 @@ public class SiteServiceImpl implements SiteService {
 
     for (StudySiteInfo studySiteInfo : studySiteDetails) {
       if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
-        studiesMap.put(studySiteInfo.getStudyId(), StudyMapper.toStudyDetails(studySiteInfo));
+        StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
+        studyDetail.setLogoImageUrl(
+            participantManagerUtil.getSignedUrl(
+                studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
+        studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
 
       StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
@@ -1235,7 +1246,11 @@ public class SiteServiceImpl implements SiteService {
     if (CollectionUtils.isNotEmpty(studySiteDetails)) {
       for (StudySiteInfo studySiteInfo : studySiteDetails) {
         if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
-          studiesMap.put(studySiteInfo.getStudyId(), StudyMapper.toStudyDetails(studySiteInfo));
+          StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
+          studyDetail.setLogoImageUrl(
+              participantManagerUtil.getSignedUrl(
+                  studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
+          studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
         StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
         if (StringUtils.isNotEmpty(studySiteInfo.getSiteId())) {

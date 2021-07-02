@@ -9,7 +9,7 @@
       </button>
       <a
         [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
-        routerLink="/coordinator/studies"
+        routerLink="/coordinator/studies/sites"
       >
         <img
           class="mr-sm width__auto"
@@ -81,6 +81,7 @@
                 studies.isActive ||
                 participantDetails.isActive
             }"
+            (click)="hamburgerclose()"
           >
             Dashboard
           </a>
@@ -127,6 +128,7 @@
             routerLink="/coordinator/locations"
             routerLinkActive="active"
             class="nav-item nav-link"
+            (click)="hamburgerclose()"
           >
             Locations
           </a>
@@ -137,6 +139,7 @@
             routerLink="/coordinator/users"
             routerLinkActive="active"
             class="nav-item nav-link"
+            (click)="hamburgerclose()"
           >
             Admins
           </a>
@@ -146,6 +149,7 @@
             routerLink="/coordinator/accounts"
             routerLinkActive="active"
             class="nav-item nav-link"
+            (click)="hamburgerclose()"
           >
             My Account
           </a>

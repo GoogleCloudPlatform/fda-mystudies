@@ -1403,6 +1403,29 @@ class DBHandler: NSObject {
     completionHandler(statsList)
 
   }
+  
+  class func deleteStatisticsForStudy(
+    studyId: String) {
+    let realm = DBHandler.getRealmObject()!
+    
+    // delete chart
+    let dbChartsArray = realm.objects(DBCharts.self).filter { $0.studyId == studyId }
+    dbChartsArray.forEach { (chart) in
+      try? realm.write {
+        realm.delete(chart.statisticsData)
+        realm.delete(chart)
+      }
+    }
+    
+    // delete stats
+    let dbStatisticsArray = realm.objects(DBStatistics.self).filter({ $0.studyId == studyId })
+    dbStatisticsArray.forEach { (stat) in
+      try? realm.write {
+        realm.delete((stat.statisticsData))
+        realm.delete(stat)
+      }
+    }
+  }
 
   // MARK: - Dashboard - Charts
 

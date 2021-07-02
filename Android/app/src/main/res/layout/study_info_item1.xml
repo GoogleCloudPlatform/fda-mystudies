@@ -19,20 +19,15 @@
         android:alpha=".6"
         android:background="@android:color/black" />
 
-    <ScrollView
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/adjustTopbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:scrollbars="none">
+        android:layout_height="?attr/actionBarSize" />
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_below="@id/adjustTopbar"
             android:layout_height="wrap_content">
-
-            <View
-                android:id="@+id/adjustTopbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
 
             <View
                 android:id="@+id/adjustContentCentral"
@@ -44,28 +39,32 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/adjustContentCentral"
-                android:layout_below="@id/adjustTopbar"
-                android:gravity="center">
+                android:layout_above="@+id/adjustContentCentral">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/title"
                     style="@style/Titles"
                     android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:text="A Study for Pregnant\nWomen"
+                    android:text="A Study for Pregnant /n Women"
                     android:textColor="@android:color/white" />
 
-
-                <android.support.v7.widget.AppCompatTextView
+                <WebView
                     android:id="@+id/desc"
                     style="@style/TextType2"
-                    android:layout_below="@id/title"
-                    android:layout_centerHorizontal="true"
+                    android:layout_height="1000dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_marginTop="5dp"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
                     android:gravity="center"
+                    android:scrollbars="none"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/title"
+                    android:layout_above="@+id/watch_video"
+                    android:background="@android:color/transparent"
                     android:text="@string/gateway_des1"
                     android:textColor="@android:color/white" />
 
@@ -73,9 +72,9 @@
                     android:id="@+id/watch_video"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/desc"
+                    android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal"
                     android:padding="10dp">
 
@@ -113,5 +112,4 @@
                     android:textColor="@android:color/white" />
             </RelativeLayout>-->
         </RelativeLayout>
-    </ScrollView>
 </RelativeLayout>

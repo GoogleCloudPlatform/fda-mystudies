@@ -107,7 +107,7 @@ spec:
                   name: shared-secrets
                   key: fcm_api_url
             - name: IOS_NOTIFICATION_TYPE
-              value: "production"
+              value: "api.push.apple.com"
             # SERVER CALLS
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/auth-server"

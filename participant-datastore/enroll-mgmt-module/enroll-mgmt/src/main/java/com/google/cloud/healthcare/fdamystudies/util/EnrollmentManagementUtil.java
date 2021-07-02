@@ -26,8 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import javax.validation.constraints.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -45,7 +45,8 @@ public class EnrollmentManagementUtil {
   static SecureRandom secureRnd = new SecureRandom();
   private static final String validInputChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   private Integer charLength = validInputChars.length();
-  private static final Logger logger = LoggerFactory.getLogger(EnrollmentManagementUtil.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(EnrollmentManagementUtil.class.getName());
 
   @Autowired private RestTemplate restTemplate;
 
@@ -142,7 +143,7 @@ public class EnrollmentManagementUtil {
       String studyId,
       Float studyVersion,
       AuditLogEventRequest auditRequest) {
-    logger.info("EnrollmentManagementUtil getParticipantId() - starts ");
+    logger.entry("Begin getParticipantId()");
     HttpHeaders headers = null;
     EnrollmentBodyProvider bodyProvider = null;
     HttpEntity<EnrollmentBodyProvider> requestBody = null;
@@ -176,13 +177,13 @@ public class EnrollmentManagementUtil {
       throw e;
     }
 
-    logger.info("EnrollmentManagementUtil getParticipantId() - Ends ");
+    logger.exit("getParticipantId() - Ends ");
     return participantId;
   }
 
   public String withDrawParticipantFromStudy(
       String participantId, Float studyVersion, String studyId, AuditLogEventRequest auditRequest) {
-    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
+    logger.entry("Begin withDrawParticipantFromStudy()");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
     String message = "";
@@ -209,7 +210,7 @@ public class EnrollmentManagementUtil {
       message = "SUCCESS";
     }
 
-    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
+    logger.exit("withDrawParticipantFromStudy() - Ends ");
     return message;
   }
 }

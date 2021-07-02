@@ -4,7 +4,7 @@
       <div class="max__w__1280 m-none">
         <div class="flex__justify__space-between">
           <div
-            class="subheader__title flex__justify__space-between align__items__baseline"
+            class="subheader__title flex__justify__space-between align__items__baseline scrollable-element"
           >
             <div>
               <a
@@ -189,7 +189,7 @@
               siteParticipants.participantRegistryDetail.siteStatus === 0
             "
           >
-            <div class="dropdown">
+            <!-- <div class="dropdown">
               <button
                 name="btnToggleParticipant"
                 class="dropbtn btn banner__primary__btn mr-sm font12"
@@ -221,6 +221,49 @@
                   </div>
                 </div>
                 <div class="flex__row__reverse">
+                  <a
+                    download="Email_Import_Template"
+                    target="_blank"
+                    href="assets/Email_Import_Template.xlsx"
+                    class="p-none"
+                  >
+                    <div class="download__text">Download template</div>
+                  </a>
+                </div>
+              </div>
+            </div> -->
+            <div class="dropdown">
+              <button
+                name="btnToggleParticipant"
+                class="dropbtn btn banner__primary__btn mr-sm tnsb"
+                (click)="toggleParticipant($event)"
+              >
+                Add participants
+                <i class="fa fa-caret-down arrow_clr__white"></i>
+              </button>
+              <div
+                [ngClass]="toggleDisplay ? 'show' : ''"
+                class="dropdown-content participantSlideDown"
+              >
+                <div class="flex__justify__space-between mb-xs">
+                  <div class="mr-sm">
+                    <button
+                      class="primary__btn font__bold"
+                      (click)="openModal(addEmail)"
+                    >
+                      Add email
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      class="primary__btn font__bold"
+                      (click)="openModal(importEmaillist)"
+                    >
+                      Import email list
+                    </button>
+                  </div>
+                </div>
+                <div class="flex__row__reverse pr-3">
                   <a
                     download="Email_Import_Template"
                     target="_blank"
@@ -722,21 +765,25 @@
                   {{ participant.enrollmentDate }}
                 </td>
               </tr>
-
-              <tr
-                *ngIf="
-                  siteParticipants.participantRegistryDetail
-                    .registryParticipants.length === 0
-                "
-              >
-                <td colspan="4" class="text-center">No records found</td>
-              </tr>
             </tbody>
 
             <tfoot class="custom__tfoot">
               <tr>
                 <td colspan="4">
                   <mfBootstrapPaginator></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+
+            <tfoot>
+              <tr
+                *ngIf="
+                  siteParticipants.participantRegistryDetail
+                    .registryParticipants.length === 0
+                "
+              >
+                <td colspan="4" class="text-center font12 txt__light-gray">
+                  No records found
                 </td>
               </tr>
             </tfoot>

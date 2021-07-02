@@ -23,10 +23,10 @@
                id="goToNotificationListForm"><img
                 src="/studybuilder/images/icons/back-b.png" alt=""/></a>
           </span>
-          <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">Add Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'view'}">View Notification</c:if>
-          <c:if test="${notificationBO.actionPage eq 'resend'}">Resend Notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'edit'}">Edit notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'addOrCopy'}">Add notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'view'}">View notification</c:if>
+          <c:if test="${notificationBO.actionPage eq 'resend'}">Resend notification</c:if>
         </div>
 
         <div class="dis-line form-group mb-none">
@@ -80,7 +80,7 @@
         <div class="form-group">
           <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
                     id="notificationText"
-                    name="notificationText" required
+                    name="notificationText" required data-error="Please fill out this field" 
           >${notificationBO.notificationText}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -113,6 +113,7 @@
           </span>
           <div class="help-block with-errors red-txt"></div>
           <c:if test="${not empty notificationHistoryNoDateTime}">
+          <div class="gray-xs-f mb-xs mt-xs">Previously sent on: </div>
             <c:forEach items="${notificationHistoryNoDateTime}" var="notificationHistory">
               <span
                   class="lastSendDateTime">${notificationHistory.notificationSentdtTime}</span>
@@ -128,7 +129,7 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group date">
-          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal"
+          <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" data-error="Please fill out this field" 
                  id="scheduleDate"
                  name="scheduleDate" value="${notificationBO.scheduleDate}"
                  oldValue="${notificationBO.scheduleDate}"
@@ -142,7 +143,7 @@
           <span class="requiredStar">*</span>
         </div>
         <div class="form-group">
-          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime"
+          <input id="timepicker1" class="form-control clock timepicker resetVal" id="scheduleTime" data-error="Please fill out this field" 
                  name="scheduleTime" value="${notificationBO.scheduleTime}"
                  oldValue="${notificationBO.scheduleTime}"
                  placeholder="00:00" disabled/>
@@ -150,7 +151,7 @@
         </div>
       </div>
  <div class="form-group mr-sm" style="white-space: normal; margin-top: -9px;">
-For studies that are already launched, notifications get scheduled for delivery upon marking the Notifications section as complete, not requiring an explicit 'Publish updates' action.
+ For studies that are already launched, notifications get scheduled for delivery to participants, immediately upon marking this screen as Done, not requiring an explicit 'Publish updates' action at the study level.
  </div>
     </div>
   </form:form>
@@ -180,14 +181,6 @@ For studies that are already launched, notifications get scheduled for delivery 
     $('.eigthNotification').removeClass('cursor-none');
 
     $('[data-toggle="tooltip"]').tooltip();
-
-    <c:if test="${studyBo.status eq 'Active'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
-
-    <c:if test="${notificationBO.actionPage eq 'view'}">
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    </c:if>
 
     <c:if test="${notificationBO.actionPage eq 'view'}">
     $('#studyNotificationFormId input,textarea').prop('disabled', true);
@@ -295,9 +288,19 @@ For studies that are already launched, notifications get scheduled for delivery 
       });
     });
 
+    var today, datepicker;
+    <c:if test="${ empty notificationBO.scheduleDate}">
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    
+    <c:if test="${not empty notificationBO.scheduleDate}">
+    today=${notificationBO.scheduleDate};
+    </c:if>
+    
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false
     }).on('dp.change change', function (e) {
       validateTime();
@@ -477,7 +480,7 @@ For studies that are already launched, notifications get scheduled for delivery 
       if (dt < serverDateTime()) {
         $('.timepicker').parent().addClass('has-error has-danger').find(
             '.help-block.with-errors').empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Please select a time that has not already passed for the current date."));
+            "Please select a time in the future"));
         valid = false;
       }
     }

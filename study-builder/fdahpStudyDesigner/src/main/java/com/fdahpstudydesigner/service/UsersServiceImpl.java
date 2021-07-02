@@ -1,9 +1,25 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.service;
@@ -34,14 +50,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsersServiceImpl implements UsersService {
 
-  private static Logger logger = Logger.getLogger(UsersServiceImpl.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(UsersServiceImpl.class.getName());
 
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
@@ -49,28 +67,25 @@ public class UsersServiceImpl implements UsersService {
 
   @Autowired private UsersDAO usersDAO;
 
+  @Autowired private EmailNotification emailNotification;
+
   @Override
   public String activateOrDeactivateUser(
-      int userId,
+      String userId,
       int userStatus,
-      int loginUser,
+      String loginUser,
       SessionObject userSession,
       HttpServletRequest request) {
-    logger.info("UsersServiceImpl - activateOrDeactivateUser() - Starts");
+    logger.entry("begin activateOrDeactivateUser()");
     String msg = FdahpStudyDesignerConstants.FAILURE;
-    List<String> superAdminEmailList = null;
     Map<String, String> keyValueForSubject = null;
     String dynamicContent = "";
     UserBO userBo = null;
-    UserBO adminFullNameIfSizeOne = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String customerCareMail = "";
-    String status = "";
-
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
-      superAdminEmailList = usersDAO.getSuperAdminList();
       userBo = usersDAO.getUserDetails(userId);
       if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
         StudyBuilderAuditEvent auditLogEvent =
@@ -79,36 +94,6 @@ public class UsersServiceImpl implements UsersService {
         values.put(EDITED_USER_ID, String.valueOf(userId));
         auditLogHelper.logEvent(auditLogEvent, auditRequest, values);
         keyValueForSubject = new HashMap<String, String>();
-        if ((superAdminEmailList != null) && !superAdminEmailList.isEmpty()) {
-          if (userStatus == 1) {
-            status = "Deactivated";
-          } else {
-            status = "Active";
-          }
-          if (superAdminEmailList.size() == 1) {
-            for (String email : superAdminEmailList) {
-              adminFullNameIfSizeOne = usersDAO.getSuperAdminNameByEmailId(email);
-              keyValueForSubject.put(
-                  "$admin",
-                  adminFullNameIfSizeOne.getFirstName()
-                      + " "
-                      + adminFullNameIfSizeOne.getLastName());
-            }
-          } else {
-            keyValueForSubject.put("$admin", "Admin");
-          }
-          keyValueForSubject.put("$userStatus", status);
-          keyValueForSubject.put(
-              "$sessionAdminFullName",
-              userSession.getFirstName() + " " + userSession.getLastName());
-          keyValueForSubject.put("$userEmail", userBo.getUserEmail());
-          keyValueForSubject.put("$orgName", propMap.get("orgName"));
-          dynamicContent =
-              FdahpStudyDesignerUtil.genarateEmailContent(
-                  "mailForAdminUserUpdateContent", keyValueForSubject);
-          EmailNotification.sendEmailNotification(
-              "mailForAdminUserUpdateSubject", dynamicContent, null, superAdminEmailList, null);
-        }
         if ((userBo != null) && Integer.valueOf(userStatus).equals(0)) {
           if (!userBo.isCredentialsNonExpired()) {
             loginService.sendPasswordResetLinkToMail(
@@ -125,7 +110,7 @@ public class UsersServiceImpl implements UsersService {
             dynamicContent =
                 FdahpStudyDesignerUtil.genarateEmailContent(
                     "mailForReactivatingUserContent", keyValueForSubject);
-            EmailNotification.sendEmailNotification(
+            emailNotification.sendEmailNotification(
                 "mailForReactivatingUserSubject",
                 dynamicContent,
                 userBo.getUserEmail(),
@@ -137,7 +122,7 @@ public class UsersServiceImpl implements UsersService {
     } catch (Exception e) {
       logger.error("UsersServiceImpl - activateOrDeactivateUser() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - activateOrDeactivateUser() - Ends");
+    logger.exit("activateOrDeactivateUser() - Ends");
     return msg;
   }
 
@@ -150,7 +135,7 @@ public class UsersServiceImpl implements UsersService {
       String permissionValues,
       SessionObject userSession,
       AuditLogEventRequest auditRequest) {
-    logger.info("UsersServiceImpl - addOrUpdateUserDetails() - Starts");
+    logger.entry("begin addOrUpdateUserDetails()");
     UserBO userBO2 = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
     boolean addFlag = false;
@@ -160,7 +145,7 @@ public class UsersServiceImpl implements UsersService {
     UserBO userBO3 = null;
 
     try {
-      if (null == userBO.getUserId()) {
+      if (StringUtils.isEmpty(userBO.getUserId())) {
         addFlag = true;
         userBO2 = new UserBO();
         userBO2.setFirstName(null != userBO.getFirstName() ? userBO.getFirstName().trim() : "");
@@ -244,111 +229,111 @@ public class UsersServiceImpl implements UsersService {
     } catch (Exception e) {
       logger.error("UsersServiceImpl - addOrUpdateUserDetails() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - addOrUpdateUserDetails() - Ends");
+    logger.exit("addOrUpdateUserDetails() - Ends");
     return msg;
   }
 
   @Override
-  public String enforcePasswordChange(Integer userId, String email) {
-    logger.info("UsersServiceImpl - enforcePasswordChange() - Starts");
+  public String enforcePasswordChange(String userId, String email) {
+    logger.entry("begin enforcePasswordChange()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message = usersDAO.enforcePasswordChange(userId, email);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - enforcePasswordChange() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - enforcePasswordChange() - Ends");
+    logger.exit("enforcePasswordChange() - Ends");
     return message;
   }
 
   @Override
   public List<String> getActiveUserEmailIds() {
-    logger.info("UsersServiceImpl - getActiveUserEmailIds() - Starts");
+    logger.entry("begin getActiveUserEmailIds()");
     List<String> emails = null;
     try {
       emails = usersDAO.getActiveUserEmailIds();
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getActiveUserEmailIds() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getActiveUserEmailIds() - Ends");
+    logger.exit("getActiveUserEmailIds() - Ends");
     return emails;
   }
 
   @Override
-  public List<Integer> getPermissionsByUserId(Integer userId) {
-    logger.info("UsersServiceImpl - permissionsByUserId() - Starts");
+  public List<Integer> getPermissionsByUserId(String userId) {
+    logger.entry("begin permissionsByUserId()");
     List<Integer> permissions = null;
     try {
       permissions = usersDAO.getPermissionsByUserId(userId);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - permissionsByUserId() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - permissionsByUserId() - Ends");
+    logger.exit("permissionsByUserId() - Ends");
     return permissions;
   }
 
   @Override
-  public UserBO getUserDetails(Integer userId) {
-    logger.info("UsersServiceImpl - getUserDetails() - Starts");
+  public UserBO getUserDetails(String userId) {
+    logger.entry("begin getUserDetails()");
     UserBO userBO = null;
     try {
       userBO = usersDAO.getUserDetails(userId);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserDetails() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserDetails() - Ends");
+    logger.exit("getUserDetails() - Ends");
     return userBO;
   }
 
   @Override
   public List<UserBO> getUserList() {
-    logger.info("UsersServiceImpl - getUserList() - Starts");
+    logger.entry("begin getUserList()");
     List<UserBO> userList = null;
     try {
       userList = usersDAO.getUserList();
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserList() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserList() - Ends");
+    logger.exit("getUserList() - Ends");
     return userList;
   }
 
   @Override
-  public Integer getUserPermissionByUserId(Integer sessionUserId) {
-    logger.info("UsersServiceImpl - getUserPermissionByUserId() - Starts");
-    Integer userId = null;
+  public String getUserPermissionByUserId(String sessionUserId) {
+    String userId = null;
+    logger.entry("begin getUserPermissionByUserId()");
     try {
       userId = usersDAO.getUserPermissionByUserId(sessionUserId);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserPermissionByUserId() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserPermissionByUserId() - Ends");
+    logger.exit("getUserPermissionByUserId() - Ends");
     return userId;
   }
 
   @Override
-  public RoleBO getUserRole(int roleId) {
-    logger.info("UsersServiceImpl - getUserRole() - Starts");
+  public RoleBO getUserRole(String roleId) {
+    logger.entry("begin getUserRole()");
     RoleBO roleBO = null;
     try {
       roleBO = usersDAO.getUserRole(roleId);
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserRole() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserRole() - Ends");
+    logger.exit("getUserRole() - Ends");
     return roleBO;
   }
 
   @Override
   public List<RoleBO> getUserRoleList() {
-    logger.info("UsersServiceImpl - getUserRoleList() - Starts");
+    logger.entry("begin getUserRoleList()");
     List<RoleBO> roleBOList = null;
     try {
       roleBOList = usersDAO.getUserRoleList();
     } catch (Exception e) {
       logger.error("UsersServiceImpl - getUserRoleList() - ERROR", e);
     }
-    logger.info("UsersServiceImpl - getUserRoleList() - Ends");
+    logger.exit("getUserRoleList() - Ends");
     return roleBOList;
   }
 }

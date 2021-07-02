@@ -467,10 +467,10 @@ class ResourcesViewController: UIViewController {
   }
 
   func withdrawalFromStudy(deleteResponse: Bool) {
-    let participantId = Study.currentStudy?.userParticipateState.participantId
+    let participantId = Study.currentStudy?.userParticipateState.participantId ?? ""
     EnrollServices().withdrawFromStudy(
       studyId: (Study.currentStudy?.studyId)!,
-      participantId: participantId!,
+      participantId: participantId,
       deleteResponses: deleteResponse,
       delegate: self
     )

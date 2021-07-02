@@ -20,6 +20,23 @@
     }
     return true;
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+	  window.setTimeout(function(){
+		window.location.href = "/studybuilder/adminStudies/consentReview.do?_S=${param._S}";
+		    }, 5000);
+	  }else{
+	    	setTimeout(hideDisplayMessage, 5000);
+	  }
+	}
 </script>
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -89,7 +106,7 @@
         <div class="text-right">
           <div class="black-md-f dis-line pull-left line34">Comprehension test questions
           </div>
-          <div class="dis-line form-group mb-none mr-sm">
+          <div class="dis-line form-group mb-none">
             <c:if test="${empty permission}">
              <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"	
                   data-placement="bottom" data-original-title="">
@@ -124,15 +141,15 @@
                   <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                         data-placement="top"
                         title="View"
-                        onclick="viewComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                        onclick="viewComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                   <span
                       class="${comprehensionTestQuestion.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                       data-toggle="tooltip" data-placement="top" title="Edit"
-                      onclick="editComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                      onclick="editComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                   <span
                       class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                       data-toggle="tooltip" data-placement="top" title="Delete"
-                      onclick="deleteComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                      onclick="deleteComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                 </td>
               </tr>
             </c:forEach>
@@ -141,10 +158,14 @@
       </div>
 
       <div class="right-content-body mt-xlg" id="displayTitleId">
-        <div class="gray-xs-f mb-xs" id="minScoreText">Minimum score needed to pass the test</div>
-        <div class="form-group col-md-5 p-none scoreClass">
+        <div class="gray-xs-f mb-xs" id="minScoreText">Minimum score needed to pass the test
+	      <span
+	        class="requiredStar">*
+	      </span>
+        </div>
+		<div class="form-group col-md-3 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
-                 name="comprehensionTestMinimumScore"
+                 name="comprehensionTestMinimumScore" data-error="Please fill out this field"
                  value="${consentBo.comprehensionTestMinimumScore}"
                  maxlength="3" onkeypress="return isNumber(event)"  Style="width:250px">
           <div class="help-block with-errors red-txt"></div>
@@ -174,8 +195,11 @@ var markAsComplete = "${markAsComplete}"
   $(document).ready(function () {
 	  var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
 	  if(mainContainerDivision==true){
-			var mainContainerDivision = $('#mainContainer').hide();		   
-		 }
+	  	$('#comprehensionTestMinimumScore').attr('required', false);
+		var mainContainerDivision = $('#mainContainer').hide();		   
+	  } else {
+		$('#comprehensionTestMinimumScore').attr('required', true);
+	  }
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
@@ -191,6 +215,7 @@ var markAsComplete = "${markAsComplete}"
       if (val == "Yes") {
     	  $("#saveId").html("Next");	
           $("#comprehensionTestMinimumScore, #minScoreText").hide();	
+          $('#comprehensionTestMinimumScore').attr('required', true);
           $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');	
           $("#mainContainer").show();	
           if ($('#comprehension_list tbody tr').length == 1	
@@ -210,6 +235,7 @@ var markAsComplete = "${markAsComplete}"
         }
       } else {
     	$("#saveId").html("Save");
+    	$('#comprehensionTestMinimumScore').attr('required', false);
         $("#comprehensionTestMinimumScore").val('');
         $("#mainContainer").hide();
         $("#addHelpNote").hide();
@@ -238,7 +264,7 @@ var markAsComplete = "${markAsComplete}"
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1]}],
@@ -289,7 +315,7 @@ var markAsComplete = "${markAsComplete}"
             if (status == "SUCCESS") {
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
               if ($('.fifthComre').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
                 $('.fifthComre').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
               }
@@ -323,7 +349,7 @@ var markAsComplete = "${markAsComplete}"
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The score should be less than or equal to the number of questions and greater than 0."));
+            "The score should be less than or equal to the number of questions and greater than 0"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");
@@ -452,27 +478,28 @@ var markAsComplete = "${markAsComplete}"
           datarow.push("<div class='dis-ellipsis'>" + DOMPurify.sanitize(obj.questionText) + "</div>");
         }
         
-        var actions='';	
-        var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');	
-        if( obj.status===true){	
-         actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("	
-            + parseInt(obj.id) + ");'></span>"	
-            + "<span class='sprites_icon mr-lg edit-inc' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)	
-            + ");'>"	
-            + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("	
-            + parseInt(obj.id) + ");'>"	
-            + "</span>";	
-        }else{	
-        	    actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("	
-                   + parseInt(obj.id) + ");'></span>"	
-                   + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)	
-                   + ");'>"	
-                   + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("	
-                   + parseInt(obj.id) + ");'>"	
-                   + "</span>";	
-        	    markAsComplete="false";	
+        var actions='';
+        var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');
+        if( obj.status===true){
+         actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion(&#34;"
+            + obj.id + "&#34;);'></span>"
+            + "<span class='sprites_icon mr-lg edit-inc' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(&#34;" 
+            + obj.id
+            + "&#34;);'>"
+            + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion(&#34;"
+            + obj.id + "&#34;);'>"
+            + "</span>";
+        }else{
+        	    actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion(&#34;"
+                   + obj.id + "&#34;);'></span>"
+                   + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(&#34;" + obj.id
+                   + "&#34;);'>"
+                   + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion(&#34;"
+                   + obj.id + "&#34;);'>"
+                   + "</span>";
+        	    markAsComplete="false";
             }
-
+        
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);
       });
@@ -546,7 +573,7 @@ var markAsComplete = "${markAsComplete}"
         $("#comprehensionTestMinimumScore").parent().find(".help-block").empty();
         $("#comprehensionTestMinimumScore").parent().find(".help-block").append(
         	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "The score should be less than or equal to the number of questions and greater than 0."));
+            "The score should be less than or equal to the number of questions and greater than 0"));
       } else {
         $("#comprehensionTestMinimumScore").parent().removeClass("has-danger").removeClass(
             "has-error");

@@ -44,7 +44,7 @@ echo "REPLACE into users (id, app_id, email, status, temp_reg_id, user_id, user_
   ('8ad16a8c74f823a10174f82c9a300001',
   'PARTICIPANT MANAGER',
   '${EMAIL}',
-  0,
+  5,
   'bd676334dd745c6afaa6547f9736a4c4df411a3ca2c4f514070daae31008cd9d',
   '96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508',
   '{ \"password\": { \"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\": \"${TIMESTAMP}\",

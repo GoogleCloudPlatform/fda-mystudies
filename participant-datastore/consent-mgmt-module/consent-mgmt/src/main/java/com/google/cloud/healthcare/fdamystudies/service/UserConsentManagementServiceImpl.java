@@ -24,8 +24,8 @@ import com.google.cloud.storage.StorageException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +38,8 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
   @Autowired private ConsentAuditHelper consentAuditHelper;
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(UserConsentManagementServiceImpl.class);
+  private XLogger logger =
+      XLoggerFactory.getXLogger(UserConsentManagementServiceImpl.class.getName());
 
   @Override
   @Transactional(readOnly = true)
@@ -70,7 +70,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   public ConsentStudyResponseBean getStudyConsentDetails(
       String userId, String studyId, String consentVersion, AuditLogEventRequest auditRequest) {
 
-    logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Started ");
+    logger.entry("Begin getStudyConsentDetails() ");
     StudyConsentEntity studyConsent = null;
     ParticipantStudyEntity participantStudiesEntity = null;
     ConsentStudyResponseBean consentStudyResponseBean = new ConsentStudyResponseBean();
@@ -101,7 +101,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
       }
     }
 
-    logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Ends ");
+    logger.exit("getStudyConsentDetails() - Ends ");
     return consentStudyResponseBean;
   }
 

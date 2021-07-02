@@ -66,7 +66,7 @@
         </div>
         <span class="radio radio-info radio-inline p-45"><input
             type="radio" id="inlineRadio1" value="1" class="eligibilityOptCls"
-            name="eligibilityMechanism" required
+            name="eligibilityMechanism" required data-error="Please fill out this field" 
             <c:if test="${eligibility.eligibilityMechanism eq 1}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
           <label for="inlineRadio1">Token validation</label>
@@ -74,7 +74,7 @@
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="2"
                                                      class="eligibilityOptCls"
-                                                     name="eligibilityMechanism" required
+                                                     name="eligibilityMechanism" required data-error="Please fill out this field" 
                                                      <c:if
                                                          test="${eligibility.eligibilityMechanism eq 2}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
@@ -83,7 +83,7 @@
         <span class="radio radio-inline"><input type="radio"
                                                 id="inlineRadio3" value="3"
                                                 class="eligibilityOptCls"
-                                                name="eligibilityMechanism" required
+                                                name="eligibilityMechanism" required data-error="Please fill out this field" 
                                                 <c:if
                                                     test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>> <label
@@ -109,8 +109,8 @@
             </span>
           </div>
           <div class="form-group elaborateClass">
-            <textarea class="form-control" rows="5" id="comment"
-                      maxlength="230" required
+            <textarea class="form-control" rows="1" id="comment"
+                      maxlength="230" required data-error="Please fill out this field" 
                       name="instructionalText">${eligibility.instructionalText}</textarea>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -119,7 +119,7 @@
     </div>
     <div id="eligibilityQusDivId"
          <c:if test="${eligibility.eligibilityMechanism eq 1}">style="display: none;"</c:if>>
-      <div class="right-content-head">
+      <div class="right-content-head pt-none">
         <div class="text-right">
           <div class="black-md-f  dis-line pull-left line34">Eligibility test questions
           <span>
@@ -129,7 +129,7 @@
                class="filled-tooltip"></span>
             </span>
           </div>
-          <div class="dis-line form-group mb-none mr-sm">
+          <div class="dis-line form-group mb-none">
             <c:if test="${empty permission}">
             <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"	
                   data-placement="bottom" data-original-title="">
@@ -287,7 +287,7 @@
                   "info": false,
                   "filter": false,
                   language: {
-                    "zeroRecords": "No content created yet.",
+                    "zeroRecords": "No content created yet",
                   },
                   rowReorder: reorder,
                   "columnDefs": [{
@@ -361,7 +361,7 @@
                                       .addClass(
                                           's-box')
                                       .text(
-                                          "Reorder done successfully");
+                                          "Content items reordered");
                                   $(
                                       '#alertMsg')
                                       .show();
@@ -625,16 +625,16 @@
                     chkDone=false;	
                 }
                 var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="View" etId="'
-                    + parseInt(obj.id) + '"></span> '
+                    + obj.id + '"></span> '
                     + '<span class="'
                     + (DOMPurify.sanitize(obj.status) ? "edit-inc"
                         : "edit-inc-draft")
                     + ' mr-md mr-lg  editIcon" data-toggle="tooltip" data-placement="top" title="Edit"  etId="'
-                    + parseInt(obj.id)
+                    + obj.id
                     + '"></span>'
-                    + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns('
-                    + parseInt(obj.id) + ',this)"></span> '
-                    datarow.push(actions);
+                    + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns(&#34;'
+                    + obj.id + '&#34;,this)"></span> '
+                     datarow.push(actions);
                 $('#consent_list').DataTable().row.add(datarow);
               });
       $('#consent_list').DataTable().draw();
@@ -661,4 +661,21 @@
       addOrEditOrViewQA("edit", $(this).attr('etId'));
     });
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+  function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
+		    }, 5000);
+	  }else{
+	  	setTimeout(hideDisplayMessage, 5000);
+	  }
+   }
 </script>
