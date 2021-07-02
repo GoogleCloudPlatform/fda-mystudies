@@ -120,6 +120,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1437,6 +1438,8 @@ public class StudyController {
     SessionObject sesObj = null;
     String studyId = "";
     List<ConsentInfoBo> consentInfoBoList = null;
+    List<ConsentBo> consentBoList = null;
+    String lastPublishedVersion = null;
 
     StudyBo studyBo = null;
     ConsentBo consentBo = null;
@@ -1537,6 +1540,13 @@ public class StudyController {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
 
+          consentBoList = studyService.getConsentList(studyBo.getCustomStudyId());
+          if (!CollectionUtils.isEmpty(consentBoList)) {
+            lastPublishedVersion = 'V' + String.valueOf(consentBoList.get(0).getVersion());
+          } else {
+            lastPublishedVersion = "N/A";
+          }
+
           if (consentBo != null) {
             request
                 .getSession()
@@ -1559,6 +1569,8 @@ public class StudyController {
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_ID, studyId);
         map.addAttribute("consentBo", consentBo);
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("status", studyBo.getStatus());
+        map.addAttribute("lastPublishedVersion", lastPublishedVersion);
         mav = new ModelAndView("consentReviewAndEConsentPage", map);
       }
     } catch (Exception e) {

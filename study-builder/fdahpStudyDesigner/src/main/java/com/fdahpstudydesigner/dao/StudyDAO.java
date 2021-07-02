@@ -225,6 +225,8 @@ public interface StudyDAO {
 
   public boolean validateStudyActions(String studyId);
 
+  public List<ConsentBo> getConsentList(String customStudyId);
+
   public StudySequenceBo getStudySequenceByStudyId(String studyId);
 
   public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId);

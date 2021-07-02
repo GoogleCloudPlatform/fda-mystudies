@@ -5595,11 +5595,18 @@ public class StudyDAOImpl implements StudyDAO {
               newConsentBo.setVersion(newstudyVersionBo.getConsentVersion());
               newConsentBo.setLive(1);
               newConsentBo.setCustomStudyId(studyBo.getCustomStudyId());
+              if (newstudyVersionBo.getConsentVersion() == 1) {
+                newConsentBo.setEnrollAgain(true);
+              }
 
               session.save(newConsentBo);
               values.put("consent_document_version", String.valueOf(newConsentBo.getVersion()));
               auditLogEventHelper.logEvent(
                   STUDY_CONSENT_DOCUMENT_NEW_VERSION_PUBLISHED, auditRequest, values);
+              if (newstudyVersionBo.getConsentVersion() == 1 || consentBo.getEnrollAgain()) {
+                consentBo.setEnrollAgain(false);
+                session.save(consentBo);
+              }
             }
 
             query =
@@ -7071,6 +7078,32 @@ public class StudyDAOImpl implements StudyDAO {
       }
     }
     return completed;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<ConsentBo> getConsentList(String customStudyId) {
+    List<ConsentBo> consentBoList = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      String searchQuery =
+          " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId ORDER BY CBO.version desc ";
+      query = session.createQuery(searchQuery);
+      query.setString("customStudyId", customStudyId);
+      consentBoList = query.list();
+      transaction.commit();
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("StudyDAOImpl - getConsentList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("StudyDAOImpl - getConsentList() - Ends");
+    return consentBoList;
   }
 
   @SuppressWarnings("unchecked")
