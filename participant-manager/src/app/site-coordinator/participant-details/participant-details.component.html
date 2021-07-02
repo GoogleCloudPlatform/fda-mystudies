@@ -350,7 +350,7 @@
 
         <tfoot>
           <tr *ngIf="participant.participantDetails.enrollments.length === 0">
-            <td colspan="6" class="text-center font12 txt__light-gray">
+            <td colspan="6" class="text-center font12 txt__light-gray mob_tbl_footer_text_center">
               No records found
             </td>
           </tr>
@@ -429,7 +429,7 @@
           </tbody>
           <tfoot class="custom__tfoot">
             <tr>
-              <td colspan="4">
+              <td colspan="4" class="mob_tbl_footer_text_center">
                 <mfBootstrapPaginator></mfBootstrapPaginator>
               </td>
             </tr>
@@ -438,7 +438,7 @@
             <tr
               *ngIf="participant.participantDetails.consentHistory.length === 0"
             >
-              <td colspan="4" class="text-center font12 txt__light-gray">
+              <td colspan="4" class="text-center font12 txt__light-gray mob_tbl_footer_text_center">
                 No records found
               </td>
             </tr>
