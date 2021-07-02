@@ -256,9 +256,29 @@
                 </small>
               </div>
             </div>
+            <c:if  test="${status ne 'Pre-launch'}"> 
+            <div class="pt-lg mt-xs pb-lg">
+        		<span class="checkbox checkbox-inline">
+          		<input type="checkbox" id="consentAgain" name="enrollAgain" <c:if test="${consentBo.enrollAgain eq 'true'}">checked</c:if>>	
+          		<label for="consentAgain">Enforce e-consent flow again for enrolled participants</label>
+          		</span>
+          		<span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Check this box if you want enrolled participants to undergo consent in the mobile app again with the latest version of the consent document. New participants will always see the latest version of the consent document.">
+            	</span>	
+      		</div>
+      		</c:if>
             <div class="mt-xlg">
-              <div class="black-md-f"> Consent document
-               <span id="requiredStarId" class="requiredStar" style="display: none;">*</span> 
+              <div class="black-md-f">
+                Consent document
+                <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
+                <span id="requiredStarId" class="requiredStar">*</span>
+                <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> The version of the consent document gets updated each time you mark this section complete and publish updates to the study.">
+            	</span>	
               </div>
               <div class="mt-lg">
                 <div class="cont_doc" id="autoCreateDivId"
@@ -629,7 +649,10 @@
       var learn_more_text = $('#learnMoreTextId').summernote('code');
       learn_more_text = $('#learnMoreTextId').text(learn_more_text).html();
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-      
+      var enrollAgain;
+      <c:if test="${status ne 'Pre-launch'}">
+       enrollAgain = document.getElementById("consentAgain").checked;
+      </c:if>
       
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
@@ -688,7 +711,10 @@
       if (null != allow_Permission) {
         consentInfo.allowWithoutPermission = allow_Permission;
       }
-     
+      if (null != enrollAgain) {
+        consentInfo.enrollAgain = enrollAgain;
+      }
+
       var data = JSON.stringify(consentInfo);
       $.ajax({
         url: "/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
