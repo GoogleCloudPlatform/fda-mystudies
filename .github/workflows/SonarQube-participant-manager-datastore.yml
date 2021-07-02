@@ -4,7 +4,7 @@ on:
       - btc-dev2dev-deployment # or the name of your main branch.
     paths:
     - 'common-modules/**'
-    - 'participant-manager-datastore/**'
+    - 'participant-manager-datastore/participant-manager-service/**'
     - '.github/workflows/SonarQube-participant-manager-datastore.yml'
 
 jobs:
@@ -38,5 +38,5 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
-          cd participant-manager-datastore
+          cd participant-manager-datastore/participant-manager-service
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dmaven.test.skip=true
