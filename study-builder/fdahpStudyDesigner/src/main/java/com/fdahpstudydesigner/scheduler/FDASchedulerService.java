@@ -28,6 +28,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.PlatformComponent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
@@ -191,6 +192,18 @@ public class FDASchedulerService {
         }
         List<PushNotificationBean> pushNotification = new ArrayList<>();
         for (PushNotificationBean finalPushNotificationBean : finalPushNotificationBeans) {
+          StudyBo studyDetails =
+              studyDAO.getStudyByLatestVersion(finalPushNotificationBean.getCustomStudyId());
+          String deviceType = null;
+          if (studyDetails != null
+              && studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.IOS)) {
+            deviceType = FdahpStudyDesignerConstants.DEVICE_IOS;
+          } else if (studyDetails != null
+              && studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.ANDROID)) {
+            deviceType = FdahpStudyDesignerConstants.DEVICE_ANDROID;
+          }
+
+          finalPushNotificationBean.setDeviceType(deviceType);
           pushNotification.add(finalPushNotificationBean);
 
           JSONArray arrayToJson = new JSONArray(objectMapper.writeValueAsString(pushNotification));
