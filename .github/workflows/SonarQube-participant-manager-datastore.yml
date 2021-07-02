@@ -39,4 +39,5 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           cd participant-manager-datastore
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dmaven.test.skip=true
+          #mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dmaven.test.skip=true
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
