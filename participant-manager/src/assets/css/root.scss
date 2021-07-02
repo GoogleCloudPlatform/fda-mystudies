@@ -1706,6 +1706,16 @@ meter::-moz-meter-bar {
   }
   .form-group .custom__labels label {
     font-size: 75% !important;
-    line-height: 12px !important;
+    line-height: 15px !important;
+  }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 320px) {
+  .mob_tbl_footer_text_center {
+    display: block !important;
+  }
+
+  .table thead tr span.mobile__view {
+    display: none !important;
   }
 }
