@@ -76,6 +76,7 @@
               <span
       <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+          style="width: 50px;background-position: -148px -68px;"
           data-toggle="tooltip"
           data-placement="top"
            data-html="true"

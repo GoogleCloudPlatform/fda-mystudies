@@ -1305,7 +1305,7 @@ public class StudyControllerTest extends BaseMockIT {
   @Test
   public void shouldCreateInsertSqlQueries() throws Exception {
 
-    /* SessionObject session = new SessionObject();
+    SessionObject session = new SessionObject();
     session.setUserId("1");
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
@@ -1316,7 +1316,7 @@ public class StudyControllerTest extends BaseMockIT {
             post("/studies/{studyId}/export.do", "f24b5b94l66b1n4286v8884w9ccb90306363")
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
-        .andExpect(status().isOk());*/
+        .andExpect(status().isOk());
   }
 
   public static String readJsonFile(String filepath) throws IOException {
