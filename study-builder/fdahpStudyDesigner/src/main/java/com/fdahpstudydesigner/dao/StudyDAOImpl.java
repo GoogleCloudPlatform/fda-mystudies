@@ -7933,217 +7933,221 @@ public class StudyDAOImpl implements StudyDAO {
   @SuppressWarnings("unchecked")
   public void getResourcesFromStorage(Session session, StudyBo studyBo) throws Exception {
     ServletContext context = ServletContextHolder.getServletContext();
-    writeSqlFileToLocalExport(studyBo, context);
 
-    if (studyBo.getThumbnailImage() != null) {
+    if (context != null) {
 
-      File directoryImage =
-          new File(
-              context.getRealPath("/")
-                  + EXPORT
-                  + studyBo.getCustomStudyId()
-                  + "/"
-                  + FdahpStudyDesignerConstants.STUDTYLOGO);
-      if (!directoryImage.exists()) {
-        directoryImage.mkdir();
+      writeSqlFileToLocalExport(studyBo, context);
+
+      if (studyBo.getThumbnailImage() != null) {
+
+        File directoryImage =
+            new File(
+                context.getRealPath("/")
+                    + EXPORT
+                    + studyBo.getCustomStudyId()
+                    + "/"
+                    + FdahpStudyDesignerConstants.STUDTYLOGO);
+        if (!directoryImage.exists()) {
+          directoryImage.mkdir();
+        }
+
+        writeToFileExport(
+            studyBo.getCustomStudyId(),
+            studyBo.getThumbnailImage(),
+            context,
+            FdahpStudyDesignerConstants.STUDTYLOGO);
       }
 
-      writeToFileExport(
-          studyBo.getCustomStudyId(),
-          studyBo.getThumbnailImage(),
-          context,
-          FdahpStudyDesignerConstants.STUDTYLOGO);
-    }
+      List<QuestionnairesStepsBo> questionnaireStepsList =
+          session
+              .createQuery(
+                  "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
+              .setString("studyId", studyBo.getId())
+              .list();
+      List<String> questionIds = new ArrayList();
+      for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
+        if (questionnaireSteps.getStepType().equals("Form")) {
+          List<String> questionIdList =
+              session
+                  .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
+                  .setString("formId", questionnaireSteps.getInstructionFormId())
+                  .list();
+          questionIds.addAll(questionIdList);
+        } else if (questionnaireSteps.getStepType().equals("Question")) {
+          questionIds.add(questionnaireSteps.getInstructionFormId());
+        }
+      }
+      if (!CollectionUtils.isEmpty(questionIds)) {
 
-    List<QuestionnairesStepsBo> questionnaireStepsList =
-        session
-            .createQuery(
-                "From QuestionnairesStepsBo where questionnairesId IN (SELECT q.id from QuestionnaireBo q where studyId=:studyId)")
-            .setString("studyId", studyBo.getId())
-            .list();
-    List<String> questionIds = new ArrayList();
-    for (QuestionnairesStepsBo questionnaireSteps : questionnaireStepsList) {
-      if (questionnaireSteps.getStepType().equals("Form")) {
-        List<String> questionIdList =
+        List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
             session
-                .createQuery("SELECT questionId FROM FormMappingBo where formId =:formId")
-                .setString("formId", questionnaireSteps.getInstructionFormId())
+                .createQuery(
+                    "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
+                .setParameterList("responseTypeId", questionIds)
                 .list();
-        questionIds.addAll(questionIdList);
-      } else if (questionnaireSteps.getStepType().equals("Question")) {
-        questionIds.add(questionnaireSteps.getInstructionFormId());
-      }
-    }
-    if (!CollectionUtils.isEmpty(questionIds)) {
 
-      List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
+        for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
+
+          if (questionResponseSubType.getSelectedImage() != null) {
+            File directoryImage =
+                new File(
+                    context.getRealPath("/")
+                        + EXPORT
+                        + studyBo.getCustomStudyId()
+                        + "/"
+                        + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+            if (!directoryImage.exists()) {
+              directoryImage.mkdir();
+            }
+
+            writeToFileExport(
+                studyBo.getCustomStudyId(),
+                questionResponseSubType.getSelectedImage(),
+                context,
+                FdahpStudyDesignerConstants.QUESTIONNAIRE);
+          }
+
+          if (questionResponseSubType.getImage() != null) {
+            File directoryImage =
+                new File(
+                    context.getRealPath("/")
+                        + EXPORT
+                        + studyBo.getCustomStudyId()
+                        + "/"
+                        + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+            if (!directoryImage.exists()) {
+              directoryImage.mkdir();
+            }
+
+            writeToFileExport(
+                studyBo.getCustomStudyId(),
+                questionResponseSubType.getImage(),
+                context,
+                FdahpStudyDesignerConstants.QUESTIONNAIRE);
+          }
+        }
+
+        List<QuestionReponseTypeBo> questionResponseTypeList =
+            session
+                .createQuery(
+                    "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
+                .setParameterList("responseTypeId", questionIds)
+                .list();
+
+        for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
+          if (questionResponseType.getMinImage() != null) {
+            File directoryImage =
+                new File(
+                    context.getRealPath("/")
+                        + EXPORT
+                        + studyBo.getCustomStudyId()
+                        + "/"
+                        + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+            if (!directoryImage.exists()) {
+              directoryImage.mkdir();
+            }
+
+            writeToFileExport(
+                studyBo.getCustomStudyId(),
+                questionResponseType.getMinImage(),
+                context,
+                FdahpStudyDesignerConstants.QUESTIONNAIRE);
+          }
+
+          if (questionResponseType.getMaxImage() != null) {
+            File directoryImage =
+                new File(
+                    context.getRealPath("/")
+                        + EXPORT
+                        + studyBo.getCustomStudyId()
+                        + "/"
+                        + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+            if (!directoryImage.exists()) {
+              directoryImage.mkdir();
+            }
+
+            writeToFileExport(
+                studyBo.getCustomStudyId(),
+                questionResponseType.getMaxImage(),
+                context,
+                FdahpStudyDesignerConstants.QUESTIONNAIRE);
+          }
+        }
+      }
+      List<StudyPageBo> studyPageBoList =
           session
-              .createQuery(
-                  "From QuestionResponseSubTypeBo WHERE responseTypeId IN (:responseTypeId)")
-              .setParameterList("responseTypeId", questionIds)
+              .createQuery("from StudyPageBo where studyId=:studyId")
+              .setString("studyId", studyBo.getId())
               .list();
 
-      for (QuestionResponseSubTypeBo questionResponseSubType : questionResponseSubTypeList) {
+      for (StudyPageBo studyPageBo : studyPageBoList) {
 
-        if (questionResponseSubType.getSelectedImage() != null) {
+        if (studyPageBo.getImagePath() != null) {
           File directoryImage =
               new File(
                   context.getRealPath("/")
                       + EXPORT
                       + studyBo.getCustomStudyId()
                       + "/"
-                      + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                      + FdahpStudyDesignerConstants.STUDTYPAGES);
           if (!directoryImage.exists()) {
             directoryImage.mkdir();
           }
 
           writeToFileExport(
               studyBo.getCustomStudyId(),
-              questionResponseSubType.getSelectedImage(),
+              studyPageBo.getImagePath(),
               context,
-              FdahpStudyDesignerConstants.QUESTIONNAIRE);
-        }
-
-        if (questionResponseSubType.getImage() != null) {
-          File directoryImage =
-              new File(
-                  context.getRealPath("/")
-                      + EXPORT
-                      + studyBo.getCustomStudyId()
-                      + "/"
-                      + FdahpStudyDesignerConstants.QUESTIONNAIRE);
-          if (!directoryImage.exists()) {
-            directoryImage.mkdir();
-          }
-
-          writeToFileExport(
-              studyBo.getCustomStudyId(),
-              questionResponseSubType.getImage(),
-              context,
-              FdahpStudyDesignerConstants.QUESTIONNAIRE);
+              FdahpStudyDesignerConstants.STUDTYPAGES);
         }
       }
 
-      List<QuestionReponseTypeBo> questionResponseTypeList =
+      List<ResourceBO> resourceBoList =
           session
-              .createQuery(
-                  "From QuestionReponseTypeBo WHERE questionsResponseTypeId IN (:responseTypeId)")
-              .setParameterList("responseTypeId", questionIds)
+              .createQuery("from ResourceBO where studyId=:studyId")
+              .setString("studyId", studyBo.getId())
               .list();
 
-      for (QuestionReponseTypeBo questionResponseType : questionResponseTypeList) {
-        if (questionResponseType.getMinImage() != null) {
+      for (ResourceBO resourceBo : resourceBoList) {
+
+        if (resourceBo.getPdfUrl() != null) {
           File directoryImage =
               new File(
                   context.getRealPath("/")
                       + EXPORT
                       + studyBo.getCustomStudyId()
                       + "/"
-                      + FdahpStudyDesignerConstants.QUESTIONNAIRE);
+                      + FdahpStudyDesignerConstants.RESOURCEPDFFILES);
           if (!directoryImage.exists()) {
             directoryImage.mkdir();
           }
 
           writeToFileExport(
               studyBo.getCustomStudyId(),
-              questionResponseType.getMinImage(),
+              resourceBo.getPdfUrl(),
               context,
-              FdahpStudyDesignerConstants.QUESTIONNAIRE);
-        }
-
-        if (questionResponseType.getMaxImage() != null) {
-          File directoryImage =
-              new File(
-                  context.getRealPath("/")
-                      + EXPORT
-                      + studyBo.getCustomStudyId()
-                      + "/"
-                      + FdahpStudyDesignerConstants.QUESTIONNAIRE);
-          if (!directoryImage.exists()) {
-            directoryImage.mkdir();
-          }
-
-          writeToFileExport(
-              studyBo.getCustomStudyId(),
-              questionResponseType.getMaxImage(),
-              context,
-              FdahpStudyDesignerConstants.QUESTIONNAIRE);
+              FdahpStudyDesignerConstants.RESOURCEPDFFILES);
         }
       }
+
+      FileOutputStream fos =
+          new FileOutputStream(
+              context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId() + ".zip");
+
+      ZipOutputStream zos = new ZipOutputStream(fos);
+      addDirToZipArchive(
+          zos, new File(context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId()), null);
+      zos.flush();
+      fos.flush();
+      zos.close();
+      fos.close();
+
+      removeDir(new File(context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId()));
+
+      FdahpStudyDesignerUtil.uplaodZip(
+          context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId() + ".zip",
+          studyBo.getCustomStudyId());
     }
-    List<StudyPageBo> studyPageBoList =
-        session
-            .createQuery("from StudyPageBo where studyId=:studyId")
-            .setString("studyId", studyBo.getId())
-            .list();
-
-    for (StudyPageBo studyPageBo : studyPageBoList) {
-
-      if (studyPageBo.getImagePath() != null) {
-        File directoryImage =
-            new File(
-                context.getRealPath("/")
-                    + EXPORT
-                    + studyBo.getCustomStudyId()
-                    + "/"
-                    + FdahpStudyDesignerConstants.STUDTYPAGES);
-        if (!directoryImage.exists()) {
-          directoryImage.mkdir();
-        }
-
-        writeToFileExport(
-            studyBo.getCustomStudyId(),
-            studyPageBo.getImagePath(),
-            context,
-            FdahpStudyDesignerConstants.STUDTYPAGES);
-      }
-    }
-
-    List<ResourceBO> resourceBoList =
-        session
-            .createQuery("from ResourceBO where studyId=:studyId")
-            .setString("studyId", studyBo.getId())
-            .list();
-
-    for (ResourceBO resourceBo : resourceBoList) {
-
-      if (resourceBo.getPdfUrl() != null) {
-        File directoryImage =
-            new File(
-                context.getRealPath("/")
-                    + EXPORT
-                    + studyBo.getCustomStudyId()
-                    + "/"
-                    + FdahpStudyDesignerConstants.RESOURCEPDFFILES);
-        if (!directoryImage.exists()) {
-          directoryImage.mkdir();
-        }
-
-        writeToFileExport(
-            studyBo.getCustomStudyId(),
-            resourceBo.getPdfUrl(),
-            context,
-            FdahpStudyDesignerConstants.RESOURCEPDFFILES);
-      }
-    }
-
-    FileOutputStream fos =
-        new FileOutputStream(
-            context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId() + ".zip");
-
-    ZipOutputStream zos = new ZipOutputStream(fos);
-    addDirToZipArchive(
-        zos, new File(context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId()), null);
-    zos.flush();
-    fos.flush();
-    zos.close();
-    fos.close();
-
-    removeDir(new File(context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId()));
-
-    FdahpStudyDesignerUtil.uplaodZip(
-        context.getRealPath("/") + EXPORT + studyBo.getCustomStudyId() + ".zip",
-        studyBo.getCustomStudyId());
   }
 
   public void writeSqlFileToLocalExport(StudyBo studyBo, ServletContext context)

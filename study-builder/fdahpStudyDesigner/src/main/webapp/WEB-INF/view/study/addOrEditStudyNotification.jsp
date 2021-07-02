@@ -98,6 +98,7 @@
             <span
       <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+          style="width: 50px;background-position: -148px -68px;"
           data-toggle="tooltip"
           data-placement="top"
           title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}.">
