@@ -642,6 +642,9 @@ class ActivitiesViewController: UIViewController {
       let studyID = currentActivity.studyId
     else { return }
 
+    let key = "Response" + studyID
+    UserDefaults.standard.set(false, forKey: key)
+    
     currentActivity.compeltedRuns += 1
     DBHandler.updateRunToComplete(
       runId: currentActivity.currentRunId,

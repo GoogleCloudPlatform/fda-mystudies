@@ -24,6 +24,7 @@
     <input type="hidden" id="userIds" name="userIds">
     <input type="hidden" id="permissions" name="permissions">
     <input type="hidden" id="projectLead" name="projectLead">
+     <input type="hidden" id="modifiedBy" name="modifiedBy"  value="${studyBo.modifiedBy}">
     
     <!-- Start top tab section-->
     <div class="right-content-head">
@@ -339,9 +340,8 @@
       $("#buttonText").val('save');
       $("#settingfoFormId").submit();
     } else {
-        $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-        $("#buttonText").val('completed');
-        $("#settingfoFormId").submit();
+        var enrollmentdateAsAnchordate = $('input[name=enrollmentdateAsAnchordate]:checked').val();
+        showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate);
       }
   }
   function admins() {
@@ -392,37 +392,37 @@
   }
   </c:if>
   function showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate) {
-    if (isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate == 'No') {
-      var text = "You have chosen not to use enrollment date as an anchor date. You will need to revise the schedules of 'target' activities or resources, if any, that were set up based on the enrollment date.";
-      bootbox.confirm({
-        closeButton: false,
-        message: text,
-        buttons: {
-          'cancel': {
-            label: 'Cancel',
-          },
-          'confirm': {
-            label: 'OK',
-          },
-        },
-        callback: function (valid) {
-          if (valid) {
-            console.log(1);
-            $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-            $("#buttonText").val('completed');
-            $("#settingfoFormId").submit();
-          } else {
-            console.log(2);
-            $('#completedId').removeAttr('disabled');
-          }
-        }
-      });
-    } else {
-      $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-      $("#buttonText").val('completed');
-      $("#settingfoFormId").submit();
-    }
-  }
+	    if (isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate == 'No') {
+	      var text = 'You have chosen not to use enrollment date as an anchor date. You will need to revise the schedules of activities or resources, if any, that were set based on the enrollment date as anchor date.';
+	      bootbox.confirm({
+	        closeButton: false,
+	        message: text,
+	        buttons: {
+	          'cancel': {
+	            label: 'Cancel',
+	          },
+	          'confirm': {
+	            label: 'OK',
+	          },
+	        },
+	        callback: function (valid) {
+	          if (valid) {
+	            console.log(1);
+	            $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
+	            $("#buttonText").val('completed');
+	            $("#settingfoFormId").submit();
+	          } else {
+	            console.log(2);
+	            $('#completedId').removeAttr('disabled');
+	          }
+	        }
+	      });
+	    } else {
+	      $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
+	      $("#buttonText").val('completed');
+	      $("#settingfoFormId").submit();
+	    }
+	  }
 
   var sucMsg = '${sucMsg}';
   if (sucMsg.length > 0) {

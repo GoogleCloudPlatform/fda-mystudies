@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,10 +28,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -49,9 +50,10 @@ public class QuestionsDto implements Serializable {
   private static final long serialVersionUID = 3036839955038582674L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "question")
   private String question;
@@ -60,7 +62,7 @@ public class QuestionsDto implements Serializable {
   private String description;
 
   @Column(name = "response_type")
-  private Integer responseType;
+  private String responseType;
 
   @Column(name = "skippable")
   private String skippable;
@@ -90,10 +92,10 @@ public class QuestionsDto implements Serializable {
   private String statDisplayUnits;
 
   @Column(name = "stat_type")
-  private Integer statType;
+  private String statType;
 
   @Column(name = "stat_formula")
-  private Integer statFormula;
+  private String statFormula;
 
   @Column(name = "created_on")
   private String createdOn;
@@ -102,10 +104,10 @@ public class QuestionsDto implements Serializable {
   private String modifiedOn;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
@@ -137,13 +139,13 @@ public class QuestionsDto implements Serializable {
   private String healthkitDatatype;
 
   @Column(name = "anchor_date_id")
-  private Integer anchorDateId;
+  private String anchorDateId;
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -163,11 +165,11 @@ public class QuestionsDto implements Serializable {
     this.description = description;
   }
 
-  public Integer getResponseType() {
+  public String getResponseType() {
     return responseType;
   }
 
-  public void setResponseType(Integer responseType) {
+  public void setResponseType(String responseType) {
     this.responseType = responseType;
   }
 
@@ -243,19 +245,19 @@ public class QuestionsDto implements Serializable {
     this.statDisplayUnits = statDisplayUnits;
   }
 
-  public Integer getStatType() {
+  public String getStatType() {
     return statType;
   }
 
-  public void setStatType(Integer statType) {
+  public void setStatType(String statType) {
     this.statType = statType;
   }
 
-  public Integer getStatFormula() {
+  public String getStatFormula() {
     return statFormula;
   }
 
-  public void setStatFormula(Integer statFormula) {
+  public void setStatFormula(String statFormula) {
     this.statFormula = statFormula;
   }
 
@@ -275,19 +277,19 @@ public class QuestionsDto implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -379,11 +381,11 @@ public class QuestionsDto implements Serializable {
     this.healthkitDatatype = healthkitDatatype;
   }
 
-  public Integer getAnchorDateId() {
+  public String getAnchorDateId() {
     return anchorDateId;
   }
 
-  public void setAnchorDateId(Integer anchorDateId) {
+  public void setAnchorDateId(String anchorDateId) {
     this.anchorDateId = anchorDateId;
   }
 }

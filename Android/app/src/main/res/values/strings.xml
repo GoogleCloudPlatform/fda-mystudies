@@ -14,14 +14,17 @@
     <string name="join">Join</string>
     <string name="studyId">studyId</string>
     <string name="ok">OK</string>
+    <string name="ok_2">Ok</string>
     <string name="app_stage">development</string>
     <string name="signup">SIGN UP</string>
     <string name="cancel">Cancel</string>
     <string name="first_name">First Name</string>
+    <string name="first_name_2">First name</string>
     <string name="account_deletion">Your account has been deleted.</string>
     <string name="enter_first_name">enter first name</string>
     <string name="enter_last_name">enter last name</string>
     <string name="last_name">Last Name</string>
+    <string name="last_name_2">Last name</string>
     <string name="email_id">Email</string>
     <string name="username">Username</string>
     <string name="enter_email">Enter email</string>
@@ -252,9 +255,9 @@
     <string name="hour">hr</string>
     <string name="minute">min</string>
     <string name="done">Done</string>
-    <string name="kick_count">TOTAL KICK COUNT</string>
-    <string name="record_kick">TAP TO RECORD A KICK</string>
-    <string name="start_timer">TAP TO START TIMER</string>
+    <string name="kick_count">Total kick count</string>
+    <string name="record_kick">Tap to record a kick</string>
+    <string name="start_timer">Tap to start timer</string>
     <string name="current_activities1">Current Activities</string>
     <string name="completed4">COMPLETED</string>
     <string name="pending1">PENDING</string>
@@ -384,7 +387,7 @@
     <string name="surveycompletedmsg">Tap on \'Done\' to submit your responses. Responses cannot be modified after submission.</string>
     <string name="action_cancel">Exit</string>
     <string name="clear"> Clear</string>
-    <string name="endtask">End Task</string>
+    <string name="endtask">End task</string>
     <string name="exit_activity">Your responses are stored on the app (unless you sign out) so you can resume and complete the activity before it expires.</string>
     <string name="json_object_filter">jsondata</string>
 
@@ -415,6 +418,7 @@
     <string name="profile_updated">Your profile has been updated</string>
     <string name="app_glossary">App glossary</string>
     <string name="proceed_caps">PROCEED</string>
+    <string name="proceed">Proceed</string>
     <string name="delete_my_data_caps">DELETE MY DATA</string>
     <string name="sign_up">Sign up</string>
     <string name="you_agree_this_app">By tapping Sign in, you agree to this app\'s</string>
@@ -526,4 +530,7 @@
     <string name="login_studyinfo_rejoin">login_studyinfo_rejoin</string>
     <string name="login_studyinfo_about_this_study">login_studyinfo_about_this_study</string>
     <string name="invalid_client">Invalid Client</string>
+    <string name="rsb_next">Next</string>
+    <string name="eligibilitytest">Eligibility test</string>
+    <string name="rsb_consent_signature_placeholder">Sign here</string>
 </resources>

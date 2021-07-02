@@ -1,3 +1,4 @@
-/* ISSUE #3022 Provide setting for admin to decide if a new consent document version should 
-trigger a consent flow in the mobile app for enrolled participants */
-alter table fda_hphc.consent add enroll_again bit(1) DEFAULT NULL;
+UPDATE fda_hphc.anchordate_type SET name = 'Enrollment date' WHERE name = 'Enrollment Date';
+ALTER TABLE fda_hphc.notification MODIFY COLUMN schedule_timestamp varchar(255) DEFAULT NULL;
+ALTER TABLE fda_hphc.notification MODIFY COLUMN schedule_date varchar(255) DEFAULT NULL;
+ALTER TABLE fda_hphc.notification MODIFY COLUMN schedule_time varchar(255) DEFAULT NULL;

@@ -2,37 +2,47 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package com.fdahpstudydesigner.util;
 
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
-import com.fdahpstudydesigner.common.UserAccessLevel;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,10 +61,12 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import net.objecthunter.exp4j.ExpressionBuilder;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -77,8 +89,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FdahpStudyDesignerUtil {
 
-  private static Map<String, String> appProperties = null;
   /* Read Properties file */
+  private static Map<String, String> appProperties = null;
+
   private static XLogger logger = XLoggerFactory.getXLogger(FdahpStudyDesignerUtil.class.getName());
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -258,7 +271,6 @@ public class FdahpStudyDesignerUtil {
       return appProperties;
     }
     appProperties = new HashMap<>();
-
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
     Resource resource = null;
@@ -1005,26 +1017,18 @@ public class FdahpStudyDesignerUtil {
     return generatedHash;
   }
 
-  public static String getUserAccessLevel(Set<UserPermissions> userPermission) {
-    if (CollectionUtils.isNotEmpty(userPermission)) {
-      for (UserPermissions up : userPermission) {
-        if (FdahpStudyDesignerConstants.ROLE_SUPERADMIN_NAME.equals(up.getPermissions())) {
-          return UserAccessLevel.SUPER_ADMIN.getValue();
-        } else if (FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW_NAME.equals(
-                up.getPermissions())
-            || FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT_NAME.equals(
-                up.getPermissions())) {
-          return UserAccessLevel.STUDY_BUILDER_ADMIN.getValue();
-        }
-      }
-    }
-    return UserAccessLevel.APP_STUDY_ADMIN.getValue();
-  }
-
-  public static String saveImage(MultipartFile fileStream, String fileName, String underDirectory) {
+  public static String saveImage(
+      MultipartFile fileStream, String fileName, String underDirectory, String customStudyId) {
     String fileNameWithExtension =
         fileName + "." + FilenameUtils.getExtension(fileStream.getOriginalFilename());
-    String absoluteFileName = underDirectory + PATH_SEPARATOR + fileNameWithExtension;
+    String absoluteFileName =
+        FdahpStudyDesignerConstants.STUDIES
+            + PATH_SEPARATOR
+            + customStudyId
+            + PATH_SEPARATOR
+            + underDirectory
+            + PATH_SEPARATOR
+            + fileNameWithExtension;
     BlobInfo blobInfo =
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
 
@@ -1036,6 +1040,17 @@ public class FdahpStudyDesignerUtil {
       logger.error("Save Image in cloud storage failed", e);
     }
     return fileNameWithExtension;
+  }
+
+  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+    } catch (Exception e) {
+      logger.error("Unable to generate signed url", e);
+    }
+    return null;
   }
 
   public static void saveDefaultImageToCloudStorage(
@@ -1051,32 +1066,216 @@ public class FdahpStudyDesignerUtil {
     }
   }
 
-  public static Timestamp getTimeStamp(String inputDate, String inputTime) {
+  public static String getTimeStamp(String inputDate, String inputTime) {
 
     String timestampInString = inputDate + " " + inputTime;
-    java.sql.Date date = null;
     try {
-      DateFormat dateFormat =
-          new SimpleDateFormat(
-              FdahpStudyDesignerConstants.DB_SDF_DATE
-                  + " "
-                  + FdahpStudyDesignerConstants.DB_SDF_TIME);
-      date = new java.sql.Date(dateFormat.parse(timestampInString).getTime());
-      return new Timestamp(date.getTime());
+      return timestampInString;
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
     }
     return null;
   }
 
-  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
+  public static void copyOrMoveStudyResources(
+      String fileName,
+      String underDirectory,
+      String customStudyId,
+      boolean delete,
+      boolean isOldFilePath,
+      String newCustomStudyId) {
+    String newFilePath;
+
+    String oldFilePath;
+    if (isOldFilePath) {
+      oldFilePath = underDirectory + PATH_SEPARATOR + fileName;
+      newFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + customStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+    } else {
+      oldFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + customStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+      newFilePath =
+          FdahpStudyDesignerConstants.STUDIES
+              + PATH_SEPARATOR
+              + newCustomStudyId
+              + PATH_SEPARATOR
+              + underDirectory
+              + PATH_SEPARATOR
+              + fileName;
+    }
+
     try {
-      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), oldFilePath));
+
+      if (blob != null) {
+        blob.copyTo(configMap.get("cloud.bucket.name"), newFilePath);
+        // Delete the original blob now that we've copied to where we want it, finishing the "move"
+        // operation
+        if (delete) {
+          blob.delete();
+        }
+      }
+
+    } catch (Exception e) {
+      logger.error("Save Image in cloud storage failed", e);
+    }
+  }
+
+  public static String getSignedUrlForExportedStudy(String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo =
+          BlobInfo.newBuilder(configMap.get("cloud.bucket.name.export.studies"), filePath).build();
       Storage storage = StorageOptions.getDefaultInstance().getService();
       return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
     } catch (Exception e) {
       logger.error("Unable to generate signed url", e);
     }
     return null;
+  }
+
+  public static boolean isValidDateFormat(String dateStr, String dateFormat) {
+    DateFormat sdf = new SimpleDateFormat(dateFormat);
+    sdf.setLenient(false);
+    try {
+      sdf.parse(dateStr);
+    } catch (ParseException e) {
+      return false;
+    }
+    return true;
+  }
+
+  public static byte[] getResource(String filePath) {
+    Storage storage = StorageOptions.getDefaultInstance().getService();
+    Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), filePath));
+    if (blob != null) {
+      return blob.getContent();
+    }
+    return null;
+  }
+
+  public static void uplaodZip(String filePath, String customStudyId) throws IOException {
+    BlobInfo blobInfo =
+        BlobInfo.newBuilder(
+                configMap.get("cloud.bucket.name.export.studies"),
+                "export-studies/" + customStudyId + ".zip")
+            .setContentType("application/zip")
+            .build();
+    try {
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      storage.create(blobInfo, Files.readAllBytes(Paths.get(filePath)));
+
+    } catch (Exception e) {
+      logger.error("uplaodZip failed", e);
+    }
+  }
+
+  @SuppressWarnings("resource")
+  public static Object[] unzip(String fileZip, String customId) {
+    ZipFile zip = null;
+    Object[] obj = null;
+    BufferedReader bf = null;
+    try {
+      zip = new ZipFile(fileZip);
+      for (Enumeration e = zip.entries(); e.hasMoreElements(); ) {
+        ZipEntry entry = (ZipEntry) e.nextElement();
+        if (!entry.isDirectory()) {
+          if (FilenameUtils.getExtension(entry.getName()).equals("sql")) {
+
+            bf = new BufferedReader(new InputStreamReader(zip.getInputStream(entry)));
+            obj = new Object[] {entry.getName(), bf};
+          } else if (FilenameUtils.getExtension(entry.getName()).equals("jpg")) {
+            byte[] imageArray = getImage(zip.getInputStream(entry));
+            CustomMultipartFile customMultipartFile =
+                new CustomMultipartFile(imageArray, entry.getName());
+            String[] directoryName = entry.getName().split("/");
+            String name =
+                directoryName[directoryName.length - 1].substring(
+                    0, directoryName[directoryName.length - 1].indexOf(".jpg"));
+
+            saveImage(
+                customMultipartFile,
+                name,
+                directoryName[directoryName.length - 2],
+                customId + "@Export");
+          } else if (FilenameUtils.getExtension(entry.getName()).equals("pdf")) {
+            byte[] pdfArray = getPdfByte(zip.getInputStream(entry));
+            CustomMultipartFile customMultipartFile =
+                new CustomMultipartFile(pdfArray, entry.getName());
+
+            String[] directoryName = entry.getName().split("/");
+            String name =
+                directoryName[directoryName.length - 1].substring(
+                    0, directoryName[directoryName.length - 1].indexOf(".pdf"));
+
+            saveImage(
+                customMultipartFile,
+                name,
+                directoryName[directoryName.length - 2],
+                customId + "@Export");
+          }
+        }
+      }
+    } catch (IOException e1) {
+      logger.error("FdahpStudyDesignerUtil - unzip : ", e1);
+    }
+    return obj;
+  }
+
+  private static byte[] getPdfByte(InputStream in) {
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+    byte[] buffer = new byte[1024];
+    int len;
+
+    // read bytes from the input stream and store them in the buffer
+    try {
+      while ((len = in.read(buffer)) != -1) {
+        // write bytes from the buffer into the output stream
+        os.write(buffer, 0, len);
+      }
+    } catch (IOException e) {
+      logger.error("FdahpStudyDesignerUtil - getPdfByte : ", e);
+    }
+
+    return os.toByteArray();
+  }
+
+  private static byte[] getImage(InputStream in) {
+    try {
+      BufferedImage image =
+          ImageIO.read(in); // just checking if the InputStream belongs in fact to an image
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ImageIO.write(image, "png", baos);
+      return baos.toByteArray();
+    } catch (IOException e) {
+      logger.error("FdahpStudyDesignerUtil - getImage : ", e);
+    }
+    return null;
+  }
+
+  public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+    File destFile = new File(destinationDir, zipEntry.getName());
+
+    String destDirPath = destinationDir.getCanonicalPath();
+    String destFilePath = destFile.getCanonicalPath();
+
+    if (!destFilePath.startsWith(destDirPath + File.separator)) {
+      throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+    }
+
+    return destFile;
   }
 }

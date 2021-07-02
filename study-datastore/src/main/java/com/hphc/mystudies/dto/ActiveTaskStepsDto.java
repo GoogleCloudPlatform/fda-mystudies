@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "active_task_steps")
@@ -37,12 +38,13 @@ public class ActiveTaskStepsDto implements Serializable {
   private static final long serialVersionUID = 8677367389857232011L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "step_id")
-  private Integer stepId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "step_id", updatable = false, nullable = false)
+  private String stepId;
 
   @Column(name = "active_task_id")
-  private Integer activeTaskId;
+  private String activeTaskId;
 
   @Column(name = "active_task_stepscol")
   private String activeTaskStepscol;
@@ -56,11 +58,11 @@ public class ActiveTaskStepsDto implements Serializable {
   @Column(name = "study_version")
   private Integer studyVersion = 1;
 
-  public Integer getActiveTaskId() {
+  public String getActiveTaskId() {
     return activeTaskId;
   }
 
-  public void setActiveTaskId(Integer activeTaskId) {
+  public void setActiveTaskId(String activeTaskId) {
     this.activeTaskId = activeTaskId;
   }
 
@@ -88,11 +90,11 @@ public class ActiveTaskStepsDto implements Serializable {
     this.sequenceNo = sequenceNo;
   }
 
-  public Integer getStepId() {
+  public String getStepId() {
     return stepId;
   }
 
-  public void setStepId(Integer stepId) {
+  public void setStepId(String stepId) {
     this.stepId = stepId;
   }
 

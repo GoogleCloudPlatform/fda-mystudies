@@ -375,13 +375,15 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
         Study.currentStudy = nil
         self.slideMenuController()?.leftViewController?.navigationController?
-          .popToRootViewController(animated: true)
+          .popToRootViewController(animated: false)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
           UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
         }
+        HomeViewController.setRootView()
       } else {
         self.slideMenuController()?.leftViewController?.navigationController?
-          .popToRootViewController(animated: true)
+          .popToRootViewController(animated: false)
+        HomeViewController.setRootView()
       }
 
     }

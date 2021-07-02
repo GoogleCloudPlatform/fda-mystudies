@@ -1,9 +1,25 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.bo;
@@ -15,12 +31,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,7 +76,7 @@ public class StudyBo implements Serializable {
   private String category;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
@@ -95,9 +111,10 @@ public class StudyBo implements Serializable {
   private Integer hasStudyDraft = 0;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "inbox_email_address")
   private String inboxEmailAddress;
@@ -114,7 +131,7 @@ public class StudyBo implements Serializable {
   private String mediaLink;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
@@ -169,7 +186,7 @@ public class StudyBo implements Serializable {
   @Column(name = "type")
   private String type;
 
-  @Transient private Integer userId;
+  @Transient private String userId;
 
   @Column(name = "version")
   private Float version = 0f;
@@ -183,13 +200,32 @@ public class StudyBo implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
-  public String getAllowRejoin() {
-    return allowRejoin;
+  @Column(name = "destination_custom_study_id")
+  private String destinationCustomStudyId;
+
+  @Column(name = "export_signed_url", length = 1012)
+  private String exportSignedUrl;
+
+  @Transient private byte[] exportSqlByte;
+
+  public String getExportSignedUrl() {
+    return exportSignedUrl;
   }
 
-  public String getAllowRejoinText() {
-    return allowRejoinText;
+  public void setExportSignedUrl(String exportSignedUrl) {
+    this.exportSignedUrl = exportSignedUrl;
   }
+
+  public String getDestinationCustomStudyId() {
+    return destinationCustomStudyId;
+  }
+
+  public void setDestinationCustomStudyId(String destinationCustomStudyId) {
+    this.destinationCustomStudyId = destinationCustomStudyId;
+  }
+
+  @Column(name = "isCloudStorageMoved", columnDefinition = "int default 0")
+  private Integer isCloudStorageMoved;
 
   public String getButtonText() {
     return buttonText;
@@ -199,7 +235,7 @@ public class StudyBo implements Serializable {
     return category;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -247,7 +283,7 @@ public class StudyBo implements Serializable {
     return hasStudyDraft;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
@@ -271,7 +307,7 @@ public class StudyBo implements Serializable {
     return mediaLink;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -289,10 +325,6 @@ public class StudyBo implements Serializable {
 
   public String getResearchSponsor() {
     return researchSponsor;
-  }
-
-  public String getRetainParticipant() {
-    return retainParticipant;
   }
 
   public Integer getSequenceNumber() {
@@ -343,7 +375,7 @@ public class StudyBo implements Serializable {
     return type;
   }
 
-  public Integer getUserId() {
+  public String getUserId() {
     return userId;
   }
 
@@ -359,14 +391,6 @@ public class StudyBo implements Serializable {
     return viewPermission;
   }
 
-  public void setAllowRejoin(String allowRejoin) {
-    this.allowRejoin = allowRejoin;
-  }
-
-  public void setAllowRejoinText(String allowRejoinText) {
-    this.allowRejoinText = allowRejoinText;
-  }
-
   public void setButtonText(String buttonText) {
     this.buttonText = buttonText;
   }
@@ -375,7 +399,7 @@ public class StudyBo implements Serializable {
     this.category = category;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -423,7 +447,7 @@ public class StudyBo implements Serializable {
     this.hasStudyDraft = hasStudyDraft;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -447,7 +471,7 @@ public class StudyBo implements Serializable {
     this.mediaLink = mediaLink;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -465,10 +489,6 @@ public class StudyBo implements Serializable {
 
   public void setResearchSponsor(String researchSponsor) {
     this.researchSponsor = researchSponsor;
-  }
-
-  public void setRetainParticipant(String retainParticipant) {
-    this.retainParticipant = retainParticipant;
   }
 
   public void setSequenceNumber(Integer sequenceNumber) {
@@ -523,7 +543,7 @@ public class StudyBo implements Serializable {
     this.type = type;
   }
 
-  public void setUserId(Integer userId) {
+  public void setUserId(String userId) {
     this.userId = userId;
   }
 
@@ -549,5 +569,21 @@ public class StudyBo implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public Integer isCloudStorageMoved() {
+    return isCloudStorageMoved;
+  }
+
+  public void setCloudStorageMoved(Integer isCloudStorageMoved) {
+    this.isCloudStorageMoved = isCloudStorageMoved;
+  }
+
+  public byte[] getExportSqlByte() {
+    return exportSqlByte;
+  }
+
+  public void setExportSqlByte(byte[] exportSqlByte) {
+    this.exportSqlByte = exportSqlByte;
   }
 }

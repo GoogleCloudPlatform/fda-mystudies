@@ -117,6 +117,9 @@ class ConsentSectionStep {
       }
       if Utilities.isValidValue(someObject: stepDict[kConsentStepHTML] as AnyObject) {
         self.html = stepDict[kConsentStepHTML] as? String
+        if let html = self.html {
+          self.html = html.stringByDecodingHTMLEntities
+        }
       }
       if Utilities.isValidValue(someObject: stepDict[kConsentStepURL] as AnyObject) {
         self.url = stepDict[kConsentStepURL] as? String

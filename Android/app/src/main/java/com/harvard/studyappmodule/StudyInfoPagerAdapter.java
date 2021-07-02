@@ -31,6 +31,7 @@ import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyInfo;
 import com.harvard.utils.AppController;
@@ -103,17 +104,20 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
     }
     String html = "&lt;font color=\"" + txtcolor + "\"&gt;" + (info.get(pos).getText()) + "&lt;/font&gt;";
     if (Build.VERSION.SDK_INT >= 24) {
-      desc.loadData(
-              Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+      desc.loadDataWithBaseURL(null,
+              Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
     } else {
-      desc.loadData(Html.fromHtml(html).toString(), "text/html", "UTF-8");
+      desc.loadDataWithBaseURL(null, Html.fromHtml(html).toString(), "text/html", "UTF-8", null);
     }
+    RequestOptions requestOptions = new RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .skipMemoryCache(false);
+
     Glide.with(context)
-        .load(info.get(pos).getImage())
-        .thumbnail(0.5f)
-        .crossFade()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .into(bgImg);
+            .load(info.get(pos).getImage())
+            .thumbnail(0.5f)
+            .apply(requestOptions)
+            .into(bgImg);
   }
 
   private void initializeXmlId(int pos, View view) {

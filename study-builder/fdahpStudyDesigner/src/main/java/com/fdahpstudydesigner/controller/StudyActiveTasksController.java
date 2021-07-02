@@ -124,10 +124,7 @@ public class StudyActiveTasksController {
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         message =
             studyService.markAsCompleted(
-                Integer.parseInt(studyId),
-                FdahpStudyDesignerConstants.ACTIVETASK_LIST,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.ACTIVETASK_LIST, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         auditRequest.setStudyId(customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
@@ -191,10 +188,7 @@ public class StudyActiveTasksController {
         if (!activeTaskInfoId.isEmpty() && !studyId.isEmpty()) {
           message =
               studyActiveTasksService.deleteActiveTask(
-                  Integer.valueOf(activeTaskInfoId),
-                  Integer.valueOf(studyId),
-                  sesObj,
-                  customStudyId);
+                  activeTaskInfoId, studyId, sesObj, customStudyId);
         }
         boolean markAsComplete = true;
         actMsg =
@@ -321,12 +315,12 @@ public class StudyActiveTasksController {
         if (StringUtils.isNotEmpty(activeTaskInfoId)) {
           activeTaskBo =
               studyActiveTasksService.getActiveTaskById(
-                  Integer.parseInt(activeTaskInfoId), studyBo.getCustomStudyId());
+                  activeTaskInfoId, studyBo.getCustomStudyId());
           typeOfActiveTask = activeTaskBo.getTaskTypeId().toString();
         } else {
           activeTaskBo = new ActiveTaskBo();
-          activeTaskBo.setStudyId(Integer.parseInt(studyId));
-          activeTaskBo.setTaskTypeId(Integer.parseInt(typeOfActiveTask));
+          activeTaskBo.setStudyId(studyId);
+          activeTaskBo.setTaskTypeId(typeOfActiveTask);
         }
         if (StringUtils.isNotEmpty(actionType)) {
           activeTaskBo.setActionPage(actionType);
@@ -350,7 +344,7 @@ public class StudyActiveTasksController {
           map.addAttribute("_S", sessionStudyCount);
           for (ActiveTaskListBo activeTaskListBo : activeTaskListBos) {
             if (StringUtils.isNotEmpty(activeTaskListBo.getTaskName())
-                && (activeTaskListBo.getActiveTaskListId() == Integer.parseInt(typeOfActiveTask))) {
+                && (activeTaskListBo.getActiveTaskListId().equals(typeOfActiveTask))) {
               switch (activeTaskListBo.getTaskName()) {
                 case FdahpStudyDesignerConstants.FETAL_KICK_COUNTER:
                   mav = new ModelAndView("viewFetalStudyActiveTask", map);
@@ -408,6 +402,7 @@ public class StudyActiveTasksController {
               activeTaskBo.setModifiedBy(sesObj.getUserId());
               activeTaskBo.setModifiedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
             } else {
+              jsonobject.put("activeTaskCreated", "true");
               activeTaskBo.setCreatedBy(sesObj.getUserId());
               activeTaskBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
               if ((activeTaskBo.getScheduleType() == null)
@@ -454,7 +449,7 @@ public class StudyActiveTasksController {
     ActiveTaskBo addActiveTaskBo = null;
     List<ActiveTaskMasterAttributeBo> taskMasterAttributeBos = new ArrayList<>();
     String buttonText = "";
-    Integer activeTaskInfoId = 0;
+    String activeTaskInfoId = null;
     String currentPage = null;
     String customStudyId = "";
     ModelMap map = new ModelMap();
@@ -520,11 +515,18 @@ public class StudyActiveTasksController {
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
-              request
-                  .getSession()
-                  .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully");
-              return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
+              if (ADD.equalsIgnoreCase(activeTaskBo.getActionPage())
+                  && activeTaskBo.getActiveTaskCreated().equals("true")) {
+                request
+                    .getSession()
+                    .setAttribute(sessionStudyCount + "sucMsg", "Active task created successfully");
+              } else {
+                request
+                    .getSession()
+                    .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully");
+              }
 
+              return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
             } else {
               StudyBuilderAuditEvent event =
                   ADD.equalsIgnoreCase(activeTaskBo.getActionPage())
@@ -650,11 +652,7 @@ public class StudyActiveTasksController {
                 : request.getParameter("activeTaskAttIdName");
         flag =
             studyActiveTasksService.validateActiveTaskAttrById(
-                Integer.parseInt(studyId),
-                activeTaskAttName,
-                activeTaskAttIdVal,
-                activeTaskAttIdName,
-                customStudyId);
+                studyId, activeTaskAttName, activeTaskAttIdVal, activeTaskAttIdName, customStudyId);
         if (flag) {
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
@@ -853,7 +851,7 @@ public class StudyActiveTasksController {
           if (StringUtils.isNotEmpty(activeTaskInfoId)) {
             activeTaskBo =
                 studyActiveTasksService.getActiveTaskById(
-                    Integer.parseInt(activeTaskInfoId), studyBo.getCustomStudyId());
+                    activeTaskInfoId, studyBo.getCustomStudyId());
             map.addAttribute("activeTaskBo", activeTaskBo);
           }
           mav = new ModelAndView("viewStudyActiveTask", map);
@@ -952,8 +950,7 @@ public class StudyActiveTasksController {
         }
         if ((null != activeTaskId) && !activeTaskId.isEmpty() && (null != studyBo)) {
           activeTaskBo =
-              studyActiveTasksService.getActiveTaskById(
-                  Integer.valueOf(activeTaskId), studyBo.getCustomStudyId());
+              studyActiveTasksService.getActiveTaskById(activeTaskId, studyBo.getCustomStudyId());
           if (activeTaskBo != null) {
             map.addAttribute("customCount", activeTaskBo.getActiveTaskCustomScheduleBo().size());
             map.addAttribute("count", activeTaskBo.getActiveTaskFrequenciesList().size());

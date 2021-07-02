@@ -219,10 +219,10 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     String webData = intentContent;
     if (Build.VERSION.SDK_INT >= 24) {
-      webView.loadData(
-              Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+      webView.loadDataWithBaseURL(null,
+              Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
     } else {
-      webView.loadData(Html.fromHtml((webData)).toString(), "text/html", "UTF-8");
+      webView.loadDataWithBaseURL(null, Html.fromHtml((webData)).toString(), "text/html", "UTF-8", null);
     }
   }
 

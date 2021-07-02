@@ -41,12 +41,9 @@ public class AuditLogDAOImpl implements AuditLogDAO {
 
   @Override
   public String updateDraftToEditedStatus(
-      Session session,
-      Transaction transaction,
-      Integer userId,
-      String actionType,
-      Integer studyId) {
-    logger.entry("begin updateDraftToEditedStatus()");
+      Session session, Transaction transaction, String userId, String actionType, String studyId) {
+    logger.info("AuditLogDAOImpl - updateDraftToEditedStatus() - Starts");
+
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session newSession = null;
     String queryString;

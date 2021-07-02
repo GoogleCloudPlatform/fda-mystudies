@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -79,14 +80,14 @@ public class DashboardMetaDataDao {
     List<StatisticsBean> statisticsList = new ArrayList<>();
     Map<String, Object> activityMap = new LinkedHashMap<>();
     Map<String, Object> questionnaireMap = new LinkedHashMap<>();
-    List<Integer> activeTaskIdsList = new ArrayList<>();
-    List<Integer> questionnaireIdsList = new ArrayList<>();
+    List<String> activeTaskIdsList = new ArrayList<>();
+    List<String> questionnaireIdsList = new ArrayList<>();
     List<ActiveTaskDto> activeTaskList = null;
     List<QuestionnairesDto> questionnaireList = null;
     List<ActiveTaskAttrtibutesValuesDto> activeTaskValuesList = null;
     List<QuestionnairesStepsDto> questionnaireStepsList = null;
-    List<Integer> questionIdsList = new ArrayList<>();
-    List<Integer> formIdsList = new ArrayList<>();
+    List<String> questionIdsList = new ArrayList<>();
+    List<String> formIdsList = new ArrayList<>();
     List<ActiveTaskFormulaDto> formulaDtoList = null;
     List<StatisticImageListDto> statisticImageList = null;
     StudyDto studyDto = null;
@@ -126,11 +127,12 @@ public class DashboardMetaDataDao {
             if ((activeTask.getActive() != null) && (activeTask.getActive() == 1)) {
               addToDashboardFlag = true;
             } else {
-              if (StudyMetaDataConstants.SDF_DATE
-                  .parse(activeTask.getModifiedDate())
-                  .after(
-                      StudyMetaDataConstants.SDF_DATE.parse(
-                          activeTask.getActiveTaskLifetimeStart()))) {
+              if (StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart())
+                  && StudyMetaDataConstants.SDF_DATE
+                      .parse(activeTask.getModifiedDate())
+                      .after(
+                          StudyMetaDataConstants.SDF_DATE.parse(
+                              activeTask.getActiveTaskLifetimeStart()))) {
                 addToDashboardFlag = true;
               }
             }
@@ -239,9 +241,9 @@ public class DashboardMetaDataDao {
                   .list();
           if ((activeTaskValuesList != null) && !activeTaskValuesList.isEmpty()) {
             int taskTypeId = 0;
-            Map<Integer, Integer> activeTaskMasterAttrIdsMap = new HashMap<>();
-            Map<Integer, String> activeTaskMasterAttrIdNameMap = new HashMap<>();
-            List<Integer> activeTaskMasterAttrIdList = new ArrayList<>();
+            Map<String, String> activeTaskMasterAttrIdsMap = new HashMap<>();
+            Map<String, String> activeTaskMasterAttrIdNameMap = new HashMap<>();
+            List<String> activeTaskMasterAttrIdList = new ArrayList<>();
 
             for (ActiveTaskAttrtibutesValuesDto activeTaskAttrDto : activeTaskValuesList) {
               activeTaskMasterAttrIdsMap.put(
@@ -249,7 +251,7 @@ public class DashboardMetaDataDao {
                   activeTaskAttrDto.getActiveTaskMasterAttrId());
             }
 
-            for (Integer activeTaskMasterAttrId : activeTaskMasterAttrIdsMap.keySet()) {
+            for (String activeTaskMasterAttrId : activeTaskMasterAttrIdsMap.keySet()) {
               activeTaskMasterAttrIdList.add(activeTaskMasterAttrId);
             }
 
@@ -280,7 +282,7 @@ public class DashboardMetaDataDao {
                               + activeTaskAttrDto.getActiveTaskId());
               if (activeTaskDto != null) {
                 if ((null != activeTaskDto.getTaskTypeId())
-                    && (3 == activeTaskDto.getTaskTypeId().intValue())) {
+                    && ("3".equals(activeTaskDto.getTaskTypeId()))) {
                   taskTypeId = 3;
                 }
                 activeTaskAttrDto.setActivityType(StudyMetaDataConstants.DASHBOARD_ACTIVE_TASK);
@@ -400,7 +402,7 @@ public class DashboardMetaDataDao {
                   .list();
           if ((formDtoList != null) && !formDtoList.isEmpty()) {
             for (FormDto form : formDtoList) {
-              List<Integer> formQuestionIdsList = new ArrayList<>();
+              List<String> formQuestionIdsList = new ArrayList<>();
               List<FormMappingDto> formMappingDtoList;
               formMappingDtoList =
                   session
@@ -408,7 +410,7 @@ public class DashboardMetaDataDao {
                           "from FormMappingDto FMDTO"
                               + " where FMDTO.formId=:formId"
                               + " order by FMDTO.sequenceNo")
-                      .setInteger("formId", form.getFormId())
+                      .setString("formId", form.getFormId())
                       .list();
               if ((formMappingDtoList != null) && !formMappingDtoList.isEmpty()) {
                 for (FormMappingDto formMappingDto : formMappingDtoList) {
@@ -635,8 +637,7 @@ public class DashboardMetaDataDao {
         statistics.setStatType(
             StringUtils.isEmpty(activeTask.getUploadTypeStat())
                 ? ""
-                : this.getStatisticsType(
-                    Integer.parseInt(activeTask.getUploadTypeStat()), statisticImageList));
+                : this.getStatisticsType(activeTask.getUploadTypeStat(), statisticImageList));
         statistics.setUnit(
             StringUtils.isEmpty(activeTask.getDisplayUnitStat())
                 ? ""
@@ -644,8 +645,7 @@ public class DashboardMetaDataDao {
         statistics.setCalculation(
             StringUtils.isEmpty(activeTask.getFormulaAppliedStat())
                 ? ""
-                : this.getFormulaType(
-                    Integer.parseInt(activeTask.getFormulaAppliedStat()), formulaDtoList));
+                : this.getFormulaType(activeTask.getFormulaAppliedStat(), formulaDtoList));
 
         activity.setActivityId(activeTask.getActivityId());
         activity.setVersion(activeTask.getActivityVersion());
@@ -736,13 +736,13 @@ public class DashboardMetaDataDao {
   }
 
   public String getStatisticsType(
-      Integer statisticTypeId, List<StatisticImageListDto> statisticImageList) throws DAOException {
+      String statisticTypeId, List<StatisticImageListDto> statisticImageList) throws DAOException {
     LOGGER.entry("begin getStatisticsType()");
     String statisticType = "";
     try {
       if ((statisticImageList != null) && !statisticImageList.isEmpty()) {
         for (StatisticImageListDto statistic : statisticImageList) {
-          if (statisticTypeId.intValue() == statistic.getStatisticImageId().intValue()) {
+          if (statisticTypeId.equals(statistic.getStatisticImageId())) {
             statisticType = statistic.getValue();
             break;
           }
@@ -755,14 +755,14 @@ public class DashboardMetaDataDao {
     return statisticType;
   }
 
-  public String getFormulaType(Integer formulaTypeId, List<ActiveTaskFormulaDto> formulaDtoList)
+  public String getFormulaType(String formulaTypeId, List<ActiveTaskFormulaDto> formulaDtoList)
       throws DAOException {
     LOGGER.entry("begin getFormulaType()");
     String formulaType = "";
     try {
       if ((formulaDtoList != null) && !formulaDtoList.isEmpty()) {
         for (ActiveTaskFormulaDto formulaDto : formulaDtoList) {
-          if (formulaTypeId.intValue() == formulaDto.getActivetaskFormulaId().intValue()) {
+          if (formulaTypeId.equals(formulaDto.getActivetaskFormulaId())) {
             formulaType = formulaDto.getFormula();
             break;
           }
@@ -781,6 +781,8 @@ public class DashboardMetaDataDao {
     LOGGER.entry("ActivityMetaDataDao - getTimeDetailsByActivityIdForActiveTask()");
     String startDateTime = "";
     String endDateTime = "";
+    String startDate = "";
+    String endDate = "";
     String time = StudyMetaDataConstants.DEFAULT_MIN_TIME;
     try {
       startDateTime = activeTaskDto.getActiveTaskLifetimeStart() + " " + time;
@@ -806,7 +808,7 @@ public class DashboardMetaDataDao {
                       .createQuery(
                           "from ActiveTaskFrequencyDto ATFDTO"
                               + " where ATFDTO.activeTaskId=:activeTaskId")
-                      .setInteger("activeTaskId", activeTaskDto.getId())
+                      .setString("activeTaskId", activeTaskDto.getId())
                       .uniqueResult();
           if ((activeTaskFrequency != null)
               && StringUtils.isNotEmpty(activeTaskFrequency.getFrequencyTime())) {
@@ -825,8 +827,12 @@ public class DashboardMetaDataDao {
             }
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeStart())) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeEnd())) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         } else if (activeTaskDto
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_DAILY)) {
@@ -837,7 +843,7 @@ public class DashboardMetaDataDao {
                       "from ActiveTaskFrequencyDto ATFDTO"
                           + " where ATFDTO.activeTaskId=:activeTaskId"
                           + " ORDER BY ATFDTO.frequencyTime")
-                  .setInteger("activeTaskId", activeTaskDto.getId())
+                  .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskFrequencyList != null) && !activeTaskFrequencyList.isEmpty()) {
             startDateTime =
@@ -850,8 +856,12 @@ public class DashboardMetaDataDao {
                     + StudyMetaDataConstants.DEFAULT_MAX_TIME;
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeStart())) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(activeTaskDto.getActiveTaskLifetimeEnd())) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         } else if (activeTaskDto
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
@@ -861,12 +871,12 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                           + " where ATCFDTO.activeTaskId=:activeTaskId"
-                          + " ORDER BY ATCFDTO.frequencyTime")
-                  .setInteger("activeTaskId", activeTaskDto.getId())
+                          + " ORDER BY ATCFDTO.frequencyStartTime")
+                  .setString("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
-            String startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
-            String endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
+            startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
+            endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
             for (ActiveTaskCustomFrequenciesDto customFrequency : activeTaskCustomFrequencyList) {
 
               if (StringUtils.isNotEmpty(startDate)) {
@@ -877,8 +887,6 @@ public class DashboardMetaDataDao {
                             customFrequency.getFrequencyStartDate()))) {
                   startDate = customFrequency.getFrequencyStartDate();
                 }
-              } else {
-                startDate = "";
               }
 
               if (StringUtils.isNotEmpty(endDate)) {
@@ -889,23 +897,25 @@ public class DashboardMetaDataDao {
                             customFrequency.getFrequencyEndDate()))) {
                   endDate = customFrequency.getFrequencyEndDate();
                 }
-              } else {
-                endDate = "";
               }
             }
-
             startDateTime =
-                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyTime();
+                startDate + " " + activeTaskCustomFrequencyList.get(0).getFrequencyStartTime();
+
             endDateTime =
                 endDate
                     + " "
                     + activeTaskCustomFrequencyList
                         .get(activeTaskCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
+                        .getFrequencyEndTime();
           }
 
-          activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
-          activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          if (StringUtils.isNotEmpty(startDate)) {
+            activeTaskDto.setActiveTaskLifetimeStart(startDateTime);
+          }
+          if (StringUtils.isNotEmpty(endDate)) {
+            activeTaskDto.setActiveTaskLifetimeEnd(endDateTime);
+          }
         }
       }
     } catch (Exception e) {
@@ -946,7 +956,7 @@ public class DashboardMetaDataDao {
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
                               + " where QFDTO.questionnairesId=:questRespId")
-                      .setInteger("questRespId", questionaire.getId())
+                      .setString("questRespId", questionaire.getId())
                       .uniqueResult();
           if ((questionnairesFrequency != null)
               && StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())) {
@@ -977,7 +987,7 @@ public class DashboardMetaDataDao {
                       "from QuestionnairesFrequenciesDto QFDTO"
                           + " where QFDTO.questionnairesId=:questRespId"
                           + " ORDER BY QFDTO.frequencyTime")
-                  .setInteger("questRespId", questionaire.getId())
+                  .setString("questRespId", questionaire.getId())
                   .list();
           if ((questionnairesFrequencyList != null) && !questionnairesFrequencyList.isEmpty()) {
             startDateTime =
@@ -999,8 +1009,8 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questRespId"
-                          + " ORDER BY QCFDTO.frequencyTime")
-                  .setInteger("questRespId", questionaire.getId())
+                          + " ORDER BY QCFDTO.frequencyStartDate, QCFDTO.frequencyStartTime")
+                  .setString("questRespId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
               && !questionnaireCustomFrequencyList.isEmpty()) {
@@ -1035,13 +1045,13 @@ public class DashboardMetaDataDao {
             }
 
             startDateTime =
-                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyTime();
+                startDate + " " + questionnaireCustomFrequencyList.get(0).getFrequencyStartTime();
             endDateTime =
                 endDate
                     + " "
                     + questionnaireCustomFrequencyList
                         .get(questionnaireCustomFrequencyList.size() - 1)
-                        .getFrequencyTime();
+                        .getFrequencyEndTime();
           }
 
           questionaire.setStudyLifetimeStart(startDateTime);

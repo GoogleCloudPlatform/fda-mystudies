@@ -16,6 +16,8 @@
 
 package com.harvard.studyappmodule;
 
+import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,19 +25,29 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.Request;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
@@ -245,23 +257,28 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       bgShape.setColor(context.getResources().getColor(R.color.rectangle_yellow));
     }
 
-    Glide.with(context)
-            .load(items.get(position).getLogo())
-            .asBitmap()
-            .thumbnail(0.5f)
-            .crossFade()
+    RequestOptions requestOptions = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(new SimpleTarget<Bitmap>(200, 200) {
+            .skipMemoryCache(false);
+
+    Glide.with(context)
+            .load(items.get(holder.getAdapterPosition()).getLogo())
+            .thumbnail(0.5f)
+            .apply(requestOptions)
+            .listener(new RequestListener<Drawable>() {
               @Override
-              public void onLoadFailed(Exception e, Drawable errorDrawable) {
+              public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 holder.defaultthumbnail.setVisibility(View.VISIBLE);
+                return false;
               }
 
               @Override
-              public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                holder.studyImg.setImageBitmap(resource);
+              public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.defaultthumbnail.setVisibility(View.GONE);
+                holder.studyImg.setImageDrawable(resource);
+                return false;
               }
-            });
+            }).into(holder.studyImg);
 
     holder.studyTitle.setText(items.get(position).getTitle());
     holder.studyTitleLatin.setText(Html.fromHtml(items.get(position).getTagline()));

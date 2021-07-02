@@ -18,7 +18,7 @@
     text-transform: inherit; !important
 	}
 	
-.help-block ul {
+.help-block .list-unstyled {
       width: max-content !important;
 }
 </style>
@@ -32,6 +32,7 @@
   <input type="hidden" value="" id="buttonText" name="buttonText">
   <input type="hidden" value="${actionPage}" id="actionPage" name="actionPage">
   <input type="hidden" value="${currentPage}" id="currentPageId" name="currentPage">
+  <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <div class="pt-lg">
     <div class="gray-xs-f mb-sm">Activity short title or key
       <small>(50 characters max)</small>
@@ -1187,7 +1188,7 @@
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
             $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "The characters like (< >) are not allowed"));
+                "Please use characters from the following set only: A-Z a-z 0-9 *()_+|:.-"));
           }
         }
       });

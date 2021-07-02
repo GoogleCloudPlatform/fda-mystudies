@@ -146,7 +146,7 @@ class ActivitiesTableViewCell: UITableViewCell {
     let currentRunId = (activity.totalRuns != 0) ? String(activity.currentRunId) : "0"
 
     self.labelRunStatus?.text =
-      "Run: " + currentRunId + "/" + String(activity.totalRuns) + ", "
+      "Run: " + currentRunId + " of " + String(activity.totalRuns) + ", "
       + String(activity.compeltedRuns) + " done" + ", " + String(activity.incompletedRuns)
       + " missed"
 

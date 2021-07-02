@@ -625,16 +625,16 @@
                     chkDone=false;	
                 }
                 var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="View" etId="'
-                    + parseInt(obj.id) + '"></span> '
+                    + obj.id + '"></span> '
                     + '<span class="'
                     + (DOMPurify.sanitize(obj.status) ? "edit-inc"
                         : "edit-inc-draft")
                     + ' mr-md mr-lg  editIcon" data-toggle="tooltip" data-placement="top" title="Edit"  etId="'
-                    + parseInt(obj.id)
+                    + obj.id
                     + '"></span>'
-                    + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns('
-                    + parseInt(obj.id) + ',this)"></span> '
-                    datarow.push(actions);
+                    + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns(&#34;'
+                    + obj.id + '&#34;,this)"></span> '
+                     datarow.push(actions);
                 $('#consent_list').DataTable().row.add(datarow);
               });
       $('#consent_list').DataTable().draw();

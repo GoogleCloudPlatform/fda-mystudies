@@ -88,7 +88,6 @@ The deployment process takes the following approach:
 1. Confirm you have access to a user account with the following Cloud IAM roles:
     - `roles/resourcemanager.folderAdmin` for the folder you created
     - `roles/resourcemanager.projectCreator` for the folder you created
-    - `roles/compute.xpnAdmin` for the folder you created
     - `roles/billing.admin` for the billing account that you will use
 1. Use the [groups manager](https://console.cloud.google.com/identity/groups) to [create](https://support.google.com/a/answer/33343?hl=en) the following
     administrative [IAM](https://cloud.google.com/iam/docs/overview#concepts_related_identity) groups that will be used during deployment:
@@ -182,6 +181,12 @@ The deployment process takes the following approach:
     cd $GIT_ROOT/deployment/terraform/cicd
     terraform init && terraform apply
     ```
+1. The Cloud Build service account will need to be a Shared VPC Admin (XPN Admin) at the organization level as this permission cannot be granted at the folder level.
+    1. Open [Cloud IAM](https://console.cloud.google.com/iam-admin/iam) in your `{PREFIX}-{ENV}-devops` project, and copy the Member name of the service account with the role `Cloud Build Service Agent`. The format should be `############@cloudbuild.gserviceaccount.com`
+    1. At the top of the page change from the `{PREFIX}-{ENV}-devops` project to the organization containing your folder and projects.
+    1. Click Add to add a new member to the organization
+    1. Enter the Cloud Build service account in the New members field and add the role `Compute Shared VPC Admin` and click `Save`.
+
 ### Deploy your platform infrastructure
 
 1. Commit your local git working directory (which now represents your desired infrastructure state) to a new branch in your cloned FDA MyStudies repository, for example using:

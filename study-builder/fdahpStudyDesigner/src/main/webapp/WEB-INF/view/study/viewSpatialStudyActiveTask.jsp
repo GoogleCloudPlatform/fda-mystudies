@@ -3,7 +3,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <style>
-    .help-block ul {
+    .help-block .list-unstyled {
       width: max-content !important;
     }
 
@@ -26,6 +26,7 @@ p<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncodi
            name="actionPage">
     <input type="hidden" value="${currentPage}" id="currentPageId"
            name="currentPage">
+           <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
     <div class="pt-lg">
       <div class="gray-xs-f mb-sm">
         Activity short title or key

@@ -16,3 +16,97 @@
 .table tbody tr:last-child td:first-child {
   border-bottom: none !important;
 }
+
+.table.custom__table th {
+  width: fit-content !important;
+}
+
+.table.table-striped thead.custom__thead tr th:nth-child(1),
+.table.table-striped thead.custom__thead tr th:nth-child(2),
+.table.table-striped thead.custom__thead tr th:nth-child(3),
+.table.table-striped tbody.custom__tbody tr td:nth-child(1),
+.table.table-striped tbody.custom__tbody tr td:nth-child(2),
+.table.table-striped tbody.custom__tbody tr td:nth-child(3) {
+  width: 20% !important;
+}
+
+table thead.custom__thead_2 tr th:nth-child(1),
+table thead.custom__thead_2 tr th:nth-child(2),
+table thead.custom__thead_2 tr th:nth-child(3),
+table thead.custom__thead_2 tr th:nth-child(4),
+table thead.custom__thead_2 tr th:nth-child(5),
+table tbody.custom__tbody_2 tr td:nth-child(1),
+table tbody.custom__tbody_2 tr td:nth-child(2),
+table tbody.custom__tbody_2 tr td:nth-child(3),
+table tbody.custom__tbody_2 tr td:nth-child(4),
+table tbody.custom__tbody_2 tr td:nth-child(5) {
+  width: 20.7% !important;
+}
+
+@media only screen and (max-width: 500px) and (min-width: 320px) {
+  .mob_display-inline {
+    display: inline-block !important;
+  }
+
+  .xs-none {
+    display: none !important;
+  }
+  .mob_tabl_wid_100 tr th {
+    width: fit-content !important;
+    white-space: nowrap !important;
+  }
+  .mob_mr-10 {
+    margin-right: 10px;
+  }
+
+  .table.table-striped thead.custom__thead tr th:nth-child(1),
+  .table.table-striped thead.custom__thead tr th:nth-child(2),
+  .table.table-striped thead.custom__thead tr th:nth-child(3),
+  .table.table-striped tbody.custom__tbody tr td:nth-child(1),
+  .table.table-striped tbody.custom__tbody tr td:nth-child(2),
+  .table.table-striped tbody.custom__tbody tr td:nth-child(3) {
+    width: auto !important;
+  }
+
+  table thead.custom__thead_2 tr th:nth-child(1),
+  table thead.custom__thead_2 tr th:nth-child(2),
+  table thead.custom__thead_2 tr th:nth-child(3),
+  table thead.custom__thead_2 tr th:nth-child(4),
+  table thead.custom__thead_2 tr th:nth-child(5),
+  table tbody.custom__tbody_2 tr td:nth-child(1),
+  table tbody.custom__tbody_2 tr td:nth-child(2),
+  table tbody.custom__tbody_2 tr td:nth-child(3),
+  table tbody.custom__tbody_2 tr td:nth-child(4),
+  table tbody.custom__tbody_2 tr td:nth-child(5) {
+    width: auto !important;
+  }
+  .table.table-striped tfoot tr td {
+    width: 100% !important;
+    text-align: center !important;
+    padding: 10px !important;
+    display: inline-block;
+  }
+
+  .mob_textpre {
+    white-space: pre !important;
+    padding-right: 20px;
+  }
+
+  .scrollable-element {
+    overflow-x: auto;
+    z-index: 1;
+  }
+
+  .scrollable-element::-webkit-scrollbar {
+    width: 1px;
+  }
+
+  .scrollable-element::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px transparent;
+  }
+
+  .scrollable-element::-webkit-scrollbar-thumb {
+    // background-color: ;
+    outline: 0px solid slategrey;
+  }
+}

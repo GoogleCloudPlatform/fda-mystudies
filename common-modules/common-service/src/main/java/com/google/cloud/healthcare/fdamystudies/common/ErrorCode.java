@@ -203,9 +203,9 @@ public enum ErrorCode {
   ADMIN_NOT_FOUND(404, "EC_0042", HttpStatus.NOT_FOUND.toString(), "Admin user not found"),
 
   PENDING_CONFIRMATION(
-      403,
+      409,
       "EC_0043",
-      HttpStatus.BAD_REQUEST.toString(),
+      HttpStatus.CONFLICT.toString(),
       "Your account is pending activation. Please check your email for details and sign in to complete activation."),
 
   ACCOUNT_NOT_VERIFIED(
@@ -369,7 +369,19 @@ public enum ErrorCode {
       400,
       "EC_0079",
       Constants.BAD_REQUEST,
-      "This site belongs to an active study that has one or more actively enrolled participants, and cannot be decommissioned.");
+      "This site belongs to an active study that has one or more actively enrolled participants, and cannot be decommissioned."),
+  
+  LOCATION_DEFAULT_ID_UNIQUE(
+	      400,
+	      "EC_0086",
+	      Constants.BAD_REQUEST,
+	      "This is a default location ID in use by the system already. Please enter a different location ID."),
+
+	  LOCATION_DEFAULT_NAME_EXISTS(
+	      400,
+	      "EC_0087",
+	      Constants.BAD_REQUEST,
+	      "This is a default location name in use by the system already. Please enter a different location name.");
 
   private final int status;
   private final String code;

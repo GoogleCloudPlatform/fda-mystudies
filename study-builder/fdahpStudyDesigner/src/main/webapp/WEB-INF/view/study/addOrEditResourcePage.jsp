@@ -336,6 +336,7 @@
            target="_blank">
   <input type="hidden" value="studyResources" name="fileFolder"/>
   <input type="hidden" value="${resourceBO.pdfUrl}" name="fileName"/>
+  <input type="hidden" value="${resourceBO.studyId}" name="studyId"/>
 </form:form>
 <script type="text/javascript">
   $(document).ready(function () {
@@ -563,12 +564,27 @@
       var thisAttr = this;
       var thisId = $(this).attr("data-imageId");
       if ((file = this.files[0])) {
+    	// file should be less than or equal to 5 mb i.e 5000000 bytes
+    	  if(file.size > 5000000){
+      		  $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
+                		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File size should not exceed 5MB"));
+      		 $("#delete").click();
+      	  }
+    	
         reader = new FileReader();
         reader.onload = function () {
           if ($.inArray($(thisAttr).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
             $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
             		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a pdf file"));
             $("#delete").click();
+            
+         	// file should be less than or equal to 5 mb i.e 5000000 bytes
+            if(file.size > 5000000){
+      		  $("#uploadImg").parent().addClass('has-error has-danger').find(".help-block").empty().append(
+                		$("<ul><li> </li></ul>").attr("class","list-unstyled").text("File size should not exceed 5MB"));
+      		 $("#delete").click();
+      	  	}
+         
           } else if ($("#uploadImg").val()) {
             $('#pdfClk').attr('href', 'javascript:void(0)').css('cursor', 'default');
             $('.pdfDiv').show();
@@ -629,16 +645,37 @@
     $("#xdays, #ydays").on('blur', function () {
       chkDaysValid(false);
     });
+
+ var startToday, endToday, datepicker;
+    
+    <c:if test="${ empty resourceBO.startDate}">
+    startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    <c:if test="${not empty resourceBO.startDate}">
+    startToday=${resourceBO.startDate};
+    </c:if>
+    
+    <c:if test="${ empty resourceBO.endDate}">
+    endToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    <c:if test="${not empty resourceBO.endDate}">
+    endToday=${resourceBO.endDate};
+    </c:if>
+
+    
     $('#StartDate').datetimepicker({
       format: 'MM/DD/YYYY',
+      minDate: startToday,
       ignoreReadonly: true,
       useCurrent: false,
     });
     $('#EndDate').datetimepicker({
       format: 'MM/DD/YYYY',
+      minDate: endToday,
       ignoreReadonly: true,
       useCurrent: false,
     });
+
 
     $(".datepicker").on("click", function (e) {
       $('#StartDate').data("DateTimePicker").minDate(
@@ -882,6 +919,17 @@
       resetValidation($(this).parents('form'));
     }
 
+    if ($('#inlineRadio4').prop('checked') == true) {
+        $('.disRadBtn1').prop('disabled', true);
+        $('.disRadBtn1').prop('checked', false);
+        $('.disBtn1').prop('disabled', true);
+        $('.disBtn1').val('');
+        $('.disBtn1').removeAttr('required');
+        $('.disBtn2').removeAttr('required');
+        $('.disBtn1').selectpicker('refresh');
+        resetValidation($('.resetDate'));
+      }
+    
     $('#inlineRadio4').on('click', function () {
       if ($('#inlineRadio4').prop('checked') == true) {
         $('.disRadBtn1').prop('disabled', true);
