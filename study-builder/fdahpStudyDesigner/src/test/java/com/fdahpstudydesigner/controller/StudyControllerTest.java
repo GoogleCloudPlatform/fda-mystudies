@@ -72,6 +72,7 @@ import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.dao.NotificationDAOImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.ServletContextHolder;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,13 +81,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.junit.Ignore;
+import javax.servlet.ServletContext;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -1307,7 +1309,6 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Ignore
   public void shouldCreateInsertSqlQueries() throws Exception {
 
     SessionObject session = new SessionObject();
@@ -1315,6 +1316,9 @@ public class StudyControllerTest extends BaseMockIT {
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    
+    ServletContext context = new MockServletContext();
+    ServletContextHolder.setServletContext(context);
 
     mockMvc
         .perform(
