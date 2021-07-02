@@ -1341,8 +1341,7 @@ public class StudyExportImportService {
               customIdsMap.get(STUDY_ID + consentBo.getStudyId()),
               consentBo.getTaglineDescription(),
               consentBo.getTitle(),
-              consentBo.getVersion(),
-              consentBo.getEnrollAgain());
+              consentBo.getVersion());
       consentBoListInsertQuery.add(consentInsertSql);
     }
     insertSqlStatements.addAll(consentBoListInsertQuery);
