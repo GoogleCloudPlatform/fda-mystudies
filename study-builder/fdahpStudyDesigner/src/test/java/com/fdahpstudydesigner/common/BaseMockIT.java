@@ -23,7 +23,6 @@ import com.fdahpstudydesigner.config.HibernateTestConfig;
 import com.fdahpstudydesigner.config.WebAppTestConfig;
 import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.ServletContextHolder;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -78,8 +77,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @RunWith(SpringJUnit4ClassRunner.class)
 @PropertySource(value = {"classpath:application-mockit.properties"})
 @WebAppConfiguration("src/main/webapp")
-@ContextConfiguration(
-    classes = {WebAppTestConfig.class, HibernateTestConfig.class, ServletContextHolder.class})
+@ContextConfiguration(classes = {WebAppTestConfig.class, HibernateTestConfig.class})
 @TestExecutionListeners({
   DependencyInjectionTestExecutionListener.class,
   DirtiesContextTestExecutionListener.class,
