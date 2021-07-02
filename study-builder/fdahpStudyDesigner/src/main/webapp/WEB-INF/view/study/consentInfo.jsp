@@ -430,6 +430,8 @@
       }
       consentInfo.type = "save";
 
+      $('#consentInfoFormId').validator('destroy').validator();
+	  $('#elaboratedRTE').parent().find(".help-block").empty();
       var data = JSON.stringify(consentInfo);
       $
           .ajax({
