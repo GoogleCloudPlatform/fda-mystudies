@@ -33,6 +33,7 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.LoginDAO;
 import com.fdahpstudydesigner.dao.NotificationDAO;
+import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
@@ -95,6 +96,8 @@ public class FDASchedulerService {
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @Autowired private OAuthService oauthService;
+
+  @Autowired private StudyDAO studyDAO;
 
   @Bean()
   public ThreadPoolTaskScheduler taskScheduler() {
