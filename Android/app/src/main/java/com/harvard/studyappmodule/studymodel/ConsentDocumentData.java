@@ -19,6 +19,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class ConsentDocumentData extends RealmObject {
   private String message;
+  private boolean enrollAgain;
   private ConsentDocObj consent;
   @PrimaryKey
   private String mStudyId;
@@ -45,5 +46,13 @@ public class ConsentDocumentData extends RealmObject {
 
   public void setConsent(ConsentDocObj consent) {
     this.consent = consent;
+  }
+
+  public boolean isEnrollAgain() {
+    return enrollAgain;
+  }
+
+  public void setEnrollAgain(boolean enrollAgain) {
+    this.enrollAgain = enrollAgain;
   }
 }
