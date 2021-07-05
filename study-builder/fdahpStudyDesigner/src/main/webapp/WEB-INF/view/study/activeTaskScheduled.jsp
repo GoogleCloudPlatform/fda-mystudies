@@ -1518,20 +1518,44 @@
        $("#AddButton").show();
        $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
       } 
-   
-        if (saveScheduleType == 'Regular' || saveScheduleType == "") {
-        	 $("#selectTime").val('');
-        	 $("#dailyxdaysId").val("");
-             $("#selectWeeklyTimeAnchor").val("");
-             $("#weeksAnchor").val("");
-             $("#weeklyxdaysId").val("");
-            
-             $("#monthsAnchor").val("");
-             $("#monthlyxdaysId").val("");
-             $("#selectMonthlyTimeAnchor").val("");
-             
-             $(".manuallyAnchorContainer").find('input:text').val("");
-       }
+
+    	  if (saveScheduleType == 'AnchorDate') {
+    	  
+    	  if(saveFrequency != 'Daily' && schedule_opts == 'Daily' &&  $("#startDate").val() != ''){
+        		 $("#selectTime").val('');
+         	 	 $("#dailyxdaysId").val("");
+         	 } 
+         	 
+    	  if(saveFrequency != 'Weekly' && schedule_opts == 'Weekly' &&  $("#startDateWeekly").val() != ''){
+    			 $("#selectWeeklyTimeAnchor").val("");
+    	         $("#weeksAnchor").val("");
+    	         $("#weeklyxdaysId").val("");
+    		  
+        	  }
+    	  if(saveFrequency != 'Monthly' && schedule_opts == 'Monthly' &&  $("#startDateMonthly").val() != ''){
+    			 $("#monthsAnchor").val("");
+    	         $("#monthlyxdaysId").val("");
+    	         $("#selectMonthlyTimeAnchor").val("");
+    		  
+    	      }
+    	
+    	  }else{
+    		 if(schedule_opts == 'Daily' &&  $("#startDate").val() != ''){
+         		 $("#selectTime").val('');
+          	 	 $("#dailyxdaysId").val("");
+          	 } 
+     		 if( schedule_opts == 'Weekly' &&  $("#startDateWeekly").val() != ''){
+     			 $("#selectWeeklyTimeAnchor").val("");
+     	         $("#weeksAnchor").val("");
+     	         $("#weeklyxdaysId").val("");
+         	  }
+     		  if(schedule_opts == 'Monthly' &&  $("#startDateMonthly").val() != ''){
+     			 $("#monthsAnchor").val("");
+     	         $("#monthlyxdaysId").val("");
+     	         $("#selectMonthlyTimeAnchor").val("");
+     	      }
+    	  }
+    	  
        $("#weekEndDate").text('NA');
        $("#weekLifeTimeEnd").text('-'); 
        $("#monthEndDate").text('NA');
@@ -1645,26 +1669,47 @@
                $("#months").val('');
                $("#pickStartDate").val('');
         	}
+       
         	
          } else{
         	 
-           $("#startDate").val('');
-    	   $("#startDateWeekly").val('');
-    	   $("#startWeeklyDate").val('');
-    	   $("#weeks").val('');
-           $("#weekEndDate").text('NA');
-           $("#weekLifeTimeEnd").text('-'); 
-           $("#selectWeeklyTime").val('');
-           
-           $("#startDateMonthly").val('');
-    	   $("#selectMonthlyTime").val('');
-           $("#monthEndDate").text('NA');
-           $("#months").val('');
-           $("#pickStartDate").val('');
-           $("#monthLifeTimeDate").text('-');
-           
-           $('.manuallyContainer').find('input:text').val('');
+        	   if($("#weeklyxdaysId").val() != ''){
+             	  $("#startDateWeekly").val('');
+            	  $("#startWeeklyDate").val('');
+            	   $("#weeks").val('');
+                   $("#weekEndDate").text('NA');
+                   $("#weekLifeTimeEnd").text('-'); 
+                   $("#selectWeeklyTime").val('');
+            }
+            
+            if($("#dailyxdaysId").val() != ''){
+         	   $("#startDate").val('');
+         	   $("#endDateId").text('NA');
+                $("#lifeTimeId").text('-'); 
+           }
+            if($("#monthlyxdaysId").val() != ''){
+         	   $("#startDateMonthly").val('');
+         	   $("#selectMonthlyTime").val('');
+                $("#monthEndDate").text('NA');
+                $("#months").val('');
+                $("#pickStartDate").val('');
+                $("#monthLifeTimeDate").text('-');
+           }
+       
        } 
+        if($("#startWeeklyDate").val() != ''){
+        	 $("#weekEndDate").text($("#studyWeeklyLifetimeEnd").val());
+             $("#weekLifeTimeEnd").text($("#startWeeklyDate").val() + ' - ' + $("#studyWeeklyLifetimeEnd").val());
+        }
+        
+        if($("#startDate").val() != ''){
+        	 $("#endDateId").text($("#studyDailyLifetimeEnd").val());
+      	     $("#lifeTimeId").text($("#startDate").val() + ' - ' + $("#studyDailyLifetimeEnd").val());
+       }
+        if($("#pickStartDate").val() != ''){
+        	 $("#monthEndDate").text($("#studyMonthlyLifetimeEnd").val());
+             $("#monthLifeTimeDate").text($("#pickStartDate").val() + ' - ' + $("#studyWeeklyLifetimeEnd").val());
+       }
         
       }
 
