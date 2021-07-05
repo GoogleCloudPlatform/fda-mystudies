@@ -369,6 +369,7 @@
       instruction.questionnairesStepsBo = questionnaireStep;
 
       $('#basicInfoFormId').validator('destroy').validator();
+      $('#instructionTitle').parent().find(".help-block").empty();
       var data = JSON.stringify(instruction);
       $.ajax({
         url: "/studybuilder/adminStudies/saveInstructionStep.do?_S=${param._S}",
