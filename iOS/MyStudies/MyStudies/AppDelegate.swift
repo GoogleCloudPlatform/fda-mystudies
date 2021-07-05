@@ -489,7 +489,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     self.selectedController = controller
 
-    if StudyUpdates.studyConsentUpdated {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       // Study consent is updated: Please Present Consent UI.
       guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
       var topController: UIViewController = navigationController
@@ -1093,6 +1093,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     Study.currentStudy?.version = StudyUpdates.studyVersion
     Study.currentStudy?.newVersion = StudyUpdates.studyVersion
     StudyUpdates.studyConsentUpdated = false
+    StudyUpdates.studyEnrollAgain = false
     DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
 
     if self.isComprehensionFailed! {

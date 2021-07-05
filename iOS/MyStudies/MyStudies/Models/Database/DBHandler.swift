@@ -438,6 +438,7 @@ class DBHandler: NSObject {
     try? realm.write {
       dbStudy?.updateResources = StudyUpdates.studyResourcesUpdated
       dbStudy?.updateConsent = StudyUpdates.studyConsentUpdated
+      dbStudy?.updateStudyEnrollAgain = StudyUpdates.studyEnrollAgain
       dbStudy?.updateActivities = StudyUpdates.studyActivitiesUpdated
       dbStudy?.updateInfo = StudyUpdates.studyInfoUpdated
       if StudyUpdates.studyVersion != nil {
@@ -485,6 +486,7 @@ class DBHandler: NSObject {
 
     StudyUpdates.studyActivitiesUpdated = (dbStudy?.updateActivities)!
     StudyUpdates.studyConsentUpdated = (dbStudy?.updateConsent)!
+    StudyUpdates.studyEnrollAgain = (dbStudy?.updateStudyEnrollAgain)!
     StudyUpdates.studyResourcesUpdated = (dbStudy?.updateResources)!
     StudyUpdates.studyInfoUpdated = (dbStudy?.updateInfo)!
     completionHandler(true)
