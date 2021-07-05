@@ -79,27 +79,9 @@ class ChartsViewController: UIViewController {
 
   /// To Create screen shot of current visible view.
   func shareScreenShotByMail() {
-
     //Create the UIImage
-
-    let savedContentOffset = self.tableView.contentOffset
-    let savedFrame = tableView.frame
-
-    UIGraphicsBeginImageContextWithOptions(tableView.contentSize, self.view.isOpaque, 0.0)
-    tableView.contentOffset = .zero
-    tableView.frame = CGRect(
-      x: 0,
-      y: 0,
-      width: tableView.contentSize.width,
-      height: tableView.contentSize.height
-    )
-    tableView.layer.render(in: UIGraphicsGetCurrentContext()!)
-    let image = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-
-    tableView.contentOffset = savedContentOffset
-    tableView.frame = savedFrame
-
+    let image = tableView.asFullImage()
+    
     (self.tabBarController as! StudyDashboardTabbarViewController).shareScreenshotByEmail(
       image: image,
       subject: kEmailSubjectCharts,
