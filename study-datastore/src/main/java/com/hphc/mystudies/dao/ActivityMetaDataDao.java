@@ -1165,7 +1165,7 @@ public class ActivityMetaDataDao {
                       + " where ATCFDTO.activeTaskId=:activeTaskId"
                       + " ORDER BY"
                       + " case ATCFDTO.xDaysSign when '1' then ATCFDTO.timePeriodFromDays END DESC,"
-                      + " case ATCFDTO.xDaysSign when '1' then ATCFDTO.frequencyStartTime END DESC,"
+                      + " case ATCFDTO.xDaysSign when '1' then ATCFDTO.frequencyStartTime END ASC,"
                       + " case ATCFDTO.xDaysSign when '0' then ATCFDTO.timePeriodFromDays END ASC,"
                       + " case ATCFDTO.xDaysSign when '0' then ATCFDTO.frequencyStartTime END ASC")
               .setString("activeTaskId", activeTask.getId())
@@ -4109,7 +4109,7 @@ public class ActivityMetaDataDao {
                           + " where QCFDTO.activeTaskId=:activeTaskId"
                           + " ORDER BY"
                           + " case QCFDTO.xDaysSign when '1' then QCFDTO.timePeriodFromDays END DESC,"
-                          + " case QCFDTO.xDaysSign when '1' then QCFDTO.frequencyStartTime END DESC,"
+                          + " case QCFDTO.xDaysSign when '1' then QCFDTO.frequencyStartTime END ASC,"
                           + " case QCFDTO.xDaysSign when '0' then QCFDTO.timePeriodFromDays END ASC,"
                           + " case QCFDTO.xDaysSign when '0' then QCFDTO.frequencyStartTime END ASC")
                   .setString("activeTaskId", activeTaskDto.getId())
@@ -4250,7 +4250,7 @@ public class ActivityMetaDataDao {
                       + " where QCFDTO.questionnairesId=:quesResId"
                       + " ORDER BY"
                       + " case QCFDTO.xDaysSign when '1' then QCFDTO.timePeriodFromDays END DESC,"
-                      + " case QCFDTO.xDaysSign when '1' then QCFDTO.frequencyStartTime END DESC,"
+                      + " case QCFDTO.xDaysSign when '1' then QCFDTO.frequencyStartTime END ASC,"
                       + " case QCFDTO.xDaysSign when '0' then QCFDTO.timePeriodFromDays END ASC,"
                       + " case QCFDTO.xDaysSign when '0' then QCFDTO.frequencyStartTime END ASC")
               .setString("quesResId", questionaire.getId())
@@ -4393,7 +4393,7 @@ public class ActivityMetaDataDao {
                           + " where QCFDTO.questionnairesId=:questId"
                           + " ORDER BY"
                           + " case QCFDTO.xDaysSign when '1' then QCFDTO.timePeriodFromDays END DESC,"
-                          + " case QCFDTO.xDaysSign when '1' then QCFDTO.frequencyStartTime END DESC,"
+                          + " case QCFDTO.xDaysSign when '1' then QCFDTO.frequencyStartTime END ASC,"
                           + " case QCFDTO.xDaysSign when '0' then QCFDTO.timePeriodFromDays END ASC,"
                           + " case QCFDTO.xDaysSign when '0' then QCFDTO.frequencyStartTime END ASC")
                   .setString("questId", questionaire.getId())
@@ -4535,7 +4535,7 @@ public class ActivityMetaDataDao {
                       + " where QCFDTO.activeTaskId=:activeTaskId"
                       + " ORDER BY"
                       + " case QCFDTO.xDaysSign when '1' then QCFDTO.timePeriodFromDays END DESC,"
-                      + " case QCFDTO.xDaysSign when '1' then QCFDTO.frequencyStartTime END DESC,"
+                      + " case QCFDTO.xDaysSign when '1' then QCFDTO.frequencyStartTime END ASC,"
                       + " case QCFDTO.xDaysSign when '0' then QCFDTO.timePeriodFromDays END ASC,"
                       + " case QCFDTO.xDaysSign when '0' then QCFDTO.frequencyStartTime END ASC")
               .setString("activeTaskId", activeTaskDto.getId())
