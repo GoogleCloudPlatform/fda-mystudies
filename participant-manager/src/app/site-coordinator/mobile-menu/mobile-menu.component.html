@@ -1,7 +1,7 @@
 <div (keydown)="mobileOnKeyDown($event)" id="mobile-menu">
   <div id="mySidenav__menubar" class="flex__justify__space-between">
     <div>
-      <button
+      <button [ngClass]="{display__none: displayHeaderOnResetpassword === false}"
         class="openNav display-inline-block mr-sm btn pl-none"
         (click)="toggleNav()"
       >
@@ -11,7 +11,7 @@
             displayHeaderOnResetpassword ? '/coordinator/studies/sites' : []
           "
           [ngClass]="{cursor__none: displayHeaderOnResetpassword === false}"
-          
+
         [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
         routerLink="/coordinator/studies/sites"
       >
