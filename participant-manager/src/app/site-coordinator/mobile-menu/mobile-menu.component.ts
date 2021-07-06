@@ -2,6 +2,8 @@ import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {UserService} from 'src/app/service/user.service';
 import {Profile} from '../account/shared/profile.model';
 
+import {HeaderDisplayService} from '../../service/header-display.service';
+
 @Component({
   selector: 'mobile-menu',
   templateUrl: './mobile-menu.component.html',
@@ -16,9 +18,16 @@ export class MobileMenuComponent implements OnInit {
   @Output() keyDown: EventEmitter<string> = new EventEmitter();
   user = {} as Profile;
   showSearchOnClick = false;
-  constructor(private readonly userService: UserService) {}
+
+  displayHeaderOnResetpassword = true;
+
+  constructor(private readonly userService: UserService, private readonly displayHeader: HeaderDisplayService) {}
   ngOnInit(): void {
     this.user = this.userService.getUserProfile();
+
+      this.displayHeader.showHeaders$.subscribe((updatedHeaderDisplayStatus) => {
+      this.displayHeaderOnResetpassword = updatedHeaderDisplayStatus;
+    });
   }
   toggleNav(): void {
     this.navIsOpen = !this.navIsOpen;
