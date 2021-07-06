@@ -3245,16 +3245,21 @@ public class ActivityMetaDataDao {
                 questionaire.getStudyLifetimeEnd() + " " + StudyMetaDataConstants.DEFAULT_MAX_TIME;
           }
 
-          activityBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          activityBean.setEndTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  endDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          if (StringUtils.isNotBlank(questionaire.getStudyLifetimeStart())) {
+            activityBean.setStartTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    startDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
+
+          if (StringUtils.isNotBlank(questionaire.getStudyLifetimeEnd())) {
+            activityBean.setEndTime(
+                StudyMetaDataUtil.getFormattedDateTimeZone(
+                    endDateTime,
+                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+          }
         } else if (questionaire
             .getFrequency()
             .equalsIgnoreCase(StudyMetaDataConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
@@ -4156,14 +4161,13 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from ActiveTaskFrequencyDto QCFDTO"
                           + " where QCFDTO.activeTaskId=:activeTaskId"
-                          + " order by QCFDTO.frequencyDate, QCFDTO.timePeriodFromDays")
+                          + " order by QCFDTO.frequencyTime")
                   .setString("activeTaskId", activeTaskDto.getId())
                   .list();
 
           if ((taskFrequencyDtoList != null) && (taskFrequencyDtoList.size() > 0)) {
             start.setTime(taskFrequencyDtoList.get(0).getFrequencyTime());
-            start.setAnchorDays(
-                taskFrequencyDtoList.get(taskFrequencyDtoList.size() - 1).getTimePeriodFromDays());
+            start.setAnchorDays(taskFrequencyDtoList.get(0).getTimePeriodFromDays());
             end.setRepeatInterval(
                 activeTaskDto.getRepeatActiveTask() == null
                     ? 0
@@ -4442,7 +4446,7 @@ public class ActivityMetaDataDao {
                   .createQuery(
                       "from QuestionnairesFrequenciesDto QCFDTO"
                           + " where QCFDTO.questionnairesId=:questId"
-                          + " order by QCFDTO.frequencyDate, QCFDTO.timePeriodFromDays")
+                          + " order by QCFDTO.frequencyTime")
                   .setString("questId", questionaire.getId())
                   .list();
 
