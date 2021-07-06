@@ -21,6 +21,7 @@ public class StudyUpdate extends RealmObject {
   @PrimaryKey private String studyId;
   private String message;
   private String currentVersion;
+  private boolean enrollAgain;
   private StudyUpdateData updates;
 
   public String getStudyId() {
@@ -61,5 +62,13 @@ public class StudyUpdate extends RealmObject {
 
   public void setStudyUpdateData(StudyUpdateData updates) {
     this.updates = updates;
+  }
+
+  public boolean isEnrollAgain() {
+    return enrollAgain;
+  }
+
+  public void setEnrollAgain(boolean enrollAgain) {
+    this.enrollAgain = enrollAgain;
   }
 }
