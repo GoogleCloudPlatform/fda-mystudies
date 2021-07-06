@@ -20,11 +20,14 @@ export class MobileMenuComponent implements OnInit {
 
   displayHeaderOnResetpassword = true;
 
-  constructor(private readonly userService: UserService, private readonly displayHeader: HeaderDisplayService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly displayHeader: HeaderDisplayService,
+  ) {}
   ngOnInit(): void {
     this.user = this.userService.getUserProfile();
     this.displayHeader.showHeaders$.subscribe((updatedHeaderDisplayStatus) => {
-    this.displayHeaderOnResetpassword = updatedHeaderDisplayStatus;
+      this.displayHeaderOnResetpassword = updatedHeaderDisplayStatus;
     });
   }
   toggleNav(): void {
