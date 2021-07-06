@@ -8,6 +8,7 @@ import {Profile} from '../account/shared/profile.model';
   styleUrls: ['./mobile-menu.component.scss'],
 })
 export class MobileMenuComponent implements OnInit {
+  changePasswordTitle = 'Change password';
   @Input() searchPlaceholder = 'Search by Site or Study ID or Name';
   navIsOpen = false;
   @Input() showSearchBar = true;
@@ -17,8 +18,11 @@ export class MobileMenuComponent implements OnInit {
   user = {} as Profile;
   showSearchOnClick = false;
   constructor(private readonly userService: UserService) {}
+
   ngOnInit(): void {
     this.user = this.userService.getUserProfile();
+     this.changePasswordTitle = 'Set up password';
+     
   }
   toggleNav(): void {
     this.navIsOpen = !this.navIsOpen;
