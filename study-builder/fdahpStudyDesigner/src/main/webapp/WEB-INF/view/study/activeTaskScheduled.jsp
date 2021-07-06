@@ -3807,7 +3807,7 @@
    	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
    	 
-   	if (isNaN(manualEndTime) ||  isNaN(manualStartTime)) {
+   	if (isNaN(manualStartTime)) {
 	    return
 	} 
 
@@ -3899,7 +3899,7 @@
    	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
    	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
    	 
-   	if (isNaN(manualEndTime) ||  isNaN(manualStartTime)) {
+   	if (isNaN(manualEndTime)) {
 	    return
 	    
 	} 
