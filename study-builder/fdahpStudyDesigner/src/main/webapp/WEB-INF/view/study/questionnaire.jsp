@@ -4068,6 +4068,7 @@
 	    return isValidManuallySchedule;
 	  }
   
+  
   function doneQuestionnaire(item, actType, callback) {
     var frequency = $('input[name="frequency"]:checked').val();
     var scheduletype = document.querySelector('input[name="scheduleType"]:checked').value;
@@ -4793,6 +4794,10 @@
    	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
    	 
+ 	if (isNaN(manualStartTime)) {
+	    return
+	} 
+
      var pxday = $("#xdays" + count).val();
      var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
      
@@ -4812,13 +4817,16 @@
     	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
      }
      
-   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime && $('.manually-anchor-option').length === 1) {
+     
+   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
    	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty().append(
    	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
    	   $("#addbtn" + count).addClass("not-allowed");
+   		$("#" + item).val("");
+   		return
    	 } else if ($('.manually-anchor-option').length === 1) {
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
@@ -4881,7 +4889,11 @@
    	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
    	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
    	 
-     var pxday = $("#xdays" + count).val();
+   	if (isNaN(manualEndTime)) {
+	    return
+	} 
+
+   	var pxday = $("#xdays" + count).val();
      var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
      
      if (pxsign === "-") {
@@ -4899,7 +4911,6 @@
      } else {
     	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
      }
-        
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
@@ -4924,23 +4935,40 @@
   $(document).ready(function () {
 
     jQuery(document).on("keyup", ".xdays", function () {
-    	
-      var xday = $(this).val()
       var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
       var parent_id = parseInt(parentId);
-      var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
-      var xdayValue = parseInt(xsign + "" + xday);
-      var yday = $("#ydays" + parent_id).val();
-      var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
-      var ydayValue = parseInt(ysign + "" + yday);
       
-      var startTime = $("#manualStartTime" + parent_id).val();
-      var endTime = $("#manualEndTime" + parent_id).val();
-      
-      if (parent_id === "0") {
+ 	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
+   	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
+   	 
+ 	if (isNaN(manualEndTime) ||  isNaN(manualStartTime)) {
+	    return
+	} 
 
-        if (ydayValue !== "") {
-          if (xdayValue > ydayValue) {
+     var pxday = $("#xdays" + parent_id).val();
+     var pxsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
+     
+     if (pxsign === "-") {
+       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+     } else {
+       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+     }
+     
+     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+     var pyday = $("#ydays" + parent_id).val();
+     var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+     }
+     
+     
+      if (parent_id === 0) {
+
+        if (manualEndTime !== "") {
+          if (manualStartTime > manualEndTime) {
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
             $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -4965,8 +4993,14 @@
         var pyday = $("#ydays" + pre_parent).val();
         var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
+        var manualEndTimeyday =  moment($("#manualEndTime" + pre_parent).val(), "HH:mm A").toDate();
+        if (pysign === "-") {
+        	manualEndTimeyday.setDate(manualEndTimeyday.getDate() - parseInt(pydayValue));
+        } else {
+        	manualEndTimeyday.setDate(manualEndTimeyday.getDate() + parseInt(pydayValue));
+        }
         
-        if (xdayValue < pydayValue) {
+        if (manualStartTime < manualEndTimeyday) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
@@ -4978,8 +5012,8 @@
           $("#ydays" + pre_parent).removeClass("red-border");
           $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
           $("#addbtn" + parent_id).addClass("not-allowed");
-          if (ydayValue !== "") {
-            if (xdayValue > ydayValue) {
+          if (manualEndTime !== "") {
+            if (manualStartTime > manualEndTime) {
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
               $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
@@ -5017,14 +5051,36 @@
     jQuery(document).on("keyup", ".ydays", function () {
     	
       var parent_id = $(this).parent().parent().attr("id").replace('AnchorDate','');
-      var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
-      var xday = $("#xdays" + parent_id).val();
-      var xdayValue = parseInt(xsign + "" + xday);
-      var yday = $("#ydays" + parent_id).val();
-      var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
-      var ydayValue = parseInt(ysign + "" + yday);
       
-      if (ydayValue < xdayValue) {
+ 	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
+   	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
+   	 
+ 	if (isNaN(manualEndTime) ||  isNaN(manualStartTime)) {
+	    return
+	} 
+
+     var pxday = $("#xdays" + parent_id).val();
+     var pxsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
+     
+     if (pxsign === "-") {
+       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+     } else {
+       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+     }
+     
+     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+     var pyday = $("#ydays" + parent_id).val();
+     var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+     
+     if (pysign === "-") {
+    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+     } else {
+    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+     }
+     
+     
+      
+      if (manualEndTime < manualStartTime) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
