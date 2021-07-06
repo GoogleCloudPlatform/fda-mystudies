@@ -7885,6 +7885,7 @@ public class StudyDAOImpl implements StudyDAO {
                   .setString("id", studyId)
                   .uniqueResult();
       studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+      studyBo.setCreatedBy(userId);
       session.save(studyBo);
 
       transaction.commit();
