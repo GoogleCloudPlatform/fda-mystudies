@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - btc-dev2dev-deployment # or the name of your main branch
-     paths:
+    paths:
     - 'common-modules/**'
     - 'auth-server/**'
     - '.github/workflows/SonarQube-auth-server.yml'
