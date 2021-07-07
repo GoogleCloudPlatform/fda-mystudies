@@ -96,12 +96,11 @@
                   </span>
                 </td>
               </tr>
-            
             </tbody>
 
             <tfoot class="custom__tfoot">
               <tr>
-                <td colspan="4">
+                <td colspan="4" class="mob_tbl_footer_text_center">
                   <div class="text-center">
                     <pagination-controls
                       pagination-template
@@ -113,9 +112,11 @@
               </tr>
             </tfoot>
             <tfoot>
-  <tr *ngIf="manageLocations.locations.length === 0">
-    <td colspan="4" class="text-center font12 txt__light-gray">No records found</td>
-  </tr>
+              <tr *ngIf="manageLocations.locations.length === 0">
+                <td colspan="4" class="text-center font12 txt__light-gray mob_tbl_footer_text_center">
+                  No records found
+                </td>
+              </tr>
             </tfoot>
           </table>
         </div>

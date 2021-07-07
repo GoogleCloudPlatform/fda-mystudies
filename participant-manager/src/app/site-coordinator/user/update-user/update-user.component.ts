@@ -24,7 +24,7 @@ import {Status} from 'src/app/shared/enums';
 @Component({
   selector: 'user-update',
   templateUrl: './update-user.component.html',
-   styleUrls: ['./update-user.component.scss'],
+  styleUrls: ['./update-user.component.scss'],
 })
 export class UpdateUserComponent
   extends UnsubscribeOnDestroyAdapter

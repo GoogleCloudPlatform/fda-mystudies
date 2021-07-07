@@ -3517,7 +3517,14 @@ if(document.getElementById("singleSelect").checked==true){
               $(thisAttr).parent().find(".help-block").empty().append(
                 $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
                   "Invalid image size or format"));
+              var id = $(thisAttr).next().attr("id");
+              $("#" + id).val('');
+              $("#" + $(thisAttr).attr("id")).val('');
+              $('.textLabel' + id).text("Upload");
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+              if(response_type == "Image choice"){
+            	  $("#" + $(thisAttr).attr("id")).attr('required', true);
+              }
          }
       }
     });
@@ -4185,6 +4192,15 @@ if(document.getElementById("singleSelect").checked==true){
         short_title != null && short_title != '' && typeof short_title != 'undefined') {
       formData.append("questionInfo", JSON.stringify(questionsBo));
 
+      $('#questionStepId').validator('destroy').validator();
+	  $("#scaleMinDescriptionId").parent().find(".help-block").empty();
+	  $("#scaleMaxDescriptionId").parent().find(".help-block").empty();
+	  $("#scaleMaxImageFileId").parent().find(".help-block").empty();
+	  $("#scaleMinImageFileId").parent().find(".help-block").empty();
+	  $("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
+	  $("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
+	  $("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
+	  $("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
       var data = JSON.stringify(questionsBo);
       $.ajax({
         url: "/studybuilder/adminStudies/saveQuestion.do?_S=${param._S}",

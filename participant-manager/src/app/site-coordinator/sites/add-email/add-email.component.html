@@ -15,21 +15,21 @@
           name="email"
           #email="ngModel"
         />
-    
-      <div *ngIf="email.invalid && (email.dirty || email.touched)">
-        <span
-          class="help-block with-errors error__msg"
-          *ngIf="email.errors?.required"
-        >
-          Enter an email
-        </span>
-        <span
-          class="help-block with-errors error__msg"
-          *ngIf="email.errors?.pattern"
-        >
-          Enter a valid email
-        </span>
-          </div>
+
+        <div *ngIf="email.invalid && (email.dirty || email.touched)">
+          <span
+            class="help-block with-errors error__msg"
+            *ngIf="email.errors?.required"
+          >
+            Enter an email
+          </span>
+          <span
+            class="help-block with-errors error__msg"
+            *ngIf="email.errors?.pattern"
+          >
+            Enter a valid email
+          </span>
+        </div>
       </div>
     </div>
   </div>
