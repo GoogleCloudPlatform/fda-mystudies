@@ -607,7 +607,7 @@ To add the bucket to the shared secrets, create a new working branch and make th
     terraform init && terraform apply
     ```
 
-1. Run the following command to apply the latest Study Builder doployment changes:
+1. Run the following command to apply the latest Study Builder deployment changes:
 
     ```bash
     kubectl apply \
