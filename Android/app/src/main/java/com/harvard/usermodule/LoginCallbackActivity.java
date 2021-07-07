@@ -41,6 +41,7 @@ import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,12 +76,13 @@ public class LoginCallbackActivity extends AppCompatActivity
     Uri appLinkData = intent.getData();
     if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
       Uri uri = intent.getData();
-      if (uri != null) {
-        userId = uri.getQueryParameter("userId");
-        emailId = uri.getQueryParameter("email");
+      Map<String, String> urlParams = AppController.decodeUrl(uri.getEncodedQuery());
+      if (uri != null && urlParams!=null) {
+        userId = urlParams.get("userId");
+        emailId = urlParams.get("email");
         if (uri.getPath().equalsIgnoreCase(Urls.DEEPLINK_CALLBACK)) {
-          code = uri.getQueryParameter("code");
-          accountStatus = uri.getQueryParameter("accountStatus");
+          code = urlParams.get("code");
+          accountStatus = urlParams.get("accountStatus");
           AppController.getHelperProgressDialog().showProgress(this, "", "", false);
 
           HashMap<String, String> headers = new HashMap<>();
@@ -114,10 +116,10 @@ public class LoginCallbackActivity extends AppCompatActivity
           UserModulePresenter userModulePresenter = new UserModulePresenter();
           userModulePresenter.performLogin(loginEvent);
         } else if (uri.getPath().equalsIgnoreCase(Urls.DEEPLINK_ACTIVATION)) {
-          emailId = uri.getQueryParameter("email");
+          emailId = urlParams.get("email");
           Intent verificationIntent =
               new Intent(LoginCallbackActivity.this, VerificationStepActivity.class);
-          verificationIntent.putExtra("email", uri.getQueryParameter("email"));
+          verificationIntent.putExtra("email", urlParams.get("email"));
           verificationIntent.putExtra("type", INTENT_SIGNIN);
           startActivity(verificationIntent);
           finish();
