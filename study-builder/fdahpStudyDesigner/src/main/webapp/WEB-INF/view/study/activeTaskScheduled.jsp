@@ -2745,9 +2745,9 @@
       var endDate = $('#' + id).val();
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
-        $('#' + id).parent().find(".help-block").empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                      "End date and time should not be less than start date and time"));
+        $('#customTime' + count).parent().find(".help-block-timer").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+        "End date and time should not be less than start date and time"));
+           $('#customTime' + count).val('');
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
         $('#' + id).parent().find(".help-block").empty();
@@ -3986,9 +3986,9 @@
           if (manualStartTime > manualEndTime) {
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
-            $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
-                ".help-block").empty().append(
-                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+            $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
+         	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+             $("#manualEndTime" + parent_id).val('');
             $(".addbtn").addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
@@ -4032,9 +4032,9 @@
             if (manualStartTime > manualEndTime) {
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
-              $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
-                  ".help-block").empty().append(
-                $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+              $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
+           	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+               $("#manualEndTime" + parent_id).val('');
               $(".addbtn").addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
