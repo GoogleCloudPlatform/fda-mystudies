@@ -118,6 +118,9 @@ public class NotificationBO implements Serializable {
   @Column(name = "study_id")
   private String studyId;
 
+  @Column(name = "platform")
+  private String platform;
+
   @Column(name = "x_days")
   private Integer xDays;
 
@@ -129,6 +132,14 @@ public class NotificationBO implements Serializable {
 
   @Column(name = "sequence_number")
   private Integer sequenceNumber;
+
+  public String getPlatform() {
+    return platform;
+  }
+
+  public void setPlatform(String platform) {
+    this.platform = platform;
+  }
 
   public String getActionPage() {
     return actionPage;

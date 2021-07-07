@@ -22,6 +22,7 @@
 package com.fdahpstudydesigner.util;
 
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
 import com.google.cloud.storage.Blob;
@@ -1137,5 +1138,19 @@ public class FdahpStudyDesignerUtil {
       return false;
     }
     return true;
+  }
+
+  public static String getStudyPlatform(StudyBo studyBo) {
+    String platform = null;
+    if (studyBo != null
+        && FdahpStudyDesignerConstants.IOS.equalsIgnoreCase(studyBo.getPlatform())) {
+      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS;
+    } else if (studyBo != null
+        && FdahpStudyDesignerConstants.ANDROID.equalsIgnoreCase(studyBo.getPlatform())) {
+      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_ANDROID;
+    } else {
+      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS_ANDROID;
+    }
+    return platform;
   }
 }

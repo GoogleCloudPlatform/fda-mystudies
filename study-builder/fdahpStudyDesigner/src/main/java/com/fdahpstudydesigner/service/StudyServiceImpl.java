@@ -1252,6 +1252,8 @@ public class StudyServiceImpl implements StudyService {
             notificationBO = new NotificationBO();
             notificationBO.setStudyId(resourceBO2.getStudyId());
             notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+            String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+            notificationBO.setPlatform(platform);
             if (StringUtils.isNotEmpty(studyBo.getAppId())) {
               notificationBO.setAppId(studyBo.getAppId());
             }
