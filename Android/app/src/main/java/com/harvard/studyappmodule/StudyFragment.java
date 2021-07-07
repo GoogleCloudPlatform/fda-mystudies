@@ -128,6 +128,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
   private int deleteIndexNumberDb;
   private String latestConsentVersion = "0";
+  private boolean enrollAgain;
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private boolean webserviceCall = false;
@@ -835,7 +836,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (studyUpdate.getStudyUpdateData().isInfo()) {
         dbServiceSubscriber.deleteStudyInfoFromDb(context, studyId);
       }
-      if (studyUpdate.getStudyUpdateData().isConsent()) {
+      if (studyUpdate.getStudyUpdateData().isConsent() && studyUpdate.isEnrollAgain()) {
         callConsentMetaDataWebservice();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
@@ -850,10 +851,11 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     } else if (responseCode == GET_CONSENT_DOC) {
       ConsentDocumentData consentDocumentData = (ConsentDocumentData) response;
       latestConsentVersion = consentDocumentData.getConsent().getVersion();
+      enrollAgain = consentDocumentData.isEnrollAgain();
       callGetConsentPdfWebservice();
     } else if (responseCode == CONSENTPDF) {
       ConsentPDF consentPdfData = (ConsentPDF) response;
-      if (latestConsentVersion != null
+      if (enrollAgain && latestConsentVersion != null
           && consentPdfData != null
           && consentPdfData.getConsent() != null
           && consentPdfData.getConsent().getVersion() != null) {

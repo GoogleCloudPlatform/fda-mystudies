@@ -138,6 +138,9 @@ public class ConsentBo implements Serializable {
   @Column(name = "version")
   private Float version = 0f;
 
+  @Column(name = "enroll_again")
+  private Boolean enrollAgain;
+
   public String getAllowWithoutPermission() {
     return allowWithoutPermission;
   }
@@ -250,6 +253,10 @@ public class ConsentBo implements Serializable {
     return version;
   }
 
+  public Boolean getEnrollAgain() {
+    return enrollAgain;
+  }
+
   public void setAllowWithoutPermission(String allowWithoutPermission) {
     this.allowWithoutPermission = allowWithoutPermission;
   }
@@ -360,5 +367,9 @@ public class ConsentBo implements Serializable {
 
   public void setVersion(Float version) {
     this.version = version;
+  }
+
+  public void setEnrollAgain(Boolean enrollAgain) {
+    this.enrollAgain = enrollAgain;
   }
 }
