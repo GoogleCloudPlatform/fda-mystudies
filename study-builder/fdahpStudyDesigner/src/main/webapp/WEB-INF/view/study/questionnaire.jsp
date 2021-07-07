@@ -5087,9 +5087,6 @@
         $("#xdays" + parent_id).addClass("red-border");
         $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
      	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
-    /*  $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
-         ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-         "Y should be greater than or equal to X")); */
          $("#manualEndTime" + parent_id).val('');
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
