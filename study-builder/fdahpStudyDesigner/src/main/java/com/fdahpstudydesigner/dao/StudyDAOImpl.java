@@ -5810,6 +5810,8 @@ public class StudyDAOImpl implements StudyDAO {
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(studyBo.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+                String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+                notificationBO.setPlatform(platform);
                 if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                   notificationBO.setAppId(studyBo.getAppId());
                 }
@@ -5904,6 +5906,8 @@ public class StudyDAOImpl implements StudyDAO {
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(liveStudy.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+                String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+                notificationBO.setPlatform(platform);
                 if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                   notificationBO.setAppId(studyBo.getAppId());
                 }
@@ -5934,6 +5938,8 @@ public class StudyDAOImpl implements StudyDAO {
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(liveStudy.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+                String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+                notificationBO.setPlatform(platform);
                 if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                   notificationBO.setAppId(studyBo.getAppId());
                 }
@@ -5965,6 +5971,8 @@ public class StudyDAOImpl implements StudyDAO {
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(liveStudy.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+                String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+                notificationBO.setPlatform(platform);
                 if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                   notificationBO.setAppId(studyBo.getAppId());
                 }
