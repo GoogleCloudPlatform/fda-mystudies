@@ -577,6 +577,7 @@ class StudyListViewController: UIViewController {
       StudyUpdates.studyConsentUpdated = false
       StudyUpdates.studyActivitiesUpdated = false
       StudyUpdates.studyResourcesUpdated = false
+      StudyUpdates.studyEnrollAgain = false
 
       currentStudy.version = StudyUpdates.studyVersion
       currentStudy.newVersion = StudyUpdates.studyVersion

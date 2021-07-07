@@ -854,3 +854,7 @@ ALTER TABLE fda_hphc.questionnaires_custom_frequencies
 
 ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
   DROP COLUMN frequency_time;
+  
+/* ISSUE #3022 Provide setting for admin to decide if a new consent document version should 
+trigger a consent flow in the mobile app for enrolled participants */
+ALTER TABLE fda_hphc.consent ADD enroll_again bit(1) DEFAULT NULL;

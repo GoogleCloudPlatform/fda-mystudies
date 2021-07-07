@@ -80,7 +80,7 @@ class ResourcesViewController: UIViewController {
 
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")
 
-    if StudyUpdates.studyConsentUpdated {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }

@@ -88,7 +88,7 @@ class StudyDashboardViewController: UIViewController {
     labelStudyTitle?.text = Study.currentStudy?.name
 
     // check if consent is udpated
-    if StudyUpdates.studyConsentUpdated {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }
