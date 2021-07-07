@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - btc-dev2dev-deployment # or the name of your main branch
+      - btc-dev2dev-deployment # or the name of your main branch.
     paths:
     - 'common-modules/**'
     - 'auth-server/**'
