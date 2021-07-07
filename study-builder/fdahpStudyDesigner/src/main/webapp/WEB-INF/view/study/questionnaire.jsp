@@ -3377,9 +3377,27 @@
       $("#" + id).parent().find(".help-block").empty();
       $("#EndDate" + count).parent().removeClass("has-danger").removeClass("has-error");
       $("#EndDate" + count).parent().find(".help-block").empty();
-      var startDate = $("#" + id).val();
-      var endDate = $("#EndDate" + count).val();
-      if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
+      
+      
+      var startDate =  moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
+ 	 var startTime = moment($("#customStartTime" + count).val(), "HH:mm A").toDate();
+ 	 
+   	if (isNaN(startTime)) {
+	    return
+	} 
+   	
+   	
+ 	 startDate.setHours(startTime.getHours());
+ 	 startDate.setMinutes(startTime.getMinutes());
+ 	 
+ 	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
+ 	 var endTime = moment($("#" + id).val(), "HH:mm A").toDate();
+ 	 endDate.setHours(endTime.getHours());
+ 	 endDate.setMinutes(endTime.getMinutes() - 1);
+ 	 
+ 
+   	
+      if (startDate != '' && endDate != '' && startDate > endDate) {
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
         $("#" + id).parent().find(".help-block").empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -3408,9 +3426,24 @@
       $('#' + id).parent().find(".help-block").empty();
       $("#StartDate" + count).parent().removeClass("has-danger").removeClass("has-error");
       $("#StartDate" + count).parent().find(".help-block").empty();
-      var startDate = $("#StartDate" + count).val();
-      var endDate = $('#' + id).val();
-      if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
+   
+      var startDate =  moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
+  	 var startTime = moment($("#customStartTime" + count).val(), "HH:mm A").toDate();
+  	 
+  	 startDate.setHours(startTime.getHours());
+  	 startDate.setMinutes(startTime.getMinutes());
+  	 
+  	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
+  	 var endTime = moment($("#" + id).val(), "HH:mm A").toDate();
+	 	if (isNaN(endTime)) {
+	 	    return
+	 	} 
+ 	
+  	 endDate.setHours(endTime.getHours());
+  	 endDate.setMinutes(endTime.getMinutes() - 1);
+  
+      
+      if (startDate != '' && endDate != '' && startDate > endDate) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
         $('#customTime' + count).parent().find(".help-block-timer").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             "End date and time should not be less than start date and time"));
@@ -4002,7 +4035,6 @@
 		      if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
 	              '.cusStrDate').val() && $(this).find('.cusEndDate').val() && $(this).find(
 	              '.startTime').val()) {
-		    	  
 	        	  var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
 	              var startTime = moment($(this).find('.startTime').val(), "HH:mm A").toDate()
 	              fromDate.setHours(startTime.getHours());
@@ -4924,6 +4956,8 @@
    	 } else {
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
+   		$("#ydays" + count).removeClass("red-border");
+   		$("#xdays" + count).removeClass("red-border");
    	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty();
    	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
@@ -4942,7 +4976,7 @@
  	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
    	 
- 	if (isNaN(manualEndTime) ||  isNaN(manualStartTime)) {
+ 	if (isNaN(manualStartTime)) {
 	    return
 	} 
 
@@ -5057,7 +5091,7 @@
  	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
    	 
- 	if (isNaN(manualEndTime) ||  isNaN(manualStartTime)) {
+ 	if (isNaN(manualEndTime) ) {
 	    return
 	} 
 
