@@ -222,7 +222,7 @@
                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                     </attributes>
                                                 </fragment>
-                                                <fragment content="Terms">
+                                                <fragment content="terms">
                                                     <attributes>
                                                         <color key="NSColor" red="0.0" green="0.48627450980392156" blue="0.72941176470588232" alpha="1" colorSpace="calibratedRGB"/>
                                                         <font key="NSFont" size="16" name="HelveticaNeue-Medium"/>
@@ -236,7 +236,7 @@
                                                         <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                     </attributes>
                                                 </fragment>
-                                                <fragment content="Privacy Policy">
+                                                <fragment content="privacy policy">
                                                     <attributes>
                                                         <color key="NSColor" red="0.0" green="0.48627450980392156" blue="0.72941176470588232" alpha="1" colorSpace="calibratedRGB"/>
                                                         <font key="NSFont" size="16" name="HelveticaNeue-Medium"/>
