@@ -3391,7 +3391,7 @@
  	 startDate.setMinutes(startTime.getMinutes());
  	 
  	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
- 	 var endTime = moment($("#" + id).val(), "HH:mm A").toDate();
+ 	 var endTime = moment($("#customTime" + count).val(), "HH:mm A").toDate();
  	 endDate.setHours(endTime.getHours());
  	 endDate.setMinutes(endTime.getMinutes() - 1);
  	 
@@ -3434,7 +3434,7 @@
   	 startDate.setMinutes(startTime.getMinutes());
   	 
   	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
-  	 var endTime = moment($("#" + id).val(), "HH:mm A").toDate();
+  	 var endTime = moment($("#customTime" + count).val(), "HH:mm A").toDate();
 	 	if (isNaN(endTime)) {
 	 	    return
 	 	} 
