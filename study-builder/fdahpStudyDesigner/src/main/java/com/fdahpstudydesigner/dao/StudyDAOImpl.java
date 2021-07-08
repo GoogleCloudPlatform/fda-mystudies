@@ -7994,7 +7994,7 @@ public class StudyDAOImpl implements StudyDAO {
       studyPermissionBO.setViewPermission(true);
       session.save(studyPermissionBO);
 
-      // give permission to all super admin Start
+      // give permission to all super admin
       query =
           session
               .createSQLQuery(
@@ -8013,7 +8013,7 @@ public class StudyDAOImpl implements StudyDAO {
         }
       }
 
-      // Add created time for new study
+      // Add created time and created by for new study
       StudyBo studyBo =
           (StudyBo)
               session
@@ -8021,6 +8021,7 @@ public class StudyDAOImpl implements StudyDAO {
                   .setString("id", studyId)
                   .uniqueResult();
       studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+      studyBo.setCreatedBy(userId);
       session.save(studyBo);
 
       transaction.commit();
