@@ -201,7 +201,8 @@ public class StudyExportImportService {
 
         prepareInsertSqlQueriesForStudyActiveTasks(customIdsMap, insertSqlStatements, studyBo);
 
-        addNotificationInsertSql(notificationBOs, insertSqlStatements, customIdsMap);
+        addNotificationInsertSql(
+            notificationBOs, insertSqlStatements, customIdsMap, studyBo.getPlatform());
 
         addResourceInsertSql(resourceBOs, insertSqlStatements, customIdsMap);
 
@@ -1076,7 +1077,8 @@ public class StudyExportImportService {
   private void addNotificationInsertSql(
       List<NotificationBO> notificationBOs,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String platform)
       throws Exception {
 
     if (CollectionUtils.isEmpty(notificationBOs)) {
@@ -1113,7 +1115,8 @@ public class StudyExportImportService {
               customIdsMap.get(STUDY_ID + notificationBO.getStudyId()),
               notificationBO.getxDays(),
               notificationBO.getScheduleTimestamp(),
-              sequence++);
+              sequence++,
+              platform);
       notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
     }
     insertSqlStatements.addAll(notificationBoBoInsertQueryList);

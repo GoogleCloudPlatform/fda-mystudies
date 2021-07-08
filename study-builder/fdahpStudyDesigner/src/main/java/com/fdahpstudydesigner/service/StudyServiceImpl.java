@@ -1663,6 +1663,7 @@ public class StudyServiceImpl implements StudyService {
         notificationBO.setNotificationId(null);
         notificationBO.setStudyId(studyBo.getId());
         notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+        notificationBO.setPlatform(studyBo.getPlatform());
         notificationBO.setSequenceNumber(sequence++);
         notificationBO.setNotificationSent(false);
         if (!notificationBO.isNotificationStatus()) {
