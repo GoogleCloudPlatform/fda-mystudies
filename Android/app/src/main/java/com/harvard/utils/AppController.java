@@ -57,6 +57,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URLDecoder;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPairGenerator;
@@ -72,7 +73,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -1012,5 +1015,19 @@ public class AppController {
       formattedText =  stringBuilder.toString();
     }
     return formattedText;
+  }
+
+  public static Map<String, String> decodeUrl(String s) {
+    Map<String, String> params = new HashMap<>();
+    if (s != null) {
+      String array[] = s.split("&");
+      for (String parameter : array) {
+        String v[] = parameter.split("=");
+        if (v.length > 1) {
+          params.put(v[0], v.length > 1 ? v[1] : null);
+        }
+      }
+    }
+    return params;
   }
 }
