@@ -4189,6 +4189,15 @@ if(document.getElementById("singleSelect").checked==true){
         short_title != null && short_title != '' && typeof short_title != 'undefined') {
       formData.append("questionInfo", JSON.stringify(questionsBo));
 
+      $('#questionStepId').validator('destroy').validator();
+	  $("#scaleMinDescriptionId").parent().find(".help-block").empty();
+	  $("#scaleMaxDescriptionId").parent().find(".help-block").empty();
+	  $("#scaleMaxImageFileId").parent().find(".help-block").empty();
+	  $("#scaleMinImageFileId").parent().find(".help-block").empty();
+	  $("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
+	  $("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
+	  $("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
+	  $("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
       var data = JSON.stringify(questionsBo);
       $.ajax({
         url: "/studybuilder/adminStudies/saveQuestion.do?_S=${param._S}",

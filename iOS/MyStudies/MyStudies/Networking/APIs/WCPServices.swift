@@ -74,6 +74,7 @@ let kContactusFirstname = "firstName"
 // MARK: - Study updates constants
 let kStudyUpdates = "updates"
 let kStudyCurrentVersion = "currentVersion"
+let kEnrollAgain = "enrollAgain"
 let kStudyConsent = "consent"
 let kStudyActivities = "activities"
 let kStudyResources = "resources"

@@ -90,7 +90,7 @@ class ActivitiesViewController: UIViewController {
     self.navigationController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.gray
 
     if (Study.currentStudy?.studyId) != nil {
-      if StudyUpdates.studyConsentUpdated {
+      if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
         NotificationHandler.instance.activityId = ""
         presentUpdatedConsent()
       }
@@ -728,7 +728,7 @@ class ActivitiesViewController: UIViewController {
     DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
 
     //Consent Updated
-    if StudyUpdates.studyConsentUpdated {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       presentUpdatedConsent()
 
     } else if StudyUpdates.studyInfoUpdated {
