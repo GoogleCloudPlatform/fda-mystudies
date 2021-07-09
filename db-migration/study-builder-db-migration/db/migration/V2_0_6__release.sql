@@ -143,11 +143,15 @@ UPDATE fda_hphc.active_task_list SET task_name = 'Spatial span memory' WHERE tas
 
 /* Added start time and end time in active task and questionnaire regular schedule*/
 
-UPDATE fda_hphc.active_task_custom_frequencies SET frequency_start_time = frequency_time
-  WHERE frequency_time IS NOT NULL;
+ALTER TABLE fda_hphc.active_task_custom_frequencies 
+RENAME COLUMN frequency_time TO frequency_end_time;
+
+ALTER TABLE fda_hphc.active_task_custom_frequencies
+  ADD frequency_start_time varchar(255) DEFAULT NULL
+  AFTER frequency_end_time;
   
-UPDATE fda_hphc.active_task_custom_frequencies SET frequency_end_time = frequency_time
-  WHERE frequency_time IS NOT NULL;
+UPDATE fda_hphc.active_task_custom_frequencies SET frequency_start_time = frequency_end_time
+  WHERE frequency_end_time IS NOT NULL;
 
 ALTER TABLE fda_hphc.active_task_custom_frequencies  
   MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
@@ -155,26 +159,23 @@ ALTER TABLE fda_hphc.active_task_custom_frequencies
 ALTER TABLE fda_hphc.active_task_custom_frequencies  
   MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
 
-ALTER TABLE fda_hphc.active_task_custom_frequencies  
-  DROP COLUMN frequency_time;
 
-
-
-UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_start_time = frequency_time
-  WHERE frequency_time IS NOT NULL;
-
-UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_end_time = frequency_time
-  WHERE frequency_time IS NOT NULL;
-
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies 
+RENAME COLUMN frequency_time TO frequency_end_time;
+  
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies
+  ADD frequency_start_time varchar(255) DEFAULT NULL
+  AFTER frequency_end_time;
+  
+UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_start_time = frequency_end_time
+  WHERE frequency_end_time IS NOT NULL;
+ 
 ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
 MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
 
 ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
   MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
 
-ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
-  DROP COLUMN frequency_time;
-  
   
 /* #1020 Data integrity checks missing from WCP and WCP-WS codebase and
 #3114 Provision for import/export of studies*/
