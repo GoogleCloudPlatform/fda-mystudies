@@ -1,0 +1,18 @@
+@media only screen and (max-width: 340px) and (min-width: 320px) {
+  .mob_display-inline {
+    display: inline-block !important;
+  }
+  .card-body__pad .custom__labels__radio {
+    padding: 0 0px !important;
+  }
+  .form-group .custom__labels label {
+    font-size: 75% !important;
+    line-height: 12px !important;
+  }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 320px) {
+  .card-body__pad .custom__labels__radio {
+    padding: 4px;
+  }
+}

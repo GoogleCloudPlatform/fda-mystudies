@@ -32,8 +32,8 @@ public class StudyListBean {
   private String createdOn;
   private String customStudyId;
   private boolean flag = false;
-  private Integer id;
-  private Integer liveStudyId;
+  private String id;
+  private String liveStudyId;
   private String name;
   private String projectLeadName;
   private String researchSponsor;
@@ -41,7 +41,7 @@ public class StudyListBean {
   private boolean viewPermission;
   private String appId;
 
-  public StudyListBean(Integer id, String customStudyId, String name, boolean viewPermission) {
+  public StudyListBean(String id, String customStudyId, String name, boolean viewPermission) {
     super();
     this.id = id;
     this.customStudyId = customStudyId;
@@ -50,7 +50,7 @@ public class StudyListBean {
   }
 
   public StudyListBean(
-      Integer id,
+      String id,
       String customStudyId,
       String name,
       String category,
@@ -76,7 +76,7 @@ public class StudyListBean {
   }
 
   public StudyListBean(
-      Integer id,
+      String id,
       String customStudyId,
       String name,
       String category,
@@ -155,19 +155,19 @@ public class StudyListBean {
     this.flag = flag;
   }
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
-  public Integer getLiveStudyId() {
+  public String getLiveStudyId() {
     return liveStudyId;
   }
 
-  public void setLiveStudyId(Integer liveStudyId) {
+  public void setLiveStudyId(String liveStudyId) {
     this.liveStudyId = liveStudyId;
   }
 

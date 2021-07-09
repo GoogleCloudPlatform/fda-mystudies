@@ -103,6 +103,9 @@ export class SetUpAccountComponent
         this.getPreStoredDetails();
       }),
     );
+    this.passCriteria = `Your password must be at least 8 characters long    
+    and contain lower case, upper case, numeric and
+    special characters.`;
   }
 
   getError(err: ErrorCode): string {

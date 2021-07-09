@@ -21,15 +21,14 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package com.hphc.mystudies.web.servlet;
 
 import com.hphc.mystudies.util.StudyMetaDataUtil;
-import com.sun.jersey.core.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.internal.util.Base64;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -49,7 +48,8 @@ public class AuthenticationService {
     String appTokenKey = "";
     try {
       if (StringUtils.isNotEmpty(authCredentials) && authCredentials.contains("Basic")) {
-        final String encodedUserPassword = authCredentials.replaceFirst("Basic" + " ", "");
+        final byte[] encodedUserPassword =
+            authCredentials.replaceFirst("Basic" + " ", "").getBytes();
         byte[] decodedBytes = Base64.decode(encodedUserPassword);
         bundleIdAndAppToken = new String(decodedBytes, "UTF-8");
         if (bundleIdAndAppToken.contains(":")) {

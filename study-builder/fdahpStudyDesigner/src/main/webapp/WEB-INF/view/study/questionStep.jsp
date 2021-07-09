@@ -193,7 +193,7 @@
                       Step ${destinationStep.sequenceNo}
                       : ${destinationStep.stepShortTitle}</option>
                   </c:forEach>
-                  <option value="0" ${questionnairesStepsBo.destinationStep eq 0 ? 'selected' :''}>
+                   <option value="0" ${questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
                     Completion Step
                   </option>
                 </select>
@@ -801,7 +801,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the minimum value.JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -842,7 +842,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the maximum value.JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -999,7 +999,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the minimum value.JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -1041,7 +1041,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Upload an image that represents the maximum value.JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -1611,7 +1611,7 @@
                           : ${destinationStep.stepShortTitle}</option>
                       </c:forEach>
                       <option
-                          value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
+                          value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                         Completion Step
                       </option>
                     </select>
@@ -1652,7 +1652,7 @@
                           : ${destinationStep.stepShortTitle}</option>
                       </c:forEach>
                       <option
-                          value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
+                          value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq '0' ? 'selected' :''}>
                         Completion Step
                       </option>
                     </select>
@@ -1879,7 +1879,7 @@
                                   : ${destinationStep.stepShortTitle}</option>
                               </c:forEach>
                               <option
-                                  value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
+                                  value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
                                 Completion Step
                               </option>
                             </select>
@@ -1948,7 +1948,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -1999,7 +1999,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2152,7 +2152,7 @@
                                   : ${destinationStep.stepShortTitle}</option>
                               </c:forEach>
                               <option
-                                  value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
+                                  value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
                                 Completion Step
                               </option>
                             </select>
@@ -2261,7 +2261,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2479,7 +2479,7 @@
                               : ${destinationStep.stepShortTitle}</option>
                           </c:forEach>
                           <option
-                              value="0" ${questionnairesStepsBo.questionReponseTypeBo.otherDestinationStepId eq 0 ? 'selected' :''}>
+                              value="0" ${questionnairesStepsBo.questionReponseTypeBo.otherDestinationStepId eq '0' ? 'selected' :''}>
                             Completion Step
                           </option>
                         </select>
@@ -2570,7 +2570,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                 </div>
                 <div class="col-md-2 pl-none col-smthumb-2">
@@ -2581,7 +2581,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="JPEG / PNG <br> Recommended Size: <br>Min: 90x90 Pixels<br>Max: 120x120 Pixels<br>(Maintain aspect ratio for the selected size of the image)"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                 </div>
                 <div class="col-md-2 pl-none">
@@ -2712,7 +2712,7 @@
                                   : ${destinationStep.stepShortTitle}</option>
                               </c:forEach>
                               <option
-                                  value="0" ${questionResponseSubType.destinationStepId eq 0 ? 'selected' :''}>
+                                  value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
                                 Completion Step
                               </option>
                             </select>
@@ -2826,7 +2826,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2936,7 +2936,7 @@
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2997,7 +2997,7 @@
                                 Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -3019,7 +3019,7 @@
                                 Step ${destinationStep.sequenceNo}: ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq 0 ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[1].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -3062,7 +3062,7 @@
                                   &gt;
                                 </option>
                                 <option
-                                    value="<" ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "<" ? 'selected' :''}>
+                                    value='<' ${questionnairesStepsBo.questionConditionBranchBoList[0].inputTypeValue eq "<" ? 'selected' :''}>
                                   &lt;
                                 </option>
                                 <option
@@ -3204,7 +3204,7 @@
                                           &gt;
                                         </option>
                                         <option
-                                            value="<" ${questionConditionBranchBo.inputTypeValue eq "<" ? 'selected' :''}>
+                                            value='<' ${questionConditionBranchBo.inputTypeValue eq "<" ? 'selected' :''}>
                                           &lt;
                                         </option>
                                         <option
@@ -4553,7 +4553,7 @@
           $('#maxDateId').data("DateTimePicker").clear();
           $('#maxDateId').parent().addClass("has-danger").addClass("has-error");
           $('#maxDateId').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Max Date and Time Should not be less than or equal Min Date and Time"));
+              "Max date and time should not be less than or equal min date and time"));
         } else {
           $('#maxDateId').parent().removeClass("has-danger").removeClass("has-error");
           $('#maxDateId').parent().find(".help-block").empty();
@@ -4574,7 +4574,7 @@
             $("#defaultDate").data("DateTimePicker").clear();
             $('#defaultDate').parent().addClass("has-danger").addClass("has-error");
             $('#defaultDate').parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Enter default date to be shown as selected as per availability of Min and Max"));
+                "Enter default date to be shown as selected as per availability of min and max"));
           }
         }
       });
@@ -4666,8 +4666,20 @@
             if(allowedExtensions.includes(fileExtension)){
           img = new Image();
           img.onload = function () {
-            var ht = this.height;
+              var minHeightAndWidth=0;
+
+   var ht = this.height;
             var wds = this.width;
+            if(ht>120 && wds >120){
+            	ht=this.height=120;
+            	wds=this.weight=120;
+            }else{
+            	minHeightAndWidth=Math.min(ht,wds);
+            	ht=this.height=minHeightAndWidth;
+            	wds=this.width=minHeightAndWidth;
+            	
+            }
+                     
             if ((parseInt(ht) == parseInt(wds)) && (parseInt(ht) >= 90 && parseInt(ht) <= 120)
                 && (parseInt(wds) >= 90 && parseInt(wds) <= 120)) {
               $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
@@ -4684,8 +4696,8 @@
               $(thisAttr).parent().find('img').attr("src", "../images/icons/sm-thumb.jpg");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Failed to upload"));
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
+                  "Invalid image size or format"));
               $(thisAttr).parent().parent().parent().find(".removeUrl").click();
               var id = $(thisAttr).next().attr("id");
 
@@ -4694,6 +4706,8 @@
               $('.textLabel' + id).text("Upload");
               if (response_type == "Scale" || response_type == "Continuous scale") {
                 $("#" + id).next().addClass("hide");
+              }else if(response_type == "Image choice"){
+              	  $("#" + $(thisAttr).attr("id")).attr('required', true);
               }
             }
           };
@@ -4702,7 +4716,7 @@
             $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
             $(thisAttr).parent().find(".help-block").empty().append(
               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "File incorrect"));
+                "Invalid image size or format"));
             $(thisAttr).parent().parent().parent().find(".removeUrl").click();
           };
           img.src = _URL.createObjectURL(file);
@@ -4712,7 +4726,14 @@
                 $(thisAttr).parent().find(".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text(
                     "Invalid image size or format"));
+                var id = $(thisAttr).next().attr("id");
+                $("#" + id).val('');
+                $("#" + $(thisAttr).attr("id")).val('');
+                $('.textLabel' + id).text("Upload");
                 $(thisAttr).parent().parent().parent().find(".removeUrl").click();
+                if(response_type == "Image choice"){
+               	  $("#" + $(thisAttr).attr("id")).attr('required', true);
+                 }
            }
         }
       });
@@ -4917,19 +4938,16 @@
     today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
     
     $('#minDateId').datetimepicker({
-        minDate: today,
         ignoreReadonly: true,
         useCurrent: false,
       });
 
     $('#maxDateId').datetimepicker({
-        minDate: today,
         ignoreReadonly: true,
         useCurrent: false,
       });
 
     $('#defaultDate').datetimepicker({
-        minDate: today,
         ignoreReadonly: true,
         useCurrent: false,
       });
@@ -5649,7 +5667,15 @@
 
       questionnaireStep.questionReponseTypeBo = questionReponseTypeBo;
       if (quesstionnaireId && shortTitle) {
-
+    	$('#questionStepId').validator('destroy').validator();
+  		$("#scaleMinDescriptionId").parent().find(".help-block").empty();
+  		$("#scaleMaxDescriptionId").parent().find(".help-block").empty();
+  		$("#scaleMaxImageFileId").parent().find(".help-block").empty();
+  		$("#scaleMinImageFileId").parent().find(".help-block").empty();
+  		$("#continuesScaleMaxDescriptionId").parent().find(".help-block").empty();
+  		$("#continuesScaleMinDescriptionId").parent().find(".help-block").empty();
+  		$("#continuesScaleMinImagePathId").parent().find(".help-block").empty();
+  		$("#continuesScaleMaxImagePathId").parent().find(".help-block").empty();
         formData.append("questionnaireStepInfo", JSON.stringify(questionnaireStep));
         var data = JSON.stringify(questionnaireStep);
         $.ajax({
@@ -5682,6 +5708,9 @@
               $("#questionResponseTypeId").val(questionResponseId);
               $("#responseQuestionId").val(questionId);
 
+              $('.image-choice').find('.requireClass').prop('required', false);
+              $('.image-choice').parent().removeClass("has-danger").removeClass("has-error");
+              $('.image-choice').parent().find(".help-block").empty();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();

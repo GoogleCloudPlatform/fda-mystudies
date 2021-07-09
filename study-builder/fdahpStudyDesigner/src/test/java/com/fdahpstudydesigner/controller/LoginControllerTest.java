@@ -131,7 +131,7 @@ public class LoginControllerTest extends BaseMockIT {
     session.setEmail("superadmin@gmail.com");
     session.setFirstName("Account");
     session.setLastName("Manager");
-    session.setUserId(1);
+    session.setUserId("1");
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -201,7 +201,7 @@ public class LoginControllerTest extends BaseMockIT {
     session.setEmail("super@gmail.com");
     session.setFirstName("firstname");
     session.setLastName("lastname");
-    session.setUserId(3);
+    session.setUserId("3");
     sessionAttributesMap.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     return sessionAttributesMap;
   }

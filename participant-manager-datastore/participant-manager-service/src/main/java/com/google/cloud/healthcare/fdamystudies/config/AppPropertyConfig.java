@@ -74,4 +74,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${study.builder.cloud.bucket.name}")
   private String studyBuilderCloudBucketName;
+
+  @Value("${signed.url.duration.in.hours}")
+  private int signedUrlDurationInHours;
 }

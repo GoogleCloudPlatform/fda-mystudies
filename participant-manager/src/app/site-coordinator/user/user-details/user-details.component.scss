@@ -1,0 +1,14 @@
+@media only screen and (max-width: 420px) and (min-width: 320px) {
+  .display-flex-center {
+    display: inline-block !important;
+    align-items: center;
+  }
+  .display-flex-center .custom__labels__radio {
+    padding-left: 1.5rem !important;
+  }
+}
+
+.orange__text__sm {
+  color: var(--yellow) !important;
+  white-space: pre !important;
+}

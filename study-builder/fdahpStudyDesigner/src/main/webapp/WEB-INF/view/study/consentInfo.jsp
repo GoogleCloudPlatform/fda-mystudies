@@ -349,10 +349,10 @@
                 var elaboratedContent = $(
                     '#elaboratedRTE')
                     .summernote('code');
-                elaboratedContent = replaceSpecialCharacters(elaboratedContent);
                 var briefSummaryText = replaceSpecialCharacters($(
                     "#briefSummary")
                     .val());
+                elaboratedContent = $('#elaboratedRTE').text(elaboratedContent).html();
                 $("#elaborated").val(
                     elaboratedContent);
                 $("#briefSummary").val(
@@ -429,6 +429,8 @@
       }
       consentInfo.type = "save";
 
+      $('#consentInfoFormId').validator('destroy').validator();
+	  $('#elaboratedRTE').parent().find(".help-block").empty();
       var data = JSON.stringify(consentInfo);
       $
           .ajax({

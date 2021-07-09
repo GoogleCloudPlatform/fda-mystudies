@@ -103,7 +103,7 @@ public class StandaloneActivity extends AppCompatActivity
   private String activityId;
   private String localNotification;
   private String latestConsentVersion = "0";
-
+  private boolean enrollAgain;
   private ArrayList<CompletionAdherence> completionAdherenceCalcs = new ArrayList<>();
 
   private static final String FROM = "from";
@@ -379,7 +379,7 @@ public class StandaloneActivity extends AppCompatActivity
       if (studyUpdate.getStudyUpdateData().isInfo()) {
         dbServiceSubscriber.deleteStudyInfoFromDb(this, studyId);
       }
-      if (studyUpdate.getStudyUpdateData().isConsent()) {
+      if (studyUpdate.getStudyUpdateData().isConsent() && studyUpdate.isEnrollAgain()) {
         callConsentMetaDataWebservice();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
@@ -396,12 +396,12 @@ public class StandaloneActivity extends AppCompatActivity
     } else if (responseCode == GET_CONSENT_DOC) {
       ConsentDocumentData consentDocumentData = (ConsentDocumentData) response;
       latestConsentVersion = consentDocumentData.getConsent().getVersion();
-
+      enrollAgain = consentDocumentData.isEnrollAgain();
       callGetConsentPdfWebservice();
 
     } else if (responseCode == CONSENTPDF) {
       ConsentPDF consentPdfData = (ConsentPDF) response;
-      if (latestConsentVersion != null
+      if (enrollAgain && latestConsentVersion != null
           && consentPdfData != null
           && consentPdfData.getConsent() != null
           && consentPdfData.getConsent().getVersion() != null) {

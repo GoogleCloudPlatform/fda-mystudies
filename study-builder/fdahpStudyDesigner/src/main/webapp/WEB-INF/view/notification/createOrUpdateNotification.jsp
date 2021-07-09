@@ -76,6 +76,7 @@
               <span
                <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
           class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+          style="width: 20px;background-position: -164px -68px;"
           data-toggle="tooltip"
           data-placement="top"
           title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}."></span>
@@ -393,7 +394,13 @@
     });
 
     var today, datepicker;
+    <c:if test="${ empty notificationBO.scheduleDate}">
     today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    
+    <c:if test="${not empty notificationBO.scheduleDate}">
+    today=${notificationBO.scheduleDate};
+    </c:if>
     
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
@@ -438,7 +445,7 @@
         $('#timepicker1').val('');
         $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
             .empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time that has not already passed for the current date"));
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time in the future"));
         valid = false;
       } else {
         $('.timepicker').parent().removeClass('has-error has-danger').find(

@@ -71,7 +71,9 @@ public class ApplicationInitializer implements WebApplicationInitializer {
       }
       multipartFile = new CommonsMultipartFile(fileItem);
       FdahpStudyDesignerUtil.saveDefaultImageToCloudStorage(
-          multipartFile, defaultImagefiles[i].getName(), FdahpStudyDesignerConstants.STUDTYLOGO);
+          multipartFile,
+          defaultImagefiles[i].getName(),
+          FdahpStudyDesignerConstants.DEFAULT_IMAGES);
     }
   }
 }

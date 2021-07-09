@@ -14,7 +14,7 @@
             <div class="pl-1">
               <div class="mb-xs">App user registry</div>
               <div>
-                <div class="pr-xlg flex__justify__space-between">
+                <div class="pr-xlg flex__justify__space-between flex__text">
                   <div class="banner__label mr-xs">
                     {{ appDetails.customId }}
                     <span class="banner__text">{{ appDetails.name }}</span>
@@ -108,16 +108,11 @@
                 </span>
               </td>
             </tr>
-            <tr *ngIf="appDetails.participants.length === 0">
-              <td colspan="4" class="text-center font12 txt__light-gray">
-                No records found
-              </td>
-            </tr>
           </tbody>
 
           <tfoot class="custom__tfoot">
             <tr>
-              <td colspan="4">
+              <td colspan="4" class="mob_tbl_footer_text_center">
                 <div class="text-center">
                   <pagination-controls
                     pagination-template
@@ -125,6 +120,16 @@
                     (pageChange)="pageChange($event)"
                   ></pagination-controls>
                 </div>
+              </td>
+            </tr>
+          </tfoot>
+          <tfoot>
+            <tr *ngIf="appDetails.participants.length === 0">
+              <td
+                colspan="4"
+                class="text-center font12 txt__light-gray mob_tbl_footer_text_center"
+              >
+                No records found
               </td>
             </tr>
           </tfoot>

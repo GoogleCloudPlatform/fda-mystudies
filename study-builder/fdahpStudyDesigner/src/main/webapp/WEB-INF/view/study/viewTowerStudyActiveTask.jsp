@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <style>
-    .help-block ul {
+    .help-block .list-unstyled {
       width: max-content !important;
     }
 
@@ -675,6 +675,7 @@
             $('.addLineChartBlock_number_of_moves_tower').find('.requireClass').attr('required',
                 true);
             $('#number_of_moves_tower_chart_id').val(true);
+            $("#inlineRadio2").prop("checked", true);
             $('.selectpicker').selectpicker('refresh');
           } else {
             $('.addLineChartBlock_number_of_moves_tower').css("display", "none");

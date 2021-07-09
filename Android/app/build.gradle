@@ -44,7 +44,7 @@ android {
     }
     repositories {
         maven {
-            url 'https://github.com/WickeDev/stetho-realm/raw/master/maven-repo'
+            url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
         }
     }
     packagingOptions {
@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'de.greenrobot:eventbus:2.4.0'
     implementation 'org.researchstack:backbone:1.1.1'
-    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.github.barteksc:android-pdf-viewer:2.4.0'
     implementation 'com.kovachcode:timePickerWithSeconds:1.0.1'
     implementation 'com.tom_roush:pdfbox-android:1.8.10.1'
@@ -91,7 +91,7 @@ dependencies {
 
     //please remove these 2 dependencies for release build
     implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.uphyca:stetho_realm:2.3.0'
+    implementation 'com.uphyca:stetho_realm:2.1.0'
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

@@ -352,11 +352,11 @@ The deployment process takes the following approach:
     `manual-android-bundle-id` | The value of [`applicationId`](https://developer.android.com/studio/build/application-id) that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/), for example `{PREFIX}_{ENV}.{DOMAIN}` (note that some characters are not permitted) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-bundle-id" --data-file=-`
     `manual-fcm-api-url` | [URL](https://firebase.google.com/docs/reference/fcm/rest) of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fcm-api-url" --data-file=-`
     `manual-android-server-key` | The Firebase Cloud Messaging [server key](https://firebase.google.com/docs/cloud-messaging/auth-server#authorize-legacy-protocol-send-requests) that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-server-key" --data-file=-`
-    `manual-android-deeplink-url` | The URL to redirect to after Android login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
+    `manual-android-deeplink-url` | The sign-in screen is run on the Hydra-based auth server. This URL is a deep link that helps redirect users to the native mobile app after they sign in. (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
     `manual-ios-bundle-id` | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) - for a production application, the bundle ID needs to be verified with Apple and is usually a reverse domain name that you own; it is a unique app identifier and application capabilities are mapped to this value ([details](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-bundle-id" --data-file=-`
     `manual-ios-certificate` | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate" --data-file=-`
     `manual-ios-certificate-password` | The value of the password for the `.p12` certificate (necessary if your certificate is encrypted - otherwise leave empty) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate-password" --data-file=-`
-    `manual-ios-deeplink-url` | The URL to redirect to after iOS login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
+    `manual-ios-deeplink-url` | The sign-in screen is run on the Hydra-based auth server. This URL is a deep link that helps redirect users to the native mobile app after they sign in. (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
      > Note: When updating secrets after this initial deployment, you must refresh your Kubernetes cluster and restart the relevant pods to ensure the updated secrets are propagated to your applications (you do not need to do this now - only when making updates later), for example you can update your Kubernetes state with:
      ```bash
      cd $GIT_ROOT/deployment/terraform/kubernetes
@@ -510,29 +510,29 @@ Go to Data Project ({prefix}-{env}-data) and remove `AllUser` access from the ({
 #### Script process:
 In the Terraform/{prefix}-{env}-data /main.tf file, please replace the existing `module "{prefix}_{env}_mystudies_study_resources>"` with the values below, replacing with your prefix and env values
 
-```
+```bash
 module "{prefix}_{env}_mystudies_study_resources" {
-source = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
-version = "~> 1.4"
+  source = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
 
-name = "{prefix}-{env}-mystudies-study-resources"
-project_id = module.project.project_id
-location = "us-east1"
+  name = "{prefix}-{env}-mystudies-study-resources"
+  project_id = module.project.project_id
+  location = "us-east1"
 
-iam_members = [
-{
-member = "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
-role = "roles/storage.objectAdmin"
-},
-{
-member = "serviceAccount:study-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
-role = "roles/storage.objectAdmin"
-},
-{
-member = "serviceAccount:participant-manager-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
-role = "roles/storage.objectAdmin"
-},
-]
+  iam_members = [
+    {
+      member = "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+      role = "roles/storage.objectAdmin"
+    },
+    {
+      member = "serviceAccount:study-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+      role = "roles/storage.objectAdmin"
+    },
+    {
+      member = "serviceAccount:participant-manager-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
+      role = "roles/storage.objectAdmin"
+    },
+  ]
 }
 ```
 
@@ -540,7 +540,7 @@ role = "roles/storage.objectAdmin"
 
 Pull the latest code (2.0.5+) and run the following commands
 
-```
+```bash
 cd $GIT_ROOT
 tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/deployment/terraform
 git checkout -b bucket-permissions
@@ -551,6 +551,69 @@ git push origin bucket-permissions
 
 Then create a pull request from `bucket-permissions` branch to your target branch
 Once your pull request pre-submit checks have completed successfully, and you have received code review approval, merge your pull request to trigger terraform apply(you can view the status of the operation in the Cloud Build history of your devops project)
+
+### Study Import / Export (2.0.6 upgrade)
+
+Release 2.0.6 added additional functionality to support study import and export. This requires a permission change and an additional secret to be added. When upgrading a prior release to 2.0.6 or greater, you will need to perform the following steps.
+
+#### Permission change to import bucket
+
+Update your repository with the latest changes from release 2.0.6 or greater, create a new working branch and make the following changes:
+
+1.  In the file `deployment/terraform/{prefix}-{env}-data/main.tf` find the section `module "{prefix}_{env}_mystudies_sql_import" { [...] }` and completely replace it with the following, substituting your values for `{prefix}` & `{env}` and changing the location to your preference:
+
+    ```bash
+    module "{prefix}-{env}_mystudies_sql_import" {
+    source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+    version = "~> 1.4"
+
+    name       = "{prefix}-{env}-mystudies-sql-import"
+    project_id = module.project.project_id
+    location   = "us-east1"
+
+    iam_members = [
+      {
+        member = "serviceAccount:${module.mystudies.instance_service_account_email_address}"
+        role   = "roles/storage.objectViewer"
+      },
+      {
+        member = "serviceAccount:study-builder-gke-sa@btc-qa-apps.iam.gserviceaccount.com"
+        role   = "roles/storage.objectAdmin"
+      },
+    ]
+    }
+
+    ```
+
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+#### Add import / export bucket to Kubernetes cluster shared secrets
+
+To add the bucket to the shared secrets, create a new working branch and make the following change:
+
+1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Shared secrets` add the following line to the section `data = { [...] }`, substituting your values for `{prefix}` & `{env}`
+
+    ```bash
+    study_export_import_bucket_name   = "{prefix}_{env}-mystudies-sql-import" 
+    ```
+
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+1.  Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.
+
+1.  Run the following commands to apply the changes to your cluster:
+
+    ```bash
+    cd $GIT_ROOT/deployment/terraform/kubernetes/
+    terraform init && terraform apply
+    ```
+
+1. Run the following command to apply the latest Study Builder deployment changes:
+
+    ```bash
+    kubectl apply \
+      -f $GIT_ROOT/study-builder/tf-deployment.yaml
+    ```
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>

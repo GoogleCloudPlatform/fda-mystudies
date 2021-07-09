@@ -65,6 +65,7 @@ public class AppConstants {
 
   public static final String STUDY = "Study";
   public static final String GATEWAY = "Gateway";
+  public static final String STUDY_EVENT = "studyEvent";
 
   public static final String MISSING_REQUIRED_PARAMETER = "MissingRequiredParameter";
   public static final String INVALID_REQUEST_EXCEPTION = "InvalidRequestException";

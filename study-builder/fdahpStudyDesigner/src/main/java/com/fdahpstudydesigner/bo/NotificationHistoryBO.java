@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,10 +28,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "notification_history")
@@ -39,23 +40,24 @@ public class NotificationHistoryBO implements Serializable {
   private static final long serialVersionUID = 3634540541782531200L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "history_id")
-  private Integer historyId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "history_id", updatable = false, nullable = false)
+  private String historyId;
 
   @Column(name = "notification_id")
-  private Integer notificationId;
+  private String notificationId;
 
   @Column(name = "notification_sent_date_time")
   private String notificationSentDateTime;
 
   @Transient private String notificationSentdtTime;
 
-  public Integer getHistoryId() {
+  public String getHistoryId() {
     return historyId;
   }
 
-  public Integer getNotificationId() {
+  public String getNotificationId() {
     return notificationId;
   }
 
@@ -67,11 +69,11 @@ public class NotificationHistoryBO implements Serializable {
     return notificationSentdtTime;
   }
 
-  public void setHistoryId(Integer historyId) {
+  public void setHistoryId(String historyId) {
     this.historyId = historyId;
   }
 
-  public void setNotificationId(Integer notificationId) {
+  public void setNotificationId(String notificationId) {
     this.notificationId = notificationId;
   }
 

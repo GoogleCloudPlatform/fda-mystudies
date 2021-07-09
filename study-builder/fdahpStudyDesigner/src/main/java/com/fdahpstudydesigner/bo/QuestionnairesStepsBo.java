@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -31,12 +32,12 @@ import java.util.TreeMap;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "questionnaires_steps")
@@ -65,6 +66,10 @@ import javax.persistence.Transient;
       name = "getQuestionnaireStepsByType",
       query =
           "From QuestionnairesStepsBo QSBO where QSBO.questionnairesId=:questionnairesId and QSBO.stepType=:stepType and QSBO.active=1"),
+  @NamedQuery(
+      name = "getQuestionnaireStepsByquestionnairesId",
+      query =
+          "From QuestionnairesStepsBo QSBO where QSBO.questionnairesId IN (:questionnairesIds)  and QSBO.active=1"),
 })
 public class QuestionnairesStepsBo implements Serializable {
 
@@ -74,23 +79,23 @@ public class QuestionnairesStepsBo implements Serializable {
   private Boolean active;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "created_on")
   private String createdOn;
 
   @Column(name = "destination_step")
-  private Integer destinationStep;
+  private String destinationStep;
 
   @Transient private SortedMap<Integer, QuestionnaireStepBean> formQuestionMap = new TreeMap<>();
 
   @Column(name = "instruction_form_id")
-  private Integer instructionFormId;
+  private String instructionFormId;
 
   @Transient private Integer isShorTitleDuplicate = 0;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "modified_on")
   private String modifiedOn;
@@ -98,7 +103,7 @@ public class QuestionnairesStepsBo implements Serializable {
   @Transient private List<QuestionConditionBranchBo> questionConditionBranchBoList;
 
   @Column(name = "questionnaires_id")
-  private Integer questionnairesId;
+  private String questionnairesId;
 
   @Transient private QuestionReponseTypeBo questionReponseTypeBo;
 
@@ -122,9 +127,10 @@ public class QuestionnairesStepsBo implements Serializable {
   private Boolean status;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "step_id")
-  private Integer stepId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "step_id", updatable = false, nullable = false)
+  private String stepId;
 
   @Column(name = "step_short_title")
   private String stepShortTitle;
@@ -138,7 +144,7 @@ public class QuestionnairesStepsBo implements Serializable {
     return active;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
@@ -146,7 +152,7 @@ public class QuestionnairesStepsBo implements Serializable {
     return createdOn;
   }
 
-  public Integer getDestinationStep() {
+  public String getDestinationStep() {
     return destinationStep;
   }
 
@@ -154,7 +160,7 @@ public class QuestionnairesStepsBo implements Serializable {
     return formQuestionMap;
   }
 
-  public Integer getInstructionFormId() {
+  public String getInstructionFormId() {
     return instructionFormId;
   }
 
@@ -162,7 +168,7 @@ public class QuestionnairesStepsBo implements Serializable {
     return isShorTitleDuplicate;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
@@ -174,7 +180,7 @@ public class QuestionnairesStepsBo implements Serializable {
     return questionConditionBranchBoList;
   }
 
-  public Integer getQuestionnairesId() {
+  public String getQuestionnairesId() {
     return questionnairesId;
   }
 
@@ -210,7 +216,7 @@ public class QuestionnairesStepsBo implements Serializable {
     return status;
   }
 
-  public Integer getStepId() {
+  public String getStepId() {
     return stepId;
   }
 
@@ -230,7 +236,7 @@ public class QuestionnairesStepsBo implements Serializable {
     this.active = active;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
@@ -238,15 +244,15 @@ public class QuestionnairesStepsBo implements Serializable {
     this.createdOn = createdOn;
   }
 
-  public void setDestinationStep(Integer destinationStep) {
-    this.destinationStep = destinationStep;
+  public void setDestinationStep(String desId) {
+    this.destinationStep = desId;
   }
 
   public void setFormQuestionMap(SortedMap<Integer, QuestionnaireStepBean> formQuestionMap) {
     this.formQuestionMap = formQuestionMap;
   }
 
-  public void setInstructionFormId(Integer instructionFormId) {
+  public void setInstructionFormId(String instructionFormId) {
     this.instructionFormId = instructionFormId;
   }
 
@@ -254,7 +260,7 @@ public class QuestionnairesStepsBo implements Serializable {
     this.isShorTitleDuplicate = isShorTitleDuplicate;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -267,7 +273,7 @@ public class QuestionnairesStepsBo implements Serializable {
     this.questionConditionBranchBoList = questionConditionBranchBoList;
   }
 
-  public void setQuestionnairesId(Integer questionnairesId) {
+  public void setQuestionnairesId(String questionnairesId) {
     this.questionnairesId = questionnairesId;
   }
 
@@ -304,7 +310,7 @@ public class QuestionnairesStepsBo implements Serializable {
     this.status = status;
   }
 
-  public void setStepId(Integer stepId) {
+  public void setStepId(String stepId) {
     this.stepId = stepId;
   }
 
