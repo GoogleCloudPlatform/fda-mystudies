@@ -14,6 +14,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PUS
 import com.eatthepath.pushy.apns.ApnsClient;
 import com.eatthepath.pushy.apns.ApnsClientBuilder;
 import com.eatthepath.pushy.apns.PushNotificationResponse;
+import com.eatthepath.pushy.apns.auth.ApnsSigningKey;
 import com.eatthepath.pushy.apns.util.SimpleApnsPayloadBuilder;
 import com.eatthepath.pushy.apns.util.SimpleApnsPushNotification;
 import com.eatthepath.pushy.apns.util.concurrent.PushNotificationFuture;
@@ -41,6 +42,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -328,20 +331,22 @@ public class StudiesServicesImpl implements StudiesServices {
       throws IOException {
 
     logger.entry("Begin pushNotification()");
-    String certificatePassword = "";
+    /*String certificatePassword = "";*/
 
     File file = null;
     if (notificationBean.getDeviceToken() != null
         && notificationBean.getDeviceToken().length() > 0
         && appPropertiesDetails != null) {
-      certificatePassword = appPropertiesDetails.getIosCertificatePassword();
+      /*certificatePassword = appPropertiesDetails.getIosCertificatePassword();*/
 
       byte[] decodedBytes;
+      final String teamId = "3485DDCN2M";
+      final String keyId = "QU6XK35ALG";
       FileOutputStream fop;
       decodedBytes =
           java.util.Base64.getDecoder()
-              .decode(appPropertiesDetails.getIosCertificate().replaceAll("\n", ""));
-      file = File.createTempFile("pushCert_" + appPropertiesDetails.getAppId(), ".p12");
+              .decode(appPropertiesDetails.getIosToken().replaceAll("\n", ""));
+      file = File.createTempFile("pushCert_" + appPropertiesDetails.getAppId(), ".p8");
       fop = new FileOutputStream(file);
       fop.write(decodedBytes);
       fop.flush();
@@ -349,50 +354,56 @@ public class StudiesServicesImpl implements StudiesServices {
       file.deleteOnExit();
 
       if (file != null) {
-        ApnsClient apnsClient =
-            new ApnsClientBuilder()
-                .setApnsServer(applicationPropertyConfiguration.getIosPushNotificationType())
-                .setClientCredentials(new File(file.getPath()), certificatePassword)
-                .build();
+        try {
+          ApnsClient apnsClient =
+              new ApnsClientBuilder()
+                  .setApnsServer(applicationPropertyConfiguration.getIosPushNotificationType())
+                  .setSigningKey(
+                      ApnsSigningKey.loadFromPkcs8File(new File(file.getPath()), teamId, keyId))
+                  .build();
 
-        String payload =
-            new SimpleApnsPayloadBuilder()
-                .setAlertBody(notificationBean.getNotificationText())
-                .addCustomProperty("subtype", notificationBean.getNotificationSubType())
-                .addCustomProperty("type", notificationBean.getNotificationType())
-                .addCustomProperty("studyId", notificationBean.getCustomStudyId())
-                .setSound("default")
-                .build();
+          String payload =
+              new SimpleApnsPayloadBuilder()
+                  .setAlertBody(notificationBean.getNotificationText())
+                  .addCustomProperty("subtype", notificationBean.getNotificationSubType())
+                  .addCustomProperty("type", notificationBean.getNotificationType())
+                  .addCustomProperty("studyId", notificationBean.getCustomStudyId())
+                  .setSound("default")
+                  .build();
 
-        for (int i = 0; i < notificationBean.getDeviceToken().length(); i++) {
-          String token = (String) notificationBean.getDeviceToken().get(i);
-          SimpleApnsPushNotification pushNotification =
-              new SimpleApnsPushNotification(token, appPropertiesDetails.getIosBundleId(), payload);
-          try {
-            final PushNotificationFuture<
-                    SimpleApnsPushNotification,
-                    PushNotificationResponse<SimpleApnsPushNotification>>
-                result = apnsClient.sendNotification(pushNotification);
+          for (int i = 0; i < notificationBean.getDeviceToken().length(); i++) {
+            String token = (String) notificationBean.getDeviceToken().get(i);
+            SimpleApnsPushNotification pushNotification =
+                new SimpleApnsPushNotification(
+                    token, appPropertiesDetails.getIosBundleId(), payload);
+            try {
+              final PushNotificationFuture<
+                      SimpleApnsPushNotification,
+                      PushNotificationResponse<SimpleApnsPushNotification>>
+                  result = apnsClient.sendNotification(pushNotification);
 
-            // getting the response from APNs
-            final PushNotificationResponse<SimpleApnsPushNotification> pushNotificationResponse =
-                result.get();
-            if (pushNotificationResponse.isAccepted()) {
-              logger.info("Push notification accepted by APNs gateway.");
-            } else {
-              logger.info(
-                  "Notification rejected by the APNs gateway: "
-                      + pushNotificationResponse.getRejectionReason());
-              if (pushNotificationResponse.getTokenInvalidationTimestamp() != null) {
+              // getting the response from APNs
+              final PushNotificationResponse<SimpleApnsPushNotification> pushNotificationResponse =
+                  result.get();
+              if (pushNotificationResponse.isAccepted()) {
+                logger.info("Push notification accepted by APNs gateway.");
+              } else {
                 logger.info(
-                    "\t…and the token is invalid as of "
-                        + pushNotificationResponse.getTokenInvalidationTimestamp());
+                    "Notification rejected by the APNs gateway: "
+                        + pushNotificationResponse.getRejectionReason());
+                if (pushNotificationResponse.getTokenInvalidationTimestamp() != null) {
+                  logger.info(
+                      "\t…and the token is invalid as of "
+                          + pushNotificationResponse.getTokenInvalidationTimestamp());
+                }
               }
+            } catch (final Exception e) {
+              logger.error("Failed to send push notification.");
+              e.printStackTrace();
             }
-          } catch (final Exception e) {
-            logger.error("Failed to send push notification.");
-            e.printStackTrace();
           }
+        } catch (final NoSuchAlgorithmException | IOException | InvalidKeyException e) {
+          e.printStackTrace();
         }
       }
     }
