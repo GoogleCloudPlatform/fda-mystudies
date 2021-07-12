@@ -672,11 +672,11 @@
       $('#actTy').remove();
       $('<input />').attr('type', 'hidden').attr('name', "actionType").attr('value',
           $(this).attr('actType')).attr('id', 'actTy').appendTo('#overViewFormId');
-      if ($(this).attr('actType') == 'save') {
-        e.preventDefault();
-        $('#overViewFormId').validator('destroy');
-        $('#overViewFormId').submit();
-      }
+//       if ($(this).attr('actType') == 'save') {
+//         e.preventDefault();
+//         $('#overViewFormId').validator('destroy');
+//         $('#overViewFormId').submit();
+//       }
     });
 
     function validateSummernote(){   
