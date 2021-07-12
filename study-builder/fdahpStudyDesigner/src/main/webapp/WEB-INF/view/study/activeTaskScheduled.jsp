@@ -3583,8 +3583,6 @@
               $(this).parent().find(".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   "Date reset to current date"));
-              if (valid)
-                  valid = false;
             } else {
               
               $(this).parent().addClass('has-error has-danger');
@@ -3598,18 +3596,28 @@
             $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
           }
         timeRef.each(function () {
-          if ($(this).val()) {
-            thisDate = moment($(this).val(), "h:mm a").toDate();
-            dt.setHours(thisDate.getHours());
-            dt.setMinutes(thisDate.getMinutes());
-            if (dt < serverDateTime()) {
-              $(this).data("DateTimePicker").clear();
-              $(this).parent().addClass('has-error has-danger');
-              if (valid)
-                valid = false;
-            } else {
-            }
-          }
+        	if ($(this).val()) {
+                thisDate = moment($(this).val(), "h:mm a").toDate();
+                dt.setHours(thisDate.getHours());
+                dt.setMinutes(thisDate.getMinutes());
+                if (timeRef.hasClass("dailyClock")) {
+                  if (dt < serverDateTime()) {
+                    $(this).data("DateTimePicker").date(serverDateTime());
+                    $(this).parent().addClass("has-danger").addClass("has-error");
+                    $(this).parent().find(".help-block").empty().append(
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                        "Time reset to current time "));
+                  }
+                } else {
+                  if (dt < serverDateTime()) {
+                    $(this).data("DateTimePicker").clear();
+                    $(this).parent().addClass('has-error has-danger');
+
+                    if (valid)
+                      valid = false;
+                  }
+                }
+              }
         });
       }
     });
