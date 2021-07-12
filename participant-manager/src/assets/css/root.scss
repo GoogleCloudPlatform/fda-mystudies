@@ -1281,7 +1281,7 @@ select {
   }
 
   .card-header {
-    padding: 15px 10px !important;
+    padding: 15px 6px !important;
   }
   .mob_display-flowroot {
     display: flow-root !important;
@@ -1515,9 +1515,9 @@ select {
   }
 }
 
-.table_row_hover_shadow tr {
-  position: relative;
-}
+// .table_row_hover_shadow tr {
+//   position: relative;
+// }
 .table_row_hover_shadow tr:hover {
   box-shadow: 1px 1px 6px 1px #ccd7e2;
   cursor: pointer;
@@ -1646,10 +1646,10 @@ meter::-webkit-meter-high-value {
   color: var(--yellow);
 }
 .goodPwd {
-  color: var(--green);
+  color: var(--light-green);
 }
 .strongPwd {
-  color: var(--green);
+  color: var(--light-green);
 }
 
 .weakPwd,
@@ -1710,6 +1710,16 @@ meter::-moz-meter-bar {
   }
   .form-group .custom__labels label {
     font-size: 75% !important;
-    line-height: 12px !important;
+    line-height: 15px !important;
+  }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 320px) {
+  .mob_tbl_footer_text_center {
+    display: block !important;
+  }
+
+  .table thead tr span.mobile__view {
+    display: none !important;
   }
 }
