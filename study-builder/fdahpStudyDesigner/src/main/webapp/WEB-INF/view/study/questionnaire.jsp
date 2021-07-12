@@ -2591,13 +2591,14 @@
       format: 'MM/DD/YYYY',
       minDate: startToday,
       useCurrent: false,
-    })
-        .on("dp.change", function (e) {
-          if (e.date._d)
-            $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
-          else
-            $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
-        });
+    }).on("dp.change", function (e) {
+    	if (typeof $("#chooseEndDate").val() === "undefined") {
+	      if (e.date._d)
+	        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
+	      else
+	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    	}
+    });
 
     $("#chooseDate").on("click", function (e) {
         $('#chooseDate').data("DateTimePicker").minDate(serverDate());

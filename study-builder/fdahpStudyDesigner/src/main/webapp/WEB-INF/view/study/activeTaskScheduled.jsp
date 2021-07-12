@@ -2033,15 +2033,15 @@
       format: 'MM/DD/YYYY',
       minDate: startToday,
       useCurrent: false
-    })
-        .on("dp.change", function (e) {
-          if (e.date._d)
-            $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
-          else
-            $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
-        	
-        	
-        });
+    }).on("dp.change", function (e) {
+    	
+    	if (typeof $("#chooseEndDate").val() === "undefined") {
+	      if (e.date._d)
+	        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
+	      else
+	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    	}
+    });
 
     
     $("#chooseDate").on("click", function (e) {
@@ -3098,6 +3098,7 @@
           $(document).find(".dailyClock").not('.cursor-none, :disabled'))) {
         isFormValid = false;
       }
+    
     } else if (frequency_text == 'Weekly') {
 
       var frequence_id = $("#weeklyFreId").val();
@@ -3572,13 +3573,30 @@
     dateRef.each(function () {
       dt = dateRef.val();
       if (dt) {
-        dt = moment(dt, "MM/DD/YYYY").toDate();
-        if (dt < serverDate()) {
-          $(this).parent().addClass('has-error has-danger');
-          $(this).data("DateTimePicker").clear();
-        } else {
-          $(this).parent().removeClass('has-error has-danger').find('.help-block.with-errors').empty();
-        }
+          dt = moment(dt, "MM/DD/YYYY").toDate();
+          if (dt < serverDate()) {
+            if (dateRef.attr('id') == "startDate") {
+              $(this).data("DateTimePicker").date(serverDateTime());
+              dt = dateRef.val();
+              $(this).val(dt);
+              $(this).parent().addClass('has-error has-danger');
+              $(this).parent().find(".help-block").empty().append(
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Date reset to current date"));
+              if (valid)
+                  valid = false;
+            } else {
+              
+              $(this).parent().addClass('has-error has-danger');
+              $(this).parent().find(".help-block").empty().append(
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Please select a valid date"));
+              $(this).data("DateTimePicker").date(serverDateTime());
+              $(this).data("DateTimePicker").clear();
+            }
+          } else {
+            $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
+          }
         timeRef.each(function () {
           if ($(this).val()) {
             thisDate = moment($(this).val(), "h:mm a").toDate();
