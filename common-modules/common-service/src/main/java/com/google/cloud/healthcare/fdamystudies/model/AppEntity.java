@@ -75,6 +75,11 @@ public class AppEntity implements Serializable {
   private String iosCertificate;
 
   @ToString.Exclude
+  @Column(name = "ios_token")
+  @Type(type = "text")
+  private String iosToken;
+
+  @ToString.Exclude
   @Column(name = "ios_certificate_password", length = SMALL_LENGTH)
   private String iosCertificatePassword;
 
