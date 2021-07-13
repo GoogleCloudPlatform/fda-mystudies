@@ -889,8 +889,8 @@ public class StudyExportImportService {
               questionnairesStepsBo.getActive(),
               questionnairesStepsBo.getCreatedBy(),
               questionnairesStepsBo.getCreatedOn(),
-              questionnairesStepsBo.getDestinationStep().equals("0")
-                  ? "0"
+              questionnairesStepsBo.getDestinationStep().equals(String.valueOf(0))
+                  ? String.valueOf(0)
                   : questionMap.get(questionnairesStepsBo.getDestinationStep()),
               customIdsMap.get(INSTRUCTION_FORM_ID + questionnairesStepsBo.getInstructionFormId()),
               questionnairesStepsBo.getModifiedBy(),
