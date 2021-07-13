@@ -3597,6 +3597,8 @@
           }
         timeRef.each(function () {
         	if ($(this).val()) {
+        	  if (dt) {
+          	    dt = moment(dt, "MM/DD/YYYY").toDate();
                 thisDate = moment($(this).val(), "h:mm a").toDate();
                 dt.setHours(thisDate.getHours());
                 dt.setMinutes(thisDate.getMinutes());
@@ -3617,7 +3619,8 @@
                       valid = false;
                   }
                 }
-              }
+        	}
+          }
         });
       }
     });
