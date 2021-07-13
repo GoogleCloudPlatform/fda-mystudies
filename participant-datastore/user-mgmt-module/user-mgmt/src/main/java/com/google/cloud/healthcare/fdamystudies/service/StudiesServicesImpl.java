@@ -151,7 +151,7 @@ public class StudiesServicesImpl implements StudiesServices {
               userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
             }
 
-            logger.debug(
+            logger.info(
                 String.format(
                     "status=%d and fcmNotificationResponse=%s",
                     fcmNotificationResponse.getStatus(), fcmNotificationResponse.getFcmResponse()));
@@ -179,7 +179,7 @@ public class StudiesServicesImpl implements StudiesServices {
               userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
             }
 
-            logger.debug(
+            logger.info(
                 String.format(
                     "status=%d and fcmNotificationResponse=%s",
                     fcmNotificationResponse.getStatus(), fcmNotificationResponse.getFcmResponse()));
@@ -340,12 +340,10 @@ public class StudiesServicesImpl implements StudiesServices {
       /*certificatePassword = appPropertiesDetails.getIosCertificatePassword();*/
 
       byte[] decodedBytes;
-      final String teamId = "3485DDCN2M";
-      final String keyId = "QU6XK35ALG";
       FileOutputStream fop;
       decodedBytes =
           java.util.Base64.getDecoder()
-              .decode(appPropertiesDetails.getIosToken().replaceAll("\n", ""));
+              .decode(appPropertiesDetails.getIosAuthorizationToken().replaceAll("\n", ""));
       file = File.createTempFile("pushCert_" + appPropertiesDetails.getAppId(), ".p8");
       fop = new FileOutputStream(file);
       fop.write(decodedBytes);
@@ -359,7 +357,10 @@ public class StudiesServicesImpl implements StudiesServices {
               new ApnsClientBuilder()
                   .setApnsServer(applicationPropertyConfiguration.getIosPushNotificationType())
                   .setSigningKey(
-                      ApnsSigningKey.loadFromPkcs8File(new File(file.getPath()), teamId, keyId))
+                      ApnsSigningKey.loadFromPkcs8File(
+                          new File(file.getPath()),
+                          appPropertiesDetails.getIosTeamId(),
+                          appPropertiesDetails.getIosKeyId()))
                   .build();
 
           String payload =
