@@ -2598,6 +2598,10 @@
 	      else
 	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
     	}
+
+    	if($("#chooseDate").val() > moment(serverDate()).format("MM/DD/YYYY")){
+    		$("#chooseDate" ).parent().find(".help-block").empty();
+        }
     });
 
     $("#chooseDate").on("click", function (e) {
