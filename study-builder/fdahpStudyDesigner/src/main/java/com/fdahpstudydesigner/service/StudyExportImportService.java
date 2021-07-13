@@ -345,9 +345,11 @@ public class StudyExportImportService {
         studyQuestionnaireDAO.getQuestionnairesStepsList(questionnaireIds);
 
     List<String> instructionFormIds = new ArrayList<>();
+    Map<String, String> questionMap = new HashMap<>();
     if (CollectionUtils.isNotEmpty(questionnairesStepsList)) {
       for (QuestionnairesStepsBo questionnairesStepsBo : questionnairesStepsList) {
         instructionFormIds.add(questionnairesStepsBo.getInstructionFormId());
+        questionMap.put(questionnairesStepsBo.getStepId(), IdGenerator.id());
       }
     }
 
@@ -421,7 +423,8 @@ public class StudyExportImportService {
 
     addQuestionsResponseTypeInsertSql(questionResponseTypeBo, insertSqlStatements, customIdsMap);
 
-    addQuestionnairesStepsListInsertSql(questionnairesStepsList, insertSqlStatements, customIdsMap);
+    addQuestionnairesStepsListInsertSql(
+        questionnairesStepsList, insertSqlStatements, customIdsMap, questionMap);
   }
 
   private void prepareInsertSqlQueriesForComprehensionTest(
@@ -864,7 +867,8 @@ public class StudyExportImportService {
   private void addQuestionnairesStepsListInsertSql(
       List<QuestionnairesStepsBo> questionnairesStepsList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      Map<String, String> questionMap)
       throws Exception {
     if (CollectionUtils.isEmpty(questionnairesStepsList)) {
       return;
@@ -875,11 +879,13 @@ public class StudyExportImportService {
       questionnaireStepsBoInsertQuery =
           prepareInsertQuery(
               StudyExportSqlQueries.QUESTIONNAIRES_STEPS,
-              IdGenerator.id(),
+              questionMap.get(questionnairesStepsBo.getStepId()),
               questionnairesStepsBo.getActive(),
               questionnairesStepsBo.getCreatedBy(),
               questionnairesStepsBo.getCreatedOn(),
-              questionnairesStepsBo.getDestinationStep(),
+              questionnairesStepsBo.getDestinationStep().equals(String.valueOf(0))
+                  ? String.valueOf(0)
+                  : questionMap.get(questionnairesStepsBo.getDestinationStep()),
               customIdsMap.get(INSTRUCTION_FORM_ID + questionnairesStepsBo.getInstructionFormId()),
               questionnairesStepsBo.getModifiedBy(),
               questionnairesStepsBo.getModifiedOn(),
