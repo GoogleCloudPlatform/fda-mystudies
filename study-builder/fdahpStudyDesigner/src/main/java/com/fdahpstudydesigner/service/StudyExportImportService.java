@@ -419,7 +419,8 @@ public class StudyExportImportService {
 
     addInstructionInsertSql(instructionList, insertSqlStatements, customIdsMap);
 
-    addQuestionsResponseSubTypeInsertSql(responseList, insertSqlStatements, customIdsMap);
+    addQuestionsResponseSubTypeInsertSql(
+        responseList, insertSqlStatements, customIdsMap, questionMap);
 
     addQuestionsResponseTypeInsertSql(questionResponseTypeBo, insertSqlStatements, customIdsMap);
 
@@ -694,7 +695,8 @@ public class StudyExportImportService {
   private void addQuestionsResponseSubTypeInsertSql(
       List<QuestionResponseSubTypeBo> questionResponseSubTypeBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      Map<String, String> questionMap)
       throws Exception {
 
     if (CollectionUtils.isEmpty(questionResponseSubTypeBoList)) {
@@ -711,7 +713,10 @@ public class StudyExportImportService {
                   INSTRUCTION_FORM_ID + questionResponseSubTypeBo.getResponseSubTypeValueId()),
               questionResponseSubTypeBo.getActive(),
               questionResponseSubTypeBo.getDescription(),
-              questionResponseSubTypeBo.getDestinationStepId(),
+              StringUtils.isNotEmpty(questionResponseSubTypeBo.getDestinationStepId())
+                      && questionResponseSubTypeBo.getDestinationStepId().equals(String.valueOf(0))
+                  ? String.valueOf(0)
+                  : questionMap.get(questionResponseSubTypeBo.getDestinationStepId()),
               questionResponseSubTypeBo.getDetail(),
               questionResponseSubTypeBo.getExclusive(),
               questionResponseSubTypeBo.getImage(),
