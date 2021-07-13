@@ -2698,6 +2698,11 @@
     }).on("dp.show", function (e) {
       $('#startDateMonthly').data("DateTimePicker").minDate(serverDate());
     }).on("dp.change", function (e) {
+    	var monthlyDate = moment($("#startDateMonthly").val(), "MM/DD/YYYY").toDate();
+    	if(monthlyDate >= serverDate()){
+        $("#startDateMonthly").parent().removeClass("has-error has-danger");
+        $('#startDateMonthly').parent().find(".help-block").empty();
+    	}
       if (e.date._d != $('#pickStartDate').data("DateTimePicker").date()) {
         $('#pickStartDate').val('');
       }
