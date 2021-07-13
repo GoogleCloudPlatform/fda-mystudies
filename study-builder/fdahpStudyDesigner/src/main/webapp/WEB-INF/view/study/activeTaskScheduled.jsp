@@ -2144,6 +2144,11 @@
     }).on("dp.show", function (e) {
       $('#startDateMonthly').data("DateTimePicker").minDate(serverDate());
     }).on("dp.change", function (e) {
+    	var monthlyDate = moment($("#startDateMonthly").val(), "MM/DD/YYYY").toDate();
+    	if(monthlyDate >= serverDate()){
+        $("#startDateMonthly").parent().removeClass("has-error has-danger");
+        $('#startDateMonthly').parent().find(".help-block").empty();
+    	}
       if (e.date._d != $('#pickStartDate').data("DateTimePicker").date()) {
         $('#pickStartDate').val('');
       }
@@ -3597,6 +3602,8 @@
           }
         timeRef.each(function () {
         	if ($(this).val()) {
+        	  if (dt) {
+          	    dt = moment(dt, "MM/DD/YYYY").toDate();
                 thisDate = moment($(this).val(), "h:mm a").toDate();
                 dt.setHours(thisDate.getHours());
                 dt.setMinutes(thisDate.getMinutes());
@@ -3617,7 +3624,8 @@
                       valid = false;
                   }
                 }
-              }
+        	}
+          }
         });
       }
     });
