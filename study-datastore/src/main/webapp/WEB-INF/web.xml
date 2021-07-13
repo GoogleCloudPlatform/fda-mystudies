@@ -14,17 +14,13 @@
 	</servlet>
 	<servlet>
 		<servlet-name>StudyMetaData REST Service</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
 		<init-param>
-			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>com.hphc.mystudies.service,com.hphc.mystudies.dto,com.hphc.mystudies.corn,org.codehaus.jackson.jaxrs</param-value>
+			<param-name>jersey.config.server.provider.packages</param-name>
+			<param-value>io.swagger.jaxrs.json,io.swagger.jaxrs.listing,com.hphc.mystudies.service,com.hphc.mystudies.util,com.hphc.mystudies.dto,com.hphc.mystudies.corn,org.codehaus.jackson.jaxrs,com.hphc.mystudies.bean</param-value>
 		</init-param>
 		<init-param>
-			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
+			<param-name>jersey.config.server.wadl.disableWadl</param-name>
 			<param-value>true</param-value>
 		</init-param>
 		<load-on-startup>2</load-on-startup>
@@ -33,7 +29,7 @@
 		<servlet-name>StudyMetaData REST Service</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
-
+    
 	<!-- Force SSL for entire site -->
 	<security-constraint>
 		<web-resource-collection>

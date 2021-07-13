@@ -141,15 +141,15 @@
                   <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                         data-placement="top"
                         title="View"
-                        onclick="viewComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                        onclick="viewComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                   <span
                       class="${comprehensionTestQuestion.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                       data-toggle="tooltip" data-placement="top" title="Edit"
-                      onclick="editComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                      onclick="editComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                   <span
                       class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                       data-toggle="tooltip" data-placement="top" title="Delete"
-                      onclick="deleteComprehensionQuestion(${comprehensionTestQuestion.id});"></span>
+                      onclick="deleteComprehensionQuestion('${comprehensionTestQuestion.id}');"></span>
                 </td>
               </tr>
             </c:forEach>
@@ -158,10 +158,14 @@
       </div>
 
       <div class="right-content-body mt-xlg" id="displayTitleId">
-        <div class="gray-xs-f mb-xs" id="minScoreText">Minimum score needed to pass the test</div>
-        <div class="form-group col-md-5 p-none scoreClass">
+        <div class="gray-xs-f mb-xs" id="minScoreText">Minimum score needed to pass the test
+	      <span
+	        class="requiredStar">*
+	      </span>
+        </div>
+		<div class="form-group col-md-3 p-none scoreClass">
           <input type="text" id="comprehensionTestMinimumScore" class="form-control"
-                 name="comprehensionTestMinimumScore"
+                 name="comprehensionTestMinimumScore" data-error="Please fill out this field"
                  value="${consentBo.comprehensionTestMinimumScore}"
                  maxlength="3" onkeypress="return isNumber(event)"  Style="width:250px">
           <div class="help-block with-errors red-txt"></div>
@@ -191,8 +195,11 @@ var markAsComplete = "${markAsComplete}"
   $(document).ready(function () {
 	  var mainContainerDivision = document.getElementById("comprehensionTestNo").checked;
 	  if(mainContainerDivision==true){
-			var mainContainerDivision = $('#mainContainer').hide();		   
-		 }
+	  	$('#comprehensionTestMinimumScore').attr('required', false);
+		var mainContainerDivision = $('#mainContainer').hide();		   
+	  } else {
+		$('#comprehensionTestMinimumScore').attr('required', true);
+	  }
 	$('.studyClass').addClass("active");
     $(".menuNav li").removeClass('active');
     $(".fifthComre").addClass('active');
@@ -208,6 +215,7 @@ var markAsComplete = "${markAsComplete}"
       if (val == "Yes") {
     	  $("#saveId").html("Next");	
           $("#comprehensionTestMinimumScore, #minScoreText").hide();	
+          $('#comprehensionTestMinimumScore').attr('required', true);
           $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');	
           $("#mainContainer").show();	
           if ($('#comprehension_list tbody tr').length == 1	
@@ -227,6 +235,7 @@ var markAsComplete = "${markAsComplete}"
         }
       } else {
     	$("#saveId").html("Save");
+    	$('#comprehensionTestMinimumScore').attr('required', false);
         $("#comprehensionTestMinimumScore").val('');
         $("#mainContainer").hide();
         $("#addHelpNote").hide();
@@ -469,27 +478,28 @@ var markAsComplete = "${markAsComplete}"
           datarow.push("<div class='dis-ellipsis'>" + DOMPurify.sanitize(obj.questionText) + "</div>");
         }
         
-        var actions='';	
-        var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');	
-        if( obj.status===true){	
-         actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("	
-            + parseInt(obj.id) + ");'></span>"	
-            + "<span class='sprites_icon mr-lg edit-inc' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)	
-            + ");'>"	
-            + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("	
-            + parseInt(obj.id) + ");'>"	
-            + "</span>";	
-        }else{	
-        	    actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion("	
-                   + parseInt(obj.id) + ");'></span>"	
-                   + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(" + parseInt(obj.id)	
-                   + ");'>"	
-                   + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion("	
-                   + parseInt(obj.id) + ");'>"	
-                   + "</span>";	
-        	    markAsComplete="false";	
+        var actions='';
+        var objStatus=(typeof obj.status ? 'edit-inc' : 'edit-inc-draft mr-md');
+        if( obj.status===true){
+         actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion(&#34;"
+            + obj.id + "&#34;);'></span>"
+            + "<span class='sprites_icon mr-lg edit-inc' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(&#34;" 
+            + obj.id
+            + "&#34;);'>"
+            + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion(&#34;"
+            + obj.id + "&#34;);'>"
+            + "</span>";
+        }else{
+        	    actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewComprehensionQuestion(&#34;"
+                   + obj.id + "&#34;);'></span>"
+                   + "<span class='sprites_icon mr-lg edit-inc-draft mr-md' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editComprehensionQuestion(&#34;" + obj.id
+                   + "&#34;);'>"
+                   + "</span><span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteComprehensionQuestion(&#34;"
+                   + obj.id + "&#34;);'>"
+                   + "</span>";
+        	    markAsComplete="false";
             }
-
+        
         datarow.push(actions);
         $('#comprehension_list').DataTable().row.add(datarow);
       });

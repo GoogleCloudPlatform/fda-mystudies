@@ -40,6 +40,7 @@ class DBStudy: Object {
   @objc dynamic var updateResources: Bool = false
   @objc dynamic var updateActivities: Bool = false
   @objc dynamic var updateConsent: Bool = false
+  @objc dynamic var updateStudyEnrollAgain: Bool = false
   @objc dynamic var updateInfo: Bool = false
   @objc dynamic var enrolling: Bool = false
   @objc dynamic var platform: String?

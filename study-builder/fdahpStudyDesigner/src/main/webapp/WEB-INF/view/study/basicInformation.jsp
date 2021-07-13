@@ -225,7 +225,9 @@ margin-top:16px !important;
             <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="top"
                     data-html="true"
-                    title="<span class='font24 text-weight-light pull-left'></span> The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to use another. The image must be of type .JPG or .PNG, and have a size of 225x225 pixels.">
+                    title="
+                    <p class='text-left'>Image requirements: The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to override it</p>
+					<p class='text-left'>The image must be of type .JPG or .PNG. The minimum image size required is 225 x 225. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></p>
             </span>
       </div>
           
@@ -807,7 +809,7 @@ margin-top:16px !important;
     	    image.src = e.target.result;
     	    image.onload = function() {
     	        // access image size here 
-    	        if(this.width ==225 && this.height==225 ){
+    	        if(this.width >=225 && this.height>=225 ){
     	        	 $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
          	                66);
         	       }
@@ -843,7 +845,7 @@ margin-top:16px !important;
               img.onload = function () {
                 var ht = this.height;
                 var wds = this.width;
-                if (ht == 225 && wds == 225) {
+                if (ht >= 225 && wds >= 225) {
                   $("#uploadImg").parent()
                       .find(".help-block").append('');
                   $('#removeUrl')
@@ -854,7 +856,7 @@ margin-top:16px !important;
                       .find(".help-block")
                       .empty()
                       .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                          "Please upload image as per provided guidelines"));
+                          "Invalid image size or format"));
                   $(".thumb.alternate img")
                       .attr("src",
                           "/studybuilder/images/dummy-img.jpg");
@@ -880,7 +882,7 @@ margin-top:16px !important;
                     .find(".help-block")
                     .empty()
                     .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                        "Please upload image as per provided guidelines"));
+                        "Invalid image size or format"));
                 $('#removeUrl').css("visibility", "hidden");
                 $(".thumb.alternate img").attr("src",
                     "/studybuilder/images/dummy-img.jpg");

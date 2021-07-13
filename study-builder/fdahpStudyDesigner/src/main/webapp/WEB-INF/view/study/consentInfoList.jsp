@@ -88,15 +88,15 @@
               <td>
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
-                      title="View" onclick="viewConsentInfo(${consentInfo.id});"></span>
+                      title="View" onclick="viewConsentInfo('${consentInfo.id}');"></span>
                 <span
                     class="${consentInfo.status?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Edit"
-                    onclick="editConsentInfo(${consentInfo.id});"></span>
+                    onclick="editConsentInfo('${consentInfo.id}');"></span>
                 <span
                     class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Delete"
-                    onclick="deleteConsentInfo(${consentInfo.id});"></span>
+                    onclick="deleteConsentInfo('${consentInfo.id}');"></span>
               </td>
             </tr>
           </c:forEach>
@@ -329,17 +329,17 @@
         } else {
           datarow.push(obj.visualStep);
         }
-        var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewConsentInfo("
-            + parseInt(obj.id) + ");'></span>";
+        var actions = "<span class='sprites_icon preview-g mr-lg' data-toggle='tooltip' data-placement='top' title='View' onclick='viewConsentInfo(&#34;"
+            + obj.id + "&#34;);'></span>";
         if (obj.status) {
-          actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo(" + parseInt(obj.id)
-              + ");'></span>"
+          actions += "<span class='sprites_icon edit-g mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo(&#34;" +  obj.id
+              + "&#34;);'></span>"
         } else {
-          actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo("
-              + parseInt(obj.id) + ");'></span>";
+          actions += "<span class='sprites_icon edit-inc-draft mr-lg' data-toggle='tooltip' data-placement='top' title='Edit' onclick='editConsentInfo(&#34;"
+              +  obj.id + "&#34;);'></span>";
         }
-        actions += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteConsentInfo(" + parseInt(obj.id)
-            + ");'></span>";
+        actions += "<span class='sprites_icon copy delete' data-toggle='tooltip' data-placement='top' title='Delete' onclick='deleteConsentInfo(&#34;" +  obj.id
+            + "&#34;);'></span>";
         datarow.push(actions);
         $('#consent_list').DataTable().row.add(datarow);
       });
@@ -392,7 +392,6 @@
       $("#consentInfoForm").submit();
     }
   }
-
   var sucMsg = '${sucMsg}';
   if (sucMsg.length > 0) {
     showSucMsg(sucMsg);

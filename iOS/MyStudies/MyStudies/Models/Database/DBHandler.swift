@@ -438,6 +438,7 @@ class DBHandler: NSObject {
     try? realm.write {
       dbStudy?.updateResources = StudyUpdates.studyResourcesUpdated
       dbStudy?.updateConsent = StudyUpdates.studyConsentUpdated
+      dbStudy?.updateStudyEnrollAgain = StudyUpdates.studyEnrollAgain
       dbStudy?.updateActivities = StudyUpdates.studyActivitiesUpdated
       dbStudy?.updateInfo = StudyUpdates.studyInfoUpdated
       if StudyUpdates.studyVersion != nil {
@@ -485,6 +486,7 @@ class DBHandler: NSObject {
 
     StudyUpdates.studyActivitiesUpdated = (dbStudy?.updateActivities)!
     StudyUpdates.studyConsentUpdated = (dbStudy?.updateConsent)!
+    StudyUpdates.studyEnrollAgain = (dbStudy?.updateStudyEnrollAgain)!
     StudyUpdates.studyResourcesUpdated = (dbStudy?.updateResources)!
     StudyUpdates.studyInfoUpdated = (dbStudy?.updateInfo)!
     completionHandler(true)
@@ -1402,6 +1404,29 @@ class DBHandler: NSObject {
     dbStatisticsList.forEach { statsList.append(DashboardStatistics(dbStatistics: $0)) }
     completionHandler(statsList)
 
+  }
+  
+  class func deleteStatisticsForStudy(
+    studyId: String) {
+    let realm = DBHandler.getRealmObject()!
+    
+    // delete chart
+    let dbChartsArray = realm.objects(DBCharts.self).filter { $0.studyId == studyId }
+    dbChartsArray.forEach { (chart) in
+      try? realm.write {
+        realm.delete(chart.statisticsData)
+        realm.delete(chart)
+      }
+    }
+    
+    // delete stats
+    let dbStatisticsArray = realm.objects(DBStatistics.self).filter({ $0.studyId == studyId })
+    dbStatisticsArray.forEach { (stat) in
+      try? realm.write {
+        realm.delete((stat.statisticsData))
+        realm.delete(stat)
+      }
+    }
   }
 
   // MARK: - Dashboard - Charts

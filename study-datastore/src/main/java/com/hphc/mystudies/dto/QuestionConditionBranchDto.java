@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,11 +27,11 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "question_condtion_branching")
@@ -47,12 +48,13 @@ public class QuestionConditionBranchDto implements Serializable {
   private static final long serialVersionUID = 2517716372949869931L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "condition_id")
-  private Integer conditionId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "condition_id", updatable = false, nullable = false)
+  private String conditionId;
 
   @Column(name = "question_id")
-  private Integer questionId;
+  private String questionId;
 
   @Column(name = "input_type")
   private String inputType;
@@ -69,19 +71,19 @@ public class QuestionConditionBranchDto implements Serializable {
   @Column(name = "active")
   private Boolean active;
 
-  public Integer getConditionId() {
+  public String getConditionId() {
     return conditionId;
   }
 
-  public void setConditionId(Integer conditionId) {
+  public void setConditionId(String conditionId) {
     this.conditionId = conditionId;
   }
 
-  public Integer getQuestionId() {
+  public String getQuestionId() {
     return questionId;
   }
 
-  public void setQuestionId(Integer questionId) {
+  public void setQuestionId(String questionId) {
     this.questionId = questionId;
   }
 

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "eligibility_test_response")
@@ -37,12 +38,13 @@ public class EligibilityTestResponseDto implements Serializable {
   private static final long serialVersionUID = 5322778206737430771L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "response_id")
-  private Integer responseId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "response_id", updatable = false, nullable = false)
+  private String responseId;
 
   @Column(name = "eligibility_test_id")
-  private Integer eligibilityTestId;
+  private String eligibilityTestId;
 
   @Column(name = "response_option")
   private String responseOption;
@@ -51,7 +53,7 @@ public class EligibilityTestResponseDto implements Serializable {
   private String passFail;
 
   @Column(name = "destination_question")
-  private Integer destinationQuestion;
+  private String destinationQuestion;
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
@@ -64,19 +66,19 @@ public class EligibilityTestResponseDto implements Serializable {
     this.studyVersion = studyVersion;
   }
 
-  public Integer getResponseId() {
+  public String getResponseId() {
     return responseId;
   }
 
-  public void setResponseId(Integer responseId) {
+  public void setResponseId(String responseId) {
     this.responseId = responseId;
   }
 
-  public Integer getEligibilityTestId() {
+  public String getEligibilityTestId() {
     return eligibilityTestId;
   }
 
-  public void setEligibilityTestId(Integer eligibilityTestId) {
+  public void setEligibilityTestId(String eligibilityTestId) {
     this.eligibilityTestId = eligibilityTestId;
   }
 
@@ -96,11 +98,11 @@ public class EligibilityTestResponseDto implements Serializable {
     this.passFail = passFail;
   }
 
-  public Integer getDestinationQuestion() {
+  public String getDestinationQuestion() {
     return destinationQuestion;
   }
 
-  public void setDestinationQuestion(Integer destinationQuestion) {
+  public void setDestinationQuestion(String destinationQuestion) {
     this.destinationQuestion = destinationQuestion;
   }
 }

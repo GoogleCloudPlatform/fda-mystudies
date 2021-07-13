@@ -18,7 +18,7 @@
     text-transform: inherit; !important
 	}
 	
-.help-block ul {
+.help-block .list-unstyled {
       width: max-content !important;
 }
 </style>
@@ -681,6 +681,7 @@
           $('.addLineChartBlock_number_of_kicks_recorded_fetal').find('.requireClass').attr(
               'required', true);
           $('#number_of_kicks_recorded_fetal_chart_id').val(true);
+          $("#inlineRadio2").prop("checked", true);
           $('.selectpicker').selectpicker('refresh');
         } else {
           $('.addLineChartBlock_number_of_kicks_recorded_fetal').css("display", "none");
@@ -1188,7 +1189,7 @@
             $(this).val(newVal);
             $(this).parent().addClass("has-danger has-error");
             $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "The characters like (< >) are not allowed"));
+                "Please use characters from the following set only: A-Z a-z 0-9 *()_+|:.-"));
           }
         }
       });

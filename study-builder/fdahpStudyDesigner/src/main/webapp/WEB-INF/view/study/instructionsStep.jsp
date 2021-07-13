@@ -88,7 +88,7 @@
       </div>
       <div class="clearfix"></div>
 
-      <div class="gray-xs-f mb-xs">Instruction text
+      <div class="gray-xs-f mb-xs">Instruction text (500 characters max)
         <span class="requiredStar">*</span>
       </div>
       <div class="form-group">
@@ -114,7 +114,7 @@
                   Step ${destinationStep.sequenceNo} : ${destinationStep.stepShortTitle}</option>
               </c:forEach>
               <option
-                  value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq 0 ? 'selected' :''}>
+                   value="0" ${instructionsBo.questionnairesStepsBo.destinationStep eq "0" ? 'selected' :''}>
                 Completion Step
               </option>
             </select>
@@ -147,10 +147,37 @@
     	validatesummernote();
       });
   //summernote editor initialization
+ 	var maxwords=500;
     $('#summernote')
         .summernote(
             {
               placeholder: '',
+              callbacks: {
+                  onKeydown: function(e) {
+                    var t = e.currentTarget.innerText;
+                    if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                   onKeyup: function(e) {
+                      var t = e.currentTarget.innerText;
+                     if (t.length >= maxwords) {
+                    if (e.keyCode != 8)
+                      e.preventDefault();
+                    }
+                  },
+                  onPaste: function(e) {
+                	  var t = e.currentTarget.innerText;
+                      var bufferText = ((e.originalEvent || e).clipboardData || 
+                                         window.clipboardData).getData('Text');
+                      e.preventDefault();
+                      var all = t + bufferText;
+                      var array = bufferText.slice(0, (maxwords-t.length))
+                      document.execCommand('insertText', false, array);
+                 
+               	  }
+     		  },
               tabsize: 2,
               height: 200,
               toolbar: [
@@ -177,6 +204,7 @@
     $('[data-toggle="tooltip"]').tooltip();
     $("#doneId").click(function () {
       //$("#doneId").attr("disabled", true);
+      validateTitle();
       validatesummernote();
            validateShortTitle('', function (val) {
         if (val) {
@@ -198,9 +226,18 @@
   function saveIns() {
     $("body").addClass("loading");
     $("#saveId").attr("disabled", true);
-    validatesummernote();
+    
+    var valid = validatesummernote();
+    var richTextVal = $('#summernote').val();
+    if (null == richTextVal || richTextVal == '' || typeof richTextVal == 'undefined' || richTextVal == '<p><br></p>'){
+    	valid = true;
+ 	       $('#summernote').attr('required', false);
+ 		   $('#summernote').parent().removeClass("has-danger").removeClass("has-error");
+ 		   $('#summernote').parent().find(".help-block").html("");
+    }
+    
     validateShortTitle('', function (val) {
-      if (val && validatesummernote()) {
+      if (val && valid) {
         saveInstruction();
       } else {
         $("#saveId").attr("disabled", false);
@@ -209,6 +246,7 @@
       
     });
   }
+  
   function validatesummernote(){
 	  var richTextVal = $('#summernote').val();
 	  if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
@@ -243,6 +281,18 @@
 	   return true;
 	 }
 	}
+  
+  function validateTitle(){
+	  var titleValue = $('#instructionTitle').val();
+      if (null == titleValue || titleValue == '' || typeof titleValue == 'undefined'){
+    	  $('#instructionTitle')
+	       .parent()
+	       .find(".help-block")
+	       .append(
+	           '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
+      }
+  }
+  
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var questionnaireId = $("#questionnaireId").val();
@@ -298,7 +348,7 @@
     var instruction_id = $("#id").val();
     var questionnaire_id = $("#questionnaireId").val();
     var instruction_title = $("#instructionTitle").val();
-    var instruction_text = $("#summernote").val();
+    var instruction_text = $('#summernote').summernote('code');
 
     var shortTitle = $("#shortTitleId").val();
     var destinationStep = $("#destinationStepId").val();
@@ -320,6 +370,8 @@
       questionnaireStep.destinationStep = destinationStep
       instruction.questionnairesStepsBo = questionnaireStep;
 
+      $('#basicInfoFormId').validator('destroy').validator();
+      $('#instructionTitle').parent().find(".help-block").empty();
       var data = JSON.stringify(instruction);
       $.ajax({
         url: "/studybuilder/adminStudies/saveInstructionStep.do?_S=${param._S}",

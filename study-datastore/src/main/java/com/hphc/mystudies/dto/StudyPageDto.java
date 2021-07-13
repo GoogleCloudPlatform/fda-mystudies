@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -37,19 +38,22 @@ import org.hibernate.annotations.NamedQuery;
 @NamedQueries({
   @NamedQuery(
       name = "studyPageDetailsByStudyId",
-      query = "from StudyPageDto SPDTO" + " where SPDTO.studyId =:studyId"),
+      query =
+          "from StudyPageDto SPDTO"
+              + " where SPDTO.studyId =:studyId order by createdOn, sequenceNumber"),
 })
 public class StudyPageDto implements Serializable {
 
   private static final long serialVersionUID = 1910738533774432289L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "page_id")
-  private Integer pageId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "page_id", updatable = false, nullable = false)
+  private String pageId;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Column(name = "title")
   private String title;
@@ -67,13 +71,16 @@ public class StudyPageDto implements Serializable {
   private String modifiedOn;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public Integer getStudyVersion() {
     return studyVersion;
@@ -83,19 +90,19 @@ public class StudyPageDto implements Serializable {
     this.studyVersion = studyVersion;
   }
 
-  public Integer getPageId() {
+  public String getPageId() {
     return pageId;
   }
 
-  public void setPageId(Integer pageId) {
+  public void setPageId(String pageId) {
     this.pageId = pageId;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
@@ -121,5 +128,13 @@ public class StudyPageDto implements Serializable {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

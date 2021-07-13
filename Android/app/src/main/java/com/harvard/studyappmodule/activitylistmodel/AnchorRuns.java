@@ -22,7 +22,9 @@ public class AnchorRuns extends RealmObject {
 
   private int endDays;
 
-  private String time;
+  private String startTime;
+
+  private String endTime;
 
   public int getStartDays() {
     return startDays;
@@ -40,11 +42,19 @@ public class AnchorRuns extends RealmObject {
     this.endDays = endDays;
   }
 
-  public String getTime() {
-    return time;
+  public String getStartTime() {
+    return startTime;
   }
 
-  public void setTime(String time) {
-    this.time = time;
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
+
+  public String getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
   }
 }

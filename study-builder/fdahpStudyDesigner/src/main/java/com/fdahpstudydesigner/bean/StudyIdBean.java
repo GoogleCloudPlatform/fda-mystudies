@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,16 +26,16 @@ package com.fdahpstudydesigner.bean;
 
 public class StudyIdBean {
 
-  Integer activetaskStudyId = null;
+  String activetaskStudyId = null;
   Integer activityStudyId = null;
-  Integer consentStudyId = null;
-  Integer questionnarieStudyId = null;
+  String consentStudyId = null;
+  String questionnarieStudyId = null;
 
-  public Integer getActivetaskStudyId() {
+  public String getActivetaskStudyId() {
     return activetaskStudyId;
   }
 
-  public void setActivetaskStudyId(Integer activetaskStudyId) {
+  public void setActivetaskStudyId(String activetaskStudyId) {
     this.activetaskStudyId = activetaskStudyId;
   }
 
@@ -46,19 +47,19 @@ public class StudyIdBean {
     this.activityStudyId = activityStudyId;
   }
 
-  public Integer getConsentStudyId() {
+  public String getConsentStudyId() {
     return consentStudyId;
   }
 
-  public void setConsentStudyId(Integer consentStudyId) {
+  public void setConsentStudyId(String consentStudyId) {
     this.consentStudyId = consentStudyId;
   }
 
-  public Integer getQuestionnarieStudyId() {
+  public String getQuestionnarieStudyId() {
     return questionnarieStudyId;
   }
 
-  public void setQuestionnarieStudyId(Integer questionnarieStudyId) {
+  public void setQuestionnarieStudyId(String questionnarieStudyId) {
     this.questionnarieStudyId = questionnarieStudyId;
   }
 }

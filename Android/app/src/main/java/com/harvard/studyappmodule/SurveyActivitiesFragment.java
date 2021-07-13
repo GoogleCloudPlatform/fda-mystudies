@@ -611,7 +611,7 @@ public class SurveyActivitiesFragment extends Fragment
           dbServiceSubscriber.deleteStudyInfoFromDb(
               context, ((SurveyActivity) context).getStudyId());
         }
-        if (studyUpdate.getStudyUpdateData().isConsent()) {
+        if (studyUpdate.getStudyUpdateData().isConsent() && studyUpdate.isEnrollAgain()) {
           callConsentMetaDataWebservice();
         } else {
           StudyList studyList =
@@ -1251,7 +1251,7 @@ public class SurveyActivitiesFragment extends Fragment
                                         .getFrequency()
                                         .getAnchorRuns()
                                         .get(k)
-                                        .getTime()
+                                        .getStartTime()
                                     + ".000"
                                     + timezoneSimpleDateFormat.format(startCalendar.getTime()));
 
@@ -1286,7 +1286,7 @@ public class SurveyActivitiesFragment extends Fragment
                                         .getFrequency()
                                         .getAnchorRuns()
                                         .get(k)
-                                        .getTime()
+                                        .getEndTime()
                                     + ".000"
                                     + timezoneSimpleDateFormat.format(endCalendar.getTime()));
 

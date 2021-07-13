@@ -3,6 +3,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
 
+<style>
+.modal-title {
+    text-align: initial !important;
+}
+</style>
+
 <!-- create Study Section Start -->
 <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md tit_con">
   <div class="md-container">
@@ -35,6 +41,7 @@
                   </label>
             <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create study
             </button>
+              <button type="button" class="btn btn-primary blue-btn importStudy"  onclick="importStudy();"> Import </button>
           </div>
         </div>
       </c:if>
@@ -53,7 +60,7 @@
 
 <script type="text/javascript">
   $(document).ready(function () {
-
+	  
     $('.addEditStudy').on('click', function () {
       $('#addEditStudyForm').submit();
     });
@@ -101,4 +108,77 @@
   function hideDisplayMessage() {
     $('#alertMsg').slideUp('5000');
   }
+  
+  function importStudy() {
+	   var bb=  bootbox.prompt({ 
+		  title: "Import a study",
+		  inputType: "text",
+  		  placeholder: "Enter a valid signed URL",
+           dataError: "Please enter a valid URL",
+           required: true,
+           closeButton: false,
+		    buttons: {
+		          'cancel': {
+		            label: 'Cancel',
+		          },
+		          'confirm': {
+		            label: 'Submit',
+		          },
+		        },
+		    callback: function (result) {
+		    	if(result == null){
+		    		return;
+		    	}
+		    	
+		    	var decodedURL = unescape(result);
+		    	var storagePath = "${sessionObject.storagePath}";
+		    	if(decodedURL !=null && !(decodedURL.startsWith(storagePath) && decodedURL.includes("Expires="))){
+		    		showErrMsg("Please enter a valid URL");
+		           }else if(decodedURL !=null){
+		        	   if(validateExpireDate(decodedURL)){
+	            	    $.ajax({
+	                      url: "/studybuilder/studies/import.do?_S=${param._S}",
+	                      type: "POST",
+	                      datatype: "json",
+	                      data: {
+	                        signedUrl: decodedURL,
+	                        "${_csrf.parameterName}": "${_csrf.token}",
+	                      },
+	                      success: function emailValid(data, status) {
+	                    	  message = data.message;
+	                    	  if (message == "SUCCESS") {
+	                    		  showSucMsg("Study imported successfully");
+	                    		  window.location=window.location;
+	                    		  setTimeout(hideDisplayMessage, 5000);
+	                            } else if(message == "Please enter a valid URL"){
+	                            	 showErrMsg(message);
+	                            }else{
+	                              bootbox.alert(message);
+	                            }
+	                          },
+	                   error: function status(data, status) {
+	                     $("body").removeClass("loading");
+	                     showErrMsg("Import failed")
+	                   }
+	                 });
+	              } 
+		       }
+		    }
+		        
+	  });
+  }
+  
+
+  function validateExpireDate(result){
+
+	 var index= result.search("Expires=");
+     var expire = result.substring(index, result.indexOf('&', index));
+	 var expireTimeStamp= expire.split("=");
+	 if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
+	    showErrMsg("The URL has expired. Please use a newly generated one.");
+	    return false;
+	 }
+	    return true;
+  }
+
 </script>
