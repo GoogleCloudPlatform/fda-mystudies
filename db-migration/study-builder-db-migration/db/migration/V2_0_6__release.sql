@@ -140,6 +140,40 @@ UPDATE fda_hphc.active_task_list SET task_name = 'Fetal kick counter' WHERE task
 UPDATE fda_hphc.active_task_list SET task_name = 'Tower of hanoi' WHERE task_name = 'Tower Of Hanoi';
 UPDATE fda_hphc.active_task_list SET task_name = 'Spatial span memory' WHERE task_name = 'Spatial Span Memory';
 
+
+/* Added start time and end time in active task and questionnaire regular schedule*/
+
+UPDATE fda_hphc.active_task_custom_frequencies SET frequency_start_time = frequency_time
+  WHERE frequency_time IS NOT NULL;
+
+UPDATE fda_hphc.active_task_custom_frequencies SET frequency_end_time = frequency_time
+  WHERE frequency_time IS NOT NULL;
+
+ALTER TABLE fda_hphc.active_task_custom_frequencies  
+  MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
+
+ALTER TABLE fda_hphc.active_task_custom_frequencies  
+  MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
+
+ALTER TABLE fda_hphc.active_task_custom_frequencies  
+  DROP COLUMN frequency_time;
+
+UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_start_time = frequency_time
+  WHERE frequency_time IS NOT NULL;
+
+UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_end_time = frequency_time
+  WHERE frequency_time IS NOT NULL;
+
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
+MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
+
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
+  MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
+
+ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
+  DROP COLUMN frequency_time;
+
+  
 /* #1020 Data integrity checks missing from WCP and WCP-WS codebase and
 #3114 Provision for import/export of studies*/
 
@@ -223,8 +257,6 @@ ALTER TABLE `study_permission` DROP FOREIGN KEY `FK_study_id`;
 ALTER TABLE `study_permission` CHANGE COLUMN `study_id` `study_id` VARCHAR(255) NULL DEFAULT NULL ;
 
 ALTER TABLE `studies` CHANGE COLUMN `id` `id` VARCHAR(255) NOT NULL ;
-ALTER TABLE `studies` ADD `destination_custom_study_id` varchar(255) DEFAULT NULL;
-ALTER TABLE `studies` ADD `export_signed_url` varchar(1012) DEFAULT NULL;
 
 ALTER TABLE `active_task` ADD CONSTRAINT `FK_study_active_task_id`FOREIGN KEY (`study_id`) REFERENCES `studies` (`id`);
 ALTER TABLE `branding` ADD CONSTRAINT `FK_study_branding_id` FOREIGN KEY (`study_id`) REFERENCES `studies` (`id`);
@@ -609,16 +641,6 @@ CHANGE COLUMN `id` `id` VARCHAR(255) NOT NULL ;
 ALTER TABLE `responses` 
 CHANGE COLUMN `id` `id` VARCHAR(255) NOT NULL ;
 
-ALTER TABLE `study_page` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `notification` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `questionnaires` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `active_task_custom_frequencies` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `questionnaires_custom_frequencies` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `response_sub_type_value` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `comprehension_test_response` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `active_task_frequencies` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `questionnaires_frequencies` ADD `sequence_number` INT(10) DEFAULT NULL;
-ALTER TABLE `studies` ADD `isCloudStorageMoved` int(10) NULL DEFAULT 0;
 
 
 -- PROCEDURE
@@ -821,40 +843,3 @@ END IF;
 END//
 DELIMITER ;
 
-
-
-UPDATE fda_hphc.active_task_custom_frequencies SET frequency_start_time = frequency_time
-  WHERE frequency_time IS NOT NULL;
-  
-UPDATE fda_hphc.active_task_custom_frequencies SET frequency_end_time = frequency_time
-  WHERE frequency_time IS NOT NULL;
-
-ALTER TABLE fda_hphc.active_task_custom_frequencies  
-  MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
-
-ALTER TABLE fda_hphc.active_task_custom_frequencies  
-  MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
-
-ALTER TABLE fda_hphc.active_task_custom_frequencies  
-  DROP COLUMN frequency_time;
-
-
-
-UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_start_time = frequency_time
-  WHERE frequency_time IS NOT NULL;
-
-UPDATE fda_hphc.questionnaires_custom_frequencies SET frequency_end_time = frequency_time
-  WHERE frequency_time IS NOT NULL;
-
-ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
-MODIFY frequency_start_time varchar(255) AFTER frequency_end_date;
-
-ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
-  MODIFY frequency_end_time varchar(255) AFTER frequency_start_time;
-
-ALTER TABLE fda_hphc.questionnaires_custom_frequencies  
-  DROP COLUMN frequency_time;
-  
-/* ISSUE #3022 Provide setting for admin to decide if a new consent document version should 
-trigger a consent flow in the mobile app for enrolled participants */
-ALTER TABLE fda_hphc.consent ADD enroll_again bit(1) DEFAULT NULL;

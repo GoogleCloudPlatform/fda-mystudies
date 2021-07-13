@@ -1192,25 +1192,28 @@ public class FdahpStudyDesignerUtil {
       for (Enumeration e = zip.entries(); e.hasMoreElements(); ) {
         ZipEntry entry = (ZipEntry) e.nextElement();
         if (!entry.isDirectory()) {
-          if (FilenameUtils.getExtension(entry.getName()).equals("sql")) {
+          if (FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("sql")) {
 
             bf = new BufferedReader(new InputStreamReader(zip.getInputStream(entry)));
             obj = new Object[] {entry.getName(), bf};
-          } else if (FilenameUtils.getExtension(entry.getName()).equals("jpg")) {
+          } else if (FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("jpg")
+              || FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("png")) {
             byte[] imageArray = getImage(zip.getInputStream(entry));
             CustomMultipartFile customMultipartFile =
                 new CustomMultipartFile(imageArray, entry.getName());
             String[] directoryName = entry.getName().split("/");
             String name =
                 directoryName[directoryName.length - 1].substring(
-                    0, directoryName[directoryName.length - 1].indexOf(".jpg"));
+                    0,
+                    directoryName[directoryName.length - 1].indexOf(
+                        "." + FilenameUtils.getExtension(entry.getName())));
 
             saveImage(
                 customMultipartFile,
                 name,
                 directoryName[directoryName.length - 2],
                 customId + "@Export");
-          } else if (FilenameUtils.getExtension(entry.getName()).equals("pdf")) {
+          } else if (FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("pdf")) {
             byte[] pdfArray = getPdfByte(zip.getInputStream(entry));
             CustomMultipartFile customMultipartFile =
                 new CustomMultipartFile(pdfArray, entry.getName());
@@ -1218,7 +1221,9 @@ public class FdahpStudyDesignerUtil {
             String[] directoryName = entry.getName().split("/");
             String name =
                 directoryName[directoryName.length - 1].substring(
-                    0, directoryName[directoryName.length - 1].indexOf(".pdf"));
+                    0,
+                    directoryName[directoryName.length - 1].indexOf(
+                        "." + FilenameUtils.getExtension(entry.getName())));
 
             saveImage(
                 customMultipartFile,
