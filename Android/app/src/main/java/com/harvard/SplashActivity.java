@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
@@ -32,6 +33,7 @@ import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.NewPasscodeSetupActivity;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
+import com.harvard.utils.realm.RealmEncryptionHelper;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 
@@ -48,11 +50,16 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
 
-      // sync registration
-      SyncAdapterManager.init(this);
-      AppController.keystoreInitilize(SplashActivity.this);
-      versionChecker = new VersionChecker(SplashActivity.this);
-      versionChecker.execute();
+    RealmEncryptionHelper realmEncryptionHelper = RealmEncryptionHelper.getInstance();
+    byte[] key = realmEncryptionHelper.getEncryptKey();
+    String s = bytesToHex(key);
+    Log.e("realm key", "" + s);
+
+    // sync registration
+    SyncAdapterManager.init(this);
+    AppController.keystoreInitilize(SplashActivity.this);
+    versionChecker = new VersionChecker(SplashActivity.this);
+    versionChecker.execute();
 
     AppController.getHelperSharedPreference()
         .writePreference(SplashActivity.this, getString(R.string.json_object_filter), "");
@@ -222,5 +229,17 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
     } else {
       loadsplash();
     }
+  }
+
+
+  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+  public static String bytesToHex(byte[] bytes) {
+    char[] hexChars = new char[bytes.length * 2];
+    for (int j = 0; j < bytes.length; j++) {
+      int v = bytes[j] & 0xFF;
+      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    }
+    return new String(hexChars);
   }
 }
