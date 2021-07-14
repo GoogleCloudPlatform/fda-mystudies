@@ -89,12 +89,16 @@ table tbody.custom__tbody_2 tr td:nth-child(5) {
 
   .mob_textpre {
     white-space: pre !important;
-    padding-right: 20px;
+    padding-right: 10px;
   }
 
   .scrollable-element {
-    overflow-x: auto;
-    z-index: 1;
+    margin: 0 auto;
+    overflow-x: hidden;
+  }
+
+  .scrollable-element:hover {
+    overflow-x: scroll;
   }
 
   .scrollable-element::-webkit-scrollbar {

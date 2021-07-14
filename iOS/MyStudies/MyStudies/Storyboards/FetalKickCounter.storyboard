@@ -495,7 +495,7 @@
             </objects>
             <point key="canvasLocation" x="996" y="-132.68365817091455"/>
         </scene>
-        <!--Consent Document-->
+        <!--Consent document-->
         <scene sceneID="yW4-dV-l64">
             <objects>
                 <viewController storyboardIdentifier="ConsentPdfViewerStepViewControllerIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0WO-Bz-3yZ" customClass="ConsentPdfViewerStepViewController" customModule="FDA_MyStudies" customModuleProvider="target" sceneMemberID="viewController">
@@ -548,7 +548,7 @@
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <navigationItem key="navigationItem" title="Consent Document" id="e0E-Qm-Uc8"/>
+                    <navigationItem key="navigationItem" title="Consent document" id="e0E-Qm-Uc8"/>
                     <connections>
                         <outlet property="webView" destination="Q8q-rU-SJb" id="4OF-vC-47L"/>
                     </connections>

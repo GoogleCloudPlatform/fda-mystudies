@@ -93,7 +93,6 @@ let kOnLogoutMessage = "You have been signed out of the app."
 let kSignUpTitleText = "Sign up"
 let kAgreeToTermsAndConditionsText = "I agree to the Terms and Privacy Policy"
 let kTermsText = "Terms"
-let kPrivacyPolicyText = "Privacy Policy"
 let kSignUpTableViewCellIdentifier = "CommonDetailsCell"
 
 // MARK: - NOTIFICATIONS Constants
