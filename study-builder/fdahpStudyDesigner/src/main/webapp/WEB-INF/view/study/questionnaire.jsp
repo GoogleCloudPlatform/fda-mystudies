@@ -1910,6 +1910,18 @@
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li.active").removeClass('active');
     $(".sixthQuestionnaires").addClass('active');
+    
+    var frequencyVal = "${questionnaireBo.frequency}";
+    if (frequencyVal == '' || frequencyVal == null || typeof frequencyVal == 'undefined') {
+    	frequencyVal = "One time";
+    }
+    var scheduletypeVal = "${questionnaireBo.scheduleType}";
+    if (scheduletypeVal == '' && scheduletypeVal == null && typeof scheduletypeVal == 'undefined') {
+    	scheduletypeVal = "Regular";
+    }
+    
+    $('input:radio[value="' + frequencyVal + '"]').prop('checked', true); 
+    $('input:radio[value="' + scheduletypeVal + '"]').prop('checked', true); 
 
     $(".scheduleQusClass").click(function () {
       if ($("#schedule2").prop("checked")) {
