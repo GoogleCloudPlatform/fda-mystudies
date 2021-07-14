@@ -41,6 +41,7 @@ import com.hphc.mystudies.util.HibernateUtil;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -94,7 +95,8 @@ public class AppMetaDataDao {
   }
 
   @SuppressWarnings("unchecked")
-  public NotificationsResponse notifications(String skip, String authorization, String appId)
+  public NotificationsResponse notifications(
+      String skip, String authorization, String appId, String verificationTime)
       throws DAOException {
     LOGGER.entry("begin notifications()");
     Session session = null;
@@ -153,69 +155,73 @@ public class AppMetaDataDao {
 
           Set<String> studyIdList = new HashSet<>();
           for (NotificationDto notificationDto : notificationList) {
-            if (StringUtils.isNotEmpty(notificationDto.getStudyId())) {
-              studyIdList.add(notificationDto.getStudyId());
-            }
+            String scheduledDateTime =
+                notificationDto.getScheduleDate() + " " + notificationDto.getScheduleTime();
+            if (Timestamp.valueOf(scheduledDateTime).after(Timestamp.valueOf(verificationTime))) {
+              if (StringUtils.isNotEmpty(notificationDto.getStudyId())) {
+                studyIdList.add(notificationDto.getStudyId());
+              }
 
-            NotificationsBean notifyBean = new NotificationsBean();
-            notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
-            if (notificationDto
-                .getNotificationType()
-                .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)) {
-              notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
-              notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
-            } else {
-              notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
-              notifyBean.setAudience(
+              NotificationsBean notifyBean = new NotificationsBean();
+              notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
+              if (notificationDto
+                  .getNotificationType()
+                  .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)) {
+                notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
+                notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
+              } else {
+                notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
+                notifyBean.setAudience(
+                    notificationDto.isAnchorDate()
+                        ? StudyMetaDataConstants.NOTIFICATION_AUDIENCE_LIMITED
+                        : StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
+              }
+
+              // notification subType
+              if (notificationDto
+                  .getNotificationSubType()
+                  .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT)) {
+                notifyBean.setSubtype(
+                    StringUtils.isEmpty(notificationDto.getNotificationSubType())
+                        ? ""
+                        : StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL);
+              } else {
+                notifyBean.setSubtype(
+                    StringUtils.isEmpty(notificationDto.getNotificationSubType())
+                        ? ""
+                        : notificationDto.getNotificationSubType());
+              }
+
+              notifyBean.setTitle(
+                  propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE) == null
+                      ? ""
+                      : propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE));
+              notifyBean.setMessage(
+                  StringUtils.isEmpty(notificationDto.getNotificationText())
+                      ? ""
+                      : notificationDto.getNotificationText());
+              notifyBean.setStudyId(
+                  StringUtils.isEmpty(notificationDto.getCustomStudyId())
+                      ? ""
+                      : notificationDto.getCustomStudyId());
+              scheduledDate =
                   notificationDto.isAnchorDate()
-                      ? StudyMetaDataConstants.NOTIFICATION_AUDIENCE_LIMITED
-                      : StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
+                      ? StudyMetaDataUtil.getCurrentDate()
+                      : notificationDto.getScheduleDate();
+              scheduledTime =
+                  StringUtils.isEmpty(notificationDto.getScheduleTime())
+                      ? StudyMetaDataConstants.DEFAULT_MIN_TIME
+                      : notificationDto.getScheduleTime();
+              notifyBean.setDate(
+                  StudyMetaDataUtil.getFormattedDateTimeZone(
+                      scheduledDate + " " + scheduledTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+
+              notificationIdsList.add(notificationDto.getNotificationId());
+              notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
+              hashMap.put(notificationDto.getNotificationId(), scheduledDate + " " + scheduledTime);
             }
-
-            // notification subType
-            if (notificationDto
-                .getNotificationSubType()
-                .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT)) {
-              notifyBean.setSubtype(
-                  StringUtils.isEmpty(notificationDto.getNotificationSubType())
-                      ? ""
-                      : StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL);
-            } else {
-              notifyBean.setSubtype(
-                  StringUtils.isEmpty(notificationDto.getNotificationSubType())
-                      ? ""
-                      : notificationDto.getNotificationSubType());
-            }
-
-            notifyBean.setTitle(
-                propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE) == null
-                    ? ""
-                    : propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE));
-            notifyBean.setMessage(
-                StringUtils.isEmpty(notificationDto.getNotificationText())
-                    ? ""
-                    : notificationDto.getNotificationText());
-            notifyBean.setStudyId(
-                StringUtils.isEmpty(notificationDto.getCustomStudyId())
-                    ? ""
-                    : notificationDto.getCustomStudyId());
-            scheduledDate =
-                notificationDto.isAnchorDate()
-                    ? StudyMetaDataUtil.getCurrentDate()
-                    : notificationDto.getScheduleDate();
-            scheduledTime =
-                StringUtils.isEmpty(notificationDto.getScheduleTime())
-                    ? StudyMetaDataConstants.DEFAULT_MIN_TIME
-                    : notificationDto.getScheduleTime();
-            notifyBean.setDate(
-                StudyMetaDataUtil.getFormattedDateTimeZone(
-                    scheduledDate + " " + scheduledTime,
-                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-
-            notificationIdsList.add(notificationDto.getNotificationId());
-            notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
-            hashMap.put(notificationDto.getNotificationId(), scheduledDate + " " + scheduledTime);
           }
 
           LinkedHashMap<String, String> sortedMap = sortHashMapByValues(hashMap);
