@@ -3434,7 +3434,10 @@
         $("#StartDate" + count).parent().find(".help-block").empty();
       }
     }).on("dp.show", function (e) {
-      $('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+    	var parentId = $(this).attr("count");
+        var parent_id = parseInt(parentId);
+        var nxtDate = moment($("#StartDate" + parent_id).val());
+    	$(this).parents('.manually-option').find('.cusEndDate').data("DateTimePicker").minDate(nxtDate);
     });
   }
 
