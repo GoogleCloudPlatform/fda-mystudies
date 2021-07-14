@@ -41,7 +41,7 @@ let kAlertMessageSignOutSync =
   Incomplete activities and activities that were completed in offline mode must be re-started when you next sign in.
   """
 
-let kAlertSignOutLaterTitle = "Sign Out later"
+let kAlertSignOutLaterTitle = "Sign out later"
 
 // MARK: Segue Identifiers
 let kLoginStoryboardIdentifier = "Login"

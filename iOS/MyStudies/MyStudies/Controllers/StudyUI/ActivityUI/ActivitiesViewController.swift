@@ -312,7 +312,7 @@ class ActivitiesViewController: UIViewController {
       // Task creation failed
       UIUtilities.showAlertMessage(
         kAlertMessageText,
-        errorMessage: NSLocalizedString("Invalid Data!", comment: ""),
+        errorMessage: NSLocalizedString("Invalid data!", comment: ""),
         errorAlertActionTitle: NSLocalizedString("OK", comment: ""),
         viewControllerUsed: self
       )

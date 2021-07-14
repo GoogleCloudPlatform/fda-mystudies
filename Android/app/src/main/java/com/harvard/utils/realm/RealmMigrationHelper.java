@@ -29,21 +29,45 @@ public class RealmMigrationHelper implements RealmMigration {
   public void migrate(final DynamicRealm realm, long oldVersion, long newVersion) {
     RealmSchema schema = realm.getSchema();
 
-    //time separated into start and end time
     if (oldVersion == 0) {
+      // time separated into start and end time
       RealmObjectSchema anchorRuns = schema.get("AnchorRuns");
-
       anchorRuns
-              .addField("startTime", String.class)
-              .addField("endTime", String.class)
-              .transform(new RealmObjectSchema.Function() {
+          .addField("startTime", String.class)
+          .addField("endTime", String.class)
+          .transform(
+              new RealmObjectSchema.Function() {
                 @Override
                 public void apply(DynamicRealmObject obj) {
                   obj.set("startTime", obj.getString("time"));
                   obj.set("endTime", obj.getString("time"));
                 }
               })
-              .removeField("time");
+          .removeField("time");
+
+      // Added enroll field
+      RealmObjectSchema consentDocumentData = schema.get("ConsentDocumentData");
+      consentDocumentData
+          .addField("enrollAgain", boolean.class)
+          .transform(
+              new RealmObjectSchema.Function() {
+                @Override
+                public void apply(DynamicRealmObject obj) {
+                  obj.set("enrollAgain", false);
+                }
+              });
+
+      RealmObjectSchema studyUpdate = schema.get("StudyUpdate");
+      studyUpdate
+          .addField("enrollAgain", boolean.class)
+          .transform(
+              new RealmObjectSchema.Function() {
+                @Override
+                public void apply(DynamicRealmObject obj) {
+                  obj.set("enrollAgain", false);
+                }
+              });
+
       oldVersion++;
     }
   }
