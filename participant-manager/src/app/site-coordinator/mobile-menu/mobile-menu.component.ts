@@ -20,7 +20,7 @@ export class MobileMenuComponent implements OnInit {
   user = {} as Profile;
   showSearchOnClick = false;
   updatedPlaceHolder = '';
-   displayHeaderOnResetpassword = true;
+  displayHeaderOnResetpassword = true;
 
   constructor(
     private readonly userService: UserService,
@@ -29,7 +29,7 @@ export class MobileMenuComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.user = this.userService.getUserProfile();
- this.displayHeader.showHeaders$.subscribe((updatedHeaderDisplayStatus) => {
+    this.displayHeader.showHeaders$.subscribe((updatedHeaderDisplayStatus) => {
       this.displayHeaderOnResetpassword = updatedHeaderDisplayStatus;
     });
     this.searchService.searchPlaceHolder$.subscribe(
@@ -44,7 +44,6 @@ export class MobileMenuComponent implements OnInit {
   toggleNav(): void {
     this.navIsOpen = !this.navIsOpen;
   }
-
 
   hamburgerclose(): void {
     // any other execution

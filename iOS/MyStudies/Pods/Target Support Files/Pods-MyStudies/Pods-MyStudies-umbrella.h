@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_HPHCTestsVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_HPHCTestsVersionString[];
+FOUNDATION_EXPORT double Pods_MyStudiesVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_MyStudiesVersionString[];
 
