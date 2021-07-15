@@ -2609,10 +2609,12 @@
       minDate: startToday,
       useCurrent: false,
     }).on("dp.change", function (e) {
-      if (e.date._d)
-        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
-      else
-        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    	if (typeof $("#chooseEndDate").val() === "undefined") {
+  	      if (e.date._d)
+  	        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
+  	      else
+  	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+      	}
     });
 
     $("#chooseDate").on("click", function (e) {
@@ -4604,6 +4606,8 @@
         }
         timeRef.each(function () {
           if ($(this).val()) {
+           if (dt) {
+      	    dt = moment(dt, "MM/DD/YYYY").toDate();
             thisDate = moment($(this).val(), "h:mm a").toDate();
             dt.setHours(thisDate.getHours());
             dt.setMinutes(thisDate.getMinutes());
@@ -4624,6 +4628,7 @@
                   valid = false;
               }
             }
+           }
           }
         });
       }
