@@ -114,7 +114,6 @@ class SignUpViewController: UIViewController {
       }
 
       setNeedsStatusBarAppearanceUpdate()
-      self.tableView?.reloadData()
     }
   }
 
