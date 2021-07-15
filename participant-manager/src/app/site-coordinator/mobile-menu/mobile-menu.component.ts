@@ -3,6 +3,8 @@ import {UserService} from 'src/app/service/user.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {Profile} from '../account/shared/profile.model';
 
+import {HeaderDisplayService} from '../../service/header-display.service';
+
 @Component({
   selector: 'mobile-menu',
   templateUrl: './mobile-menu.component.html',
@@ -18,13 +20,18 @@ export class MobileMenuComponent implements OnInit {
   user = {} as Profile;
   showSearchOnClick = false;
   updatedPlaceHolder = '';
+  displayHeaderOnResetpassword = true;
+
   constructor(
     private readonly userService: UserService,
     private readonly searchService: SearchService,
+    private readonly displayHeader: HeaderDisplayService,
   ) {}
   ngOnInit(): void {
     this.user = this.userService.getUserProfile();
-
+    this.displayHeader.showHeaders$.subscribe((updatedHeaderDisplayStatus) => {
+      this.displayHeaderOnResetpassword = updatedHeaderDisplayStatus;
+    });
     this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
         this.showSearchBar = true;
@@ -33,6 +40,7 @@ export class MobileMenuComponent implements OnInit {
       },
     );
   }
+
   toggleNav(): void {
     this.navIsOpen = !this.navIsOpen;
   }
