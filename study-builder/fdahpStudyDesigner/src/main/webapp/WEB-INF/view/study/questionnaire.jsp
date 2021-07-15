@@ -1910,6 +1910,18 @@
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li.active").removeClass('active');
     $(".sixthQuestionnaires").addClass('active');
+    
+    var frequencyVal = "${questionnaireBo.frequency}";
+    if (frequencyVal == '' || frequencyVal == null || typeof frequencyVal == 'undefined') {
+    	frequencyVal = "One time";
+    }
+    var scheduletypeVal = "${questionnaireBo.scheduleType}";
+    if (scheduletypeVal == '' && scheduletypeVal == null && typeof scheduletypeVal == 'undefined') {
+    	scheduletypeVal = "Regular";
+    }
+    
+    $('input:radio[value="' + frequencyVal + '"]').prop('checked', true); 
+    $('input:radio[value="' + scheduletypeVal + '"]').prop('checked', true); 
 
     $(".scheduleQusClass").click(function () {
       if ($("#schedule2").prop("checked")) {
@@ -2699,6 +2711,13 @@
     }).on("dp.show", function (e) {
       $('#startDateMonthly').data("DateTimePicker").minDate(serverDate());
     }).on("dp.change", function (e) {
+    	
+    	var monthlyDate = moment($("#startDateMonthly").val(), "MM/DD/YYYY").toDate();
+    	if(monthlyDate >= serverDate()){
+        $("#startDateMonthly").parent().removeClass("has-error has-danger");
+        $('#startDateMonthly').parent().find(".help-block").empty();
+    	}
+    	
       if (e.date._d != $('#pickStartDate').data("DateTimePicker").date()) {
         $('#pickStartDate').val('');
       }
@@ -3434,7 +3453,10 @@
         $("#StartDate" + count).parent().find(".help-block").empty();
       }
     }).on("dp.show", function (e) {
-      $('.cusEndDate').data("DateTimePicker").minDate(serverDate());
+    	var parentId = $(this).attr("count");
+        var parent_id = parseInt(parentId);
+        var nxtDate = moment($("#StartDate" + parent_id).val());
+    	$(this).parents('.manually-option').find('.cusEndDate').data("DateTimePicker").minDate(nxtDate);
     });
   }
 
