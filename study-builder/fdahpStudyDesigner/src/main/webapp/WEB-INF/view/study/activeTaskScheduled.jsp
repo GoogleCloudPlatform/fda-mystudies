@@ -2034,10 +2034,16 @@
       minDate: startToday,
       useCurrent: false
     }).on("dp.change", function (e) {
-      if (e.date._d)
-        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
-      else
-        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    	if (typeof $("#chooseEndDate").val() === "undefined") {
+  	      if (e.date._d)
+  	        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
+  	      else
+  	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+      	}
+      	
+      	if($("#chooseDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+      		$("#chooseDate" ).parent().find(".help-block").empty();
+        }
     });
 
     
@@ -2269,6 +2275,10 @@
           $("#studyWeeklyLifetimeEnd").val(endDate);
           $("#weekEndDate").text(endDate);
           $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
+        }
+        
+        if($("#startWeeklyDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+      		$("#startWeeklyDate" ).parent().find(".help-block").empty();
         }
       });
       $('#startWeeklyDate').val('');
