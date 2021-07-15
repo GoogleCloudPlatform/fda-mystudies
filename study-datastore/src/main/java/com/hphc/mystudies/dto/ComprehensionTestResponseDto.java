@@ -40,7 +40,8 @@ import org.hibernate.annotations.NamedQuery;
       name = "comprehensionQuestionResponseByCTID",
       query =
           " from ComprehensionTestResponseDto CTRDTO"
-              + " where CTRDTO.comprehensionTestQuestionId =:comprehensionTestQuestionId"),
+              + " where CTRDTO.comprehensionTestQuestionId =:comprehensionTestQuestionId"
+              + " ORDER BY CTRDTO.sequenceNumber"),
 })
 public class ComprehensionTestResponseDto implements Serializable {
 
@@ -63,6 +64,9 @@ public class ComprehensionTestResponseDto implements Serializable {
 
   @Column(name = "study_version")
   private Integer studyVersion = 1;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public String getId() {
     return id;
@@ -102,5 +106,13 @@ public class ComprehensionTestResponseDto implements Serializable {
 
   public void setStudyVersion(Integer studyVersion) {
     this.studyVersion = studyVersion;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }
