@@ -576,7 +576,7 @@ Update your repository with the latest changes from release 2.0.6 or greater, cr
         role   = "roles/storage.objectViewer"
       },
       {
-        member = "serviceAccount:study-builder-gke-sa@btc-qa-apps.iam.gserviceaccount.com"
+        member = "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"
         role   = "roles/storage.objectAdmin"
       },
     ]

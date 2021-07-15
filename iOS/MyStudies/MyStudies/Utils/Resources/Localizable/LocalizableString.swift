@@ -22,13 +22,13 @@ enum LocalizableString: String {
   case resourceNotAvailable = "This resource is currently unavailable."
   case aboutStudy = "About the study"
   case leaveSubtitle = "This will also delete your app account."
-  case newResourceMessage = "New Resource Available"
+  case newResourceMessage = "New resource available"
 
   // MARK: - Consent
   case learnMore = "Learn more"
 
   // MARK: - Errors
-  case sessionExpired = "Your Session is Expired"
+  case sessionExpired = "Your session is expired"
 
   // MARK: - Force Upgrade
   case blockerScreenLabelText = "Please update to the latest version of the app to continue."

@@ -16,7 +16,7 @@
 	</dict>
 	<dict>
 		<key>helpText</key>
-		<string>Confirm Password</string>
+		<string>Confirm password</string>
 		<key>placeHolder</key>
 		<string>confirm password</string>
 	</dict>

@@ -46,25 +46,25 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your camera for the task to give more accurate result.</string>
+	<string>$(PRODUCT_NAME) would like to access your camera for this task.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use Face ID for quick and secure access to the app. </string>
+	<string>$(PRODUCT_NAME) would like to use your Face ID for quick and secure access to the app. </string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Health App data to read data from Health to answer questions.</string>
+	<string>$(PRODUCT_NAME) would like to access Health data on your device to help you respond to the question. This will not result in your data getting automatically submitted as a response.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to update your Health App data to save your responses.</string>
+	<string>$(PRODUCT_NAME) would like to update your Health data.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Location to answer location-based questions and will not result in your location automatically getting submitted as a response.</string>
+	<string>$(PRODUCT_NAME) would like to access your location to answer location-based questions. This will not result in your location getting automatically submitted as a response.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Location to answer location-based questions and will not result in your location automatically getting submitted as a response.</string>
+	<string>$(PRODUCT_NAME) would like to access your location to answer location-based questions. This will not result in your location getting automatically submitted as a response.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Location to answer location-based questions and will not result in your location automatically getting submitted as a response.</string>
+	<string>$(PRODUCT_NAME) would like to access your location to answer location-based questions. This will not result in your location getting automatically submitted as a response.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your microphone for the task to give more accurate result.</string>
+	<string>$(PRODUCT_NAME) would like to access your microphone for this task.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use Motion data for the task to give more accurate result.</string>
+	<string>$(PRODUCT_NAME) would like to access motion data from your device for this task.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use Speech Recognition for the task to give more accurate result.</string>
+	<string>$(PRODUCT_NAME) would like to use Speech Recognition for this task.</string>
 	<key>RESPONSE_DATASTORE_URL</key>
 	<string>$(RESPONSE_DATASTORE_URL)</string>
 	<key>STUDY_DATASTORE_URL</key>
