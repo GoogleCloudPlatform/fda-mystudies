@@ -80,13 +80,13 @@ class ActivitiesTableViewCell: UITableViewCell {
       selectionStyle = .none
       disabledView.isHidden = false
     } else {
-        if currentActivity.currentRun == nil {
-            selectionStyle = .none
-            disabledView.isHidden = false
-        } else {
-            selectionStyle = .default
-            disabledView.isHidden = true
-        }
+      if currentActivity.currentRun == nil {
+        selectionStyle = .none
+        disabledView.isHidden = false
+      } else {
+        selectionStyle = .default
+        disabledView.isHidden = true
+      }
     }
   }
 

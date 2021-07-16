@@ -1098,14 +1098,12 @@ class DBHandler: NSObject {
       ? 0 : incompleteRuns
 
     if activity.currentRun == nil {
-        if activity.currentRunId < activity.activityRuns.count {
-            userStatus.status = UserActivityStatus.ActivityStatus.yetToJoin
-        } else {
-            userStatus.status = UserActivityStatus.ActivityStatus.abandoned
-        }
-      
+      if activity.currentRunId < activity.activityRuns.count {
+        userStatus.status = UserActivityStatus.ActivityStatus.yetToJoin
+      } else {
+        userStatus.status = UserActivityStatus.ActivityStatus.abandoned
+      }
     } else {
-
       if userStatus.status != UserActivityStatus.ActivityStatus.completed {
 
         var incompleteRuns = activity.currentRunId - activity.compeltedRuns
