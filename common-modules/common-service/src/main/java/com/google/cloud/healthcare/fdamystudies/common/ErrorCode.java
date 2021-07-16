@@ -205,7 +205,7 @@ public enum ErrorCode {
   PENDING_CONFIRMATION(
       403,
       "EC_0043",
-      HttpStatus.BAD_REQUEST.toString(),
+      HttpStatus.CONFLICT.toString(),
       "Your account is pending activation. Please check your email for details and sign in to complete activation."),
 
   ACCOUNT_NOT_VERIFIED(
