@@ -124,8 +124,7 @@ public class StudiesControllerTest extends BaseMockIT {
             .findFirst()
             .orElse(null);
     assertNotNull(studyInfoBo);
-    assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
-    assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
+
     assertEquals(Constants.LOGO_IMAGE_URL, studyInfoBo.getLogoImageUrl());
 
     verifyTokenIntrospectRequest(1);
