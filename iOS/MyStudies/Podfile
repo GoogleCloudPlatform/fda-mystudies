@@ -9,7 +9,7 @@ def main_pods
   pod 'IQKeyboardManagerSwift'
   pod 'SlideMenuControllerSwift', :git => 'https://github.com/AtomicSLLC/SlideMenuControllerSwift.git', :branch => 'swift5'
   pod 'SDWebImage'
-  pod 'RealmSwift'
+  pod 'RealmSwift', '5.3.5'
   pod 'CryptoSwift'
   pod 'ActionSheetPicker-3.0'
   pod 'Toast-Swift'
