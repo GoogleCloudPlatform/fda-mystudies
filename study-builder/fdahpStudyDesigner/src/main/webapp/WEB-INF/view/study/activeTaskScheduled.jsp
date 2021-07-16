@@ -2042,7 +2042,7 @@
 	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
     	}
     	
-    	if($("#chooseDate").val() > moment(serverDate()).format("MM/DD/YYYY")){
+    	if($("#chooseDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
     		$("#chooseDate" ).parent().find(".help-block").empty();
         }
     });
@@ -2068,11 +2068,8 @@
           }
         });
         if (!chkVal) {
-          var test =thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").find("ul").length;
-          if(test === 0){
-          	thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
-              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not yet added"));
-          }
+          thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty().append(
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Duplicate times cannot be set"));
         } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty();
         }
@@ -2238,7 +2235,7 @@
         $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
       }
 
-      if($("#startWeeklyDate").val() > moment(serverDate()).format("MM/DD/YYYY")){
+      if($("#startWeeklyDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
   		$("#startWeeklyDate" ).parent().find(".help-block").empty();
       }
     }).on("click", function (e) {
@@ -2445,7 +2442,12 @@
           }
           if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate()
               < serverDateTime()) {
-            $(timeId).val('');
+        	  $(timeId).data("DateTimePicker").date(null);
+              $(timeId).data("DateTimePicker").date(serverDateTime());
+              $(timeId).parent().addClass("has-danger").addClass("has-error");
+              $(timeId).parent().find(".help-block").empty().append(
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Time reset to current time"));
           }
         } else {
           $(timeId).data("DateTimePicker").minDate(false);
@@ -3596,14 +3598,15 @@
               $(this).parent().find(".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   "Date reset to current date"));
+              if(valid){
+				valid = false;
+                  }
             } else {
-              
+              $(this).data("DateTimePicker").clear();
               $(this).parent().addClass('has-error has-danger');
               $(this).parent().find(".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please select a valid date"));
-              $(this).data("DateTimePicker").date(serverDateTime());
-              $(this).data("DateTimePicker").clear();
+                  "Please select a valid date"));              
             }
           } else {
             $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
