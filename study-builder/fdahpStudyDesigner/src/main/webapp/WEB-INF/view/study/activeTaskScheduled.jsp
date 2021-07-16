@@ -960,7 +960,7 @@
                            class="form-control clock cusTime customTime startTime"
                            name="activeTaskCustomScheduleBo[0].frequencyStartTime"
                            placeholder="Start time" onclick='startTimep(this.id,0);' disabled required data-error="Please fill out this field"/>
-                    <span class='help-block-timer with-errors red-txt'></span>
+                    <span class='help-block-timer help-block with-errors red-txt'></span>
                  
           </span>
           <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -979,7 +979,8 @@
                    name="activeTaskCustomScheduleBo[0].frequencyEndTime" placeholder="End time"
                    onclick='endTimep(this.id,0);'
                    disabled required data-error="Please fill out this field"/>
-            <span class='help-block-timer with-errors red-txt'></span>
+            <span class='help-block-timer with-errors red-txt' style='display:none'></span>
+            <span class='help-block with-errors red-txt'></span>
           </span>
           <span class="addBtnDis addbtn mr-sm align-span-center" onclick='addDate();'>+</span>
              <span id="delete"
@@ -1016,7 +1017,7 @@
                      value="${activeTaskCustomScheduleBo.frequencyStartTime}" placeholder="Start time"
                      onclick='startTimep(this.id,${customVar.index});'
                      required data-error="Please fill out this field"/>
-              <span class='help-block-timer with-errors red-txt'></span>
+              <span class='help-block-timer help-block with-errors red-txt'></span>
             </span>
             
             
@@ -1038,7 +1039,8 @@
                      value="${activeTaskCustomScheduleBo.frequencyEndTime}" placeholder="End time"
                      onclick='endTimep(this.id,${customVar.index});'
                      required data-error="Please fill out this field"/>
-              <span class='help-block-timer with-errors red-txt'></span>
+              <span class='help-block-timer with-errors red-txt' style='display:none'></span>
+              <span class='help-block with-errors red-txt'></span>
             </span>
             <span id="AddButton"
                   class="addbtn addBtnDis align-span-center mr-md " onclick="addDate();">+</span>
@@ -1057,7 +1059,7 @@
           <input type="hidden" name="activeTaskCustomScheduleBo[0].activeTaskId" id="activeTaskId"
                  class="activeTaskIdClass" value="${activeTaskBo.id}">
             
-          <span class="mb-sm pr-md">
+          <span class="mb-sm pr-xs">
             <span class="light-txt opacity06">
               Anchor date
             </span>
@@ -1085,12 +1087,12 @@
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
-          <span class="mb-sm pr-lg">
+          <span class="mb-sm" style='padding-right: 25px !important;'>
             <span
-                class="light-txt opacity06"> days
+                class="pr-xs light-txt opacity06"> days
               </span>
 
-                <span class="form-group  dis-inline vertical-align-middle pr-md"
+                <span class="pr-md form-group  dis-inline vertical-align-middle pr-md"
                 style="margin-bottom: -13px">
                 <input id="manualStartTime0"
 					 type="text" class="form-control clock"
@@ -1098,7 +1100,8 @@
 					 value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
 					 placeholder="Start time" required/>
             <span
-                class='help-block-timer with-errors red-txt'></span>
+                class='help-block-timer with-errors red-txt' style='display:none'></span>
+            <span class='help-block with-errors red-txt'></span>
           </span>
 
           <span
@@ -1168,7 +1171,7 @@
                    id="isUsed${customVar.index}" value="${activeTaskCustomScheduleBo.used}">
             <input type="hidden" name="activeTaskCustomScheduleBo[${customVar.index}].activeTaskId" data-error="Please fill out this field" 
                    id="activeTaskId" value="${activeTaskCustomScheduleBo.activeTaskId}">
-            <span class="mb-sm pr-md">
+            <span class="mb-sm pr-xs">
               <span
                   class="light-txt opacity06"> Anchor date
               </span>
@@ -1198,20 +1201,21 @@
               <span
                   class="help-block with-errors red-txt"></span>
             </span>
-            <span class="mb-sm pr-md">
+            <span class="mb-sm" style='padding-right: 25px !important;'>
               <span
                   class="light-txt opacity06"> days
                   </span>
 
-                <span class="form-group  dis-inline vertical-align-middle"
-                style="margin-bottom: -13px;padding-right: 12px !important;">
+                <span class="pr-md form-group  dis-inline vertical-align-middle"
+                style="margin-bottom: -13px;">
                 <input id="manualStartTime${customVar.index}"
                   type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                   name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
                   value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                   placeholder="Start time" required data-error="Please fill out this field"/>
             <span
-                class='help-block-timer with-errors red-txt'></span>
+                class='help-block-timer with-errors red-txt' style='display:none'></span>
+            <span class='help-block with-errors red-txt'></span>
           </span>
 
           <span
@@ -2572,7 +2576,7 @@
         + "  <input id='customStartTime" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
         + "].frequencyStartTime' class='form-control clock customTime startTime cusTime' data-error='Please fill out this field' placeholder='Start time' onclick='startTimep(this.id, " + customCount + ");' disabled/>"
-        + "<span class='help-block-timer with-errors red-txt'></span>"
+        + "<span class='help-block-timer help-block with-errors red-txt'></span>"
         + "  </span>"
         
         + "  <span class='gray-xs-f mb-sm pr-md align-span-center'>"
@@ -2589,7 +2593,8 @@
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
         + "' required name='activeTaskCustomScheduleBo[" + customCount
         + "].frequencyEndTime' class='form-control clock customTime endTime' data-error='Please fill out this field'  placeholder='End time' onclick='endTimep(this.id, " + customCount + ");' disabled/>"
-        + "<span class='help-block-timer with-errors red-txt'></span>"
+        + "<span class='help-block-timer with-errors red-txt' style='display:none'></span>"
+        + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
@@ -2706,13 +2711,18 @@
 	 endDate.setMinutes(endTime.getMinutes() - 1);
 	 
 	 if (startDate != '' && endDate != '' && startDate > endDate) {
+	   $("#" + item).parent().find(".help-block").hide();
+	   $("#" + item).parent().find(".help-block-timer").show();
 	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	       "End date and time should not be less than or equal to start date and time"));
 	 } else {
+	   $("#" + item).parent().find(".help-block-timer").hide();
+	   $("#" + item).parent().find(".help-block").show();
 	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty();
+	   $("#" + item).parent().find(".help-block").empty();
 	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#customTime" + count).parent().find(".help-block-timer").empty();
 	 }
@@ -3732,7 +3742,7 @@
 	customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
+        + "<span class='mb-sm pr-xs'><span class='light-txt opacity06'> Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
@@ -3745,13 +3755,14 @@
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span>" 
+		+ "<span class='mb-sm pr-md'><span class='pr-xs light-txt opacity06'> days </span>" 
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
-        + "<span class='help-block-timer with-errors red-txt'></span>"
+        + "<span class='help-block-timer with-errors red-txt' style='display:none'></span>"
+        + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         
         +"<span class='light-txt opacity06'>"
@@ -3768,7 +3779,7 @@
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-xs'><span class='light-txt opacity06'> days</span></span>"
+        + "<span class='mb-sm pr-sm'><span class='light-txt opacity06'> days</span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
@@ -3886,6 +3897,12 @@
        format: 'h:mm a',
        useCurrent: false,
      }).on("dp.change", function (e) {
+	 if ($('#' + item).val() != '') {
+   	   $('#' + item).parent().removeClass("has-danger").removeClass("has-error");
+   	   $('#' + item).parent().find(".help-block").empty().css({'display': 'none'});
+   	   $('#' + item).parent().find(".clock").empty().css({'position': 'relative', 'top': '-5px'});
+   	 } 
+	     	
    	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
    	 
@@ -3913,8 +3930,12 @@
      }
      
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+       $('#manualStartTime' + count).parent().find(".help-block-timer").show();
+       $('#manualStartTime' + count).parent().find(".help-block").hide();
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
+  	   $('#' + item).parent().find(".help-block").empty().removeAttr("style");
+   	   $('#' + item).parent().find(".clock").empty().removeAttr("style");
    	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty().append(
    	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
@@ -3951,7 +3972,11 @@
      
      preEndTime.setMinutes(preEndTime.getMinutes() + 2);
    	 if (preEndTime != '' && preEndTime > manualStartTime) {
+   	   $('#manualStartTime' + count).parent().find(".help-block-timer").show();
+   	   $('#manualStartTime' + count).parent().find(".help-block").hide();
    	   $(this).addClass("red-border");
+   	   $('#' + item).parent().find(".help-block").empty().removeAttr("style");
+   	   $('#' + item).parent().find(".clock").empty().removeAttr("style");
    	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty().append(
    	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -3965,7 +3990,7 @@
    	   $("#" + item).parent().find(".help-block-timer").empty();
    	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
-   	   $("#addbtn" + count).removeClass("not-allowed");
+   	   $(".addbtn").removeClass("not-allowed");
    	 }
          
      }
@@ -3978,6 +4003,15 @@
       format: 'h:mm a',
       useCurrent: false,
     }).on("dp.change", function (e) {
+    	
+   	if ($('#' + item).val() != '') {
+   	  $('#' + item).parent().removeClass("has-danger").removeClass("has-error");
+   	  $('#' + item).parent().find(".clock").empty().css({'position': 'relative', 'top': '-3px'});
+   	} else {
+   	  $('#' + item).parent().find(".help-block").removeAttr("style");
+   	  $('#' + item).parent().find(".clock").removeAttr("style");
+   	}
+   	
    	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
    	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
    	 
@@ -4004,7 +4038,7 @@
      } else {
     	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
      }
-        
+     
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
@@ -4016,11 +4050,13 @@
    	 } else {
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
+   	   $("#xdays" + count).removeClass("red-border");
+   	   $("#ydays" + count).removeClass("red-border");
    	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty();
    	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#manualStartTime" + count).parent().find(".help-block-timer").empty();
-   	   $("#addbtn" + count).removeClass("not-allowed");
+       $(".addbtn").removeClass("not-allowed");
    	 }
    	});
    }
@@ -4038,7 +4074,16 @@
       
   	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
     	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
-    	 
+
+   	if ($('#xdays' + parent_id).val() != '') {
+  	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
+  	  $('#xdays' + parent_id).parent().find(".help-block").empty().css({'display': 'none'});
+  	  $('#xdays' + parent_id).parent().find(".xdays").empty().css({'position': 'relative', 'top': '-5px'});
+   	} else {
+   	  $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+   	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
+   	}
+    	   	
   	if (isNaN(manualStartTime)) {
  	    return
  	} 
@@ -4066,6 +4111,8 @@
 
         if (manualEndTime !== "") {
           if (manualStartTime > manualEndTime) {
+           	$('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+           	$('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
             $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
@@ -4100,6 +4147,8 @@
         }
 
         if (manualStartTime < manualEndTimeyday) {
+          $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+          $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
@@ -4112,6 +4161,8 @@
           $(".addbtn").addClass("not-allowed");
           if (manualEndTime !== "") {
             if (manualStartTime > manualEndTime) {
+              $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+              $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
               $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
@@ -4152,6 +4203,15 @@
   	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
     	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
     	 
+	 if ($('#ydays' + parent_id).val() != '') {
+  	   $('#ydays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
+  	   $('#ydays' + parent_id).parent().find(".help-block").empty().css({'display': 'none'});
+  	   $('#ydays' + parent_id).parent().find(".ydays").empty().css({'position': 'relative', 'top': '-5px'});
+   	 } else {
+   	   $('#ydays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+   	   $('#ydays' + parent_id).parent().find(".ydays").empty().removeAttr("style");
+   	 }
+      	 
   	if (isNaN(manualEndTime)) {
  	    return
  	} 
