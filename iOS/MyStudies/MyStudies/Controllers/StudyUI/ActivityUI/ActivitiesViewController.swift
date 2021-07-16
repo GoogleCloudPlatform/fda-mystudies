@@ -930,7 +930,7 @@ extension ActivitiesViewController: UITableViewDelegate {
             )
           }
         }
-      } else if activity.userParticipationStatus?.status == .abandoned || activity.userParticipationStatus?.status == .yetToJoin{
+      } else if activity.userParticipationStatus?.status == .abandoned || activity.userParticipationStatus?.status == .yetToJoin {
         // Run not available.
         self.view.makeToast(
           NSLocalizedString(kActivityAbondonedAlertMessage, comment: "")
