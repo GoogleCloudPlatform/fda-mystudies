@@ -80,8 +80,13 @@ class ActivitiesTableViewCell: UITableViewCell {
       selectionStyle = .none
       disabledView.isHidden = false
     } else {
-      selectionStyle = .default
-      disabledView.isHidden = true
+      if currentActivity.currentRun == nil {
+        selectionStyle = .none
+        disabledView.isHidden = false
+      } else {
+        selectionStyle = .default
+        disabledView.isHidden = true
+      }
     }
   }
 
@@ -189,7 +194,12 @@ class ActivitiesTableViewCell: UITableViewCell {
       case .abandoned:
         self.labelStatus?.backgroundColor = UIColor.red
       case .completed:
-        self.labelStatus?.backgroundColor = kGreenColor
+        if currentActivity.currentRun != nil, currentActivity.currentRunId < currentActivity.totalRuns {
+            labelStatus?.text = UserActivityStatus.ActivityStatus.yetToJoin.description
+            self.labelStatus?.backgroundColor = kBlueColor
+        } else {
+            self.labelStatus?.backgroundColor = kGreenColor
+        }
       case .expired:
         self.labelStatus?.backgroundColor = UIColor.gray
       }
