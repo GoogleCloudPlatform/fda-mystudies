@@ -221,7 +221,9 @@ class WCPServices: NSObject {
   func getNotification(skip: Int, delegate: NMWebServiceDelegate) {
     self.delegate = delegate
     let method = WCPMethods.notifications.method
-    let headerParams = [kNotificationSkip: "\(skip)"]
+    let user = User.currentUser
+    let headerParams = [kNotificationSkip: "\(skip)",
+                        kVerificationTime: user.verificationTime ?? ""]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
 

@@ -45,6 +45,7 @@ class DBHandler: NSObject {
       dbUser = DBUser()
       dbUser?.userType = (user.userType?.rawValue)!
       dbUser?.emailId = user.emailId!
+      dbUser?.verificationTime = user.verificationTime ?? ""
       dbUser?.userId = user.userId
       dbUser?.verified = user.verified
 
@@ -57,6 +58,7 @@ class DBHandler: NSObject {
         try realm.write {
           dbUser?.userType = (user.userType?.rawValue)!
           dbUser?.emailId = user.emailId!
+          dbUser?.verificationTime = user.verificationTime ?? ""
           dbUser?.authToken = user.authToken
           dbUser?.verified = user.verified
           dbUser?.refreshToken = user.refreshToken
@@ -81,6 +83,7 @@ class DBHandler: NSObject {
       currentUser.verified = dbUser?.verified ?? false
       currentUser.userId = dbUser?.userId
       currentUser.emailId = dbUser?.emailId
+      currentUser.verificationTime = dbUser?.verificationTime
       currentUser.userType = (dbUser?.userType).map { UserType(rawValue: $0) }!
 
       let settings = Settings()
@@ -104,10 +107,16 @@ class DBHandler: NSObject {
 
     try? realm.write {
       let user = User.currentUser
+      dbUser?.userType = (user.userType?.rawValue)!
+      dbUser?.emailId = user.emailId!
+      dbUser?.verificationTime = user.verificationTime ?? ""
+      dbUser?.authToken = user.authToken
+      dbUser?.verified = user.verified
+      dbUser?.refreshToken = user.refreshToken
+      
       dbUser?.passcodeEnabled = (user.settings?.passcode)!
       dbUser?.localNotificationEnabled = (user.settings?.localNotifications)!
       dbUser?.remoteNotificationEnabled = (user.settings?.remoteNotifications)!
-
     }
   }
 
