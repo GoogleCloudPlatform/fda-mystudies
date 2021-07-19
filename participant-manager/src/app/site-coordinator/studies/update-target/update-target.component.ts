@@ -8,6 +8,7 @@ import {UpdateTargetEnrollmentRequest} from '../shared/site.model';
 @Component({
   selector: 'update-target',
   templateUrl: './update-target.component.html',
+  styles: ['.nc label{ text-transform: none !important; }'],
 })
 export class UpdateTargetComponent {
   @Input() studyId = '';
