@@ -3172,6 +3172,11 @@
       var today = moment(serverDate()).format("MM/DD/YYYY");
       $('#startDate').parent().removeClass("has-danger").removeClass("has-error");
       $('#startDate').parent().find(".help-block").empty();
+      if (dt) {
+        $('#time0').prop("disabled", false);
+        $("#dailyAddTimeButton").removeClass('hide');
+      }
+      
       $('.time-opts').each(function () {
 
         var id = $(this).attr("id");

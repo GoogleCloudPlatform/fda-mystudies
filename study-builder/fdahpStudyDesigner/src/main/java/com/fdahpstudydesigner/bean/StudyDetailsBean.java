@@ -28,9 +28,9 @@ public class StudyDetailsBean {
       studyVersion = "",
       studyType = "",
       studyStatus = "",
-      studyCategory = "",
-      studyTagline = "",
-      studySponsor = "",
+      //      studyCategory = "",
+      //      studyTagline = "",
+      //      studySponsor = "",
       studyEnrolling = "",
       appId = "",
       appName = "",
@@ -66,17 +66,17 @@ public class StudyDetailsBean {
     return studyStatus;
   }
 
-  public String getStudyCategory() {
-    return studyCategory;
-  }
-
-  public String getStudyTagline() {
-    return studyTagline;
-  }
-
-  public String getStudySponsor() {
-    return studySponsor;
-  }
+  //  public String getStudyCategory() {
+  //    return studyCategory;
+  //  }
+  //
+  //  public String getStudyTagline() {
+  //    return studyTagline;
+  //  }
+  //
+  //  public String getStudySponsor() {
+  //    return studySponsor;
+  //  }
 
   public String getStudyEnrolling() {
     return studyEnrolling;
@@ -106,17 +106,17 @@ public class StudyDetailsBean {
     this.studyStatus = studyStatus;
   }
 
-  public void setStudyCategory(String studyCategory) {
-    this.studyCategory = studyCategory;
-  }
-
-  public void setStudyTagline(String studyTagline) {
-    this.studyTagline = studyTagline;
-  }
-
-  public void setStudySponsor(String studySponsor) {
-    this.studySponsor = studySponsor;
-  }
+  //  public void setStudyCategory(String studyCategory) {
+  //    this.studyCategory = studyCategory;
+  //  }
+  //
+  //  public void setStudyTagline(String studyTagline) {
+  //    this.studyTagline = studyTagline;
+  //  }
+  //
+  //  public void setStudySponsor(String studySponsor) {
+  //    this.studySponsor = studySponsor;
+  //  }
 
   public void setStudyEnrolling(String studyEnrolling) {
     this.studyEnrolling = studyEnrolling;
