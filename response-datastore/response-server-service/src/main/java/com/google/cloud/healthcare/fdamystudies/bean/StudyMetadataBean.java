@@ -28,9 +28,9 @@ public class StudyMetadataBean implements Serializable {
   private String studyVersion;
   private String studyType;
   private String studyStatus;
-  private String studyCategory;
-  private String studyTagline;
-  private String studySponsor;
+  //  private String studyCategory;
+  //  private String studyTagline;
+  //  private String studySponsor;
   private String studyEnrolling;
   private String appId;
   private String appName;

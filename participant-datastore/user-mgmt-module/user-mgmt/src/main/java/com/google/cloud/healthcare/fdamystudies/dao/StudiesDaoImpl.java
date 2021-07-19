@@ -80,7 +80,7 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setType(studyMetadataBean.getStudyType());
       studyInfo.setStatus(studyMetadataBean.getStudyStatus());
       //  studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-      //   studyInfo.setTagline(studyMetadataBean.getStudyTagline());
+      //  studyInfo.setTagline(studyMetadataBean.getStudyTagline());
       //  studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
       studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
       //   studyInfo.setApp(appInfo);
@@ -124,7 +124,7 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setType(studyMetadataBean.getStudyType());
       studyInfo.setStatus(studyMetadataBean.getStudyStatus());
       //  studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-      // studyInfo.setTagline(studyMetadataBean.getStudyTagline());
+      //  studyInfo.setTagline(studyMetadataBean.getStudyTagline());
       //  studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
       studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
       studyInfo.setApp(appInfo);
