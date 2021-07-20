@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACC
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.VERIFICATION_CODE_LENGTH;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -60,8 +61,6 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService {
-
-  private static final int VERIFICATION_CODE_LENGTH = 6;
 
   private XLogger logger = XLoggerFactory.getXLogger(UserRegistrationServiceImpl.class.getName());
 
