@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACC
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.VERIFICATION_CODE_LENGTH;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -39,13 +40,13 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -60,8 +61,6 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService {
-
-  private static final int VERIFICATION_CODE_LENGTH = 6;
 
   private XLogger logger = XLoggerFactory.getXLogger(UserRegistrationServiceImpl.class.getName());
 
@@ -181,7 +180,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
   private EmailResponse generateAndSaveVerificationCode(
       UserDetailsEntity userDetails, String appName) {
-    String verificationCode = RandomStringUtils.randomAlphanumeric(VERIFICATION_CODE_LENGTH);
+    String verificationCode =
+        MyStudiesUserRegUtil.generateRandomAlphanumeric(VERIFICATION_CODE_LENGTH);
     EmailResponse emailResponse = sendConfirmationEmail(userDetails, verificationCode, appName);
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       userDetails.setEmailCode(verificationCode);
