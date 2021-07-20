@@ -2034,10 +2034,13 @@
       minDate: startToday,
       useCurrent: false
     }).on("dp.change", function (e) {
-      if (e.date._d)
-        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
-      else
-        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    	
+    	if (typeof $("#chooseEndDate").val() === "undefined") {
+	      if (e.date._d)
+	        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
+	      else
+	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    	}
     });
 
     
@@ -2061,12 +2064,9 @@
           }
         });
         if (!chkVal) {
-          var test =thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").find("ul").length;
-          if(test === 0){
-          	thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").append(
-              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","white-space:nowrap").text("Please select a time that has not yet added"));
-          }
-        } else {
+            thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty().append(
+          	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Duplicate times cannot be set"));
+          } else {
           thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").empty();
         }
       });
@@ -2435,7 +2435,12 @@
           }
           if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate()
               < serverDateTime()) {
-            $(timeId).val('');
+        	  $(timeId).data("DateTimePicker").date(null);
+              $(timeId).data("DateTimePicker").date(serverDateTime());
+              $(timeId).parent().addClass("has-danger").addClass("has-error");
+              $(timeId).parent().find(".help-block").empty().append(
+                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                  "Time reset to current time"));
           }
         } else {
           $(timeId).data("DateTimePicker").minDate(false);
@@ -3564,37 +3569,66 @@
   }
 
   function validateTime(dateRef, timeRef) {
-    var tm = $('#timepicker1').val();
-    var dt;
-    var valid = true;
-    dateRef.each(function () {
-      dt = dateRef.val();
-      if (dt) {
-        dt = moment(dt, "MM/DD/YYYY").toDate();
-        if (dt < serverDate()) {
-          $(this).parent().addClass('has-error has-danger');
-          $(this).data("DateTimePicker").clear();
-        } else {
-          $(this).parent().removeClass('has-error has-danger').find('.help-block.with-errors').empty();
-        }
-        timeRef.each(function () {
-          if ($(this).val()) {
-            thisDate = moment($(this).val(), "h:mm a").toDate();
-            dt.setHours(thisDate.getHours());
-            dt.setMinutes(thisDate.getMinutes());
-            if (dt < serverDateTime()) {
-              $(this).data("DateTimePicker").clear();
-              $(this).parent().addClass('has-error has-danger');
-              if (valid)
-                valid = false;
-            } else {
-            }
-          }
-        });
-      }
-    });
-    return valid;
-  }
+	    var tm = $('#timepicker1').val();
+	    var dt;
+	    var valid = true;
+	    dateRef.each(function () {
+	      dt = dateRef.val();
+	      if (dt) {
+	          dt = moment(dt, "MM/DD/YYYY").toDate();
+	          if (dt < serverDate()) {
+	            if (dateRef.attr('id') == "startDate") {
+	              $(this).data("DateTimePicker").date(serverDateTime());
+	              dt = dateRef.val();
+	              $(this).val(dt);
+	              $(this).parent().addClass('has-error has-danger');
+	              $(this).parent().find(".help-block").empty().append(
+	                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	                  "Date reset to current date"));
+	              if(valid){
+					valid = false;
+	                  }
+	            } else {
+	              $(this).data("DateTimePicker").clear();
+	              $(this).parent().addClass('has-error has-danger');
+	              $(this).parent().find(".help-block").empty().append(
+	                  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	                  "Please select a valid date"));              
+	            }
+	          } else {
+	            $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
+	          }
+	        timeRef.each(function () {
+	        	if ($(this).val()) {
+	        	  if (dt) {
+	          	    dt = moment(dt, "MM/DD/YYYY").toDate();
+	                thisDate = moment($(this).val(), "h:mm a").toDate();
+	                dt.setHours(thisDate.getHours());
+	                dt.setMinutes(thisDate.getMinutes());
+	                if (timeRef.hasClass("dailyClock")) {
+	                  if (dt < serverDateTime()) {
+	                    $(this).data("DateTimePicker").date(serverDateTime());
+	                    $(this).parent().addClass("has-danger").addClass("has-error");
+	                    $(this).parent().find(".help-block").empty().append(
+	                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	                        "Time reset to current time "));
+	                  }
+	                } else {
+	                  if (dt < serverDateTime()) {
+	                    $(this).data("DateTimePicker").clear();
+	                    $(this).parent().addClass('has-error has-danger');
+
+	                    if (valid)
+	                      valid = false;
+	                  }
+	                }
+	        	}
+	          }
+	        });
+	      }
+	    });
+	    return valid;
+	  }
 
   function validateCustTime(dateRef, timeRef) {
     var dt;
