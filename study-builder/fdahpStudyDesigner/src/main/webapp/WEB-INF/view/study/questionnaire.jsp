@@ -3922,12 +3922,15 @@
         questionnaireFrequencey.yDaysSign = true;
       }
       questionnaire.questionnairesFrequenciesBo = questionnaireFrequencey;
-      if ($('#monthlyFormId').find('.numChk').val() && $('#monthlyFormId').find('.numChk').val()
+      if (scheduletype != 'AnchorDate') {
+        if ($('#monthlyFormId').find('.numChk').val() && $('#monthlyFormId').find('.numChk').val()
           == 0 || !(validateTime(
               $(document).find("#startDateMonthly").not('.cursor-none, :disabled'),
               $(document).find("#selectMonthlyTime").not('.cursor-none, :disabled')))) {
         isFormValid = false;
+        }
       }
+      
       if (scheduletype == 'AnchorDate') {
         questionnaire.studyLifetimeStart = null;
         questionnaire.studyLifetimeEnd = null;
@@ -4151,6 +4154,10 @@
         $("#monthlyfrequencyId").val(frequency);
         if (isFromValid("#monthlyFormId")) {
           valForm = true;
+        }
+        
+        if (scheduletype == 'AnchorDate' && anchorForm) {
+            valForm = true;
         }
       }
     } else {
