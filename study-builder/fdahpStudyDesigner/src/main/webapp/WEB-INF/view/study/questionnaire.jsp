@@ -2615,6 +2615,10 @@
   	      else
   	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
       	}
+
+    	if($("#chooseDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+    		$("#chooseDate" ).parent().find(".help-block").empty();
+        }
     });
 
     $("#chooseDate").on("click", function (e) {
@@ -2804,6 +2808,10 @@
         $("#studyWeeklyLifetimeEnd").val(endDate);
         $("#weekEndDate").text(endDate);
         $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
+      }
+
+      if($("#startWeeklyDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+    		$("#startWeeklyDate" ).parent().find(".help-block").empty();
       }
     }).on("click", function (e) {
       $('#startWeeklyDate').data("DateTimePicker").minDate(serverDate());
