@@ -126,7 +126,7 @@ margin-top:16px !important;
           <div class="form-group">
              <input type="text" class="form-control" name="name"
                    id="customStudyName" value="${fn:escapeXml(studyBo.name)}"
-                   maxlength="50" required data-error="Please fill out this field" />
+                   required data-error="Please fill out this field" />
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -431,6 +431,18 @@ margin-top:16px !important;
                             ".help-block").html("");
 
                       }
+                      if ($('#customStudyName').val().length > 50) {
+                          $('#customStudyName')
+                              .parent()
+                              .addClass(
+                                'has-error has-danger')
+                              .find(".help-block")
+                              .empty()
+                              .append(
+                                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                                   "Study name cannot exceed 50 characters"));
+                        return false;
+                        }
 
                       var type = $(
                           "input[name='type']:checked")
