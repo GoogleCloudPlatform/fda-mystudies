@@ -74,4 +74,6 @@ public class AppConstants {
   public static final String SYSTEM_EXCEPTION = "SystemException";
   public static final Integer EMAILID_VERIFIED_STATUS = 1;
   public static final String EMAIL_NOT_EXISTS = "EMAIL_NOT_EXISTS";
+
+  public static final int VERIFICATION_CODE_LENGTH = 6;
 }

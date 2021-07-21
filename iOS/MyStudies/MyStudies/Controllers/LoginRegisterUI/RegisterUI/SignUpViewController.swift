@@ -103,9 +103,12 @@ class SignUpViewController: UIViewController {
       // unhide navigationbar
       self.navigationController?.setNavigationBarHidden(false, animated: true)
 
+      let valPassword = self.user?.password ?? ""
+      let valEmail = self.user?.emailId ?? ""
       User.resetCurrentUser()
-      self.user = User.currentUser
-      confirmPassword = ""
+      self.user = User.currentUser      
+      self.user.password = valPassword
+      self.user.emailId = valEmail
 
       if viewLoadFrom == .menu {
         self.setNavigationBarItem()
@@ -114,7 +117,6 @@ class SignUpViewController: UIViewController {
       }
 
       setNeedsStatusBarAppearanceUpdate()
-      self.tableView?.reloadData()
     }
   }
 
