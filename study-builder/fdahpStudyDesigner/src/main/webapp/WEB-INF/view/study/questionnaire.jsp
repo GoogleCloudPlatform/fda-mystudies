@@ -2609,10 +2609,16 @@
       minDate: startToday,
       useCurrent: false,
     }).on("dp.change", function (e) {
-      if (e.date._d)
-        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
-      else
-        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    	if (typeof $("#chooseEndDate").val() === "undefined") {
+  	      if (e.date._d)
+  	        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
+  	      else
+  	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+      	}
+
+    	if($("#chooseDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+    		$("#chooseDate" ).parent().find(".help-block").empty();
+        }
     });
 
     $("#chooseDate").on("click", function (e) {
@@ -2802,6 +2808,10 @@
         $("#studyWeeklyLifetimeEnd").val(endDate);
         $("#weekEndDate").text(endDate);
         $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
+      }
+
+      if($("#startWeeklyDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+    		$("#startWeeklyDate" ).parent().find(".help-block").empty();
       }
     }).on("click", function (e) {
       $('#startWeeklyDate').data("DateTimePicker").minDate(serverDate());
@@ -3342,63 +3352,64 @@
   
   function startTimep(item, count) {
 
-    $('#' + item).not('.cursor-none').datetimepicker({
-      format: 'h:mm a',
-      useCurrent: false,
-    }).on("dp.change", function (e) {
-	 var endDate = moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
-	 var endTime = moment($("#" + item).val(), "HH:mm A").toDate();
-	 endDate.setHours(endTime.getHours());
-	 endDate.setMinutes(endTime.getMinutes());
-	 
-	 var startDate =  moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
-	 var startTime = moment($("#customTime" + count).val(), "HH:mm A").toDate();
-	 startDate.setHours(startTime.getHours());
-	 startDate.setMinutes(startTime.getMinutes() - 1);
-	 if (startDate != '' && endDate != '' && startDate < endDate) {
-	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
-	   $("#" + item).parent().find(".help-block-timer").empty().append(
-	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	       "Start date and time should not be greater than or equal to end date and time"));
-	 } else {
-	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
-	   $("#" + item).parent().find(".help-block-timer").empty();
-	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
-	   $("#customTime" + count).parent().find(".help-block-timer").empty();
-	 }
-	});
-  }
+	    $('#' + item).not('.cursor-none').datetimepicker({
+	      format: 'h:mm a',
+	      useCurrent: false,
+	    }).on("dp.change", function (e) {
+		 var endDate = moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
+		 var endTime = moment($("#" + item).val(), "HH:mm A").toDate();
+		 endDate.setHours(endTime.getHours());
+		 endDate.setMinutes(endTime.getMinutes());
+		 
+		 var startDate =  moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
+		 var startTime = moment($("#customTime" + count).val(), "HH:mm A").toDate();
+		 startDate.setHours(startTime.getHours());
+		 startDate.setMinutes(startTime.getMinutes() - 1);
+		 if (startDate != '' && endDate != '' && startDate < endDate) {
+		   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+		   $("#" + item).parent().find(".help-block-timer").empty().append(
+		       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+		       "Start date and time should not be greater than or equal to end date and time"));
+		 } else {
+		   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+		   $("#" + item).parent().find(".help-block-timer").empty();
+		   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+		   $("#customTime" + count).parent().find(".help-block-timer").empty();
+		 }
+		});
+	}
   
   function endTimep(item, count) {
 
-    $('#' + item).not('.cursor-none').datetimepicker({
-      format: 'h:mm a',
-      useCurrent: false,
-    }).on("dp.change", function (e) {
-	 var startDate =  moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
-	 var startTime = moment($("#customStartTime" + count).val(), "HH:mm A").toDate();
-	 startDate.setHours(startTime.getHours());
-	 startDate.setMinutes(startTime.getMinutes());
-	 
-	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
-	 var endTime = moment($("#" + item).val(), "HH:mm A").toDate();
-	 endDate.setHours(endTime.getHours());
-	 endDate.setMinutes(endTime.getMinutes() - 1);
-	 if (startDate != '' && endDate != '' && startDate > endDate) {
-	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
-	   $("#" + item).parent().find(".help-block-timer").empty().append(
-	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	       "End date and time should not be less than or equal to start date and time"));
-	 } else {
-	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
-	   $("#" + item).parent().find(".help-block-timer").empty();
-	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
-	   $("#customTime" + count).parent().find(".help-block-timer").empty();
-	 }
-	});
-  }
+	    $('#' + item).not('.cursor-none').datetimepicker({
+	      format: 'h:mm a',
+	      useCurrent: false,
+	    }).on("dp.change", function (e) {
+		 var startDate =  moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
+		 var startTime = moment($("#customStartTime" + count).val(), "HH:mm A").toDate();
+		 startDate.setHours(startTime.getHours());
+		 startDate.setMinutes(startTime.getMinutes());
+		 
+		 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
+		 var endTime = moment($("#" + item).val(), "HH:mm A").toDate();
+		 endDate.setHours(endTime.getHours());
+		 endDate.setMinutes(endTime.getMinutes() - 1);
+		 if (startDate != '' && endDate != '' && startDate > endDate) {
+		   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+		   $("#" + item).parent().find(".help-block-timer").empty().append(
+		       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+		       "End date and time should not be less than or equal to start date and time"));
+		 } else {
+		   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+		   $("#" + item).parent().find(".help-block-timer").empty();
+		   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+		   $("#customTime" + count).parent().find(".help-block-timer").empty();
+		 }
+		});
+	}
 
-  function customStartDate(id, count) {
+
+function customStartDate(id, count) {
 	  
 	  $('.manually-option').find('.startTime').prop('disabled', false);
       $('.cusStrDate').not('.cursor-none, :disabled').datetimepicker({
@@ -3409,9 +3420,27 @@
       $("#" + id).parent().find(".help-block").empty();
       $("#EndDate" + count).parent().removeClass("has-danger").removeClass("has-error");
       $("#EndDate" + count).parent().find(".help-block").empty();
-      var startDate = $("#" + id).val();
-      var endDate = $("#EndDate" + count).val();
-      if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
+      
+      
+      var startDate =  moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
+ 	 var startTime = moment($("#customStartTime" + count).val(), "HH:mm A").toDate();
+ 	 
+   	if (isNaN(startTime)) {
+	    return
+	} 
+   	
+   	
+ 	 startDate.setHours(startTime.getHours());
+ 	 startDate.setMinutes(startTime.getMinutes());
+ 	 
+ 	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
+ 	 var endTime = moment($("#customTime" + count).val(), "HH:mm A").toDate();
+ 	 endDate.setHours(endTime.getHours());
+ 	 endDate.setMinutes(endTime.getMinutes() - 1);
+ 	 
+ 
+   	
+      if (startDate != '' && endDate != '' && startDate > endDate) {
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
         $("#" + id).parent().find(".help-block").empty().append(
             $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -3440,12 +3469,28 @@
       $('#' + id).parent().find(".help-block").empty();
       $("#StartDate" + count).parent().removeClass("has-danger").removeClass("has-error");
       $("#StartDate" + count).parent().find(".help-block").empty();
-      var startDate = $("#StartDate" + count).val();
-      var endDate = $('#' + id).val();
-      if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
+   
+      var startDate =  moment($("#StartDate" + count).val(), "MM/DD/YYYY").toDate();
+  	 var startTime = moment($("#customStartTime" + count).val(), "HH:mm A").toDate();
+  	 
+  	 startDate.setHours(startTime.getHours());
+  	 startDate.setMinutes(startTime.getMinutes());
+  	 
+  	 var endDate = moment($("#EndDate" + count).val(), "MM/DD/YYYY").toDate();
+  	 var endTime = moment($("#customTime" + count).val(), "HH:mm A").toDate();
+	 	if (isNaN(endTime)) {
+	 	    return
+	 	} 
+ 	
+  	 endDate.setHours(endTime.getHours());
+  	 endDate.setMinutes(endTime.getMinutes() - 1);
+  
+      
+      if (startDate != '' && endDate != '' && startDate > endDate) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
-        $('#' + id).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+        $('#customTime' + count).parent().find(".help-block-timer").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
             "End date and time should not be less than start date and time"));
+               $('#customTime' + count).val('');
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
         $('#' + id).parent().find(".help-block").empty();
@@ -3455,6 +3500,7 @@
     }).on("dp.show", function (e) {
     	var parentId = $(this).attr("count");
         var parent_id = parseInt(parentId);
+
         var nxtDate = moment($("#StartDate" + parent_id).val());
     	$(this).parents('.manually-option').find('.cusEndDate').data("DateTimePicker").minDate(nxtDate);
     });
@@ -3922,12 +3968,15 @@
         questionnaireFrequencey.yDaysSign = true;
       }
       questionnaire.questionnairesFrequenciesBo = questionnaireFrequencey;
-      if ($('#monthlyFormId').find('.numChk').val() && $('#monthlyFormId').find('.numChk').val()
+      if (scheduletype != 'AnchorDate') {
+        if ($('#monthlyFormId').find('.numChk').val() && $('#monthlyFormId').find('.numChk').val()
           == 0 || !(validateTime(
               $(document).find("#startDateMonthly").not('.cursor-none, :disabled'),
               $(document).find("#selectMonthlyTime").not('.cursor-none, :disabled')))) {
         isFormValid = false;
+        }
       }
+      
       if (scheduletype == 'AnchorDate') {
         questionnaire.studyLifetimeStart = null;
         questionnaire.studyLifetimeEnd = null;
@@ -4151,6 +4200,10 @@
         $("#monthlyfrequencyId").val(frequency);
         if (isFromValid("#monthlyFormId")) {
           valForm = true;
+        }
+        
+        if (scheduletype == 'AnchorDate' && anchorForm) {
+            valForm = true;
         }
       }
     } else {
@@ -4604,6 +4657,8 @@
         }
         timeRef.each(function () {
           if ($(this).val()) {
+           if (dt) {
+      	    dt = moment(dt, "MM/DD/YYYY").toDate();
             thisDate = moment($(this).val(), "h:mm a").toDate();
             dt.setHours(thisDate.getHours());
             dt.setMinutes(thisDate.getMinutes());
@@ -4624,6 +4679,7 @@
                   valid = false;
               }
             }
+           }
           }
         });
       }
@@ -4820,335 +4876,393 @@
   }
 
   function ancStartTime(item, count) {
- 
-     $('#' + item).not('.cursor-none').datetimepicker({
-       format: 'h:mm a',
-       useCurrent: false,
-     }).on("dp.change", function (e) {
-   	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
-   	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
-   	 
-     var pxday = $("#xdays" + count).val();
-     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
-     
-     if (pxsign === "-") {
-       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
-     } else {
-       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
-     }
-     
-     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
-     var pyday = $("#ydays" + count).val();
-     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
-     
-     if (pysign === "-") {
-    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
-     } else {
-    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
-     }
-     
-   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime && $('.manually-anchor-option').length === 1) {
-   	   $('.help-block-timer').selectpicker('refresh');
-   	   $(this).addClass("red-border");
-   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
-   	   $("#" + item).parent().find(".help-block-timer").empty().append(
-   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
-   	   $("#addbtn" + count).addClass("not-allowed");
-   	 } else if ($('.manually-anchor-option').length === 1) {
-   	   $('.help-block-timer').selectpicker('refresh');
-   	   $(this).removeClass("red-border");
-   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
-   	   $("#" + item).parent().find(".help-block-timer").empty();
-   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
-   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
-   	   $("#addbtn" + count).removeClass("not-allowed");
+	  
+	     $('#' + item).not('.cursor-none').datetimepicker({
+	       format: 'h:mm a',
+	       useCurrent: false,
+	     }).on("dp.change", function (e) {
+	   	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
+	   	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
+	   	 
+	 	if (isNaN(manualStartTime)) {
+		    return
+		} 
 
-   	 }
-   	 
-     if ($('.manually-anchor-option').length > 1) {
-    	 
-     var pre_parent_id = $("#AnchorDate" + count).prev().attr("id");
-     if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
-       pre_parent_id = pre_parent_id.replace('AnchorDate','');
-     }
-     var pre_parent = parseInt(pre_parent_id);
-   	 var preEndTime =  moment($("#manualEndTime" + pre_parent).val(), "HH:mm A").toDate();
-   	 
-     var pyday = $("#ydays" + pre_parent).val();
-     var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
-     
-     if (pysign === "-") {
-    	 preEndTime.setDate(preEndTime.getDate() - parseInt(pyday));
-     } else {
-    	 preEndTime.setDate(preEndTime.getDate() + parseInt(pyday));
-     }
-     
-     preEndTime.setMinutes(preEndTime.getMinutes() + 2);
-   	 if (preEndTime != '' && preEndTime > manualStartTime) {
-   	   $(this).addClass("red-border");
-   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
-   	   $("#" + item).parent().find(".help-block-timer").empty().append(
-   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-   	       "X should be less than Y of the current row and greater than Y of the previous row"));
-   	   $("#addbtn" + count).addClass("not-allowed");
-   	   $("#manualStartTime" + count).val('');
-   	   $('.help-block-timer').selectpicker('refresh');
-   	 } else {
-   	   $(this).removeClass("red-border");
-   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
-   	   $("#" + item).parent().find(".help-block-timer").empty();
-   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
-   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
-   	   $("#addbtn" + count).removeClass("not-allowed");
-   	 }
-         
-     }
-   	});
-   }
-  
+	     var pxday = $("#xdays" + count).val();
+	     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
+	     
+	     if (pxsign === "-") {
+	       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+	     } else {
+	       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+	     }
+	     
+	     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+	     var pyday = $("#ydays" + count).val();
+	     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
+	     
+	     if (pysign === "-") {
+	    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+	     } else {
+	    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+	     }
+	     
+	     
+	   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+	   	   $('.help-block-timer').selectpicker('refresh');
+	   	   $(this).addClass("red-border");
+	   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+	   	   $("#" + item).parent().find(".help-block-timer").empty().append(
+	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+	   	   $("#addbtn" + count).addClass("not-allowed");
+	   		$("#" + item).val("");
+	   		return
+	   	 } else if ($('.manually-anchor-option').length === 1) {
+	   	   $('.help-block-timer').selectpicker('refresh');
+	   	   $(this).removeClass("red-border");
+	   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+	   	   $("#" + item).parent().find(".help-block-timer").empty();
+	   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+	   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
+	   	   $("#addbtn" + count).removeClass("not-allowed");
+
+	   	 }
+	   	 
+	     if ($('.manually-anchor-option').length > 1) {
+	    	 
+	     var pre_parent_id = $("#AnchorDate" + count).prev().attr("id");
+	     if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
+	       pre_parent_id = pre_parent_id.replace('AnchorDate','');
+	     }
+	     var pre_parent = parseInt(pre_parent_id);
+	   	 var preEndTime =  moment($("#manualEndTime" + pre_parent).val(), "HH:mm A").toDate();
+	   	 
+	     var pyday = $("#ydays" + pre_parent).val();
+	     var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
+	     
+	     if (pysign === "-") {
+	    	 preEndTime.setDate(preEndTime.getDate() - parseInt(pyday));
+	     } else {
+	    	 preEndTime.setDate(preEndTime.getDate() + parseInt(pyday));
+	     }
+	     
+	     preEndTime.setMinutes(preEndTime.getMinutes() + 2);
+	   	 if (preEndTime != '' && preEndTime > manualStartTime) {
+	   	   $(this).addClass("red-border");
+	   	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
+	   	   $("#" + item).parent().find(".help-block-timer").empty().append(
+	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	   	       "X should be less than Y of the current row and greater than Y of the previous row"));
+	   	   $("#addbtn" + count).addClass("not-allowed");
+	   	   $("#manualStartTime" + count).val('');
+	   	   $('.help-block-timer').selectpicker('refresh');
+	   	 } else {
+	   	   $(this).removeClass("red-border");
+	   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+	   	   $("#" + item).parent().find(".help-block-timer").empty();
+	   	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+	   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
+	   	   $("#addbtn" + count).removeClass("not-allowed");
+	   	 }
+	         
+	     }
+	   	});
+	}
   function ancEndTime(item, count) {
 	  
-    $('#' + item).not('.cursor-none').datetimepicker({
-      format: 'h:mm a',
-      useCurrent: false,
-    }).on("dp.change", function (e) {
-	 
-   	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
-   	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
-   	 
-     var pxday = $("#xdays" + count).val();
-     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
-     
-     if (pxsign === "-") {
-       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
-     } else {
-       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
-     }
-     
-     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
-     var pyday = $("#ydays" + count).val();
-     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
-     
-     if (pysign === "-") {
-    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
-     } else {
-    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
-     }
-        
-   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
-   	   $('.help-block-timer').selectpicker('refresh');
-   	   $(this).addClass("red-border");
-   	   $("#manualEndTime" + count).parent().addClass("has-danger").addClass("has-error");
-   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty().append(
-   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
-   	   $("#addbtn" + count).addClass("not-allowed");
-   	   $("#manualEndTime" + count).val('');
-   	  
-   	 } else {
-   	   $('.help-block-timer').selectpicker('refresh');
-   	   $(this).removeClass("red-border");
-   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
-   	   $("#" + item).parent().find(".help-block-timer").empty();
-   	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
-   	   $("#manualStartTime" + count).parent().find(".help-block-timer").empty();
-   	   $("#addbtn" + count).removeClass("not-allowed");
-   	 }
-   	});
-   }
+	    $('#' + item).not('.cursor-none').datetimepicker({
+	      format: 'h:mm a',
+	      useCurrent: false,
+	    }).on("dp.change", function (e) {
+		 
+	   	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
+	   	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
+	   	 
+	   	if (isNaN(manualEndTime)) {
+		    return
+		} 
+
+	   	var pxday = $("#xdays" + count).val();
+	     var pxsign = $("#xSign" + count).val() === "0" ? "+" : "-";
+	     
+	     if (pxsign === "-") {
+	       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+	     } else {
+	       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+	     }
+	     
+	     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+	     var pyday = $("#ydays" + count).val();
+	     var pysign = $("#ySign" + count).val() === "0" ? "+" : "-";
+	     
+	     if (pysign === "-") {
+	    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+	     } else {
+	    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+	     }
+	   	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+	   	   $('.help-block-timer').selectpicker('refresh');
+	   	   $(this).addClass("red-border");
+	   	   $("#manualEndTime" + count).parent().addClass("has-danger").addClass("has-error");
+	   	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty().append(
+	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+	   	   $("#addbtn" + count).addClass("not-allowed");
+	   	   $("#manualEndTime" + count).val('');
+	   	  
+	   	 } else {
+	   	   $('.help-block-timer').selectpicker('refresh');
+	   	   $(this).removeClass("red-border");
+	   		$("#ydays" + count).removeClass("red-border");
+	   		$("#xdays" + count).removeClass("red-border");
+	   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
+	   	   $("#" + item).parent().find(".help-block-timer").empty();
+	   	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
+	   	   $("#manualStartTime" + count).parent().find(".help-block-timer").empty();
+	   	   $("#addbtn" + count).removeClass("not-allowed");
+	   	 }
+	   	});
+	}
   
   $(document).ready(function () {
 
-    jQuery(document).on("keyup", ".xdays", function () {
-    	
-      var xday = $(this).val()
-      var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
-      var parent_id = parseInt(parentId);
-      var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
-      var xdayValue = parseInt(xsign + "" + xday);
-      var yday = $("#ydays" + parent_id).val();
-      var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
-      var ydayValue = parseInt(ysign + "" + yday);
-      
-      var startTime = $("#manualStartTime" + parent_id).val();
-      var endTime = $("#manualEndTime" + parent_id).val();
-      
-      if (parent_id === "0") {
 
-        if (ydayValue !== "") {
-          if (xdayValue > ydayValue) {
-            $(this).addClass("red-border");
-            $("#ydays" + parent_id).addClass("red-border");
-            $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
-                ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                "Y should be greater than or equal to X"));
-            $("#addbtn" + parent_id).addClass("not-allowed");
-          } else {
-            $(this).removeClass("red-border");
-            $("#ydays" + parent_id).removeClass("red-border");
-            $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
-                ".help-block").empty();
-            $("#addbtn" + parent_id).removeClass("not-allowed");
-          }
-        }
+	  jQuery(document).on("keyup", ".xdays", function () {
+	      var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
+	      var parent_id = parseInt(parentId);
+	      
+	 	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
+	   	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
+	   	 
+	 	if (isNaN(manualStartTime)) {
+		    return
+		} 
 
-      } else {
-        var pre_parent_id = $("#AnchorDate" + parent_id).prev().attr("id");
-        if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
-          pre_parent_id = pre_parent_id.replace('AnchorDate','');
-        }
-        var pre_parent = parseInt(pre_parent_id);
-        var pyday = $("#ydays" + pre_parent).val();
-        var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
-        var pydayValue = parseInt(pysign + "" + pyday);
-        
-        if (xdayValue < pydayValue) {
-          $(this).addClass("red-border");
-          $("#ydays" + pre_parent).addClass("red-border");
-          $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than or equal to Y of the current row and greater than or equal to Y of the previous row"));
-          $("#addbtn" + parent_id).addClass("not-allowed");
-        } else {
-          $(this).removeClass("red-border");
-          $("#ydays" + pre_parent).removeClass("red-border");
-          $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
-          $("#addbtn" + parent_id).addClass("not-allowed");
-          if (ydayValue !== "") {
-            if (xdayValue > ydayValue) {
-              $(this).addClass("red-border");
-              $("#ydays" + parent_id).addClass("red-border");
-              $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
-                  ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Y should be greater than or equal to X"));
-              $("#addbtn" + parent_id).addClass("not-allowed");
-            } else {
-              $(this).removeClass("red-border");
-              $("#ydays" + parent_id).removeClass("red-border");
-              $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
-                  ".help-block").empty();
-              $("#addbtn" + parent_id).removeClass("not-allowed");
-            }
-          }
-        }
+	     var pxday = $("#xdays" + parent_id).val();
+	     var pxsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
+	     
+	     if (pxsign === "-") {
+	       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+	     } else {
+	       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+	     }
+	     
+	     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+	     var pyday = $("#ydays" + parent_id).val();
+	     var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+	     
+	     if (pysign === "-") {
+	    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+	     } else {
+	    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+	     }
+	     
+	     
+	      if (parent_id === 0) {
 
+	        if (manualEndTime !== "") {
+	          if (manualStartTime > manualEndTime) {
+	            $(this).addClass("red-border");
+	            $("#ydays" + parent_id).addClass("red-border");
+	            $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
+	            	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+	                $("#manualEndTime" + parent_id).val('');
+	            $("#addbtn" + parent_id).addClass("not-allowed");
+	          } else {
+	            $(this).removeClass("red-border");
+	            $("#ydays" + parent_id).removeClass("red-border");
+	            $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
+	                ".help-block").empty();
+	            $("#addbtn" + parent_id).removeClass("not-allowed");
+	          }
+	        }
 
-      }
-
-    });
-
-    jQuery(document).on("change", ".xdays", function () {
-      $(this).parent().parent().siblings().removeClass("current");
-      $(this).parent().parent().addClass("current");
-
-      $(".current").nextAll().remove();
-      
-      if( $('.manually-anchor-option').filter(function() {
-  	    return $(this).css('display') !== 'none';}).length == 1){
-  	 $("#AddButton").show();
-  	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
-  	}
-    });
-
-    jQuery(document).on("keyup", ".ydays", function () {
-    	
-      var parent_id = $(this).parent().parent().attr("id").replace('AnchorDate','');
-      var xsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
-      var xday = $("#xdays" + parent_id).val();
-      var xdayValue = parseInt(xsign + "" + xday);
-      var yday = $("#ydays" + parent_id).val();
-      var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
-      var ydayValue = parseInt(ysign + "" + yday);
-      
-      if (ydayValue < xdayValue) {
-        $(this).addClass("red-border");
-        $("#xdays" + parent_id).addClass("red-border");
-        $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
-            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than or equal to X"));
-        $(this).parent().parent().siblings().removeClass("current");
-        $(this).parent().parent().addClass("current");
-        $(".current").nextAll().remove();
-        $("#addbtn" + parent_id).addClass("not-allowed");
-      } else {
-        $(this).removeClass("red-border");
-        $("#xdays" + parent_id).removeClass("red-border");
-        $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
-            ".help-block").empty();
-        $("#addbtn" + parent_id).removeClass("not-allowed");
-      }
-
-    });
-
-    jQuery(document).on("change", ".ydays", function () {
-      $(this).parent().parent().siblings().removeClass("current");
-      $(this).parent().parent().addClass("current");
-      $(".current").nextAll().remove();
-      
-      if( $('.manually-anchor-option').filter(function() {
-  	    return $(this).css('display') !== 'none';}).length == 1){
-  	 $("#AddButton").show();
-  	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
-  	}
-
-    });
-
-    jQuery(document).on("change", ".sign-box select", function () {
-      var parent_id = $(this).attr("count");
-      var signValue = $("#xSign" + parent_id).val();
-      var xsign = signValue === "0" ? "+" : "-";
-      var xday = $("#xdays" + parent_id).val();
-      var xdayValue = parseInt(xsign + "" + xday);
-
-      var yday = $("#ydays" + parent_id).val();
-      var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
-      var ydayValue = parseInt(ysign + "" + yday);
-
-      if (ydayValue < xdayValue) {
-        $("#xdays" + parent_id).addClass("red-border");
-        $("#ydays" + parent_id).addClass("red-border");
-        $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
-            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Y should be greater than or equal to X"));
-        $("#addbtn" + parent_id).addClass("not-allowed");
-      } else {
-        $("#xdays" + parent_id).removeClass("red-border");
-        $("#ydays" + parent_id).removeClass("red-border");
-        $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
-            ".help-block").empty();
-        $("#addbtn" + parent_id).removeClass("not-allowed");
-      }
-
-      if ($('.manually-anchor-option').length > 1) {
-        var pre_parent = $("#" + parent_id).prev().attr("id").replace('AnchorDate','');
-        var pyday = $("#ydays" + pre_parent).val();
-        var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
-        var pydayValue = parseInt(pysign + "" + pyday);
-
-        if (xdayValue < pydayValue) {
-          $(this).addClass("red-border");
-          $("#ydays" + pre_parent).addClass("red-border");
-          $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
-              ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "X should be less than or equal to Y of the current row and greater than or equal to Y of the previous row"));
-          $("#addbtn" + parent_id).addClass("not-allowed");
-        } else {
-          $(this).removeClass("red-border");
-          $("#ydays" + pre_parent).removeClass("red-border");
-          $("#xdays" + parent_id).parent().removeClass('has-error has-danger').find(
-              ".help-block").empty();
-          $("#addbtn" + parent_id).addClass("not-allowed");
-        }
-      }
-
-      $(this).parent().parent().parent().siblings().removeClass("current");
-      $(this).parent().parent().parent().addClass("current");
+	      } else {
+	        var pre_parent_id = $("#AnchorDate" + parent_id).prev().attr("id");
+	        if (pre_parent_id && pre_parent_id.indexOf("AnchorDate") >= 0) {
+	          pre_parent_id = pre_parent_id.replace('AnchorDate','');
+	        }
+	        var pre_parent = parseInt(pre_parent_id);
+	        var pyday = $("#ydays" + pre_parent).val();
+	        var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
+	        var pydayValue = parseInt(pysign + "" + pyday);
+	        var manualEndTimeyday =  moment($("#manualEndTime" + pre_parent).val(), "HH:mm A").toDate();
+	        if (pysign === "-") {
+	        	manualEndTimeyday.setDate(manualEndTimeyday.getDate() - parseInt(pydayValue));
+	        } else {
+	        	manualEndTimeyday.setDate(manualEndTimeyday.getDate() + parseInt(pydayValue));
+	        }
+	        
+	        if (manualStartTime < manualEndTimeyday) {
+	          $(this).addClass("red-border");
+	          $("#ydays" + pre_parent).addClass("red-border");
+	          $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
+	        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	              "X should be less than or equal to Y of the current row and greater than or equal to Y of the previous row"));
+	          $("#addbtn" + parent_id).addClass("not-allowed");
+	        } else {
+	          $(this).removeClass("red-border");
+	          $("#ydays" + pre_parent).removeClass("red-border");
+	          $(this).parent().removeClass('has-error has-danger').find(".help-block").empty();
+	          $("#addbtn" + parent_id).addClass("not-allowed");
+	          if (manualEndTime !== "") {
+	            if (manualStartTime > manualEndTime) {
+	              $(this).addClass("red-border");
+	              $("#ydays" + parent_id).addClass("red-border");
+	              
+	              $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
+	           	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+	               $("#manualEndTime" + parent_id).val('');
+	              $("#addbtn" + parent_id).addClass("not-allowed");
+	            } else {
+	              $(this).removeClass("red-border");
+	              $("#ydays" + parent_id).removeClass("red-border");
+	              $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
+	                  ".help-block").empty();
+	              $("#addbtn" + parent_id).removeClass("not-allowed");
+	            }
+	          }
+	        }
 
 
-      $(".current").nextAll().remove();
+	      }
+
+	    });
+
+	    jQuery(document).on("change", ".xdays", function () {
+	      $(this).parent().parent().siblings().removeClass("current");
+	      $(this).parent().parent().addClass("current");
+
+	      $(".current").nextAll().remove();
+	      
+	      if( $('.manually-anchor-option').filter(function() {
+	  	    return $(this).css('display') !== 'none';}).length == 1){
+	  	 $("#AddButton").show();
+	  	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+	  	}
+	    });
+
+	    jQuery(document).on("keyup", ".ydays", function () {
+	    	
+	      var parent_id = $(this).parent().parent().attr("id").replace('AnchorDate','');
+	      
+	 	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
+	   	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
+	   	 
+	 	if (isNaN(manualEndTime) ) {
+		    return
+		} 
+
+	     var pxday = $("#xdays" + parent_id).val();
+	     var pxsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
+	     
+	     if (pxsign === "-") {
+	       manualStartTime.setDate(manualStartTime.getDate() - parseInt(pxday));
+	     } else {
+	       manualStartTime.setDate(manualStartTime.getDate() + parseInt(pxday));
+	     }
+	     
+	     manualStartTime.setMinutes(manualStartTime.getMinutes() + 1);
+	     var pyday = $("#ydays" + parent_id).val();
+	     var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+	     
+	     if (pysign === "-") {
+	    	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
+	     } else {
+	    	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
+	     }
+	     
+	     
+	      
+	      if (manualEndTime < manualStartTime) {
+	        $(this).addClass("red-border");
+	        $("#xdays" + parent_id).addClass("red-border");
+	        $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
+	     	   	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
+	         $("#manualEndTime" + parent_id).val('');
+	        $(this).parent().parent().siblings().removeClass("current");
+	        $(this).parent().parent().addClass("current");
+	        $(".current").nextAll().remove();
+	        $("#addbtn" + parent_id).addClass("not-allowed");
+	      } else {
+	        $(this).removeClass("red-border");
+	        $("#xdays" + parent_id).removeClass("red-border");
+	        $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
+	            ".help-block").empty();
+	        $("#addbtn" + parent_id).removeClass("not-allowed");
+	      }
+
+	    });
+
+	    jQuery(document).on("change", ".ydays", function () {
+	      $(this).parent().parent().siblings().removeClass("current");
+	      $(this).parent().parent().addClass("current");
+	      $(".current").nextAll().remove();
+	      
+	      if( $('.manually-anchor-option').filter(function() {
+	  	    return $(this).css('display') !== 'none';}).length == 1){
+	  	 $("#AddButton").show();
+	  	 $('.manually-anchor-option').find(".delete").css("visibility", "hidden");
+	  	}
+
+	    });
+
+	    jQuery(document).on("change", ".sign-box select", function () {
+	      var parent_id = $(this).attr("count");
+	      var signValue = $("#xSign" + parent_id).val();
+	      var xsign = signValue === "0" ? "+" : "-";
+	      var xday = $("#xdays" + parent_id).val();
+	      var xdayValue = parseInt(xsign + "" + xday);
+
+	      var yday = $("#ydays" + parent_id).val();
+	      var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
+	      var ydayValue = parseInt(ysign + "" + yday);
+
+	      if (ydayValue < xdayValue) {
+	        $("#xdays" + parent_id).addClass("red-border");
+	        $("#ydays" + parent_id).addClass("red-border");
+	        $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
+	            ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	            "Y should be greater than or equal to X"));
+	        $("#addbtn" + parent_id).addClass("not-allowed");
+	      } else {
+	        $("#xdays" + parent_id).removeClass("red-border");
+	        $("#ydays" + parent_id).removeClass("red-border");
+	        $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
+	            ".help-block").empty();
+	        $("#addbtn" + parent_id).removeClass("not-allowed");
+	      }
+
+	      if ($('.manually-anchor-option').length > 1) {
+	        var pre_parent = $("#" + parent_id).prev().attr("id").replace('AnchorDate','');
+	        var pyday = $("#ydays" + pre_parent).val();
+	        var pysign = $("#ySign" + pre_parent).val() === "0" ? "+" : "-";
+	        var pydayValue = parseInt(pysign + "" + pyday);
+
+	        if (xdayValue < pydayValue) {
+	          $(this).addClass("red-border");
+	          $("#ydays" + pre_parent).addClass("red-border");
+	          $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
+	              ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	              "X should be less than or equal to Y of the current row and greater than or equal to Y of the previous row"));
+	          $("#addbtn" + parent_id).addClass("not-allowed");
+	        } else {
+	          $(this).removeClass("red-border");
+	          $("#ydays" + pre_parent).removeClass("red-border");
+	          $("#xdays" + parent_id).parent().removeClass('has-error has-danger').find(
+	              ".help-block").empty();
+	          $("#addbtn" + parent_id).addClass("not-allowed");
+	        }
+	      }
+
+	      $(this).parent().parent().parent().siblings().removeClass("current");
+	      $(this).parent().parent().parent().addClass("current");
 
 
-    });
-  });
+	      $(".current").nextAll().remove();
+
+
+	    });
+	  });
 
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");
