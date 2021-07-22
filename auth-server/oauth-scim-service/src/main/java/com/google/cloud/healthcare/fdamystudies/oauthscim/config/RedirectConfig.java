@@ -15,6 +15,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.
 
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import io.micrometer.core.instrument.util.StringUtils;
 import java.io.Serializable;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,76 +36,95 @@ public class RedirectConfig implements Serializable {
   @Value("${android.deeplink.url}")
   private String androidDeeplinkUrl;
 
-  public String getCallbackUrl(String mobilePlatform, String source) {
+  public String getCallbackUrl(String mobilePlatform, String source, String deeplinkCookie) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(source);
     if (PARTICIPANT_MANAGER == platformComponent) {
       return participantManagerUrl + "/#/callback";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return androidDeeplinkUrl + "/callback";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : androidDeeplinkUrl + "/callback";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return iosDeeplinkUrl + "/callback";
+      return StringUtils.isNotBlank(deeplinkCookie) ? deeplinkCookie : iosDeeplinkUrl + "/callback";
     }
     return null;
   }
 
-  public String getForgotPasswordUrl(String mobilePlatform, String source) {
+  public String getForgotPasswordUrl(String mobilePlatform, String source, String deeplinkCookie) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(source);
     if (PARTICIPANT_MANAGER == platformComponent) {
       return participantManagerUrl + "/#/forgotPassword";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return androidDeeplinkUrl + "/forgotPassword";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : androidDeeplinkUrl + "/forgotPassword";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return iosDeeplinkUrl + "/forgotPassword";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : iosDeeplinkUrl + "/forgotPassword";
     }
     return null;
   }
 
-  public String getSignupUrl(String mobilePlatform) {
+  public String getSignupUrl(String mobilePlatform, String deeplinkCookie) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return androidDeeplinkUrl + "/signup";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : androidDeeplinkUrl + "/signup";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return iosDeeplinkUrl + "/signup";
+      return StringUtils.isNotBlank(deeplinkCookie) ? deeplinkCookie : iosDeeplinkUrl + "/signup";
     }
     return null;
   }
 
-  public String getAccountActivationUrl(String mobilePlatform, String source) {
+  public String getAccountActivationUrl(
+      String mobilePlatform, String source, String deeplinkCookie) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(source);
     if (PARTICIPANT_MANAGER == platformComponent) {
       return participantManagerUrl + "/#/activation";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return androidDeeplinkUrl + "/activation";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : androidDeeplinkUrl + "/activation";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return iosDeeplinkUrl + "/activation";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : iosDeeplinkUrl + "/activation";
     }
     return null;
   }
 
-  public String getTermsUrl(String mobilePlatform, String source) {
+  public String getTermsUrl(String mobilePlatform, String source, String deeplinkCookie) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(source);
     if (PARTICIPANT_MANAGER == platformComponent) {
       return participantManagerUrl + "/#/terms";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return androidDeeplinkUrl + "/terms";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : androidDeeplinkUrl + "/terms";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return iosDeeplinkUrl + "/terms";
+      return StringUtils.isNotBlank(deeplinkCookie) ? deeplinkCookie : iosDeeplinkUrl + "/terms";
     }
     return null;
   }
 
-  public String getPrivacyPolicyUrl(String mobilePlatform) {
+  public String getPrivacyPolicyUrl(String mobilePlatform, String deeplinkCookie) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return androidDeeplinkUrl + "/privacyPolicy";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : androidDeeplinkUrl + "/privacyPolicy";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return iosDeeplinkUrl + "/privacyPolicy";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie
+          : iosDeeplinkUrl + "/privacyPolicy";
     }
     return null;
   }

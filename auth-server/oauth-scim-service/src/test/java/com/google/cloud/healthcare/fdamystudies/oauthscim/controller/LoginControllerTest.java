@@ -113,6 +113,8 @@ public class LoginControllerTest extends BaseMockIT {
   private static final String AUTO_LOGIN_LOGIN_CHALLENGE_VALUE =
       "117eb076-23cf-4653-a76d-14ec1ead4317";
 
+  private static final String DEEPLINK_URL_VALUE = "app://gcp/mystudies";
+
   private static final String USER_ID_VALUE = "4e626d41-7f42-43a6-b749-ee4b6635ac66";
 
   private static final String TEMP_REG_ID_VALUE = "ec2045a1-0cd3-4998-b515-7f9703dff5bf";
@@ -137,13 +139,17 @@ public class LoginControllerTest extends BaseMockIT {
     queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
 
     HttpHeaders headers = getCommonHeaders();
-
+    String deeplinkCookie = DEEPLINK_URL_VALUE;
     String forgotPasswordRedirectUrl =
         redirectConfig.getForgotPasswordUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+            MobilePlatform.UNKNOWN.getValue(),
+            PlatformComponent.PARTICIPANT_MANAGER.getValue(),
+            deeplinkCookie);
     String termsRedirectUrl =
         redirectConfig.getTermsUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+            MobilePlatform.UNKNOWN.getValue(),
+            PlatformComponent.PARTICIPANT_MANAGER.getValue(),
+            deeplinkCookie);
     String aboutRedirectUrl =
         redirectConfig.getAboutUrl(PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
@@ -171,15 +177,21 @@ public class LoginControllerTest extends BaseMockIT {
 
     HttpHeaders headers = getCommonHeaders();
 
+    String deeplinkCookie = "";
     String forgotPasswordRedirectUrl =
         redirectConfig.getForgotPasswordUrl(
-            MobilePlatform.ANDROID.getValue(), PlatformComponent.MOBILE_APPS.getValue());
-    String signupRedirectUrl = redirectConfig.getSignupUrl(MobilePlatform.ANDROID.getValue());
+            MobilePlatform.ANDROID.getValue(),
+            PlatformComponent.MOBILE_APPS.getValue(),
+            deeplinkCookie);
+    String signupRedirectUrl =
+        redirectConfig.getSignupUrl(MobilePlatform.ANDROID.getValue(), deeplinkCookie);
     String termsRedirectUrl =
         redirectConfig.getTermsUrl(
-            MobilePlatform.ANDROID.getValue(), PlatformComponent.MOBILE_APPS.getValue());
+            MobilePlatform.ANDROID.getValue(),
+            PlatformComponent.MOBILE_APPS.getValue(),
+            deeplinkCookie);
     String privacyPolicyRedirectUrl =
-        redirectConfig.getPrivacyPolicyUrl(MobilePlatform.ANDROID.getValue());
+        redirectConfig.getPrivacyPolicyUrl(MobilePlatform.ANDROID.getValue(), deeplinkCookie);
     mockMvc
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -378,13 +390,18 @@ public class LoginControllerTest extends BaseMockIT {
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     Cookie sourceCookie =
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
+    String deeplinkCookie = DEEPLINK_URL_VALUE;
 
     String forgotPasswordRedirectUrl =
         redirectConfig.getForgotPasswordUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+            MobilePlatform.UNKNOWN.getValue(),
+            PlatformComponent.PARTICIPANT_MANAGER.getValue(),
+            deeplinkCookie);
     String termsRedirectUrl =
         redirectConfig.getTermsUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+            MobilePlatform.UNKNOWN.getValue(),
+            PlatformComponent.PARTICIPANT_MANAGER.getValue(),
+            deeplinkCookie);
     String aboutRedirectUrl =
         redirectConfig.getAboutUrl(PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
@@ -414,11 +431,14 @@ public class LoginControllerTest extends BaseMockIT {
     userEntity = userRepository.saveAndFlush(userEntity);
 
     HttpHeaders headers = getCommonHeaders();
+    String deeplinkCookie = DEEPLINK_URL_VALUE;
 
     // Step-2 call API with login credentials
     String activationUrl =
         redirectConfig.getAccountActivationUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+            MobilePlatform.UNKNOWN.getValue(),
+            PlatformComponent.PARTICIPANT_MANAGER.getValue(),
+            deeplinkCookie);
     String expectedViedName =
         String.format("redirect:%s?email=%s", activationUrl, userEntity.getEmail());
 
