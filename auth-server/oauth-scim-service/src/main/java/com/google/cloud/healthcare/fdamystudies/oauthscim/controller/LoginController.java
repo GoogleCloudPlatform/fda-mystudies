@@ -16,6 +16,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_VERSION_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEEPLINK_URL;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEEPLINK_URL_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_DESCRIPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
@@ -260,10 +261,13 @@ public class LoginController {
 
     String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
     String source = qsParams.getFirst(SOURCE);
-    String deeplinkCookie = qsParams.getFirst(DEEPLINK_URL_COOKIE);
+    String deeplinkUrl = qsParams.getFirst(DEEPLINK_URL);
+
     model.addAttribute(LOGIN_CHALLENGE, loginChallenge);
-    boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source, deeplinkCookie);
+    boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source, deeplinkUrl);
     if (!attrsAdded) {
+      logger.warn(
+          String.format("'%s' attributes not added to model. deeplinkCookie value: ", deeplinkUrl));
       return ERROR_VIEW_NAME;
     }
 
