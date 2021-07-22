@@ -97,8 +97,7 @@ public class AppMetaDataDao {
 
   @SuppressWarnings("unchecked")
   public NotificationsResponse notifications(
-      String skip, String authorization, String appId, String verificationTime)
-      throws DAOException {
+      String skip, String authorization, String appId, String verificationTime) {
     LOGGER.entry("begin notifications()");
     Session session = null;
     NotificationsResponse notificationsResponse = new NotificationsResponse();
@@ -146,33 +145,7 @@ public class AppMetaDataDao {
                 .list();
 
         if (CollectionUtils.isNotEmpty(notificationList)) {
-          Map<String, NotificationsBean> notificationTreeMap = new HashMap<>();
-          HashMap<String, String> hashMap = new HashMap<>();
-          List<String> notificationIdsList = new ArrayList<>();
-          Set<String> studyIdList = new HashSet<>();
-
-          for (NotificationDto notificationDto : notificationList) {
-            if (StringUtils.isNotEmpty(verificationTime)) {
-              String scheduledDateTime =
-                  notificationDto.getScheduleDate() + " " + notificationDto.getScheduleTime();
-              if (Timestamp.valueOf(scheduledDateTime).after(Timestamp.valueOf(verificationTime))) {
-                prepareNotifications(
-                    notificationTreeMap,
-                    hashMap,
-                    notificationIdsList,
-                    studyIdList,
-                    notificationDto);
-              }
-            } else {
-              prepareNotifications(
-                  notificationTreeMap, hashMap, notificationIdsList, studyIdList, notificationDto);
-            }
-          }
-
-          LinkedHashMap<String, String> sortedMap = sortHashMapByValues(hashMap);
-          for (String id : sortedMap.keySet()) {
-            notifyList.add(notificationTreeMap.get(id));
-          }
+          prepareAppStudyLevelNotifications(verificationTime, notificationList, notifyList);
         }
       }
 
@@ -189,20 +162,57 @@ public class AppMetaDataDao {
     return notificationsResponse;
   }
 
+  private void prepareAppStudyLevelNotifications(
+      String verificationTime,
+      List<NotificationDto> notificationList,
+      List<NotificationsBean> notifyList) {
+    Map<String, NotificationsBean> notificationTreeMap = new HashMap<>();
+    HashMap<String, String> hashMap = new HashMap<>();
+    List<String> notificationIdsList = new ArrayList<>();
+
+    for (NotificationDto notificationDto : notificationList) {
+      Set<String> studyIds = new HashSet<>();
+      if (StringUtils.isNotEmpty(notificationDto.getStudyId())) {
+        studyIds.add(notificationDto.getStudyId());
+      }
+      if (StringUtils.isNotEmpty(verificationTime)) {
+        String scheduledDateTime =
+            notificationDto.getScheduleDate() + " " + notificationDto.getScheduleTime();
+        if ((notificationDto
+                    .getNotificationType()
+                    .equalsIgnoreCase(StudyMetaDataConstants.STUDY_TYPE_GT)
+                && notificationDto
+                    .getNotificationSubType()
+                    .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL))
+            || Timestamp.valueOf(scheduledDateTime).after(Timestamp.valueOf(verificationTime))) {
+          prepareNotifications(notificationTreeMap, hashMap, notificationIdsList, notificationDto);
+        }
+      } else if (notificationDto
+              .getNotificationType()
+              .equalsIgnoreCase(StudyMetaDataConstants.STUDY_TYPE_GT)
+          && notificationDto
+              .getNotificationSubType()
+              .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL)) {
+        prepareNotifications(notificationTreeMap, hashMap, notificationIdsList, notificationDto);
+      }
+    }
+
+    LinkedHashMap<String, String> sortedMap = sortHashMapByValues(hashMap);
+    for (String id : sortedMap.keySet()) {
+      notifyList.add(notificationTreeMap.get(id));
+    }
+  }
+
   private void prepareNotifications(
       Map<String, NotificationsBean> notificationTreeMap,
       HashMap<String, String> hashMap,
       List<String> notificationIdsList,
-      Set<String> studyIdList,
       NotificationDto notificationDto) {
     String scheduledDate = null;
     String scheduledTime = null;
-    if (StringUtils.isNotEmpty(notificationDto.getStudyId())) {
-      studyIdList.add(notificationDto.getStudyId());
-    }
 
     NotificationsBean notifyBean = new NotificationsBean();
-    notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
+    notifyBean.setNotificationId(notificationDto.getNotificationId());
     if (notificationDto
         .getNotificationType()
         .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)) {
