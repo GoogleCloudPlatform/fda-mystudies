@@ -46,6 +46,8 @@ public class CallbackControllerTest extends BaseMockIT {
 
   private static final String USER_ID_VALUE = "4e626d41-7f42-43a6-b749-ee4b6635ac66";
 
+  private static final String DEEPLINK_URL_VALUE = "app://gcp/mystudies";
+
   @Autowired private RedirectConfig redirectConfig;
 
   @Autowired private UserRepository userRepository;
@@ -112,10 +114,13 @@ public class CallbackControllerTest extends BaseMockIT {
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
     Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
     Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "0");
+    String deeplinkCookie = DEEPLINK_URL_VALUE;
 
     String callbackUrl =
         redirectConfig.getCallbackUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+            MobilePlatform.UNKNOWN.getValue(),
+            PlatformComponent.PARTICIPANT_MANAGER.getValue(),
+            deeplinkCookie);
     String expectedRedirectUrl =
         String.format(
             "%s?code=%s&userId=%s&accountStatus=0", callbackUrl, AUTH_CODE_VALUE, USER_ID_VALUE);
@@ -163,9 +168,12 @@ public class CallbackControllerTest extends BaseMockIT {
     Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
     Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "3");
 
+    String deeplinkCookie = DEEPLINK_URL_VALUE;
     String callbackUrl =
         redirectConfig.getCallbackUrl(
-            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+            MobilePlatform.UNKNOWN.getValue(),
+            PlatformComponent.PARTICIPANT_MANAGER.getValue(),
+            deeplinkCookie);
     String expectedRedirectUrl =
         String.format(
             "%s?code=%s&userId=%s&accountStatus=3&email=%s",
