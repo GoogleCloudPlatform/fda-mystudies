@@ -109,6 +109,8 @@ public final class AuthScimConstants {
 
   public static final String SOURCE = "source";
 
+  public static final String DEEPLINK_URL = "deeplinkUrl";
+
   public static final String MOBILE_PLATFORM_COOKIE = "mystudies_mobilePlatform";
 
   public static final String SOURCE_COOKIE = "mystudies_source";

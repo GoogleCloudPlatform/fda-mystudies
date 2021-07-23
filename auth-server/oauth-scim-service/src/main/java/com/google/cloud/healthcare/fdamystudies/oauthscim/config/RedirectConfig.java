@@ -43,11 +43,13 @@ public class RedirectConfig implements Serializable {
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/callback"
           : androidDeeplinkUrl + "/callback";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return StringUtils.isNotBlank(deeplinkCookie) ? deeplinkCookie : iosDeeplinkUrl + "/callback";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie + "/callback"
+          : iosDeeplinkUrl + "/callback";
     }
     return null;
   }
@@ -59,12 +61,12 @@ public class RedirectConfig implements Serializable {
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/forgotPassword"
           : androidDeeplinkUrl + "/forgotPassword";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/forgotPassword"
           : iosDeeplinkUrl + "/forgotPassword";
     }
     return null;
@@ -73,10 +75,12 @@ public class RedirectConfig implements Serializable {
   public String getSignupUrl(String mobilePlatform, String deeplinkCookie) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/signup"
           : androidDeeplinkUrl + "/signup";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return StringUtils.isNotBlank(deeplinkCookie) ? deeplinkCookie : iosDeeplinkUrl + "/signup";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie + "/signup"
+          : iosDeeplinkUrl + "/signup";
     }
     return null;
   }
@@ -89,12 +93,12 @@ public class RedirectConfig implements Serializable {
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/activation"
           : androidDeeplinkUrl + "/activation";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/activation"
           : iosDeeplinkUrl + "/activation";
     }
     return null;
@@ -107,11 +111,13 @@ public class RedirectConfig implements Serializable {
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/terms"
           : androidDeeplinkUrl + "/terms";
     } else if (MOBILE_APPS == platformComponent
         && MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return StringUtils.isNotBlank(deeplinkCookie) ? deeplinkCookie : iosDeeplinkUrl + "/terms";
+      return StringUtils.isNotBlank(deeplinkCookie)
+          ? deeplinkCookie + "/terms"
+          : iosDeeplinkUrl + "/terms";
     }
     return null;
   }
@@ -119,11 +125,11 @@ public class RedirectConfig implements Serializable {
   public String getPrivacyPolicyUrl(String mobilePlatform, String deeplinkCookie) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/privacyPolicy"
           : androidDeeplinkUrl + "/privacyPolicy";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return StringUtils.isNotBlank(deeplinkCookie)
-          ? deeplinkCookie
+          ? deeplinkCookie + "/privacyPolicy"
           : iosDeeplinkUrl + "/privacyPolicy";
     }
     return null;
