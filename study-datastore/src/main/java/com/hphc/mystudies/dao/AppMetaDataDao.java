@@ -41,6 +41,7 @@ import com.hphc.mystudies.util.HibernateUtil;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,6 +53,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -94,8 +96,8 @@ public class AppMetaDataDao {
   }
 
   @SuppressWarnings("unchecked")
-  public NotificationsResponse notifications(String skip, String authorization, String appId)
-      throws DAOException {
+  public NotificationsResponse notifications(
+      String skip, String authorization, String appId, String verificationTime) {
     LOGGER.entry("begin notifications()");
     Session session = null;
     NotificationsResponse notificationsResponse = new NotificationsResponse();
@@ -103,12 +105,8 @@ public class AppMetaDataDao {
     String bundleIdType = "";
     String platformType = "";
     List<NotificationsBean> notifyList = new ArrayList<>();
-    AppVersionDto appVersion = null;
     String notificationStudyTypeQuery = "";
-    String customStudyQuery = "";
     String deviceType = "";
-    String scheduledDate = "";
-    String scheduledTime = "";
     try {
       bundleIdType =
           StudyMetaDataUtil.platformType(
@@ -145,83 +143,9 @@ public class AppMetaDataDao {
                 .setFirstResult(Integer.parseInt(skip))
                 .setMaxResults(20)
                 .list();
-        if ((notificationList != null) && !notificationList.isEmpty()) {
-          Map<String, NotificationsBean> notificationTreeMap = new HashMap<>();
-          HashMap<String, String> hashMap = new HashMap<>();
-          List<String> notificationIdsList = new ArrayList<>();
-          List<String> scheduleDateTimes = new ArrayList<>();
 
-          Set<String> studyIdList = new HashSet<>();
-          for (NotificationDto notificationDto : notificationList) {
-            if (StringUtils.isNotEmpty(notificationDto.getStudyId())) {
-              studyIdList.add(notificationDto.getStudyId());
-            }
-
-            NotificationsBean notifyBean = new NotificationsBean();
-            notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
-            if (notificationDto
-                .getNotificationType()
-                .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)) {
-              notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
-              notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
-            } else {
-              notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
-              notifyBean.setAudience(
-                  notificationDto.isAnchorDate()
-                      ? StudyMetaDataConstants.NOTIFICATION_AUDIENCE_LIMITED
-                      : StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
-            }
-
-            // notification subType
-            if (notificationDto
-                .getNotificationSubType()
-                .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT)) {
-              notifyBean.setSubtype(
-                  StringUtils.isEmpty(notificationDto.getNotificationSubType())
-                      ? ""
-                      : StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL);
-            } else {
-              notifyBean.setSubtype(
-                  StringUtils.isEmpty(notificationDto.getNotificationSubType())
-                      ? ""
-                      : notificationDto.getNotificationSubType());
-            }
-
-            notifyBean.setTitle(
-                propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE) == null
-                    ? ""
-                    : propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE));
-            notifyBean.setMessage(
-                StringUtils.isEmpty(notificationDto.getNotificationText())
-                    ? ""
-                    : notificationDto.getNotificationText());
-            notifyBean.setStudyId(
-                StringUtils.isEmpty(notificationDto.getCustomStudyId())
-                    ? ""
-                    : notificationDto.getCustomStudyId());
-            scheduledDate =
-                notificationDto.isAnchorDate()
-                    ? StudyMetaDataUtil.getCurrentDate()
-                    : notificationDto.getScheduleDate();
-            scheduledTime =
-                StringUtils.isEmpty(notificationDto.getScheduleTime())
-                    ? StudyMetaDataConstants.DEFAULT_MIN_TIME
-                    : notificationDto.getScheduleTime();
-            notifyBean.setDate(
-                StudyMetaDataUtil.getFormattedDateTimeZone(
-                    scheduledDate + " " + scheduledTime,
-                    StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                    StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-
-            notificationIdsList.add(notificationDto.getNotificationId());
-            notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
-            hashMap.put(notificationDto.getNotificationId(), scheduledDate + " " + scheduledTime);
-          }
-
-          LinkedHashMap<String, String> sortedMap = sortHashMapByValues(hashMap);
-          for (String id : sortedMap.keySet()) {
-            notifyList.add(notificationTreeMap.get(id));
-          }
+        if (CollectionUtils.isNotEmpty(notificationList)) {
+          prepareAppStudyLevelNotifications(verificationTime, notificationList, notifyList);
         }
       }
 
@@ -236,6 +160,116 @@ public class AppMetaDataDao {
     }
     LOGGER.exit("notifications() :: Ends");
     return notificationsResponse;
+  }
+
+  private void prepareAppStudyLevelNotifications(
+      String verificationTime,
+      List<NotificationDto> notificationList,
+      List<NotificationsBean> notifyList) {
+    Map<String, NotificationsBean> notificationTreeMap = new HashMap<>();
+    HashMap<String, String> hashMap = new HashMap<>();
+    List<String> notificationIdsList = new ArrayList<>();
+
+    for (NotificationDto notificationDto : notificationList) {
+      Set<String> studyIds = new HashSet<>();
+      if (StringUtils.isNotEmpty(notificationDto.getStudyId())) {
+        studyIds.add(notificationDto.getStudyId());
+      }
+      if (StringUtils.isNotEmpty(verificationTime)) {
+        String scheduledDateTime =
+            notificationDto.getScheduleDate() + " " + notificationDto.getScheduleTime();
+        if ((notificationDto
+                    .getNotificationType()
+                    .equalsIgnoreCase(StudyMetaDataConstants.STUDY_TYPE_GT)
+                && notificationDto
+                    .getNotificationSubType()
+                    .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL))
+            || Timestamp.valueOf(scheduledDateTime).after(Timestamp.valueOf(verificationTime))) {
+          prepareNotifications(notificationTreeMap, hashMap, notificationIdsList, notificationDto);
+        }
+      } else if (notificationDto
+              .getNotificationType()
+              .equalsIgnoreCase(StudyMetaDataConstants.STUDY_TYPE_GT)
+          && notificationDto
+              .getNotificationSubType()
+              .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL)) {
+        prepareNotifications(notificationTreeMap, hashMap, notificationIdsList, notificationDto);
+      }
+    }
+
+    LinkedHashMap<String, String> sortedMap = sortHashMapByValues(hashMap);
+    for (String id : sortedMap.keySet()) {
+      notifyList.add(notificationTreeMap.get(id));
+    }
+  }
+
+  private void prepareNotifications(
+      Map<String, NotificationsBean> notificationTreeMap,
+      HashMap<String, String> hashMap,
+      List<String> notificationIdsList,
+      NotificationDto notificationDto) {
+    String scheduledDate = null;
+    String scheduledTime = null;
+
+    NotificationsBean notifyBean = new NotificationsBean();
+    notifyBean.setNotificationId(notificationDto.getNotificationId());
+    if (notificationDto
+        .getNotificationType()
+        .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_TYPE_GT)) {
+      notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_GATEWAY);
+      notifyBean.setAudience(StudyMetaDataConstants.NOTIFICATION_AUDIENCE_ALL);
+    } else {
+      notifyBean.setType(StudyMetaDataConstants.NOTIFICATION_STANDALONE);
+      notifyBean.setAudience(
+          notificationDto.isAnchorDate()
+              ? StudyMetaDataConstants.NOTIFICATION_AUDIENCE_LIMITED
+              : StudyMetaDataConstants.NOTIFICATION_AUDIENCE_PARTICIPANTS);
+    }
+
+    // notification subType
+    if (notificationDto
+        .getNotificationSubType()
+        .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_STUDY_EVENT)) {
+      notifyBean.setSubtype(
+          StringUtils.isEmpty(notificationDto.getNotificationSubType())
+              ? ""
+              : StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL);
+    } else {
+      notifyBean.setSubtype(
+          StringUtils.isEmpty(notificationDto.getNotificationSubType())
+              ? ""
+              : notificationDto.getNotificationSubType());
+    }
+
+    notifyBean.setTitle(
+        propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE) == null
+            ? ""
+            : propMap.get(StudyMetaDataConstants.FDA_SMD_NOTIFICATION_TITLE));
+    notifyBean.setMessage(
+        StringUtils.isEmpty(notificationDto.getNotificationText())
+            ? ""
+            : notificationDto.getNotificationText());
+    notifyBean.setStudyId(
+        StringUtils.isEmpty(notificationDto.getCustomStudyId())
+            ? ""
+            : notificationDto.getCustomStudyId());
+    scheduledDate =
+        notificationDto.isAnchorDate()
+            ? StudyMetaDataUtil.getCurrentDate()
+            : notificationDto.getScheduleDate();
+    scheduledTime =
+        StringUtils.isEmpty(notificationDto.getScheduleTime())
+            ? StudyMetaDataConstants.DEFAULT_MIN_TIME
+            : notificationDto.getScheduleTime();
+    notifyBean.setDate(
+        StudyMetaDataUtil.getFormattedDateTimeZone(
+            scheduledDate + " " + scheduledTime,
+            StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+            StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+
+    notificationIdsList.add(notificationDto.getNotificationId());
+    notificationTreeMap.put(notificationDto.getNotificationId(), notifyBean);
+    hashMap.put(notificationDto.getNotificationId(), scheduledDate + " " + scheduledTime);
   }
 
   public LinkedHashMap<String, String> sortHashMapByValues(HashMap<String, String> passedMap) {

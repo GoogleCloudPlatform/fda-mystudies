@@ -209,6 +209,40 @@
     });
   });
 
+  $("#doneId").click(function () {
+    var scheduletype = $('input[name="scheduleType"]:checked').val();
+	$('.manually-anchor-option').each(function(customAnchorCount) {
+		if ($('#xdays' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+	  	  $('#xdays' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+     	  $('#xdays' + customAnchorCount).parent().find(".help-block").empty().append(
+     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+     	       "Please fill out this field"));
+    	}
+		
+		if ($('#manualStartTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+	  	  $('#manualStartTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").empty().append(
+     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+     	       "Please fill out this field"));
+     	 $('#manualStartTime0').parent().find(".help-block-timer").hide();
+    	}
+		
+		if ($('#manualEndTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+	  	  $('#manualEndTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+     	  $('#manualEndTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
+     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+     	       "Please fill out this field"));
+    	}
+	});
+	
+	$('.manually-option').each(function(customCount) {
+		if ($('#customTime' + customCount).val() == '' && scheduletype == 'Regular') {
+		  $('#customTime' + customCount).parent().find(".help-block").show();
+		  $('#customTime' + customCount).parent().find(".help-block-timer").hide();
+		}
+	});
+  });
+		
   function goToBackPage(item) {
     //window.history.back();
     <c:if test="${actionPage ne 'view'}">

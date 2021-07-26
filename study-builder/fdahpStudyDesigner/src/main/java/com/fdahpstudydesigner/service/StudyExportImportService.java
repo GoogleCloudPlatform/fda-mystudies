@@ -106,6 +106,8 @@ public class StudyExportImportService {
 
   private static final String ANCHORDATE_ID = "ANCHORDATE_ID_";
 
+  private static final String IMPORTED = "Imported ";
+
   private static XLogger logger =
       XLoggerFactory.getXLogger(StudyExportImportService.class.getName());
 
@@ -342,9 +344,11 @@ public class StudyExportImportService {
         studyQuestionnaireDAO.getQuestionnairesStepsList(questionnaireIds);
 
     List<String> instructionFormIds = new ArrayList<>();
+    Map<String, String> questionMap = new HashMap<>();
     if (CollectionUtils.isNotEmpty(questionnairesStepsList)) {
       for (QuestionnairesStepsBo questionnairesStepsBo : questionnairesStepsList) {
         instructionFormIds.add(questionnairesStepsBo.getInstructionFormId());
+        questionMap.put(questionnairesStepsBo.getStepId(), IdGenerator.id());
       }
     }
 
@@ -420,11 +424,13 @@ public class StudyExportImportService {
 
     addInstructionInsertSql(instructionList, insertSqlStatements, customIdsMap);
 
-    addQuestionsResponseSubTypeInsertSql(responseList, insertSqlStatements, customIdsMap);
+    addQuestionsResponseSubTypeInsertSql(
+        responseList, insertSqlStatements, customIdsMap, questionMap);
 
     addQuestionsResponseTypeInsertSql(questionResponseTypeBo, insertSqlStatements, customIdsMap);
 
-    addQuestionnairesStepsListInsertSql(questionnairesStepsList, insertSqlStatements, customIdsMap);
+    addQuestionnairesStepsListInsertSql(
+        questionnairesStepsList, insertSqlStatements, customIdsMap, questionMap);
   }
 
   private void prepareInsertSqlQueriesForComprehensionTest(
@@ -699,7 +705,8 @@ public class StudyExportImportService {
   private void addQuestionsResponseSubTypeInsertSql(
       List<QuestionResponseSubTypeBo> questionResponseSubTypeBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      Map<String, String> questionMap)
       throws Exception {
 
     if (CollectionUtils.isEmpty(questionResponseSubTypeBoList)) {
@@ -716,7 +723,10 @@ public class StudyExportImportService {
                   INSTRUCTION_FORM_ID + questionResponseSubTypeBo.getResponseSubTypeValueId()),
               questionResponseSubTypeBo.getActive(),
               questionResponseSubTypeBo.getDescription(),
-              questionResponseSubTypeBo.getDestinationStepId(),
+              StringUtils.isNotEmpty(questionResponseSubTypeBo.getDestinationStepId())
+                      && questionResponseSubTypeBo.getDestinationStepId().equals(String.valueOf(0))
+                  ? String.valueOf(0)
+                  : questionMap.get(questionResponseSubTypeBo.getDestinationStepId()),
               questionResponseSubTypeBo.getDetail(),
               questionResponseSubTypeBo.getExclusive(),
               questionResponseSubTypeBo.getImage(),
@@ -870,7 +880,8 @@ public class StudyExportImportService {
   private void addQuestionnairesStepsListInsertSql(
       List<QuestionnairesStepsBo> questionnairesStepsList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      Map<String, String> questionMap)
       throws Exception {
     if (CollectionUtils.isEmpty(questionnairesStepsList)) {
       return;
@@ -881,11 +892,13 @@ public class StudyExportImportService {
       questionnaireStepsBoInsertQuery =
           prepareInsertQuery(
               StudyExportSqlQueries.QUESTIONNAIRES_STEPS,
-              IdGenerator.id(),
+              questionMap.get(questionnairesStepsBo.getStepId()),
               questionnairesStepsBo.getActive(),
               questionnairesStepsBo.getCreatedBy(),
               questionnairesStepsBo.getCreatedOn(),
-              questionnairesStepsBo.getDestinationStep(),
+              questionnairesStepsBo.getDestinationStep().equals(String.valueOf(0))
+                  ? String.valueOf(0)
+                  : questionMap.get(questionnairesStepsBo.getDestinationStep()),
               customIdsMap.get(INSTRUCTION_FORM_ID + questionnairesStepsBo.getInstructionFormId()),
               questionnairesStepsBo.getModifiedBy(),
               questionnairesStepsBo.getModifiedOn(),
@@ -934,7 +947,7 @@ public class StudyExportImportService {
             studyBo.getMediaLink(),
             studyBo.getModifiedBy(),
             studyBo.getModifiedOn(),
-            studyBo.getName(),
+            IMPORTED + studyBo.getName(),
             studyBo.getPlatform(),
             studyBo.getResearchSponsor(),
             studyBo.getSequenceNumber(),

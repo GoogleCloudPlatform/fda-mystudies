@@ -4054,6 +4054,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   && !questionnaireBo.getStudyLifetimeStart().isEmpty()) {
                 questionnairesFrequenciesBo.setFrequencyDate(
                     questionnaireBo.getStudyLifetimeStart());
+              } else {
+                questionnairesFrequenciesBo.setFrequencyDate(
+                    StringUtils.isNotEmpty(questionnairesFrequenciesBo.getFrequencyDate())
+                        ? FdahpStudyDesignerUtil.getFormattedDate(
+                            questionnairesFrequenciesBo.getFrequencyDate(),
+                            FdahpStudyDesignerConstants.UI_SDF_DATE,
+                            FdahpStudyDesignerConstants.DB_SDF_DATE)
+                        : null);
               }
               if ((questionnaireBo.getQuestionnairesFrequenciesBo().getFrequencyTime() != null)
                   && !questionnaireBo

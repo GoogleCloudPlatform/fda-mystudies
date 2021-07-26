@@ -66,36 +66,37 @@ public class StudiesDaoImpl implements StudiesDao {
     studyCriteria.select(studyRoot).where(studyPredicate);
     studyInfo = session.createQuery(studyCriteria).uniqueResult();
 
-    appCriteria = builder.createQuery(AppEntity.class);
-    appRoot = appCriteria.from(AppEntity.class);
-    appPredicate[0] = builder.equal(appRoot.get("appId"), studyMetadataBean.getAppId());
-    appCriteria.select(appRoot).where(appPredicate);
-    appInfo = session.createQuery(appCriteria).uniqueResult();
-
     if (studyInfo != null) {
 
-      appInfo.setAppId(studyMetadataBean.getAppId());
-      appInfo.setAppName(studyMetadataBean.getAppName());
-      appInfo.setAppDescription(studyMetadataBean.getAppDescription());
-      appInfo.setModifiedBy(String.valueOf(0));
-      appInfo.setModified(Timestamp.from(Instant.now()));
+      //      appInfo.setAppId(studyMetadataBean.getAppId());
+      //      appInfo.setAppName(studyMetadataBean.getAppName());
+      //      appInfo.setAppDescription(studyMetadataBean.getAppDescription());
+      //      appInfo.setModifiedBy(String.valueOf(0));
+      //      appInfo.setModified(Timestamp.from(Instant.now()));
 
-      studyInfo.setCustomId(studyMetadataBean.getStudyId());
+      //   studyInfo.setCustomId(studyMetadataBean.getStudyId());
       studyInfo.setName(studyMetadataBean.getStudyTitle());
       studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
       studyInfo.setType(studyMetadataBean.getStudyType());
       studyInfo.setStatus(studyMetadataBean.getStudyStatus());
-      studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-      studyInfo.setTagline(studyMetadataBean.getStudyTagline());
-      studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
+      //  studyInfo.setCategory(studyMetadataBean.getStudyCategory());
+      //  studyInfo.setTagline(studyMetadataBean.getStudyTagline());
+      //  studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
       studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
-      studyInfo.setApp(appInfo);
+      //   studyInfo.setApp(appInfo);
       studyInfo.setModifiedBy(String.valueOf(0));
       studyInfo.setModified(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
       studyInfo.setContactEmail(studyMetadataBean.getContactEmail());
       session.update(studyInfo);
     } else {
+
+      appCriteria = builder.createQuery(AppEntity.class);
+      appRoot = appCriteria.from(AppEntity.class);
+      appPredicate[0] = builder.equal(appRoot.get("appId"), studyMetadataBean.getAppId());
+      appCriteria.select(appRoot).where(appPredicate);
+      appInfo = session.createQuery(appCriteria).uniqueResult();
+
       List<AppPermissionEntity> appPermissionList = new ArrayList<>();
       if (appInfo == null) {
         appInfo = new AppEntity();
@@ -122,9 +123,9 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
       studyInfo.setType(studyMetadataBean.getStudyType());
       studyInfo.setStatus(studyMetadataBean.getStudyStatus());
-      studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-      studyInfo.setTagline(studyMetadataBean.getStudyTagline());
-      studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
+      //  studyInfo.setCategory(studyMetadataBean.getStudyCategory());
+      //  studyInfo.setTagline(studyMetadataBean.getStudyTagline());
+      //  studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
       studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
       studyInfo.setApp(appInfo);
       studyInfo.setCreatedBy(String.valueOf(0));

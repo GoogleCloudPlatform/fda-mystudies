@@ -98,7 +98,6 @@
   
  /* error box css end here  */
   
-   
 </style>
 
 <script type="text/javascript">
@@ -1422,7 +1421,7 @@
                            class="form-control clock cusTime customTime startTime"
                            name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
                            placeholder="Start time" onclick='startTimep(this.id,0);' disabled required />
-                    <span class='help-block-timer with-errors red-txt'></span>
+                    <span class='help-block-timer help-block with-errors red-txt'></span>
                   </span>
 
                  
@@ -1446,6 +1445,7 @@
                            name="questionnaireCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field"
                            placeholder="End time" onclick='endTimep(this.id,0);' disabled required/>
                     <span class='help-block-timer with-errors red-txt'></span>
+                    <span class='help-block with-errors red-txt' style='display:none'></span>
                   </span>
                   <span class="addbtn addBtnDis align-span-center mr-md"
                         onclick="addDate();">+
@@ -1495,7 +1495,7 @@
                              value="${questionnaireCustomScheduleBo.frequencyStartTime}" data-error="Please fill out this field"
                              placeholder="Start time" onclick='startTimep(this.id,${customVar.index});' required disabled/>
                       <span
-                          class='help-block-timer with-errors red-txt'></span>
+                          class='help-block-timer help-block with-errors red-txt'></span>
 
                     </span>
                     <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -1522,6 +1522,7 @@
                              placeholder="End time" onclick='endTimep(this.id,${customVar.index});' required data-error="Please fill out this field"/>
                       <span
                           class='help-block-timer with-errors red-txt'></span>
+                          <span class='help-block with-errors red-txt' style='display:none'></span>
                     </span>
                     <span id="AddButton"
                           class="addbtn addBtnDis align-span-center mr-md cursor-display"
@@ -1545,7 +1546,7 @@
                          
                    
                   <span
-                      class="mb-sm pr-md">
+                      class="mb-sm pr-xs">
                     <span class="light-txt opacity06">
                       Anchor date
                     </span>
@@ -1574,9 +1575,9 @@
                     <span
                         class="help-block with-errors red-txt"></span>
                   </span>
-                  <span class="mb-sm"  style="padding-right: 12px !important;">
+                  <span class="mb-sm pr-md">
                     <span
-                        class="light-txt opacity06"> days
+                        class="pr-xs light-txt opacity06"> days
                      </span>                        
                       <span                     
                     class="form-group  dis-inline vertical-align-middle pr-md"
@@ -1587,6 +1588,7 @@
                                                           placeholder="Start time" required/>
                     <span
                         class='help-block-timer with-errors red-txt'></span>
+                    <span class='help-block with-errors red-txt'></span>
                   </span>                       
 
                         <span class="light-txt opacity06">
@@ -1631,7 +1633,7 @@
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field"
                                                           value="${questionnaireCustomScheduleBo.frequencyEndTime}"  onclick='ancEndTime(this.id,0);' 
-                                                          placeholder="End time" required data-error="Please fill out this field"/>
+                                                          placeholder="End time" required />
                     <span
                         class='help-block-timer with-errors red-txt'></span>
                   </span>
@@ -1663,7 +1665,7 @@
                       name="questionnaireCustomScheduleBo[${customVar.index}].questionnairesId"
                       id="questionnairesId"
                       value="${questionnaireCustomScheduleBo.questionnairesId}">
-                    <span class="mb-sm pr-md">
+                    <span class="mb-sm pr-xs">
                       <span
                           class="light-txt opacity06"> Anchor date
                       </span>
@@ -1698,8 +1700,8 @@
                           class="light-txt opacity06"> days
                         </span>
                           <span
-                        class="form-group  dis-inline vertical-align-middle"
-                        style="margin-bottom: -13px;padding-right: 12px !important;"><input
+                        class="pr-md form-group dis-inline vertical-align-middle"
+                        style="margin-bottom: -13px;"><input
                         id="manualStartTime${customVar.index}" type="text"
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartTime"
@@ -1707,6 +1709,7 @@
                         placeholder="Start time" required data-error="Please fill out this field"/>
                       <span
                           class='help-block-timer with-errors red-txt'></span>
+                      <span class='help-block with-errors red-txt'></span>
                     </span>
                          <span
                           class="light-txt opacity06">  
@@ -1751,7 +1754,7 @@
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndTime"
                         value="${questionnaireCustomScheduleBo.frequencyEndTime}" onclick='ancEndTime(this.id,0);' 
-                        placeholder="End time" required data-error="Please fill out this field"/>
+                        placeholder="End time" required />
                       <span
                           class='help-block-timer with-errors red-txt'></span>
                     </span>
@@ -2591,13 +2594,18 @@
       format: 'MM/DD/YYYY',
       minDate: startToday,
       useCurrent: false,
-    })
-        .on("dp.change", function (e) {
-          if (e.date._d)
-            $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
-          else
-            $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
-        });
+    }).on("dp.change", function (e) {
+    	if (typeof $("#chooseEndDate").val() === "undefined") {
+	      if (e.date._d)
+	        $("#chooseEndDate").data("DateTimePicker").clear().minDate(new Date(e.date._d));
+	      else
+	        $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
+    	}
+
+    	if($("#chooseDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+    		$("#chooseDate" ).parent().find(".help-block").empty();
+        }
+    });
 
     $("#chooseDate").on("click", function (e) {
         $('#chooseDate').data("DateTimePicker").minDate(serverDate());
@@ -2697,6 +2705,11 @@
     }).on("dp.show", function (e) {
       $('#startDateMonthly').data("DateTimePicker").minDate(serverDate());
     }).on("dp.change", function (e) {
+    	var monthlyDate = moment($("#startDateMonthly").val(), "MM/DD/YYYY").toDate();
+    	if(monthlyDate >= serverDate()){
+        $("#startDateMonthly").parent().removeClass("has-error has-danger");
+        $('#startDateMonthly').parent().find(".help-block").empty();
+    	}
       if (e.date._d != $('#pickStartDate').data("DateTimePicker").date()) {
         $('#pickStartDate').val('');
       }
@@ -2782,6 +2795,10 @@
         $("#weekEndDate").text(endDate);
         $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
       }
+
+      if($("#startWeeklyDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+  		$("#startWeeklyDate" ).parent().find(".help-block").empty();
+      }
     }).on("click", function (e) {
       $('#startWeeklyDate').data("DateTimePicker").minDate(serverDate());
     });
@@ -2827,7 +2844,39 @@
     $("#doneId").click(function () {
 
       var res = localStorage.getItem("IsAnchorDateSelected");
-
+      var scheduletype = $('input[name="scheduleType"]:checked').val();
+      
+		$('.manually-anchor-option').each(function(customAnchorCount) {
+			if ($('#xdays' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+		  	  $('#xdays' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+	     	  $('#xdays' + customAnchorCount).parent().find(".help-block").empty().append(
+	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	     	       "Please fill out this field"));
+	    	}
+			
+			if ($('#manualStartTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+		  	  $('#manualStartTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+	     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").empty().append(
+	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	     	       "Please fill out this field"));
+	     	 $('#manualStartTime0').parent().find(".help-block-timer").hide();
+	    	}
+			
+			if ($('#manualEndTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+		  	  $('#manualEndTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+	     	  $('#manualEndTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
+	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	     	       "Please fill out this field"));
+	    	}
+		});
+		
+		$('.manually-option').each(function(customCount) {
+			if ($('#customTime' + customCount).val() == '' && scheduletype == 'Regular') {
+			  $('#customTime' + customCount).parent().find(".help-block").show();
+			  $('#customTime' + customCount).parent().find(".help-block-timer").hide();
+			}
+		});
+		
       if (res === 'true') {
         $("#weekDaysId").hide();
         $("#weekDaysId").find('*').removeAttr('required');
@@ -3123,6 +3172,11 @@
       var today = moment(serverDate()).format("MM/DD/YYYY");
       $('#startDate').parent().removeClass("has-danger").removeClass("has-error");
       $('#startDate').parent().find(".help-block").empty();
+      if (dt) {
+        $('#time0').prop("disabled", false);
+        $("#dailyAddTimeButton").removeClass('hide');
+      }
+      
       $('.time-opts').each(function () {
 
         var id = $(this).attr("id");
@@ -3235,7 +3289,7 @@
         + "  <input id='customStartTime" + customCount + "' type='text' count='" + customCount
         + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyStartTime' class='form-control clock customTime startTime cusTime' placeholder='Start time' onclick='startTimep(this.id, " + customCount + ");' disabled/>"
-        + "<span class='help-block-timer with-errors red-txt'></span>"
+        + "<span class='help-block-timer help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='gray-xs-f mb-sm pr-md align-span-center'>"
         + "  to "
@@ -3252,6 +3306,7 @@
         + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyEndTime' class='form-control clock customTime endTime' data-error='Please fill out this field'  placeholder='End time' onclick='endTimep(this.id, " + customCount + ");' disabled/>"
         + "<span class='help-block-timer with-errors red-txt'></span>"
+        + "<span class='help-block with-errors red-txt' style='display:none'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
@@ -3365,13 +3420,18 @@
 	 endDate.setHours(endTime.getHours());
 	 endDate.setMinutes(endTime.getMinutes() - 1);
 	 if (startDate != '' && endDate != '' && startDate > endDate) {
+	   $("#" + item).parent().find(".help-block").hide();
+	   $("#" + item).parent().find(".help-block-timer").show();
 	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	       "End date and time should not be less than or equal to start date and time"));
 	 } else {
+	   $("#" + item).parent().find(".help-block").show();
+	   $("#" + item).parent().find(".help-block-timer").hide();
 	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty();
+	   $("#" + item).parent().find(".help-block").empty();
 	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#customTime" + count).parent().find(".help-block-timer").empty();
 	 }
@@ -3937,11 +3997,13 @@
         questionnaireFrequencey.yDaysSign = true;
       }
       questionnaire.questionnairesFrequenciesBo = questionnaireFrequencey;
+      if (scheduletype != 'AnchorDate') {
       if ($('#monthlyFormId').find('.numChk').val() && $('#monthlyFormId').find('.numChk').val()
           == 0 || !(validateTime(
               $(document).find("#startDateMonthly").not('.cursor-none, :disabled'),
               $(document).find("#selectMonthlyTime").not('.cursor-none, :disabled')))) {
         isFormValid = false;
+      }
       }
       if (scheduletype == 'AnchorDate') {
         questionnaire.studyLifetimeStart = null;
@@ -4166,6 +4228,9 @@
         $("#monthlyfrequencyId").val(frequency);
         if (isFromValid("#monthlyFormId")) {
           valForm = true;
+        }
+        if (scheduletype == 'AnchorDate' && anchorForm) {
+            valForm = true;
         }
       }
     } else {
@@ -4619,6 +4684,8 @@
         }
         timeRef.each(function () {
           if ($(this).val()) {
+        	  if (dt) {
+        	        dt = moment(dt, "MM/DD/YYYY").toDate();
             thisDate = moment($(this).val(), "h:mm a").toDate();
             dt.setHours(thisDate.getHours());
             dt.setMinutes(thisDate.getMinutes());
@@ -4639,6 +4706,7 @@
                   valid = false;
               }
             }
+           }
           }
         });
       }
@@ -4684,7 +4752,7 @@
     customAnchorCount = customCountIndex + 1;
     var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='AnchorDate" + customAnchorCount
         + "'>"
-        + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor date </span></span>"
+        + "<span class='mb-sm pr-xs'><span class='light-txt opacity06'> Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectXSign' count='"
         + customAnchorCount + "' title='Select' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
@@ -4697,13 +4765,13 @@
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span>"
+		+ "<span class='mb-sm pr-md'><span class='pr-xs light-txt opacity06'> days </span>"
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
        	+ "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
        	+ "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
       	+ "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field'/>"
-       	+ "<span class='help-block-timer with-errors red-txt'></span>"
+       	+ "<span class='help-block-timer help-block with-errors red-txt'></span>"
       	+ "</span>"
        
       	+"<span class='light-txt opacity06'>"
@@ -4721,7 +4789,7 @@
         + "name='questionnaireCustomScheduleBo[" + customAnchorCount
         + "].timePeriodToDays' maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-xs'><span class='light-txt opacity06'> days</span></span>"
+        + "<span class='mb-sm pr-sm'><span class='light-txt opacity06'> days</span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
@@ -4840,6 +4908,13 @@
        format: 'h:mm a',
        useCurrent: false,
      }).on("dp.change", function (e) {
+    	 
+   	if ($('#' + item).val() != '') {
+   	  $('#' + item).parent().removeClass("has-danger").removeClass("has-error");
+   	  $('#' + item).parent().find(".help-block").empty().css({'display': 'none'});
+   	  $('#' + item).parent().find(".clock").empty().css({'position': 'relative', 'top': '-5px'});
+   	} 
+   	
    	 var manualStartTime = moment($("#" + item).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + count).val(), "HH:mm A").toDate();
    	 
@@ -4868,8 +4943,12 @@
      
      
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
+       $('#manualStartTime0').parent().find(".help-block-timer").show();
+       $('#manualStartTime0').parent().find(".help-block").hide();
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
+  	   $('#' + item).parent().find(".help-block").empty().removeAttr("style");
+   	   $('#' + item).parent().find(".clock").empty().removeAttr("style");
    	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty().append(
    	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
@@ -4907,7 +4986,11 @@
      
      preEndTime.setMinutes(preEndTime.getMinutes() + 2);
    	 if (preEndTime != '' && preEndTime > manualStartTime) {
+   	   $('#manualStartTime0').parent().find(".help-block-timer").show();
+   	   $('#manualStartTime0').parent().find(".help-block").hide();
    	   $(this).addClass("red-border");
+  	   $('#' + item).parent().find(".help-block").empty().removeAttr("style");
+   	   $('#' + item).parent().find(".clock").empty().removeAttr("style");
    	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty().append(
    	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -4921,7 +5004,7 @@
    	   $("#" + item).parent().find(".help-block-timer").empty();
    	   $("#manualEndTime" + count).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty();
-   	   $("#addbtn" + count).removeClass("not-allowed");
+   	   $(".addbtn").removeClass("not-allowed");
    	 }
          
      }
@@ -4935,6 +5018,14 @@
       useCurrent: false,
     }).on("dp.change", function (e) {
 	 
+   	if ($('#' + item).val() != '') {
+   	  $('#' + item).parent().removeClass("has-danger").removeClass("has-error");
+   	  $('#' + item).parent().find(".clock").empty().css({'position': 'relative', 'top': '-3px'});
+   	} else {
+   	  $('#' + item).parent().find(".help-block").removeAttr("style");
+   	  $('#' + item).parent().find(".clock").removeAttr("style");
+   	}
+       	
    	 var manualEndTime = moment($("#" + item).val(), "HH:mm A").toDate();
    	 var manualStartTime =  moment($("#manualStartTime" + count).val(), "HH:mm A").toDate();
    	 
@@ -4959,7 +5050,8 @@
     	 manualEndTime.setDate(manualEndTime.getDate() - parseInt(pyday));
      } else {
     	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
-     }
+     } 
+     
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
@@ -4968,17 +5060,17 @@
    	   $("<ul><li> </li></ul>").attr("class","list-unstyled").text("Y should be greater than X"));
    	   $("#addbtn" + count).addClass("not-allowed");
    	   $("#manualEndTime" + count).val('');
-   	  
+
    	 } else {
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
-   		$("#ydays" + count).removeClass("red-border");
-   		$("#xdays" + count).removeClass("red-border");
+   	   $("#ydays" + count).removeClass("red-border");
+   	   $("#xdays" + count).removeClass("red-border");
    	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty();
    	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#manualStartTime" + count).parent().find(".help-block-timer").empty();
-   	   $("#addbtn" + count).removeClass("not-allowed");
+   	   $(".addbtn").removeClass("not-allowed");
    	 }
    	});
    }
@@ -4991,7 +5083,18 @@
       
  	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
-   	 
+
+   	if ($('#xdays' + parent_id).val() != '') {
+  	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
+  	  $('#xdays' + parent_id).parent().find(".help-block").empty().css({'display': 'none'});
+  	  $('#xdays' + parent_id).parent().find(".xdays").empty().css({'position': 'relative', 'top': '-5px'});
+   	} else {
+   	  $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+   	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
+   	}
+   	
+    	 
+   	
  	if (isNaN(manualStartTime)) {
 	    return
 	} 
@@ -5020,6 +5123,8 @@
 
         if (manualEndTime !== "") {
           if (manualStartTime > manualEndTime) {
+           	$('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+           	$('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
             $("#manualEndTime" + parent_id).parent().find(".help-block-timer").empty().append(
@@ -5052,6 +5157,8 @@
         }
         
         if (manualStartTime < manualEndTimeyday) {
+          $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+          $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
           $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
@@ -5065,6 +5172,8 @@
           $("#addbtn" + parent_id).addClass("not-allowed");
           if (manualEndTime !== "") {
             if (manualStartTime > manualEndTime) {
+              $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+              $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
               
@@ -5107,6 +5216,15 @@
  	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
    	 
+  	 if ($('#ydays' + parent_id).val() != '') {
+  	   $('#ydays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
+  	   $('#ydays' + parent_id).parent().find(".help-block").empty().css({'display': 'none'});
+  	   $('#ydays' + parent_id).parent().find(".ydays").empty().css({'position': 'relative', 'top': '-5px'});
+   	 } else {
+   	   $('#ydays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+   	   $('#ydays' + parent_id).parent().find(".ydays").empty().removeAttr("style");
+   	 }
+    	
  	if (isNaN(manualEndTime) ) {
 	    return
 	} 
@@ -5131,7 +5249,6 @@
      }
      
      
-      
       if (manualEndTime < manualStartTime) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");

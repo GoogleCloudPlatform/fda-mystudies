@@ -16,8 +16,9 @@ public class PropertiesUtil {
   // Expects environment variables to be in the form ${VAR_NAME}.
   public static Properties makePropertiesWithEnvironmentVariables(String properties_file) {
     Properties properties = new Properties();
+    ClassLoader loader = Thread.currentThread().getContextClassLoader();
     try {
-      properties.load(PropertiesUtil.class.getClassLoader().getResourceAsStream(properties_file));
+      properties.load(loader.getResourceAsStream(properties_file));
     } catch (IOException ex) {
       logger.error("Unable to access " + properties_file, ex);
     }
