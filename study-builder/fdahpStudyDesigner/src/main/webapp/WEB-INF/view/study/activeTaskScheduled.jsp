@@ -1098,7 +1098,7 @@
             <span
                 class="help-block with-errors red-txt"></span>
           </span>
-          <span class="mb-sm" style='padding-right: 25px !important;'>
+          <span class="mb-sm pr-md">
             <span
                 class="pr-sm light-txt opacity06"> days
               </span>
@@ -1212,7 +1212,7 @@
               <span
                   class="help-block with-errors red-txt"></span>
             </span>
-            <span class="mb-sm" style='padding-right: 25px !important;'>
+            <span class="mb-sm pr-md">
               <span
                   class="pr-sm light-txt opacity06"> days
                   </span>
