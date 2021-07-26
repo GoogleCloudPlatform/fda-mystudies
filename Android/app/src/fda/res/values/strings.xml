@@ -11,10 +11,9 @@
     <!--The following strings must be updated-->
     <!-- Update `google_maps_key` with your Google Maps API key (see https://developers.google.com/maps/documentation/android-sdk/get-api-key) -->
     <string name="google_maps_Key">YOUR_MAPS_KEY</string>
-    
-    <!-- Update `deeplink_host` with a value that defines your deeplink URL (do not include app:// or context-path) -->
-    <!-- For example, a `deeplink_host` value of "subdomain.domain" would establish "app://subdomain.domain/mystudies" as the deeplink URL -->
-    <string name="deeplink_host">YOUR_DEEPLINK_HOST</string>
+
+    <!-- Keeping deeplink host as package_name to make it unique across apps. This would establish "app://{package_name}/mystudies" as the deeplink URL -->
+    <string name="deeplink_host">&package_name;</string>
 
     <!--The following strings may be customized as desired-->
     <string name="app_name">&app_name;</string>
