@@ -7207,6 +7207,8 @@ public class StudyDAOImpl implements StudyDAO {
       studyBo.setCustomStudyId(null);
       studyBo.setExportSignedUrl(null);
       studyBo.setName("Copy of " + studyBo.getName());
+      studyBo.setLive(0);
+      studyBo.setVersion(0f);
       studyId = (String) session.save(studyBo);
 
       studyPermissionBO = new StudyPermissionBO();
@@ -7504,6 +7506,7 @@ public class StudyDAOImpl implements StudyDAO {
                     .setString("id", studyId)
                     .uniqueResult();
       }
+
       if (studyBo != null) {
         studyBo.setDestinationCustomStudyId(destinationCustomId + "@Export");
         studyBo.setExportSignedUrl(signedUrl);
