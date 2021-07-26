@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {UserService} from 'src/app/service/user.service';
-import { SearchService } from 'src/app/shared/search.service';
+import {SearchService} from 'src/app/shared/search.service';
 import {Profile} from '../account/shared/profile.model';
 
 import {HeaderDisplayService} from '../../service/header-display.service';
@@ -20,21 +20,24 @@ export class MobileMenuComponent implements OnInit {
   user = {} as Profile;
   showSearchOnClick = false;
 
-
   displayHeaderOnResetpassword = true;
 
-  constructor(private readonly userService: UserService, private readonly displayHeader: HeaderDisplayService, private readonly searchService: SearchService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly displayHeader: HeaderDisplayService,
+    private readonly searchService: SearchService,
+  ) {}
   ngOnInit(): void {
     this.user = this.userService.getUserProfile();
 
-      this.displayHeader.showHeaders$.subscribe((updatedHeaderDisplayStatus) => {
+    this.displayHeader.showHeaders$.subscribe((updatedHeaderDisplayStatus) => {
       this.displayHeaderOnResetpassword = updatedHeaderDisplayStatus;
-      });
+    });
 
     this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
-          this.showSearchBar = true;
-          this.mobileFilterQuery = '';
+        this.showSearchBar = true;
+        this.mobileFilterQuery = '';
       },
     );
   }
@@ -57,6 +60,4 @@ export class MobileMenuComponent implements OnInit {
   hideSearchBarOnClick(): void {
     this.showSearchOnClick = false;
   }
-
- 
 }
