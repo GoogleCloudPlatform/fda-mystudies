@@ -251,6 +251,16 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
         }
       }
     });
+    confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
+            confirmPassword.setError(getResources().getString(R.string.password_mismatch_error));
+          }
+        }
+      }
+    });
   }
 
   private void callRegisterUserWebService() {
