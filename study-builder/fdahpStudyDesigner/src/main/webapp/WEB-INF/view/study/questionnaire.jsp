@@ -1444,8 +1444,7 @@
                            class="form-control clock customTime endTime"
                            name="questionnaireCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field"
                            placeholder="End time" onclick='endTimep(this.id,0);' disabled required/>
-                    <span class='help-block-timer with-errors red-txt'></span>
-                    <span class='help-block with-errors red-txt' style='display:none'></span>
+                    <span class='help-block-timer help-block with-errors red-txt'></span>
                   </span>
                   <span class="addbtn addBtnDis align-span-center mr-md"
                         onclick="addDate();">+
@@ -1521,8 +1520,7 @@
                              value="${questionnaireCustomScheduleBo.frequencyEndTime}"
                              placeholder="End time" onclick='endTimep(this.id,${customVar.index});' required data-error="Please fill out this field"/>
                       <span
-                          class='help-block-timer with-errors red-txt'></span>
-                          <span class='help-block with-errors red-txt' style='display:none'></span>
+                          class='help-block-timer help-block with-errors red-txt'></span>
                     </span>
                     <span id="AddButton"
                           class="addbtn addBtnDis align-span-center mr-md cursor-display"
@@ -2045,7 +2043,7 @@
       } else {
         localStorage.setItem("IsAnchorDateSelected", "false");
         localStorage.setItem("IsRegularSelected", "true");
-
+        
         $(".onetimeanchorClass").hide();
         $('.onetimeanchorClass').find('input:text').removeAttr('required');
         $('.regularClass').show();
@@ -2086,24 +2084,22 @@
         $('.anchortypeclass').removeAttr('required');
         $("#anchorDateId").val("");
         $(".Selectedtooltip").show();
-        
+
         $('.manually-option').each(function () {	
            var id = $(this).attr("id");	
            var count12 = $("#"+id).find(".cusStrDate").attr("count");	
            if($('#'+id).find('#StartDate'+count12).val()=="" && $('.manually-option').filter(function() {	
                return $(this).css('display') !== 'none';	
            }).length !== 1){	
-                 	
                    $("#"+id).remove();	
                    $("#"+id).find('input:text').removeAttr('required', true);	
                    $("#AddButton").show();	
-                   $("#AddButton").attr('required', true);	
-               }else {	
+                   $("#AddButton").attr('required', true);
+               }else {
                      $("#AddButton").hide();	
                      $("#AddButton").attr('required', false);	
                  }	
         });
-        
         if( $('.manually-option').filter(function() {	
             return $(this).css('display') !== 'none';}).length == 1){	
     	   $("#AddButton").show();	
@@ -2698,7 +2694,13 @@
       $("#endDateId").text(endDate ? endDate : 'NA');
     }).on("dp.show", function (e) {
       $('#startDate').data("DateTimePicker").minDate(serverDate());
+    }).on("click", function (e) {
+        if (startDate) {
+            $('#time0').prop("disabled", false);
+            $("#dailyAddTimeButton").removeClass('hide');
+          }
     });
+    
     $('#startDateMonthly').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
       useCurrent: false,
@@ -2868,13 +2870,6 @@
 	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	     	       "Please fill out this field"));
 	    	}
-		});
-		
-		$('.manually-option').each(function(customCount) {
-			if ($('#customTime' + customCount).val() == '' && scheduletype == 'Regular') {
-			  $('#customTime' + customCount).parent().find(".help-block").show();
-			  $('#customTime' + customCount).parent().find(".help-block-timer").hide();
-			}
 		});
 		
       if (res === 'true') {
@@ -3172,11 +3167,6 @@
       var today = moment(serverDate()).format("MM/DD/YYYY");
       $('#startDate').parent().removeClass("has-danger").removeClass("has-error");
       $('#startDate').parent().find(".help-block").empty();
-      if (dt) {
-        $('#time0').prop("disabled", false);
-        $("#dailyAddTimeButton").removeClass('hide');
-      }
-      
       $('.time-opts').each(function () {
 
         var id = $(this).attr("id");
@@ -3305,8 +3295,7 @@
         + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
         + "' required data-error='Please fill out this field' name='questionnaireCustomScheduleBo[" + customCount
         + "].frequencyEndTime' class='form-control clock customTime endTime' data-error='Please fill out this field'  placeholder='End time' onclick='endTimep(this.id, " + customCount + ");' disabled/>"
-        + "<span class='help-block-timer with-errors red-txt'></span>"
-        + "<span class='help-block with-errors red-txt' style='display:none'></span>"
+        + "<span class='help-block-timer help-block  with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
         + "  <span id='delete' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDate(this);'></span>"
@@ -3420,18 +3409,13 @@
 	 endDate.setHours(endTime.getHours());
 	 endDate.setMinutes(endTime.getMinutes() - 1);
 	 if (startDate != '' && endDate != '' && startDate > endDate) {
-	   $("#" + item).parent().find(".help-block").hide();
-	   $("#" + item).parent().find(".help-block-timer").show();
 	   $("#" + item).parent().addClass("has-danger").addClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	       "End date and time should not be less than or equal to start date and time"));
 	 } else {
-	   $("#" + item).parent().find(".help-block").show();
-	   $("#" + item).parent().find(".help-block-timer").hide();
 	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty();
-	   $("#" + item).parent().find(".help-block").empty();
 	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#customTime" + count).parent().find(".help-block-timer").empty();
 	 }
