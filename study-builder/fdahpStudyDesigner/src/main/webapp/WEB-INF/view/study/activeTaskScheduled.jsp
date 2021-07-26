@@ -4010,6 +4010,8 @@
 	   	 } else {
 	   	   $('.help-block-timer').selectpicker('refresh');
 	   	   $(this).removeClass("red-border");
+	   		$("#ydays" + count).removeClass("red-border");
+	   	   $("#xdays" + count).removeClass("red-border");
 	   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   	   $("#" + item).parent().find(".help-block-timer").empty();
 	   	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
