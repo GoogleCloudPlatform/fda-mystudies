@@ -1507,14 +1507,7 @@ public class StudyServiceImpl implements StudyService {
           }
         }
         studyDetails.setStudyStatus(studyBo.getStatus());
-        if (studyBo.getCategory() != null) {
-          studyCatagory = studyDAO.getStudyCategory(studyBo.getCategory());
-        }
-        if (StringUtils.isNotBlank(studyCatagory)) {
-          studyDetails.setStudyCategory(studyCatagory);
-        }
-        studyDetails.setStudyTagline(studyBo.getStudyTagLine());
-        studyDetails.setStudySponsor(studyBo.getResearchSponsor());
+
         studyDetails.setStudyEnrolling(studyBo.getEnrollingParticipants());
         studyDetails.setAppId(studyBo.getAppId());
         studyDetails.setAppName("App Name_" + studyBo.getAppId());
