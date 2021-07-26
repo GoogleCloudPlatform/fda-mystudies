@@ -113,6 +113,8 @@ public class StudyExportImportService {
 
   private static final String ANCHORDATE_ID = "ANCHORDATE_ID_";
 
+  private static final String IMPORTED = "Imported ";
+
   private static XLogger logger =
       XLoggerFactory.getXLogger(StudyExportImportService.class.getName());
 
@@ -939,7 +941,7 @@ public class StudyExportImportService {
             studyBo.getMediaLink(),
             studyBo.getModifiedBy(),
             studyBo.getModifiedOn(),
-            studyBo.getName(),
+            IMPORTED + studyBo.getName(),
             studyBo.getPlatform(),
             studyBo.getResearchSponsor(),
             studyBo.getSequenceNumber(),

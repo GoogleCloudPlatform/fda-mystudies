@@ -2235,6 +2235,10 @@
         $("#weekEndDate").text(endDate);
         $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
       }
+      
+      if($("#startWeeklyDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
+    		$("#startWeeklyDate" ).parent().find(".help-block").empty();
+      }
     }).on("click", function (e) {
       $('#startWeeklyDate').data("DateTimePicker").minDate(serverDate());
     });
@@ -2272,10 +2276,6 @@
           $("#studyWeeklyLifetimeEnd").val(endDate);
           $("#weekEndDate").text(endDate);
           $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
-        }
-        
-        if($("#startWeeklyDate").val() >= moment(serverDate()).format("MM/DD/YYYY")){
-      		$("#startWeeklyDate" ).parent().find(".help-block").empty();
         }
       });
       $('#startWeeklyDate').val('');
@@ -4010,6 +4010,8 @@
 	   	 } else {
 	   	   $('.help-block-timer').selectpicker('refresh');
 	   	   $(this).removeClass("red-border");
+	   		$("#ydays" + count).removeClass("red-border");
+	   	   $("#xdays" + count).removeClass("red-border");
 	   	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   	   $("#" + item).parent().find(".help-block-timer").empty();
 	   	   $("#manualStartTime" + count).parent().removeClass("has-danger").removeClass("has-error");
