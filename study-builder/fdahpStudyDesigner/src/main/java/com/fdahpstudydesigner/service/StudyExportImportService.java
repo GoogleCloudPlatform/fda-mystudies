@@ -943,7 +943,7 @@ public class StudyExportImportService {
             studyBo.getHasStudyDraft(),
             studyBo.getInboxEmailAddress(),
             studyBo.getIrbReview(),
-            studyBo.getLive(),
+            0,
             studyBo.getMediaLink(),
             studyBo.getModifiedBy(),
             studyBo.getModifiedOn(),
@@ -960,7 +960,7 @@ public class StudyExportImportService {
             studyBo.getTentativeDurationWeekmonth(),
             studyBo.getThumbnailImage(),
             studyBo.getType(),
-            studyBo.getVersion(),
+            0f,
             studyBo.isEnrollmentdateAsAnchordate() ? "Y" : "N",
             studyBo.getCustomStudyId() + "@Export",
             null);

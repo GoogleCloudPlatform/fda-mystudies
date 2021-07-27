@@ -96,6 +96,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7510,6 +7512,7 @@ public class StudyDAOImpl implements StudyDAO {
       if (studyBo != null) {
         studyBo.setDestinationCustomStudyId(destinationCustomId + "@Export");
         studyBo.setExportSignedUrl(signedUrl);
+        studyBo.setExportTime(new Timestamp(Instant.now().toEpochMilli()));
         session.update(studyBo);
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
