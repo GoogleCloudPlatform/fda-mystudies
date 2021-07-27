@@ -29,6 +29,7 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
   @IBOutlet var heightLayoutConstraint: NSLayoutConstraint!
 
   var activity: Activity!
+  var highlightedRun = -1
 
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -43,6 +44,7 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
       as? ActivitySchedules)!
     view.frame = frame
     view.activity = activity
+    view.setHighlightedActivity()
     view.tableview?.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
     view.tableview?.delegate = view
     view.tableview?.dataSource = view
@@ -70,6 +72,20 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
     return self.activity.activityRuns.count
   }
 
+  func setHighlightedActivity() {
+    self.highlightedRun = activity.currentRunId
+    if highlightedRun > 0 {
+      let activityRun = self.activity.activityRuns[highlightedRun - 1]
+      if var endDate = activityRun.endDate {
+        endDate.updateWithOffset()
+        let valCurrentDate = Date()
+        if endDate < valCurrentDate {
+          self.highlightedRun = highlightedRun + 1
+        }
+      }
+    }
+  }
+  
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
@@ -86,10 +102,10 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
         + ActivitySchedules.formatter.string(from: endDate)
     }
 
-    if activityRun.runId == self.activity.currentRunId {
+    if activityRun.runId == highlightedRun {
       cell.textLabel?.textColor = kBlueColor
 
-    } else if activityRun.runId < self.activity.currentRunId {
+    } else if activityRun.runId < highlightedRun {
       cell.textLabel?.textColor = UIColor.gray
     }
     cell.textLabel?.textAlignment = .center
