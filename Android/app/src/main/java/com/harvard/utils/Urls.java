@@ -54,7 +54,7 @@ public class Urls {
           + "&correlationId=" + FdaApplication.getRandomString()
           + "&redirect_uri=" + AUTH_SERVER_REDIRECT_URL
           + "&state=" + FdaApplication.getRandomString()
-          + "&deeplinkUrl=" + "app://"+ FdaApplication.getInstance().getString(R.string.deeplink_host) +"/mystudies";
+          + "&deeplinkUrl=" + "app://" + FdaApplication.getInstance().getString(R.string.deeplink_host) + "/mystudies";
 
   // Deeplinks
   public static String DEEPLINK_CALLBACK="/mystudies/callback";
