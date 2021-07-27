@@ -23,11 +23,14 @@
  */
 package com.hphc.mystudies.util;
 
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.hphc.mystudies.bean.FailureResponse;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
@@ -810,6 +813,23 @@ public class StudyMetaDataUtil {
       return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
     } catch (Exception e) {
       LOGGER.error("Unable to generate signed url", e);
+    }
+    return null;
+  }
+
+  public static String getResources(String bucketName, String filepath, String dataFormat) {
+    try {
+      if (StringUtils.isNotBlank(filepath)) {
+        Storage storage = StorageOptions.getDefaultInstance().getService();
+        Blob blob = storage.get(BlobId.of(bucketName, filepath));
+        if (blob != null) {
+          ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+          blob.downloadTo(outputStream);
+          return dataFormat + java.util.Base64.getEncoder().encodeToString(blob.getContent());
+        }
+      }
+    } catch (Exception e) {
+      LOGGER.error("Unable to getResources", e);
     }
     return null;
   }

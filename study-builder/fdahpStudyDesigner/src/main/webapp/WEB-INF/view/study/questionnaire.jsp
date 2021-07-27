@@ -4531,9 +4531,17 @@
         } else {
           $(timeId).data("DateTimePicker").minDate(serverDateTime());
         }
-        if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate()
-            < serverDateTime()) {
-          $(timeId).val('');
+        if ($(timeId).val() && dt == today ) {
+        	
+        	if( moment($(timeId).val(), 'h:mm a').toDate() < serverDateTime()){
+        		$(timeId).val(serverTime());
+                $(timeId).parent().find(".help-block").empty().append(
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                        "Time reset to current time"));
+        	}else{
+        		$(timeId).parent().find(".help-block").empty();
+        	}
+          
         }
       } else {
         $(timeId).data("DateTimePicker").minDate(false);
@@ -4541,6 +4549,7 @@
     });
   }
 
+ 
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var studyId = $("#studyId").val();
