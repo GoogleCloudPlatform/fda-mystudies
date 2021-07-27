@@ -342,7 +342,7 @@
                   <c:if test="${actionPage ne 'VIEW_PAGE'}">
                     <span class="mr-md"><img
                         src="/studybuilder/images/icons/close.png"
-                        onclick="del(${study.id});" alt=""/></span>
+                        onclick="del('${study.id}');" alt=""/></span>
                   </c:if>
                   <span>${study.name}&nbsp;(${study.customStudyId})</span>
                   <span
@@ -599,8 +599,8 @@
         var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
             + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
             + "'>"
-            + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del("
-            + selVal + ");'/></span>"
+            + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del(\""
+            + selVal + "\");'/></span>"
             + "<span>" + selTxt + "</span>"
             + "<span class='pull-right'>"
             + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
