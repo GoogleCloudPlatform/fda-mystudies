@@ -3142,6 +3142,7 @@
     disablePastTime('#selectTime1', '#chooseDate');
 
     $(document).on('click change dp.change', '.cusStrDate, .startTime', function (e) {
+    	debugger
         if ($(this).is('.startTime') && !$(this).prop('disabled')) {
          disablePastTime('#' + $(this).attr('id'),
              '#' + $(this).parents('.manually-option').find('.cusStrDate').attr('id'));
@@ -4516,6 +4517,7 @@
     document.body.appendChild(a).click();
     </c:if>
   }
+  var count=0;
 
   function disablePastTime(timeId, dateId) {
     $(document).on('click change dp.change', timeId + ', ' + dateId, function () {
@@ -4538,8 +4540,12 @@
                 $(timeId).parent().find(".help-block").empty().append(
                         $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         "Time reset to current time"));
+                count++;
         	}else{
-        		$(timeId).parent().find(".help-block").empty();
+        		if(count==0){
+        			$(timeId).parent().find(".help-block").empty();
+        		}
+        		
         	}
           
         }
