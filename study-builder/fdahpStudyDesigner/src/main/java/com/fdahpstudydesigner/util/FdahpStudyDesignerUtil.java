@@ -1292,4 +1292,21 @@ public class FdahpStudyDesignerUtil {
     }
     return platform;
   }
+
+  public static String getImageResources(String filepath) {
+    try {
+      if (StringUtils.isNotBlank(filepath)) {
+        Storage storage = StorageOptions.getDefaultInstance().getService();
+        Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), filepath));
+        if (blob != null) {
+          ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+          blob.downloadTo(outputStream);
+          return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(blob.getContent());
+        }
+      }
+    } catch (Exception e) {
+      logger.error("Unable to getImageResources", e);
+    }
+    return null;
+  }
 }

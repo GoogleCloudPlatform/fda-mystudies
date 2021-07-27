@@ -15,7 +15,7 @@
     height: 38px;
 }
 button#exportId {
-    margin-right: 6px;
+    margin-right: 7px;
 }
 
 .modal {
