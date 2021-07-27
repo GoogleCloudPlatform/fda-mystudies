@@ -14,6 +14,26 @@
 .mr-lg {
     margin-right: 15px !important;
 }
+.modal-footer {
+    border-top: none !important;; 
+}
+.modal-header {
+    border-bottom: none !important; 
+}
+.copy-version {
+    width: max-content !important; 
+    border-radius: 0px !important; 
+    padding: 20px !important;
+} 
+.copyVersionModel {
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-40%, -40%); 
+}
+
+
+ 
 </style>
 
 <div>
@@ -90,7 +110,8 @@
 			  </c:choose>"
              
                    data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
-                  title="Copy-into-new" onclick='copyStudy("${study.id}");'>
+                  title="Copy-into-new" onclick='copyStudy("${study.id}" , "${study.liveStudyId}" ,
+                   ${(not empty study.liveStudyId)?((study.flag)? true : false): false});'>
                     </span>
            <c:if test="${not empty study.liveStudyId}">
               <span class="eye-inc viewStudyClass mr-lg published" isLive="Yes"
@@ -103,6 +124,33 @@
       </c:forEach>
     </tbody>
   </table>
+</div>
+<div class="modal fade copyVersionModel" id="copyVersionModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content copy-version">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Select the study version to be copied:</h4>
+            </div>
+            <div class="modal-body">
+               
+                      <span class="radio radio-info radio-inline p-40 ">
+                          <input type="radio" id="workingVersion" class="workingVersion copyVersion"  value="workingVersion" name="copy">
+                          <label for="workingVersion">Copy working version</label>
+                      </span>
+                      <span class="radio radio-inline ">
+                          <input type="radio" id="publishedVersion" class="publishedVersion copyVersion"  value="publishedVersion" name="copy">
+                          <label for="publishedVersion">Copy last published version</label>
+                     </span>
+                     
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default gray-btn" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary blue-btn" id="submit" onclick='copyVersion()' disabled >Submit</button>
+                 <input type="hidden" name="draftVersion" id="draftVersion" value=""/>
+                 <input type="hidden" name="lastpublish" id="lastpublish" value=""/>
+            </div>
+        </div>
+    </div>
 </div>
 
 <form:form action="/studybuilder/adminStudies/viewBasicInfo.do?_S=${param._S}"
@@ -248,27 +296,53 @@
      
   }
  
-   function copyStudy(studyId) {
-      var form = document.createElement('form');
-      form.method = 'post';
-      var input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = 'studyId';
-      input.value = studyId;
-      form.appendChild(input);
-
-      input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = '${_csrf.parameterName}';
-      input.value = '${_csrf.token}';
-      form.appendChild(input);
-
-      form.action = '/studybuilder/adminStudies/replicate.do';
-      document.body.appendChild(form);
-      form.submit();
+   function copyStudy(studyId, lastpublishStudyId, flag) {
+	  if(flag){
+		  $('#draftVersion').val(studyId);
+		  $('#lastpublish').val(lastpublishStudyId);
+		  $("input[type=radio][name=copy]").prop('checked', false);
+		  $("#submit").attr("disabled", "disabled");
+	      $('#copyVersionModel').modal('show');
+	  }else{
+		  copyAction(studyId);
+	  }
     }  
     
 
-    
+   function copyVersion() {
+	var copy_opts = $("input[name='copy']:checked").val();
+	var studyId = (copy_opts == 'publishedVersion') ? $('#lastpublish').val() : $('#draftVersion').val();
+	copyAction(studyId);
+   }
+   
+   var radioButton = $("input:radio");
+   radioButton.change(function () {
+       if (radioButton.filter(':checked').length > 0) {
+           $("#submit").removeAttr("disabled");
+       } else {
+           $("#submit").attr("disabled", "disabled");
+       }
+   });
+   
+   function copyAction(studyId){
+	   var form = document.createElement('form');
+	     form.method = 'post';
+	     var input = document.createElement('input');
+	     input.type = 'hidden';
+	     input.name = 'studyId';
+	     input.value = studyId;
+	     form.appendChild(input);
+
+	     input = document.createElement('input');
+	     input.type = 'hidden';
+	     input.name = '${_csrf.parameterName}';
+	     input.value = '${_csrf.token}';
+	     form.appendChild(input);
+
+	     form.action = '/studybuilder/adminStudies/replicate.do';
+	     document.body.appendChild(form);
+	     form.submit(); 
+   }
+   
 
 </script>
