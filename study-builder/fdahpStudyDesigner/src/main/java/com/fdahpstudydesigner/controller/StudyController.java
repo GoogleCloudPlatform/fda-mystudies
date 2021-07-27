@@ -222,6 +222,32 @@ public class StudyController {
           liveStudyBo = studyService.getStudyLiveStatusByCustomId(studyBo.getCustomStudyId());
           studyPermissionBO =
               studyService.findStudyPermissionBO(studyBo.getId(), sesObj.getUserId());
+
+          String signedUrl = "";
+          if (liveStudyBo != null) {
+            if (liveStudyBo != null
+                && studyBo.getExportTime() != null
+                && liveStudyBo.getExportTime() != null) {
+              signedUrl =
+                  studyBo.getExportTime().before(liveStudyBo.getExportTime())
+                      ? liveStudyBo.getExportSignedUrl()
+                      : studyBo.getExportSignedUrl();
+            } else if (liveStudyBo != null
+                && studyBo.getExportTime() != null
+                && liveStudyBo.getExportTime() == null) {
+              signedUrl = studyBo.getExportSignedUrl();
+            } else if (liveStudyBo != null
+                && studyBo.getExportTime() == null
+                && liveStudyBo.getExportTime() != null) {
+              signedUrl = liveStudyBo.getExportSignedUrl();
+            }
+          } else {
+            signedUrl =
+                StringUtils.isNotEmpty(studyBo.getExportSignedUrl())
+                    ? studyBo.getExportSignedUrl()
+                    : "";
+          }
+
           markAsCompleted = studyService.validateStudyActions(studyId);
           map.addAttribute("_S", sessionStudyCount);
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
@@ -234,10 +260,9 @@ public class StudyController {
           map.addAttribute(
               "exportSignedUrl",
               URLEncoder.encode(
-                  StringUtils.isNotEmpty(studyBo.getExportSignedUrl())
-                      ? studyBo.getExportSignedUrl()
-                      : "",
+                signedUrl,
                   StandardCharsets.UTF_8.toString()));
+
           mav = new ModelAndView("actionList", map);
         } else {
           return new ModelAndView("redirect:/adminStudies/studyList.do");
