@@ -2411,30 +2411,29 @@ public class ActivityMetaDataDao {
           "maxImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMaxImage()))
               ? ""
-              : this.getBase64Image(
-                  StudyMetaDataUtil.getSignedUrl(
-                      propMap.get("cloud.bucket.name"),
-                      StudyMetaDataConstants.STUDIES
-                          + "/"
-                          + studyDto.getCustomStudyId()
-                          + "/"
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + reponseType.getMaxImage(),
-                      12)));
+              : StudyMetaDataUtil.getResources(
+                  propMap.get("cloud.bucket.name"),
+                  StudyMetaDataConstants.STUDIES
+                      + "/"
+                      + studyDto.getCustomStudyId()
+                      + "/"
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                      + reponseType.getMaxImage(),
+                  StudyMetaDataConstants.DATA_IMAGE));
+
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
               ? ""
-              : this.getBase64Image(
-                  StudyMetaDataUtil.getSignedUrl(
-                      propMap.get("cloud.bucket.name"),
-                      StudyMetaDataConstants.STUDIES
-                          + "/"
-                          + studyDto.getCustomStudyId()
-                          + "/"
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + reponseType.getMinImage(),
-                      12)));
+              : StudyMetaDataUtil.getResources(
+                  propMap.get("cloud.bucket.name"),
+                  StudyMetaDataConstants.STUDIES
+                      + "/"
+                      + studyDto.getCustomStudyId()
+                      + "/"
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                      + reponseType.getMinImage(),
+                  StudyMetaDataConstants.DATA_IMAGE));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionScaleDetails() :: ERROR", e);
     }
@@ -2488,30 +2487,28 @@ public class ActivityMetaDataDao {
           "maxImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMaxImage()))
               ? ""
-              : this.getBase64Image(
-                  StudyMetaDataUtil.getSignedUrl(
-                      propMap.get("cloud.bucket.name"),
-                      StudyMetaDataConstants.STUDIES
-                          + "/"
-                          + studyDto.getCustomStudyId()
-                          + "/"
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + reponseType.getMaxImage(),
-                      12)));
+              : StudyMetaDataUtil.getResources(
+                  propMap.get("cloud.bucket.name"),
+                  StudyMetaDataConstants.STUDIES
+                      + "/"
+                      + studyDto.getCustomStudyId()
+                      + "/"
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                      + reponseType.getMaxImage(),
+                  StudyMetaDataConstants.DATA_IMAGE));
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
               ? ""
-              : this.getBase64Image(
-                  StudyMetaDataUtil.getSignedUrl(
-                      propMap.get("cloud.bucket.name"),
-                      StudyMetaDataConstants.STUDIES
-                          + "/"
-                          + studyDto.getCustomStudyId()
-                          + "/"
-                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
-                          + reponseType.getMinImage(),
-                      12)));
+              : StudyMetaDataUtil.getResources(
+                  propMap.get("cloud.bucket.name"),
+                  StudyMetaDataConstants.STUDIES
+                      + "/"
+                      + studyDto.getCustomStudyId()
+                      + "/"
+                      + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                      + reponseType.getMinImage(),
+                  StudyMetaDataConstants.DATA_IMAGE));
     } catch (Exception e) {
       LOGGER.error("ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: ERROR", e);
     }
@@ -2633,34 +2630,28 @@ public class ActivityMetaDataDao {
               "image",
               StringUtils.isEmpty(subType.getImage())
                   ? ""
-                  : this.getBase64Image(
-                      StudyMetaDataUtil.getSignedUrl(
-                          propMap.get("cloud.bucket.name"),
-                          StudyMetaDataConstants.STUDIES
-                              + "/"
-                              + studyDto.getCustomStudyId()
-                              + "/"
-                              + propMap
-                                  .get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE)
-                                  .trim()
-                              + subType.getImage(),
-                          12)));
+                  : StudyMetaDataUtil.getResources(
+                      propMap.get("cloud.bucket.name"),
+                      StudyMetaDataConstants.STUDIES
+                          + "/"
+                          + studyDto.getCustomStudyId()
+                          + "/"
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + subType.getImage(),
+                      StudyMetaDataConstants.DATA_IMAGE));
           imageChoiceMap.put(
               "selectedImage",
               StringUtils.isEmpty(subType.getSelectedImage())
                   ? ""
-                  : this.getBase64Image(
-                      StudyMetaDataUtil.getSignedUrl(
-                          propMap.get("cloud.bucket.name"),
-                          StudyMetaDataConstants.STUDIES
-                              + "/"
-                              + studyDto.getCustomStudyId()
-                              + "/"
-                              + propMap
-                                  .get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE)
-                                  .trim()
-                              + subType.getSelectedImage(),
-                          12)));
+                  : StudyMetaDataUtil.getResources(
+                      propMap.get("cloud.bucket.name"),
+                      StudyMetaDataConstants.STUDIES
+                          + "/"
+                          + studyDto.getCustomStudyId()
+                          + "/"
+                          + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
+                          + subType.getSelectedImage(),
+                      StudyMetaDataConstants.DATA_IMAGE));
           imageChoiceMap.put(
               "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
           imageChoiceMap.put(
