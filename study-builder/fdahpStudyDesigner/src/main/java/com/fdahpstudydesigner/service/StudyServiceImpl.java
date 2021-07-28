@@ -1591,7 +1591,8 @@ public class StudyServiceImpl implements StudyService {
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
         studyDAO.getComprehensionTestQuestionList(studyBo.getId());
 
-    List<AnchorDateTypeBo> anchorDateList = studyDAO.getAnchorDateDetails(studyBo.getId());
+    List<AnchorDateTypeBo> anchorDateList =
+        studyDAO.getAnchorDateDetails(studyBo.getId(), studyBo.getCustomStudyId());
 
     List<QuestionnaireBo> questionnairesList =
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());

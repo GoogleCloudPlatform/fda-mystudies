@@ -7138,7 +7138,7 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId) {
+  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId, String customStudyId) {
     logger.info("StudyDAOImpl - getStudy() - Starts");
     Session session = null;
     List<AnchorDateTypeBo> anchorDateTypeBoList = null;
@@ -7146,6 +7146,11 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       String searchQuery = "From AnchorDateTypeBo where studyId=:studyId";
       anchorDateTypeBoList = session.createQuery(searchQuery).setString("studyId", studyId).list();
+      if (CollectionUtils.isEmpty(anchorDateTypeBoList)) {
+        searchQuery = "From AnchorDateTypeBo where customStudyId=:customStudyId";
+        anchorDateTypeBoList =
+            session.createQuery(searchQuery).setString("customStudyId", customStudyId).list();
+      }
 
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getStudy() - ERROR", e);

@@ -156,7 +156,8 @@ public class StudyExportImportService {
       // userId);
       StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
 
-      List<AnchorDateTypeBo> anchorDateList = studyDao.getAnchorDateDetails(studyBo.getId());
+      List<AnchorDateTypeBo> anchorDateList =
+          studyDao.getAnchorDateDetails(studyBo.getId(), studyBo.getCustomStudyId());
       if (CollectionUtils.isNotEmpty(anchorDateList)) {
         for (AnchorDateTypeBo anchorDate : anchorDateList) {
           customIdsMap.put(ANCHORDATE_ID + anchorDate.getId(), IdGenerator.id());
@@ -188,7 +189,7 @@ public class StudyExportImportService {
         //  addStudyPermissionInsertSql(studyPermissionBo, insertSqlStatements, customIdsMap);
         addStudySequenceInsertSql(studySequenceBo, insertSqlStatements, customIdsMap);
 
-        addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap);
+        addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap, studyBo.getId());
         addStudypagesListInsertSql(studypageList, insertSqlStatements, customIdsMap);
 
         addEligibilityInsertSql(eligibilityBo, insertSqlStatements, customIdsMap);
@@ -1005,7 +1006,8 @@ public class StudyExportImportService {
   private void addAnchorDateInsertSql(
       List<AnchorDateTypeBo> anchorDateList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String studyId)
       throws Exception {
 
     if (CollectionUtils.isEmpty(anchorDateList)) {
@@ -1021,7 +1023,7 @@ public class StudyExportImportService {
               customIdsMap.get(CUSTOM_STUDY_ID + anchorDate.getCustomStudyId()),
               anchorDate.getHasAnchortypeDraft(),
               anchorDate.getName(),
-              customIdsMap.get(STUDY_ID + anchorDate.getStudyId()),
+              customIdsMap.get(STUDY_ID + studyId),
               anchorDate.getVersion());
 
       anchorDateInsertQueryList.add(anchorDateTypeInsertQuery);
