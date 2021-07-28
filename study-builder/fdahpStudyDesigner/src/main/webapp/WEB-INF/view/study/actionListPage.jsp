@@ -20,7 +20,7 @@ button#exportId {
 
 .modal {
     position: fixed;
-    top: 50% !important;
+    top: 30% !important;
     left: 50% !important;
     transform: translate(-40%, -40%); 
 }
