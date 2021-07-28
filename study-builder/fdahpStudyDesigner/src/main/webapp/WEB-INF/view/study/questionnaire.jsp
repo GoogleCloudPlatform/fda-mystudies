@@ -3414,11 +3414,17 @@
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	       "End date and time should not be less than or equal to start date and time"));
+	   $("#" + item).parent().find(".help-block-timer").removeClass("help-block");
 	 } else {
 	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty();
 	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#customTime" + count).parent().find(".help-block-timer").empty();
+	   
+	   if (!$("#" + item).parent().find(".help-block-timer").hasClass("help-block") ) {
+		   $("#" + item).parent().find(".help-block-timer").addClass("help-block");
+	   }
+	  
 	 }
 	});
   }
@@ -4138,6 +4144,7 @@
 	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
 	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
 	                     "Please ensure that the runs created do not have any overlapping time period"));
+	          $(thisAttr).parents('.manually-option').find('.startTime').val('');
 	        } else if (!chkValToDate) {
 	        $(thisAttr).parents('.manually-option').find('.endTime').parent().addClass(
 	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
@@ -4149,7 +4156,6 @@
 	      $('.manuallyContainer').find('.manually-option').each(function () {
 	        if ($(this).find('.startTime').parent().find('.help-block-timer').children().length > 0) {
 	          a++;
-	          $(this).find('.startTime').val('');
 	        }
 	      });
 	      var b = 0;
@@ -4517,7 +4523,7 @@
     document.body.appendChild(a).click();
     </c:if>
   }
-  var count=0;
+  var countOfTime=0;
 
   function disablePastTime(timeId, dateId) {
     $(document).on('click change dp.change', timeId + ', ' + dateId, function () {
@@ -4540,9 +4546,9 @@
                 $(timeId).parent().find(".help-block").empty().append(
                         $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                         "Time reset to current time"));
-                count++;
+                countOfTime++;
         	}else{
-        		if(count==0){
+        		if(countOfTime==0){
         			$(timeId).parent().find(".help-block").empty();
         		}
         		
