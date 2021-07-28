@@ -193,9 +193,8 @@
       }
       
       var serverTime = function () {
-    	  var date = new Date();
-    	  var hours = date.getHours();
-    	  var minutes = date.getMinutes();
+    	  var hours = serverDateTime().getHours();
+    	  var minutes = serverDateTime().getMinutes();
     	  var ampm = hours >= 12 ? 'pm' : 'am';
     	  hours = hours % 12;
     	  hours = hours ? hours : 12; // the hour '0' should be '12'
