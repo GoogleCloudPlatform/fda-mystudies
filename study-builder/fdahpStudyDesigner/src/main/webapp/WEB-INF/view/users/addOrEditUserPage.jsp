@@ -312,7 +312,7 @@
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
                 <select
                     class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
-                    title="- Select and Add Studies -" multiple id="multiple">
+                    title="- Select and add studies -" multiple id="multiple">
                   <c:forEach items="${studyBOList}" var="study">
                     <option value="${study.id}"
                             id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
