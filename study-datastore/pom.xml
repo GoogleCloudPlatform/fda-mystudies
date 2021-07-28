@@ -130,12 +130,6 @@
 		    <artifactId>swagger-jersey2-jaxrs</artifactId>
 		    <version>1.5.0</version>
 		</dependency>
-		<dependency>
-		    <groupId>com.google.guava</groupId>
-		    <artifactId>guava</artifactId>
-		    <version>18.0</version>
-		</dependency>
-
 	    <dependency>
 	        <groupId>org.apache.tomcat</groupId>
 	        <artifactId>tomcat-servlet-api</artifactId>
