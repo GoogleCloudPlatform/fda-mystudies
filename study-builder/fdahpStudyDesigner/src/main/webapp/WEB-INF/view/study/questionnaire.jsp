@@ -1421,7 +1421,7 @@
                            class="form-control clock cusTime customTime startTime"
                            name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
                            placeholder="Start time" onclick='startTimep(this.id,0);' disabled required />
-                    <span class='help-block-timer help-block with-errors red-txt'></span>
+                    <span class='help-block-timer help-block with-errors red-txt' id="startTimeError"></span>
                   </span>
 
                  
@@ -3479,6 +3479,9 @@
   }
 
   function customEndDate(id, count) {
+	  if($('#customStartTime' + count).parent().find("span#startTimeError").text()== "Time reset to current time"){
+		  $("#customStartTime" + count).parent().find(".help-block").empty();
+	  }
 	
 	$('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
@@ -4156,6 +4159,7 @@
 	      $('.manuallyContainer').find('.manually-option').each(function () {
 	        if ($(this).find('.startTime').parent().find('.help-block-timer').children().length > 0) {
 	          a++;
+	          
 	        }
 	      });
 	      var b = 0;

@@ -960,7 +960,7 @@
                            class="form-control clock cusTime customTime startTime"
                            name="activeTaskCustomScheduleBo[0].frequencyStartTime"
                            placeholder="Start time" onclick='startTimep(this.id,0);' disabled required data-error="Please fill out this field"/>
-                    <span class='help-block-timer help-block with-errors red-txt'></span>
+                    <span class='help-block-timer help-block with-errors red-txt'  id="startTimeError"></span>
                  
           </span>
           <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -2792,6 +2792,11 @@
   }
 
   function customEndDate(id, count) {
+	  if($('#customStartTime' + count).parent().find("span#startTimeError").text()== "Time reset to current time"){
+		  $("#customStartTime" + count).parent().find(".help-block").empty();
+	  }
+	  
+	  
     $('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
