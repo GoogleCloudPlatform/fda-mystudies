@@ -122,7 +122,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
                 intent.putExtra("title", "" + items.get(i).getTitle().toString());
                 intent.putExtra("type", "" + items.get(i).getType().toString());
-                intent.putExtra("content", "" + items.get(i).getContent().toString());
+                intent.putExtra("resourceId", "" + items.get(i).getResourcesId().toString());
                 context.startActivity(intent);
               } else if (items
                   .get(i)
