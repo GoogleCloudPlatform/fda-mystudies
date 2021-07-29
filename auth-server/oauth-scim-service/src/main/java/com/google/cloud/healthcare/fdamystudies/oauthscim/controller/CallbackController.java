@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEEPLINK_URL_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
@@ -81,7 +82,8 @@ public class CallbackController {
     String mobilePlatform = cookieHelper.getCookieValue(request, MOBILE_PLATFORM_COOKIE);
     String accountStatus = cookieHelper.getCookieValue(request, ACCOUNT_STATUS_COOKIE);
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
-    String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform, source);
+    String deeplinkCookie = cookieHelper.getCookieValue(request, DEEPLINK_URL_COOKIE);
+    String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform, source, deeplinkCookie);
 
     String redirectUrl = null;
     if (StringUtils.equals(
