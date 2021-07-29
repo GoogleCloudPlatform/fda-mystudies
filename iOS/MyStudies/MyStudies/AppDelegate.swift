@@ -22,6 +22,7 @@ import IQKeyboardManagerSwift
 import RealmSwift
 import UIKit
 import UserNotifications
+import Firebase
 
 @UIApplicationMain
 
@@ -71,6 +72,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       // 2. Attempt registration for remote notifications on the main thread
       DispatchQueue.main.async {
         UIApplication.shared.registerForRemoteNotifications()
+      }
+    }
+  }
+  
+  func askForFCMNotification() {
+    if #available(iOS 10.0, *) {
+      // For iOS 10 display notification (sent via APNS)
+      UNUserNotificationCenter.current().delegate = self
+      
+      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+      UNUserNotificationCenter.current().requestAuthorization(
+        options: authOptions,
+        completionHandler: { _, _ in }
+      )
+    }
+    DispatchQueue.main.async {
+      UIApplication.shared.registerForRemoteNotifications()
+    }
+    getFCMToken()
+    
+  }
+  
+  func getFCMToken() {
+    Messaging.messaging().token { token, error in
+      if let error = error {
+        print("Error fetching FCM registration token: \(error)")
+      } else if let token = token {
+        print("FCM registration token: \(token)")
+        self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
       }
     }
   }
@@ -179,6 +209,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.isAppLaunched = true
     IQKeyboardManager.shared.enable = true
     self.customizeNavigationBar()
+    
+    // Use Firebase library to configure APIs
+    FirebaseApp.configure()
+    
+    Messaging.messaging().delegate = self
 
     UIView.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor =
       kUIColorForSubmitButtonBackground

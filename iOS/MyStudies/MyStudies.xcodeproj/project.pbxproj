@@ -153,6 +153,7 @@
 		7878B31D2216C6E20052FC23 /* HPHCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B31C2216C6E20052FC23 /* HPHCTests.swift */; };
 		84249C9D268DFDB400CE5E87 /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84249C9C268DFDB400CE5E87 /* UITableView+Extensions.swift */; };
 		847A25102518C93800BCB50A /* UtilitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A250F2518C93800BCB50A /* UtilitiesTest.swift */; };
+		84A0E61026AFEC030045A03B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84A0E60D26AFEC030045A03B /* GoogleService-Info.plist */; };
 		84FCC8D12514DCA70012904C /* AuthTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FCC8D02514DCA70012904C /* AuthTest.swift */; };
 		89055913230148FD005FB284 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89055912230148FD005FB284 /* Branding.plist */; };
 		8905592A23016852005FB284 /* UITestingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8905592923016852005FB284 /* UITestingHelpers.swift */; };
@@ -456,7 +457,10 @@
 		7878B31E2216C6E20052FC23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7BDC002620C7855C409516D3 /* Pods-HPHC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPHC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPHC/Pods-HPHC.debug.xcconfig"; sourceTree = "<group>"; };
 		84249C9C268DFDB400CE5E87 /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
+		84701DED26AFCE7600A515FE /* TestNew1.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = TestNew1.xcconfig; sourceTree = "<group>"; };
+		84701DF026AFCE7600A515FE /* Dev21-5-01.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Dev21-5-01.xcconfig"; sourceTree = "<group>"; };
 		847A250F2518C93800BCB50A /* UtilitiesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesTest.swift; sourceTree = "<group>"; };
+		84A0E60D26AFEC030045A03B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		84FCC8D02514DCA70012904C /* AuthTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTest.swift; sourceTree = "<group>"; };
 		89055912230148FD005FB284 /* Branding.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		8905592923016852005FB284 /* UITestingHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestingHelpers.swift; sourceTree = "<group>"; };
@@ -682,6 +686,9 @@
 		6E7D2D581E433E8700763D4C /* MyStudies */ = {
 			isa = PBXGroup;
 			children = (
+				84A0E60D26AFEC030045A03B /* GoogleService-Info.plist */,
+				84701DF026AFCE7600A515FE /* Dev21-5-01.xcconfig */,
+				84701DED26AFCE7600A515FE /* TestNew1.xcconfig */,
 				6F07148824279452002749DA /* Default.xcconfig */,
 				6F10BB15234DDFDA006388E2 /* Branding */,
 				6FE00CD5238FEDE80067A7B8 /* Utils */,
@@ -1979,6 +1986,7 @@
 				6ED134381E5F1B110090C976 /* Consent.json in Resources */,
 				94B3DD541E6ED8E500327AE5 /* SignInPlist.plist in Resources */,
 				6EDDB65A1EE05E4C00C79337 /* NewProgressView.xib in Resources */,
+				84A0E61026AFEC030045A03B /* GoogleService-Info.plist in Resources */,
 				6EDDB6611EE05FDC00C79337 /* fda_preload.gif in Resources */,
 				4833E9E31E712C2B0032D244 /* StudyOverview.plist in Resources */,
 				6F4E1B2D24223C210051D3E2 /* README.md in Resources */,
@@ -2030,26 +2038,42 @@
 				"${BUILT_PRODUCTS_DIR}/ActionSheetPicker-3.0/ActionSheetPicker_3_0.framework",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
+				"${BUILT_PRODUCTS_DIR}/FirebaseMessaging/FirebaseMessaging.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/ReachabilitySwift/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/SlideMenuControllerSwift/SlideMenuControllerSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ActionSheetPicker_3_0.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreDiagnostics.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseMessaging.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SlideMenuControllerSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -2370,7 +2394,7 @@
 /* Begin XCBuildConfiguration section */
 		6E7D2D7C1E433E8800763D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F07148824279452002749DA /* Default.xcconfig */;
+			baseConfigurationReference = 84701DED26AFCE7600A515FE /* TestNew1.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2433,7 +2457,7 @@
 		};
 		6E7D2D7D1E433E8800763D4C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F07148824279452002749DA /* Default.xcconfig */;
+			baseConfigurationReference = 84701DED26AFCE7600A515FE /* TestNew1.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2496,14 +2520,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 225;
+				CURRENT_PROJECT_VERSION = 234;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = MyStudies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
 				PRODUCT_NAME = "FDA MyStudies";
@@ -2528,14 +2552,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 225;
+				CURRENT_PROJECT_VERSION = 234;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = MyStudies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
 				PRODUCT_NAME = "FDA MyStudies";
 				PROVISIONING_PROFILE_SPECIFIER = "";
