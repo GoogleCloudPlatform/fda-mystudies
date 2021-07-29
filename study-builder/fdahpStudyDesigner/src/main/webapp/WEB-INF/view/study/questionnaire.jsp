@@ -2326,7 +2326,6 @@
       $(".all").addClass("dis-none");
       var schedule_opts = $(this).attr('frequencytype');
       var val = $(this).val();
-
       $("." + schedule_opts).removeClass("dis-none");
       resetValidation($("#oneTimeFormId"));
       resetValidation($("#customFormId"));
@@ -2350,6 +2349,7 @@
             }
             $('#onetimexdaysId').val('');
             $('#onetimeydaysId').val('');
+            
           } else if (val == 'Manually Schedule') {
             $('.manually').find('input:text').val('');
             isValidManuallySchedule = true;
@@ -2391,6 +2391,7 @@
             $("#monthLifeTimeDate").text('-');
             $('#monthlyxdaysId').val('');
           }
+          
         }
       } else {
         $('.oneTime').find('input:text').val('');
@@ -2492,6 +2493,22 @@
         $("#anchorDateId").val("");
       }
       //AnchorDate type end
+      
+      if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
+        	$('.dailyContainer').find('.help-block').empty();
+        }
+        if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+        	$('.oneTime').find('.help-block').empty();
+        }
+        if($('.week').find('.help-block').text()=== "Time reset to current time"){
+        	$('.week').find('.help-block').empty();
+        }
+        if($('.month').find('.help-block').text()=== "Time reset to current time"){
+        	$('.month').find('.help-block').empty();
+        }
+        if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+        	$('.manually-option').find('.help-block').empty();
+        }
     });
 
     if (frequencey != null && frequencey != "" && typeof frequencey != 'undefined') {
@@ -2574,6 +2591,7 @@
         $('.anchortypeclass').hide();
         $('.anchortypeclass').removeAttr('required');
       }
+    
     }
 
     var startToday;
@@ -3508,7 +3526,6 @@
   	 endDate.setHours(endTime.getHours());
   	 endDate.setMinutes(endTime.getMinutes() - 1);
   
-      
       if (startDate != '' && endDate != '' && startDate > endDate) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
         $('#customTime' + count).parent().find(".help-block-timer").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -4004,7 +4021,7 @@
         questionnaire.studyLifetimeEnd = null;
       }
     }
-
+   
     var data = JSON.stringify(questionnaire);
     $(item).prop('disabled', true);
     if (study_id != null && short_title != '' && short_title != null && isFormValid) {
@@ -4064,6 +4081,23 @@
                   'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
             }
             frequencey = frequency_text;
+
+            if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
+            	$('.dailyContainer').find('.help-block').empty();
+            }
+            if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+            	$('.oneTime').find('.help-block').empty();
+            }
+            if($('.week').find('.help-block').text()=== "Time reset to current time"){
+            	$('.week').find('.help-block').empty();
+            }
+            if($('.month').find('.help-block').text()=== "Time reset to current time"){
+            	$('.month').find('.help-block').empty();
+            }
+            if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+            	$('.manually-option').find('.help-block').empty();
+            }
+            
             if (callback)
               callback(true);
           } else {
@@ -4552,9 +4586,14 @@
                         "Time reset to current time"));
                 countOfTime++;
         	}else{
-        		if(countOfTime==0){
+        		if(timeId.includes("customStartTime")){
+        			if(countOfTime==0){
+            			$(timeId).parent().find(".help-block").empty();
+            		}
+        		}else{
         			$(timeId).parent().find(".help-block").empty();
         		}
+        		
         		
         	}
           
