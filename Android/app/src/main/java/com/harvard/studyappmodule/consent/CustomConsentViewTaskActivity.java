@@ -750,6 +750,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       pdfWriter.createPdfFile(CustomConsentViewTaskActivity.this);
 
       StringBuffer pageText = new StringBuffer();
+      docBuilder= new StringBuilder(docBuilder.toString().replaceAll("<p>","<br>"));
       String[] docString = docBuilder.toString().split("<br>");
       if (docString.length > 0) {
         for (String s : docString) {
