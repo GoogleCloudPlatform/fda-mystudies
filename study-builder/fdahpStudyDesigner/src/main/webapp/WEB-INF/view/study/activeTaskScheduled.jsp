@@ -1927,6 +1927,22 @@
 
       }
       //AnchorDate type end
+      
+      if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
+        	$('.dailyContainer').find('.help-block').empty();
+        }
+        if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+        	$('.oneTime').find('.help-block').empty();
+        }
+        if($('.week').find('.help-block').text()=== "Time reset to current time"){
+        	$('.week').find('.help-block').empty();
+        }
+        if($('.month').find('.help-block').text()=== "Time reset to current time"){
+        	$('.month').find('.help-block').empty();
+        }
+        if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+        	$('.manually-option').find('.help-block').empty();
+        }
     });
     if (frequencey != null && frequencey != "" && typeof frequencey != 'undefined') {
       $(".all").addClass("dis-none");
@@ -2490,7 +2506,11 @@
                         "Time reset to current time"));
                 countOfTime++;
         	}else{
-        		if(countOfTime==0){
+        		if(timeId.includes("customStartTime")){
+        			if(countOfTime==0){
+            			$(timeId).parent().find(".help-block").empty();
+            		}
+        		}else{
         			$(timeId).parent().find(".help-block").empty();
         		}
         		
@@ -3321,6 +3341,23 @@
                 $("#monthFreId").val(activeTaskFrequenceId);
               }
               frequencey = frequency_text;
+              
+
+              if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
+              	$('.dailyContainer').find('.help-block').empty();
+              }
+              if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+              	$('.oneTime').find('.help-block').empty();
+              }
+              if($('.week').find('.help-block').text()=== "Time reset to current time"){
+              	$('.week').find('.help-block').empty();
+              }
+              if($('.month').find('.help-block').text()=== "Time reset to current time"){
+              	$('.month').find('.help-block').empty();
+              }
+              if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+              	$('.manually-option').find('.help-block').empty();
+              }
               if (callback)
                 callback(true);
             } else {
