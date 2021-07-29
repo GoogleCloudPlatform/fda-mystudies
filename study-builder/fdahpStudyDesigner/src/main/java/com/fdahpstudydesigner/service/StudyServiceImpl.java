@@ -22,6 +22,9 @@
 
 package com.fdahpstudydesigner.service;
 
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.PUBLISHED_VERSION;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.WORKING_VERSION;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudyIdBean;
@@ -59,6 +62,7 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1575,7 +1579,10 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public StudyBo replicateStudy(
-      String studyId, SessionObject sessionObject, AuditLogEventRequest auditRequest) {
+      String studyId,
+      String copyVersion,
+      SessionObject sessionObject,
+      AuditLogEventRequest auditRequest) {
 
     StudyBo studyBo = studyDAO.getStudy(studyId);
     auditRequest.setStudyId(studyBo.getCustomStudyId());
@@ -1597,13 +1604,15 @@ public class StudyServiceImpl implements StudyService {
     List<QuestionnaireBo> questionnairesList =
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
 
-    List<NotificationBO> notificationBOs = notificationDAO.getNotificationsList(studyBo.getId());
+    List<NotificationBO> notificationBOs =
+        notificationDAO.getNotificationsList(
+            studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     List<ResourceBO> resourceBOs = studyDAO.getResourceList(studyBo.getId());
 
     List<ActiveTaskBo> activeTaskBos =
         studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
-
+    Timestamp launchDate = Timestamp.valueOf(studyBo.getStudylunchDate());
     // replicating study
     studyDAO.cloneStudy(studyBo, sessionObject);
 
@@ -1660,20 +1669,30 @@ public class StudyServiceImpl implements StudyService {
 
     if (CollectionUtils.isNotEmpty(notificationBOs)) {
       Integer sequence = 0;
+
       for (NotificationBO notificationBO : notificationBOs) {
-        notificationBO.setNotificationId(null);
-        notificationBO.setStudyId(studyBo.getId());
-        notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
-        notificationBO.setPlatform(studyBo.getPlatform());
-        notificationBO.setSequenceNumber(sequence++);
-        notificationBO.setNotificationSent(false);
-        if (!notificationBO.isNotificationStatus()) {
-          notificationBO.setNotificationDone(false);
-          notificationBO.setNotificationAction(false);
+
+        boolean flag =
+            notificationBO.getCreatedOn() == null
+                ? true
+                : Timestamp.valueOf(notificationBO.getCreatedOn()).before(launchDate);
+
+        if (copyVersion.equals(WORKING_VERSION)
+            || (copyVersion.equals(PUBLISHED_VERSION) && flag)) {
+          notificationBO.setNotificationId(null);
+          notificationBO.setStudyId(studyBo.getId());
+          notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+          notificationBO.setPlatform(studyBo.getPlatform());
+          notificationBO.setSequenceNumber(sequence++);
+          notificationBO.setNotificationSent(false);
+          if (!notificationBO.isNotificationStatus()) {
+            notificationBO.setNotificationDone(false);
+            notificationBO.setNotificationAction(false);
+          }
+          notificationBO.setNotificationScheduleType(
+              FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
+          notificationDAO.saveNotification(notificationBO);
         }
-        notificationBO.setNotificationScheduleType(
-            FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
-        notificationDAO.saveNotification(notificationBO);
       }
     }
 

@@ -441,6 +441,7 @@ button#exportId {
         datatype: "json",
         data: {
           "${_csrf.parameterName}": "${_csrf.token}",
+          "copyVersion" : $('#copyVersion').val(),
         },
         
         success: function (data) {

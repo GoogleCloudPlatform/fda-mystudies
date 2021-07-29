@@ -15,7 +15,7 @@
     margin-right: 15px !important;
 }
 .modal-footer {
-    border-top: none !important;; 
+    border-top: none !important;
 }
 .modal-header {
     border-bottom: none !important; 
@@ -304,7 +304,7 @@
 		  $("#submit").attr("disabled", "disabled");
 	      $('#copyVersionModel').modal('show');
 	  }else{
-		  copyAction(studyId);
+		  copyAction(studyId, "workingVersion");
 	  }
     }  
     
@@ -312,7 +312,7 @@
    function copyVersion() {
 	var copy_opts = $("input[name='copy']:checked").val();
 	var studyId = (copy_opts == 'publishedVersion') ? $('#lastpublish').val() : $('#draftVersion').val();
-	copyAction(studyId);
+	copyAction(studyId, copy_opts);
    }
    
    var radioButton = $("input:radio");
@@ -324,7 +324,7 @@
        }
    });
    
-   function copyAction(studyId){
+   function copyAction(studyId, copyVersion){
 	   var form = document.createElement('form');
 	     form.method = 'post';
 	     var input = document.createElement('input');
@@ -337,6 +337,12 @@
 	     input.type = 'hidden';
 	     input.name = '${_csrf.parameterName}';
 	     input.value = '${_csrf.token}';
+	     form.appendChild(input);
+	     
+	     input = document.createElement('input');
+	     input.type = 'hidden';
+	     input.name = 'copyVersion';
+	     input.value = copyVersion;
 	     form.appendChild(input);
 
 	     form.action = '/studybuilder/adminStudies/replicate.do';

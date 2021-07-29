@@ -258,10 +258,7 @@ public class StudyController {
           map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.expiration.in.hour"));
           map.addAttribute("releaseVersion", propMap.get("release.version"));
           map.addAttribute(
-              "exportSignedUrl",
-              URLEncoder.encode(
-                signedUrl,
-                  StandardCharsets.UTF_8.toString()));
+              "exportSignedUrl", URLEncoder.encode(signedUrl, StandardCharsets.UTF_8.toString()));
 
           mav = new ModelAndView("actionList", map);
         } else {
@@ -5354,10 +5351,17 @@ public class StudyController {
         (SessionObject)
             request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
+    String copyVersion =
+        FdahpStudyDesignerUtil.isEmpty(request.getParameter("copyVersion"))
+            ? ""
+            : request.getParameter("copyVersion");
+
     String message = "";
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     if (StringUtils.isNotEmpty(studyId)) {
-      message = studyExportImportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
+      message =
+          studyExportImportService.exportStudy(
+              studyId, copyVersion, sesObj.getUserId(), auditRequest);
     }
     JSONObject jsonobject = new JSONObject();
     if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
@@ -5422,7 +5426,12 @@ public class StudyController {
             ? ""
             : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
 
-    StudyBo study = studyService.replicateStudy(studyId, sessionObject, auditRequest);
+    String copyVersion =
+        FdahpStudyDesignerUtil.isEmpty(request.getParameter("copyVersion"))
+            ? ""
+            : request.getParameter("copyVersion");
+
+    StudyBo study = studyService.replicateStudy(studyId, copyVersion, sessionObject, auditRequest);
 
     if (study != null) {
       auditLogEventHelper.logEvent(STUDY_COPIED_INTO_NEW, auditRequest);

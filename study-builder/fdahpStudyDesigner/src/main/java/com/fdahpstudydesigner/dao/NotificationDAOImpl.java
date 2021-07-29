@@ -517,12 +517,33 @@ public class NotificationDAOImpl implements NotificationDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<NotificationBO> getNotificationsList(String studyId) {
+  public List<NotificationBO> getNotificationsList(
+      String studyId, String customStudyId, String copyVersion) {
     logger.entry("begin getNotificationList()");
     Session session = null;
+    List<NotificationBO> notificationBOs = null;
+    String searchQuery = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      return session.getNamedQuery("getNotificationsList").setString("studyId", studyId).list();
+      if (copyVersion.endsWith("workingVersion")) {
+        searchQuery =
+            "From NotificationBO where studyId=:studyId AND notificationType =:notificationType";
+        notificationBOs =
+            session
+                .createQuery(searchQuery)
+                .setString("studyId", studyId)
+                .setString("notificationType", FdahpStudyDesignerConstants.NOTIFICATION_ST)
+                .list();
+      } else {
+        searchQuery =
+            "From NotificationBO where customStudyId=:customStudyId AND notificationType =:notificationType";
+        notificationBOs =
+            session
+                .createQuery(searchQuery)
+                .setString("customStudyId", customStudyId)
+                .setString("notificationType", FdahpStudyDesignerConstants.NOTIFICATION_ST)
+                .list();
+      }
     } catch (Exception e) {
       logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
     } finally {
@@ -531,6 +552,6 @@ public class NotificationDAOImpl implements NotificationDAO {
       }
     }
     logger.exit("getNotificationList() - Ends");
-    return null;
+    return notificationBOs;
   }
 }
