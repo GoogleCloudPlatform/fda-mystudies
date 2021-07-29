@@ -17,26 +17,22 @@
 button#exportId {
     margin-right: 7px;
 }
-
-.modal {
-    position: fixed;
-    top: 30% !important;
-    left: 50% !important;
-    transform: translate(-40%, -40%); 
-}
-
 .modal-footer {
-    border-top: none !important; 
+    border-top: none !important;
 }
 .modal-header {
     border-bottom: none !important; 
 }
-
 .copy-version {
     width: max-content !important; 
     border-radius: 0px !important; 
-    padding: 20px !important; 
-
+    padding: 20px !important;
+} 
+.exportVersionModel {
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-40%, -40%); 
 }
 
 
@@ -195,7 +191,7 @@ button#exportId {
 
   </div>
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"     >
+<div class="modal fade exportVersionModel" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"     >
     <div class="modal-dialog">
         <div class="modal-content copy-version">
             <div class="modal-header">
