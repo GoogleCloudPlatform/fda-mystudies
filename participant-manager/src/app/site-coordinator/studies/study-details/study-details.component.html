@@ -1,7 +1,9 @@
 <ng-container *ngIf="studyDetail$ | async as studyDetails">
   <div *ngIf="studyDetails && studyDetails.participantRegistryDetail">
     <div class="subheader p-none p-3 study-participant-registry">
-      <div class="max__w__1280 m-none flex__justify__space-between scrollable-element">
+      <div
+        class="max__w__1280 m-none flex__justify__space-between scrollable-element"
+      >
         <div class="flex__justify__space-between">
           <div
             class="subheader__title flex__justify__space-between align__items__baseline overflow__auto"
@@ -45,7 +47,8 @@
                   <div class="banner__label mob_textpre">
                     {{ studyDetails.participantRegistryDetail.customStudyId }}
                     -
-                    <span class="mob_textpre"
+                    <span
+                      class="mob_textpre"
                       [ngClass]="{
                         active_text:
                           studyDetails.participantRegistryDetail.studyStatus ===
@@ -84,7 +87,7 @@
           class="pt-1"
         >
           <div class="enrollment-label mt-4 mob_textpre">
-            <span class="btn mt-2 enrol_btn p-none cursor__text ">
+            <span class="btn mt-2 enrol_btn p-none cursor__text">
               Enrollment target:
               {{ studyDetails.participantRegistryDetail.targetEnrollment }}
             </span>
@@ -230,7 +233,10 @@
                   .length === 0
               "
             >
-              <td colspan="5" class="text-center font12 txt__light-gray mob_tbl_footer_text_center">
+              <td
+                colspan="5"
+                class="text-center font12 txt__light-gray mob_tbl_footer_text_center"
+              >
                 No records found
               </td>
             </tr>

@@ -275,7 +275,12 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                               name="appRadioGroup{{ app.id }}"
                               (change)="appRadioButtonChange(app)"
                             />
-                            <label class="font12" for="appRadioView{{ app.id }}">View</label>
+                            <label
+                              class="font12"
+                              for="appRadioView{{ app.id }}"
+                            >
+                              View
+                            </label>
                           </span>
                           <span>
                             <input
@@ -298,7 +303,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                         </div>
                       </div>
                       <div class="clearfix"></div>
-                      <div class="app__id_num flex__justify__space-between mob_pull_right">
+                      <div
+                        class="app__id_num flex__justify__space-between mob_pull_right"
+                      >
                         <div class="pr-2">
                           {{
                             app.selectedSitesCount
@@ -343,7 +350,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     [(ngModel)]="study.selected"
                                     [ngModelOptions]="{standalone: true}"
                                   />
-                                  <label   class="font14" for="studyCheckBox{{ study.studyId }}">
+                                  <label
+                                    class="font14"
+                                    for="studyCheckBox{{ study.studyId }}"
+                                  >
                                     {{ study.studyName }}
                                   </label>
                                 </div>
@@ -390,7 +400,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                 </div>
                               </div>
                               <div
-                                class="app__id_num flex__justify__space-between "
+                                class="app__id_num flex__justify__space-between"
                               >
                                 <div class="orange__text__sm font-12 pr-2">
                                   {{
