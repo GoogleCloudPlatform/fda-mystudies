@@ -340,5 +340,12 @@
                        value="/WEB-INF/view/users/addOrEditUserPage.jsp"/>
     </definition>
     <!-- Users Section Ends -->
+    
+    <!-- My apps -->
+    
+    <definition name="appListPage" extends="base.definition">
+        <put-attribute name="body"
+                       value="/WEB-INF/view/apps/appsList.jsp"/>
+    </definition>
 
 </tiles-definitions>
