@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("Error fetching FCM registration token: \(error)")
       } else if let token = token {
         print("FCM registration token: \(token)")
-        self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
+//        self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
       }
     }
   }
