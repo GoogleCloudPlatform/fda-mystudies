@@ -5,7 +5,9 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAI
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.INVALID_URL;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.PUBLISHED_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.WORKING_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.YES;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
@@ -139,7 +141,8 @@ public class StudyExportImportService {
 
   private static final String UNDER_DIRECTORY = "export-studies";
 
-  public String exportStudy(String studyId, String userId, AuditLogEventRequest auditRequest) {
+  public String exportStudy(
+      String studyId, String copyVersion, String userId, AuditLogEventRequest auditRequest) {
 
     final Map<String, String> customIdsMap = new HashMap<>();
 
@@ -156,7 +159,8 @@ public class StudyExportImportService {
       // userId);
       StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
 
-      List<AnchorDateTypeBo> anchorDateList = studyDao.getAnchorDateDetails(studyBo.getId());
+      List<AnchorDateTypeBo> anchorDateList =
+          studyDao.getAnchorDateDetails(studyBo.getId(), studyBo.getCustomStudyId());
       if (CollectionUtils.isNotEmpty(anchorDateList)) {
         for (AnchorDateTypeBo anchorDate : anchorDateList) {
           customIdsMap.put(ANCHORDATE_ID + anchorDate.getId(), IdGenerator.id());
@@ -178,7 +182,9 @@ public class StudyExportImportService {
 
       List<ConsentInfoBo> consentInfoBoList = studyDao.getConsentInfoList(studyBo.getId());
 
-      List<NotificationBO> notificationBOs = notificationDAO.getNotificationsList(studyBo.getId());
+      List<NotificationBO> notificationBOs =
+          notificationDAO.getNotificationsList(
+              studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
       List<ResourceBO> resourceBOs = studyDao.getResourceList(studyBo.getId());
 
@@ -188,7 +194,7 @@ public class StudyExportImportService {
         //  addStudyPermissionInsertSql(studyPermissionBo, insertSqlStatements, customIdsMap);
         addStudySequenceInsertSql(studySequenceBo, insertSqlStatements, customIdsMap);
 
-        addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap);
+        addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap, studyBo.getId());
         addStudypagesListInsertSql(studypageList, insertSqlStatements, customIdsMap);
 
         addEligibilityInsertSql(eligibilityBo, insertSqlStatements, customIdsMap);
@@ -204,7 +210,7 @@ public class StudyExportImportService {
         prepareInsertSqlQueriesForStudyActiveTasks(customIdsMap, insertSqlStatements, studyBo);
 
         addNotificationInsertSql(
-            notificationBOs, insertSqlStatements, customIdsMap, studyBo.getPlatform());
+            notificationBOs, insertSqlStatements, customIdsMap, copyVersion, studyBo);
 
         addResourceInsertSql(resourceBOs, insertSqlStatements, customIdsMap);
 
@@ -943,7 +949,7 @@ public class StudyExportImportService {
             studyBo.getHasStudyDraft(),
             studyBo.getInboxEmailAddress(),
             studyBo.getIrbReview(),
-            studyBo.getLive(),
+            0,
             studyBo.getMediaLink(),
             studyBo.getModifiedBy(),
             studyBo.getModifiedOn(),
@@ -960,7 +966,7 @@ public class StudyExportImportService {
             studyBo.getTentativeDurationWeekmonth(),
             studyBo.getThumbnailImage(),
             studyBo.getType(),
-            studyBo.getVersion(),
+            0f,
             studyBo.isEnrollmentdateAsAnchordate() ? "Y" : "N",
             studyBo.getCustomStudyId() + "@Export",
             null);
@@ -1005,7 +1011,8 @@ public class StudyExportImportService {
   private void addAnchorDateInsertSql(
       List<AnchorDateTypeBo> anchorDateList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String studyId)
       throws Exception {
 
     if (CollectionUtils.isEmpty(anchorDateList)) {
@@ -1021,7 +1028,7 @@ public class StudyExportImportService {
               customIdsMap.get(CUSTOM_STUDY_ID + anchorDate.getCustomStudyId()),
               anchorDate.getHasAnchortypeDraft(),
               anchorDate.getName(),
-              customIdsMap.get(STUDY_ID + anchorDate.getStudyId()),
+              customIdsMap.get(STUDY_ID + studyId),
               anchorDate.getVersion());
 
       anchorDateInsertQueryList.add(anchorDateTypeInsertQuery);
@@ -1091,7 +1098,8 @@ public class StudyExportImportService {
       List<NotificationBO> notificationBOs,
       List<String> insertSqlStatements,
       Map<String, String> customIdsMap,
-      String platform)
+      String copyVersion,
+      StudyBo studyBo)
       throws Exception {
 
     if (CollectionUtils.isEmpty(notificationBOs)) {
@@ -1099,38 +1107,53 @@ public class StudyExportImportService {
     }
     List<String> notificationBoBoInsertQueryList = new ArrayList<>();
     Integer sequence = 0;
+
     for (NotificationBO notificationBO : notificationBOs) {
-      String notificationBoInsertQuery;
-      notificationBoInsertQuery =
-          prepareInsertQuery(
-              StudyExportSqlQueries.NOTIFICATION,
-              IdGenerator.id(),
-              customIdsMap.get(ACTIVETASK_ID + notificationBO.getActiveTaskId()),
-              notificationBO.isAnchorDate(),
-              notificationBO.getAppId(),
-              notificationBO.getCreatedBy(),
-              notificationBO.getCreatedOn(),
-              customIdsMap.get(CUSTOM_STUDY_ID + notificationBO.getCustomStudyId()),
-              notificationBO.getModifiedBy(),
-              notificationBO.getModifiedOn(),
-              notificationBO.isNotificationStatus() ? notificationBO.isNotificationAction() : false,
-              notificationBO.isNotificationStatus() ? notificationBO.isNotificationDone() : false,
-              NOTIFICATION_NOTIMMEDIATE,
-              false,
-              notificationBO.isNotificationStatus(),
-              notificationBO.getNotificationSubType(),
-              notificationBO.getNotificationText(),
-              notificationBO.getNotificationType(),
-              customIdsMap.get(QUESTIONNAIRES_ID + notificationBO.getQuestionnarieId()),
-              notificationBO.getResourceId(),
-              notificationBO.getScheduleDate(),
-              notificationBO.getScheduleTime(),
-              customIdsMap.get(STUDY_ID + notificationBO.getStudyId()),
-              notificationBO.getxDays(),
-              notificationBO.getScheduleTimestamp(),
-              sequence++,
-              platform);
-      notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
+
+      boolean flag = false;
+      if (copyVersion.equals(PUBLISHED_VERSION)) {
+        flag =
+            notificationBO.getCreatedOn() == null
+                ? true
+                : Timestamp.valueOf(notificationBO.getCreatedOn())
+                    .before(Timestamp.valueOf(studyBo.getStudylunchDate()));
+      }
+
+      if (copyVersion.equals(WORKING_VERSION) || (copyVersion.equals(PUBLISHED_VERSION) && flag)) {
+        String notificationBoInsertQuery;
+        notificationBoInsertQuery =
+            prepareInsertQuery(
+                StudyExportSqlQueries.NOTIFICATION,
+                IdGenerator.id(),
+                customIdsMap.get(ACTIVETASK_ID + notificationBO.getActiveTaskId()),
+                notificationBO.isAnchorDate(),
+                notificationBO.getAppId(),
+                notificationBO.getCreatedBy(),
+                notificationBO.getCreatedOn(),
+                customIdsMap.get(CUSTOM_STUDY_ID + notificationBO.getCustomStudyId()),
+                notificationBO.getModifiedBy(),
+                notificationBO.getModifiedOn(),
+                notificationBO.isNotificationStatus()
+                    ? notificationBO.isNotificationAction()
+                    : false,
+                notificationBO.isNotificationStatus() ? notificationBO.isNotificationDone() : false,
+                NOTIFICATION_NOTIMMEDIATE,
+                false,
+                notificationBO.isNotificationStatus(),
+                notificationBO.getNotificationSubType(),
+                notificationBO.getNotificationText(),
+                notificationBO.getNotificationType(),
+                customIdsMap.get(QUESTIONNAIRES_ID + notificationBO.getQuestionnarieId()),
+                notificationBO.getResourceId(),
+                notificationBO.getScheduleDate(),
+                notificationBO.getScheduleTime(),
+                customIdsMap.get(STUDY_ID + studyBo.getId()),
+                notificationBO.getxDays(),
+                notificationBO.getScheduleTimestamp(),
+                sequence++,
+                studyBo.getPlatform());
+        notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
+      }
     }
     insertSqlStatements.addAll(notificationBoBoInsertQueryList);
   }

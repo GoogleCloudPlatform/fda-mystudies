@@ -24,6 +24,7 @@ package com.fdahpstudydesigner.bo;
 
 import com.fdahpstudydesigner.bean.StudyListBean;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -193,6 +194,9 @@ public class StudyBo implements Serializable {
   private String exportSignedUrl;
 
   @Transient private byte[] exportSqlByte;
+
+  @Column(name = "export_time")
+  private Timestamp exportTime;
 
   public String getExportSignedUrl() {
     return exportSignedUrl;
@@ -571,5 +575,13 @@ public class StudyBo implements Serializable {
 
   public void setExportSqlByte(byte[] exportSqlByte) {
     this.exportSqlByte = exportSqlByte;
+  }
+
+  public Timestamp getExportTime() {
+    return exportTime;
+  }
+
+  public void setExportTime(Timestamp exportTime) {
+    this.exportTime = exportTime;
   }
 }

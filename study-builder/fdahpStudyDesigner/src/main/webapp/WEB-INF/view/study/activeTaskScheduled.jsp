@@ -960,7 +960,7 @@
                            class="form-control clock cusTime customTime startTime"
                            name="activeTaskCustomScheduleBo[0].frequencyStartTime"
                            placeholder="Start time" onclick='startTimep(this.id,0);' disabled required data-error="Please fill out this field"/>
-                    <span class='help-block-timer help-block with-errors red-txt'></span>
+                    <span class='help-block-timer help-block with-errors red-txt'  id="startTimeError"></span>
                  
           </span>
           <span class="gray-xs-f mb-sm pr-md align-span-center">
@@ -1076,7 +1076,7 @@
             </option>
             </select>
           </span>
-          <span class="form-group m-none dis-inline vertical-align-middle">
+          <span class="form-group m-none dis-inline vertical-align-middle pr-sm">
             <input id="xdays0" type="text"
                    class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate"
                    count='0' placeholder="X"
@@ -1089,11 +1089,11 @@
           </span>
           <span class="mb-sm" style='padding-right: 25px !important;'>
             <span
-                class="pr-xs light-txt opacity06"> days
+                class="pr-sm light-txt opacity06"> days
               </span>
 
                 <span class="pr-md form-group  dis-inline vertical-align-middle pr-md"
-                style="margin-bottom: -13px">
+                style="margin-bottom: -13px;width: 170px;">
                 <input id="manualStartTime0"
 					 type="text" class="form-control clock"
 					 name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
@@ -1124,7 +1124,7 @@
             </option>
             </select>
           </span>
-          <span class="form-group m-none dis-inline vertical-align-middle">
+          <span class="form-group m-none dis-inline vertical-align-middle pr-sm">
             <input id="ydays0" type="text"
                    class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate"
                    count='0' placeholder="Y"
@@ -1137,13 +1137,13 @@
           </span>
           <span class="mb-sm pr-xs">
             <span
-                class="light-txt opacity06"> days
+                class="pr-sm light-txt opacity06"> days
             </span>
           </span>
           
             
           <span class="form-group  dis-inline vertical-align-middle pr-sm"
-                style="margin-bottom: -13px"><input id="manualEndTime0"
+                style="margin-bottom: -13px;width: 170px;"><input id="manualEndTime0"
                                                     type="text" class="form-control clock"
                                                     name="activeTaskCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field" 
                                                     value="${activeTaskCustomScheduleBo.frequencyEndTime}"   onclick='ancEndTime(this.id,0);' 
@@ -1190,7 +1190,7 @@
                 </option>
               </select>
             </span>
-            <span class="form-group m-none dis-inline vertical-align-middle">
+            <span class="form-group m-none dis-inline vertical-align-middle pr-sm">
               <input id="xdays${customVar.index}" type="text"
                      class="form-control wid70 disRadBtn1 disBtn1 remove_required remReqOnSave xdays daysMask mt-sm resetAncDate xancorText ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      count='${customVar.index}' placeholder="X"
@@ -1203,11 +1203,11 @@
             </span>
             <span class="mb-sm" style='padding-right: 25px !important;'>
               <span
-                  class="light-txt opacity06"> days
+                  class="pr-sm light-txt opacity06"> days
                   </span>
 
                 <span class="pr-md form-group  dis-inline vertical-align-middle"
-                style="margin-bottom: -13px;">
+                style="margin-bottom: -13px;width: 170px;">
                 <input id="manualStartTime${customVar.index}"
                   type="text" class="form-control clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                   name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
@@ -1240,7 +1240,7 @@
               </option>
              </select>
             </span>
-            <span class="form-group m-none dis-inline vertical-align-middle">
+            <span class="form-group m-none dis-inline vertical-align-middle pr-sm">
               <input id="ydays${customVar.index}" type="text"
                      class="form-control wid70 disRadBtn1 disBtn1 remove_required remReqOnSave ydays daysMask mt-sm resetAncDate yancorText ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                      count='${customVar.index}' placeholder="Y"
@@ -1254,11 +1254,11 @@
             </span>
             <span class="mb-sm pr-xs">
               <span
-                  class="light-txt opacity06"> days
+                  class="pr-sm light-txt opacity06"> days
               </span>
             </span>
             <span class="form-group  dis-inline vertical-align-middle pr-sm"
-                  style="margin-bottom: -13px"><input
+                  style="margin-bottom: -13px;width: 170px;"><input
                 id="manualEndTime${customVar.index}" type="text"
                 class="form-control remove_required clock ${activeTaskCustomScheduleBo.used ?'cursor-none' : ''}"
                 name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndTime"
@@ -1927,6 +1927,22 @@
 
       }
       //AnchorDate type end
+      
+      if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
+        	$('.dailyContainer').find('.help-block').empty();
+        }
+        if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+        	$('.oneTime').find('.help-block').empty();
+        }
+        if($('.week').find('.help-block').text()=== "Time reset to current time"){
+        	$('.week').find('.help-block').empty();
+        }
+        if($('.month').find('.help-block').text()=== "Time reset to current time"){
+        	$('.month').find('.help-block').empty();
+        }
+        if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+        	$('.manually-option').find('.help-block').empty();
+        }
     });
     if (frequencey != null && frequencey != "" && typeof frequencey != 'undefined') {
       $(".all").addClass("dis-none");
@@ -2465,7 +2481,7 @@
     });
 
   });
-
+  var countOfTime=0;
   function disablePastTime(timeId, dateId) {
     $(document).on('click change dp.change', timeId + ', ' + dateId, function () {
       var dt = $(dateId).val();
@@ -2480,10 +2496,28 @@
         } else {
           $(timeId).data("DateTimePicker").minDate(serverDateTime());
         }
-        if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate()
-            < serverDateTime()) {
-          $(timeId).val('');
+        
+ 		if ($(timeId).val() && dt == today ) {
+        	
+ 			if( moment($(timeId).val(), 'h:mm a').toDate() < serverDateTime()){
+        		$(timeId).val(serverTime());
+                $(timeId).parent().find(".help-block").empty().append(
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                        "Time reset to current time"));
+                countOfTime++;
+        	}else{
+        		if(timeId.includes("customStartTime")){
+        			if(countOfTime==0){
+            			$(timeId).parent().find(".help-block").empty();
+            		}
+        		}else{
+        			$(timeId).parent().find(".help-block").empty();
+        		}
+        		
+        	}
+          
         }
+ 
       } else {
         $(timeId).data("DateTimePicker").minDate(false);
       }
@@ -2717,6 +2751,7 @@
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	       "End date and time should not be less than or equal to start date and time"));
+	   $("#" + item).parent().find(".help-block-timer").removeClass("help-block");
 	 } else {
 	   $("#" + item).parent().find(".help-block-timer").hide();
 	   $("#" + item).parent().find(".help-block").show();
@@ -2725,6 +2760,9 @@
 	   $("#" + item).parent().find(".help-block").empty();
 	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#customTime" + count).parent().find(".help-block-timer").empty();
+	   if (!$("#" + item).parent().find(".help-block-timer").hasClass("help-block") ) {
+		   $("#" + item).parent().find(".help-block-timer").addClass("help-block");
+	   }
 	 }
 	});
   }
@@ -2774,6 +2812,11 @@
   }
 
   function customEndDate(id, count) {
+	  if($('#customStartTime' + count).parent().find("span#startTimeError").text()== "Time reset to current time"){
+		  $("#customStartTime" + count).parent().find(".help-block").empty();
+	  }
+	  
+	  
     $('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
@@ -3298,6 +3341,23 @@
                 $("#monthFreId").val(activeTaskFrequenceId);
               }
               frequencey = frequency_text;
+              
+
+              if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
+              	$('.dailyContainer').find('.help-block').empty();
+              }
+              if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+              	$('.oneTime').find('.help-block').empty();
+              }
+              if($('.week').find('.help-block').text()=== "Time reset to current time"){
+              	$('.week').find('.help-block').empty();
+              }
+              if($('.month').find('.help-block').text()=== "Time reset to current time"){
+              	$('.month').find('.help-block').empty();
+              }
+              if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+              	$('.manually-option').find('.help-block').empty();
+              }
               if (callback)
                 callback(true);
             } else {
@@ -3418,6 +3478,7 @@
 	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
 	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
 	                     "Please ensure that the runs created do not have any overlapping time period."));
+	          $(thisAttr).parents('.manually-option').find('.startTime').val('');
 	        } 
 	      else if (!chkValToDate) {
 	        $(thisAttr).parents('.manually-option').find('.endTime').parent().addClass(
@@ -3429,7 +3490,6 @@
 	      $('.manuallyContainer').find('.manually-option').each(function () {
 	        if ($(this).find('.startTime').parent().find('.help-block-timer').children().length > 0) {
 	          a++;
-	          $(this).find('.startTime').val('');
 	        }
 	      });
 	      var b = 0;
@@ -3748,16 +3808,16 @@
         + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
         + "</select></span>"
-        + "<span class='form-group m-none dis-inline vertical-align-middle'>"
+        + "<span class='form-group m-none dis-inline vertical-align-middle pr-sm'>"
         + "<input id='xdays" + customAnchorCount
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate xancorText'"
         + "count='" + customAnchorCount + "' placeholder='X' name='activeTaskCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md'><span class='pr-xs light-txt opacity06'> days </span>" 
+		+ "<span class='mb-sm pr-md'><span class='pr-sm light-txt opacity06'> days </span>" 
         
-        + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
+        + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px;width: 170px;'>"
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
@@ -3772,15 +3832,15 @@
         + "].yDaysSign' id='ySign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
         + "</select></span>"
-        + "<span class='form-group m-none dis-inline vertical-align-middle'>"
+        + "<span class='form-group m-none dis-inline vertical-align-middle pr-sm'>"
         + "<input id='ydays" + customAnchorCount
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate yancorText' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span class='mb-sm pr-sm'><span class='light-txt opacity06'> days</span></span>"
-        + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
+        + "<span class='mb-sm pr-sm'><span class='pr-sm light-txt opacity06'> days</span></span>"
+        + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px;width: 170px;'>"
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].frequencyEndTime' placeholder='End time' onclick='ancEndTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"

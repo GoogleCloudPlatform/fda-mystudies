@@ -497,6 +497,10 @@ public class FdahpStudyDesignerConstants {
 
   public static final String DEVICE_IOS = "ios";
 
+  public static final String PUBLISHED_VERSION = "publishedVersion";
+
+  public static final String WORKING_VERSION = "workingVersion";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

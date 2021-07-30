@@ -96,6 +96,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7136,7 +7138,7 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId) {
+  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId, String customStudyId) {
     logger.info("StudyDAOImpl - getStudy() - Starts");
     Session session = null;
     List<AnchorDateTypeBo> anchorDateTypeBoList = null;
@@ -7144,6 +7146,11 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       String searchQuery = "From AnchorDateTypeBo where studyId=:studyId";
       anchorDateTypeBoList = session.createQuery(searchQuery).setString("studyId", studyId).list();
+      if (CollectionUtils.isEmpty(anchorDateTypeBoList)) {
+        searchQuery = "From AnchorDateTypeBo where customStudyId=:customStudyId";
+        anchorDateTypeBoList =
+            session.createQuery(searchQuery).setString("customStudyId", customStudyId).list();
+      }
 
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getStudy() - ERROR", e);
@@ -7207,6 +7214,8 @@ public class StudyDAOImpl implements StudyDAO {
       studyBo.setCustomStudyId(null);
       studyBo.setExportSignedUrl(null);
       studyBo.setName("Copy of " + studyBo.getName());
+      studyBo.setLive(0);
+      studyBo.setVersion(0f);
       studyId = (String) session.save(studyBo);
 
       studyPermissionBO = new StudyPermissionBO();
@@ -7355,6 +7364,7 @@ public class StudyDAOImpl implements StudyDAO {
       consentBo.setId(null);
       consentBo.setStudyId(studyId);
       consentBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+      consentBo.setVersion(0f);
       session.save(consentBo);
 
       transaction.commit();
@@ -7380,6 +7390,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       consentInfoBo.setId(null);
       consentInfoBo.setStudyId(studyId);
+      consentInfoBo.setVersion(0f);
       consentInfoBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       session.save(consentInfoBo);
 
@@ -7504,9 +7515,11 @@ public class StudyDAOImpl implements StudyDAO {
                     .setString("id", studyId)
                     .uniqueResult();
       }
+
       if (studyBo != null) {
         studyBo.setDestinationCustomStudyId(destinationCustomId + "@Export");
         studyBo.setExportSignedUrl(signedUrl);
+        studyBo.setExportTime(new Timestamp(Instant.now().toEpochMilli()));
         session.update(studyBo);
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
