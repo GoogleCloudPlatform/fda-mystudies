@@ -2151,29 +2151,27 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             if ((questionReponseTypeBo != null)
                 && StringUtils.isNotEmpty(questionReponseTypeBo.getMaxImage())) {
               questionReponseTypeBo.setSignedMaxImage(
-                  FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerUtil.getImageResources(
                       FdahpStudyDesignerConstants.STUDIES
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + customStudyId
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                          + questionReponseTypeBo.getMaxImage(),
-                      12));
+                          + questionReponseTypeBo.getMaxImage()));
             }
 
             if ((questionReponseTypeBo != null)
                 && StringUtils.isNotEmpty(questionReponseTypeBo.getMinImage())) {
               questionReponseTypeBo.setSignedMinImage(
-                  FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerUtil.getImageResources(
                       FdahpStudyDesignerConstants.STUDIES
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + customStudyId
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + questionReponseTypeBo.getMinImage(),
-                      12));
+                          + questionReponseTypeBo.getMinImage()));
             }
 
             questionnairesStepsBo.setQuestionReponseTypeBo(questionReponseTypeBo);
@@ -2190,27 +2188,25 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                 if (FdahpStudyDesignerUtil.isNotEmpty(s.getImage())) {
 
                   s.setSignedImage(
-                      FdahpStudyDesignerUtil.getSignedUrl(
+                      FdahpStudyDesignerUtil.getImageResources(
                           FdahpStudyDesignerConstants.STUDIES
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
                               + customStudyId
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
                               + FdahpStudyDesignerConstants.QUESTIONNAIRE
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                              + s.getImage(),
-                          12));
+                              + s.getImage()));
                 }
                 if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
                   s.setSignedSelectedImage(
-                      FdahpStudyDesignerUtil.getSignedUrl(
+                      FdahpStudyDesignerUtil.getImageResources(
                           FdahpStudyDesignerConstants.STUDIES
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
                               + customStudyId
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
                               + FdahpStudyDesignerConstants.QUESTIONNAIRE
                               + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                              + s.getSelectedImage(),
-                          12));
+                              + s.getSelectedImage()));
                 }
               }
             }
@@ -2642,30 +2638,28 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             && questionReponseTypeBo.getMinImage() != null
             && StringUtils.isNotEmpty(questionReponseTypeBo.getMinImage())) {
           questionReponseTypeBo.setSignedMinImage(
-              FdahpStudyDesignerUtil.getSignedUrl(
+              FdahpStudyDesignerUtil.getImageResources(
                   FdahpStudyDesignerConstants.STUDIES
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + customStudyId
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
-                      + questionReponseTypeBo.getMinImage(),
-                  12));
+                      + questionReponseTypeBo.getMinImage()));
         }
 
         if (questionReponseTypeBo != null
             && questionReponseTypeBo.getMaxImage() != null
             && StringUtils.isNotEmpty(questionReponseTypeBo.getMaxImage())) {
           questionReponseTypeBo.setSignedMaxImage(
-              FdahpStudyDesignerUtil.getSignedUrl(
+              FdahpStudyDesignerUtil.getImageResources(
                   FdahpStudyDesignerConstants.STUDIES
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + customStudyId
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.QUESTIONNAIRE
                       + "/"
-                      + questionReponseTypeBo.getMaxImage(),
-                  12));
+                      + questionReponseTypeBo.getMaxImage()));
         }
         questionsBo.setQuestionReponseTypeBo(questionReponseTypeBo);
 
@@ -2680,27 +2674,25 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           for (QuestionResponseSubTypeBo s : questionResponseSubTypeList) {
             if (FdahpStudyDesignerUtil.isNotEmpty(s.getImage())) {
               s.setSignedImage(
-                  FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerUtil.getImageResources(
                       FdahpStudyDesignerConstants.STUDIES
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + customStudyId
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + s.getImage(),
-                      12));
+                          + s.getImage()));
             }
             if (FdahpStudyDesignerUtil.isNotEmpty(s.getSelectedImage())) {
               s.setSignedSelectedImage(
-                  FdahpStudyDesignerUtil.getSignedUrl(
+                  FdahpStudyDesignerUtil.getImageResources(
                       FdahpStudyDesignerConstants.STUDIES
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + customStudyId
                           + FdahpStudyDesignerConstants.PATH_SEPARATOR
                           + FdahpStudyDesignerConstants.QUESTIONNAIRE
                           + "/"
-                          + s.getSelectedImage(),
-                      12));
+                          + s.getSelectedImage()));
             }
           }
         }
