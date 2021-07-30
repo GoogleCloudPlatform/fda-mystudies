@@ -525,7 +525,7 @@ public class NotificationDAOImpl implements NotificationDAO {
     String searchQuery = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if (copyVersion.endsWith("workingVersion")) {
+      if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
         searchQuery =
             "From NotificationBO where studyId=:studyId AND notificationType =:notificationType";
         notificationBOs =
