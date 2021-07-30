@@ -1617,7 +1617,8 @@ public class StudyServiceImpl implements StudyService {
     List<ActiveTaskBo> activeTaskBos =
         studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
 
-    StudyBo originalStudy = studyBo;
+    Timestamp launchDate =
+        studyBo.getStudylunchDate() != null ? Timestamp.valueOf(studyBo.getStudylunchDate()) : null;
 
     // replicating study
     studyDAO.cloneStudy(studyBo, sessionObject);
@@ -1679,12 +1680,11 @@ public class StudyServiceImpl implements StudyService {
       for (NotificationBO notificationBO : notificationBOs) {
 
         boolean flag = false;
-        if (copyVersion.equals(PUBLISHED_VERSION)) {
+        if (copyVersion.equals(PUBLISHED_VERSION) && launchDate != null) {
           flag =
               notificationBO.getCreatedOn() == null
                   ? true
-                  : Timestamp.valueOf(notificationBO.getCreatedOn())
-                      .before(Timestamp.valueOf(originalStudy.getStudylunchDate()));
+                  : Timestamp.valueOf(notificationBO.getCreatedOn()).before(launchDate);
         }
 
         if (copyVersion.equals(WORKING_VERSION)
