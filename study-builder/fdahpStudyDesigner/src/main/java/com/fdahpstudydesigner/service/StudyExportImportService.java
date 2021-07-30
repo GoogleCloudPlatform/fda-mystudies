@@ -1110,11 +1110,14 @@ public class StudyExportImportService {
 
     for (NotificationBO notificationBO : notificationBOs) {
 
-      boolean flag =
-          notificationBO.getCreatedOn() == null
-              ? true
-              : Timestamp.valueOf(notificationBO.getCreatedOn())
-                  .before(Timestamp.valueOf(studyBo.getStudylunchDate()));
+      boolean flag = false;
+      if (copyVersion.equals(PUBLISHED_VERSION)) {
+        flag =
+            notificationBO.getCreatedOn() == null
+                ? true
+                : Timestamp.valueOf(notificationBO.getCreatedOn())
+                    .before(Timestamp.valueOf(studyBo.getStudylunchDate()));
+      }
 
       if (copyVersion.equals(WORKING_VERSION) || (copyVersion.equals(PUBLISHED_VERSION) && flag)) {
         String notificationBoInsertQuery;
