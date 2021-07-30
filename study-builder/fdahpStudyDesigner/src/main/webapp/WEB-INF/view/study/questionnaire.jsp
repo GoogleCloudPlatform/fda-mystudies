@@ -1433,7 +1433,7 @@
                            class="form-control clock cusTime customTime startTime"
                            name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
                            placeholder="Start time" onclick='startTimep(this.id,0);' disabled required />
-                    <span class='help-block-timer help-block with-errors red-txt'></span>
+                    <span class='help-block-timer help-block with-errors red-txt'  id="startTimeError"></span>
                   </span>
 
                  
@@ -2503,6 +2503,21 @@
         $("#anchorDateId").val("");
       }
       //AnchorDate type end
+      if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
+      	$('.dailyContainer').find('.help-block').empty();
+      }
+      if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+      	$('.oneTime').find('.help-block').empty();
+      }
+      if($('.week').find('.help-block').text()=== "Time reset to current time"){
+      	$('.week').find('.help-block').empty();
+      }
+      if($('.month').find('.help-block').text()=== "Time reset to current time"){
+      	$('.month').find('.help-block').empty();
+      }
+      if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+      	$('.manually-option').find('.help-block').empty();
+      }
     });
 
     if (frequencey != null && frequencey != "" && typeof frequencey != 'undefined') {
@@ -3432,11 +3447,15 @@
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	       "End date and time should not be less than or equal to start date and time"));
+	   $("#" + item).parent().find(".help-block-timer").removeClass("help-block");
 	 } else {
 	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#" + item).parent().find(".help-block-timer").empty();
 	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#customTime" + count).parent().find(".help-block-timer").empty();
+	   if (!$("#" + item).parent().find(".help-block-timer").hasClass("help-block") ) {
+		   $("#" + item).parent().find(".help-block-timer").addClass("help-block");
+	   }
 	 }
 	});
   }
@@ -3491,7 +3510,9 @@
   }
 
   function customEndDate(id, count) {
-	
+	  if($('#customStartTime' + count).parent().find("span#startTimeError").text()=== "Time reset to current time"){
+		  $("#customStartTime" + count).parent().find(".help-block").empty();
+	  }
 	$('.manually-option').find('.endTime').prop('disabled', false);
     $('.cusEndDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
@@ -4073,6 +4094,21 @@
                   'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
             }
             frequencey = frequency_text;
+            if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
+            	$('.dailyContainer').find('.help-block').empty();
+            }
+            if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+            	$('.oneTime').find('.help-block').empty();
+            }
+            if($('.week').find('.help-block').text()=== "Time reset to current time"){
+            	$('.week').find('.help-block').empty();
+            }
+            if($('.month').find('.help-block').text()=== "Time reset to current time"){
+            	$('.month').find('.help-block').empty();
+            }
+            if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+            	$('.manually-option').find('.help-block').empty();
+            }
             if (callback)
               callback(true);
           } else {
@@ -4156,6 +4192,7 @@
 	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
 	              	$("<ul><li> </li></ul>").attr("class","list-unstyled").attr("style","font-size: 10px;").text(
 	                     "Please ensure that the runs created do not have any overlapping time period"));
+	          $(thisAttr).parents('.manually-option').find('.startTime').val('');
 	        } else if (!chkValToDate) {
 	        $(thisAttr).parents('.manually-option').find('.endTime').parent().addClass(
 	              'has-error has-danger').find(".help-block-timer").removeClass('with-errors').empty().append(
@@ -4167,7 +4204,6 @@
 	      $('.manuallyContainer').find('.manually-option').each(function () {
 	        if ($(this).find('.startTime').parent().find('.help-block-timer').children().length > 0) {
 	          a++;
-	          $(this).find('.startTime').val('');
 	        }
 	      });
 	      var b = 0;
@@ -4535,7 +4571,7 @@
     document.body.appendChild(a).click();
     </c:if>
   }
-
+  var countOfTime=0;
   function disablePastTime(timeId, dateId) {
     $(document).on('click change dp.change', timeId + ', ' + dateId, function () {
       var dt = $(dateId).val();
@@ -4550,9 +4586,24 @@
         } else {
           $(timeId).data("DateTimePicker").minDate(serverDateTime());
         }
-        if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate()
-            < serverDateTime()) {
-          $(timeId).val('');
+		if ($(timeId).val() && dt == today ) {
+        	
+        	if( moment($(timeId).val(), 'h:mm a').toDate() < serverDateTime()){
+        		$(timeId).val(serverTime());
+                $(timeId).parent().find(".help-block").empty().append(
+                        $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                        "Time reset to current time"));
+                countOfTime++;
+        	}else{
+        		if(timeId.includes("customStartTime")){
+        			if(countOfTime==0){
+            			$(timeId).parent().find(".help-block").empty();
+            		}
+        		}else{
+        			$(timeId).parent().find(".help-block").empty();
+        		}
+        	}
+          
         }
       } else {
         $(timeId).data("DateTimePicker").minDate(false);
