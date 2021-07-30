@@ -384,6 +384,7 @@ button#exportId {
 	   if ("${liveStudyBo}" != ""  ? (("${studyBo.hasStudyDraft}" == "1")? true : false ) : false){
 	      $('#myModal').modal('show');
 		 }else{
+			 $('#copyVersion').val("workingVersion");
 			 exportStudyToCloud("${studyBo.id}");
 		 }
 	
