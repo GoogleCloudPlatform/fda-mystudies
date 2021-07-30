@@ -1735,6 +1735,8 @@ public class StudyServiceImpl implements StudyService {
         activeTask.setId(null);
         activeTask.setStudyId(studyBo.getId());
         activeTask.setAnchorDateId(anchorDateMap.get(activeTask.getAnchorDateId()));
+        activeTask.setLive(0);
+        activeTask.setVersion(0f);
         studyDAO.saveStudyActiveTask(activeTask);
 
         for (ActiveTaskAtrributeValuesBo active : activeTaskAtrributeValuesBos) {
