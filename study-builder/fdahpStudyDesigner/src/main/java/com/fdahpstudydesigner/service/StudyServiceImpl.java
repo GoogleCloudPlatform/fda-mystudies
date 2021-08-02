@@ -1555,7 +1555,10 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public StudyBo replicateStudy(
-      String studyId, SessionObject sessionObject, AuditLogEventRequest auditRequest) {
+      String studyId,
+      String copyVersion,
+      SessionObject sessionObject,
+      AuditLogEventRequest auditRequest) {
 
     StudyBo studyBo = studyDAO.getStudy(studyId);
     auditRequest.setStudyId(studyBo.getCustomStudyId());
@@ -1571,7 +1574,8 @@ public class StudyServiceImpl implements StudyService {
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
         studyDAO.getComprehensionTestQuestionList(studyBo.getId());
 
-    List<AnchorDateTypeBo> anchorDateList = studyDAO.getAnchorDateDetails(studyBo.getId());
+    List<AnchorDateTypeBo> anchorDateList =
+        studyDAO.getAnchorDateDetails(studyBo.getId(), studyBo.getCustomStudyId());
 
     List<QuestionnaireBo> questionnairesList =
         studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());

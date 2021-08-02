@@ -229,7 +229,7 @@ public interface StudyDAO {
 
   public StudySequenceBo getStudySequenceByStudyId(String studyId);
 
-  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId);
+  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId, String customId);
 
   public List<ComprehensionTestResponseBo> getComprehensionTestResponseList(
       List<String> comprehensionTestQuestionIds);
