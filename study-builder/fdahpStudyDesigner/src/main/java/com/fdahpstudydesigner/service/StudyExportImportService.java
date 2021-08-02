@@ -146,7 +146,8 @@ public class StudyExportImportService {
 
   private static final String UNDER_DIRECTORY = "export-studies";
 
-  public String exportStudy(String studyId, String userId, AuditLogEventRequest auditRequest) {
+  public String exportStudy(
+      String studyId, String copyVersion, String userId, AuditLogEventRequest auditRequest) {
 
     // This map contains new primary key and foreign key values
     final Map<String, String> customIdsMap = new HashMap<>();
@@ -937,7 +938,7 @@ public class StudyExportImportService {
             studyBo.getHasStudyDraft(),
             studyBo.getInboxEmailAddress(),
             studyBo.getIrbReview(),
-            studyBo.getLive(),
+            0,
             studyBo.getMediaLink(),
             studyBo.getModifiedBy(),
             studyBo.getModifiedOn(),
@@ -954,7 +955,7 @@ public class StudyExportImportService {
             studyBo.getTentativeDurationWeekmonth(),
             studyBo.getThumbnailImage(),
             studyBo.getType(),
-            studyBo.getVersion(),
+            0f,
             studyBo.isEnrollmentdateAsAnchordate() ? "Y" : "N",
             studyBo.getCustomStudyId() + "@Export",
             null);
