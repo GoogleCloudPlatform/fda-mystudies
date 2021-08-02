@@ -768,6 +768,7 @@
     var _URL = window.URL || window.webkitURL;
 
     $(document).on('change', '.uploadImg', function (e) {
+        debugger;
       var file, img;
       var thisAttr = this;
       var thisId = $(this).attr("data-imageId");
@@ -803,7 +804,7 @@
           	
               var ht = this.height;
               var wds = this.width;
-              $(thisAttr).val();
+              $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -827,7 +828,7 @@
               $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty();
             } else {
-              $(thisAttr).val();
+              $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -838,7 +839,7 @@
 
         };
         img.onerror = function () {
-          $(thisAttr).val();
+          $(thisAttr).val("");
           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
           $(thisAttr).parent().find(".help-block").empty().append(
         	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -847,7 +848,7 @@
         };
         img.src = _URL.createObjectURL(file);
         }else{
-        	  $(thisAttr).val();
+        	  $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
             	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -869,6 +870,7 @@
 
   // Displaying images from file upload
   function readURL(input) {
+	  debugger;
     if (input.files && input.files[0]) {
     	const allowedExtensions =  ['jpg','png','jpeg'];
      	const { name:fileName } = input.files[0];
