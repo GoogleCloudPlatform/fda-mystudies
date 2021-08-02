@@ -262,4 +262,7 @@ public interface StudyDAO {
 
   public List<ComprehensionTestResponseBo> getComprehensionTestResponses(
       String comprehensionTestQuestionId);
+
+  public List<ConsentInfoBo> getConsentInfoList(
+      String studyId, String customStudyId, String copyVersion);
 }
