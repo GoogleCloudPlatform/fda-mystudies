@@ -2751,7 +2751,6 @@
 	   $("#" + item).parent().find(".help-block-timer").empty().append(
 	       $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	       "End date and time should not be less than or equal to start date and time"));
-	   $("#" + item).parent().find(".help-block-timer").removeClass("help-block");
 	 } else {
 	   $("#" + item).parent().find(".help-block-timer").hide();
 	   $("#" + item).parent().find(".help-block").show();
@@ -2760,9 +2759,6 @@
 	   $("#" + item).parent().find(".help-block").empty();
 	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#customTime" + count).parent().find(".help-block-timer").empty();
-	   if (!$("#" + item).parent().find(".help-block-timer").hasClass("help-block") ) {
-		   $("#" + item).parent().find(".help-block-timer").addClass("help-block");
-	   }
 	 }
 	});
   }
@@ -3815,7 +3811,7 @@
         + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md'><span class='pr-sm light-txt opacity06'> days </span>" 
+		+ "<span class='mb-sm pr-xl'><span class='pr-sm light-txt opacity06'> days </span>" 
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px;width: 170px;'>"
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
@@ -4003,6 +3999,8 @@
    		$("#" + item).val("");
 		return
    	 } else if ($('.manually-anchor-option').length === 1) {
+       $('#manualStartTime' + count).parent().find(".help-block-timer").hide();
+       $('#manualStartTime' + count).parent().find(".help-block").show();
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
    	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
@@ -4045,6 +4043,8 @@
    	   $("#manualStartTime" + count).val('');
    	   $('.help-block-timer').selectpicker('refresh');
    	 } else {
+       $('#manualStartTime' + count).parent().find(".help-block-timer").hide();
+       $('#manualStartTime' + count).parent().find(".help-block").show();
    	   $(this).removeClass("red-border");
    	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty();
@@ -4101,6 +4101,7 @@
      
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
    	   $('.help-block-timer').selectpicker('refresh');
+   	   $("#" + item).parent().find(".help-block-timer").removeClass("help-block");
    	   $(this).addClass("red-border");
    	   $("#manualEndTime" + count).parent().addClass("has-danger").addClass("has-error");
    	   $("#manualEndTime" + count).parent().find(".help-block-timer").empty().append(
@@ -4108,6 +4109,9 @@
    	   $("#addbtn" + count).addClass("not-allowed");
    	   $("#manualEndTime" + count).val('');
    	 } else {
+  	   if (!$("#" + item).parent().find(".help-block-timer").hasClass("help-block") ) {
+		   $("#" + item).parent().find(".help-block-timer").addClass("help-block");
+	   }
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
    	   $("#xdays" + count).removeClass("red-border");
