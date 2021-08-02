@@ -5361,7 +5361,7 @@ public class StudyController {
     if (StringUtils.isNotEmpty(studyId)) {
       message =
           studyExportImportService.exportStudy(
-              studyId, copyVersion, sesObj.getUserId(), auditRequest);
+              studyId, sesObj.getUserId(), auditRequest, copyVersion);
     }
     JSONObject jsonobject = new JSONObject();
     if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {

@@ -120,7 +120,8 @@ public interface StudyQuestionnaireDAO {
 
   public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId, Boolean isLive);
 
-  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId);
+  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(
+      String studyId, String customStudyId, String copyVersion);
 
   public Boolean isAnchorDateExistsForStudy(String studyId, String customStudyId);
 

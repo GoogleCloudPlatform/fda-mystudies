@@ -1656,11 +1656,14 @@ public class StudyDAOImpl implements StudyDAO {
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      String searchQuery =
-          "From ConsentInfoBo CIB where CIB.studyId=:studyId and CIB.active=1 order by CIB.sequenceNo asc";
-      query = session.createQuery(searchQuery);
-      query.setString("studyId", studyId);
-      consentInfoList = query.list();
+      if (StringUtils.isNotEmpty(studyId)) {
+        String searchQuery =
+            "From ConsentInfoBo CIB where CIB.studyId=:studyId and CIB.active=1 order by CIB.sequenceNo asc";
+        query = session.createQuery(searchQuery);
+        query.setString("studyId", studyId);
+        consentInfoList = query.list();
+      }
+
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getConsentInfoList() - ERROR ", e);
     } finally {
@@ -8261,5 +8264,39 @@ public class StudyDAOImpl implements StudyDAO {
       zos.closeEntry();
       fis.close();
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<ConsentInfoBo> getConsentInfoList(
+      String studyId, String customStudyId, String copyVersion) {
+    logger.entry("begin getConsentInfoList()");
+    List<ConsentInfoBo> consentInfoList = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(studyId)
+          && copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
+        String searchQuery =
+            "From ConsentInfoBo CIB where CIB.studyId=:studyId and CIB.active=1 order by CIB.sequenceNo asc";
+        query = session.createQuery(searchQuery);
+        query.setString("studyId", studyId);
+      } else {
+        String searchQuery =
+            "From ConsentInfoBo CIB where CIB.customStudyId=:customStudyId and CIB.active=1 AND CIB.version IN "
+                + "(SELECT MAX(version) FROM ConsentInfoBo WHERE customStudyId=:customStudyId) order by CIB.sequenceNo asc";
+        query = session.createQuery(searchQuery);
+        query.setString("customStudyId", customStudyId);
+      }
+      consentInfoList = query.list();
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getConsentInfoList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getConsentInfoList() - Ends");
+    return consentInfoList;
   }
 }

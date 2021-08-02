@@ -5312,17 +5312,25 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId) {
+  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(
+      String studyId, String customStudyId, String copyVersion) {
     logger.info("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - Starts");
     Session session = null;
     List<QuestionnaireBo> questionnaires = null;
     String searchQuery = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if (StringUtils.isNotEmpty(studyId)) {
+      if (StringUtils.isNotEmpty(studyId)
+          && copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
         query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
-        questionnaires = query.list();
+      } else {
+        query =
+            session
+                .getNamedQuery("getQuestionariesByCustomStudyId")
+                .setString("customStudyId", customStudyId);
       }
+
+      questionnaires = query.list();
     } catch (Exception e) {
       logger.error("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - ERROR ", e);
     } finally {
