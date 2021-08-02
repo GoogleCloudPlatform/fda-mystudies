@@ -1737,7 +1737,6 @@ public class StudyServiceImpl implements StudyService {
         String oldActiveTaskId = activeTask.getId();
         activeTask.setId(null);
         activeTask.setStudyId(studyBo.getId());
-        activeTask.setLive(0);
         activeTask.setAnchorDateId(anchorDateMap.get(activeTask.getAnchorDateId()));
         activeTask.setLive(0);
         activeTask.setVersion(0f);
