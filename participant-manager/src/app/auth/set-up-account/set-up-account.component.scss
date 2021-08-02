@@ -99,3 +99,7 @@ meter::-webkit-meter-even-less-good-value{background:red;} */
     display: block !important;
   }
 }
+
+.cursor__none {
+  cursor: default !important;
+}
