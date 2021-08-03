@@ -1632,7 +1632,7 @@
                                                           name="questionnaireCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field"
                                                           value="${questionnaireCustomScheduleBo.frequencyEndTime}"  onclick='ancEndTime(this.id,0);' 
                                                           placeholder="End time" required />
-                    <span
+                    <span id='endTimeTimer' 
                         class='help-block-timer with-errors red-txt'></span>
                   </span>
                   <span id="addbtn0"
@@ -1753,7 +1753,7 @@
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndTime"
                         value="${questionnaireCustomScheduleBo.frequencyEndTime}" onclick='ancEndTime(this.id,0);' 
                         placeholder="End time" required />
-                      <span
+                      <span id='endTimeTimer' 
                           class='help-block-timer with-errors red-txt'></span>
                     </span>
                     <span id="addbtn${customVar.index}"
@@ -4842,7 +4842,7 @@
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
         + "].frequencyEndTime' placeholder='End time' onclick='ancEndTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field'/>"
-        + "<span class='help-block-timer with-errors red-txt'></span>"
+        + "<span id='endTimeTimer' class='help-block-timer with-errors red-txt'></span>"
         + "</span>"
         + "<span id='addbtn" + customAnchorCount
         + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
@@ -5130,6 +5130,14 @@
    	 }
    	});
    }
+  
+  jQuery(document).on("blur", ".clock", function () {
+	   if (!$(this).parent().find("#endTimeTimer").hasClass("help-block")) {
+		   $(this).parent().find("#endTimeTimer").addClass("help-block");
+	   } else {
+		   $(this).parent().find("#endTimeTimer").removeClass("help-block"); 
+	   }
+   });
   
   $(document).ready(function () {
 

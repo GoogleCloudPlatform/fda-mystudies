@@ -1148,7 +1148,7 @@
                                                     name="activeTaskCustomScheduleBo[0].frequencyEndTime" data-error="Please fill out this field" 
                                                     value="${activeTaskCustomScheduleBo.frequencyEndTime}"   onclick='ancEndTime(this.id,0);' 
                                                     placeholder="End time" required/>
-            <span
+            <span id='endTimeTimer'
                 class='help-block-timer with-errors red-txt'></span>
           </span>
           <span class="addbtn addBtnDis dis-inline vertical-align-middle "
@@ -1264,7 +1264,7 @@
                 name="activeTaskCustomScheduleBo[${customVar.index}].frequencyEndTime"
                 value="${activeTaskCustomScheduleBo.frequencyEndTime}" onclick='ancEndTime(this.id,0);' 
                 placeholder="End time" required data-error="Please fill out this field"/>
-              <span
+              <span id='endTimeTimer'
                   class='help-block-timer with-errors red-txt'></span>
             </span>
             <span class="addbtn addBtnDis align-span-center mr-md "
@@ -3302,6 +3302,7 @@
         isFormValid = false;
       }
     }
+  
     console.log("activeTask:" + JSON.stringify(activeTask));
     var data = JSON.stringify(activeTask);
     $(item).prop('disabled', true);
@@ -3840,7 +3841,7 @@
         + "<input id='manualEndTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].frequencyEndTime' placeholder='End time' onclick='ancEndTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
-        + "<span class='help-block-timer with-errors red-txt'></span>"
+        + "<span id='endTimeTimer' class='help-block-timer with-errors red-txt'></span>"
         + "</span>"
         + "<span class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor(customAnchorCount);'>+</span>"
         + "<span id='deleteAncchor' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
@@ -4125,6 +4126,13 @@
    	});
    }
 	  
+  jQuery(document).on("blur", ".clock", function () {
+ 	   if (!$(this).parent().find("#endTimeTimer").hasClass("help-block")) {
+		   $(this).parent().find("#endTimeTimer").addClass("help-block");
+	   } else {
+		   $(this).parent().find("#endTimeTimer").removeClass("help-block"); 
+	   }
+    });
 	  
   //# sourceURL=filename.js
 
