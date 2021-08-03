@@ -4316,14 +4316,19 @@ public class StudyDAOImpl implements StudyDAO {
 
             String[] copyCustomIdArray = dbStudyBo.getDestinationCustomStudyId().split("@");
             String customId = "";
-            if (copyCustomIdArray[1].equalsIgnoreCase("COPY")) {
+            if (copyCustomIdArray[1].contains("COPY")) {
               customId = copyCustomIdArray[0];
+              int isLive =
+                  copyCustomIdArray[1].contains(FdahpStudyDesignerConstants.PUBLISHED_VERSION)
+                      ? 1
+                      : 0;
               StudyBo study =
                   (StudyBo)
                       session
                           .createQuery(
-                              "From StudyBo SBO WHERE SBO.live=0 AND customStudyId=:customStudyId")
+                              "From StudyBo SBO WHERE SBO.live=:isLive AND customStudyId=:customStudyId")
                           .setString("customStudyId", customId)
+                          .setInteger("isLive", isLive)
                           .uniqueResult();
               if (study != null) {
                 moveOrCopyCloudStorage(session, study, false, false, studyBo.getCustomStudyId());
@@ -7190,7 +7195,7 @@ public class StudyDAOImpl implements StudyDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject) {
+  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject, String copyVersion) {
     logger.info("StudyDAOImpl - cloneStudy() - Starts");
     Session session = null;
     StudyPermissionBO studyPermissionBO = null;
@@ -7212,7 +7217,7 @@ public class StudyDAOImpl implements StudyDAO {
               ? null
               : studyBo.getAppId().toUpperCase());
       studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-      studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId() + "@COPY");
+      studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId() + "@COPY" + copyVersion);
       studyBo.setEnrollingParticipants(FdahpStudyDesignerConstants.YES);
       studyBo.setCustomStudyId(null);
       studyBo.setExportSignedUrl(null);
