@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.model;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.APP_STUDY_ID_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -131,6 +132,14 @@ public class AppEntity implements Serializable {
   @Column(name = "created_time")
   @CreationTimestamp
   private Timestamp created;
+
+  @ToString.Exclude
+  @Column(name = "contact_us_to_email", length = EMAIL_LENGTH)
+  private String contactUsToEmail;
+
+  @ToString.Exclude
+  @Column(name = "feedback_to_email", length = EMAIL_LENGTH)
+  private String feedBackToEmail;
 
   @OneToMany(
       cascade = CascadeType.ALL,
