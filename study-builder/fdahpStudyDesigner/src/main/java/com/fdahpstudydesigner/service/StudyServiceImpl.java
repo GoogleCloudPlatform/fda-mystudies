@@ -1624,7 +1624,7 @@ public class StudyServiceImpl implements StudyService {
         studyBo.getStudylunchDate() != null ? Timestamp.valueOf(studyBo.getStudylunchDate()) : null;
 
     // replicating study
-    studyDAO.cloneStudy(studyBo, sessionObject);
+    studyDAO.cloneStudy(studyBo, sessionObject, copyVersion);
 
     Map<String, String> anchorDateMap = new HashMap<>();
     if (CollectionUtils.isNotEmpty(anchorDateList)) {
