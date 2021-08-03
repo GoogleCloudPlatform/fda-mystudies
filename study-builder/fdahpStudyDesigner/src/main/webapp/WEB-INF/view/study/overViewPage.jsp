@@ -768,7 +768,6 @@
     var _URL = window.URL || window.webkitURL;
 
     $(document).on('change', '.uploadImg', function (e) {
-        debugger;
       var file, img;
       var thisAttr = this;
       var thisId = $(this).attr("data-imageId");
@@ -870,7 +869,6 @@
 
   // Displaying images from file upload
   function readURL(input) {
-	  debugger;
     if (input.files && input.files[0]) {
     	const allowedExtensions =  ['jpg','png','jpeg'];
      	const { name:fileName } = input.files[0];
