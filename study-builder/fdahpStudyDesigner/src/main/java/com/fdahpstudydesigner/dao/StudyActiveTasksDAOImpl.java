@@ -592,55 +592,52 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           query.executeUpdate();
           for (ActiveTaskCustomScheduleBo activeTaskCustomScheduleBo :
               activeTaskBo.getActiveTaskCustomScheduleBo()) {
-            if (activeTaskCustomScheduleBo.getFrequencyStartTime() != null
-                && activeTaskCustomScheduleBo.getFrequencyEndTime() != null) {
-              if (activeTaskCustomScheduleBo.getActiveTaskId() == null) {
-                activeTaskCustomScheduleBo.setActiveTaskId(activeTaskBo.getId());
-              }
-              if ((activeTaskCustomScheduleBo.getFrequencyStartDate() != null)
-                  && !activeTaskCustomScheduleBo.getFrequencyStartDate().isEmpty()) {
-                activeTaskCustomScheduleBo.setFrequencyStartDate(
-                    FdahpStudyDesignerUtil.getFormattedDate(
-                        activeTaskCustomScheduleBo.getFrequencyStartDate(),
-                        FdahpStudyDesignerConstants.UI_SDF_DATE,
-                        FdahpStudyDesignerConstants.SD_DATE_FORMAT));
-              }
-              if ((activeTaskCustomScheduleBo.getFrequencyEndDate() != null)
-                  && !activeTaskCustomScheduleBo.getFrequencyEndDate().isEmpty()) {
-                activeTaskCustomScheduleBo.setFrequencyEndDate(
-                    FdahpStudyDesignerUtil.getFormattedDate(
-                        activeTaskCustomScheduleBo.getFrequencyEndDate(),
-                        FdahpStudyDesignerConstants.UI_SDF_DATE,
-                        FdahpStudyDesignerConstants.SD_DATE_FORMAT));
-              }
-              if ((activeTaskCustomScheduleBo.getFrequencyStartTime() != null)
-                  && !activeTaskCustomScheduleBo.getFrequencyStartTime().isEmpty()) {
-                activeTaskCustomScheduleBo.setFrequencyStartTime(
-                    FdahpStudyDesignerUtil.getFormattedDate(
-                        activeTaskCustomScheduleBo.getFrequencyStartTime(),
-                        FdahpStudyDesignerConstants.SDF_TIME,
-                        FdahpStudyDesignerConstants.UI_SDF_TIME));
-              }
-              if ((activeTaskCustomScheduleBo.getFrequencyEndTime() != null)
-                  && !activeTaskCustomScheduleBo.getFrequencyEndTime().isEmpty()) {
-                activeTaskCustomScheduleBo.setFrequencyEndTime(
-                    FdahpStudyDesignerUtil.getFormattedDate(
-                        activeTaskCustomScheduleBo.getFrequencyEndTime(),
-                        FdahpStudyDesignerConstants.SDF_TIME,
-                        FdahpStudyDesignerConstants.UI_SDF_TIME));
-              }
-              activeTaskCustomScheduleBo.setxDaysSign(activeTaskCustomScheduleBo.isxDaysSign());
-              if (activeTaskCustomScheduleBo.getTimePeriodFromDays() != null) {
-                activeTaskCustomScheduleBo.setTimePeriodFromDays(
-                    activeTaskCustomScheduleBo.getTimePeriodFromDays());
-              }
-              activeTaskCustomScheduleBo.setyDaysSign(activeTaskCustomScheduleBo.isyDaysSign());
-              if (activeTaskCustomScheduleBo.getTimePeriodToDays() != null) {
-                activeTaskCustomScheduleBo.setTimePeriodToDays(
-                    activeTaskCustomScheduleBo.getTimePeriodToDays());
-              }
-              session.saveOrUpdate(activeTaskCustomScheduleBo);
+            if (activeTaskCustomScheduleBo.getActiveTaskId() == null) {
+              activeTaskCustomScheduleBo.setActiveTaskId(activeTaskBo.getId());
             }
+            if ((activeTaskCustomScheduleBo.getFrequencyStartDate() != null)
+                && !activeTaskCustomScheduleBo.getFrequencyStartDate().isEmpty()) {
+              activeTaskCustomScheduleBo.setFrequencyStartDate(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyStartDate(),
+                      FdahpStudyDesignerConstants.UI_SDF_DATE,
+                      FdahpStudyDesignerConstants.SD_DATE_FORMAT));
+            }
+            if ((activeTaskCustomScheduleBo.getFrequencyEndDate() != null)
+                && !activeTaskCustomScheduleBo.getFrequencyEndDate().isEmpty()) {
+              activeTaskCustomScheduleBo.setFrequencyEndDate(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyEndDate(),
+                      FdahpStudyDesignerConstants.UI_SDF_DATE,
+                      FdahpStudyDesignerConstants.SD_DATE_FORMAT));
+            }
+            if ((activeTaskCustomScheduleBo.getFrequencyStartTime() != null)
+                && !activeTaskCustomScheduleBo.getFrequencyStartTime().isEmpty()) {
+              activeTaskCustomScheduleBo.setFrequencyStartTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyStartTime(),
+                      FdahpStudyDesignerConstants.SDF_TIME,
+                      FdahpStudyDesignerConstants.UI_SDF_TIME));
+            }
+            if ((activeTaskCustomScheduleBo.getFrequencyEndTime() != null)
+                && !activeTaskCustomScheduleBo.getFrequencyEndTime().isEmpty()) {
+              activeTaskCustomScheduleBo.setFrequencyEndTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyEndTime(),
+                      FdahpStudyDesignerConstants.SDF_TIME,
+                      FdahpStudyDesignerConstants.UI_SDF_TIME));
+            }
+            activeTaskCustomScheduleBo.setxDaysSign(activeTaskCustomScheduleBo.isxDaysSign());
+            if (activeTaskCustomScheduleBo.getTimePeriodFromDays() != null) {
+              activeTaskCustomScheduleBo.setTimePeriodFromDays(
+                  activeTaskCustomScheduleBo.getTimePeriodFromDays());
+            }
+            activeTaskCustomScheduleBo.setyDaysSign(activeTaskCustomScheduleBo.isyDaysSign());
+            if (activeTaskCustomScheduleBo.getTimePeriodToDays() != null) {
+              activeTaskCustomScheduleBo.setTimePeriodToDays(
+                  activeTaskCustomScheduleBo.getTimePeriodToDays());
+            }
+            session.saveOrUpdate(activeTaskCustomScheduleBo);
           }
         }
       }
