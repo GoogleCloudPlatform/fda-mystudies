@@ -90,7 +90,7 @@ class ResourceDetailViewController: UIViewController {
         {
           activityIndicator.startAnimating()
           activityIndicator.isHidden.toggle()
-          let fileURL = checkIfFileExists(pdfNameFromUrl: resourceURL.lastPathComponent)
+          let fileURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
           if let url = fileURL {
             webView.loadFileURL(url, allowingReadAccessTo: url)
             self.isFileAvailable = true
@@ -265,8 +265,7 @@ extension ResourceDetailViewController {
     } else if self.resource?.file?.mimeType == .pdf,
       isFileAvailable,
       let path = resourceLink,
-      let fileName = URL(string: path)?.lastPathComponent,
-      let documentURL = checkIfFileExists(pdfNameFromUrl: fileName)
+      let documentURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
     {
       attachResource(from: documentURL)
       completion(true)
@@ -316,7 +315,7 @@ extension ResourceDetailViewController {
     DispatchQueue.global(qos: .background).async { [weak self] in
 
       let pdfData = try? Data(contentsOf: url)
-      let pdfNameFromUrl = url.lastPathComponent
+      let pdfNameFromUrl = "\(self?.resource?.file?.name ?? "").pdf"
       let actualPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
       do {
         try pdfData?.write(to: actualPath, options: .atomic)

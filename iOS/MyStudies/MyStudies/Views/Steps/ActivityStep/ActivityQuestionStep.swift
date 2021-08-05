@@ -336,25 +336,12 @@ class ActivityQuestionStep: ActivityStep {
                 someObject: (formatDict?[kStepQuestionScaleMinImage] as? String as AnyObject)
               )
             {
-
               let minImageBase64String = (formatDict![kStepQuestionScaleMinImage] as? String)!
-              let minNormalImageData = NSData(
-                base64Encoded: minImageBase64String,
-                options: .ignoreUnknownCharacters
-              )
-              let minNormalImage: UIImage = UIImage(
-                data: minNormalImageData! as Data
-              )!
-
+              let minNormalImage = imageFromBase64(minImageBase64String)
+              
               let maxImageBase64String = (formatDict![kStepQuestionScaleMaxImage] as? String)!
-              let maxNormalImageData = NSData(
-                base64Encoded: maxImageBase64String,
-                options: .ignoreUnknownCharacters
-              )
-              let maxNormalImage: UIImage = UIImage(
-                data: maxNormalImageData! as Data
-              )!
-
+              let maxNormalImage = imageFromBase64(maxImageBase64String)
+              
               (questionStepAnswerFormat as? ORKScaleAnswerFormat)!.minimumImage = minNormalImage
               (questionStepAnswerFormat as? ORKScaleAnswerFormat)!.maximumImage = maxNormalImage
             }
@@ -444,22 +431,10 @@ class ActivityQuestionStep: ActivityStep {
             {
 
               let minImageBase64String = (formatDict![kStepQuestionContinuosScaleMinImage] as? String)!
-              let minNormalImageData = NSData(
-                base64Encoded: minImageBase64String,
-                options: .ignoreUnknownCharacters
-              )
-              let minNormalImage: UIImage = UIImage(
-                data: minNormalImageData! as Data
-              )!
+              let minNormalImage = imageFromBase64(minImageBase64String)
 
               let maxImageBase64String = (formatDict![kStepQuestionContinuosScaleMaxImage] as? String)!
-              let maxNormalImageData = NSData(
-                base64Encoded: maxImageBase64String,
-                options: .ignoreUnknownCharacters
-              )
-              let maxNormalImage: UIImage = UIImage(
-                data: maxNormalImageData! as Data
-              )!
+              let maxNormalImage = imageFromBase64(maxImageBase64String)
 
               (questionStepAnswerFormat as? ORKContinuousScaleAnswerFormat)!
                 .minimumImage = minNormalImage
@@ -1078,10 +1053,10 @@ class ActivityQuestionStep: ActivityStep {
               base64Encoded: ((dict[kStepQuestionImageChoiceSelectedImage] as? String)!),
               options: .ignoreUnknownCharacters
             )
-
+            
             // Create image Instance from Data
-            let normalImage: UIImage = UIImage(data: (normalImageData as Data?)!)!
-            let selectedImage: UIImage = UIImage(data: (selectedImageData as Data?)!)!
+            let normalImage = imageFromBase64(base64String)
+            let selectedImage = imageFromBase64((dict[kStepQuestionImageChoiceSelectedImage] as? String)!)
 
             // Create ORKImageChoice
             let choice = ORKImageChoice(
@@ -1134,5 +1109,14 @@ class ActivityQuestionStep: ActivityStep {
       return false
     }
     return false
+  }
+  
+  func imageFromBase64(_ base64: String) -> UIImage? {
+    if let url = URL(string: base64) {
+      if let data = try? Data(contentsOf: url) {
+        return UIImage(data: data)
+      }
+    }
+    return nil
   }
 }
