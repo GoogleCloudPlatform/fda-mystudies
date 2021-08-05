@@ -21,7 +21,7 @@ public class AppController {
 
   @Autowired private AppService appService;
 
-  @RequestMapping("/adminStudies/appList.do")
+  @RequestMapping("/adminApps/appList.do")
   public ModelAndView getApps(HttpServletRequest request) {
     logger.entry("begin getApps()");
     ModelAndView mav = new ModelAndView("loginPage");
@@ -39,6 +39,22 @@ public class AppController {
       logger.error("StudyController - getStudies - ERROR", e);
     }
     logger.exit("getApps() - Ends");
+    return mav;
+  }
+
+  @RequestMapping("/adminApps/viewAppsInfo.do")
+  public ModelAndView viewAppsBasicInfo(HttpServletRequest request) {
+    logger.entry("begin viewAppsBasicInfo");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelMap map = new ModelMap();
+
+    try {
+
+      mav = new ModelAndView("viewAppsInfo", map);
+    } catch (Exception e) {
+      logger.error("AppController - viewAppsBasicInfo - ERROR", e);
+    }
+    logger.exit("viewAppsBasicInfo - Ends");
     return mav;
   }
 }

@@ -79,12 +79,22 @@
    
 
 <div class="clearfix"></div>
-
+<form:form action="/studybuilder/adminApps/viewAppsInfo.do?_S=${param._S}"
+           name="addEditAppsForm"
+           id="addEditAppsForm" method="post">
+  <input type="hidden" name="appsId" id="appsId" value="${appsId}"/>
+</form:form>
 
 
 <script>
   $(document).ready(function () {
-	  $('#rowId').parent().removeClass('white-bg');
+	  
+    $('.applistDetailsToEdit').on('click', function () {
+      $('#addEditAppsForm').submit();
+    });
+	    
+	    
+	$('#rowId').parent().removeClass('white-bg');
 	  
     $('#app_Wide_table_list').DataTable({
       "paging": true,

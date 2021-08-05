@@ -131,7 +131,7 @@
       document.body.appendChild(a).click();
     });
     $('#appSection').on('click', function () {
-        a.href = "/studybuilder/adminStudies/appList.do";
+        a.href = "/studybuilder/adminApps/appList.do";
         document.body.appendChild(a).click();
       });
     
