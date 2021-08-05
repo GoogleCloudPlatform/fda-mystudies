@@ -207,7 +207,8 @@ public class StudyServiceImpl implements StudyService {
       resourceBO = studyDAO.getResourceInfo(resourceInfoId);
       if (null != resourceBO) {
         message =
-            studyDAO.deleteResourceInfo(resourceInfoId, resourceBO.isResourceVisibility(), studyId);
+            studyDAO.deleteResourceInfo(
+                resourceInfoId, resourceBO.isResourceVisibility(), studyId, sesObj);
       }
 
     } catch (Exception e) {
@@ -1597,7 +1598,8 @@ public class StudyServiceImpl implements StudyService {
 
     List<ConsentBo> consentBoList = studyDAO.getConsentListForStudy(studyBo.getId());
 
-    List<ConsentInfoBo> consentInfoBoList = studyDAO.getConsentInfoList(studyBo.getId());
+    List<ConsentInfoBo> consentInfoBoList =
+        studyDAO.getConsentInfoList(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
         studyDAO.getComprehensionTestQuestionList(studyBo.getId());
@@ -1606,7 +1608,8 @@ public class StudyServiceImpl implements StudyService {
         studyDAO.getAnchorDateDetails(studyBo.getId(), studyBo.getCustomStudyId());
 
     List<QuestionnaireBo> questionnairesList =
-        studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
+        studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(
+            studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     List<NotificationBO> notificationBOs =
         notificationDAO.getNotificationsList(
@@ -1615,13 +1618,14 @@ public class StudyServiceImpl implements StudyService {
     List<ResourceBO> resourceBOs = studyDAO.getResourceList(studyBo.getId());
 
     List<ActiveTaskBo> activeTaskBos =
-        studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
+        studyActiveTasksDAO.getStudyActiveTaskByStudyId(
+            studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     Timestamp launchDate =
         studyBo.getStudylunchDate() != null ? Timestamp.valueOf(studyBo.getStudylunchDate()) : null;
 
     // replicating study
-    studyDAO.cloneStudy(studyBo, sessionObject);
+    studyDAO.cloneStudy(studyBo, sessionObject, copyVersion);
 
     Map<String, String> anchorDateMap = new HashMap<>();
     if (CollectionUtils.isNotEmpty(anchorDateList)) {

@@ -73,7 +73,7 @@ public interface StudyDAO {
   public String deleteOverviewStudyPageById(String studyId, String pageId);
 
   public String deleteResourceInfo(
-      String resourceInfoId, boolean resourceVisibility, String studyId);
+      String resourceInfoId, boolean resourceVisibility, String studyId, SessionObject sesOb);
 
   public boolean deleteStudyByCustomStudyId(String customStudyId);
 
@@ -231,7 +231,7 @@ public interface StudyDAO {
   public List<ComprehensionTestResponseBo> getComprehensionTestResponseList(
       List<String> comprehensionTestQuestionIds);
 
-  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject);
+  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject, String copyVersion);
 
   public void cloneEligibility(EligibilityBo eligibilityBo, String studyId);
 
@@ -262,4 +262,7 @@ public interface StudyDAO {
 
   public List<ComprehensionTestResponseBo> getComprehensionTestResponses(
       String comprehensionTestQuestionId);
+
+  public List<ConsentInfoBo> getConsentInfoList(
+      String studyId, String customStudyId, String copyVersion);
 }

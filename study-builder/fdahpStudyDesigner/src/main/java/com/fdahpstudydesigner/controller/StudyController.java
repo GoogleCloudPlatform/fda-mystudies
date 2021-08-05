@@ -4618,7 +4618,7 @@ public class StudyController {
 
           String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
           String customId = "";
-          if (copyCustomIdArray[1].equalsIgnoreCase("COPY")) {
+          if (copyCustomIdArray[1].contains("COPY")) {
             customId = copyCustomIdArray[0];
             studyBo.setDestinationCustomStudyId(customId);
           } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
@@ -5361,7 +5361,7 @@ public class StudyController {
     if (StringUtils.isNotEmpty(studyId)) {
       message =
           studyExportImportService.exportStudy(
-              studyId, copyVersion, sesObj.getUserId(), auditRequest);
+              studyId, sesObj.getUserId(), auditRequest, copyVersion);
     }
     JSONObject jsonobject = new JSONObject();
     if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {

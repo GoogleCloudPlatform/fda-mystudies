@@ -4080,57 +4080,55 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             query.executeUpdate();
             for (QuestionnaireCustomScheduleBo questionnaireCustomScheduleBo :
                 questionnaireBo.getQuestionnaireCustomScheduleBo()) {
-              if (questionnaireCustomScheduleBo.getFrequencyEndTime() != null) {
-                if (questionnaireCustomScheduleBo.getQuestionnairesId() == null) {
-                  questionnaireCustomScheduleBo.setQuestionnairesId(questionnaireBo.getId());
-                }
-                if ((questionnaireCustomScheduleBo.getFrequencyEndDate() != null)
-                    && !questionnaireCustomScheduleBo.getFrequencyEndDate().isEmpty()) {
-                  questionnaireCustomScheduleBo.setFrequencyEndDate(
-                      FdahpStudyDesignerUtil.getFormattedDate(
-                          questionnaireCustomScheduleBo.getFrequencyEndDate(),
-                          FdahpStudyDesignerConstants.UI_SDF_DATE,
-                          FdahpStudyDesignerConstants.SD_DATE_FORMAT));
-                }
-                if ((questionnaireCustomScheduleBo.getFrequencyStartDate() != null)
-                    && !questionnaireCustomScheduleBo.getFrequencyStartDate().isEmpty()) {
-                  questionnaireCustomScheduleBo.setFrequencyStartDate(
-                      FdahpStudyDesignerUtil.getFormattedDate(
-                          questionnaireCustomScheduleBo.getFrequencyStartDate(),
-                          FdahpStudyDesignerConstants.UI_SDF_DATE,
-                          FdahpStudyDesignerConstants.SD_DATE_FORMAT));
-                }
-                if ((questionnaireCustomScheduleBo.getFrequencyEndTime() != null)
-                    && !questionnaireCustomScheduleBo.getFrequencyEndTime().isEmpty()) {
-                  questionnaireCustomScheduleBo.setFrequencyEndTime(
-                      FdahpStudyDesignerUtil.getFormattedDate(
-                          questionnaireCustomScheduleBo.getFrequencyEndTime(),
-                          FdahpStudyDesignerConstants.SDF_TIME,
-                          FdahpStudyDesignerConstants.UI_SDF_TIME));
-                }
-
-                if ((questionnaireCustomScheduleBo.getFrequencyStartTime() != null)
-                    && !questionnaireCustomScheduleBo.getFrequencyStartTime().isEmpty()) {
-                  questionnaireCustomScheduleBo.setFrequencyStartTime(
-                      FdahpStudyDesignerUtil.getFormattedDate(
-                          questionnaireCustomScheduleBo.getFrequencyStartTime(),
-                          FdahpStudyDesignerConstants.SDF_TIME,
-                          FdahpStudyDesignerConstants.UI_SDF_TIME));
-                }
-                questionnaireCustomScheduleBo.setxDaysSign(
-                    questionnaireCustomScheduleBo.isxDaysSign());
-                if (questionnaireCustomScheduleBo.getTimePeriodFromDays() != null) {
-                  questionnaireCustomScheduleBo.setTimePeriodFromDays(
-                      questionnaireCustomScheduleBo.getTimePeriodFromDays());
-                }
-                questionnaireCustomScheduleBo.setyDaysSign(
-                    questionnaireCustomScheduleBo.isyDaysSign());
-                if (questionnaireCustomScheduleBo.getTimePeriodToDays() != null) {
-                  questionnaireCustomScheduleBo.setTimePeriodToDays(
-                      questionnaireCustomScheduleBo.getTimePeriodToDays());
-                }
-                session.saveOrUpdate(questionnaireCustomScheduleBo);
+              if (questionnaireCustomScheduleBo.getQuestionnairesId() == null) {
+                questionnaireCustomScheduleBo.setQuestionnairesId(questionnaireBo.getId());
               }
+              if ((questionnaireCustomScheduleBo.getFrequencyEndDate() != null)
+                  && !questionnaireCustomScheduleBo.getFrequencyEndDate().isEmpty()) {
+                questionnaireCustomScheduleBo.setFrequencyEndDate(
+                    FdahpStudyDesignerUtil.getFormattedDate(
+                        questionnaireCustomScheduleBo.getFrequencyEndDate(),
+                        FdahpStudyDesignerConstants.UI_SDF_DATE,
+                        FdahpStudyDesignerConstants.SD_DATE_FORMAT));
+              }
+              if ((questionnaireCustomScheduleBo.getFrequencyStartDate() != null)
+                  && !questionnaireCustomScheduleBo.getFrequencyStartDate().isEmpty()) {
+                questionnaireCustomScheduleBo.setFrequencyStartDate(
+                    FdahpStudyDesignerUtil.getFormattedDate(
+                        questionnaireCustomScheduleBo.getFrequencyStartDate(),
+                        FdahpStudyDesignerConstants.UI_SDF_DATE,
+                        FdahpStudyDesignerConstants.SD_DATE_FORMAT));
+              }
+              if ((questionnaireCustomScheduleBo.getFrequencyEndTime() != null)
+                  && !questionnaireCustomScheduleBo.getFrequencyEndTime().isEmpty()) {
+                questionnaireCustomScheduleBo.setFrequencyEndTime(
+                    FdahpStudyDesignerUtil.getFormattedDate(
+                        questionnaireCustomScheduleBo.getFrequencyEndTime(),
+                        FdahpStudyDesignerConstants.SDF_TIME,
+                        FdahpStudyDesignerConstants.UI_SDF_TIME));
+              }
+
+              if ((questionnaireCustomScheduleBo.getFrequencyStartTime() != null)
+                  && !questionnaireCustomScheduleBo.getFrequencyStartTime().isEmpty()) {
+                questionnaireCustomScheduleBo.setFrequencyStartTime(
+                    FdahpStudyDesignerUtil.getFormattedDate(
+                        questionnaireCustomScheduleBo.getFrequencyStartTime(),
+                        FdahpStudyDesignerConstants.SDF_TIME,
+                        FdahpStudyDesignerConstants.UI_SDF_TIME));
+              }
+              questionnaireCustomScheduleBo.setxDaysSign(
+                  questionnaireCustomScheduleBo.isxDaysSign());
+              if (questionnaireCustomScheduleBo.getTimePeriodFromDays() != null) {
+                questionnaireCustomScheduleBo.setTimePeriodFromDays(
+                    questionnaireCustomScheduleBo.getTimePeriodFromDays());
+              }
+              questionnaireCustomScheduleBo.setyDaysSign(
+                  questionnaireCustomScheduleBo.isyDaysSign());
+              if (questionnaireCustomScheduleBo.getTimePeriodToDays() != null) {
+                questionnaireCustomScheduleBo.setTimePeriodToDays(
+                    questionnaireCustomScheduleBo.getTimePeriodToDays());
+              }
+              session.saveOrUpdate(questionnaireCustomScheduleBo);
             }
           }
         }
@@ -5312,17 +5310,25 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId) {
+  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(
+      String studyId, String customStudyId, String copyVersion) {
     logger.info("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - Starts");
     Session session = null;
     List<QuestionnaireBo> questionnaires = null;
     String searchQuery = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if (StringUtils.isNotEmpty(studyId)) {
+      if (StringUtils.isNotEmpty(studyId)
+          && copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
         query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
-        questionnaires = query.list();
+      } else {
+        searchQuery =
+            "From QuestionnaireBo QB where QB.customStudyId=:customStudyId and QB.active=1 AND QB.version IN "
+                + "(SELECT MAX(version) FROM QuestionnaireBo WHERE customStudyId=:customStudyId) order by QB.sequenceNumber asc";
+        query = session.createQuery(searchQuery).setString("customStudyId", customStudyId);
       }
+
+      questionnaires = query.list();
     } catch (Exception e) {
       logger.error("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - ERROR ", e);
     } finally {
