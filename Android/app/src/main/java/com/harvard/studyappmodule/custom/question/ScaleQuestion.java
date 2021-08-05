@@ -118,13 +118,13 @@ public class ScaleQuestion implements StepBody {
     maxdesc.setText(format.getMaxDesc());
 
     if (!format.getMinImage().equalsIgnoreCase("")) {
-      byte[] imageByteArray = Base64.decode(format.getMinImage(), Base64.DEFAULT);
+      byte[] imageByteArray = Base64.decode(format.getMinImage().split(",")[1], Base64.DEFAULT);
       Glide.with(inflater.getContext()).load(imageByteArray).into(minimage);
     } else {
       minimage.setVisibility(View.INVISIBLE);
     }
     if (!format.getMaxImage().equalsIgnoreCase("")) {
-      byte[] imageByteArray = Base64.decode(format.getMaxImage(), Base64.DEFAULT);
+      byte[] imageByteArray = Base64.decode(format.getMaxImage().split(",")[1], Base64.DEFAULT);
       Glide.with(inflater.getContext()).load(imageByteArray).into(maximage);
     } else {
       maximage.setVisibility(View.INVISIBLE);

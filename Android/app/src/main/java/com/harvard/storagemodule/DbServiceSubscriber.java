@@ -37,6 +37,7 @@ import com.harvard.studyappmodule.studymodel.MotivationalNotification;
 import com.harvard.studyappmodule.studymodel.NotificationData;
 import com.harvard.studyappmodule.studymodel.NotificationDbResources;
 import com.harvard.studyappmodule.studymodel.PendingIntentsResources;
+import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
@@ -1485,6 +1486,10 @@ public class DbServiceSubscriber {
 
   public OfflineData getStudyIdOfflineData(String studyId, Realm realm) {
     return realm.where(OfflineData.class).equalTo("studyId", studyId).findFirst();
+  }
+
+  public Resource getResource(String resourceId, Realm realm) {
+    return realm.where(Resource.class).equalTo("resourcesId", resourceId).findFirst();
   }
 
   public OfflineData getActivityIdOfflineData(String activityId, Realm realm) {
