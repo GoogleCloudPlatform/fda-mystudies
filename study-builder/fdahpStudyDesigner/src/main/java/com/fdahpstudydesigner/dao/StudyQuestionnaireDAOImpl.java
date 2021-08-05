@@ -5322,10 +5322,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           && copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
         query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
       } else {
-        query =
-            session
-                .getNamedQuery("getQuestionariesByCustomStudyId")
-                .setString("customStudyId", customStudyId);
+        searchQuery =
+            "From QuestionnaireBo QB where QB.customStudyId=:customStudyId and QB.active=1 AND QB.version IN "
+                + "(SELECT MAX(version) FROM QuestionnaireBo WHERE customStudyId=:customStudyId) order by QB.sequenceNumber asc";
+        query = session.createQuery(searchQuery).setString("customStudyId", customStudyId);
       }
 
       questionnaires = query.list();

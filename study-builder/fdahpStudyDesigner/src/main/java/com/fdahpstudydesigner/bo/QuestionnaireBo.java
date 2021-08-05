@@ -57,11 +57,6 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(
       name = "updateQuestionnaireStartDate",
       query = "update QuestionnaireBo SET studyLifetimeStart=:studyLifetimeStart where id=:id"),
-  @NamedQuery(
-      name = "getQuestionariesByCustomStudyId",
-      query =
-          " From QuestionnaireBo QBO WHERE QBO.customStudyId =:customStudyId and QBO.active=1 and "
-              + "QBO.version=1 order by QBO.createdDate DESC, QBO.sequenceNumber ASC"),
 })
 public class QuestionnaireBo implements Serializable {
 
