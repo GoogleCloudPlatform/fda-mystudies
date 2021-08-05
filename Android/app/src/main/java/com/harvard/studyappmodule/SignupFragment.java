@@ -36,6 +36,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -227,6 +228,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
           public void onClick(View view) {
             if (clicked == false) {
               clicked = true;
+              password.clearFocus();
+              confirmPassword.clearFocus();
               callRegisterUserWebService();
               new Handler()
                   .postDelayed(
@@ -249,6 +252,23 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
             password.setError(getResources().getString(R.string.password_validation));
           }
         }
+      }
+    });
+    confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
+            confirmPassword.setError(getResources().getString(R.string.password_mismatch_error));
+          }
+        }
+      }
+    });
+    agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        password.clearFocus();
+        confirmPassword.clearFocus();
       }
     });
   }
