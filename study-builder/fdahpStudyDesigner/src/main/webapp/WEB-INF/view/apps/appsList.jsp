@@ -58,7 +58,7 @@
                 <td>${app.customAppId}</td>
                 <td>${app.name}</td>
                 <td>${app.type}</td>
-                <td>${app.status}</td>
+                <td>${app.appsStatus}</td>
                 <td class="text-right" style="padding-right: 2% !important; ">
                     <span class="sprites_icon preview-g mr-lg viewAppClass"></span>
                     <span class="sprites_icon edit-g mr-lg"></span>

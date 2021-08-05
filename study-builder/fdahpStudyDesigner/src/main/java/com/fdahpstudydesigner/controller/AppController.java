@@ -36,7 +36,7 @@ public class AppController {
       mav = new ModelAndView("appListPage", map);
 
     } catch (Exception e) {
-      logger.error("StudyController - getStudies - ERROR", e);
+      logger.error("AppController - getApps - ERROR", e);
     }
     logger.exit("getApps() - Ends");
     return mav;

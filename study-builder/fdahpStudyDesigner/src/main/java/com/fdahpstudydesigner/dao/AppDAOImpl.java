@@ -25,7 +25,6 @@
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.AppListBean;
-import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import java.util.List;
@@ -61,11 +60,9 @@ public class AppDAOImpl implements AppDAO {
 
   @Override
   public List<AppListBean> getAppList(String userId) {
-    logger.entry("begin getStudyList()");
+    logger.entry("begin getAppList()");
     Session session = null;
     List<AppListBean> appListBean = null;
-    String name = "";
-    AppsBo appBo = null;
     try {
 
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -78,7 +75,7 @@ public class AppDAOImpl implements AppDAO {
         if (userBO.getRoleId().equals("1")) {
           query =
               session.createQuery(
-                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.status,a.type,a.createdOn)"
+                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appsStatus,a.type,a.createdOn)"
                       + " from AppsBo a, UserBO user"
                       + " where user.userId = a.createdBy"
                       + " and a.version=0"
@@ -87,7 +84,7 @@ public class AppDAOImpl implements AppDAO {
         } else {
           query =
               session.createQuery(
-                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.status,a.type,a.createdOn)"
+                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appsStatus,a.type,a.createdOn)"
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
                       + " and user.userId = a.createdBy"
@@ -100,13 +97,13 @@ public class AppDAOImpl implements AppDAO {
       }
 
     } catch (Exception e) {
-      logger.error("AppDAOImpl - getStudyList() - ERROR ", e);
+      logger.error("AppDAOImpl - getAppList() - ERROR ", e);
     } finally {
       if ((null != session) && session.isOpen()) {
         session.close();
       }
     }
-    logger.exit("getStudyList() - Ends");
+    logger.exit("getAppList() - Ends");
     return appListBean;
   }
 }

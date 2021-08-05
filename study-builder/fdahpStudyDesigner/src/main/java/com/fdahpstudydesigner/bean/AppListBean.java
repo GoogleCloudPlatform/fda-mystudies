@@ -32,17 +32,22 @@ public class AppListBean {
   private String customAppId;
   private String id;
   private String name;
-  private String status;
+  private String appsStatus;
   private String type;
   private String createdOn;
 
   public AppListBean(
-      String id, String customAppId, String name, String status, String type, String createdOn) {
+      String id,
+      String customAppId,
+      String name,
+      String appsStatus,
+      String type,
+      String createdOn) {
     super();
     this.id = id;
     this.customAppId = customAppId;
     this.name = name;
-    this.status = status;
+    this.appsStatus = appsStatus;
     this.type = type;
     this.createdOn = createdOn;
   }
