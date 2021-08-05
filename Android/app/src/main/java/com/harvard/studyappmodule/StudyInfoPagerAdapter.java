@@ -24,6 +24,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,7 +115,7 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
             .skipMemoryCache(false);
 
     Glide.with(context)
-            .load(info.get(pos).getImage())
+            .load(Base64.decode(info.get(pos).getImage().split(",")[1], Base64.DEFAULT))
             .thumbnail(0.5f)
             .apply(requestOptions)
             .into(bgImg);

@@ -1200,7 +1200,7 @@ public class SiteServiceImpl implements SiteService {
       if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
         StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
         studyDetail.setLogoImageUrl(
-            participantManagerUtil.getSignedUrl(
+            participantManagerUtil.getImageResources(
                 studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
         studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
@@ -1248,7 +1248,7 @@ public class SiteServiceImpl implements SiteService {
         if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
           StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
           studyDetail.setLogoImageUrl(
-              participantManagerUtil.getSignedUrl(
+              participantManagerUtil.getImageResources(
                   studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
           studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
