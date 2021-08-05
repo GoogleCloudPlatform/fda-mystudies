@@ -188,6 +188,18 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                 .setParameter("studyId", studyId);
         query.executeUpdate();
 
+        queryString =
+            "Update StudyBo set "
+                + "hasStudyDraft = 1"
+                + " , modifiedBy = :userId"
+                + " , modifiedOn = now() where id = :studyId";
+
+        session
+            .createQuery(queryString)
+            .setParameter("userId", sesObj.getUserId())
+            .setParameter("studyId", studyId)
+            .executeUpdate();
+
         message = FdahpStudyDesignerConstants.SUCCESS;
         auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
 

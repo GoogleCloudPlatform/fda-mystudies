@@ -73,7 +73,7 @@ public interface StudyDAO {
   public String deleteOverviewStudyPageById(String studyId, String pageId);
 
   public String deleteResourceInfo(
-      String resourceInfoId, boolean resourceVisibility, String studyId);
+      String resourceInfoId, boolean resourceVisibility, String studyId, SessionObject sesOb);
 
   public boolean deleteStudyByCustomStudyId(String customStudyId);
 

@@ -207,7 +207,8 @@ public class StudyServiceImpl implements StudyService {
       resourceBO = studyDAO.getResourceInfo(resourceInfoId);
       if (null != resourceBO) {
         message =
-            studyDAO.deleteResourceInfo(resourceInfoId, resourceBO.isResourceVisibility(), studyId);
+            studyDAO.deleteResourceInfo(
+                resourceInfoId, resourceBO.isResourceVisibility(), studyId, sesObj);
       }
 
     } catch (Exception e) {
