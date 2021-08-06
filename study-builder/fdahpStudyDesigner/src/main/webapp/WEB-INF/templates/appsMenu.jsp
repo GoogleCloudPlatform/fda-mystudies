@@ -104,17 +104,17 @@
 
     var a = document.createElement('a');
     $('.first').click(function () {
-      a.href = "/studybuilder/adminApps/viewAppsInfo.do?_S=1";
+      a.href = "/studybuilder/adminApps/viewAppsInfo.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
     <c:if test="${true}">
     $('.second').click(function () {
-      a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=2";
+      a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
     <c:if test="${true}">
     $('.third').click(function () {
-      a.href = "/studybuilder/adminApps/viewAppProperties.do?_S=3";
+      a.href = "/studybuilder/adminApps/viewAppProperties.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
     $('.fourth').click(function () {

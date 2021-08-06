@@ -87,7 +87,37 @@
 			</div>
 			<!-- End Section-->
 			
-			
+      <!-- Start Section-->
+      <div class="col-md-12 p-none">
+        <div class="gray-xs-f mb-sm">
+          Platform(s) supported
+          <span class="requiredStar"> *</span>
+          <span
+              class="sprites_v3 filled-tooltip" id="infoIconId"></span>
+        </div>
+        <div class="form-group">
+          <span class="checkbox checkbox-inline p-45"><input
+              class="platformClass" type="checkbox" id="inlineCheckbox1"
+              name="platform" value="I"
+              <c:if test="${fn:contains(studyBo.platform,'I')}">checked</c:if>
+              <c:if
+                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if>
+              data-error="Please check these box if you want to proceed"
+              > <label for="inlineCheckbox1"> iOS </label>
+          </span>
+          <span class="checkbox checkbox-inline"><input
+              type="checkbox" class="platformClass" id="inlineCheckbox2"
+              name="platform" value="A"
+              <c:if test="${fn:contains(studyBo.platform,'A')}">checked</c:if>
+              <c:if
+                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if>
+              data-error="Please check these box if you want to proceed"
+              > <label for="inlineCheckbox2"> Android </label>
+          </span>
+          <div class="help-block with-errors red-txt"></div>
+        </div>
+      </div>
+      <!-- End Section-->
 
 
     </div>
