@@ -158,4 +158,6 @@ public class AppsBo implements Serializable {
 
   @Column(name = "version")
   private Float version = 0f;
+
+  @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
 }
