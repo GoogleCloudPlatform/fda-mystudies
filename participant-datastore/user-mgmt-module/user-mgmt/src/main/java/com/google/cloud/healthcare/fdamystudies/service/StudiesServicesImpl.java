@@ -298,11 +298,6 @@ public class StudiesServicesImpl implements StudiesServices {
           AppConstants.DEVICE_ANDROID.equals(notification.getDeviceType())
               ? appPropertiesDetails.getAndroidServerKey()
               : appPropertiesDetails.getIosServerKey();
-      /*if (AppConstants.DEVICE_ANDROID.equals(notification.getDeviceType())) {
-        authKey = appPropertiesDetails.getAndroidServerKey(); // You FCM AUTH key
-      } else {
-        authKey = appPropertiesDetails.getIosServerKey(); // You FCM AUTH key
-      }*/
 
       URL url = new URL((String) applicationPropertyConfiguration.getApiUrlFcm());
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -325,11 +320,19 @@ public class StudiesServicesImpl implements StudiesServices {
       dataInfo.put("type", notification.getNotificationType());
       dataInfo.put("title", notification.getNotificationTitle());
       dataInfo.put("message", notification.getNotificationText());
+      dataInfo.put("body", notification.getNotificationText());
       if (notification.getCustomStudyId() != null
           && StringUtils.isNotEmpty(notification.getCustomStudyId())) {
         dataInfo.put("studyId", notification.getCustomStudyId());
       }
+
+      JSONObject notificationForIos = new JSONObject();
+      notificationForIos.put("title", notification.getNotificationTitle());
+      notificationForIos.put("body", notification.getNotificationText());
+
       json.put("data", dataInfo);
+      json.put("notification", notificationForIos);
+
       OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
       wr.write(json.toString());
       wr.flush();
