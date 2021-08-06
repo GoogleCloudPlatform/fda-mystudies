@@ -22,7 +22,7 @@
              href="javascript:void(0)"
              id="landingScreen"><img src="/studybuilder/images/logo/logo_innerScreens.png"/></a>
           <ul class="nav navbar-nav ml-none">
-          	  <li class="studyClass">
+          	  <li class="appClass">
                 <a href="javascript:void(0)" id="appSection">Apps</a>
               </li>
               

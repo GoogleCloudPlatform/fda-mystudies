@@ -45,10 +45,10 @@
       <table id="app_Wide_table_list" class="table wid100 tbl">
         <thead>
          <tr>
-                <th class="linkDis">APP ID <span class="sort"></span></th>
-                <th class="linkDis">APP NAME <span class="sort"></span></th>
-                <th class="linkDis">TYPE <span class="sort"></span></th>
-                <th class="linkDis">STATUS<span class="sort"></span></th>
+                <th id="">APP ID <span class="sort"></span></th>
+                <th id="">APP NAME <span class="sort"></span></th>
+                <th id="">TYPE <span class="sort"></span></th>
+                <th id="">STATUS<span class="sort"></span></th>
                 <th id="" class="linkDis text-right" style="padding-right: 3% !important; "  >Actions</th>
               </tr>
         </thead>
@@ -88,7 +88,7 @@
 
 <script>
   $(document).ready(function () {
-	  
+	$('.appClass').addClass('active');
     $('.applistDetailsToEdit').on('click', function () {
       $('#addEditAppsForm').submit();
     });
@@ -99,7 +99,7 @@
     $('#app_Wide_table_list').DataTable({
       "paging": true,
       "order": [],
-      "columnDefs": [{orderable: false, orderable: false, targets: [0]}],
+      "columnDefs": [{orderable: false, orderable: false}],
       "info": false,
       "lengthChange": false,
       language: {
@@ -136,7 +136,7 @@
         input.value = '${_csrf.token}';
         form.appendChild(input);
 
-        form.action = '/studybuilder/adminStudies/viewStudyDetails.do';
+        form.action = '/studybuilder/adminApps/viewAppsInfo.do';
         document.body.appendChild(form);
         form.submit();
       });
