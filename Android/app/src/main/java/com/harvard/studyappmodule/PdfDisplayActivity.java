@@ -266,7 +266,13 @@ public class PdfDisplayActivity extends AppCompatActivity
       } else {
         root = getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
       }
-      String temPdfPath = root + "/" + title + "_" + getString(R.string.signed_consent) + ".pdf";
+      String temPdfPath =
+          root
+              + "/"
+              + title.replace("/", "\u2215")
+              + "_"
+              + getString(R.string.signed_consent)
+              + ".pdf";
       File file = new File(temPdfPath);
       if (!file.exists()) {
         file.createNewFile();
