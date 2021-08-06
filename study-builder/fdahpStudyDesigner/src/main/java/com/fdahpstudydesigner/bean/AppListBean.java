@@ -35,6 +35,9 @@ public class AppListBean {
   private String appsStatus;
   private String type;
   private String createdOn;
+  private boolean flag = false;
+  private boolean viewPermission;
+  private String liveAppId;
 
   public AppListBean(
       String id,
@@ -50,5 +53,45 @@ public class AppListBean {
     this.appsStatus = appsStatus;
     this.type = type;
     this.createdOn = createdOn;
+  }
+
+  public AppListBean(
+      String id,
+      String customAppId,
+      String name,
+      String appsStatus,
+      String type,
+      String createdOn,
+      boolean viewPermission) {
+    super();
+    this.id = id;
+    this.customAppId = customAppId;
+    this.name = name;
+    this.appsStatus = appsStatus;
+    this.type = type;
+    this.createdOn = createdOn;
+    this.viewPermission = viewPermission;
+  }
+
+  public AppListBean(
+      String id,
+      String customAppId,
+      String name,
+      String appsStatus,
+      String type,
+      String createdOn,
+      boolean viewPermission,
+      boolean flag,
+      String liveAppId) {
+    super();
+    this.id = id;
+    this.customAppId = customAppId;
+    this.name = name;
+    this.appsStatus = appsStatus;
+    this.type = type;
+    this.createdOn = createdOn;
+    this.viewPermission = viewPermission;
+    this.liveAppId = liveAppId;
+    this.flag = flag;
   }
 }

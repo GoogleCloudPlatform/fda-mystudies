@@ -61,7 +61,17 @@
                 <td>${app.appsStatus}</td>
                 <td class="text-right" style="padding-right: 2% !important; ">
                     <span class="sprites_icon preview-g mr-lg viewAppClass"></span>
-                    <span class="sprites_icon edit-g mr-lg"></span>
+                    <span class="${(not empty app.liveAppId)?((app.flag)?'edit-inc-draft mr-md':'edit-inc mr-md'):'edit-inc-draft mr-md'}
+                    addEditAppClass 
+                    <c:choose>
+						<c:when test="${not app.viewPermission}">
+								cursor-none
+						</c:when>
+						<c:when test="${not empty app.appsStatus && (app.appsStatus eq 'Inactive')}">
+							  cursor-none
+						</c:when>
+					</c:choose>"
+                    ></span>
                     <span class="sprites_icon copy mr-lg"></span>
                     
                   </td>        

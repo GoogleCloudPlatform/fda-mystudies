@@ -25,6 +25,7 @@
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.AppListBean;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import java.util.List;
@@ -63,6 +64,8 @@ public class AppDAOImpl implements AppDAO {
     logger.entry("begin getAppList()");
     Session session = null;
     List<AppListBean> appListBean = null;
+    AppsBo liveApp = null;
+    AppsBo appBo = null;
     try {
 
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -84,7 +87,7 @@ public class AppDAOImpl implements AppDAO {
         } else {
           query =
               session.createQuery(
-                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appsStatus,a.type,a.createdOn)"
+                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appsStatus,a.type,a.createdOn,ap.viewPermission)"
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
                       + " and user.userId = a.createdBy"
@@ -94,6 +97,40 @@ public class AppDAOImpl implements AppDAO {
           query.setString(FdahpStudyDesignerConstants.IMP_VALUE, userId);
         }
         appListBean = query.list();
+        if ((appListBean != null) && !appListBean.isEmpty()) {
+          for (AppListBean appDetails : appListBean) {
+
+            if (StringUtils.isNotEmpty(appDetails.getCustomAppId())) {
+              liveApp =
+                  (AppsBo)
+                      session
+                          .createQuery("from AppsBo where customAppId=:customAppId and live=1")
+                          .setParameter("customAppId", appDetails.getCustomAppId())
+                          .uniqueResult();
+              if (liveApp != null) {
+                appDetails.setLiveAppId(liveApp.getId());
+              } else {
+                appDetails.setLiveAppId(null);
+              }
+            }
+
+            // for draft app
+            if ((appDetails.getId() != null) && (appDetails.getLiveAppId() != null)) {
+              appBo =
+                  (AppsBo)
+                      session
+                          .createQuery("from AppsBo where id=:id")
+                          .setParameter("id", appDetails.getId())
+                          .uniqueResult();
+              if (appBo.getHasAppDraft() == 1) {
+                appDetails.setFlag(true);
+              }
+            }
+            if (userBO.getRoleId().equals("1")) {
+              appDetails.setViewPermission(true);
+            }
+          }
+        }
       }
 
     } catch (Exception e) {

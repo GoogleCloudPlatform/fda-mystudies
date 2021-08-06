@@ -129,8 +129,8 @@ public class AppsBo implements Serializable {
   @Column(name = "app_launched_date")
   private String appLaunchDate;
 
-  @Column(name = "has_app_information_draft")
-  private Integer hasAppInfoDraft = 0;
+  @Column(name = "has_app_draft")
+  private Integer hasAppDraft = 0;
 
   @Column(name = "has_app_settings_draft")
   private Integer hasAppSettingDraft = 0;
