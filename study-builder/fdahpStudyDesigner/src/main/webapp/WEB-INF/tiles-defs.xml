@@ -367,4 +367,24 @@
                        value="/WEB-INF/view/apps/appsBasicInformation.jsp"/>
     </definition>
     
+    <definition name="viewAppSettings" extends="apps.definition">
+    	<put-attribute name="body"
+                   value="/WEB-INF/view/apps/viewAppSettings.jsp"/>
+    </definition>
+    
+    <definition name="viewAppProperties" extends="apps.definition">
+    	<put-attribute name="body"
+                   value="/WEB-INF/view/apps/viewAppProperties.jsp"/>
+    </definition>
+    
+    <definition name="viewDevConfigs" extends="apps.definition">
+    	<put-attribute name="body"
+                   value="/WEB-INF/view/apps/viewDevelopersConfig.jsp"/>
+    </definition>
+    
+    <definition name="appActionList" extends="apps.definition">
+        <put-attribute name="body"
+                       value="/WEB-INF/view/apps/appActionListPage.jsp"/>
+    </definition>
+    
 </tiles-definitions>

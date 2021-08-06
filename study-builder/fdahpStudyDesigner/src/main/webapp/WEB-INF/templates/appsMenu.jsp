@@ -37,25 +37,25 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="second commonCls">
+      <li class="second active">
         APP SETTINGS
         <c:if test="${studyBo.studySequenceBo.settingAdmins}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="third commonCls">
+      <li class="third active">
         APP PROPERTIES
         <c:if test="${studyBo.studySequenceBo.overView}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fourth commonCls">
+      <li class="fourth active">
         DEVELOPER CONFIGURATIONS
         <c:if test="${studyBo.studySequenceBo.eligibility}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="tenth commonCls">
+      <li class="fifth active">
         ACTIONS
       </li>
     </ul>
@@ -87,7 +87,7 @@
         callback: function (result) {
           if (result) {
             var a = document.createElement('a');
-            a.href = "/studybuilder/adminStudies/studyList.do";
+            a.href = "/studybuilder/adminApps/appList.do";
             document.body.appendChild(a).click();
           } else {
             $('.cancelBut').prop('disabled', false);
@@ -97,76 +97,35 @@
       </c:if>
       <c:if test="${not empty permission}">
       var a = document.createElement('a');
-      a.href = "/studybuilder/adminStudies/studyList.do";
+      a.href = "/studybuilder/adminApps/appList.do";
       document.body.appendChild(a).click();
       </c:if>
     });
 
     var a = document.createElement('a');
     $('.first').click(function () {
-      a.href = "/studybuilder/adminStudies/viewBasicInfo.do?_S=${param._S}";
+      a.href = "/studybuilder/adminApps/viewAppsInfo.do?_S=1";
       document.body.appendChild(a).click();
     });
-
-    <c:if test="${(not empty studyBo.studySequenceBo && studyBo.studySequenceBo.basicInfo) || (not empty studyBo.status && studyBo.status ne 'Pre-launch')}">
+    <c:if test="${true}">
     $('.second').click(function () {
-      a.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
+      a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=2";
       document.body.appendChild(a).click();
     });
-    <c:if test="${studyBo.studySequenceBo.settingAdmins || studyBo.status ne 'Pre-launch'}">
+    <c:if test="${true}">
     $('.third').click(function () {
-      a.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
+      a.href = "/studybuilder/adminApps/viewAppProperties.do?_S=3";
       document.body.appendChild(a).click();
     });
     $('.fourth').click(function () {
-      a.href = "/studybuilder/adminStudies/viewStudyEligibilty.do?_S=${param._S}";
+      a.href = "/studybuilder/adminApps/viewDevConfigs.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
     $('.fifth').click(function () {
-      a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-    $('.fifthConsent').click(function () {
-      a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-    $('.fifthComre').click(function () {
-      a.href = "/studybuilder/adminStudies/comprehensionQuestionList.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-    $('.fifthConsentReview').click(function () {
-      a.href = "/studybuilder/adminStudies/consentReview.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-    $('.sixth , .sixthQuestionnaires').click(function () {
-      a.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-
-    });
-    $('.sixthTask').click(function () {
-      a.href = "/studybuilder/adminStudies/viewStudyActiveTasks.do?_S=${param._S}";
+      a.href = "/studybuilder/adminApps/appActionList.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
 
-    $('.eight').click(function () {
-      a.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-    $('.eighthResources').click(function () {
-      $('.eighthResources').addClass('cursor-none');
-      a.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-    $('.eigthNotification').click(function () {
-      $('.eigthNotification').addClass('cursor-none');
-      a.href = "/studybuilder/adminStudies/viewStudyNotificationList.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-    $('.tenth').click(function () {
-      $('.tenth').addClass('cursor-none');
-      a.href = "/studybuilder/adminStudies/actionList.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
     </c:if>
     </c:if>
     <c:if test="${(empty studyBo.status || studyBo.status eq 'Pre-launch') && ((empty studyBo.studySequenceBo) || not studyBo.studySequenceBo.basicInfo)}">

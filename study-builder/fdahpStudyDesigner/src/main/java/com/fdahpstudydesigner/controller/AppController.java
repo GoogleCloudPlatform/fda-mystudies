@@ -57,4 +57,68 @@ public class AppController {
     logger.exit("viewAppsBasicInfo - Ends");
     return mav;
   }
+
+  @RequestMapping("/adminApps/viewAppSettings.do")
+  public ModelAndView viewAppSettings(HttpServletRequest request) {
+    logger.entry("begin viewAppSettings");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelMap map = new ModelMap();
+
+    try {
+
+      mav = new ModelAndView("viewAppSettings", map);
+    } catch (Exception e) {
+      logger.error("AppController - viewAppSettings - ERROR", e);
+    }
+    logger.exit("viewAppSettings - Ends");
+    return mav;
+  }
+
+  @RequestMapping("/adminApps/viewAppProperties.do")
+  public ModelAndView viewAppProperties(HttpServletRequest request) {
+    logger.entry("begin viewAppProperties");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelMap map = new ModelMap();
+
+    try {
+
+      mav = new ModelAndView("viewAppProperties", map);
+    } catch (Exception e) {
+      logger.error("AppController - viewAppProperties - ERROR", e);
+    }
+    logger.exit("viewAppProperties - Ends");
+    return mav;
+  }
+
+  @RequestMapping("/adminApps/viewDevConfigs.do")
+  public ModelAndView viewDevConfigs(HttpServletRequest request) {
+    logger.entry("begin viewDevConfigs");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelMap map = new ModelMap();
+
+    try {
+
+      mav = new ModelAndView("viewDevConfigs", map);
+    } catch (Exception e) {
+      logger.error("AppController - viewDevConfigs - ERROR", e);
+    }
+    logger.exit("viewDevConfigs - Ends");
+    return mav;
+  }
+
+  @RequestMapping("/adminApps/appActionList.do")
+  public ModelAndView viewAppActionList(HttpServletRequest request) {
+    logger.entry("begin appActionList");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelMap map = new ModelMap();
+
+    try {
+
+      mav = new ModelAndView("appActionList", map);
+    } catch (Exception e) {
+      logger.error("AppController - appActionList - ERROR", e);
+    }
+    logger.exit("appActionList - Ends");
+    return mav;
+  }
 }
