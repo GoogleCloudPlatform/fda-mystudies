@@ -32,6 +32,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -253,6 +254,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           public void onClick(View view) {
             if (clicked == false) {
               clicked = true;
+              password.clearFocus();
+              confirmPassword.clearFocus();
               callRegisterUserWebService();
               new Handler()
                   .postDelayed(
@@ -287,6 +290,25 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
             password.setError(getResources().getString(R.string.password_validation));
           }
         }
+      }
+    });
+
+    confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
+            confirmPassword.setError(getResources().getString(R.string.password_mismatch_error));
+          }
+        }
+      }
+    });
+
+    agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        password.clearFocus();
+        confirmPassword.clearFocus();
       }
     });
   }

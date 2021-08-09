@@ -2060,18 +2060,16 @@ public class StudyController {
           map.addAttribute("user", user);
           map.addAttribute(
               "defaultOverViewImageSignedUrl",
-              FdahpStudyDesignerUtil.getSignedUrl(
+              FdahpStudyDesignerUtil.getImageResources(
                   FdahpStudyDesignerConstants.DEFAULT_IMAGES
                       + "/"
-                      + configMap.get("study.defaultImage"),
-                  12));
+                      + configMap.get("study.defaultImage")));
           map.addAttribute(
               "defaultPageOverviewImageSignedUrl",
-              FdahpStudyDesignerUtil.getSignedUrl(
+              FdahpStudyDesignerUtil.getImageResources(
                   FdahpStudyDesignerConstants.DEFAULT_IMAGES
                       + "/"
-                      + configMap.get("study.page2.defaultImage"),
-                  12));
+                      + configMap.get("study.page2.defaultImage")));
 
           mav = new ModelAndView("overviewStudyPages", map);
         } else {
@@ -4449,15 +4447,14 @@ public class StudyController {
 
           map.addAttribute(
               "signedUrl",
-              FdahpStudyDesignerUtil.getSignedUrl(
+              FdahpStudyDesignerUtil.getImageResources(
                   FdahpStudyDesignerConstants.STUDIES
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + studyBo.getCustomStudyId()
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.STUDTYLOGO
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                      + studyBo.getThumbnailImage(),
-                  12));
+                      + studyBo.getThumbnailImage()));
         } else if (StringUtils.isEmpty(studyBo.getCustomStudyId())
             && StringUtils.isNotEmpty(studyBo.getDestinationCustomStudyId())) {
 
@@ -4473,23 +4470,21 @@ public class StudyController {
 
           map.addAttribute(
               "signedUrl",
-              FdahpStudyDesignerUtil.getSignedUrl(
+              FdahpStudyDesignerUtil.getImageResources(
                   FdahpStudyDesignerConstants.STUDIES
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + studyBo.getDestinationCustomStudyId()
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
                       + FdahpStudyDesignerConstants.STUDTYLOGO
                       + FdahpStudyDesignerConstants.PATH_SEPARATOR
-                      + studyBo.getThumbnailImage(),
-                  12));
+                      + studyBo.getThumbnailImage()));
         }
         map.addAttribute(
             "defaultImageSignedUrl",
-            FdahpStudyDesignerUtil.getSignedUrl(
+            FdahpStudyDesignerUtil.getImageResources(
                 FdahpStudyDesignerConstants.DEFAULT_IMAGES
                     + "/"
-                    + configMap.get("study.basicInformation.defaultImage"),
-                12));
+                    + configMap.get("study.basicInformation.defaultImage")));
         // grouped for Study category , Research Sponsors , Data partner
         referenceMap =
             (HashMap<String, List<ReferenceTablesBo>>) studyService.getreferenceListByCategory();
