@@ -34,6 +34,7 @@ struct HydraAPI {
       "redirect_uri": AuthRouter.redirectURL,
       "state": String.randomString(length: 21),
       "appName": Utilities.appName(),
+      "app": "//\(Bundle.main.bundleIdentifier ?? "")/mystudies",
     ]
     return
       try? AuthRouter

@@ -25,6 +25,11 @@ import UIKit
 let kActivities = "activities"
 
 let kActivityUnwindToStudyListIdentifier = "unwindeToStudyListIdentier"
+let kActivityUpcomingAlertMessage =
+  """
+  This is an upcoming event
+  """
+
 let kActivityAbondonedAlertMessage =
   """
   The next run of this activity is not available yet. Please try again later.
@@ -312,7 +317,7 @@ class ActivitiesViewController: UIViewController {
       // Task creation failed
       UIUtilities.showAlertMessage(
         kAlertMessageText,
-        errorMessage: NSLocalizedString("Invalid Data!", comment: ""),
+        errorMessage: NSLocalizedString("Invalid data!", comment: ""),
         errorAlertActionTitle: NSLocalizedString("OK", comment: ""),
         viewControllerUsed: self
       )
@@ -925,15 +930,18 @@ extension ActivitiesViewController: UITableViewDelegate {
             )
           }
         }
-      } else if activity.userParticipationStatus?.status == .abandoned {
+      } else if activity.userParticipationStatus?.status == .abandoned || activity.userParticipationStatus?.status == .yetToJoin {
         // Run not available.
         self.view.makeToast(
           NSLocalizedString(kActivityAbondonedAlertMessage, comment: "")
         )
       }
 
-    case .upcoming, .past: break
-
+    case .upcoming:
+        self.view.makeToast(
+          NSLocalizedString(kActivityUpcomingAlertMessage, comment: "")
+        )
+    case .past: break
     }
   }
 }

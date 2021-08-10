@@ -14,6 +14,9 @@
     width: 230px;
     height: 38px;
 }
+button#exportId {
+    margin-right: 7px;
+}
 </style>
 
 <div class="col-sm-10 col-rc white-bg p-none">

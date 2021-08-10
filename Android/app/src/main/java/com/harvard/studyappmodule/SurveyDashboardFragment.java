@@ -719,7 +719,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     }
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
-    String fname = ((SurveyActivity) context).getTitle1() + "_Dashboard.png";
+    String fname = ((SurveyActivity) context).getTitle1()
+            .replace("/", "\u2215") + "_Dashboard.png";
     File file = new File(dir, fname);
     if (file.exists()) {
       file.delete();
