@@ -23,9 +23,12 @@
 package com.fdahpstudydesigner.service;
 
 import com.fdahpstudydesigner.bean.AppListBean;
+import com.fdahpstudydesigner.bo.AppsBo;
 import java.util.List;
 
 public interface AppService {
 
   public List<AppListBean> getAppList(String userId);
+
+  public AppsBo getAppById(String appId, String userId);
 }

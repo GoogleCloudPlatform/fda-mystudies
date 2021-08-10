@@ -23,6 +23,7 @@
 package com.fdahpstudydesigner.service;
 
 import com.fdahpstudydesigner.bean.AppListBean;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.dao.AppDAO;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -50,5 +51,18 @@ public class AppServiceImpl implements AppService {
     }
     logger.exit("AppServiceImpl - getAppList() - Ends");
     return appBos;
+  }
+
+  @Override
+  public AppsBo getAppById(String appId, String userId) {
+    logger.entry("StudyServiceImpl - getStudyById() - Starts");
+    AppsBo appsBo = null;
+    try {
+      appsBo = appDAO.getAppById(appId, userId);
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - getStudyById() - ERROR ", e);
+    }
+    logger.exit("StudyServiceImpl - getStudyById() - Ends");
+    return appsBo;
   }
 }

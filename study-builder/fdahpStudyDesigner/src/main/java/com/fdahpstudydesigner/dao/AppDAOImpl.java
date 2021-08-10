@@ -26,8 +26,10 @@ package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import java.math.BigInteger;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
@@ -66,6 +68,8 @@ public class AppDAOImpl implements AppDAO {
     List<AppListBean> appListBean = null;
     AppsBo liveApp = null;
     AppsBo appBo = null;
+    StudyBo studyBo = null;
+    BigInteger studyCount;
     try {
 
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -127,7 +131,32 @@ public class AppDAOImpl implements AppDAO {
               }
             }
             if (userBO.getRoleId().equals("1")) {
+              studyCount =
+                  (BigInteger)
+                      session
+                          .createSQLQuery(
+                              "select count(*) from studies"
+                                  + " WHERE app_id=:customAppId AND is_live=0")
+                          .setString("customAppId", appDetails.getCustomAppId())
+                          .uniqueResult();
+              appDetails.setStudiesCount(studyCount);
               appDetails.setViewPermission(true);
+            } else {
+              studyCount =
+                  (BigInteger)
+                      session
+                          .createSQLQuery(
+                              "select count(*) "
+                                  + "from studies s,study_permission p, users user "
+                                  + "where s.id=p.study_id "
+                                  + "and user.user_id = s.created_by "
+                                  + "and s.app_id=:customAppId "
+                                  + "and p.user_id=:impValue "
+                                  + "and s.is_live=0")
+                          .setString("customAppId", appDetails.getCustomAppId())
+                          .setString(FdahpStudyDesignerConstants.IMP_VALUE, userId)
+                          .uniqueResult();
+              appDetails.setStudiesCount(studyCount);
             }
           }
         }
@@ -142,5 +171,41 @@ public class AppDAOImpl implements AppDAO {
     }
     logger.exit("getAppList() - Ends");
     return appListBean;
+  }
+
+  @Override
+  public AppsBo getAppById(String appId, String userId) {
+    logger.entry("begin getStudyById()");
+    Session session = null;
+    AppsBo appsBo = null;
+    AppsBo liveAppsBo = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(appId)) {
+        appsBo =
+            (AppsBo)
+                session.getNamedQuery("AppsBo.getAppsById").setString("id", appId).uniqueResult();
+        if (appsBo != null) {
+          // To get the live version of app by passing customAppId
+          liveAppsBo =
+              (AppsBo)
+                  session
+                      .createQuery("FROM AppsBo where customAppId=:customAppId and live=1")
+                      .setParameter("customAppId", appsBo.getCustomAppId())
+                      .uniqueResult();
+          if (liveAppsBo != null) {
+            appsBo.setLiveAppsBo(liveAppsBo);
+          }
+        }
+      }
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getStudyList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getStudyById() - Ends");
+    return appsBo;
   }
 }

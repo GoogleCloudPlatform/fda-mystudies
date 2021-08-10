@@ -60,7 +60,9 @@
                 <td>${app.type}</td>
                 <td>${app.appsStatus}</td>
                 <td class="text-right" style="padding-right: 2% !important; ">
-                    <span class="sprites_icon preview-g mr-lg viewAppClass"></span>
+                    <span class="sprites_icon preview-g mr-lg viewAppClass" isLive=""
+                  appId="${app.id}"
+                  permission="view" data-toggle="tooltip" data-placement="top" title="View"></span>
                     <span class="${(not empty app.liveAppId)?((app.flag)?'edit-inc-draft mr-md':'edit-inc mr-md'):'edit-inc-draft mr-md'}
                     addEditAppClass 
                     <c:choose>
@@ -70,9 +72,10 @@
 						<c:when test="${not empty app.appsStatus && (app.appsStatus eq 'Inactive')}">
 							  cursor-none
 						</c:when>
-					</c:choose>"
-                    ></span>
-                    <span class="sprites_icon copy mr-lg"></span>
+					</c:choose>" data-toggle="tooltip" data-placement="top"
+                	title="${(not empty app.liveAppId)?((app.flag)?'Edit draft version':'Edit'):'Edit draft version'}"
+                	appId="${app.id}"></span>
+                    <span class="sprites_icon copy mr-lg" data-toggle="tooltip" data-placement="top" title="View associated studies (${app.studiesCount})"></span>
                     
                   </td>        
               </tr>
@@ -99,6 +102,7 @@
 <script>
   $(document).ready(function () {
 	$('.appClass').addClass('active');
+	$('[data-toggle="tooltip"]').tooltip();
     $('.applistDetailsToEdit').on('click', function () {
       $('#addEditAppsForm').submit();
     });
@@ -124,8 +128,8 @@
         form.method = 'post';
         var input = document.createElement('input');
         input.type = 'hidden';
-        input.name = 'studyId';
-        input.value = $(this).attr('studyId');
+        input.name = 'appId';
+        input.value = $(this).attr('appId');
         form.appendChild(input);
 
         var input1 = document.createElement('input');
@@ -146,7 +150,7 @@
         input.value = '${_csrf.token}';
         form.appendChild(input);
 
-        form.action = '/studybuilder/adminApps/viewAppsInfo.do';
+        form.action = '/studybuilder/adminApps/viewAppDetails.do';
         document.body.appendChild(form);
         form.submit();
       });

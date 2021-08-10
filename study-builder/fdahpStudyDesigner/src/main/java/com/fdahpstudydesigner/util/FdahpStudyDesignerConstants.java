@@ -501,6 +501,8 @@ public class FdahpStudyDesignerConstants {
 
   public static final String WORKING_VERSION = "workingVersion";
 
+  public static final String APP_ID = "appId";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

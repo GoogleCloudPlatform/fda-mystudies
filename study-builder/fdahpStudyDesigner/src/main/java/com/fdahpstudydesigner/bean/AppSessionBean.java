@@ -21,14 +21,44 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.fdahpstudydesigner.dao;
+package com.fdahpstudydesigner.bean;
 
-import com.fdahpstudydesigner.bean.AppListBean;
-import com.fdahpstudydesigner.bo.AppsBo;
-import java.util.List;
+public class AppSessionBean {
 
-public interface AppDAO {
-  public List<AppListBean> getAppList(String userId);
+  private String isLive;
+  private String permission;
+  private Integer sessionAppCount;
+  private String studyId;
 
-  public AppsBo getAppById(String appId, String userId);
+  public String getIsLive() {
+    return isLive;
+  }
+
+  public void setIsLive(String isLive) {
+    this.isLive = isLive;
+  }
+
+  public String getPermission() {
+    return permission;
+  }
+
+  public void setPermission(String permission) {
+    this.permission = permission;
+  }
+
+  public Integer getSessionAppCount() {
+    return sessionAppCount;
+  }
+
+  public void setSessionAppCount(Integer sessionAppCount) {
+    this.sessionAppCount = sessionAppCount;
+  }
+
+  public String getStudyId() {
+    return studyId;
+  }
+
+  public void setStudyId(String studyId) {
+    this.studyId = studyId;
+  }
 }

@@ -23,6 +23,7 @@
  */
 package com.fdahpstudydesigner.bean;
 
+import java.math.BigInteger;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,6 +39,7 @@ public class AppListBean {
   private boolean flag = false;
   private boolean viewPermission;
   private String liveAppId;
+  private BigInteger studiesCount;
 
   public AppListBean(
       String id,
@@ -82,7 +84,8 @@ public class AppListBean {
       String createdOn,
       boolean viewPermission,
       boolean flag,
-      String liveAppId) {
+      String liveAppId,
+      BigInteger studiesCount) {
     super();
     this.id = id;
     this.customAppId = customAppId;
@@ -93,5 +96,6 @@ public class AppListBean {
     this.viewPermission = viewPermission;
     this.liveAppId = liveAppId;
     this.flag = flag;
+    this.studiesCount = studiesCount;
   }
 }

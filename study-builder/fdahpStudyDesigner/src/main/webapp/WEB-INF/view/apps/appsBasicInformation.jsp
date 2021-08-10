@@ -67,7 +67,7 @@ margin-top:16px !important;
                   <div class="form-group mb-none">
                     <input type="text" custAttType="cust" autofocus="autofocus"
 	                   class="form-control aq-inp appIdCls" name="appId" id="appId"
-	                   maxlength="15" value="${appsBo.id}"
+	                   maxlength="15" value="${appBo.id}"
 	                <c:if
 	                    test="${not empty appsBo.status && (appsBo.status == 'Active' || appsBo.status == 'Published' || appsBo.status == 'Paused' || appsBo.status == 'Deactivated')}"> disabled</c:if>
 	                   required data-error="Please fill out this field"/>

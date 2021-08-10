@@ -27,6 +27,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.Getter;
@@ -38,6 +40,11 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Entity
 @Table(name = "apps")
+@NamedQueries({
+  @NamedQuery(
+      name = "AppsBo.getAppsById",
+      query = " From AppsBo ABO WHERE ABO.id =:id order by version DESC LIMIT 1"),
+})
 public class AppsBo implements Serializable {
 
   private static final long serialVersionUID = 2147840266295837728L;
@@ -160,4 +167,6 @@ public class AppsBo implements Serializable {
   private Float version = 0f;
 
   @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
+
+  @Transient private AppsBo liveAppsBo = null;
 }
