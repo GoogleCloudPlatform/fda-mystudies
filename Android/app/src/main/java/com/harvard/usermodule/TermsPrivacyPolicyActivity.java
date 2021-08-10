@@ -18,6 +18,7 @@ package com.harvard.usermodule;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -49,13 +50,32 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
 
   private void setTextForView() {
     try {
-      String titleTxt = getIntent().getStringExtra("title");
-      title.setText(titleTxt);
+      if (getIntent().getStringExtra("title") == null) {
+        if (getIntent().getData().getPath().equalsIgnoreCase("/mystudies/privacyPolicy")) {
+          title.setText(getString(R.string.privacy_policy));
+        }
+
+        if (getIntent().getData().getPath().equalsIgnoreCase("/mystudies/terms")) {
+          title.setText(getString(R.string.terms));
+        }
+      } else {
+        title.setText(getIntent().getStringExtra("title"));
+      }
       webView.getSettings().setLoadsImagesAutomatically(true);
       webView.getSettings().setJavaScriptEnabled(true);
       webView.setWebViewClient(new WebViewClient());
       webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-      webView.loadUrl(getIntent().getStringExtra("url"));
+      if (getIntent().getStringExtra("url") == null) {
+        if (getIntent().getData().getPath().equalsIgnoreCase("/mystudies/privacyPolicy")) {
+          webView.loadUrl(getString(R.string.privacyurl));
+        }
+
+        if (getIntent().getData().getPath().equalsIgnoreCase("/mystudies/terms")) {
+          webView.loadUrl(getString(R.string.termsurl));
+        }
+      } else {
+        webView.loadUrl(getIntent().getStringExtra("url"));
+      }
     } catch (Exception e) {
       Logger.log(e);
     }
