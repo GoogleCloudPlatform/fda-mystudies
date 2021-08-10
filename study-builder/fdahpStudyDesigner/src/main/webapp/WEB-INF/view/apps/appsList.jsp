@@ -69,7 +69,7 @@
 						<c:when test="${not app.viewPermission}">
 								cursor-none
 						</c:when>
-						<c:when test="${not empty app.appsStatus && (app.appsStatus eq 'Inactive')}">
+						<c:when test="${not empty app.appsStatus && (app.appsStatus eq 'Deactivated')}">
 							  cursor-none
 						</c:when>
 					</c:choose>" data-toggle="tooltip" data-placement="top"
