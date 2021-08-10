@@ -55,14 +55,14 @@ public class AppServiceImpl implements AppService {
 
   @Override
   public AppsBo getAppById(String appId, String userId) {
-    logger.entry("StudyServiceImpl - getStudyById() - Starts");
+    logger.entry("AppServiceImpl - getAppById() - Starts");
     AppsBo appsBo = null;
     try {
       appsBo = appDAO.getAppById(appId, userId);
     } catch (Exception e) {
-      logger.error("StudyServiceImpl - getStudyById() - ERROR ", e);
+      logger.error("AppServiceImpl - getAppById() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - getStudyById() - Ends");
+    logger.exit("AppServiceImpl - getAppById() - Ends");
     return appsBo;
   }
 }

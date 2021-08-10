@@ -38,14 +38,14 @@ margin-top:16px !important;
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn actBut"
                     id="saveId"
-                    <c:if test="${not studyBo.viewPermission }">disabled</c:if>>Save
+                    >Save
             </button>
           </div>
 
           <div class="dis-line form-group mb-none">
             <button type="button" class="btn btn-primary blue-btn actBut"
                     id="completedId"
-                    <c:if test="${not studyBo.viewPermission }">disabled</c:if>>Mark
+                    >Mark
               as completed
             </button>
           </div>
@@ -53,7 +53,7 @@ margin-top:16px !important;
       </div>
     </div>
     <!-- End top tab section-->
-    <input type="hidden" id="sId" value="${studyBo.id}" name="id"/>
+    <input type="hidden" id="sId" value="${appBo.id}" name="id"/>
     <input type="hidden" value="" id="buttonText" name="buttonText">
     <!-- Start body tab section -->
     <div class="right-content-body col-xs-12">
@@ -67,9 +67,9 @@ margin-top:16px !important;
                   <div class="form-group mb-none">
                     <input type="text" custAttType="cust" autofocus="autofocus"
 	                   class="form-control aq-inp appIdCls" name="appId" id="appId"
-	                   maxlength="15" value="${appBo.id}"
-	                <c:if
-	                    test="${not empty appsBo.status && (appsBo.status == 'Active' || appsBo.status == 'Published' || appsBo.status == 'Paused' || appsBo.status == 'Deactivated')}"> disabled</c:if>
+	                   maxlength="15" value="${appBo.customAppId}"
+	                <%-- <c:if
+	                    test="${not empty appsBo.status && (appsBo.status == 'Active' || appsBo.status == 'Published' || appsBo.status == 'Paused' || appsBo.status == 'Deactivated')}"> disabled</c:if> --%>
 	                   required data-error="Please fill out this field"/>
                     <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -96,7 +96,11 @@ margin-top:16px !important;
 
 <script>
  $(document).ready( function () {
-	$('.studyClass').addClass("active");
+	 $('.appClass').addClass('active');
+	 <c:if test="${not empty permission}">
+     $('#appsBasicInfoFormId input').prop(
+         'disabled', true);
+     </c:if>
     $('#removeUrl').css("visibility", "hidden");
     
     $('#saveId').click(

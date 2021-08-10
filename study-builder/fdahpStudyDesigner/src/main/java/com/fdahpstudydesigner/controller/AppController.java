@@ -378,7 +378,7 @@ public class AppController {
             if ((sessionBean != null)
                 && sessionBean.getPermission().equals(permission)
                 && sessionBean.getIsLive().equals(isLive)
-                && sessionBean.getStudyId().equals(appId)) {
+                && sessionBean.getAppId().equals(appId)) {
               appSessionBean = sessionBean;
             }
           }
@@ -387,7 +387,7 @@ public class AppController {
           sessionAppCount = appSessionBean.getSessionAppCount();
         } else {
           ++sessionAppCount;
-          if ((sesObj.getStudySession() != null) && !sesObj.getStudySession().isEmpty()) {
+          if ((sesObj.getAppSession() != null) && !sesObj.getAppSession().isEmpty()) {
             appSessionList.addAll(sesObj.getAppSession());
           }
           appSessionList.add(sessionAppCount);
@@ -400,7 +400,7 @@ public class AppController {
           appSessionBean.setIsLive(isLive);
           appSessionBean.setPermission(permission);
           appSessionBean.setSessionAppCount(sessionAppCount);
-          appSessionBean.setStudyId(appId);
+          appSessionBean.setAppId(appId);
           appSessionBeans.add(appSessionBean);
           sesObj.setAppSessionBeans(appSessionBeans);
         }
@@ -408,7 +408,7 @@ public class AppController {
 
       map.addAttribute("_S", sessionAppCount);
       request.getSession().setAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT, sesObj);
-      request.getSession().setAttribute("sessionStudyCount", sessionAppCount);
+      request.getSession().setAttribute("sessionAppCount", sessionAppCount);
       request
           .getSession()
           .setAttribute(sessionAppCount + FdahpStudyDesignerConstants.APP_ID, appId);

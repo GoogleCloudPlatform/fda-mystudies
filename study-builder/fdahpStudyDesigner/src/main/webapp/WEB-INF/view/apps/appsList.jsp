@@ -92,10 +92,9 @@
    
 
 <div class="clearfix"></div>
-<form:form action="/studybuilder/adminApps/viewAppsInfo.do?_S=${param._S}"
+<form:form action="/studybuilder/adminApps/viewAppDetails.do" id="addEditAppsForm"
            name="addEditAppsForm"
-           id="addEditAppsForm" method="post">
-  <input type="hidden" name="appsId" id="appsId" value="${appsId}"/>
+           method="post">
 </form:form>
 
 
@@ -137,6 +136,32 @@
         input1.name = 'permission';
         input1.value = $(this).attr('permission');
         form.appendChild(input1);
+
+        var input2 = document.createElement('input');
+        input2.type = 'hidden';
+        input2.name = 'isLive';
+        input2.value = $(this).attr('isLive');
+        form.appendChild(input2);
+
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '${_csrf.parameterName}';
+        input.value = '${_csrf.token}';
+        form.appendChild(input);
+
+        form.action = '/studybuilder/adminApps/viewAppDetails.do';
+        document.body.appendChild(form);
+        form.submit();
+      });
+
+    $('.addEditAppClass').on('click', function () {
+        var form = document.createElement('form');
+        form.method = 'post';
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'appId';
+        input.value = $(this).attr('appId');
+        form.appendChild(input);
 
         var input2 = document.createElement('input');
         input2.type = 'hidden';

@@ -175,7 +175,7 @@ public class AppDAOImpl implements AppDAO {
 
   @Override
   public AppsBo getAppById(String appId, String userId) {
-    logger.entry("begin getStudyById()");
+    logger.entry("begin getAppById()");
     Session session = null;
     AppsBo appsBo = null;
     AppsBo liveAppsBo = null;
@@ -199,13 +199,13 @@ public class AppDAOImpl implements AppDAO {
         }
       }
     } catch (Exception e) {
-      logger.error("StudyDAOImpl - getStudyList() - ERROR ", e);
+      logger.error("AppDAOImpl - getAppById() - ERROR ", e);
     } finally {
       if ((null != session) && session.isOpen()) {
         session.close();
       }
     }
-    logger.exit("getStudyById() - Ends");
+    logger.exit("getAppById() - Ends");
     return appsBo;
   }
 }

@@ -23,42 +23,15 @@
 
 package com.fdahpstudydesigner.bean;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class AppSessionBean {
 
   private String isLive;
   private String permission;
   private Integer sessionAppCount;
-  private String studyId;
-
-  public String getIsLive() {
-    return isLive;
-  }
-
-  public void setIsLive(String isLive) {
-    this.isLive = isLive;
-  }
-
-  public String getPermission() {
-    return permission;
-  }
-
-  public void setPermission(String permission) {
-    this.permission = permission;
-  }
-
-  public Integer getSessionAppCount() {
-    return sessionAppCount;
-  }
-
-  public void setSessionAppCount(Integer sessionAppCount) {
-    this.sessionAppCount = sessionAppCount;
-  }
-
-  public String getStudyId() {
-    return studyId;
-  }
-
-  public void setStudyId(String studyId) {
-    this.studyId = studyId;
-  }
+  private String appId;
 }
