@@ -234,7 +234,7 @@ class WCPServices: NSObject {
     let method = WCPMethods.studyUpdates.method
     let headerParams = [
       kStudyId: study.studyId!,
-      kStudyVersion: study.version!,
+      kStudyVersion: study.version ?? "0",
     ]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
