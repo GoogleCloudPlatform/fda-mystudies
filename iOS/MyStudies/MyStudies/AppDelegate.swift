@@ -412,20 +412,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// Present Retry View
   /// - Parameter viewController: `UIViewController` instance
   func addRetryScreen(viewController: UIViewController?) {
-
-    let navigationController = (self.window?.rootViewController as? UINavigationController)!
-    self.retryView = ComprehensionFailure.instanceFromNib(
-      frame: navigationController.view.frame,
-      detail: nil
-    )
-
-    if viewController != nil {
-      retryView?.delegate = (viewController as? ComprehensionFailureDelegate)!
-    } else {
-      retryView?.delegate = self
+    if let navigationController = (self.window?.rootViewController as? UINavigationController) {
+      self.retryView = ComprehensionFailure.instanceFromNib(
+        frame: navigationController.view.frame,
+        detail: nil
+      )
+      
+      if viewController != nil {
+        retryView?.delegate = (viewController as? ComprehensionFailureDelegate)!
+      } else {
+        retryView?.delegate = self
+      }
+      UIApplication.shared.keyWindow?.addSubview(retryView!)
+      UIApplication.shared.keyWindow?.bringSubviewToFront(retryView!)
+    } else if let windowBounds = UIApplication.shared.keyWindow?.bounds {
+      self.retryView = ComprehensionFailure.instanceFromNib(
+        frame: windowBounds,
+        detail: nil
+      )
+      
+      if viewController != nil {
+        retryView?.delegate = (viewController as? ComprehensionFailureDelegate)!
+      } else {
+        retryView?.delegate = self
+      }
+      UIApplication.shared.keyWindow?.addSubview(retryView!)
+      UIApplication.shared.keyWindow?.bringSubviewToFront(retryView!)
     }
-    UIApplication.shared.keyWindow?.addSubview(retryView!)
-    UIApplication.shared.keyWindow?.bringSubviewToFront(retryView!)
   }
 
   // MARK: - Custom Navigation Bar
