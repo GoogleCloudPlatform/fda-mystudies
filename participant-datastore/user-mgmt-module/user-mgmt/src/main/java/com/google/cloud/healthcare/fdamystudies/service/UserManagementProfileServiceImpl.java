@@ -91,7 +91,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     if (userDetails != null) {
       userProfileRespBean = new UserProfileRespBean();
       userProfileRespBean.getProfile().setEmailId(userDetails.getEmail());
-      verificationDate = userDetails.getVerificationDate().toString();
+      verificationDate = userDetails.getVerificationDate();
       userProfileRespBean
           .getProfile()
           .setVerificationTime(StringUtils.defaultIfEmpty(verificationDate, ""));

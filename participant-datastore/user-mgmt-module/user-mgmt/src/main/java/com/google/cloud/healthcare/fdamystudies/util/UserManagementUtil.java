@@ -171,4 +171,10 @@ public class UserManagementUtil {
     restTemplate.exchange(
         appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, entity, Void.class, userId);
   }
+
+  public static String getCurrentDateTime() {
+    Calendar currentDate = Calendar.getInstance();
+    SimpleDateFormat formatter = new SimpleDateFormat(AppConstants.DB_SDF_DATE_TIME);
+    return formatter.format(currentDate.getTime());
+  }
 }
