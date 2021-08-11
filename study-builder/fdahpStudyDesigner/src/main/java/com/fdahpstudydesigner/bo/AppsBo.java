@@ -90,6 +90,9 @@ public class AppsBo implements Serializable {
   @Column(name = "app_privacy_url")
   private String appPrivacyUrl;
 
+  @Column(name = "app_terms_url")
+  private String appTermsUrl;
+
   @Column(name = "organization_name")
   private String organizationName;
 
@@ -159,6 +162,9 @@ public class AppsBo implements Serializable {
 
   @Column(name = "ios_app_distributed")
   private Integer iosAppDistributed;
+
+  @Column(name = "is_app_published")
+  private Boolean isAppPublished;
 
   @Column(name = "android_app_distributed")
   private Integer androidAppDistributed;

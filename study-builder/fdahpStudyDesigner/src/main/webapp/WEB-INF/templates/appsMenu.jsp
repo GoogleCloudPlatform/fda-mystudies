@@ -3,6 +3,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
 
+<style>
+.left-content-container ul li:first-child {
+	height: 75px !important;
+}
+.left-content-container ul li {
+    width: 101% !important;
+}
+</style>
+
 <!-- Start left Content here -->
 <!-- ============================================================== -->
 <div class="col-sm-2 col-lc p-none">
@@ -10,22 +19,21 @@
     <ul class="menuNav">
       <li>
         <div class="tit_wrapper" data-toggle="tooltip" data-placement="top"
-             title="${fn:escapeXml(not empty studyBo.name?studyBo.name:'Create Apps')}">${not empty studyBo.name?studyBo.name:'Create Apps'}</div>
-        <div class="mb-lg ${empty studyBo.status?'hide':''}">
+             title="${fn:escapeXml(not empty appBo.name?appBo.name:'Create Apps')}">${not empty appBo.name?appBo.name:'Create Apps'}</div>
+         <div class="mb-lg ${empty appBo.customAppId?'hide':''}"><span class="study_status">${appBo.customAppId}</span></div>
+        <div class="mb-lg ${empty appBo.appsStatus?'hide':''}">
           <span class="study_status
-	                <c:if test="${studyBo.status eq 'Pre-launch' || studyBo.status eq 'Pre-launch(Published)'}">
-	                    pre-launch_txt
-	                </c:if>
-	                <c:if test="${studyBo.status eq 'Active'}">
+	                <c:if test="${appBo.appsStatus eq 'Active'}">
 	                    active_txt
 	                </c:if>
-	                <c:if test="${studyBo.status eq 'Paused'}">
+	                <c:if test="${appBo.appsStatus eq 'Inactive'}">
 	                    paused_txt
 	                </c:if>
-	                <c:if test="${studyBo.status eq 'Deactivated'}">
-	                    deactivated_txt
-	                </c:if>
-	                ">${studyBo.status}</span>
+	                ">${appBo.appsStatus}</span><span class="study_status">|</span>
+	                <span class="study_status active_txt"><c:if test="${appBo.isAppPublished}">Published</c:if>
+	                <c:if test="${empty appBo.isAppPublished}">Not published</c:if></span><span class="study_status">|</span>
+	                <span class="study_status active_txt"><c:if test="${appBo.iosAppDistributed eq 1|| appBo.androidAppDistributed  eq 1}">Distributed</c:if>
+	                <c:if test="${appBo.iosAppDistributed eq 0|| appBo.androidAppDistributed  eq 0}">Not distributed</c:if></span>
           <c:set var="isLive">${_S}isLive</c:set>
           <span
               class="version">${not empty  sessionScope[isLive]?studyBo.studyVersionBo.studyLVersion:''}</span>
