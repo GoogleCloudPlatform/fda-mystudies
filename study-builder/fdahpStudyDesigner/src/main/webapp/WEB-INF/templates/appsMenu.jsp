@@ -20,10 +20,12 @@
       <li>
         <div class="tit_wrapper" data-toggle="tooltip" data-placement="top"
              title="${fn:escapeXml(not empty appBo.name?appBo.name:'Create Apps')}">${not empty appBo.name?appBo.name:'Create Apps'}</div>
+
          <div class="mb-lg ${empty appBo.customAppId?'hide':''}"><span class="study_status">${appBo.customAppId}</span></div>
         <div class="mb-lg ${empty appBo.appsStatus?'hide':''}">
           <span class="study_status
 	                <c:if test="${appBo.appsStatus eq 'Active'}">
+
 	                    active_txt
 	                </c:if>
 	                <c:if test="${appBo.appsStatus eq 'Inactive'}">
@@ -34,6 +36,7 @@
 	                <c:if test="${empty appBo.isAppPublished}">Not published</c:if></span><span class="study_status">|</span>
 	                <span class="study_status active_txt"><c:if test="${appBo.iosAppDistributed eq 1|| appBo.androidAppDistributed  eq 1}">Distributed</c:if>
 	                <c:if test="${appBo.iosAppDistributed eq 0|| appBo.androidAppDistributed  eq 0}">Not distributed</c:if></span>
+
           <c:set var="isLive">${_S}isLive</c:set>
           <span
               class="version">${not empty  sessionScope[isLive]?studyBo.studyVersionBo.studyLVersion:''}</span>
@@ -41,7 +44,7 @@
       </li>
       <li class="first active">
         APP INFORMATION
-        <c:if test="${studyBo.studySequenceBo.basicInfo}">
+        <c:if test="${appBo.appSequenceBo.appInfo}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
@@ -77,7 +80,9 @@
     $('#createStudyId').show();
     $("#myNavbar li.studyClass").addClass('active');
     $('[data-toggle="tooltip"]').tooltip();
-
+    console.log('${appBo.appSequenceBo.appId}');
+    console.log('${appBo.appSequenceBo.appSequenceId}');
+	console.log('${appBo.appSequenceBo.appInfo}');
     $('.cancelBut').click(function () {
       <c:if test="${empty permission}">
       $('.cancelBut').prop('disabled', true);
