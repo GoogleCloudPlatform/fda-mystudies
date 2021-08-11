@@ -38,14 +38,14 @@ margin-top:16px !important;
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn actBut"
                     id="saveId"
-                    >Save
+                    <%-- <c:if test="${not studyBo.viewPermission }">disabled</c:if> --%>>Save
             </button>
           </div>
 
           <div class="dis-line form-group mb-none">
             <button type="button" class="btn btn-primary blue-btn actBut"
                     id="completedId"
-                    >Mark
+                    <%-- <c:if test="${not studyBo.viewPermission }">disabled</c:if> --%>>Mark
               as completed
             </button>
           </div>
@@ -66,10 +66,11 @@ margin-top:16px !important;
                   </div>
                   <div class="form-group mb-none">
                     <input type="text" custAttType="cust" autofocus="autofocus"
-	                   class="form-control aq-inp appIdCls" name="appId" id="appId"
+	                   class="form-control aq-inp appIdCls" name="customAppId" id="appId"
 	                   maxlength="15" value="${appBo.customAppId}"
 	                <%-- <c:if
 	                    test="${not empty appsBo.status && (appsBo.status == 'Active' || appsBo.status == 'Published' || appsBo.status == 'Paused' || appsBo.status == 'Deactivated')}"> disabled</c:if> --%>
+
 	                   required data-error="Please fill out this field"/>
                     <div class="help-block with-errors red-txt"></div>
                 </div>
@@ -104,21 +105,98 @@ margin-top:16px !important;
     $('#removeUrl').css("visibility", "hidden");
     
     $('#saveId').click(
+            function (e) {
+              $('#appsBasicInfoFormId').validator(
+                  'destroy').validator();
+              validateAppId(
+                  '',
+                  function (st) {
+                    if (st) {
+                        var appId = $(
+                            '#appId')
+                            .val();
+                        if (null != appId
+                            && appId != ''
+                            && typeof appId != 'undefined') {
+                          validateAppId(
+                              '',
+                              function (
+                                  valid) {
+                                if (valid) {
+                                  $(
+                                      '#appsBasicInfoFormId')
+                                      .validator(
+                                          'destroy');
+                                  $(
+                                      "#buttonText")
+                                      .val(
+                                          'save');
+                                  $(
+                                      '#appsBasicInfoFormId')
+                                      .submit();
+                                } else {
+                                  $(
+                                      '#appsBasicInfoFormId')
+                                      .validator(
+                                          'destroy');
+                                  $(
+                                      "#buttonText")
+                                      .val(
+                                          'save');
+                                 
+                                  $(
+                                      '#appsBasicInfoFormId')
+                                      .submit();
+                                }
+                              });
+                        } else {
+                          $(
+                              '#appsBasicInfoFormId')
+                              .validator(
+                                  'destroy');
+                          $(
+                              "#buttonText")
+                              .val(
+                                  'save');
+                          $(
+                              '#appsBasicInfoFormId')
+                              .submit();
+                        }
+                    } else {
+                        $(
+                            '#appsBasicInfoFormId')
+                            .validator(
+                                'destroy')
+                            .validator();
+                        if (!$('#appId')[0]
+                            .checkValidity()) {
+                          $(
+                              "#appId")
+                              .parent()
+                              .addClass(
+                                  'has-error has-danger')
+                              .find(
+                                  ".help-block")
+                              .empty()
+                              .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                                  "This is a required field"));
+                          return false;
+                        }
+                      }
+                    
+                  });
+            });
+    
+    $('#completedId').click(
         function (e) {
-          $('#appsBasicInfoFormId').validator(
-              'destroy').validator();
+          e.preventDefault();
+          isFromValid("#appsBasicInfoFormId")
+          
           validateAppId(
               '',
               function (st) {
                 if (st) {
-                  var studyCount = $(
-                      '.customStudyClass')
-                      .find(
-                          '.help-block')
-                      .children().length;
-                  if (parseInt(studyCount) >= 1) {
-                    return false;
-                  } else if (!$('#appName')[0]
+                	if (!$('#appName')[0]
                       .checkValidity()) {
                     $(
                         "#appName")
@@ -145,47 +223,26 @@ margin-top:16px !important;
                               valid) {
                             if (valid) {
                               $(
-                                  '.studyTypeClass,.studyIdCls,.appIdCls')
-                                  .prop(
-                                      'disabled',
-                                      false);
-                              $(
                                   '#appsBasicInfoFormId')
                                   .validator(
                                       'destroy');
                               $(
                                   "#buttonText")
                                   .val(
-                                      'save');
-                              var richTextVal=$('#summernote').val();
-                              if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
-                            	  var richText=$('#summernote').summernote('code');
-                            	  var escaped = $('#summernote').text(richText).html();
-                              	  $('#summernote').val(escaped);
-                               }
+                                      'completed');
                               $(
                                   '#appsBasicInfoFormId')
                                   .submit();
                             } else {
                               $(
-                                  '.studyTypeClass,.studyIdCls,.appIdCls')
-                                  .prop(
-                                      'disabled',
-                                      false);
-                              $(
                                   '#appsBasicInfoFormId')
                                   .validator(
                                       'destroy');
                               $(
                                   "#buttonText")
                                   .val(
-                                      'save');
-                              var richTextVal=$('#summernote').val();
-                              if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
-                            	  var richText=$('#summernote').summernote('code');
-                            	  var escaped = $('#summernote').text(richText).html();
-                              	  $('#summernote').val(escaped);
-                               }
+                                      'completed');
+                             
                               $(
                                   '#appsBasicInfoFormId')
                                   .submit();
@@ -193,67 +250,27 @@ margin-top:16px !important;
                           });
                     } else {
                       $(
-                          '.studyTypeClass,.studyIdCls,.appIdCls')
-                          .prop(
-                              'disabled',
-                              false);
-                      $(
                           '#appsBasicInfoFormId')
                           .validator(
                               'destroy');
                       $(
                           "#buttonText")
                           .val(
-                              'save');
-                      var richTextVal=$('#summernote').val();
-                      if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
-                    	  var richText=$('#summernote').summernote('code');
-                    	  var escaped = $('#summernote').text(richText).html();
-                      	  $('#summernote').val(escaped);
-                       }
+                              'completed');
                       $(
                           '#appsBasicInfoFormId')
                           .submit();
                     }
                   }
-                } else {
-                  var studyCount = $(
-                      '.customStudyClass')
-                      .find(
-                          '.help-block')
-                      .children().length;
-                  if (parseInt(studyCount) >= 1) {
-                    return false;
-                  } else {
-                    $(
-                        '#appsBasicInfoFormId')
-                        .validator(
-                            'destroy')
-                        .validator();
-                    if (!$('#appId')[0]
-                        .checkValidity()) {
-                      $(
-                          "#appId")
-                          .parent()
-                          .addClass(
-                              'has-error has-danger')
-                          .find(
-                              ".help-block")
-                          .empty()
-                          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                              "This is a required field"));
-                      return false;
-                    }
-                  }
-                }
+                } 
               });
         });
  });
  
 function validateAppId(item, callback) {
-    var appId = $("#appsId").val();
-    var thisAttr = $("#appsId");
-    var dbAppId = '${appsBo.id}';
+    var appId = $("#appId").val();
+    var thisAttr = $("#appId");
+    var dbAppId = '${appBo.customAppId}';
     if (appId != null && appId != ''
         && typeof appId != 'undefined') {
       if (dbAppId != appId) {
@@ -268,6 +285,7 @@ function validateAppId(item, callback) {
               },
               success: function getResponse(data) {
                 var message = data.message;
+                debugger
                 if ('SUCCESS' != message) {
                   $(thisAttr).validator('validate');
                   $(thisAttr).parent().removeClass(
