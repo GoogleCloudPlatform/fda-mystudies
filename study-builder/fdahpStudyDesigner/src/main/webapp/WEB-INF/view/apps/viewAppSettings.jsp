@@ -16,15 +16,8 @@
 <div class="col-sm-10 col-rc white-bg p-none" id="settingId">
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
-      data-toggle="validator" role="form" id="settingfoFormId" method="post"
+      data-toggle="validator" role="form" id="settingFormId" method="post"
       autocomplete="off">
-    <input type="hidden" name="buttonText" id="buttonText">
-    <input type="hidden" id="settingsstudyId" name="id"
-           value="${studyBo.id}">
-    <input type="hidden" id="userIds" name="userIds">
-    <input type="hidden" id="permissions" name="permissions">
-    <input type="hidden" id="projectLead" name="projectLead">
-    <input type="hidden" id="modifiedBy" name="modifiedBy"  value="${studyBo.modifiedBy}">
     
 	
     <!-- Start top tab section-->
@@ -33,15 +26,14 @@
         <div class="black-md-f text-uppercase dis-line pull-left line34">
           APP SETTINGS
           <c:set var="isLive">${_S}isLive</c:set>
-            ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
+        </div>
 
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn cancelBut"
                   id="cancelId">Cancel
           </button>
         </div>
-        <c:if
-            test="${(empty permission) && (sessionObject.role ne 'Org-level Admin')}">
+        <c:if test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn" id="saveId">Save</button>
           </div>
@@ -72,14 +64,13 @@
 				<div class="form-group">
 					<span class="radio radio-info radio-inline p-45"><input
 						type="radio" id="inlineRadio1" value="Yes" 
-						name="enrollingParticipants"
-						<c:if test="${studyBo.enrollingParticipants eq 'Yes' || studyBo.status eq 'Pre-launch'}">checked</c:if>
+						<c:if test="${appBo.type eq 'Gateway'}">checked</c:if>
 						 required data-error="Please fill out this field"> <label
 						for="inlineRadio1">Gateway</label> </span> <span class="radio radio-inline"><input
 						type="radio" id="inlineRadio2" value="No"
 						name="enrollingParticipants"
-						${studyBo.status eq 'Pre-launch' ?'disabled':''}
-						<c:if test="${ studyBo.enrollingParticipants eq 'No' }">checked</c:if>
+						<%-- ${studyBo.status eq 'Pre-launch' ?'disabled':''} --%>
+						<c:if test="${ appBo.type eq 'Standalone' }">checked</c:if>
 						 required data-error="Please fill out this field">
 						<label for="inlineRadio2">Standalone</label> </span>
 					<div class="help-block with-errors red-txt"></div>
@@ -99,18 +90,18 @@
           <span class="checkbox checkbox-inline p-45"><input
               class="platformClass" type="checkbox" id="inlineCheckbox1"
               name="platform" value="I"
-              <c:if test="${fn:contains(studyBo.platform,'I')}">checked</c:if>
-              <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if>
+              <c:if test="${fn:contains(appBo.appPlatform,'I')}">checked</c:if>
+              <%-- <c:if
+                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if> --%>
               data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox1"> iOS </label>
           </span>
           <span class="checkbox checkbox-inline"><input
               type="checkbox" class="platformClass" id="inlineCheckbox2"
               name="platform" value="A"
-              <c:if test="${fn:contains(studyBo.platform,'A')}">checked</c:if>
-              <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if>
+              <c:if test="${fn:contains(appBo.appPlatform,'A')}">checked</c:if>
+              <%-- <c:if
+                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if> --%>
               data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox2"> Android </label>
           </span>
@@ -174,7 +165,10 @@
   </div>
 </div>
 <script>
-  $(document).ready(function () {
-
-	}
+$(document).ready( function () {
+	  <c:if test="${not empty permission}">
+	     $('#settingFormId input').prop(
+	         'disabled', true);
+	     </c:if>
+	});
 </script>

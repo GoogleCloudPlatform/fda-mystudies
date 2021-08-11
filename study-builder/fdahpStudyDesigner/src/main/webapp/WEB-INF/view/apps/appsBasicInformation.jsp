@@ -27,7 +27,6 @@ margin-top:16px !important;
         <div class="black-md-f text-uppercase dis-line pull-left line34">
           APP INFORMATION
           <c:set var="isLive">${_S}isLive</c:set>
-            ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </div>
 
 

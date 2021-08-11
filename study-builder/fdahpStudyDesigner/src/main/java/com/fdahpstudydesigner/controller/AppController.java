@@ -284,10 +284,97 @@ public class AppController {
     logger.entry("begin viewAppSettings");
     ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
     ModelMap map = new ModelMap();
-
+    AppsBo appBo = null;
+    String sucMsg = "";
+    String errMsg = "";
     try {
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      Integer sessionAppCount =
+          StringUtils.isNumeric(request.getParameter("_S"))
+              ? Integer.parseInt(request.getParameter("_S"))
+              : 0;
+      if ((sesObj != null)
+          && (sesObj.getAppSession() != null)
+          && sesObj.getAppSession().contains(sessionAppCount)) {
+        if (null
+            != request
+                .getSession()
+                .getAttribute(sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG)) {
+          sucMsg =
+              (String)
+                  request
+                      .getSession()
+                      .getAttribute(sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG);
+          map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
+          request
+              .getSession()
+              .removeAttribute(sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG);
+        }
+        if (null
+            != request
+                .getSession()
+                .getAttribute(sessionAppCount + FdahpStudyDesignerConstants.ERR_MSG)) {
+          errMsg =
+              (String)
+                  request
+                      .getSession()
+                      .getAttribute(sessionAppCount + FdahpStudyDesignerConstants.ERR_MSG);
+          map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
+          request
+              .getSession()
+              .removeAttribute(sessionAppCount + FdahpStudyDesignerConstants.ERR_MSG);
+        }
+        String appId =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String)
+                            request
+                                .getSession()
+                                .getAttribute(sessionAppCount + FdahpStudyDesignerConstants.APP_ID))
+                    ? ""
+                    : request
+                        .getSession()
+                        .getAttribute(sessionAppCount + FdahpStudyDesignerConstants.APP_ID));
+        String permission =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String)
+                            request
+                                .getSession()
+                                .getAttribute(
+                                    sessionAppCount + FdahpStudyDesignerConstants.PERMISSION))
+                    ? ""
+                    : request
+                        .getSession()
+                        .getAttribute(sessionAppCount + FdahpStudyDesignerConstants.PERMISSION));
+        String isLive =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String)
+                            request
+                                .getSession()
+                                .getAttribute(
+                                    sessionAppCount + FdahpStudyDesignerConstants.IS_LIVE))
+                    ? ""
+                    : request
+                        .getSession()
+                        .getAttribute(sessionAppCount + FdahpStudyDesignerConstants.IS_LIVE));
 
-      mav = new ModelAndView("viewAppSettings", map);
+        if (FdahpStudyDesignerUtil.isEmpty(isLive)) {
+          request
+              .getSession()
+              .removeAttribute(sessionAppCount + FdahpStudyDesignerConstants.IS_LIVE);
+        }
+        if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
+          appBo = appService.getAppById(appId, sesObj.getUserId());
+        }
+        map.addAttribute("appBo", appBo);
+        map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
+        map.addAttribute("_S", sessionAppCount);
+        mav = new ModelAndView("viewAppSettings", map);
+      }
     } catch (Exception e) {
       logger.error("AppController - viewAppSettings - ERROR", e);
     }
