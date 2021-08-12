@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
-import java.util.Random;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -266,25 +265,5 @@ public class MyStudiesUserRegUtil {
       return password.matches(
           "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\\\[\\\\]^_`{|}~]).{8,64}$");
     } else return false;
-  }
-
-  public static String generateRandomAlphanumeric(int targetStringLength) {
-    logger.entry("Begin generateRandomAlphanumeric()");
-    int leftLimit = 49; // numeral '1'
-    int rightLimit = 122; // letter 'z'
-
-    String generatedString =
-        new Random()
-            .ints(leftLimit, rightLimit + 1)
-            .filter(
-                i ->
-                    (i <= 57 || i >= 65)
-                        && (i <= 90 || i >= 97)
-                        && (i != 73 && i != 79 && i != 108 && i != 111))
-            .limit(targetStringLength)
-            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-            .toString();
-    logger.exit("generateRandomAlphanumeric() :: ends");
-    return generatedString;
   }
 }

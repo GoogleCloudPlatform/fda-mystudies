@@ -859,7 +859,7 @@ public class SiteServiceImpl implements SiteService {
         continue;
       }
 
-      String token = RandomStringUtils.randomAlphanumeric(8);
+      String token = RandomAlphanumericGenerator.generateRandomAlphanumeric(8);
       participantRegistrySiteEntity.setEnrollmentToken(token);
       participantRegistrySiteEntity.setInvitationDate(new Timestamp(Instant.now().toEpochMilli()));
 
