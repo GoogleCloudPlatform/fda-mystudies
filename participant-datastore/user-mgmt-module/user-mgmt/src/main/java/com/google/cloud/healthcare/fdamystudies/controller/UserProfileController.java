@@ -216,7 +216,8 @@ public class UserProfileController {
           participantDetails.setEmailCode(code);
           participantDetails.setCodeExpireDate(
               Timestamp.valueOf(LocalDateTime.now().plusHours(expireTime)));
-          participantDetails.setVerificationDate(UserManagementUtil.getCurrentDateTime());
+          participantDetails.setVerificationDate(
+              UserManagementUtil.getCurrentDate() + " " + UserManagementUtil.getCurrentTime());
           UserDetailsEntity updParticipantDetails =
               userManagementProfService.saveParticipant(participantDetails);
           if (updParticipantDetails != null) {

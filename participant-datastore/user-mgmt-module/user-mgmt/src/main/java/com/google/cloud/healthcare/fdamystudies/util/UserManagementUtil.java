@@ -172,9 +172,15 @@ public class UserManagementUtil {
         appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, entity, Void.class, userId);
   }
 
-  public static String getCurrentDateTime() {
+  public static String getCurrentDate() {
     Calendar currentDate = Calendar.getInstance();
-    SimpleDateFormat formatter = new SimpleDateFormat(AppConstants.DB_SDF_DATE_TIME);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    return formatter.format(currentDate.getTime());
+  }
+
+  public static String getCurrentTime() {
+    Calendar currentDate = Calendar.getInstance();
+    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
     return formatter.format(currentDate.getTime());
   }
 }

@@ -195,7 +195,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private UserDetailsEntity fromUserRegistrationForm(UserRegistrationForm user) {
     UserDetailsEntity userDetails = new UserDetailsEntity();
     userDetails.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
-    userDetails.setVerificationDate(UserManagementUtil.getCurrentDateTime());
+    userDetails.setVerificationDate(
+        UserManagementUtil.getCurrentDate() + " " + UserManagementUtil.getCurrentTime());
     userDetails.setUserId(user.getUserId());
     userDetails.setEmail(user.getEmailId());
     userDetails.setUsePassCode(user.isUsePassCode());
