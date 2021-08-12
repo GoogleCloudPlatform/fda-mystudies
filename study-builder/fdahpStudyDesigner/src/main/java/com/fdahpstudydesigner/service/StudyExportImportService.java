@@ -1723,7 +1723,7 @@ public class StudyExportImportService {
 
         if (signedUrlVersion.compareTo(releaseVersion) > 0) {
           throw new Exception(
-              IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + " " + map.get("release.version"));
+              IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION + " " + map.get("release.version") + ").");
         }
 
         // validating tableName and insert statements
