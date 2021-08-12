@@ -103,9 +103,12 @@ class SignUpViewController: UIViewController {
       // unhide navigationbar
       self.navigationController?.setNavigationBarHidden(false, animated: true)
 
+      let valPassword = self.user?.password ?? ""
+      let valEmail = self.user?.emailId ?? ""
       User.resetCurrentUser()
-      self.user = User.currentUser
-      confirmPassword = ""
+      self.user = User.currentUser      
+      self.user.password = valPassword
+      self.user.emailId = valEmail
 
       if viewLoadFrom == .menu {
         self.setNavigationBarItem()
@@ -114,7 +117,6 @@ class SignUpViewController: UIViewController {
       }
 
       setNeedsStatusBarAppearanceUpdate()
-      self.tableView?.reloadData()
     }
   }
 
@@ -126,14 +128,14 @@ class SignUpViewController: UIViewController {
     self.termsAndCondition?.delegate = self
     let attributedString = (termsAndCondition?.attributedText.mutableCopy() as? NSMutableAttributedString)!
 
-    var foundRange = attributedString.mutableString.range(of: "Terms")
+    var foundRange = attributedString.mutableString.range(of: "terms")
     attributedString.addAttribute(
       NSAttributedString.Key.link,
       value: (TermsAndPolicy.currentTermsAndPolicy?.termsURL!)! as String,
       range: foundRange
     )
 
-    foundRange = attributedString.mutableString.range(of: "Privacy Policy")
+    foundRange = attributedString.mutableString.range(of: "privacy policy")
     attributedString.addAttribute(
       NSAttributedString.Key.link,
       value: (TermsAndPolicy.currentTermsAndPolicy?.policyURL!)! as String,
@@ -302,7 +304,7 @@ extension SignUpViewController: UITextViewDelegate {
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
       && characterRange
-        .length == String("Privacy Policy").count
+        .length == String("privacy policy").count
     {
       link = TermsAndPolicy.currentTermsAndPolicy?.policyURL ?? ""
       title = kNavigationTitlePrivacyPolicy

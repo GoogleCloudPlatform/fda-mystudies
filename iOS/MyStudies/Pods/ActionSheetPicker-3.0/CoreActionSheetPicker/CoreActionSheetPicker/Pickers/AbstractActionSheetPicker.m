@@ -26,6 +26,7 @@
 //
 
 #import "AbstractActionSheetPicker.h"
+#import "ActionSheetDatePicker.h"
 #import "SWActionSheet.h"
 #import <objc/message.h>
 #import <sys/utsname.h>
@@ -50,7 +51,7 @@ CG_INLINE BOOL isIPhone4() {
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_8_0
 
-@interface MyPopoverController : UIPopoverController <UIAdaptivePresentationControllerDelegate>
+@interface MyPopoverController : UIPopoverPresentationController <UIAdaptivePresentationControllerDelegate>
 @end
 
 @implementation MyPopoverController
@@ -93,7 +94,7 @@ CG_INLINE BOOL isIPhone4() {
 @property(nonatomic, unsafe_unretained) id target;
 @property(nonatomic, assign) SEL successAction;
 @property(nonatomic, assign) SEL cancelAction;
-@property(nonatomic, strong) UIPopoverController *popOverController;
+@property(nonatomic, strong) UIViewController *popOverViewController;
 @property(nonatomic, strong) CIFilter *filter;
 @property(nonatomic, strong) CIContext *context;
 @property(nonatomic, strong) NSObject *selfReference;
@@ -106,7 +107,7 @@ CG_INLINE BOOL isIPhone4() {
 
 - (void)presentActionSheet:(SWActionSheet *)actionSheet;
 
-- (void)presentPopover:(UIPopoverController *)popover;
+- (void)presentPopover:(UIViewController *)popover;
 
 - (void)dismissPicker;
 
@@ -243,7 +244,22 @@ CG_INLINE BOOL isIPhone4() {
 #pragma mark - Actions
 
 - (void)showActionSheetPicker {
-    UIView *masterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.viewSize.width, 260)];
+    CGFloat height = 216.0;
+    if (@available(iOS 14.0, *)) {
+        if ([self isKindOfClass:[ActionSheetDatePicker class]]) {
+            ActionSheetDatePicker *datePicker = (ActionSheetDatePicker *)self;
+            /// To fixed datePickerStyle = inline height issue
+            height = [datePicker getDatePickerHeight];
+        }
+    }
+    
+    /// Bottom padding for iPhone X style phones (adds some additional height for the home bar).
+    if (@available(iOS 11.0, *)) {
+        UIWindow *window = UIApplication.sharedApplication.keyWindow;
+        height += window.safeAreaInsets.bottom;
+    }
+    
+    UIView *masterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.viewSize.width, height)];
 
     // to fix bug, appeared only on iPhone 4 Device: https://github.com/skywinder/ActionSheetPicker-3.0/issues/5
     if (isIPhone4()) {
@@ -274,6 +290,14 @@ CG_INLINE BOOL isIPhone4() {
         masterView.frame = CGRectMake(0, 0, self.viewSize.width, 220);
         self.pickerView.frame = CGRectMake(0, halfWidth, self.viewSize.width, 220 - halfWidth);
     }
+    
+    // Centers the pickerView frame in cases where the pickerView is not as wide as masterView
+    CGFloat xOffset = (CGRectGetWidth(masterView.frame) - CGRectGetWidth(self.pickerView.frame)) / 2;
+    self.pickerView.frame = CGRectMake(xOffset,
+                                       CGRectGetMinY(self.pickerView.frame),
+                                       CGRectGetWidth(self.pickerView.frame),
+                                       CGRectGetHeight(self.pickerView.frame));
+    
     [masterView addSubview:_pickerView];
 
     if ((![MyPopoverController canShowPopover] || self.popoverDisabled) && !self.pickerBackgroundColor && !self.toolbarBackgroundColor && [self.pickerBlurRadius intValue] > 0) {
@@ -327,10 +351,10 @@ CG_INLINE BOOL isIPhone4() {
         if (self.actionSheet && [self.actionSheet isVisible])
 #endif
         [_actionSheet dismissWithClickedButtonIndex:0 animated:YES];
-    else if (self.popOverController && self.popOverController.popoverVisible)
-        [_popOverController dismissPopoverAnimated:YES];
+    else if (self.popOverViewController)
+        [_popOverViewController dismissViewControllerAnimated:YES completion:nil];
     self.actionSheet = nil;
-    self.popOverController = nil;
+    self.popOverViewController = nil;
     self.selfReference = nil;
 }
 
@@ -603,8 +627,7 @@ CG_INLINE BOOL isIPhone4() {
 #pragma mark - Picker blur effect
 
 - (void)blurPickerBackground {
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-    UIViewController *rootViewController = window.rootViewController;
+    UIViewController *rootViewController = [self rootViewController];
 
     UIView *masterView = self.pickerView.superview;
 
@@ -685,6 +708,19 @@ CG_INLINE BOOL isIPhone4() {
     return self.containerView;
 }
 
+- (UIViewController *)rootViewController {
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    return window.rootViewController;
+}
+
+- (UIViewController *)topViewController {
+    UIViewController *topController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    while (topController.presentedViewController) {
+        topController = topController.presentedViewController;
+    }
+    return topController;
+}
+
 #pragma mark - Popovers and ActionSheets
 
 - (void)presentPickerForView:(UIView *)aView {
@@ -756,35 +792,36 @@ CG_INLINE BOOL isIPhone4() {
 #pragma clang diagnostic pop
     }
 
-    _popOverController = [[MyPopoverController alloc] initWithContentViewController:viewController];
-    _popOverController.delegate = self;
-    if (self.pickerBackgroundColor) {
-        self.popOverController.backgroundColor = self.pickerBackgroundColor;
-    }
-    if (self.popoverBackgroundViewClass) {
-        [self.popOverController setPopoverBackgroundViewClass:self.popoverBackgroundViewClass];
-    }
-
-    [self presentPopover:_popOverController];
+    self.popOverViewController = viewController;
+    [self presentPopover:viewController];
 }
 
-- (void)presentPopover:(UIPopoverController *)popover {
-    NSParameterAssert(popover != NULL);
+- (void)presentPopover:(UIViewController *)viewController {
+    NSParameterAssert(viewController != NULL);
+
+    viewController.modalPresentationStyle = UIModalPresentationPopover;
+
     if (self.barButtonItem) {
         if (_containerView != nil) {
-            [popover presentPopoverFromRect:CGRectMake(_containerView.frame.size.width / 2.f, 0.f, 0, 0) inView:_containerView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            viewController.popoverPresentationController.sourceRect = CGRectMake(_containerView.frame.size.width / 2.f, 0.f, 0, 0);
+            viewController.popoverPresentationController.sourceView = _containerView;
+            viewController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
         } else {
-            [popover presentPopoverFromBarButtonItem:_barButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            viewController.popoverPresentationController.barButtonItem = _barButtonItem;
+            viewController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
         }
 
+        [[self topViewController] presentViewController:viewController animated:YES completion:nil];
         return;
     }
     else if ((self.containerView)) {
         AbstractActionSheetPicker __weak *weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [popover presentPopoverFromRect: weakSelf.containerView.bounds inView: weakSelf.containerView
-                   permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            viewController.popoverPresentationController.sourceRect = weakSelf.containerView.bounds;
+            viewController.popoverPresentationController.sourceView = weakSelf.containerView;
+            viewController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
 
+            [[weakSelf topViewController] presentViewController:viewController animated:YES completion:nil];
         });
         return;
     }
@@ -795,42 +832,24 @@ CG_INLINE BOOL isIPhone4() {
         origin = (_containerView.superview ? _containerView.superview : _containerView);
         presentRect = origin.bounds;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [popover presentPopoverFromRect:presentRect inView:origin
-                   permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            viewController.popoverPresentationController.sourceRect = presentRect;
+            viewController.popoverPresentationController.sourceView = origin;
+            viewController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
 
+            [[self topViewController] presentViewController:viewController animated:YES completion:nil];
         });
     }
     @catch (NSException *exception) {
-        origin = [[[[UIApplication sharedApplication] keyWindow] rootViewController] view];
+        origin = [[self topViewController] view];
         presentRect = CGRectMake(origin.center.x, origin.center.y, 1, 1);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [popover presentPopoverFromRect:presentRect inView:origin
-                   permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            viewController.popoverPresentationController.sourceRect = presentRect;
+            viewController.popoverPresentationController.sourceView = origin;
+            viewController.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionAny;
 
+            [[self topViewController] presentViewController:viewController animated:YES completion:nil];
         });
     }
-}
-
-#pragma mark - Popoverdelegate
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-    switch (self.tapDismissAction) {
-        case TapActionSuccess: {
-            [self notifyTarget:self.target didSucceedWithAction:self.successAction origin:self.storedOrigin];
-            if (!self.popoverDisabled && [MyPopoverController canShowPopover]) {
-                [self dismissPicker];
-            }
-            break;
-        }
-        case TapActionNone:
-        case TapActionCancel: {
-            [self notifyTarget:self.target didCancelWithAction:self.cancelAction origin:self.storedOrigin];
-            if (!self.popoverDisabled && [MyPopoverController canShowPopover]) {
-                [self dismissPicker];
-            }
-            break;
-        }
-    };
 }
 
 #pragma mark UIGestureRecognizerDelegate

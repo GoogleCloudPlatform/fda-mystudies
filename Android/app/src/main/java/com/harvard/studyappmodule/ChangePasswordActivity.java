@@ -152,11 +152,24 @@ public class ChangePasswordActivity extends AppCompatActivity
       }
     });
 
+    confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
+            confirmPassword.setError(getResources().getString(R.string.password_mismatch_error));
+          }
+        }
+      }
+    });
+
     submitButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             if (!clicked) {
+              newPassword.clearFocus();
+              confirmPassword.clearFocus();
               clicked = true;
               if (newPassword.getText().toString().equalsIgnoreCase("")
                   && oldPassword.getText().toString().equalsIgnoreCase("")

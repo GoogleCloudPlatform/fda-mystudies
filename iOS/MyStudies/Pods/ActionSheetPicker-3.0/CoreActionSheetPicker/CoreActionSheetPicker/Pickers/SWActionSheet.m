@@ -12,9 +12,10 @@ static const float duration = .25f;
 static const enum UIViewAnimationOptions options = UIViewAnimationOptionCurveEaseIn;
 
 
-@interface SWActionSheetVC : UIViewController
+@interface SWActionSheetVC : UIViewController <UIGestureRecognizerDelegate>
 
 @property (nonatomic, retain) SWActionSheet *actionSheet;
+@property (nonatomic, retain) UITapGestureRecognizer *dismissTap;
 
 @end
 
@@ -188,6 +189,11 @@ static const enum UIViewAnimationOptions options = UIViewAnimationOptionCurveEas
     self.presented = YES;
 }
 
+- (void)dismissActionSheet
+{
+    [self dismissWithClickedButtonIndex:0 animated:YES];
+}
+
 @end
 
 
@@ -229,12 +235,31 @@ static const enum UIViewAnimationOptions options = UIViewAnimationOptionCurveEas
         _actionSheet.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.view addSubview:_actionSheet];
         [_actionSheet showInContainerViewAnimated:animated];
+
+        // Add Tap Gesture on Background to dismiss ActionSheet
+        [_actionSheet removeGestureRecognizer:self.dismissTap];
+        self.dismissTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissActionSheet)];
+        self.dismissTap.delegate = self;
+        [_actionSheet addGestureRecognizer:self.dismissTap];
     }
 }
 
-- (BOOL)prefersStatusBarHidden {
+- (void)dismissActionSheet
+{
+    [_actionSheet dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+- (BOOL)prefersStatusBarHidden
+{
 	return [UIApplication sharedApplication].statusBarHidden;
 }
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    CGPoint location = [touch locationInView:_actionSheet];
+    return !CGRectContainsPoint(_actionSheet.bgView.frame, location);
+}
+
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_6_0
 // iOS6 support

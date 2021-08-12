@@ -421,7 +421,7 @@ public class StudyServiceImpl implements StudyService {
                     + FdahpStudyDesignerConstants.STUDTYPAGES
                     + FdahpStudyDesignerConstants.PATH_SEPARATOR
                     + s.getImagePath();
-            s.setSignedUrl(FdahpStudyDesignerUtil.getSignedUrl(path, 12));
+            s.setSignedUrl(FdahpStudyDesignerUtil.getImageResources(path));
             if (s.getImagePath().contains("?v=")) {
               String imagePathArr[] = s.getImagePath().split("\\?");
               s.setImagePath(imagePathArr[0] + "?v=" + new Date().getTime());
@@ -1250,7 +1250,7 @@ public class StudyServiceImpl implements StudyService {
           notificationBO = studyDAO.getNotificationByResourceId(resourseId);
           String notificationText = "";
           boolean notiFlag = false;
-          if (null == notificationBO && !(resourceBO2.getResourceText().equals(""))) {
+          if (null == notificationBO && StringUtils.isNotBlank(resourceBO2.getResourceText())) {
             notificationBO = new NotificationBO();
             notificationBO.setStudyId(resourceBO2.getStudyId());
             notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
@@ -1266,20 +1266,20 @@ public class StudyServiceImpl implements StudyService {
             notificationBO.setNotificationStatus(false);
             notificationBO.setCreatedBy(sesObj.getUserId());
             notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-          } else {
+          } else if (null != notificationBO) {
             notiFlag = true;
             notificationBO.setModifiedBy(sesObj.getUserId());
             notificationBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           }
           if (!resourceBO2.isStudyProtocol()) {
-            if (resourceBO.isResourceVisibility()) {
+            if (resourceBO.isResourceVisibility() && null != notificationBO) {
               saveNotiFlag = true;
               notificationText = resourceBO2.getResourceText();
             } else {
               saveNotiFlag = false;
             }
           } else {
-            if (studyBo.getLiveStudyBo() != null) {
+            if (studyBo.getLiveStudyBo() != null && null != notificationBO) {
               String studyName = studyBo.getName();
               String innerText;
               if (notiFlag || (!notiFlag && updateResource)) {
@@ -1296,16 +1296,20 @@ public class StudyServiceImpl implements StudyService {
                       + ". Visit the app to read it now.";
             }
           }
-          notificationBO.setNotificationText(notificationText);
-          if (resourceBO2.isResourceType()) {
-            notificationBO.setAnchorDate(true);
-            notificationBO.setxDays(resourceBO2.getTimePeriodFromDays());
-          } else {
-            notificationBO.setAnchorDate(false);
-            notificationBO.setxDays(null);
+          if (null != notificationBO) {
+            notificationBO.setNotificationText(notificationText);
+
+            if (resourceBO2.isResourceType()) {
+              notificationBO.setAnchorDate(true);
+              notificationBO.setxDays(resourceBO2.getTimePeriodFromDays());
+            } else {
+              notificationBO.setAnchorDate(false);
+              notificationBO.setxDays(null);
+            }
+            notificationBO.setScheduleDate(null);
+            notificationBO.setScheduleTime(null);
           }
-          notificationBO.setScheduleDate(null);
-          notificationBO.setScheduleTime(null);
+
           if (saveNotiFlag) {
             studyDAO.saveResourceNotification(notificationBO, notiFlag);
           }
@@ -1507,14 +1511,7 @@ public class StudyServiceImpl implements StudyService {
           }
         }
         studyDetails.setStudyStatus(studyBo.getStatus());
-        if (studyBo.getCategory() != null) {
-          studyCatagory = studyDAO.getStudyCategory(studyBo.getCategory());
-        }
-        if (StringUtils.isNotBlank(studyCatagory)) {
-          studyDetails.setStudyCategory(studyCatagory);
-        }
-        studyDetails.setStudyTagline(studyBo.getStudyTagLine());
-        studyDetails.setStudySponsor(studyBo.getResearchSponsor());
+
         studyDetails.setStudyEnrolling(studyBo.getEnrollingParticipants());
         studyDetails.setAppId(studyBo.getAppId());
         studyDetails.setAppName("App Name_" + studyBo.getAppId());

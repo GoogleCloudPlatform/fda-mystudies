@@ -16,7 +16,7 @@ This directory contains all the code necessary to build the **FDA MyStudies** iO
 ![Example screens](../documentation/images/mobile-screens.png "Example screens")
 
 # Requirements
-The **FDA MyStudies** iOS application requires [Xcode 11](https://developer.apple.com/xcode/) or newer, and can be run on iOS versions 11 and above.
+The **FDA MyStudies** iOS application requires [Xcode 11](https://developer.apple.com/xcode/) or newer, and can be run on iOS versions 13 and above.
 
 # Platform integration
 The **FDA MyStudies** mobile application fetches all study, schedule, activity, eligibility, consent and notification information from the [`Study datastore`](../study-datastore/) and posts pseudonymized participant response data to the [`Response datastore`](../response-datastore/). Consent forms and any other identifiable data is posted to the [`Participant datastore`](../participant-datastore/). Email and password authentication is handled by the MyStudies [`Auth server`](../auth-server/) using OAuth 2.0.

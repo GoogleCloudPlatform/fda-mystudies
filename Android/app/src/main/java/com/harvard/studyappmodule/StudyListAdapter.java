@@ -31,6 +31,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -262,7 +263,7 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
             .skipMemoryCache(false);
 
     Glide.with(context)
-            .load(items.get(holder.getAdapterPosition()).getLogo())
+            .load(Base64.decode(items.get(holder.getAdapterPosition()).getLogo().split(",")[1], Base64.DEFAULT))
             .thumbnail(0.5f)
             .apply(requestOptions)
             .listener(new RequestListener<Drawable>() {

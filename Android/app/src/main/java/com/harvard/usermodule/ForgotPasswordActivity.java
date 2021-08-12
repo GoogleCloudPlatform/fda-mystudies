@@ -177,8 +177,15 @@ public class ForgotPasswordActivity extends AppCompatActivity
       }
       Toast.makeText(
               this, getResources().getString(R.string.forgot_password_error), Toast.LENGTH_SHORT)
-          .show();
-      finish();
+              .show();
+      if (getIntent().getStringExtra("from") != null
+              && getIntent().getStringExtra("from").equalsIgnoreCase("verification")) {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+      } else {
+        finish();
+      }
     }
   }
 

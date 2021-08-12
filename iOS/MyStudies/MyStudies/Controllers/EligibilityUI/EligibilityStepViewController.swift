@@ -103,6 +103,8 @@ class EligibilityStepViewController: ORKStepViewController {
       step.type = "token"
     }
     tokenTextField.delegate = self
+    IQKeyboardManager.shared.disabledDistanceHandlingClasses.append(EligibilityStepViewController.self)
+
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -143,6 +145,17 @@ class EligibilityStepViewController: ORKStepViewController {
       )
     )
     self.present(alert, animated: true, completion: nil)
+  }
+  
+  /// For lifting the view up
+  func animateViewMoving (up:Bool, moveValue :CGFloat) {
+    let movementDuration:TimeInterval = 0.3
+    let movement:CGFloat = ( up ? -moveValue : moveValue)
+    UIView.beginAnimations( "animateView", context: nil)
+    UIView.setAnimationBeginsFromCurrentState(true)
+    UIView.setAnimationDuration(movementDuration )
+    self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
+    UIView.commitAnimations()
   }
 
   // MARK: - Action
@@ -188,7 +201,14 @@ extension EligibilityStepViewController: UITextFieldDelegate {
       return true
     }
   }
+  
+  func textFieldDidBeginEditing(_ textField: UITextField) {
+    animateViewMoving(up: true, moveValue: 100)
+  }
 
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    animateViewMoving(up: false, moveValue: 100)
+  }
 }
 
 // MARK: Webservice Delegates
