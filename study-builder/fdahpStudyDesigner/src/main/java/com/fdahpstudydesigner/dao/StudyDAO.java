@@ -234,7 +234,7 @@ public interface StudyDAO {
   public List<ComprehensionTestResponseBo> getComprehensionTestResponseList(
       List<String> comprehensionTestQuestionIds);
 
-  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject);
+  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject, String copyVersion);
 
   public void cloneEligibility(EligibilityBo eligibilityBo, String studyId);
 
