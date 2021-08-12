@@ -24,6 +24,7 @@ package com.fdahpstudydesigner.service;
 
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 
 public interface AppService {
@@ -31,4 +32,8 @@ public interface AppService {
   public List<AppListBean> getAppList(String userId);
 
   public AppsBo getAppById(String appId, String userId);
+
+  public boolean validateAppId(String appId);
+
+  public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject);
 }

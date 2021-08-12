@@ -25,6 +25,8 @@ package com.fdahpstudydesigner.service;
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.dao.AppDAO;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -64,5 +66,33 @@ public class AppServiceImpl implements AppService {
     }
     logger.exit("AppServiceImpl - getAppById() - Ends");
     return appsBo;
+  }
+
+  @Override
+  public boolean validateAppId(String appId) {
+    logger.entry("AppServiceImpl - validateAppId() - Starts");
+    boolean flag = false;
+    try {
+      if (StringUtils.isNotEmpty(appId)) {
+        flag = appDAO.validateAppId(appId);
+      }
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getAppList() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getAppList() - Ends");
+    return flag;
+  }
+
+  @Override
+  public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject) {
+    logger.entry("StudyServiceImpl - saveOrUpdateApp() - Starts");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = appDAO.saveOrUpdateApp(appsBo, sessionObject);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - saveOrUpdateApp() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - saveOrUpdateApp() - Ends");
+    return message;
   }
 }

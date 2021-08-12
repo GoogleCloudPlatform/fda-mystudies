@@ -175,4 +175,6 @@ public class AppsBo implements Serializable {
   @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
 
   @Transient private AppsBo liveAppsBo = null;
+
+  @Transient private String userId;
 }
