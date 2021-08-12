@@ -5,10 +5,17 @@
 
 <style>
 .left-content-container ul li:first-child {
-	height: 75px !important;
+	height: 85px !important;
 }
 .left-content-container ul li {
     width: 101% !important;
+}
+.post-launch_txt { color: #5ec456; }
+.right-border { 
+	border-right: 1px solid #95a2ab;
+    height: 15px;
+    position: absolute;
+    margin-top: 2px;
 }
 </style>
 
@@ -20,8 +27,19 @@
       <li>
         <div class="tit_wrapper" data-toggle="tooltip" data-placement="top"
              title="${fn:escapeXml(not empty appBo.name?appBo.name:'Create Apps')}">${not empty appBo.name?appBo.name:'Create Apps'}</div>
+             
+         <div class="mb-lg ">
+          <span class="study_status ${empty appBo.customAppId?'hide':''}">${appBo.customAppId}</span>
+           <div class="clearfix"></div>
+          <div>
+          <span class="study_status  post-launch_txt  pr-sm"> Active </span><span class="right-border"></span>
+          <span class="study_status  post-launch_txt  pr-sm pl-sm"> Published </span> <span class="right-border"></span>
+          <span class="study_status  post-launch_txt pr-sm pl-sm"> Distributed (1) </span>
+          </div>
+          <span class="version"></span>
+        </div>
 
-         <div class="mb-lg ${empty appBo.customAppId?'hide':''}"><span class="study_status">${appBo.customAppId}</span></div>
+         <%-- <div class="mb-lg ${empty appBo.customAppId?'hide':''}"><span class="study_status">${appBo.customAppId}</span></div>
         <div class="mb-lg ${empty appBo.appsStatus?'hide':''}">
           <span class="study_status
 	                <c:if test="${appBo.appsStatus eq 'Active'}">
@@ -40,7 +58,7 @@
           <c:set var="isLive">${_S}isLive</c:set>
           <span
               class="version">${not empty  sessionScope[isLive]?studyBo.studyVersionBo.studyLVersion:''}</span>
-        </div>
+        </div> --%>
       </li>
       <li class="first active">
         APP INFORMATION
@@ -51,7 +69,7 @@
       <li class="second active">
         APP SETTINGS
         <c:if test="${studyBo.studySequenceBo.settingAdmins}">
-          <span class="sprites-icons-2 tick pull-right mt-xs"></span>
+          <span class="sprites-icons-2 tick pull-right mt-xs"></span> 
         </c:if>
       </li>
       <li class="third active">

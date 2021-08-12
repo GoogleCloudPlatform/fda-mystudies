@@ -16,17 +16,9 @@
 <div class="col-sm-10 col-rc white-bg p-none" id="settingId">
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
-      data-toggle="validator" role="form" id="settingfoFormId" method="post"
+      data-toggle="validator" role="form" id="appPropertiesFormId" method="post"
       autocomplete="off">
-    <input type="hidden" name="buttonText" id="buttonText">
-    <input type="hidden" id="settingsstudyId" name="id"
-           value="${studyBo.id}">
-    <input type="hidden" id="userIds" name="userIds">
-    <input type="hidden" id="permissions" name="permissions">
-    <input type="hidden" id="projectLead" name="projectLead">
-    <input type="hidden" id="modifiedBy" name="modifiedBy"  value="${studyBo.modifiedBy}">
-    
-	
+    	
     <!-- Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
@@ -41,7 +33,7 @@
           </button>
         </div>
         <c:if
-            test="${(empty permission) && (sessionObject.role ne 'Org-level Admin')}">
+            test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn" id="saveId">Save</button>
           </div>
@@ -66,7 +58,7 @@
                             <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs">Feedback email  <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value="${appBo.feedbackEmailAddress}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -74,7 +66,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs">Contact Us email <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value="${appBo.contactEmailAddress}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -84,7 +76,7 @@
                              <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs">App support email  <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value="${appBo.appSupportEmailAddress}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -92,7 +84,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs">App 'Terms' URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value="${appBo.appTermsUrl}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -102,7 +94,7 @@
                               <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs">App Privacy policy URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value="${appBo.appPrivacyUrl}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -110,7 +102,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs">Organization name<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value="${appBo.organizationName}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -120,7 +112,7 @@
                               <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs">App Store URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value="${appBo.appStoreUrl}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -128,7 +120,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs">Play Store URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value="${appBo.playStoreUrl}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -147,54 +139,10 @@
 
 </div>
 <!-- End right Content here -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <!-- Modal content-->
-    <div class="modal-content">
-
-      <div class="modal-header cust-hdr pt-lg">
-        <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title pl-lg">
-          <strong>Platform and Feature Support</strong>
-        </h4>
-      </div>
-      <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
-        <div>
-          <div>
-            <ul class="no-disc">
-              <li><strong>1. Platform support: </strong><br/>
-                <ul class="no-disc">
-                  <li>Note that once the study is launched, platform support
-                    cannot be revoked. However, adding support for a platform not
-                    previously selected will still be possible.
-                  </li>
-                </ul>
-              </li>
-              <li>&nbsp;</li>
-              <li><strong>2. Feature support on iOS and Android:</strong><br/>
-
-                <ul class="no-disc">
-                  <li>Given below is a list of features currently NOT
-					available for Android as compared to iOS. Please note the same
-                    in your creation of study content:
-                  </li>
-                  <li>i. Active tasks: Tower of hanoi, Spatial span memory
-                  </li>
-                </ul>
-              </li>
-
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
   $(document).ready(function () {
-
-	}
+	  <c:if test="${not empty permission}">
+	     $('#appPropertiesFormId input').prop('disabled', true);
+	     </c:if>
+	});
 </script>
