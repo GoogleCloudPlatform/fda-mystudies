@@ -172,54 +172,8 @@
 
 </div>
 <!-- End right Content here -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <!-- Modal content-->
-    <div class="modal-content">
-
-      <div class="modal-header cust-hdr pt-lg">
-        <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title pl-lg">
-          <strong>Platform and Feature Support</strong>
-        </h4>
-      </div>
-      <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
-        <div>
-          <div>
-            <ul class="no-disc">
-              <li><strong>1. Platform support: </strong><br/>
-                <ul class="no-disc">
-                  <li>Note that once the study is launched, platform support
-                    cannot be revoked. However, adding support for a platform not
-                    previously selected will still be possible.
-                  </li>
-                </ul>
-              </li>
-              <li>&nbsp;</li>
-              <li><strong>2. Feature support on iOS and Android:</strong><br/>
-
-                <ul class="no-disc">
-                  <li>Given below is a list of features currently NOT
-					available for Android as compared to iOS. Please note the same
-                    in your creation of study content:
-                  </li>
-                  <li>i. Active tasks: Tower of hanoi, Spatial span memory
-                  </li>
-                </ul>
-              </li>
-
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
   $(document).ready(function () {
 
-	}
+	});
 </script>

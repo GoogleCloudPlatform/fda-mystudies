@@ -167,8 +167,7 @@
 <script>
 $(document).ready( function () {
 	  <c:if test="${not empty permission}">
-	     $('#settingFormId input').prop(
-	         'disabled', true);
-	     </c:if>
+	     $('#settingFormId input').prop('disabled', true);
+	  </c:if>
 	});
 </script>
