@@ -33,6 +33,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
+import android.util.Base64;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
@@ -40,6 +41,8 @@ import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
+import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
@@ -54,15 +57,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import javax.crypto.CipherInputStream;
 
+import io.realm.Realm;
+
 public class ResourcesWebViewActivity extends AppCompatActivity {
   private AppCompatTextView titleTv;
   private RelativeLayout backBtn;
   private WebView webView;
   private RelativeLayout shareBtn;
   private PDFView pdfView;
-  private String downloadedFilePath;
+  private String CreateFilePath;
   private String fileName;
-  private String downloadingFileUrl = "";
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private String intentTitle;
   private String intentType;
@@ -70,19 +74,26 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   private File finalMSharingFile;
   private ConnectionDetector connectionDetector =
       new ConnectionDetector(ResourcesWebViewActivity.this);
+  private Realm realm;
+  private DbServiceSubscriber dbServiceSubscriber;
+  String resourceId;
+  Resource resource;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
 
-    downloadedFilePath = "/data/data/" + getPackageName() + "/files/";
+    CreateFilePath = "/data/data/" + getPackageName() + "/files/";
     initializeXmlId();
-    downloadingFileUrl = getIntent().getStringExtra("content");
     intentTitle = getIntent().getStringExtra("title");
     intentType = getIntent().getStringExtra("type");
-    intentContent = getIntent().getStringExtra("content");
+    resourceId = getIntent().getStringExtra("resourceId");
     String studyId = getIntent().getStringExtra("studyId");
+
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(ResourcesWebViewActivity.this);
+    resource = dbServiceSubscriber.getResource(resourceId, realm);
 
     String title;
     // removing space b/w the string : name of the pdf
@@ -114,7 +125,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         } else {
           if (connectionDetector.isConnectingToInternet()) {
             // starting new Async Task for downlaoding pdf file
-            new DownloadFileFromUrl(downloadingFileUrl, downloadedFilePath, fileName).execute();
+            new CreateFileFromBase64(resource.getContent(), CreateFilePath, fileName).execute();
           } else {
             // offline functionality
             offLineFunctionality();
@@ -123,7 +134,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       } else {
         if (connectionDetector.isConnectingToInternet()) {
           // starting new Async Task for downlaoding pdf file
-          new DownloadFileFromUrl(downloadingFileUrl, downloadedFilePath, fileName).execute();
+          new CreateFileFromBase64(resource.getContent(), CreateFilePath, fileName).execute();
         } else {
           // offline functionality
           offLineFunctionality();
@@ -155,7 +166,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
               shareIntent.putExtra(Intent.EXTRA_SUBJECT, intentTitle);
               // if pdf then attach and send else content send
               if (intentType.equalsIgnoreCase("pdf")) {
-                File file = new File(downloadedFilePath + fileName + ".pdf");
+                File file = new File(CreateFilePath + fileName + ".pdf");
                 if (file.exists()) {
                   finalMSharingFile = copy(file);
                   Uri fileUri =
@@ -190,7 +201,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         finish();
       } else {
         if (connectionDetector.isConnectingToInternet()) {
-          new DownloadFileFromUrl(downloadingFileUrl, downloadedFilePath, fileName).execute();
+          new CreateFileFromBase64(resource.getContent(), CreateFilePath, fileName).execute();
         } else {
           Toast.makeText(
                   ResourcesWebViewActivity.this,
@@ -217,7 +228,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     webView.getSettings().setJavaScriptEnabled(true);
     webView.getSettings().setDefaultTextEncodingName("utf-8");
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-    String webData = intentContent;
+    String webData = resource.getContent();;
     if (Build.VERSION.SDK_INT >= 24) {
       webView.loadDataWithBaseURL(null,
               Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
@@ -273,7 +284,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   protected void onDestroy() {
     super.onDestroy();
     try {
-      File file = new File(downloadedFilePath + fileName + ".pdf");
+      File file = new File(CreateFilePath + fileName + ".pdf");
       if (file.exists()) {
         file.delete();
       }
@@ -281,24 +292,27 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       Logger.log(e);
     }
     try {
-      if (finalMSharingFile.exists()) {
+      if (finalMSharingFile != null && finalMSharingFile.exists()) {
         finalMSharingFile.delete();
       }
 
     } catch (Exception e) {
       Logger.log(e);
     }
+    dbServiceSubscriber.closeRealmObj(realm);
   }
 
-  class DownloadFileFromUrl extends AsyncTask<String, String, String> {
+  class CreateFileFromBase64 extends AsyncTask<String, String, String> {
 
-    /** Before starting background thread Show Progress Bar Dialog. */
+    /**
+     * Before starting background thread Show Progress Bar Dialog.
+     */
     String downloadUrl = "";
 
     String filePath = "";
     String fileName = "";
 
-    DownloadFileFromUrl(String downloadUrl, String filePath, String fileName) {
+    CreateFileFromBase64(String downloadUrl, String filePath, String fileName) {
       this.downloadUrl = downloadUrl;
       this.filePath = filePath;
       this.fileName = fileName;
@@ -308,46 +322,19 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     protected void onPreExecute() {
       super.onPreExecute();
       AppController.getHelperProgressDialog()
-          .showProgress(ResourcesWebViewActivity.this, "", "", false);
+              .showProgress(ResourcesWebViewActivity.this, "", "", false);
     }
 
-    /** Downloading file in background thread. */
+    /**
+     * Downloading file in background thread.
+     */
     @Override
     protected String doInBackground(String... url1) {
       int count;
       try {
-        URL url = new URL(downloadUrl);
-        URLConnection conection = url.openConnection();
-        conection.connect();
-        // getting file length
-        int lenghtOfFile = conection.getContentLength();
-
-        // input stream to read file - with 8k buffer
-        InputStream input = new BufferedInputStream(url.openStream(), 8192);
-
-        // Output stream to write file
-        OutputStream output = new FileOutputStream(filePath + fileName + ".pdf");
-
-        byte[] data = new byte[1024];
-
-        long total = 0;
-
-        while ((count = input.read(data)) != -1) {
-          total += count;
-          // publishing the progress....
-          // After this onProgressUpdate will be called
-          publishProgress("" + (int) ((total * 100) / lenghtOfFile));
-
-          // writing data to file
-          output.write(data, 0, count);
-        }
-
-        // flushing output
-        output.flush();
-
-        // closing streams
-        output.close();
-        input.close();
+        FileOutputStream fos = new FileOutputStream(filePath + fileName + ".pdf");
+        fos.write(Base64.decode(downloadUrl.split(",")[1], Base64.NO_WRAP));
+        fos.close();
 
       } catch (Exception e) {
         // while downloading time, net got disconnected so delete the file
@@ -360,7 +347,9 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       return null;
     }
 
-    /** After completing background task Dismiss the progress dialog. */
+    /**
+     * After completing background task Dismiss the progress dialog.
+     */
     @Override
     protected void onPostExecute(String url) {
       try {
@@ -384,10 +373,10 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   private void offLineFunctionality() {
     try {
       // checking encrypted file is there or not?
-      File file = new File(downloadedFilePath + fileName + ".txt");
+      File file = new File(CreateFilePath + fileName + ".txt");
       if (file.exists()) {
         // decrypt the file
-        File decryptFile = getEncryptedFilePath(downloadedFilePath + fileName + ".txt");
+        File decryptFile = getEncryptedFilePath(CreateFilePath + fileName + ".txt");
         displayPdfView(decryptFile.getAbsolutePath());
       } else {
         Toast.makeText(
@@ -410,7 +399,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     try {
       CipherInputStream cis = AppController.generateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
-      File file = new File(downloadedFilePath + fileName + ".pdf");
+      File file = new File(CreateFilePath + fileName + ".pdf");
       if (!file.exists() && file == null) {
         file.createNewFile();
       }
