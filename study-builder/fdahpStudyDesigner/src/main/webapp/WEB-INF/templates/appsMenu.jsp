@@ -10,6 +10,13 @@
 .left-content-container ul li {
     width: 101% !important;
 }
+.post-launch_txt { color: #5ec456; }
+.right-border { 
+	border-right: 1px solid #95a2ab;
+    height: 15px;
+    position: absolute;
+    margin-top: 2px;
+}
 </style>
 
 <!-- Start left Content here -->
@@ -20,6 +27,17 @@
       <li>
         <div class="tit_wrapper" data-toggle="tooltip" data-placement="top"
              title="${fn:escapeXml(not empty appBo.name?appBo.name:'Create Apps')}">${not empty appBo.name?appBo.name:'Create Apps'}</div>
+             
+            <div class="mb-lg ">
+          <span class="study_status  pre-launch_txt">APP003H2</span>
+           <div class="clearfix"></div>
+          <div>
+          <span class="study_status  post-launch_txt  pr-sm"> Active </span><span class="right-border"></span>
+          <span class="study_status  post-launch_txt  pr-sm pl-sm"> Published </span> <span class="right-border"></span>
+          <span class="study_status  post-launch_txt pr-sm pl-sm"> Distributed (1) </span>
+          </div>
+          <span class="version"></span>
+        </div>
 
          <div class="mb-lg ${empty appBo.customAppId?'hide':''}"><span class="study_status">${appBo.customAppId}</span></div>
         <div class="mb-lg ${empty appBo.appsStatus?'hide':''}">
@@ -51,7 +69,7 @@
       <li class="second active">
         APP SETTINGS
         <c:if test="${studyBo.studySequenceBo.settingAdmins}">
-          <span class="sprites-icons-2 tick pull-right mt-xs"></span>
+          <span class="sprites-icons-2 tick pull-right mt-xs"></span> 
         </c:if>
       </li>
       <li class="third active">
