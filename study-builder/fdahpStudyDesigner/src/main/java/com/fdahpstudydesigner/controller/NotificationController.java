@@ -262,7 +262,7 @@ public class NotificationController {
       } else if (FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE.equals(currentDateTime)) {
         notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
         notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
-        logger.info(
+        System.out.println(
             " currentDateTime="
                 + FdahpStudyDesignerUtil.getCurrentDate()
                 + " "
@@ -272,7 +272,7 @@ public class NotificationController {
         DateTimeFormatter baseFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         // Converting the Object to JSONString
-        logger.info("localDateTime =" + baseFormatter.format(timeNow));
+        System.out.println("localDateTime =" + baseFormatter.format(timeNow));
 
         notificationBO.setScheduleTimestamp(
             FdahpStudyDesignerUtil.getTimeStamp(
