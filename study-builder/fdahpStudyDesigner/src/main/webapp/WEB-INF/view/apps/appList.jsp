@@ -58,7 +58,7 @@
                 <td>${app.customAppId}</td>
                 <td>${app.name}</td>
                 <td>${app.type}</td>
-                <td>${app.appsStatus}</td>
+                <td>${app.appStatus}</td>
                 <td class="text-right" style="padding-right: 2% !important; ">
                     <span class="sprites_icon preview-g mr-lg viewAppClass" isLive=""
                   appId="${app.id}"
@@ -69,7 +69,7 @@
 						<c:when test="${not app.viewPermission}">
 								cursor-none
 						</c:when>
-						<c:when test="${not empty app.appsStatus && (app.appsStatus eq 'Deactivated')}">
+						<c:when test="${not empty app.appStatus && (app.appStatus eq 'Deactivated')}">
 							  cursor-none
 						</c:when>
 					</c:choose>" data-toggle="tooltip" data-placement="top"

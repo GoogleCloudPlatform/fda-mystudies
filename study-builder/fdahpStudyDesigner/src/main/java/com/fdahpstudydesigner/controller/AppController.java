@@ -6,6 +6,7 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_SUC
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_UPDATES;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_UPDATES_SUCCESS_MSG;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APPLICATION_JSON;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APP_BO;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APP_ID;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.BUTTON_TEXT;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.COMPLETED_BUTTON;
@@ -94,7 +95,7 @@ public class AppController {
   @RequestMapping("/adminApps/viewAppsInfo.do")
   public ModelAndView viewAppsBasicInfo(HttpServletRequest request) {
     logger.entry("begin viewAppsBasicInfo");
-    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appList.do");
     ModelMap map = new ModelMap();
     AppsBo appBo = null;
     String sucMsg = "";
@@ -143,7 +144,7 @@ public class AppController {
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
-        map.addAttribute("appBo", appBo);
+        map.addAttribute(APP_BO, appBo);
         map.addAttribute(PERMISSION, permission);
         map.addAttribute("_S", sessionAppCount);
         mav = new ModelAndView("viewAppsInfo", map);
@@ -207,8 +208,8 @@ public class AppController {
               ? Integer.parseInt(request.getParameter("_S"))
               : 0;
       if ((sesObj != null)
-      /* && (sesObj.getStudySession() != null)
-      && sesObj.getStudySession().contains(sessionAppCount)*/ ) {
+          && (sesObj.getAppSession() != null)
+          && sesObj.getAppSession().contains(sessionAppCount)) {
         appsBo.setUserId(sesObj.getUserId());
         appsBo.setButtonText(buttonText);
 
@@ -306,7 +307,7 @@ public class AppController {
             appBo.setType(FdahpStudyDesignerConstants.STUDY_TYPE_GT);
           }
         }
-        map.addAttribute("appBo", appBo);
+        map.addAttribute(APP_BO, appBo);
         map.addAttribute(PERMISSION, permission);
         map.addAttribute("_S", sessionAppCount);
         mav = new ModelAndView("viewAppSettings", map);
@@ -318,7 +319,7 @@ public class AppController {
     return mav;
   }
 
-  @RequestMapping("/adminApps/saveOrUpdateAppSettingAndAdmins.do")
+  /*@RequestMapping("/adminApps/saveOrUpdateAppSettingAndAdmins.do")
   public ModelAndView saveOrUpdateAppSettingAndAdmins(HttpServletRequest request, AppsBo appsBo) {
     logger.entry("begin saveOrUpdateAppSettingAndAdmins()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -378,12 +379,12 @@ public class AppController {
     }
     logger.exit("saveOrUpdateAppSettingAndAdmins() - Ends");
     return mav;
-  }
+  }*/
 
   @RequestMapping("/adminApps/viewAppProperties.do")
   public ModelAndView viewAppProperties(HttpServletRequest request) {
     logger.entry("begin viewAppProperties");
-    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appList.do");
     ModelMap map = new ModelMap();
     AppsBo appBo = null;
     String sucMsg = "";
@@ -432,7 +433,7 @@ public class AppController {
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
-        map.addAttribute("appBo", appBo);
+        map.addAttribute(APP_BO, appBo);
         map.addAttribute(PERMISSION, permission);
         map.addAttribute("_S", sessionAppCount);
         mav = new ModelAndView("viewAppProperties", map);
@@ -447,12 +448,61 @@ public class AppController {
   @RequestMapping("/adminApps/viewDevConfigs.do")
   public ModelAndView viewDevConfigs(HttpServletRequest request) {
     logger.entry("begin viewDevConfigs");
-    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appList.do");
     ModelMap map = new ModelMap();
-
+    AppsBo appBo = null;
+    String sucMsg = "";
+    String errMsg = "";
     try {
+      SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
+      Integer sessionAppCount =
+          StringUtils.isNumeric(request.getParameter("_S"))
+              ? Integer.parseInt(request.getParameter("_S"))
+              : 0;
+      if ((sesObj != null)
+          && (sesObj.getAppSession() != null)
+          && sesObj.getAppSession().contains(sessionAppCount)) {
+        if (null != request.getSession().getAttribute(sessionAppCount + SUC_MSG)) {
+          sucMsg = (String) request.getSession().getAttribute(sessionAppCount + SUC_MSG);
+          map.addAttribute(SUC_MSG, sucMsg);
+          request.getSession().removeAttribute(sessionAppCount + SUC_MSG);
+        }
+        if (null != request.getSession().getAttribute(sessionAppCount + ERR_MSG)) {
+          errMsg = (String) request.getSession().getAttribute(sessionAppCount + ERR_MSG);
+          map.addAttribute(ERR_MSG, errMsg);
+          request.getSession().removeAttribute(sessionAppCount + ERR_MSG);
+        }
+        String appId =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String) request.getSession().getAttribute(sessionAppCount + APP_ID))
+                    ? ""
+                    : request.getSession().getAttribute(sessionAppCount + APP_ID));
+        String permission =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String) request.getSession().getAttribute(sessionAppCount + PERMISSION))
+                    ? ""
+                    : request.getSession().getAttribute(sessionAppCount + PERMISSION));
+        String isLive =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String) request.getSession().getAttribute(sessionAppCount + IS_LIVE))
+                    ? ""
+                    : request.getSession().getAttribute(sessionAppCount + IS_LIVE));
 
-      mav = new ModelAndView("viewDevConfigs", map);
+        if (FdahpStudyDesignerUtil.isEmpty(isLive)) {
+          request.getSession().removeAttribute(sessionAppCount + IS_LIVE);
+        }
+        if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
+          appBo = appService.getAppById(appId, sesObj.getUserId());
+        }
+        map.addAttribute(APP_BO, appBo);
+        map.addAttribute(PERMISSION, permission);
+        map.addAttribute("_S", sessionAppCount);
+
+        mav = new ModelAndView("viewDevConfigs", map);
+      }
     } catch (Exception e) {
       logger.error("AppController - viewDevConfigs - ERROR", e);
     }
@@ -463,7 +513,7 @@ public class AppController {
   @RequestMapping("/adminApps/appActionList.do")
   public ModelAndView viewAppActionList(HttpServletRequest request) {
     logger.entry("begin appActionList");
-    ModelAndView mav = new ModelAndView("redirect:/adminApps/appsList.do");
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appList.do");
     ModelMap map = new ModelMap();
 
     try {
@@ -518,13 +568,13 @@ public class AppController {
           sessionAppCount = appSessionBean.getSessionAppCount();
         } else {
           ++sessionAppCount;
-          if ((sesObj.getStudySession() != null) && !sesObj.getStudySession().isEmpty()) {
+          if ((sesObj.getAppSession() != null) && !sesObj.getAppSession().isEmpty()) {
             appSessionList.addAll(sesObj.getAppSession());
           }
           appSessionList.add(sessionAppCount);
           sesObj.setAppSession(appSessionList);
 
-          if ((sesObj.getStudySessionBeans() != null) && !sesObj.getStudySessionBeans().isEmpty()) {
+          if ((sesObj.getAppSessionBeans() != null) && !sesObj.getAppSessionBeans().isEmpty()) {
             appSessionBeans.addAll(sesObj.getAppSessionBeans());
           }
           appSessionBean = new AppSessionBean();

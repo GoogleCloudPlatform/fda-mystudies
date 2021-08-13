@@ -22,11 +22,12 @@
 
 package com.fdahpstudydesigner.service;
 
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE;
+
 import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.dao.AppDAO;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -87,7 +88,7 @@ public class AppServiceImpl implements AppService {
   @Override
   public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject) {
     logger.entry("StudyServiceImpl - saveOrUpdateApp() - Starts");
-    String message = FdahpStudyDesignerConstants.FAILURE;
+    String message = FAILURE;
     try {
       message = appDAO.saveOrUpdateApp(appsBo, sessionObject);
     } catch (Exception e) {
@@ -138,7 +139,7 @@ public class AppServiceImpl implements AppService {
 
         appDetailsBean.setAndroidBundleId(app.getAndroidBundleId());
         appDetailsBean.setAndroidServerKey(app.getAndroidServerKey());
-        appDetailsBean.setAndroidForceUpdrade(app.getAndroidForceUpdrade());
+        appDetailsBean.setAndroidForceUpdrade(app.getAndroidForceUpgrade());
         appDetailsBean.setAndroidAppBuildVersion(app.getAndroidAppBuildVersion());
 
         appDetailsBean.setIosBundleId(app.getIosBundleId());
