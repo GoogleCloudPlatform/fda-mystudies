@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.RandomAlphanumericGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
@@ -40,7 +41,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -181,7 +181,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private EmailResponse generateAndSaveVerificationCode(
       UserDetailsEntity userDetails, String appName) {
     String verificationCode =
-        MyStudiesUserRegUtil.generateRandomAlphanumeric(VERIFICATION_CODE_LENGTH);
+        RandomAlphanumericGenerator.generateRandomAlphanumeric(VERIFICATION_CODE_LENGTH);
     EmailResponse emailResponse = sendConfirmationEmail(userDetails, verificationCode, appName);
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       userDetails.setEmailCode(verificationCode);
