@@ -306,6 +306,8 @@ public class StudyDAOImpl implements StudyDAO {
               studySequence.setComprehensionTest(false);
             }
             session.saveOrUpdate(studySequence);
+
+            updateStudyToDraftStatus(studyId, sessionObject, session);
           }
         }
       }
@@ -373,6 +375,9 @@ public class StudyDAOImpl implements StudyDAO {
       query.setString("currentDateTime", FdahpStudyDesignerUtil.getCurrentDateTime());
       query.setString("consentInfoId", consentInfoId);
       count = query.executeUpdate();
+
+      updateStudyToDraftStatus(studyId, sessionObject, session);
+
       if (count > 0) {
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
@@ -428,6 +433,8 @@ public class StudyDAOImpl implements StudyDAO {
                 .getNamedQuery("EligibilityTestBo.deleteById")
                 .setString("eligibilityTestId", eligibilityTestId)
                 .executeUpdate();
+
+        updateStudyToDraftStatus(studyId, sessionObject, session);
       }
       sb = new StringBuilder();
       sb.append(
@@ -589,7 +596,7 @@ public class StudyDAOImpl implements StudyDAO {
   @SuppressWarnings("unchecked")
   @Override
   public String deleteResourceInfo(
-      String resourceInfoId, boolean resourceVisibility, String studyId) {
+      String resourceInfoId, boolean resourceVisibility, String studyId, SessionObject sesOb) {
     logger.entry("begin deleteResourceInfo()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
@@ -620,6 +627,8 @@ public class StudyDAOImpl implements StudyDAO {
       String deleteQuery = " UPDATE ResourceBO RBO SET status = false  WHERE id = :resourceInfoId ";
       resourceQuery = session.createQuery(deleteQuery).setString("resourceInfoId", resourceInfoId);
       resourceCount = resourceQuery.executeUpdate();
+
+      updateStudyToDraftStatus(studyId, sesOb, session);
 
       if (!resourceVisibility && (resourceCount > 0)) {
         String deleteNotificationQuery =
@@ -8431,5 +8440,20 @@ public class StudyDAOImpl implements StudyDAO {
     }
     logger.exit("getConsentInfoList() - Ends");
     return consentInfoList;
+  }
+
+  private void updateStudyToDraftStatus(
+      String studyId, SessionObject sessionObject, Session session) {
+    queryString =
+        "Update StudyBo set "
+            + "hasStudyDraft = 1"
+            + " , modifiedBy = :userId"
+            + " , modifiedOn = now() where id = :studyId";
+
+    session
+        .createQuery(queryString)
+        .setParameter("userId", sessionObject.getUserId())
+        .setParameter("studyId", studyId)
+        .executeUpdate();
   }
 }
