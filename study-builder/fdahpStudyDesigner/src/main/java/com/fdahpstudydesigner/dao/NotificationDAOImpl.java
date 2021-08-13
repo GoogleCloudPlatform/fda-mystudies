@@ -33,6 +33,8 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFIC
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NEW_NOTIFICATION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NOTIFICATION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.OLD_NOTIFICATION_ID;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.NOTIFICATION_ST;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.WORKING_VERSION;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
@@ -510,12 +512,33 @@ public class NotificationDAOImpl implements NotificationDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<NotificationBO> getNotificationsList(String studyId) {
+  public List<NotificationBO> getNotificationsList(
+      String studyId, String customStudyId, String copyVersion) {
     logger.entry("begin getNotificationList()");
     Session session = null;
+    List<NotificationBO> notificationBOs = null;
+    String searchQuery = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      return session.getNamedQuery("getNotificationsList").setString("studyId", studyId).list();
+      if (copyVersion.equals(WORKING_VERSION)) {
+        searchQuery =
+            "From NotificationBO where studyId=:studyId AND notificationType =:notificationType";
+        notificationBOs =
+            session
+                .createQuery(searchQuery)
+                .setString("studyId", studyId)
+                .setString("notificationType", NOTIFICATION_ST)
+                .list();
+      } else {
+        searchQuery =
+            "From NotificationBO where customStudyId=:customStudyId AND notificationType =:notificationType";
+        notificationBOs =
+            session
+                .createQuery(searchQuery)
+                .setString("customStudyId", customStudyId)
+                .setString("notificationType", NOTIFICATION_ST)
+                .list();
+      }
     } catch (Exception e) {
       logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
     } finally {
@@ -524,6 +547,6 @@ public class NotificationDAOImpl implements NotificationDAO {
       }
     }
     logger.exit("getNotificationList() - Ends");
-    return null;
+    return notificationBOs;
   }
 }

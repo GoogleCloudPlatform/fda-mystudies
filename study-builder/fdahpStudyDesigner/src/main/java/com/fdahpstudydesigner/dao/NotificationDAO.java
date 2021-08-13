@@ -55,5 +55,6 @@ public interface NotificationDAO {
 
   public void saveNotification(NotificationBO notificationBO);
 
-  public List<NotificationBO> getNotificationsList(String studyId);
+  public List<NotificationBO> getNotificationsList(
+      String studyId, String customStudyId, String copyVersion);
 }

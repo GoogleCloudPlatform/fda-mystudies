@@ -225,6 +225,32 @@ public class StudyController {
           liveStudyBo = studyService.getStudyLiveStatusByCustomId(studyBo.getCustomStudyId());
           studyPermissionBO =
               studyService.findStudyPermissionBO(studyBo.getId(), sesObj.getUserId());
+
+          String signedUrl = "";
+          if (liveStudyBo != null) {
+            if (liveStudyBo != null
+                && studyBo.getExportTime() != null
+                && liveStudyBo.getExportTime() != null) {
+              signedUrl =
+                  studyBo.getExportTime().before(liveStudyBo.getExportTime())
+                      ? liveStudyBo.getExportSignedUrl()
+                      : studyBo.getExportSignedUrl();
+            } else if (liveStudyBo != null
+                && studyBo.getExportTime() != null
+                && liveStudyBo.getExportTime() == null) {
+              signedUrl = studyBo.getExportSignedUrl();
+            } else if (liveStudyBo != null
+                && studyBo.getExportTime() == null
+                && liveStudyBo.getExportTime() != null) {
+              signedUrl = liveStudyBo.getExportSignedUrl();
+            }
+          } else {
+            signedUrl =
+                StringUtils.isNotEmpty(studyBo.getExportSignedUrl())
+                    ? studyBo.getExportSignedUrl()
+                    : "";
+          }
+
           markAsCompleted = studyService.validateStudyActions(studyId);
           map.addAttribute("_S", sessionStudyCount);
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
@@ -235,12 +261,8 @@ public class StudyController {
           map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.duration.in.hours"));
           map.addAttribute("releaseVersion", propMap.get("release.version"));
           map.addAttribute(
-              "exportSignedUrl",
-              URLEncoder.encode(
-                  StringUtils.isNotEmpty(studyBo.getExportSignedUrl())
-                      ? studyBo.getExportSignedUrl()
-                      : "",
-                  StandardCharsets.UTF_8.toString()));
+              "exportSignedUrl", URLEncoder.encode(signedUrl, StandardCharsets.UTF_8.toString()));
+
           mav = new ModelAndView("actionList", map);
         } else {
           return new ModelAndView("redirect:/adminStudies/studyList.do");
@@ -4460,7 +4482,7 @@ public class StudyController {
 
           String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
           String customId = "";
-          if (copyCustomIdArray[1].equalsIgnoreCase("COPY")) {
+          if (copyCustomIdArray[1].contains("COPY")) {
             customId = copyCustomIdArray[0];
             studyBo.setDestinationCustomStudyId(customId);
           } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
@@ -5333,11 +5355,18 @@ public class StudyController {
         (SessionObject)
             request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
 
+    String copyVersion =
+        FdahpStudyDesignerUtil.isEmpty(request.getParameter("copyVersion"))
+            ? ""
+            : request.getParameter("copyVersion");
+
     String message = "";
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     if (StringUtils.isNotEmpty(studyId)) {
       // export study to google cloud storage
-      message = studyExportImportService.exportStudy(studyId, sesObj.getUserId(), auditRequest);
+      message =
+          studyExportImportService.exportStudy(
+              studyId, copyVersion, sesObj.getUserId(), auditRequest);
     }
     JSONObject jsonobject = new JSONObject();
     if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
@@ -5402,7 +5431,12 @@ public class StudyController {
             ? ""
             : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
 
-    StudyBo study = studyService.replicateStudy(studyId, sessionObject, auditRequest);
+    String copyVersion =
+        FdahpStudyDesignerUtil.isEmpty(request.getParameter("copyVersion"))
+            ? ""
+            : request.getParameter("copyVersion");
+
+    StudyBo study = studyService.replicateStudy(studyId, copyVersion, sessionObject, auditRequest);
 
     if (study != null) {
       auditLogEventHelper.logEvent(STUDY_COPIED_INTO_NEW, auditRequest);

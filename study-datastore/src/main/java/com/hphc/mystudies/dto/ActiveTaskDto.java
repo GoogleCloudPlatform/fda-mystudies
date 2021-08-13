@@ -46,6 +46,12 @@ import org.hibernate.annotations.NamedQuery;
       query =
           "from ActiveTaskDto ATDTO"
               + " where ATDTO.action=true and ATDTO.customStudyId=:customStudyId and (ATDTO.live=:live OR ATDTO.active=:active)"
+              + " ORDER BY ATDTO.createdDate DESC"),
+  @NamedQuery(
+      name = "getActiveTaskDetailsByStudyId",
+      query =
+          "from ActiveTaskDto ATDTO"
+              + " where ATDTO.action=true and ATDTO.studyId=:studyId and (ATDTO.live=:live OR ATDTO.active=:active)"
               + " ORDER BY ATDTO.createdDate DESC")
 })
 public class ActiveTaskDto implements Serializable {
