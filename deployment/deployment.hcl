@@ -35,7 +35,7 @@ template "mystudies" {
     default_zone     = "a"
     # The account or organization that your cloned github repo belongs to 
     # For example, "GoogleCloudPlatform"
-    github_owner     = "kishida"
+    github_owner     = "kenzozozo"
     # The name of your cloned github repo 
     # For example, "fda-mystudies"
     github_repo      = "fda-mystudies"

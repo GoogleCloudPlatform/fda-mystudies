@@ -169,10 +169,10 @@ resource "google_cloudbuild_trigger" "validate" {
   ]
 
   github {
-    owner = "kishida"
+    owner = "kenzozozo"
     name  = "fda-mystudies"
     pull_request {
-      branch = "^irtpoc8$"
+      branch = "^master$"
     }
   }
 
@@ -198,10 +198,10 @@ resource "google_cloudbuild_trigger" "plan" {
   ]
 
   github {
-    owner = "kishida"
+    owner = "kenzozozo"
     name  = "fda-mystudies"
     pull_request {
-      branch = "^irtpoc8$"
+      branch = "^master$"
     }
   }
 
@@ -227,10 +227,10 @@ resource "google_cloudbuild_trigger" "apply" {
   ]
 
   github {
-    owner = "kishida"
+    owner = "kenzozozo"
     name  = "fda-mystudies"
     push {
-      branch = "^irtpoc8$"
+      branch = "^master$"
     }
   }
 

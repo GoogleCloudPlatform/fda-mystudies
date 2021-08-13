@@ -63,9 +63,9 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #7#   included_files = each.value
 #7#
 #7#   github {
-#7#     owner = "kishida"
+#7#     owner = "kenzozozo"
 #7#     name  = "fda-mystudies"
-#7#     push { branch = "^irtpoc8$" }
+#7#     push { branch = "^master$" }
 #7#   }
 
 #7#   filename = "${each.key}/cloudbuild.yaml"
