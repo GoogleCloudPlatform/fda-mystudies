@@ -1042,17 +1042,6 @@ public class FdahpStudyDesignerUtil {
     return fileNameWithExtension;
   }
 
-  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
-    try {
-      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
-      Storage storage = StorageOptions.getDefaultInstance().getService();
-      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
-    } catch (Exception e) {
-      logger.error("Unable to generate signed url", e);
-    }
-    return null;
-  }
-
   public static void saveDefaultImageToCloudStorage(
       MultipartFile fileStream, String fileName, String underDirectory) {
     String absoluteFileName = underDirectory + PATH_SEPARATOR + fileName;
@@ -1282,5 +1271,22 @@ public class FdahpStudyDesignerUtil {
     }
 
     return destFile;
+  }
+
+  public static String getImageResources(String filepath) {
+    try {
+      if (StringUtils.isNotBlank(filepath)) {
+        Storage storage = StorageOptions.getDefaultInstance().getService();
+        Blob blob = storage.get(BlobId.of(configMap.get("cloud.bucket.name"), filepath));
+        if (blob != null) {
+          ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+          blob.downloadTo(outputStream);
+          return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(blob.getContent());
+        }
+      }
+    } catch (Exception e) {
+      logger.error("Unable to getImageResources", e);
+    }
+    return null;
   }
 }

@@ -13,7 +13,9 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAI
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.INVALID_URL;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.PUBLISHED_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.WORKING_VERSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.YES;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
@@ -113,6 +115,8 @@ public class StudyExportImportService {
 
   private static final String ANCHORDATE_ID = "ANCHORDATE_ID_";
 
+  private static final String IMPORTED = "Imported ";
+
   private static XLogger logger =
       XLoggerFactory.getXLogger(StudyExportImportService.class.getName());
 
@@ -144,7 +148,8 @@ public class StudyExportImportService {
 
   private static final String UNDER_DIRECTORY = "export-studies";
 
-  public String exportStudy(String studyId, String userId, AuditLogEventRequest auditRequest) {
+  public String exportStudy(
+      String studyId, String copyVersion, String userId, AuditLogEventRequest auditRequest) {
 
     // This map contains new primary key and foreign key values
     final Map<String, String> customIdsMap = new HashMap<>();
@@ -160,7 +165,8 @@ public class StudyExportImportService {
 
       StudySequenceBo studySequenceBo = studyDao.getStudySequenceByStudyId(studyBo.getId());
 
-      List<AnchorDateTypeBo> anchorDateList = studyDao.getAnchorDateDetails(studyBo.getId());
+      List<AnchorDateTypeBo> anchorDateList =
+          studyDao.getAnchorDateDetails(studyBo.getId(), studyBo.getCustomStudyId());
       if (CollectionUtils.isNotEmpty(anchorDateList)) {
         for (AnchorDateTypeBo anchorDate : anchorDateList) {
           customIdsMap.put(ANCHORDATE_ID + anchorDate.getId(), IdGenerator.id());
@@ -181,9 +187,12 @@ public class StudyExportImportService {
 
       List<ConsentBo> consentBoList = studyDao.getConsentListForStudy(studyBo.getId());
 
-      List<ConsentInfoBo> consentInfoBoList = studyDao.getConsentInfoList(studyBo.getId());
+      List<ConsentInfoBo> consentInfoBoList =
+          studyDao.getConsentInfoList(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
-      List<NotificationBO> notificationBOs = notificationDAO.getNotificationsList(studyBo.getId());
+      List<NotificationBO> notificationBOs =
+          notificationDAO.getNotificationsList(
+              studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
       List<ResourceBO> resourceBOs = studyDao.getResourceList(studyBo.getId());
 
@@ -196,22 +205,26 @@ public class StudyExportImportService {
         addStudiesInsertSql(studyBo, insertSqlStatements, customIdsMap);
         addStudySequenceInsertSql(studySequenceBo, insertSqlStatements, customIdsMap);
 
-        addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap);
+        addAnchorDateInsertSql(anchorDateList, insertSqlStatements, customIdsMap, studyBo.getId());
         addStudypagesListInsertSql(studypageList, insertSqlStatements, customIdsMap);
 
         addEligibilityInsertSql(eligibilityBo, insertSqlStatements, customIdsMap);
         addEligibilityTestListInsertSql(eligibilityBoList, insertSqlStatements, customIdsMap);
 
         addConsentBoListInsertSql(consentBoList, insertSqlStatements, customIdsMap);
-        addConsentInfoBoListInsertSql(consentInfoBoList, insertSqlStatements, customIdsMap);
+        addConsentInfoBoListInsertSql(
+            consentInfoBoList, insertSqlStatements, customIdsMap, studyBo.getId());
 
         prepareInsertSqlQueriesForComprehensionTest(customIdsMap, insertSqlStatements, studyBo);
 
-        prepareInsertSqlQueriesForQuestionnaires(customIdsMap, insertSqlStatements, studyBo);
+        prepareInsertSqlQueriesForQuestionnaires(
+            customIdsMap, insertSqlStatements, studyBo, copyVersion);
 
-        prepareInsertSqlQueriesForStudyActiveTasks(customIdsMap, insertSqlStatements, studyBo);
+        prepareInsertSqlQueriesForStudyActiveTasks(
+            customIdsMap, insertSqlStatements, studyBo, copyVersion);
 
-        addNotificationInsertSql(notificationBOs, insertSqlStatements, customIdsMap);
+        addNotificationInsertSql(
+            notificationBOs, insertSqlStatements, customIdsMap, copyVersion, studyBo);
 
         addResourceInsertSql(resourceBOs, insertSqlStatements, customIdsMap);
 
@@ -227,11 +240,15 @@ public class StudyExportImportService {
   }
 
   private void prepareInsertSqlQueriesForStudyActiveTasks(
-      final Map<String, String> customIdsMap, List<String> insertSqlStatements, StudyBo studyBo)
+      final Map<String, String> customIdsMap,
+      List<String> insertSqlStatements,
+      StudyBo studyBo,
+      String copyVersion)
       throws Exception {
 
     List<ActiveTaskBo> activeTaskBos =
-        studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
+        studyActiveTasksDAO.getStudyActiveTaskByStudyId(
+            studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     Map<String, List<ActiveTaskCustomScheduleBo>> activeTaskCustomFrequencyMap = new HashMap<>();
     Map<String, List<ActiveTaskFrequencyBo>> activeTaskFrequencyMap = new HashMap<>();
@@ -277,7 +294,7 @@ public class StudyExportImportService {
     List<ActiveTaskAtrributeValuesBo> activeTaskAtrributeValuesBos =
         studyActiveTasksDAO.getActiveTaskAtrributeValuesByActiveTaskId(activeTaskIds);
 
-    addStudyActiveTaskInsertSql(activeTaskBos, insertSqlStatements, customIdsMap);
+    addStudyActiveTaskInsertSql(activeTaskBos, insertSqlStatements, customIdsMap, studyBo.getId());
 
     addActiveTaskAtrributeValuesInsertSql(
         activeTaskAtrributeValuesBos, insertSqlStatements, customIdsMap);
@@ -290,11 +307,15 @@ public class StudyExportImportService {
   }
 
   private void prepareInsertSqlQueriesForQuestionnaires(
-      final Map<String, String> customIdsMap, List<String> insertSqlStatements, StudyBo studyBo)
+      final Map<String, String> customIdsMap,
+      List<String> insertSqlStatements,
+      StudyBo studyBo,
+      String copyVersion)
       throws Exception {
 
     List<QuestionnaireBo> questionnairesList =
-        studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
+        studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(
+            studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     List<String> questionnaireIds = new ArrayList<>();
     Map<String, List<QuestionnaireCustomScheduleBo>> customScheduleMap = new HashMap<>();
@@ -405,7 +426,7 @@ public class StudyExportImportService {
         questionResponseTypeBo,
         customIdsMap);
 
-    addQuestionnaireBoListInsertSql(questionnairesList, insertSqlStatements, customIdsMap);
+    addQuestionnaireBoListInsertSql(questionnairesList, insertSqlStatements, customIdsMap, studyBo);
 
     addQuestionnaireFrequenciesBoInsertSql(frequencyList, insertSqlStatements, customIdsMap);
 
@@ -935,11 +956,11 @@ public class StudyExportImportService {
             studyBo.getHasStudyDraft(),
             studyBo.getInboxEmailAddress(),
             studyBo.getIrbReview(),
-            studyBo.getLive(),
+            0,
             studyBo.getMediaLink(),
             studyBo.getModifiedBy(),
             studyBo.getModifiedOn(),
-            studyBo.getName(),
+            IMPORTED + studyBo.getName(),
             studyBo.getPlatform(),
             studyBo.getResearchSponsor(),
             studyBo.getSequenceNumber(),
@@ -952,7 +973,7 @@ public class StudyExportImportService {
             studyBo.getTentativeDurationWeekmonth(),
             studyBo.getThumbnailImage(),
             studyBo.getType(),
-            studyBo.getVersion(),
+            0f,
             studyBo.isEnrollmentdateAsAnchordate() ? "Y" : "N",
             studyBo.getCustomStudyId() + "@Export",
             null);
@@ -997,7 +1018,8 @@ public class StudyExportImportService {
   private void addAnchorDateInsertSql(
       List<AnchorDateTypeBo> anchorDateList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String studyId)
       throws Exception {
 
     if (CollectionUtils.isEmpty(anchorDateList)) {
@@ -1013,7 +1035,7 @@ public class StudyExportImportService {
               customIdsMap.get(CUSTOM_STUDY_ID + anchorDate.getCustomStudyId()),
               anchorDate.getHasAnchortypeDraft(),
               anchorDate.getName(),
-              customIdsMap.get(STUDY_ID + anchorDate.getStudyId()),
+              customIdsMap.get(STUDY_ID + studyId),
               anchorDate.getVersion());
 
       anchorDateInsertQueryList.add(anchorDateTypeInsertQuery);
@@ -1082,7 +1104,9 @@ public class StudyExportImportService {
   private void addNotificationInsertSql(
       List<NotificationBO> notificationBOs,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String copyVersion,
+      StudyBo studyBo)
       throws Exception {
 
     if (CollectionUtils.isEmpty(notificationBOs)) {
@@ -1091,36 +1115,50 @@ public class StudyExportImportService {
     List<String> notificationBoBoInsertQueryList = new ArrayList<>();
     Integer sequenceNumber = 0;
     for (NotificationBO notificationBO : notificationBOs) {
-      String notificationBoInsertQuery;
-      notificationBoInsertQuery =
-          prepareInsertQuery(
-              StudyExportSqlQueries.NOTIFICATION,
-              IdGenerator.id(),
-              customIdsMap.get(ACTIVETASK_ID + notificationBO.getActiveTaskId()),
-              notificationBO.isAnchorDate(),
-              notificationBO.getAppId(),
-              notificationBO.getCreatedBy(),
-              notificationBO.getCreatedOn(),
-              customIdsMap.get(CUSTOM_STUDY_ID + notificationBO.getCustomStudyId()),
-              notificationBO.getModifiedBy(),
-              notificationBO.getModifiedOn(),
-              notificationBO.isNotificationStatus() ? notificationBO.isNotificationAction() : false,
-              notificationBO.isNotificationStatus() ? notificationBO.isNotificationDone() : false,
-              NOTIFICATION_NOTIMMEDIATE,
-              false,
-              notificationBO.isNotificationStatus(),
-              notificationBO.getNotificationSubType(),
-              notificationBO.getNotificationText(),
-              notificationBO.getNotificationType(),
-              customIdsMap.get(QUESTIONNAIRES_ID + notificationBO.getQuestionnarieId()),
-              notificationBO.getResourceId(),
-              notificationBO.getScheduleDate(),
-              notificationBO.getScheduleTime(),
-              customIdsMap.get(STUDY_ID + notificationBO.getStudyId()),
-              notificationBO.getxDays(),
-              notificationBO.getScheduleTimestamp(),
-              sequenceNumber++);
-      notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
+
+      boolean flag = false;
+      if (copyVersion.equals(PUBLISHED_VERSION)) {
+        flag =
+            notificationBO.getCreatedOn() == null
+                ? true
+                : Timestamp.valueOf(notificationBO.getCreatedOn())
+                    .before(Timestamp.valueOf(studyBo.getStudylunchDate()));
+      }
+
+      if (copyVersion.equals(WORKING_VERSION) || (copyVersion.equals(PUBLISHED_VERSION) && flag)) {
+        String notificationBoInsertQuery;
+        notificationBoInsertQuery =
+            prepareInsertQuery(
+                StudyExportSqlQueries.NOTIFICATION,
+                IdGenerator.id(),
+                customIdsMap.get(ACTIVETASK_ID + notificationBO.getActiveTaskId()),
+                notificationBO.isAnchorDate(),
+                notificationBO.getAppId(),
+                notificationBO.getCreatedBy(),
+                notificationBO.getCreatedOn(),
+                customIdsMap.get(CUSTOM_STUDY_ID + notificationBO.getCustomStudyId()),
+                notificationBO.getModifiedBy(),
+                notificationBO.getModifiedOn(),
+                notificationBO.isNotificationStatus()
+                    ? notificationBO.isNotificationAction()
+                    : false,
+                notificationBO.isNotificationStatus() ? notificationBO.isNotificationDone() : false,
+                NOTIFICATION_NOTIMMEDIATE,
+                false,
+                notificationBO.isNotificationStatus(),
+                notificationBO.getNotificationSubType(),
+                notificationBO.getNotificationText(),
+                notificationBO.getNotificationType(),
+                customIdsMap.get(QUESTIONNAIRES_ID + notificationBO.getQuestionnarieId()),
+                notificationBO.getResourceId(),
+                notificationBO.getScheduleDate(),
+                notificationBO.getScheduleTime(),
+                customIdsMap.get(STUDY_ID + studyBo.getId()),
+                notificationBO.getxDays(),
+                notificationBO.getScheduleTimestamp(),
+                sequenceNumber++);
+        notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
+      }
     }
     insertSqlStatements.addAll(notificationBoBoInsertQueryList);
   }
@@ -1128,7 +1166,8 @@ public class StudyExportImportService {
   private void addStudyActiveTaskInsertSql(
       List<ActiveTaskBo> activeTaskBos,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String studyId)
       throws Exception {
 
     if (CollectionUtils.isEmpty(activeTaskBos)) {
@@ -1155,13 +1194,13 @@ public class StudyExportImportService {
               activeTaskBo.getFrequency(),
               activeTaskBo.getInstruction(),
               activeTaskBo.getIsChange(),
-              activeTaskBo.getLive(),
+              0,
               activeTaskBo.getModifiedBy(),
               activeTaskBo.getModifiedDate(),
               activeTaskBo.getRepeatActiveTask(),
               activeTaskBo.getScheduleType(),
               activeTaskBo.getShortTitle(),
-              customIdsMap.get(STUDY_ID + activeTaskBo.getStudyId()),
+              customIdsMap.get(STUDY_ID + studyId),
               activeTaskBo.getTaskTypeId(),
               activeTaskBo.getTitle(),
               activeTaskBo.getVersion());
@@ -1314,7 +1353,7 @@ public class StudyExportImportService {
               consentBo.geteConsentSignature(),
               consentBo.getHtmlConsent(),
               consentBo.getLearnMoreText(),
-              consentBo.getLive(),
+              0,
               consentBo.getLongDescription(),
               consentBo.getModifiedBy(),
               consentBo.getModifiedOn(),
@@ -1324,7 +1363,7 @@ public class StudyExportImportService {
               customIdsMap.get(STUDY_ID + consentBo.getStudyId()),
               consentBo.getTaglineDescription(),
               consentBo.getTitle(),
-              consentBo.getVersion(),
+              0f,
               consentBo.getEnrollAgain());
       consentBoListInsertQuery.add(consentInsertSql);
     }
@@ -1334,7 +1373,8 @@ public class StudyExportImportService {
   private void addConsentInfoBoListInsertSql(
       List<ConsentInfoBo> consentInfoBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String studyId)
       throws Exception {
 
     if (CollectionUtils.isEmpty(consentInfoBoList)) {
@@ -1358,14 +1398,14 @@ public class StudyExportImportService {
               consentInfoBo.getDisplayTitle(),
               consentInfoBo.getElaborated(),
               consentInfoBo.getHtmlContent(),
-              consentInfoBo.getLive(),
+              0,
               consentInfoBo.getModifiedBy(),
               consentInfoBo.getModifiedOn(),
               consentInfoBo.getSequenceNo(),
               consentInfoBo.getStatus(),
-              customIdsMap.get(STUDY_ID + consentInfoBo.getStudyId()),
+              customIdsMap.get(STUDY_ID + studyId),
               consentInfoBo.getUrl(),
-              consentInfoBo.getVersion(),
+              0f,
               consentInfoBo.getVisualStep());
 
       consentInfoInsertQueryList.add(consentInfoInsertSql);
@@ -1409,7 +1449,8 @@ public class StudyExportImportService {
   private void addQuestionnaireBoListInsertSql(
       List<QuestionnaireBo> questionnairesList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      StudyBo studyBo)
       throws Exception {
 
     if (CollectionUtils.isEmpty(questionnairesList)) {
@@ -1432,18 +1473,18 @@ public class StudyExportImportService {
               questionnaireBo.getDayOfTheWeek(),
               questionnaireBo.getFrequency(),
               1, // setting isChange value to 1
-              questionnaireBo.getLive(),
+              0,
               questionnaireBo.getModifiedBy(),
               questionnaireBo.getModifiedDate(),
               questionnaireBo.getRepeatQuestionnaire(),
               questionnaireBo.getScheduleType(),
               questionnaireBo.getShortTitle(),
               questionnaireBo.getStatus(),
-              customIdsMap.get(STUDY_ID + questionnaireBo.getStudyId()),
+              customIdsMap.get(STUDY_ID + studyBo.getId()),
               questionnaireBo.getStudyLifetimeEnd(),
               questionnaireBo.getStudyLifetimeStart(),
               questionnaireBo.getTitle(),
-              questionnaireBo.getVersion(),
+              0f,
               questionnaireBo.getSequenceNumber());
 
       questionnairesBoInsertQueryList.add(questionnairesBoInsertQuery);

@@ -61,6 +61,7 @@ import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.RandomAlphanumericGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -118,7 +119,6 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -859,7 +859,7 @@ public class SiteServiceImpl implements SiteService {
         continue;
       }
 
-      String token = RandomStringUtils.randomAlphanumeric(8);
+      String token = RandomAlphanumericGenerator.generateRandomAlphanumeric(8);
       participantRegistrySiteEntity.setEnrollmentToken(token);
       participantRegistrySiteEntity.setInvitationDate(new Timestamp(Instant.now().toEpochMilli()));
 
@@ -1200,7 +1200,7 @@ public class SiteServiceImpl implements SiteService {
       if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
         StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
         studyDetail.setLogoImageUrl(
-            participantManagerUtil.getSignedUrl(
+            participantManagerUtil.getImageResources(
                 studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
         studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
@@ -1248,7 +1248,7 @@ public class SiteServiceImpl implements SiteService {
         if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
           StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
           studyDetail.setLogoImageUrl(
-              participantManagerUtil.getSignedUrl(
+              participantManagerUtil.getImageResources(
                   studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
           studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }

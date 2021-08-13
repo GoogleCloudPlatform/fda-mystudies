@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.REA
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATE_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.VERIFICATION_CODE_LENGTH;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -24,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.RandomAlphanumericGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -43,7 +45,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -210,7 +211,8 @@ public class UserProfileController {
       }
       if (participantDetails != null) {
         if (UserStatus.PENDING_EMAIL_CONFIRMATION.getValue() == participantDetails.getStatus()) {
-          String code = RandomStringUtils.randomAlphanumeric(6);
+          String code =
+              RandomAlphanumericGenerator.generateRandomAlphanumeric(VERIFICATION_CODE_LENGTH);
           participantDetails.setEmailCode(code);
           participantDetails.setCodeExpireDate(
               Timestamp.valueOf(LocalDateTime.now().plusHours(expireTime)));

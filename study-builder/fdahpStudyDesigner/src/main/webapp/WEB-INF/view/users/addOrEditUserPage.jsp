@@ -175,7 +175,7 @@
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}"
-                     pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                     pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                      data-pattern-error="Email address is invalid" maxlength="100"
                      required data-error="Please fill out this field" 
                      <c:if
@@ -312,7 +312,7 @@
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
                 <select
                     class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
-                    title="- Select and Add Studies -" multiple id="multiple">
+                    title="- Select and add studies -" multiple id="multiple">
                   <c:forEach items="${studyBOList}" var="study">
                     <option value="${study.id}"
                             id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
@@ -342,7 +342,7 @@
                   <c:if test="${actionPage ne 'VIEW_PAGE'}">
                     <span class="mr-md"><img
                         src="/studybuilder/images/icons/close.png"
-                        onclick="del(${study.id});" alt=""/></span>
+                        onclick="del('${study.id}');" alt=""/></span>
                   </c:if>
                   <span>${study.name}&nbsp;(${study.customStudyId})</span>
                   <span
@@ -599,8 +599,8 @@
         var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
             + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
             + "'>"
-            + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del("
-            + selVal + ");'/></span>"
+            + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del(\""
+            + selVal + "\");'/></span>"
             + "<span>" + selTxt + "</span>"
             + "<span class='pull-right'>"
             + "<span class='radio radio-info radio-inline p-45 mr-xs'>"

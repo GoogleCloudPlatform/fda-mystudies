@@ -669,11 +669,7 @@
       $('#actTy').remove();
       $('<input />').attr('type', 'hidden').attr('name', "actionType").attr('value',
           $(this).attr('actType')).attr('id', 'actTy').appendTo('#overViewFormId');
-      if ($(this).attr('actType') == 'save') {
-        e.preventDefault();
-        $('#overViewFormId').validator('destroy');
-        $('#overViewFormId').submit();
-      }
+     
     });
     function validateSummernote(){   
         var valid=true;     
@@ -798,7 +794,7 @@
            	
                var ht = this.height;
                var wds = this.width;
-              $(thisAttr).val();
+              $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -822,7 +818,7 @@
               $(thisAttr).parent().find('.form-group').removeClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty();
             } else {
-              $(thisAttr).val();
+              $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
                   $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -833,7 +829,7 @@
 
         };
         img.onerror = function () {
-          $(thisAttr).val();
+          $(thisAttr).val("");
           $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
           $(thisAttr).parent().find(".help-block").empty().append(
         	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
@@ -843,7 +839,7 @@
         img.src = _URL.createObjectURL(file);
         
           }else{
-        	  $(thisAttr).val();
+        	  $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
             	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(

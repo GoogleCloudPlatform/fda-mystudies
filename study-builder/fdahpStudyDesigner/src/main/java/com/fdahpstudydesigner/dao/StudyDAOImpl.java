@@ -99,6 +99,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -1657,11 +1659,14 @@ public class StudyDAOImpl implements StudyDAO {
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      String searchQuery =
-          "From ConsentInfoBo CIB where CIB.studyId=:studyId and CIB.active=1 order by CIB.sequenceNo asc";
-      query = session.createQuery(searchQuery);
-      query.setString("studyId", studyId);
-      consentInfoList = query.list();
+      if (StringUtils.isNotEmpty(studyId)) {
+        String searchQuery =
+            "From ConsentInfoBo CIB where CIB.studyId=:studyId and CIB.active=1 order by CIB.sequenceNo asc";
+        query = session.createQuery(searchQuery);
+        query.setString("studyId", studyId);
+        consentInfoList = query.list();
+      }
+
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getConsentInfoList() - ERROR ", e);
     } finally {
@@ -4323,14 +4328,19 @@ public class StudyDAOImpl implements StudyDAO {
 
             String[] copyCustomIdArray = dbStudyBo.getDestinationCustomStudyId().split("@");
             String customId = "";
-            if (copyCustomIdArray[1].equalsIgnoreCase("COPY")) {
+            if (copyCustomIdArray[1].contains("COPY")) {
               customId = copyCustomIdArray[0];
+              int isLive =
+                  copyCustomIdArray[1].contains(FdahpStudyDesignerConstants.PUBLISHED_VERSION)
+                      ? 1
+                      : 0;
               StudyBo study =
                   (StudyBo)
                       session
                           .createQuery(
-                              "From StudyBo SBO WHERE SBO.live=0 AND customStudyId=:customStudyId")
+                              "From StudyBo SBO WHERE SBO.live=:isLive AND customStudyId=:customStudyId")
                           .setString("customStudyId", customId)
+                          .setInteger("isLive", isLive)
                           .uniqueResult();
               if (study != null) {
                 moveOrCopyCloudStorage(session, study, false, false, studyBo.getCustomStudyId());
@@ -7269,7 +7279,7 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId) {
+  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId, String customStudyId) {
     logger.info("StudyDAOImpl - getStudy() - Starts");
     Session session = null;
     List<AnchorDateTypeBo> anchorDateTypeBoList = null;
@@ -7277,6 +7287,11 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       String searchQuery = "From AnchorDateTypeBo where studyId=:studyId";
       anchorDateTypeBoList = session.createQuery(searchQuery).setString("studyId", studyId).list();
+      if (CollectionUtils.isEmpty(anchorDateTypeBoList)) {
+        searchQuery = "From AnchorDateTypeBo where customStudyId=:customStudyId";
+        anchorDateTypeBoList =
+            session.createQuery(searchQuery).setString("customStudyId", customStudyId).list();
+      }
 
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getStudy() - ERROR", e);
@@ -7313,7 +7328,7 @@ public class StudyDAOImpl implements StudyDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject) {
+  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject, String copyVersion) {
     logger.info("StudyDAOImpl - cloneStudy() - Starts");
     Session session = null;
     StudyPermissionBO studyPermissionBO = null;
@@ -7333,12 +7348,15 @@ public class StudyDAOImpl implements StudyDAO {
       studyBo.setAppId(
           studyBo.getType().equals(FdahpStudyDesignerConstants.STUDY_TYPE_SD)
               ? null
-              : studyBo.getAppId().toUpperCase());
+              : studyBo.getAppId());
       studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-      studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId() + "@COPY");
+      studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId() + "@COPY" + copyVersion);
       studyBo.setEnrollingParticipants(FdahpStudyDesignerConstants.YES);
       studyBo.setCustomStudyId(null);
       studyBo.setExportSignedUrl(null);
+      studyBo.setName("Copy of " + studyBo.getName());
+      studyBo.setLive(0);
+      studyBo.setVersion(0f);
       studyId = (String) session.save(studyBo);
 
       studyPermissionBO = new StudyPermissionBO();
@@ -7480,6 +7498,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       consentBo.setId(null);
       consentBo.setStudyId(studyId);
+      consentBo.setVersion(0f);
       consentBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       session.save(consentBo);
 
@@ -7506,6 +7525,7 @@ public class StudyDAOImpl implements StudyDAO {
 
       consentInfoBo.setId(null);
       consentInfoBo.setStudyId(studyId);
+      consentInfoBo.setVersion(0f);
       consentInfoBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       session.save(consentInfoBo);
 
@@ -7633,6 +7653,7 @@ public class StudyDAOImpl implements StudyDAO {
       if (studyBo != null) {
         studyBo.setDestinationCustomStudyId(destinationCustomId + "@Export");
         studyBo.setExportSignedUrl(signedUrl);
+        studyBo.setExportTime(new Timestamp(Instant.now().toEpochMilli()));
         session.update(studyBo);
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
@@ -8376,5 +8397,39 @@ public class StudyDAOImpl implements StudyDAO {
       zos.closeEntry();
       fis.close();
     }
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<ConsentInfoBo> getConsentInfoList(
+      String studyId, String customStudyId, String copyVersion) {
+    logger.entry("begin getConsentInfoList()");
+    List<ConsentInfoBo> consentInfoList = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(studyId)
+          && copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
+        String searchQuery =
+            "From ConsentInfoBo CIB where CIB.studyId=:studyId and CIB.active=1 order by CIB.sequenceNo asc";
+        query = session.createQuery(searchQuery);
+        query.setString("studyId", studyId);
+      } else {
+        String searchQuery =
+            "From ConsentInfoBo CIB where CIB.customStudyId=:customStudyId and CIB.active=1 AND CIB.version IN "
+                + "(SELECT MAX(version) FROM ConsentInfoBo WHERE customStudyId=:customStudyId) order by CIB.sequenceNo asc";
+        query = session.createQuery(searchQuery);
+        query.setString("customStudyId", customStudyId);
+      }
+      consentInfoList = query.list();
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getConsentInfoList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getConsentInfoList() - Ends");
+    return consentInfoList;
   }
 }

@@ -102,13 +102,13 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
       imageView.setLayoutParams(layoutParams);
 
       if (currentSelected != null && currentSelected.equals(item.getValue())) {
-        byte[] imageByteArray = Base64.decode(item.getSelectedImage(), Base64.DEFAULT);
+        byte[] imageByteArray = Base64.decode(item.getSelectedImage().split(",")[1], Base64.DEFAULT);
         Glide.with(inflater.getContext()).load(imageByteArray).into(imageView);
         currentSelected = item.getValue();
         pervioustxtview[0] = imageView;
         desc.setText(item.getText());
       } else {
-        byte[] imageByteArray = Base64.decode(item.getImage(), Base64.DEFAULT);
+        byte[] imageByteArray = Base64.decode(item.getImage().split(",")[1], Base64.DEFAULT);
         Glide.with(inflater.getContext()).load(imageByteArray).into(imageView);
       }
 
@@ -118,11 +118,11 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
             public void onClick(View view) {
               if (pervioustxtview[0] != null) {
                 byte[] imageByteArray =
-                    Base64.decode(choices[pervioustxtview[0].getId()].getImage(), Base64.DEFAULT);
+                    Base64.decode(choices[pervioustxtview[0].getId()].getImage().split(",")[1], Base64.DEFAULT);
                 Glide.with(inflater.getContext()).load(imageByteArray).into(pervioustxtview[0]);
               }
               byte[] imageByteArray =
-                  Base64.decode(choices[imageView.getId()].getSelectedImage(), Base64.DEFAULT);
+                  Base64.decode(choices[imageView.getId()].getSelectedImage().split(",")[1], Base64.DEFAULT);
               Glide.with(inflater.getContext()).load(imageByteArray).into(imageView);
               imageView.setLayoutParams(layoutParams);
               pervioustxtview[0] = imageView;
