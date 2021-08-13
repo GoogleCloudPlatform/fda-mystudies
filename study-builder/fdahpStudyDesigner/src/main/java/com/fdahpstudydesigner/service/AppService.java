@@ -38,6 +38,8 @@ public interface AppService {
 
   public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject);
 
+  public String saveOrUpdateAppSettings(AppsBo appsBo, SessionObject sessionObject);
+
   public String updateAppAction(String appId, String buttonText, SessionObject sesObj);
 
   public AppDetailsBean getAppDetailsBean(String customAppId);

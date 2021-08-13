@@ -297,7 +297,7 @@ public class AppDAOImpl implements AppDAO {
           dbappBo.setCustomAppId(appBo.getCustomAppId());
           dbappBo.setName(appBo.getName());
           dbappBo.setModifiedBy(appBo.getUserId());
-          appBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+          dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
               (AppSequenceBo)
                   session
@@ -328,6 +328,7 @@ public class AppDAOImpl implements AppDAO {
 
       transaction.commit();
     } catch (Exception e) {
+      message = FAILURE;
       transaction.rollback();
       logger.error("AppDAOImpl - saveOrUpdateApp() - ERROR", e);
     } finally {
@@ -336,6 +337,72 @@ public class AppDAOImpl implements AppDAO {
       }
     }
     logger.exit("saveOrUpdateApp() - Ends");
+    return message;
+  }
+
+  public String saveOrUpdateAppSettings(AppsBo appBo, SessionObject sessionObject) {
+    logger.entry("begin saveOrUpdateAppSettings()");
+    Session session = null;
+    String message = FdahpStudyDesignerConstants.SUCCESS;
+    StudyBuilderAuditEvent auditLogEvent = null;
+    AppSequenceBo appSequenceBo = null;
+    String appId = null;
+    try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+
+      if (StringUtils.isNotEmpty(appBo.getId())) {
+        AppsBo dbappBo =
+            (AppsBo)
+                session
+                    .getNamedQuery("AppsBo.getAppsById")
+                    .setString("id", appBo.getId())
+                    .uniqueResult();
+        if (dbappBo != null) {
+          dbappBo.setType(appBo.getType());
+          dbappBo.setAppPlatform(appBo.getAppPlatform());
+          dbappBo.setModifiedBy(appBo.getUserId());
+          dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+          appSequenceBo =
+              (AppSequenceBo)
+                  session
+                      .getNamedQuery("getAppSequenceByAppd")
+                      .setString("appId", dbappBo.getId())
+                      .uniqueResult();
+          session.update(dbappBo);
+        }
+      }
+
+      auditRequest.setAppId(appBo.getId());
+      if (appSequenceBo != null) {
+        if (StringUtils.isNotEmpty(appBo.getButtonText())
+            && appBo
+                .getButtonText()
+                .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+          appSequenceBo.setAppSettings(true);
+          // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+        } else if (StringUtils.isNotEmpty(appBo.getButtonText())
+            && appBo.getButtonText().equalsIgnoreCase(FdahpStudyDesignerConstants.SAVE_BUTTON)) {
+          // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+          appSequenceBo.setAppSettings(false);
+        }
+        session.saveOrUpdate(appSequenceBo);
+      }
+
+      auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
+
+      transaction.commit();
+    } catch (Exception e) {
+      message = FAILURE;
+      transaction.rollback();
+      logger.error("AppDAOImpl - saveOrUpdateAppSettings() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("saveOrUpdateAppSettings() - Ends");
     return message;
   }
 
@@ -367,7 +434,7 @@ public class AppDAOImpl implements AppDAO {
         }
       }
     } catch (Exception e) {
-      message = FAILURE;
+
       transaction.rollback();
       logger.error("AppDAOImpl - updateAppAction() - ERROR ", e);
     } finally {
@@ -375,6 +442,7 @@ public class AppDAOImpl implements AppDAO {
         session.close();
       }
     }
+
     logger.exit("updateAppAction() - Ends");
     return message;
   }

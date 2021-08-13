@@ -86,7 +86,7 @@ public class AppServiceImpl implements AppService {
 
   @Override
   public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject) {
-    logger.entry("StudyServiceImpl - saveOrUpdateApp() - Starts");
+    logger.entry("AppServiceImpl - saveOrUpdateApp() - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
       message = appDAO.saveOrUpdateApp(appsBo, sessionObject);
@@ -98,6 +98,18 @@ public class AppServiceImpl implements AppService {
   }
 
   @Override
+  public String saveOrUpdateAppSettings(AppsBo appsBo, SessionObject sessionObject) {
+    logger.entry("AppServiceImpl - saveOrUpdateApp() - Starts");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = appDAO.saveOrUpdateAppSettings(appsBo, sessionObject);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - saveOrUpdateApp() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - saveOrUpdateApp() - Ends");
+    return message;
+  }
+
   public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
     logger.entry("StudyServiceImpl - updateAppAction() - Starts");
     String message = "";
