@@ -22,6 +22,7 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.dao.AppDAO;
@@ -107,5 +108,63 @@ public class AppServiceImpl implements AppService {
     }
     logger.exit("AppServiceImpl - saveOrUpdateApp() - Ends");
     return message;
+  }
+
+  public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
+    logger.entry("StudyServiceImpl - updateAppAction() - Starts");
+    String message = "";
+    try {
+      if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
+        message = appDAO.updateAppAction(appId, buttonText, sesObj);
+      }
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - updateAppAction() - ERROR ", e);
+    }
+    logger.exit("StudyServiceImpl - updateAppAction() - Ends");
+    return message;
+  }
+
+  @Override
+  public AppDetailsBean getAppDetailsBean(String customAppId) {
+    logger.entry("StudyServiceImpl - getAppDetailsBean - Starts");
+
+    try {
+      AppsBo app = appDAO.getAppByLatestVersion(customAppId);
+      if (app != null) {
+        AppDetailsBean appDetailsBean = new AppDetailsBean();
+        appDetailsBean.setAppId(app.getCustomAppId());
+        appDetailsBean.setAppName(app.getName());
+        appDetailsBean.setAppType(app.getType());
+        appDetailsBean.setAppPlatform(app.getAppPlatform());
+        appDetailsBean.setOraganizationName(app.getOrganizationName());
+
+        appDetailsBean.setContactEmail(app.getContactEmailAddress());
+        appDetailsBean.setFeedBackEmail(app.getFeedbackEmailAddress());
+        appDetailsBean.setAppSupportEmail(app.getAppSupportEmailAddress());
+        appDetailsBean.setFromEmail(app.getFromEmailAddress());
+
+        appDetailsBean.setAppTermsUrl(app.getAppTermsUrl());
+        appDetailsBean.setAppPrivacyUrl(app.getAppPrivacyUrl());
+        appDetailsBean.setAppStoreUrl(app.getAppStoreUrl());
+        appDetailsBean.setPlayStoreUrl(app.getPlayStoreUrl());
+
+        appDetailsBean.setAndroidBundleId(app.getAndroidBundleId());
+        appDetailsBean.setAndroidServerKey(app.getAndroidServerKey());
+        appDetailsBean.setAndroidForceUpdrade(app.getAndroidForceUpdrade());
+        appDetailsBean.setAndroidAppBuildVersion(app.getAndroidAppBuildVersion());
+
+        appDetailsBean.setIosBundleId(app.getIosBundleId());
+        appDetailsBean.setIosServerKey(app.getIosServerKey());
+        appDetailsBean.setIosForceUpgrade(app.getIosForceUpgrade());
+        appDetailsBean.setIosAppBuildVersion(app.getIosAppBuildVersion());
+        appDetailsBean.setIosXCodeAppVersion(app.getIosXCodeAppVersion());
+
+        return appDetailsBean;
+      }
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - getAppDetailsBean - Error", e);
+    }
+    logger.exit("StudyServiceImpl - getAppDetailsBean - Ends");
+    return null;
   }
 }

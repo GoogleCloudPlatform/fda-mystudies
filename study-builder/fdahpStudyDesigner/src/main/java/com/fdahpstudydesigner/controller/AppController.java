@@ -1,12 +1,19 @@
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_DEACTIVATE;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_LUNCH;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_SUC_MSG;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_UPDATES;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_UPDATES_SUCCESS_MSG;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APPLICATION_JSON;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APP_ID;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.BUTTON_TEXT;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.COMPLETED_BUTTON;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.CUSTOM_APP_ID;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.CUSTOM_STUDY_ID;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ERR_MSG;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE_UPDATE_STUDY_MESSAGE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IS_LIVE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.MESSAGE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.PERMISSION;
@@ -15,18 +22,21 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SESSION_OB
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUC_MSG;
 
+import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AppSessionBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.AppService;
+import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -37,11 +47,18 @@ import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -50,6 +67,10 @@ public class AppController {
   private static XLogger logger = XLoggerFactory.getXLogger(StudyController.class.getName());
 
   @Autowired private AppService appService;
+
+  @Autowired private OAuthService oauthService;
+
+  @Autowired private RestTemplate restTemplate;
 
   @RequestMapping("/adminApps/appList.do")
   public ModelAndView getApps(HttpServletRequest request) {
@@ -528,5 +549,128 @@ public class AppController {
       logger.error("StudyController - viewStudyDetails - ERROR", e);
     }
     return modelAndView;
+  }
+
+  @RequestMapping(value = "/adminApps/updateAppAction", method = RequestMethod.POST)
+  public ModelAndView updateAppAction(HttpServletRequest request, HttpServletResponse response) {
+    logger.entry("begin updateAppAction()");
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
+    String message = FAILURE;
+    String successMessage = "";
+    try {
+      SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
+      Integer sessionAppCount =
+          StringUtils.isNumeric(request.getParameter("_S"))
+              ? Integer.parseInt(request.getParameter("_S"))
+              : 0;
+      if ((sesObj != null)
+          && (sesObj.getStudySession() != null)
+          && sesObj.getStudySession().contains(sessionAppCount)) {
+        String appId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter(APP_ID))
+                ? ""
+                : request.getParameter(APP_ID);
+        String customAppId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter(CUSTOM_APP_ID))
+                ? ""
+                : request.getParameter(CUSTOM_APP_ID);
+
+        String buttonText =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter(BUTTON_TEXT))
+                ? ""
+                : request.getParameter(BUTTON_TEXT);
+        if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
+          message = appService.updateAppAction(appId, buttonText, sesObj);
+          if (message.equalsIgnoreCase(SUCCESS)) {
+            /*  if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)) {
+               successMessage = FdahpStudyDesignerConstants.ACTION_LUNCH_SUCCESS_MSG;
+               submitResponseToUserRegistrationServer(customAppId, request);
+            //   submitResponseToResponseServer(customStudyId, request);
+             } else*/ if (buttonText.equalsIgnoreCase(ACTION_UPDATES)) {
+              successMessage = ACTION_UPDATES_SUCCESS_MSG;
+              submitAppDetailsResponseToUserRegistrationServer(customAppId, request);
+              //  submitResponseToResponseServer(customStudyId, request);
+            } /*else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_RESUME)) {
+                successMessage = FdahpStudyDesignerConstants.ACTION_RESUME_SUCCESS_MSG;
+                submitResponseToUserRegistrationServer(customStudyId, request);
+                submitResponseToResponseServer(customStudyId, request);
+              } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_PAUSE)) {
+                successMessage = FdahpStudyDesignerConstants.ACTION_PAUSE_SUCCESS_MSG;
+                submitResponseToUserRegistrationServer(customStudyId, request);
+                submitResponseToResponseServer(customStudyId, request);
+              } else if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_DEACTIVATE)) {
+                successMessage = FdahpStudyDesignerConstants.ACTION_DEACTIVATE_SUCCESS_MSG;
+                submitResponseToUserRegistrationServer(customStudyId, request);
+               submitResponseToResponseServer(customStudyId, request);
+              }*/
+            if (buttonText.equalsIgnoreCase(ACTION_DEACTIVATE)
+                || buttonText.equalsIgnoreCase(ACTION_LUNCH)
+                || buttonText.equalsIgnoreCase(ACTION_UPDATES)) {
+              request.getSession().setAttribute(ACTION_SUC_MSG, successMessage);
+            } else {
+              request.getSession().setAttribute(sessionAppCount + ACTION_SUC_MSG, successMessage);
+            }
+          } else {
+            if (message.equalsIgnoreCase(FAILURE)) {
+              request.getSession().setAttribute(ERR_MSG, FAILURE_UPDATE_STUDY_MESSAGE);
+            }
+          }
+        }
+      }
+      jsonobject.put(MESSAGE, message);
+      response.setContentType(APPLICATION_JSON);
+      out = response.getWriter();
+      out.print(jsonobject);
+    } catch (Exception e) {
+      logger.error("StudyController - updateStudyActionOnAction() - ERROR", e);
+    }
+    logger.exit("updateStudyActionOnAction() - Ends");
+    return null;
+  }
+
+  private void submitAppDetailsResponseToUserRegistrationServer(
+      String customAppId, HttpServletRequest request) {
+    logger.entry("begin submitAppDetailsResponseToUserRegistrationServer()");
+    HttpHeaders headers = null;
+    HttpEntity<AppDetailsBean> requestEntity = null;
+    ResponseEntity<?> userRegistrationResponseEntity = null;
+    AppDetailsBean appDetailsBean = null;
+    String userRegistrationServerUrl = "";
+    Map<String, String> map = new HashMap<>();
+    try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      map = FdahpStudyDesignerUtil.getAppProperties();
+      headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+      AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
+
+      userRegistrationServerUrl = map.get("userRegistrationServerAppMetadataUrl");
+
+      appDetailsBean = appService.getAppDetailsBean(customAppId);
+
+      requestEntity = new HttpEntity<AppDetailsBean>(appDetailsBean, headers);
+
+      userRegistrationResponseEntity =
+          restTemplate.exchange(
+              userRegistrationServerUrl, HttpMethod.POST, requestEntity, String.class);
+
+      if (userRegistrationResponseEntity.getStatusCode() == HttpStatus.OK) {
+        //  auditLogEventHelper.logEvent(STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE,
+        // auditRequest);
+        logger.info(
+            "AppController - submitAppDetailsResponseToUserRegistrationServer() - INFO ==>> SUCCESS");
+      } else {
+        //    auditLogEventHelper.logEvent(STUDY_METADATA_SEND_OPERATION_FAILED, auditRequest);
+        logger.error(
+            "AppController - submitResponseToUserRegistrationServer() - ERROR ==>> FAILURE");
+        throw new Exception("There is some issue in submitting data to User Registration Server ");
+      }
+    } catch (Exception e) {
+      logger.error(
+          "AppController - submitAppDetailsResponseToUserRegistrationServer() - ERROR ", e);
+    }
+    logger.exit("submitAppDetailsResponseToUserRegistrationServer() - Ends ");
   }
 }

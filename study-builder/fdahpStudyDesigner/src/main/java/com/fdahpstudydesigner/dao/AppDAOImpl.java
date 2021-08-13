@@ -24,6 +24,9 @@
 
 package com.fdahpstudydesigner.dao;
 
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_UPDATES;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE;
+
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppSequenceBo;
@@ -325,6 +328,7 @@ public class AppDAOImpl implements AppDAO {
 
       transaction.commit();
     } catch (Exception e) {
+      message = FAILURE;
       transaction.rollback();
       logger.error("AppDAOImpl - saveOrUpdateApp() - ERROR", e);
     } finally {
@@ -336,7 +340,6 @@ public class AppDAOImpl implements AppDAO {
     return message;
   }
 
-  @Override
   public String saveOrUpdateAppSettings(AppsBo appBo, SessionObject sessionObject) {
     logger.entry("begin saveOrUpdateAppSettings()");
     Session session = null;
@@ -391,6 +394,7 @@ public class AppDAOImpl implements AppDAO {
 
       transaction.commit();
     } catch (Exception e) {
+      message = FAILURE;
       transaction.rollback();
       logger.error("AppDAOImpl - saveOrUpdateAppSettings() - ERROR", e);
     } finally {
@@ -400,5 +404,70 @@ public class AppDAOImpl implements AppDAO {
     }
     logger.exit("saveOrUpdateAppSettings() - Ends");
     return message;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
+    logger.entry("begin updateAppAction()");
+    String message = FAILURE;
+    Session session = null;
+    String searchQuery = null;
+    AppsBo app = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
+
+        if (!appId.isEmpty()) {
+          searchQuery = " From AppsBo WHERE id=:appId";
+          app = (AppsBo) session.createQuery(searchQuery).setString("appId", appId);
+        }
+
+        if (app != null) {
+          if (buttonText.equalsIgnoreCase(ACTION_UPDATES)) {
+            app.setIsAppPublished(true);
+            app.setAppLaunchDate(FdahpStudyDesignerUtil.getCurrentDateTime());
+            app.setAppsStatus("Published");
+            session.update(app);
+          }
+        }
+      }
+    } catch (Exception e) {
+
+      transaction.rollback();
+      logger.error("AppDAOImpl - updateAppAction() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+
+    logger.exit("updateAppAction() - Ends");
+    return message;
+  }
+
+  @Override
+  public AppsBo getAppByLatestVersion(String customAppId) {
+    logger.entry("begin getStudyByLatestVersion()");
+    Session session = null;
+    AppsBo app = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      app =
+          (AppsBo)
+              session
+                  .getNamedQuery("getAppByLatestVersion")
+                  .setString("customAppId", customAppId)
+                  .uniqueResult();
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getStudyByLatestVersion() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getStudyByLatestVersion() - Ends");
+    return app;
   }
 }
