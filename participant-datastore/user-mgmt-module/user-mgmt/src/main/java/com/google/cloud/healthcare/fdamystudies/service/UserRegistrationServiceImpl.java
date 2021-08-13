@@ -41,10 +41,13 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -195,6 +198,19 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private UserDetailsEntity fromUserRegistrationForm(UserRegistrationForm user) {
     UserDetailsEntity userDetails = new UserDetailsEntity();
     userDetails.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
+
+    LocalDateTime timeNow = LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
+    DateTimeFormatter baseFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    // Converting the Object to JSONString
+    logger.info("localDateTime =" + baseFormatter.format(timeNow));
+
+    logger.info(
+        " currentDateTime="
+            + UserManagementUtil.getCurrentDate()
+            + " "
+            + UserManagementUtil.getCurrentTime());
+
     userDetails.setVerificationDate(
         UserManagementUtil.getCurrentDate() + " " + UserManagementUtil.getCurrentTime());
     userDetails.setUserId(user.getUserId());
