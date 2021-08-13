@@ -208,5 +208,8 @@ public interface StudyService {
   public List<ConsentBo> getConsentList(String customStudyId);
 
   public StudyBo replicateStudy(
-      String studyId, SessionObject sessionObject, AuditLogEventRequest auditRequest);
+      String studyId,
+      String copyVersion,
+      SessionObject sessionObject,
+      AuditLogEventRequest auditRequest);
 }
