@@ -68,7 +68,7 @@
       </li>
       <li class="second active">
         APP SETTINGS
-        <c:if test="${studyBo.studySequenceBo.settingAdmins}">
+        <c:if test="${appBo.appSequenceBo.appSettings}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span> 
         </c:if>
       </li>

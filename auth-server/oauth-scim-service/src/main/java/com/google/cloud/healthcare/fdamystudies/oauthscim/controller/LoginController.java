@@ -187,6 +187,8 @@ public class LoginController {
     user.setPassword(loginRequest.getPassword());
     user.setAppId(appId);
     user.setAppName(appName);
+    user.setContactEmail(loginRequest.getContactEmail());
+    user.setFromEmail(loginRequest.getFromEmail());
 
     AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
 

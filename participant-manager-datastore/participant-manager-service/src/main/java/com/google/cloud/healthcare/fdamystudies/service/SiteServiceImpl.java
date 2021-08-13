@@ -1486,7 +1486,7 @@ public class SiteServiceImpl implements SiteService {
       templateArgs.put("contact email address", optStudy.get().getContactEmail());
       EmailRequest emailRequest =
           new EmailRequest(
-              appPropertyConfig.getFromEmail(),
+              optStudy.get().getApp().getFormEmailId(),
               new String[] {participantRegistrySiteEntity.getEmail()},
               null,
               null,

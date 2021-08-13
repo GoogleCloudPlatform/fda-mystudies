@@ -84,7 +84,8 @@ public class UserSupportControllerTest extends BaseMockIT {
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getFeedbackMailBody(), templateArgs);
     Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
-    verifyMimeMessage(optApp.get().getFeedBackToEmail(), appConfig.getFromEmail(), subject, body);
+    verifyMimeMessage(
+        optApp.get().getFeedBackToEmail(), optApp.get().getFormEmailId(), subject, body);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -128,7 +129,8 @@ public class UserSupportControllerTest extends BaseMockIT {
             appConfig.getContactusMailBody(), templateArgs);
 
     Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
-    verifyMimeMessage(optApp.get().getContactUsToEmail(), appConfig.getFromEmail(), subject, body);
+    verifyMimeMessage(
+        optApp.get().getContactUsToEmail(), optApp.get().getFormEmailId(), subject, body);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);

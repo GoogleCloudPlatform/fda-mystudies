@@ -9,9 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.bean.AppMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AppContactEmailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.service.AppsService;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +24,11 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api(
@@ -30,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
     value = "Apps",
     description = "Operations pertaining to Apps in user management service")
 @RestController
+@RequestMapping("/apps")
 public class AppsController {
 
   private XLogger logger = XLoggerFactory.getXLogger(AppsController.class.getName());
@@ -53,5 +60,21 @@ public class AppsController {
 
     logger.exit(String.format(STATUS_LOG, errorBean.getCode()));
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
+  }
+
+  @ApiOperation(value = "Fetch app contact us and from email id")
+  @GetMapping()
+  public ResponseEntity<AppContactEmailsResponse> getAppContactEmails(
+      @RequestParam String customAppId, HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    if (StringUtils.isBlank(customAppId)) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.BAD_REQUEST);
+    }
+
+    AppContactEmailsResponse appResponse = appsServices.getAppContactEmails(customAppId);
+
+    logger.exit(String.format(STATUS_LOG, appResponse.getHttpStatusCode()));
+    return new ResponseEntity<>(appResponse, HttpStatus.OK);
   }
 }

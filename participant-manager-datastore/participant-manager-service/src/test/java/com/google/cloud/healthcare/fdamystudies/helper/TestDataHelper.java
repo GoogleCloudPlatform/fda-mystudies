@@ -69,6 +69,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestDataHelper {
 
+  public static final String FROM_EMAIL = "fromEmail@gmail.com";
+
+  public static final String CONTACT_US_EMAIL = "contactus@gmail.com";
+
   public static final String ADMIN_LAST_NAME = "mockito_last_name";
 
   public static final String ADMIN_FIRST_NAME = "mockito";

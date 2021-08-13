@@ -28,6 +28,7 @@ import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.dao.AppDAO;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
@@ -87,7 +88,7 @@ public class AppServiceImpl implements AppService {
 
   @Override
   public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject) {
-    logger.entry("StudyServiceImpl - saveOrUpdateApp() - Starts");
+    logger.entry("AppServiceImpl - saveOrUpdateApp() - Starts");
     String message = FAILURE;
     try {
       message = appDAO.saveOrUpdateApp(appsBo, sessionObject);
@@ -99,6 +100,18 @@ public class AppServiceImpl implements AppService {
   }
 
   @Override
+  public String saveOrUpdateAppSettings(AppsBo appsBo, SessionObject sessionObject) {
+    logger.entry("AppServiceImpl - saveOrUpdateApp() - Starts");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = appDAO.saveOrUpdateAppSettings(appsBo, sessionObject);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - saveOrUpdateApp() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - saveOrUpdateApp() - Ends");
+    return message;
+  }
+
   public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
     logger.entry("StudyServiceImpl - updateAppAction() - Starts");
     String message = "";
