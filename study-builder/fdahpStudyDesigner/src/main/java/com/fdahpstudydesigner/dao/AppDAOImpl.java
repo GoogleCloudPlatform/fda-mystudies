@@ -344,7 +344,7 @@ public class AppDAOImpl implements AppDAO {
   public String saveOrUpdateAppSettings(AppsBo appBo, SessionObject sessionObject) {
     logger.entry("begin saveOrUpdateAppSettings()");
     Session session = null;
-    String message = FdahpStudyDesignerConstants.SUCCESS;
+    String message = SUCCESS;
     StudyBuilderAuditEvent auditLogEvent = null;
     AppSequenceBo appSequenceBo = null;
     String appId = null;
@@ -378,13 +378,11 @@ public class AppDAOImpl implements AppDAO {
       auditRequest.setAppId(appBo.getId());
       if (appSequenceBo != null) {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
-            && appBo
-                .getButtonText()
-                .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
           appSequenceBo.setAppSettings(true);
           // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
         } else if (StringUtils.isNotEmpty(appBo.getButtonText())
-            && appBo.getButtonText().equalsIgnoreCase(FdahpStudyDesignerConstants.SAVE_BUTTON)) {
+            && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
           // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
           appSequenceBo.setAppSettings(false);
         }
