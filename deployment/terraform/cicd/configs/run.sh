@@ -19,11 +19,11 @@ set -ex
 MODULES=(
   devops
   audit
-  example-dev-secrets
-  example-dev-networks
-  example-dev-apps
-  example-dev-firebase
-  example-dev-data
+  irtpoc8-dev-secrets
+  irtpoc8-dev-networks
+  irtpoc8-dev-apps
+  irtpoc8-dev-firebase
+  irtpoc8-dev-data
 )
 
 ACTIONS=()

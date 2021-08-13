@@ -34,10 +34,10 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "example-dev-devops"
+  name                    = "irtpoc8-dev-devops"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "596581925687"
+  billing_account         = "01A9C3-D10A30-DE032F"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
@@ -55,7 +55,7 @@ module "state_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-terraform-state"
+  name       = "irtpoc8-dev-terraform-state"
   project_id = module.project.project_id
   location   = "us-central1"
 }
@@ -64,13 +64,12 @@ module "state_bucket" {
 resource "google_project_iam_binding" "devops_owners" {
   project = module.project.project_id
   role    = "roles/owner"
-  members = ["group:example-dev-devops-owners@example.com"]
-
+  members = ["group:irtpoc8-dev-devops-owners@ishidata.com"]
 }
 
 # Org level IAM permissions for org admins.
 resource "google_folder_iam_member" "admin" {
-  folder = "folders/0000000000"
+  folder = "folders/596581925687"
   role   = "roles/resourcemanager.folderAdmin"
-  member = "group:example-dev-folder-admins@example.com"
+  member = "group:irtpoc8-dev-folder-admins@ishidata.com"
 }

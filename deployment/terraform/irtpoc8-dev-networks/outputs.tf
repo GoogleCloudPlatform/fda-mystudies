@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+output "project_id" {
+  value = module.project.project_id
+}
 
-folder         = "folders/596581925687"
-auditors_group = "irtpoc8-dev-auditors@ishidata.com"
+output "project_number" {
+  value = module.project.project_number
+}
