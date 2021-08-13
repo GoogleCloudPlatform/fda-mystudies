@@ -36,4 +36,8 @@ public interface AppDAO {
   public boolean validateAppId(String appId);
 
   public String saveOrUpdateApp(AppsBo appBo, SessionObject sessionObject);
+
+  public String updateAppAction(String studyId, String buttonText, SessionObject sesObj);
+
+  public AppsBo getAppByLatestVersion(String customAppId);
 }

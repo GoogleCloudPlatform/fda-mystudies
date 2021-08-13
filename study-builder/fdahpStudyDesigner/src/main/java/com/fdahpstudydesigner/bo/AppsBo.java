@@ -44,6 +44,9 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(
       name = "AppsBo.getAppsById",
       query = " From AppsBo ABO WHERE ABO.id =:id order by version DESC LIMIT 1"),
+  @NamedQuery(
+      name = "getAppByLatestVersion",
+      query = " From AppsBo WHERE customAppId =:customAppId order by version DESC LIMIT 1")
 })
 public class AppsBo implements Serializable {
 
