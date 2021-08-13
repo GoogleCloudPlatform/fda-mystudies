@@ -36,4 +36,6 @@ public interface AppDAO {
   public boolean validateAppId(String appId);
 
   public String saveOrUpdateApp(AppsBo appBo, SessionObject sessionObject);
+
+  public String saveOrUpdateAppSettings(AppsBo appsBo, SessionObject sessionObject);
 }

@@ -36,4 +36,6 @@ public interface AppService {
   public boolean validateAppId(String appId);
 
   public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject);
+
+  public String saveOrUpdateAppSettings(AppsBo appsBo, SessionObject sessionObject);
 }
