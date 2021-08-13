@@ -22,8 +22,12 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.dao.AppDAO;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -50,5 +54,105 @@ public class AppServiceImpl implements AppService {
     }
     logger.exit("AppServiceImpl - getAppList() - Ends");
     return appBos;
+  }
+
+  @Override
+  public AppsBo getAppById(String appId, String userId) {
+    logger.entry("AppServiceImpl - getAppById() - Starts");
+    AppsBo appsBo = null;
+    try {
+      appsBo = appDAO.getAppById(appId, userId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getAppById() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getAppById() - Ends");
+    return appsBo;
+  }
+
+  @Override
+  public boolean validateAppId(String appId) {
+    logger.entry("AppServiceImpl - validateAppId() - Starts");
+    boolean flag = false;
+    try {
+      if (StringUtils.isNotEmpty(appId)) {
+        flag = appDAO.validateAppId(appId);
+      }
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getAppList() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getAppList() - Ends");
+    return flag;
+  }
+
+  @Override
+  public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject) {
+    logger.entry("StudyServiceImpl - saveOrUpdateApp() - Starts");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = appDAO.saveOrUpdateApp(appsBo, sessionObject);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - saveOrUpdateApp() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - saveOrUpdateApp() - Ends");
+    return message;
+  }
+
+  @Override
+  public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
+    logger.entry("StudyServiceImpl - updateAppAction() - Starts");
+    String message = "";
+    try {
+      if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
+        message = appDAO.updateAppAction(appId, buttonText, sesObj);
+      }
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - updateAppAction() - ERROR ", e);
+    }
+    logger.exit("StudyServiceImpl - updateAppAction() - Ends");
+    return message;
+  }
+
+  @Override
+  public AppDetailsBean getAppDetailsBean(String customAppId) {
+    logger.entry("StudyServiceImpl - getAppDetailsBean - Starts");
+
+    try {
+      AppsBo app = appDAO.getAppByLatestVersion(customAppId);
+      if (app != null) {
+        AppDetailsBean appDetailsBean = new AppDetailsBean();
+        appDetailsBean.setAppId(app.getCustomAppId());
+        appDetailsBean.setAppName(app.getName());
+        appDetailsBean.setAppType(app.getType());
+        appDetailsBean.setAppPlatform(app.getAppPlatform());
+        appDetailsBean.setOraganizationName(app.getOrganizationName());
+
+        appDetailsBean.setContactEmail(app.getContactEmailAddress());
+        appDetailsBean.setFeedBackEmail(app.getFeedbackEmailAddress());
+        appDetailsBean.setAppSupportEmail(app.getAppSupportEmailAddress());
+        appDetailsBean.setFromEmail(app.getFromEmailAddress());
+
+        appDetailsBean.setAppTermsUrl(app.getAppTermsUrl());
+        appDetailsBean.setAppPrivacyUrl(app.getAppPrivacyUrl());
+        appDetailsBean.setAppStoreUrl(app.getAppStoreUrl());
+        appDetailsBean.setPlayStoreUrl(app.getPlayStoreUrl());
+
+        appDetailsBean.setAndroidBundleId(app.getAndroidBundleId());
+        appDetailsBean.setAndroidServerKey(app.getAndroidServerKey());
+        appDetailsBean.setAndroidForceUpdrade(app.getAndroidForceUpdrade());
+        appDetailsBean.setAndroidAppBuildVersion(app.getAndroidAppBuildVersion());
+
+        appDetailsBean.setIosBundleId(app.getIosBundleId());
+        appDetailsBean.setIosServerKey(app.getIosServerKey());
+        appDetailsBean.setIosForceUpgrade(app.getIosForceUpgrade());
+        appDetailsBean.setIosAppBuildVersion(app.getIosAppBuildVersion());
+        appDetailsBean.setIosXCodeAppVersion(app.getIosXCodeAppVersion());
+
+        return appDetailsBean;
+      }
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - getAppDetailsBean - Error", e);
+    }
+    logger.exit("StudyServiceImpl - getAppDetailsBean - Ends");
+    return null;
   }
 }

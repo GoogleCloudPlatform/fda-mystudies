@@ -27,6 +27,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.Getter;
@@ -38,6 +40,14 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Entity
 @Table(name = "apps")
+@NamedQueries({
+  @NamedQuery(
+      name = "AppsBo.getAppsById",
+      query = " From AppsBo ABO WHERE ABO.id =:id order by version DESC LIMIT 1"),
+  @NamedQuery(
+      name = "getAppByLatestVersion",
+      query = " From AppsBo WHERE customAppId =:customAppId order by version DESC LIMIT 1")
+})
 public class AppsBo implements Serializable {
 
   private static final long serialVersionUID = 2147840266295837728L;
@@ -82,6 +92,9 @@ public class AppsBo implements Serializable {
 
   @Column(name = "app_privacy_url")
   private String appPrivacyUrl;
+
+  @Column(name = "app_terms_url")
+  private String appTermsUrl;
 
   @Column(name = "organization_name")
   private String organizationName;
@@ -153,6 +166,9 @@ public class AppsBo implements Serializable {
   @Column(name = "ios_app_distributed")
   private Integer iosAppDistributed;
 
+  @Column(name = "is_app_published")
+  private Boolean isAppPublished;
+
   @Column(name = "android_app_distributed")
   private Integer androidAppDistributed;
 
@@ -160,4 +176,8 @@ public class AppsBo implements Serializable {
   private Float version = 0f;
 
   @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
+
+  @Transient private AppsBo liveAppsBo = null;
+
+  @Transient private String userId;
 }

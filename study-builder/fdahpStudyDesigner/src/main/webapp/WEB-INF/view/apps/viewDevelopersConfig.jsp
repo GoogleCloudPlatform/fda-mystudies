@@ -31,9 +31,9 @@
     <div class="right-content-head">
       <div class="text-right">
         <div class="black-md-f text-uppercase dis-line pull-left line34">
-          APP SETTINGS
+          DEVELOPER CONFIGURATIONS
           <c:set var="isLive">${_S}isLive</c:set>
-            ${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}</div>
+         </div>
 
         <div class="dis-line form-group mb-none mr-sm">
           <button type="button" class="btn btn-default gray-btn cancelBut"
@@ -64,7 +64,7 @@
 
                          <div class="row mt-xlg">
                             <div class="col-md-6 pl-none">
-                                <div class="gray-xs-f mb-xs">Feedback email  <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs mt-md">Android Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control"/>
                                     <div class="help-block with-errors red-txt"></div>
@@ -72,7 +72,7 @@
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs">Contact Us email <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs mt-md">Android Server Key <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control"/>
                                     <div class="help-block with-errors red-txt"></div>
@@ -82,7 +82,7 @@
                             <div class="clearfix"></div>
                             
                              <div class="col-md-6 pl-none">
-                                <div class="gray-xs-f mb-xs">App support email  <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs mt-md">iOS Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control"/>
                                     <div class="help-block with-errors red-txt"></div>
@@ -90,7 +90,27 @@
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs">App 'Terms' URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs mt-md">iOS Server Key<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="form-group mb-none">
+                                    <input type="text" class="form-control"/>
+                                    <div class="help-block with-errors red-txt"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="clearfix"></div>
+                            <div class="blue-md-f mb-md mt-md text-uppercase"> APP VERSION INFORMATION </div>
+                <div class="clearfix"></div>
+                            
+                              <div class="col-md-6 pl-none">
+                                <div class="gray-xs-f mb-xs">Latest XCode app version (for iOS app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="form-group mb-none">
+                                    <input type="text" class="form-control"/>
+                                    <div class="help-block with-errors red-txt"></div>
+                                </div>
+                            </div>
+
+                           <div class="col-md-6">
+                                <div class="gray-xs-f mb-xs">Lastest app build version (for iOS app)<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control"/>
                                     <div class="help-block with-errors red-txt"></div>
@@ -99,38 +119,43 @@
                             
                             <div class="clearfix"></div>
                             
-                              <div class="col-md-6 pl-none">
-                                <div class="gray-xs-f mb-xs">App Privacy policy URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
-                                <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
-                                    <div class="help-block with-errors red-txt"></div>
-                                </div>
+                              <div class="col-md-12 pl-none">
+                                <div class="gray-xs-f mb-xs mt-md">Force upgrade for iOS users? <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                               <div class="mt-md mb-md">
+                         <span class="radio radio-info radio-inline p-45">
+                            <input type="radio" id="inlineRadio1" value="option1" name="radioInline1">
+                            <label for="inlineRadio1">Yes</label>
+                        </span>
+                        <span class="radio radio-inline">
+                            <input type="radio" id="inlineRadio2" value="option1" name="radioInline1">
+                            <label for="inlineRadio2">NO</label>
+                        </span>
+                    </div>
                             </div>
+                             <div class="clearfix"></div>
 
-                           <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs">Organization name<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                           <div class="col-md-6 pl-none">
+                                <div class="gray-xs-f mb-xs"> Latest app version code (for Android app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
                             
-                            <div class="clearfix"></div>
+                             <div class="clearfix"></div>
                             
-                              <div class="col-md-6 pl-none">
-                                <div class="gray-xs-f mb-xs">App Store URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
-                                <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
-                                    <div class="help-block with-errors red-txt"></div>
-                                </div>
-                            </div>
-
-                           <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs">Play Store URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
-                                <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
-                                    <div class="help-block with-errors red-txt"></div>
-                                </div>
+                              <div class="col-md-12 pl-none">
+                                <div class="gray-xs-f mb-xs mt-md">Force upgrade for Android users? <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                               <div class="mt-md mb-md">
+                         <span class="radio radio-info radio-inline p-45">
+                            <input type="radio" id="inlineRadio1" value="option1" name="radioInline1">
+                            <label for="inlineRadio1">Yes</label>
+                        </span>
+                        <span class="radio radio-inline">
+                            <input type="radio" id="inlineRadio2" value="option1" name="radioInline1">
+                            <label for="inlineRadio2">NO</label>
+                        </span>
+                    </div>
                             </div>
                            
                         </div>
@@ -147,54 +172,8 @@
 
 </div>
 <!-- End right Content here -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <!-- Modal content-->
-    <div class="modal-content">
-
-      <div class="modal-header cust-hdr pt-lg">
-        <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title pl-lg">
-          <strong>Platform and Feature Support</strong>
-        </h4>
-      </div>
-      <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
-        <div>
-          <div>
-            <ul class="no-disc">
-              <li><strong>1. Platform support: </strong><br/>
-                <ul class="no-disc">
-                  <li>Note that once the study is launched, platform support
-                    cannot be revoked. However, adding support for a platform not
-                    previously selected will still be possible.
-                  </li>
-                </ul>
-              </li>
-              <li>&nbsp;</li>
-              <li><strong>2. Feature support on iOS and Android:</strong><br/>
-
-                <ul class="no-disc">
-                  <li>Given below is a list of features currently NOT
-					available for Android as compared to iOS. Please note the same
-                    in your creation of study content:
-                  </li>
-                  <li>i. Active tasks: Tower of hanoi, Spatial span memory
-                  </li>
-                </ul>
-              </li>
-
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
   $(document).ready(function () {
 
-	}
+	});
 </script>

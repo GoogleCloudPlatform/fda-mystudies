@@ -21,6 +21,7 @@
 
 package com.fdahpstudydesigner.util;
 
+import com.fdahpstudydesigner.bean.AppSessionBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import java.io.Serializable;
 import java.util.List;
@@ -44,6 +45,8 @@ public class SessionObject implements Serializable {
   private String privacyPolicyText = "";
   private List<Integer> studySession;
   private List<StudySessionBean> studySessionBeans;
+  private List<Integer> appSession;
+  private List<AppSessionBean> appSessionBeans;
   private String superAdminId = null;
   private String termsText = "";
   private String userId = "";
@@ -110,8 +113,20 @@ public class SessionObject implements Serializable {
     return studySession;
   }
 
+  public List<Integer> getAppSession() {
+    return appSession;
+  }
+
   public List<StudySessionBean> getStudySessionBeans() {
     return studySessionBeans;
+  }
+
+  public List<AppSessionBean> getAppSessionBeans() {
+    return appSessionBeans;
+  }
+
+  public void setAppSessionBeans(List<AppSessionBean> appSessionBeans) {
+    this.appSessionBeans = appSessionBeans;
   }
 
   public String getSuperAdminId() {
@@ -196,6 +211,10 @@ public class SessionObject implements Serializable {
 
   public void setStudySession(List<Integer> studySession) {
     this.studySession = studySession;
+  }
+
+  public void setAppSession(List<Integer> appSession) {
+    this.appSession = appSession;
   }
 
   public void setStudySessionBeans(List<StudySessionBean> studySessionBeans) {
@@ -283,5 +302,4 @@ public class SessionObject implements Serializable {
   public void setExportStudiesBucketName(String exportStudiesBucketName) {
     this.exportStudiesBucketName = exportStudiesBucketName;
   }
-
 }

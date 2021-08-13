@@ -21,23 +21,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.fdahpstudydesigner.dao;
+package com.fdahpstudydesigner.bean;
 
-import com.fdahpstudydesigner.bean.AppListBean;
-import com.fdahpstudydesigner.bo.AppsBo;
-import com.fdahpstudydesigner.util.SessionObject;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
-public interface AppDAO {
-  public List<AppListBean> getAppList(String userId);
+@Setter
+@Getter
+public class AppSessionBean {
 
-  public AppsBo getAppById(String appId, String userId);
-
-  public boolean validateAppId(String appId);
-
-  public String saveOrUpdateApp(AppsBo appBo, SessionObject sessionObject);
-
-  public String updateAppAction(String studyId, String buttonText, SessionObject sesObj);
-
-  public AppsBo getAppByLatestVersion(String customAppId);
+  private String isLive;
+  private String permission;
+  private Integer sessionAppCount;
+  private String appId;
 }

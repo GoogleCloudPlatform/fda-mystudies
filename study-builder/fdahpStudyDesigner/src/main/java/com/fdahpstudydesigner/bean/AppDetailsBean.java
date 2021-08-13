@@ -20,25 +20,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.fdahpstudydesigner.service;
+package com.fdahpstudydesigner.bean;
 
-import com.fdahpstudydesigner.bean.AppDetailsBean;
-import com.fdahpstudydesigner.bean.AppListBean;
-import com.fdahpstudydesigner.bo.AppsBo;
-import com.fdahpstudydesigner.util.SessionObject;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
-public interface AppService {
+@Setter
+@Getter
+public class AppDetailsBean {
 
-  public List<AppListBean> getAppList(String userId);
+  private String appId;
+  private String appName;
+  //  private String appDescription;
+  private String appType;
+  private String appPlatform;
+  private String oraganizationName;
 
-  public AppsBo getAppById(String appId, String userId);
+  private String contactEmail;
+  private String feedBackEmail;
+  private String appSupportEmail;
+  private String fromEmail;
 
-  public boolean validateAppId(String appId);
+  private String appTermsUrl;
+  private String appPrivacyUrl;
+  private String appStoreUrl;
+  private String playStoreUrl;
 
-  public String saveOrUpdateApp(AppsBo appsBo, SessionObject sessionObject);
+  private String androidBundleId;
+  private String androidServerKey;
+  private Integer androidForceUpdrade;
+  private String androidAppBuildVersion;
 
-  public String updateAppAction(String appId, String buttonText, SessionObject sesObj);
-
-  public AppDetailsBean getAppDetailsBean(String customAppId);
+  private String iosBundleId;
+  private String iosServerKey;
+  private String iosAppBuildVersion;
+  private Integer iosForceUpgrade;
+  private String iosXCodeAppVersion;
 }
