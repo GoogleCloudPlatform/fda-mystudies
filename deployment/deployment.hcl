@@ -41,7 +41,7 @@ template "mystudies" {
     github_repo      = "fda-mystudies"
     # The branch of your cloned repo that your CICD pipelines will monitor
     # For example, "develop"
-    github_branch    = "irtpoc8"
+    github_branch    = "master"
     # GKE master authorized networks.
     # Comment out this block if you would like to allow connections from anywhere.
     master_authorized_networks = [
