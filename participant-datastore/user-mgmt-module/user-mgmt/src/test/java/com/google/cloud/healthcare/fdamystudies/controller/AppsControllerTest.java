@@ -36,7 +36,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 public class AppsControllerTest extends BaseMockIT {
 
-  private static final String APP_METADATA_PATH = "/participant-user-datastore/appmetadata";
+  private static final String APP_METADATA_PATH = "/participant-user-datastore/apps/appmetadata";
 
   @Autowired private AppsController appsController;
 
