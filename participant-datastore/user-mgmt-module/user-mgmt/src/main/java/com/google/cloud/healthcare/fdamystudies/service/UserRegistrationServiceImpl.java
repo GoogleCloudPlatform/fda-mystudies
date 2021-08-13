@@ -47,6 +47,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -199,10 +200,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     UserDetailsEntity userDetails = new UserDetailsEntity();
     userDetails.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
 
+    // Converting the Object to JSONString
     LocalDateTime timeNow = LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
     DateTimeFormatter baseFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    // Converting the Object to JSONString
     logger.info("localDateTime =" + baseFormatter.format(timeNow));
 
     logger.info(
@@ -210,6 +210,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             + UserManagementUtil.getCurrentDate()
             + " "
             + UserManagementUtil.getCurrentTime());
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    ZonedDateTime now = ZonedDateTime.now();
+    System.out.println("dateForDefaultTimeZone = " + dtf.format(now));
 
     userDetails.setVerificationDate(
         UserManagementUtil.getCurrentDate() + " " + UserManagementUtil.getCurrentTime());
