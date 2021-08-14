@@ -8,6 +8,64 @@
 .modal-title {
     text-align: initial !important;
 }
+
+  .select-sup_text { font-size: 14px;
+    line-height: 16px;
+    color: #7c868d;
+    font-weight: 500;
+    padding-left:3%;
+  }
+  
+  .select-sub_text { padding-left:13%;}
+  .select_drop_parent {
+  	position: absolute;
+    display: contents;
+    }
+      .custom_checkbox_dropdown { 
+      background: #d9e1e9;
+      left: 20px;
+      }
+      
+    .custom_checkbox_dropdown > li >a {
+    padding: 0px 20px;
+    
+}
+
+.dropdown_chk_box {
+ position: absolute;
+display: inline-block;
+}
+
+.dropdown_chk_box button { 
+width:200px;
+text-align: left;
+color: #95a2ab;
+}
+
+.dropdown_chk_box button .caret {
+    float: right !important;
+    margin-top: 8px !important;
+}
+
+
+.dropdown_chk_box .btn-default.active.focus,
+ .dropdown_chk_box .btn-default.active:focus, 
+ .dropdown_chk_box .btn-default.active:hover,
+  .dropdown_chk_box .btn-default:active.focus,
+   .dropdown_chk_box .btn-default:active:focus,
+    .dropdown_chk_box .btn-default:active:hover, 
+    .open>.dropdown-toggle.btn-default.focus,
+     .open>.dropdown-toggle.btn-default:focus, 
+     .open>.dropdown-toggle.btn-default:hover, 
+     .bootstrap-select .dropdown-toggle:focus {
+     color: #95a2ab;
+     }
+
+
+.custom_checkbox_dropdown > li >a:hover {
+    color: #2d2926 !important;
+}
+
 </style>
 
 
@@ -29,6 +87,61 @@
       <div class="black-lg-f">
         Configure and manage studies
       </div>
+      
+      
+        <div class="dropdown dropdown_chk_box pl-lg">
+      <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+        <span class="dropdown-text">-- Select apps --</span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu custom_checkbox_dropdown">
+        <li>
+          <a href="#">
+            <label>
+              <input type="checkbox" class="selectall" />
+              <span class="select-sub_text"> All</span> apps </label>
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a class="option-link" href="#">
+            <label>
+              <input name='options[]' type="checkbox" class="option justone" value='Option 1 ' /> 
+              <div class="select_drop_parent"> 
+ <span class="select-sup_text"> APP94789 | Standalone</span> 
+  <div class="clearfix"></div> 
+  <span class="select-sub_text"> Arthritis Research APP </span> </div> </label>
+ </label>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <label>
+              <input name='options[]' type="checkbox" class="option justone" value='Option 2 ' /> 
+               <div class="select_drop_parent"> 
+              <span class="select-sup_text"> APP94789 | Standalone</span>
+ <div class="clearfix"></div>
+  <span class="select-sub_text"> COVID19 Research APP</span> </div>
+               </label>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <label>
+              <input name='options[]' type="checkbox" class="option justone" value='Option 3 ' /> 
+               <div class="select_drop_parent"> 
+               <span class="select-sup_text"> APP94789 | Standalone</span> 
+                <div class="clearfix"></div> 
+                <span class="select-sub_text"> COVID19 Research APP</span>
+                </div>
+              </label>
+          </a>
+        </li>
+      </ul>
+    </div>
+    
+     
+     
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
         <div class="dis-line pull-right ml-md mt-xs">
           <div class="form-group mb-none">

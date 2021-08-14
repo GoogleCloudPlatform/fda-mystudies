@@ -32,11 +32,31 @@
     transform: translate(-40%, -40%); 
 }
 
-
+  .select-sup_text { font-size: 14px;
+    line-height: 16px;
+    color: #7c868d;
+    font-weight: 500;
+    padding-left:3%;
+  }
+  
+  .select-sub_text { padding-left:13%;}
+  .select_drop_parent {
+  	position: absolute;
+    display: contents;
+    }
+      .custom_checkbox_dropdown { 
+      background: #d9e1e9;
+      }
+      
+    .custom_checkbox_dropdown > li >a {
+    padding: 0px 20px;
+    
+}
  
 </style>
 
 <div>
+ 
   <table id="studies_list" class="table wid100 tbl">
     <thead>
       <tr>
@@ -349,6 +369,40 @@
 	     document.body.appendChild(form);
 	     form.submit(); 
    }
-   
+
+   $(document).ready(function () {
+
+		  $('body').on("click", ".dropdown-menu", function (e) {
+			    $(this).parent().is(".open") && e.stopPropagation();
+			});
+
+			$('.selectall').click(function() {
+			    if ($(this).is(':checked')) {
+			        $('.option').prop('checked', true);
+			        var total = $('input[name="options[]"]:checked').length;
+			        $(".dropdown-text").html('(' + total + ') Selected');
+			        $(".select-text").html(' Deselect');
+			    } else {
+			        $('.option').prop('checked', false);
+			        $(".dropdown-text").html('(0) Selected');
+			        $(".select-text").html(' Select');
+			    }
+			});
+
+			$("input[type='checkbox'].justone").change(function(){
+			    var a = $("input[type='checkbox'].justone");
+			    if(a.length == a.filter(":checked").length){
+			        $('.selectall').prop('checked', true);
+			        $(".select-text").html(' Deselect');
+			    }
+			    else {
+			        $('.selectall').prop('checked', false);
+			        $(".select-text").html(' Select');
+			    }
+			  var total = $('input[name="options[]"]:checked').length;
+			  $(".dropdown-text").html('(' + total + ') Selected');
+			});
+		  
+		});
 
 </script>
