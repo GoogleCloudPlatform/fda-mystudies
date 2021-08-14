@@ -290,13 +290,15 @@
           </span>
         </div>
 
+  <!--  Manage studies div  --> 
+  
         <!-- Gray Widget-->
         <div class="edit-user-list-widget">
           <span class="checkbox checkbox-inline"><input
               type="checkbox" id="inlineCheckbox4" name="manageStudies"
               <c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox4"> Studies </label>
+            <label for="inlineCheckbox4"> Manage apps </label>
           </span>
           <div class="mt-lg pl-lg">
             <div class="pb-md bor-dashed">
@@ -325,7 +327,7 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-bold">List of assigned studies with permissions
+                  class="mr-lg text-weight-bold text-uppercase">List of assigned apps with permissions
               </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
@@ -372,6 +374,92 @@
             </div>
           </div>
         </div>
+        
+   <!--  Manage studies div  -->  
+      
+          <!-- Gray Widget-->
+        <div class="edit-user-list-widget mt-xxlg">
+          <span class="checkbox checkbox-inline"><input
+              type="checkbox" id="inlineCheckbox4" name="manageStudies"
+              <c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
+              <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+            <label for="inlineCheckbox4"> Manage Studies </label>
+          </span>
+          <div class="mt-lg pl-lg">
+            <div class="pb-md bor-dashed">
+              <span class="checkbox checkbox-inline"><input
+                  type="checkbox" id="inlineCheckbox5" class="changeView1"
+                  name="addingNewStudy"
+                  value="${fn:contains(permissions,8)?'1':''}"
+              <c:if test="${fn:contains(permissions,8)}"> checked</c:if>
+                  <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+                <label for="inlineCheckbox5"> Create new studies </label>
+              </span>
+            </div>
+            <div class="mt-md study-list mb-md addHide">
+              <c:if test="${actionPage ne 'VIEW_PAGE'}">
+                <select
+                    class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
+                    title="- Select and add studies -" multiple id="multiple">
+                  <c:forEach items="${studyBOList}" var="study">
+                    <option value="${study.id}"
+                            id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
+                    </option>
+                  </c:forEach>
+                </select>
+                <span class="study-addbtn changeView">+</span>
+              </c:if>
+            </div>
+            <div class="addHide">
+              <span
+                  class="mr-lg text-weight-bold text-uppercase">List of assigned studies with permissions
+              </span>
+
+              <c:if test="${actionPage ne 'VIEW_PAGE'}">
+                <span class="ablue removeAll changeView">x Remove all</span>
+              </c:if>
+            </div>
+            <!-- Selected Study items -->
+            <div class="study-selected mt-md">
+              <c:forEach items="${studyBOs}" var="study">
+                <div class="study-selected-item selStd" id="std${study.id}">
+                  <input type="hidden" class="stdCls" id="${study.id}" name=""
+                         value="${study.id}"
+                         stdTxt="${study.name}&nbsp;(${study.customStudyId})"
+                         <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+                  <c:if test="${actionPage ne 'VIEW_PAGE'}">
+                    <span class="mr-md"><img
+                        src="/studybuilder/images/icons/close.png"
+                        onclick="del('${study.id}');" alt=""/></span>
+                  </c:if>
+                  <span>${study.name}&nbsp;(${study.customStudyId})</span>
+                  <span
+                      class="pull-right">
+                    <span
+                        class="radio radio-info radio-inline p-45 mr-xs"><input
+                        type="radio" class="v${study.id} changeView"
+                        id="v1${study.id}" name="radio${study.id}" value="0"
+                        <c:if test="${not study.viewPermission}">checked</c:if>
+                        <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+                      <label for="v1${study.id}"></label></span>
+                    <span
+                        class="radio radio-inline"><input type="radio"
+                                                          class="v${study.id} changeView"
+                                                          id="v2${study.id}"
+                                                          name="radio${study.id}" value="1"
+                                                          <c:if
+                                                              test="${study.viewPermission}">checked</c:if>
+                                                          <c:if
+                                                              test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+                      <label for="v2${study.id}"></label>
+                    </span>
+                  </span>
+                </div>
+              </c:forEach>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </div>
   </div>
