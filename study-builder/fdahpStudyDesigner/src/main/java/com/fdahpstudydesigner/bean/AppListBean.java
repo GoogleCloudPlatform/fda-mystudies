@@ -24,16 +24,12 @@
 package com.fdahpstudydesigner.bean;
 
 import java.math.BigInteger;
-import lombok.Getter;
-import lombok.Setter;
 
-@Setter
-@Getter
 public class AppListBean {
   private String customAppId;
   private String id;
   private String name;
-  private String appsStatus;
+  private String appStatus;
   private String type;
   private String createdOn;
   private boolean flag = false;
@@ -42,17 +38,12 @@ public class AppListBean {
   private BigInteger studiesCount;
 
   public AppListBean(
-      String id,
-      String customAppId,
-      String name,
-      String appsStatus,
-      String type,
-      String createdOn) {
+      String id, String customAppId, String name, String appStatus, String type, String createdOn) {
     super();
     this.id = id;
     this.customAppId = customAppId;
     this.name = name;
-    this.appsStatus = appsStatus;
+    this.appStatus = appStatus;
     this.type = type;
     this.createdOn = createdOn;
   }
@@ -61,7 +52,7 @@ public class AppListBean {
       String id,
       String customAppId,
       String name,
-      String appsStatus,
+      String appStatus,
       String type,
       String createdOn,
       boolean viewPermission) {
@@ -69,7 +60,7 @@ public class AppListBean {
     this.id = id;
     this.customAppId = customAppId;
     this.name = name;
-    this.appsStatus = appsStatus;
+    this.appStatus = appStatus;
     this.type = type;
     this.createdOn = createdOn;
     this.viewPermission = viewPermission;
@@ -79,7 +70,7 @@ public class AppListBean {
       String id,
       String customAppId,
       String name,
-      String appsStatus,
+      String appStatus,
       String type,
       String createdOn,
       boolean viewPermission,
@@ -90,12 +81,92 @@ public class AppListBean {
     this.id = id;
     this.customAppId = customAppId;
     this.name = name;
-    this.appsStatus = appsStatus;
+    this.appStatus = appStatus;
     this.type = type;
     this.createdOn = createdOn;
     this.viewPermission = viewPermission;
     this.liveAppId = liveAppId;
     this.flag = flag;
+    this.studiesCount = studiesCount;
+  }
+
+  public String getCustomAppId() {
+    return customAppId;
+  }
+
+  public void setCustomAppId(String customAppId) {
+    this.customAppId = customAppId;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getAppStatus() {
+    return appStatus;
+  }
+
+  public void setAppStatus(String appStatus) {
+    this.appStatus = appStatus;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getCreatedOn() {
+    return createdOn;
+  }
+
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
+
+  public boolean isFlag() {
+    return flag;
+  }
+
+  public void setFlag(boolean flag) {
+    this.flag = flag;
+  }
+
+  public boolean isViewPermission() {
+    return viewPermission;
+  }
+
+  public void setViewPermission(boolean viewPermission) {
+    this.viewPermission = viewPermission;
+  }
+
+  public String getLiveAppId() {
+    return liveAppId;
+  }
+
+  public void setLiveAppId(String liveAppId) {
+    this.liveAppId = liveAppId;
+  }
+
+  public BigInteger getStudiesCount() {
+    return studiesCount;
+  }
+
+  public void setStudiesCount(BigInteger studiesCount) {
     this.studiesCount = studiesCount;
   }
 }

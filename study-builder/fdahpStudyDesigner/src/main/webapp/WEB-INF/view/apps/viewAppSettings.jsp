@@ -15,10 +15,12 @@
 </style>
 <div class="col-sm-10 col-rc white-bg p-none" id="settingId">
   <form:form
-      action="/studybuilder/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
+      action="/studybuilder/adminApps/saveOrUpdateAppSettingAndAdmins.do?_S=${param._S}"
       data-toggle="validator" role="form" id="settingFormId" method="post"
       autocomplete="off">
-    
+     <input type="hidden" name="buttonText" id="buttonText">
+     <input type="hidden" id="settingsAppId" name="id"
+           value="${appBo.id}">
 	
     <!-- Start top tab section-->
     <div class="right-content-head">
@@ -63,14 +65,13 @@
 				</div>
 				<div class="form-group">
 					<span class="radio radio-info radio-inline p-45"><input
-						type="radio" id="inlineRadio1" value="Yes" 
-						<c:if test="${appBo.type eq 'Gateway'}">checked</c:if>
+						type="radio" id="inlineRadio1" value="GT" class="appTypeClass"
+						${appBo.type eq 'GT'?'checked':""} name="type"
 						 required data-error="Please fill out this field"> <label
 						for="inlineRadio1">Gateway</label> </span> <span class="radio radio-inline"><input
-						type="radio" id="inlineRadio2" value="No"
-						name="enrollingParticipants"
-						<%-- ${studyBo.status eq 'Pre-launch' ?'disabled':''} --%>
-						<c:if test="${ appBo.type eq 'Standalone' }">checked</c:if>
+						type="radio" id="inlineRadio2" value="SD" class="appTypeClass"
+						name="type"
+						${appBo.type eq 'SD'?'checked':""}
 						 required data-error="Please fill out this field">
 						<label for="inlineRadio2">Standalone</label> </span>
 					<div class="help-block with-errors red-txt"></div>
@@ -89,7 +90,7 @@
         <div class="form-group">
           <span class="checkbox checkbox-inline p-45"><input
               class="platformClass" type="checkbox" id="inlineCheckbox1"
-              name="platform" value="I"
+              name="appPlatform" value="I"
               <c:if test="${fn:contains(appBo.appPlatform,'I')}">checked</c:if>
               <%-- <c:if
                   test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if> --%>
@@ -98,7 +99,7 @@
           </span>
           <span class="checkbox checkbox-inline"><input
               type="checkbox" class="platformClass" id="inlineCheckbox2"
-              name="platform" value="A"
+              name="appPlatform" value="A"
               <c:if test="${fn:contains(appBo.appPlatform,'A')}">checked</c:if>
               <%-- <c:if
                   test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if> --%>
@@ -169,5 +170,28 @@ $(document).ready( function () {
 	  <c:if test="${not empty permission}">
 	     $('#settingFormId input').prop('disabled', true);
 	  </c:if>
+        
 	});
+	
+$('#saveId').click(
+        function (e) {
+          $('#settingFormId').validator(
+              'destroy').validator();
+          $("#buttonText").val('save');
+          $("#settingFormId").submit()
+        });
+
+$('#completedId').click(
+    function (e) {
+      if ($('.checkbox input:checked').length == 0) {
+    	    $("input").attr("required", true);
+        }
+     if( isFromValid("#settingFormId")){
+    	 $("#buttonText").val('completed');
+    	 $("#settingFormId").submit();
+     }
+      
+    
+    });
+  
 </script>

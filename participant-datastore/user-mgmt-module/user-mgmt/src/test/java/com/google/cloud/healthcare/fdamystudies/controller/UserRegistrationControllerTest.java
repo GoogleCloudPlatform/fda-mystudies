@@ -189,11 +189,11 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", userDetails.getEmailCode());
     templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("contactEmail", Constants.CONTACT_US_EMAIL);
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);
 
-    verifyMimeMessage(Constants.EMAIL, appConfig.getFromEmail(), subject, body);
+    verifyMimeMessage(Constants.EMAIL, Constants.FROM_EMAIL, subject, body);
 
     verify(
         1,
@@ -219,6 +219,8 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   private String getRegisterUser(String emailId, String password) throws JsonProcessingException {
     UserRegistrationForm userRegistrationForm = new UserRegistrationForm(emailId, password);
+    userRegistrationForm.setContactEmail(Constants.CONTACT_US_EMAIL);
+    userRegistrationForm.setFromEmail(Constants.FROM_EMAIL);
     return getObjectMapper().writeValueAsString(userRegistrationForm);
   }
 

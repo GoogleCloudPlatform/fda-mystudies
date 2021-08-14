@@ -141,6 +141,46 @@ public class AppEntity implements Serializable {
   @Column(name = "feedback_to_email", length = EMAIL_LENGTH)
   private String feedBackToEmail;
 
+  @ToString.Exclude
+  @Column(name = "app_support_email_address", length = EMAIL_LENGTH)
+  private String appSupportEmailAddress;
+
+  @Column(name = "app_platform")
+  private String appPlatform;
+
+  @Column(name = "app_store_url")
+  private String appStoreUrl;
+
+  @Column(name = "app_privacy_url")
+  private String appPrivacyUrl;
+
+  @Column(name = "play_store_url")
+  private String playStoreUrl;
+
+  @Column(name = "app_terms_url")
+  private String appTermsUrl;
+
+  @Column(name = "organization_name")
+  private String organizationName;
+
+  @Column(name = "ios_latest_xcode_app_version")
+  private String iosXCodeAppVersion;
+
+  @Column(name = "ios_latest_app_build_version")
+  private String iosAppBuildVersion;
+
+  @Column(name = "ios_force_upgrade")
+  private Integer iosForceUpgrade;
+
+  @Column(name = "android_latest_app_version")
+  private String androidAppBuildVersion;
+
+  @Column(name = "android_force_upgrade")
+  private Integer androidForceUpdrade;
+
+  @Column(name = "type")
+  private String type;
+
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,

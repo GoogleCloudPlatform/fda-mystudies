@@ -360,7 +360,7 @@
     
     <definition name="appListPage" extends="base.definition">
         <put-attribute name="body"
-                       value="/WEB-INF/view/apps/appsList.jsp"/>
+                       value="/WEB-INF/view/apps/appList.jsp"/>
     </definition>
     <definition name="viewAppsInfo" extends="apps.definition">
         <put-attribute name="body"

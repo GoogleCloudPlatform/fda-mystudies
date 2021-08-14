@@ -24,6 +24,13 @@
 
 package com.fdahpstudydesigner.dao;
 
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ACTION_UPDATES;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.COMPLETED_BUTTON;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMP_VALUE;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SAVE_BUTTON;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SUCCESS;
+
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppSequenceBo;
@@ -33,7 +40,6 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.math.BigInteger;
@@ -93,7 +99,7 @@ public class AppDAOImpl implements AppDAO {
         if (userBO.getRoleId().equals("1")) {
           query =
               session.createQuery(
-                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appsStatus,a.type,a.createdOn)"
+                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appStatus,a.type,a.createdOn)"
                       + " from AppsBo a, UserBO user"
                       + " where user.userId = a.createdBy"
                       + " and a.version=0"
@@ -102,14 +108,14 @@ public class AppDAOImpl implements AppDAO {
         } else {
           query =
               session.createQuery(
-                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appsStatus,a.type,a.createdOn,ap.viewPermission)"
+                  "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appStatus,a.type,a.createdOn,ap.viewPermission)"
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
                       + " and user.userId = a.createdBy"
                       + " and a.version=0"
                       + " and ap.userId=:impValue"
                       + " order by a.createdOn desc");
-          query.setString(FdahpStudyDesignerConstants.IMP_VALUE, userId);
+          query.setString(IMP_VALUE, userId);
         }
         appListBean = query.list();
         if ((appListBean != null) && !appListBean.isEmpty()) {
@@ -165,7 +171,7 @@ public class AppDAOImpl implements AppDAO {
                                   + "and p.user_id=:impValue "
                                   + "and s.is_live=0")
                           .setString("customAppId", appDetails.getCustomAppId())
-                          .setString(FdahpStudyDesignerConstants.IMP_VALUE, userId)
+                          .setString(IMP_VALUE, userId)
                           .uniqueResult();
               appDetails.setStudiesCount(studyCount);
             }
@@ -265,7 +271,7 @@ public class AppDAOImpl implements AppDAO {
   public String saveOrUpdateApp(AppsBo appBo, SessionObject sessionObject) {
     logger.entry("begin saveOrUpdateApp()");
     Session session = null;
-    String message = FdahpStudyDesignerConstants.SUCCESS;
+    String message = SUCCESS;
     StudyBuilderAuditEvent auditLogEvent = null;
     AppSequenceBo appSequenceBo = null;
     String appId = null;
@@ -277,7 +283,7 @@ public class AppDAOImpl implements AppDAO {
       if (StringUtils.isEmpty(appBo.getId())) {
         appBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         appSequenceBo = new AppSequenceBo();
-        appBo.setAppsStatus("Inactive");
+        appBo.setAppStatus("Inactive");
         appBo.setCreatedBy(appBo.getUserId());
         appId = (String) session.save(appBo);
 
@@ -294,7 +300,7 @@ public class AppDAOImpl implements AppDAO {
           dbappBo.setCustomAppId(appBo.getCustomAppId());
           dbappBo.setName(appBo.getName());
           dbappBo.setModifiedBy(appBo.getUserId());
-          appBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+          dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
               (AppSequenceBo)
                   session
@@ -308,13 +314,11 @@ public class AppDAOImpl implements AppDAO {
       auditRequest.setAppId(appBo.getId());
       if (appSequenceBo != null) {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
-            && appBo
-                .getButtonText()
-                .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
           appSequenceBo.setAppInfo(true);
           // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
         } else if (StringUtils.isNotEmpty(appBo.getButtonText())
-            && appBo.getButtonText().equalsIgnoreCase(FdahpStudyDesignerConstants.SAVE_BUTTON)) {
+            && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
           // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
           appSequenceBo.setAppInfo(false);
         }
@@ -325,6 +329,7 @@ public class AppDAOImpl implements AppDAO {
 
       transaction.commit();
     } catch (Exception e) {
+      message = FAILURE;
       transaction.rollback();
       logger.error("AppDAOImpl - saveOrUpdateApp() - ERROR", e);
     } finally {
@@ -334,5 +339,134 @@ public class AppDAOImpl implements AppDAO {
     }
     logger.exit("saveOrUpdateApp() - Ends");
     return message;
+  }
+
+  public String saveOrUpdateAppSettings(AppsBo appBo, SessionObject sessionObject) {
+    logger.entry("begin saveOrUpdateAppSettings()");
+    Session session = null;
+    String message = SUCCESS;
+    StudyBuilderAuditEvent auditLogEvent = null;
+    AppSequenceBo appSequenceBo = null;
+    String appId = null;
+    try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+
+      if (StringUtils.isNotEmpty(appBo.getId())) {
+        AppsBo dbappBo =
+            (AppsBo)
+                session
+                    .getNamedQuery("AppsBo.getAppsById")
+                    .setString("id", appBo.getId())
+                    .uniqueResult();
+        if (dbappBo != null) {
+          dbappBo.setType(appBo.getType());
+          dbappBo.setAppPlatform(appBo.getAppPlatform());
+          dbappBo.setModifiedBy(appBo.getUserId());
+          dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+          appSequenceBo =
+              (AppSequenceBo)
+                  session
+                      .getNamedQuery("getAppSequenceByAppd")
+                      .setString("appId", dbappBo.getId())
+                      .uniqueResult();
+          session.update(dbappBo);
+        }
+      }
+
+      auditRequest.setAppId(appBo.getId());
+      if (appSequenceBo != null) {
+        if (StringUtils.isNotEmpty(appBo.getButtonText())
+            && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
+          appSequenceBo.setAppSettings(true);
+          // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+        } else if (StringUtils.isNotEmpty(appBo.getButtonText())
+            && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
+          // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+          appSequenceBo.setAppSettings(false);
+        }
+        session.saveOrUpdate(appSequenceBo);
+      }
+
+      auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
+
+      transaction.commit();
+    } catch (Exception e) {
+      message = FAILURE;
+      transaction.rollback();
+      logger.error("AppDAOImpl - saveOrUpdateAppSettings() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("saveOrUpdateAppSettings() - Ends");
+    return message;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
+    logger.entry("begin updateAppAction()");
+    String message = FAILURE;
+    Session session = null;
+    String searchQuery = null;
+    AppsBo app = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
+
+        if (!appId.isEmpty()) {
+          searchQuery = " From AppsBo WHERE id=:appId";
+          app = (AppsBo) session.createQuery(searchQuery).setString("appId", appId);
+        }
+
+        if (app != null) {
+          if (buttonText.equalsIgnoreCase(ACTION_UPDATES)) {
+            app.setIsAppPublished(true);
+            app.setAppLaunchDate(FdahpStudyDesignerUtil.getCurrentDateTime());
+            app.setAppStatus("Published");
+            session.update(app);
+          }
+        }
+      }
+    } catch (Exception e) {
+
+      transaction.rollback();
+      logger.error("AppDAOImpl - updateAppAction() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+
+    logger.exit("updateAppAction() - Ends");
+    return message;
+  }
+
+  @Override
+  public AppsBo getAppByLatestVersion(String customAppId) {
+    logger.entry("begin getStudyByLatestVersion()");
+    Session session = null;
+    AppsBo app = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      app =
+          (AppsBo)
+              session
+                  .getNamedQuery("getAppByLatestVersion")
+                  .setString("customAppId", customAppId)
+                  .uniqueResult();
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getStudyByLatestVersion() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getStudyByLatestVersion() - Ends");
+    return app;
   }
 }

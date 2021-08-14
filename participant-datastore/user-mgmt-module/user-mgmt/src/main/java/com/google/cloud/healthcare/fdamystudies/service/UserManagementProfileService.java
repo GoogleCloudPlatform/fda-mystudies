@@ -12,6 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
@@ -37,7 +38,11 @@ public interface UserManagementProfileService {
       String userId, DeactivateAcctBean deactivateBean, AuditLogEventRequest auditRequest);
 
   public EmailResponse resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId, String appName);
+      String applicationId,
+      String securityToken,
+      String emailId,
+      String appName,
+      ResetPasswordBean resetPasswordBean);
 
   public void processDeactivatePendingRequests();
 }

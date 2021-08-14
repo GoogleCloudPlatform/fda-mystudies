@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.beans;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,4 +29,16 @@ public class LoginRequest {
   @ToString.Exclude
   @Size(min = 8, max = 64)
   private String password;
+
+  @ToString.Exclude
+  @Size(max = EMAIL_LENGTH)
+  @Email
+  @NotBlank
+  private String contactEmail;
+
+  @ToString.Exclude
+  @Size(max = EMAIL_LENGTH)
+  @Email
+  @NotBlank
+  private String fromEmail;
 }

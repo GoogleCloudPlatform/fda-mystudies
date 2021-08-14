@@ -31,19 +31,18 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "apps")
 @NamedQueries({
   @NamedQuery(
       name = "AppsBo.getAppsById",
       query = " From AppsBo ABO WHERE ABO.id =:id order by version DESC LIMIT 1"),
+  @NamedQuery(
+      name = "getAppByLatestVersion",
+      query = " From AppsBo WHERE customAppId =:customAppId order by version DESC LIMIT 1")
 })
 public class AppsBo implements Serializable {
 
@@ -131,7 +130,7 @@ public class AppsBo implements Serializable {
   private String androidAppBuildVersion;
 
   @Column(name = "android_force_upgrade")
-  private Integer androidForceUpdrade;
+  private Integer androidForceUpgrade;
 
   @Column(name = "is_live")
   private Integer live = 0;
@@ -158,7 +157,7 @@ public class AppsBo implements Serializable {
   private String modifiedOn;
 
   @Column(name = "apps_status")
-  private String appsStatus;
+  private String appStatus;
 
   @Column(name = "ios_app_distributed")
   private Integer iosAppDistributed;
@@ -177,4 +176,340 @@ public class AppsBo implements Serializable {
   @Transient private AppsBo liveAppsBo = null;
 
   @Transient private String userId;
+
+  public String getButtonText() {
+    return buttonText;
+  }
+
+  public void setButtonText(String buttonText) {
+    this.buttonText = buttonText;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
+  }
+
+  public String getCreatedBy() {
+    return createdBy;
+  }
+
+  public void setCreatedBy(String createdBy) {
+    this.createdBy = createdBy;
+  }
+
+  public String getCreatedOn() {
+    return createdOn;
+  }
+
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
+
+  public String getCustomAppId() {
+    return customAppId;
+  }
+
+  public void setCustomAppId(String customAppId) {
+    this.customAppId = customAppId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getAppPlatform() {
+    return appPlatform;
+  }
+
+  public void setAppPlatform(String appPlatform) {
+    this.appPlatform = appPlatform;
+  }
+
+  public String getFromEmailAddress() {
+    return fromEmailAddress;
+  }
+
+  public void setFromEmailAddress(String fromEmailAddress) {
+    this.fromEmailAddress = fromEmailAddress;
+  }
+
+  public String getFeedbackEmailAddress() {
+    return feedbackEmailAddress;
+  }
+
+  public void setFeedbackEmailAddress(String feedbackEmailAddress) {
+    this.feedbackEmailAddress = feedbackEmailAddress;
+  }
+
+  public String getContactEmailAddress() {
+    return contactEmailAddress;
+  }
+
+  public void setContactEmailAddress(String contactEmailAddress) {
+    this.contactEmailAddress = contactEmailAddress;
+  }
+
+  public String getAppSupportEmailAddress() {
+    return appSupportEmailAddress;
+  }
+
+  public void setAppSupportEmailAddress(String appSupportEmailAddress) {
+    this.appSupportEmailAddress = appSupportEmailAddress;
+  }
+
+  public String getAppPrivacyUrl() {
+    return appPrivacyUrl;
+  }
+
+  public void setAppPrivacyUrl(String appPrivacyUrl) {
+    this.appPrivacyUrl = appPrivacyUrl;
+  }
+
+  public String getAppTermsUrl() {
+    return appTermsUrl;
+  }
+
+  public void setAppTermsUrl(String appTermsUrl) {
+    this.appTermsUrl = appTermsUrl;
+  }
+
+  public String getOrganizationName() {
+    return organizationName;
+  }
+
+  public void setOrganizationName(String organizationName) {
+    this.organizationName = organizationName;
+  }
+
+  public String getAppStoreUrl() {
+    return appStoreUrl;
+  }
+
+  public void setAppStoreUrl(String appStoreUrl) {
+    this.appStoreUrl = appStoreUrl;
+  }
+
+  public String getPlayStoreUrl() {
+    return playStoreUrl;
+  }
+
+  public void setPlayStoreUrl(String playStoreUrl) {
+    this.playStoreUrl = playStoreUrl;
+  }
+
+  public String getIosBundleId() {
+    return iosBundleId;
+  }
+
+  public void setIosBundleId(String iosBundleId) {
+    this.iosBundleId = iosBundleId;
+  }
+
+  public String getAndroidBundleId() {
+    return androidBundleId;
+  }
+
+  public void setAndroidBundleId(String androidBundleId) {
+    this.androidBundleId = androidBundleId;
+  }
+
+  public String getAndroidServerKey() {
+    return androidServerKey;
+  }
+
+  public void setAndroidServerKey(String androidServerKey) {
+    this.androidServerKey = androidServerKey;
+  }
+
+  public String getIosServerKey() {
+    return iosServerKey;
+  }
+
+  public void setIosServerKey(String iosServerKey) {
+    this.iosServerKey = iosServerKey;
+  }
+
+  public String getIosXCodeAppVersion() {
+    return iosXCodeAppVersion;
+  }
+
+  public void setIosXCodeAppVersion(String iosXCodeAppVersion) {
+    this.iosXCodeAppVersion = iosXCodeAppVersion;
+  }
+
+  public String getIosAppBuildVersion() {
+    return iosAppBuildVersion;
+  }
+
+  public void setIosAppBuildVersion(String iosAppBuildVersion) {
+    this.iosAppBuildVersion = iosAppBuildVersion;
+  }
+
+  public Integer getIosForceUpgrade() {
+    return iosForceUpgrade;
+  }
+
+  public void setIosForceUpgrade(Integer iosForceUpgrade) {
+    this.iosForceUpgrade = iosForceUpgrade;
+  }
+
+  public String getAndroidAppBuildVersion() {
+    return androidAppBuildVersion;
+  }
+
+  public void setAndroidAppBuildVersion(String androidAppBuildVersion) {
+    this.androidAppBuildVersion = androidAppBuildVersion;
+  }
+
+  public Integer getAndroidForceUpgrade() {
+    return androidForceUpgrade;
+  }
+
+  public void setAndroidForceUpgrade(Integer androidForceUpgrade) {
+    this.androidForceUpgrade = androidForceUpgrade;
+  }
+
+  public Integer getLive() {
+    return live;
+  }
+
+  public void setLive(Integer live) {
+    this.live = live;
+  }
+
+  public String getAppLaunchDate() {
+    return appLaunchDate;
+  }
+
+  public void setAppLaunchDate(String appLaunchDate) {
+    this.appLaunchDate = appLaunchDate;
+  }
+
+  public Integer getHasAppDraft() {
+    return hasAppDraft;
+  }
+
+  public void setHasAppDraft(Integer hasAppDraft) {
+    this.hasAppDraft = hasAppDraft;
+  }
+
+  public Integer getHasAppSettingDraft() {
+    return hasAppSettingDraft;
+  }
+
+  public void setHasAppSettingDraft(Integer hasAppSettingDraft) {
+    this.hasAppSettingDraft = hasAppSettingDraft;
+  }
+
+  public Integer getHasAppPropertiesDraft() {
+    return hasAppPropertiesDraft;
+  }
+
+  public void setHasAppPropertiesDraft(Integer hasAppPropertiesDraft) {
+    this.hasAppPropertiesDraft = hasAppPropertiesDraft;
+  }
+
+  public Integer getHasAppDevConfigDraft() {
+    return hasAppDevConfigDraft;
+  }
+
+  public void setHasAppDevConfigDraft(Integer hasAppDevConfigDraft) {
+    this.hasAppDevConfigDraft = hasAppDevConfigDraft;
+  }
+
+  public String getModifiedBy() {
+    return modifiedBy;
+  }
+
+  public void setModifiedBy(String modifiedBy) {
+    this.modifiedBy = modifiedBy;
+  }
+
+  public String getModifiedOn() {
+    return modifiedOn;
+  }
+
+  public void setModifiedOn(String modifiedOn) {
+    this.modifiedOn = modifiedOn;
+  }
+
+  public String getAppStatus() {
+    return appStatus;
+  }
+
+  public void setAppStatus(String appStatus) {
+    this.appStatus = appStatus;
+  }
+
+  public Integer getIosAppDistributed() {
+    return iosAppDistributed;
+  }
+
+  public void setIosAppDistributed(Integer iosAppDistributed) {
+    this.iosAppDistributed = iosAppDistributed;
+  }
+
+  public Boolean getIsAppPublished() {
+    return isAppPublished;
+  }
+
+  public void setIsAppPublished(Boolean isAppPublished) {
+    this.isAppPublished = isAppPublished;
+  }
+
+  public Integer getAndroidAppDistributed() {
+    return androidAppDistributed;
+  }
+
+  public void setAndroidAppDistributed(Integer androidAppDistributed) {
+    this.androidAppDistributed = androidAppDistributed;
+  }
+
+  public Float getVersion() {
+    return version;
+  }
+
+  public void setVersion(Float version) {
+    this.version = version;
+  }
+
+  public AppSequenceBo getAppSequenceBo() {
+    return appSequenceBo;
+  }
+
+  public void setAppSequenceBo(AppSequenceBo appSequenceBo) {
+    this.appSequenceBo = appSequenceBo;
+  }
+
+  public AppsBo getLiveAppsBo() {
+    return liveAppsBo;
+  }
+
+  public void setLiveAppsBo(AppsBo liveAppsBo) {
+    this.liveAppsBo = liveAppsBo;
+  }
+
+  public String getUserId() {
+    return userId;
+  }
+
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 }

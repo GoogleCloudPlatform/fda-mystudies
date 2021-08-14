@@ -16,15 +16,8 @@
 <div class="col-sm-10 col-rc white-bg p-none" id="settingId">
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
-      data-toggle="validator" role="form" id="settingfoFormId" method="post"
+      data-toggle="validator" role="form" id="developerConfigFormId" method="post"
       autocomplete="off">
-    <input type="hidden" name="buttonText" id="buttonText">
-    <input type="hidden" id="settingsstudyId" name="id"
-           value="${studyBo.id}">
-    <input type="hidden" id="userIds" name="userIds">
-    <input type="hidden" id="permissions" name="permissions">
-    <input type="hidden" id="projectLead" name="projectLead">
-    <input type="hidden" id="modifiedBy" name="modifiedBy"  value="${studyBo.modifiedBy}">
     
 	
     <!-- Start top tab section-->
@@ -41,7 +34,7 @@
           </button>
         </div>
         <c:if
-            test="${(empty permission) && (sessionObject.role ne 'Org-level Admin')}">
+            test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn" id="saveId">Save</button>
           </div>
@@ -66,7 +59,7 @@
                             <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs mt-md">Android Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value= "${appBo.androidBundleId}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -74,7 +67,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs mt-md">Android Server Key <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value= "${appBo.androidServerKey}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -84,7 +77,7 @@
                              <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs mt-md">iOS Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value= "${appBo.iosBundleId}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -92,7 +85,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs mt-md">iOS Server Key<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value= "${appBo.iosServerKey}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -104,7 +97,7 @@
                               <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs">Latest XCode app version (for iOS app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value= "${appBo.iosXCodeAppVersion}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -112,7 +105,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs">Lastest app build version (for iOS app)<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value= "${appBo.androidAppBuildVersion}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -123,11 +116,11 @@
                                 <div class="gray-xs-f mb-xs mt-md">Force upgrade for iOS users? <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                <div class="mt-md mb-md">
                          <span class="radio radio-info radio-inline p-45">
-                            <input type="radio" id="inlineRadio1" value="option1" name="radioInline1">
+                            <input type="radio" id="inlineRadio1" value="1" name="radioInline1" <c:if test="${appBo.iosForceUpgrade eq 1}">checked</c:if>>
                             <label for="inlineRadio1">Yes</label>
                         </span>
                         <span class="radio radio-inline">
-                            <input type="radio" id="inlineRadio2" value="option1" name="radioInline1">
+                            <input type="radio" id="inlineRadio2" value="0" name="radioInline1" <c:if test="${appBo.iosForceUpgrade eq 0}">checked</c:if>>
                             <label for="inlineRadio2">NO</label>
                         </span>
                     </div>
@@ -137,7 +130,7 @@
                            <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs"> Latest app version code (for Android app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control"/>
+                                    <input type="text" class="form-control" value= "${appBo.androidBundleId}"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -148,12 +141,12 @@
                                 <div class="gray-xs-f mb-xs mt-md">Force upgrade for Android users? <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                <div class="mt-md mb-md">
                          <span class="radio radio-info radio-inline p-45">
-                            <input type="radio" id="inlineRadio1" value="option1" name="radioInline1">
-                            <label for="inlineRadio1">Yes</label>
+                            <input type="radio" id="inlineRadio3" value="1" name="radioInline1" <c:if test="${appBo.androidForceUpgrade eq 1}">checked</c:if>>
+                            <label for="inlineRadio3">Yes</label>
                         </span>
                         <span class="radio radio-inline">
-                            <input type="radio" id="inlineRadio2" value="option1" name="radioInline1">
-                            <label for="inlineRadio2">NO</label>
+                            <input type="radio" id="inlineRadio4" value="0" name="radioInline1" <c:if test="${appBo.androidForceUpgrade eq 0}">checked</c:if>>
+                            <label for="inlineRadio4">NO</label>
                         </span>
                     </div>
                             </div>
@@ -174,6 +167,8 @@
 <!-- End right Content here -->
 <script>
   $(document).ready(function () {
-
+	  <c:if test="${not empty permission}">
+	     $('#developerConfigFormId input').prop('disabled', true);
+	  </c:if>
 	});
 </script>

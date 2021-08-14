@@ -64,7 +64,7 @@ public class UserSupportServiceImpl implements UserSupportService {
     if (optApp.isPresent()) {
       emailRequest =
           new EmailRequest(
-              appConfig.getFromEmail(),
+              optApp.get().getFormEmailId(),
               new String[] {optApp.get().getFeedBackToEmail()},
               null,
               null,
@@ -109,7 +109,7 @@ public class UserSupportServiceImpl implements UserSupportService {
     if (optApp.isPresent()) {
       emailRequest =
           new EmailRequest(
-              appConfig.getFromEmail(),
+              optApp.get().getFormEmailId(),
               new String[] {optApp.get().getContactUsToEmail()},
               null,
               null,

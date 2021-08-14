@@ -97,6 +97,10 @@ import org.springframework.test.web.servlet.MvcResult;
 
 public class UserControllerTest extends BaseMockIT {
 
+  private static final String FROM_EMAIL = "from_email@gmail.com";
+
+  private static final String CONTACT_US_EMAIL = "contact_us@gmail.com";
+
   private static final String APP_ID_VALUE = "MyStudies";
 
   private static final String APP_NAME_VALUE = "App Name_BTCDEV001";
@@ -611,6 +615,8 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setContactEmail(CONTACT_US_EMAIL);
+    userRequest.setFromEmail(FROM_EMAIL);
 
     mockMvc
         .perform(
@@ -632,6 +638,8 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setContactEmail(CONTACT_US_EMAIL);
+    userRequest.setFromEmail(FROM_EMAIL);
 
     mockMvc
         .perform(
@@ -661,6 +669,8 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setContactEmail(CONTACT_US_EMAIL);
+    userRequest.setFromEmail(FROM_EMAIL);
 
     mockMvc
         .perform(
@@ -689,6 +699,9 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setContactEmail(CONTACT_US_EMAIL);
+    userRequest.setFromEmail(FROM_EMAIL);
+
     userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
     userRepository.saveAndFlush(userEntity);
 
@@ -705,8 +718,7 @@ public class UserControllerTest extends BaseMockIT {
     String subject = getMailResetSubject();
     String body = "Thank you for reaching out for password help";
 
-    MimeMessage mail =
-        verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
+    MimeMessage mail = verifyMimeMessage(EMAIL_VALUE, FROM_EMAIL, subject, body);
     verifyDoesNotContain(mail.getContent().toString(), "@tempPassword@");
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
@@ -743,6 +755,9 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setContactEmail(CONTACT_US_EMAIL);
+    userRequest.setFromEmail(FROM_EMAIL);
+
     userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     userRepository.saveAndFlush(userEntity);
 
@@ -779,6 +794,8 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId("Invalid");
+    userRequest.setContactEmail(CONTACT_US_EMAIL);
+    userRequest.setFromEmail(FROM_EMAIL);
 
     mockMvc
         .perform(

@@ -57,6 +57,18 @@ public class UserRegistrationForm {
   private String appId;
   private String appName;
 
+  @ToString.Exclude
+  @Size(max = EMAIL_LENGTH)
+  @NotBlank
+  @Email
+  private String contactEmail;
+
+  @ToString.Exclude
+  @Size(max = EMAIL_LENGTH)
+  @NotBlank
+  @Email
+  private String fromEmail;
+
   public UserRegistrationForm(String userId, String emailId, String password) {
     super();
     this.userId = userId;
