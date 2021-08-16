@@ -42,10 +42,14 @@ import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -165,7 +169,8 @@ public class AppMetaDataDao {
   private void prepareAppStudyLevelNotifications(
       String verificationTime,
       List<NotificationDto> notificationList,
-      List<NotificationsBean> notifyList) {
+      List<NotificationsBean> notifyList)
+      throws ParseException {
     Map<String, NotificationsBean> notificationTreeMap = new HashMap<>();
     HashMap<String, String> hashMap = new HashMap<>();
     List<String> notificationIdsList = new ArrayList<>();
@@ -178,13 +183,19 @@ public class AppMetaDataDao {
       if (StringUtils.isNotEmpty(verificationTime)) {
         String scheduledDateTime =
             notificationDto.getScheduleDate() + " " + notificationDto.getScheduleTime();
+        Date verificationTimeOfUser =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(verificationTime);
+        Calendar calender = Calendar.getInstance();
+        calender.setTime(verificationTimeOfUser);
+        calender.add(Calendar.HOUR, -4);
+        Timestamp verificationTimestamp = new Timestamp(calender.getTimeInMillis());
         if ((notificationDto
                     .getNotificationType()
                     .equalsIgnoreCase(StudyMetaDataConstants.STUDY_TYPE_GT)
                 && notificationDto
                     .getNotificationSubType()
                     .equalsIgnoreCase(StudyMetaDataConstants.NOTIFICATION_SUBTYPE_GENERAL))
-            || Timestamp.valueOf(scheduledDateTime).after(Timestamp.valueOf(verificationTime))) {
+            || Timestamp.valueOf(scheduledDateTime).after(verificationTimestamp)) {
           prepareNotifications(notificationTreeMap, hashMap, notificationIdsList, notificationDto);
         }
       } else if (notificationDto
