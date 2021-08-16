@@ -319,7 +319,7 @@ public class AppController {
     return mav;
   }
 
-  /*@RequestMapping("/adminApps/saveOrUpdateAppSettingAndAdmins.do")
+  @RequestMapping("/adminApps/saveOrUpdateAppSettingAndAdmins.do")
   public ModelAndView saveOrUpdateAppSettingAndAdmins(HttpServletRequest request, AppsBo appsBo) {
     logger.entry("begin saveOrUpdateAppSettingAndAdmins()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -379,7 +379,7 @@ public class AppController {
     }
     logger.exit("saveOrUpdateAppSettingAndAdmins() - Ends");
     return mav;
-  }*/
+  }
 
   @RequestMapping("/adminApps/viewAppProperties.do")
   public ModelAndView viewAppProperties(HttpServletRequest request) {
