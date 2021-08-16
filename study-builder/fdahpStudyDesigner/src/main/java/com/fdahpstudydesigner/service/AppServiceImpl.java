@@ -169,4 +169,17 @@ public class AppServiceImpl implements AppService {
     logger.exit("StudyServiceImpl - getAppDetailsBean - Ends");
     return null;
   }
+
+  @Override
+  public String saveOrUpdateAppProperties(AppsBo appsBo, SessionObject sessionObject) {
+    logger.entry("AppServiceImpl - saveOrUpdateAppProperties() - Starts");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = appDAO.saveOrUpdateAppProperties(appsBo, sessionObject);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - saveOrUpdateAppProperties() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - saveOrUpdateAppProperties() - Ends");
+    return message;
+  }
 }

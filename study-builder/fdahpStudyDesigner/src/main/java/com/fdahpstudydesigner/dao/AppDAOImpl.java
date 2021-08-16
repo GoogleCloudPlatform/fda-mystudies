@@ -469,4 +469,92 @@ public class AppDAOImpl implements AppDAO {
     logger.exit("getStudyByLatestVersion() - Ends");
     return app;
   }
+
+  @Override
+  public String saveOrUpdateAppProperties(AppsBo appBo, SessionObject sessionObject) {
+    logger.entry("begin saveOrUpdateAppProperties()");
+    Session session = null;
+    String message = SUCCESS;
+    StudyBuilderAuditEvent auditLogEvent = null;
+    AppSequenceBo appSequenceBo = null;
+    try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+
+      if (StringUtils.isNotEmpty(appBo.getId())) {
+        AppsBo dbappBo =
+            (AppsBo)
+                session
+                    .getNamedQuery("AppsBo.getAppsById")
+                    .setString("id", appBo.getId())
+                    .uniqueResult();
+        if (dbappBo != null) {
+
+          if (StringUtils.isNotEmpty(appBo.getFeedbackEmailAddress())) {
+            dbappBo.setFeedbackEmailAddress(appBo.getFeedbackEmailAddress());
+          }
+          if (StringUtils.isNotEmpty(appBo.getContactEmailAddress())) {
+            dbappBo.setContactEmailAddress(appBo.getContactEmailAddress());
+          }
+
+          if (StringUtils.isNotEmpty(appBo.getAppSupportEmailAddress())) {
+            dbappBo.setAppSupportEmailAddress(appBo.getAppSupportEmailAddress());
+          }
+          if (StringUtils.isNotEmpty(appBo.getAppTermsUrl())) {
+            dbappBo.setAppTermsUrl(appBo.getAppTermsUrl());
+          }
+          if (StringUtils.isNotEmpty(appBo.getAppPrivacyUrl())) {
+            dbappBo.setAppPrivacyUrl(appBo.getAppPrivacyUrl());
+          }
+          if (StringUtils.isNotEmpty(appBo.getOrganizationName())) {
+            dbappBo.setOrganizationName(appBo.getOrganizationName());
+          }
+          if (StringUtils.isNotEmpty(appBo.getAppStoreUrl())) {
+            dbappBo.setAppStoreUrl(appBo.getAppStoreUrl());
+          }
+          if (StringUtils.isNotEmpty(appBo.getPlayStoreUrl())) {
+            dbappBo.setPlayStoreUrl(appBo.getPlayStoreUrl());
+          }
+          dbappBo.setModifiedBy(appBo.getUserId());
+          dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+          appSequenceBo =
+              (AppSequenceBo)
+                  session
+                      .getNamedQuery("getAppSequenceByAppd")
+                      .setString("appId", dbappBo.getId())
+                      .uniqueResult();
+          session.update(dbappBo);
+        }
+      }
+
+      auditRequest.setAppId(appBo.getId());
+      if (appSequenceBo != null) {
+        if (StringUtils.isNotEmpty(appBo.getButtonText())
+            && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
+          appSequenceBo.setAppProperties(true);
+          // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+        } else if (StringUtils.isNotEmpty(appBo.getButtonText())
+            && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
+          // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+          appSequenceBo.setAppProperties(false);
+        }
+        session.saveOrUpdate(appSequenceBo);
+      }
+
+      auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
+
+      transaction.commit();
+    } catch (Exception e) {
+      message = FAILURE;
+      transaction.rollback();
+      logger.error("AppDAOImpl - saveOrUpdateAppProperties() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("saveOrUpdateAppProperties() - Ends");
+    return message;
+  }
 }

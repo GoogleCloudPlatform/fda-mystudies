@@ -43,4 +43,6 @@ public interface AppService {
   public String updateAppAction(String appId, String buttonText, SessionObject sesObj);
 
   public AppDetailsBean getAppDetailsBean(String customAppId);
+
+  public String saveOrUpdateAppProperties(AppsBo appsBo, SessionObject sessionObject);
 }

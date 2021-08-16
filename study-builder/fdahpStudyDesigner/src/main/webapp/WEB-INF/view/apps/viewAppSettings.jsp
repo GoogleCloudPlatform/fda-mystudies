@@ -175,8 +175,7 @@ $(document).ready( function () {
 	
 $('#saveId').click(
         function (e) {
-          $('#settingFormId').validator(
-              'destroy').validator();
+         $('#settingFormId').validator('destroy');
           $("#buttonText").val('save');
           $("#settingFormId").submit()
         });

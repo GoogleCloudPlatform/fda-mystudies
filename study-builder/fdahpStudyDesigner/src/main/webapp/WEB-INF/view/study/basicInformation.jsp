@@ -300,7 +300,6 @@ margin-top:16px !important;
   $(document)
       .ready(
           function () {
-        	  debugger
         	$('.studyClass').addClass("active");
             $('#removeUrl').css("visibility", "hidden");
             var file = $('#uploadImg').val();

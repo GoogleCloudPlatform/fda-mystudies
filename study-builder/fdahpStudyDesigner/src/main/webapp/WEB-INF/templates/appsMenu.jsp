@@ -74,7 +74,7 @@
       </li>
       <li class="third active">
         APP PROPERTIES
-        <c:if test="${studyBo.studySequenceBo.overView}">
+        <c:if test="${appBo.appSequenceBo.appProperties}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
@@ -98,9 +98,6 @@
     $('#createStudyId').show();
     $("#myNavbar li.studyClass").addClass('active');
     $('[data-toggle="tooltip"]').tooltip();
-    console.log('${appBo.appSequenceBo.appId}');
-    console.log('${appBo.appSequenceBo.appSequenceId}');
-	console.log('${appBo.appSequenceBo.appInfo}');
     $('.cancelBut').click(function () {
       <c:if test="${empty permission}">
       $('.cancelBut').prop('disabled', true);

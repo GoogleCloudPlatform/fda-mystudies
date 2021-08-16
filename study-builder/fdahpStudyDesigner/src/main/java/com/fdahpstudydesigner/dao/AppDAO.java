@@ -42,4 +42,6 @@ public interface AppDAO {
   public String updateAppAction(String studyId, String buttonText, SessionObject sesObj);
 
   public AppsBo getAppByLatestVersion(String customAppId);
+
+  public String saveOrUpdateAppProperties(AppsBo appsBo, SessionObject sessionObject);
 }
