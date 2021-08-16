@@ -167,6 +167,7 @@
 </div>
 <script>
 $(document).ready( function () {
+	$('.appClass').addClass('active');
 	  <c:if test="${not empty permission}">
 	     $('#settingFormId input').prop('disabled', true);
 	  </c:if>
