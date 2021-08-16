@@ -135,11 +135,11 @@
               </div>
               <div class='lg-icons'>
                 <ul class="lg-icons-list">
-                 <li class="studyListId">
+                 <li class="appListId">
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/manageApss.png" alt="">
                     </a>
-                    <div class='studyList'>Manage<br> apps<br>
+                    <div class='appList'>Manage<br> apps<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -268,6 +268,11 @@
         $(".notificationListId").unbind();
         </c:if>
 
+        $(".appListId").click(function () {
+            document.studyListForm.action = "/studybuilder/adminApps/appList.do";
+            document.studyListForm.submit();
+          });
+        
         $(".studyListId").click(function () {
           document.studyListForm.action = "/studybuilder/adminStudies/studyList.do";
           document.studyListForm.submit();
