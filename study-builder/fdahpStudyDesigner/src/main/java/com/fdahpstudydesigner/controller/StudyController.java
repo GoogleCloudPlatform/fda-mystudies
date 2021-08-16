@@ -93,10 +93,6 @@ import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -3896,21 +3892,6 @@ public class StudyController {
             notificationBO.setNotificationScheduleType(
                 FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
           } else if (FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE.equals(currentDateTime)) {
-
-            System.out.println(
-                " currentDateTime="
-                    + FdahpStudyDesignerUtil.getCurrentDate()
-                    + " "
-                    + FdahpStudyDesignerUtil.getCurrentTime());
-
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            ZonedDateTime now = ZonedDateTime.now();
-            System.out.println("dateForDefaultTimeZone = " + dtf.format(now));
-
-            LocalDateTime timeNow = LocalDateTime.now(ZoneId.of("America/New_York"));
-            DateTimeFormatter baseFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            System.out.println("localDateTime =" + baseFormatter.format(timeNow));
-
             notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
             notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
             notificationBO.setScheduleTimestamp(

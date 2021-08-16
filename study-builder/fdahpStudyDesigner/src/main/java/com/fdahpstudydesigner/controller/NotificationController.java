@@ -19,9 +19,6 @@ import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -262,18 +259,6 @@ public class NotificationController {
       } else if (FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE.equals(currentDateTime)) {
         notificationBO.setScheduleDate(FdahpStudyDesignerUtil.getCurrentDate());
         notificationBO.setScheduleTime(FdahpStudyDesignerUtil.getCurrentTime());
-        System.out.println(
-            " currentDateTime="
-                + FdahpStudyDesignerUtil.getCurrentDate()
-                + " "
-                + FdahpStudyDesignerUtil.getCurrentTime());
-
-        LocalDateTime timeNow = LocalDateTime.now(ZoneId.of("America/New_York"));
-        DateTimeFormatter baseFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        // Converting the Object to JSONString
-        System.out.println("localDateTime =" + baseFormatter.format(timeNow));
-
         notificationBO.setScheduleTimestamp(
             FdahpStudyDesignerUtil.getTimeStamp(
                 notificationBO.getScheduleDate(), notificationBO.getScheduleTime()));
