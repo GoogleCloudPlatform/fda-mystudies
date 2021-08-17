@@ -149,7 +149,7 @@ public class AppServiceImpl implements AppService {
         appDetailsBean.setAppPrivacyUrl(app.getAppPrivacyUrl());
         appDetailsBean.setAppStoreUrl(app.getAppStoreUrl());
         appDetailsBean.setPlayStoreUrl(app.getPlayStoreUrl());
-        appDetailsBean.setAppWebSite(app.getAppWebsite());
+        appDetailsBean.setAppWebSiteUrl(app.getAppWebsiteUrl());
 
         appDetailsBean.setAndroidBundleId(app.getAndroidBundleId());
         appDetailsBean.setAndroidServerKey(app.getAndroidServerKey());

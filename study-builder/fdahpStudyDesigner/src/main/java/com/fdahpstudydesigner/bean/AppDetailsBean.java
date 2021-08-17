@@ -40,7 +40,7 @@ public class AppDetailsBean {
   private String appPrivacyUrl;
   private String appStoreUrl;
   private String playStoreUrl;
-  private String appWebSite;
+  private String appWebSiteUrl;
 
   private String androidBundleId;
   private String androidServerKey;
@@ -157,14 +157,6 @@ public class AppDetailsBean {
     this.playStoreUrl = playStoreUrl;
   }
 
-  public String getAppWebSite() {
-    return appWebSite;
-  }
-
-  public void setAppWebSite(String appWebSite) {
-    this.appWebSite = appWebSite;
-  }
-
   public String getAndroidBundleId() {
     return androidBundleId;
   }
@@ -235,5 +227,13 @@ public class AppDetailsBean {
 
   public void setIosXCodeAppVersion(String iosXCodeAppVersion) {
     this.iosXCodeAppVersion = iosXCodeAppVersion;
+  }
+
+  public String getAppWebSiteUrl() {
+    return appWebSiteUrl;
+  }
+
+  public void setAppWebSiteUrl(String appWebSiteUrl) {
+    this.appWebSiteUrl = appWebSiteUrl;
   }
 }
