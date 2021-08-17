@@ -7402,6 +7402,8 @@ public class StudyDAOImpl implements StudyDAO {
       transaction = session.beginTransaction();
 
       consentBo.setId(null);
+      consentBo.setCustomStudyId(null);
+      consentBo.setLive(0);
       consentBo.setStudyId(studyId);
       consentBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       consentBo.setVersion(0f);
