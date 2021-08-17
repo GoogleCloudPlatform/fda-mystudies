@@ -51,12 +51,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
@@ -176,10 +174,6 @@ public class AppMetaDataDao {
     List<String> notificationIdsList = new ArrayList<>();
 
     for (NotificationDto notificationDto : notificationList) {
-      Set<String> studyIds = new HashSet<>();
-      if (StringUtils.isNotEmpty(notificationDto.getStudyId())) {
-        studyIds.add(notificationDto.getStudyId());
-      }
       if (StringUtils.isNotEmpty(verificationTime)) {
         String scheduledDateTime =
             notificationDto.getScheduleDate() + " " + notificationDto.getScheduleTime();
