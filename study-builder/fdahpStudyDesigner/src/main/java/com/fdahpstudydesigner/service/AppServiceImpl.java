@@ -182,4 +182,14 @@ public class AppServiceImpl implements AppService {
     logger.exit("AppServiceImpl - saveOrUpdateAppProperties() - Ends");
     return message;
   }
+
+  public boolean validateAppActions(String appId) {
+    boolean markAsCompleted = false;
+    try {
+      markAsCompleted = appDAO.validateAppActions(appId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - validateAppActions() - ERROR ", e);
+    }
+    return markAsCompleted;
+  }
 }

@@ -45,4 +45,6 @@ public interface AppService {
   public AppDetailsBean getAppDetailsBean(String customAppId);
 
   public String saveOrUpdateAppProperties(AppsBo appsBo, SessionObject sessionObject);
+
+  public boolean validateAppActions(String appId);
 }
