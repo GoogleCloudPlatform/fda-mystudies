@@ -628,7 +628,18 @@ public class StudyDAOImpl implements StudyDAO {
       resourceQuery = session.createQuery(deleteQuery).setString("resourceInfoId", resourceInfoId);
       resourceCount = resourceQuery.executeUpdate();
 
+
       updateStudyToDraftStatus(studyId, sesOb, session);
+
+      StudySequenceBo studySequence =
+          (StudySequenceBo)
+              session
+                  .getNamedQuery("getStudySequenceByStudyId")
+                  .setString("studyId", studyId)
+                  .uniqueResult();
+      studySequence.setMiscellaneousResources(false);
+      session.saveOrUpdate(studySequence);
+
 
       if (!resourceVisibility && (resourceCount > 0)) {
         String deleteNotificationQuery =

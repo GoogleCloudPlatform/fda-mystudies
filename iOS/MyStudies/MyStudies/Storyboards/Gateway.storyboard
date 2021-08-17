@@ -961,12 +961,24 @@
                                     <outlet property="delegate" destination="zmZ-Ff-dEh" id="gbU-PF-VgK"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No records found." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hVm-PI-G3m">
+                                <rect key="frame" x="20" y="16" width="374" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="I9M-rr-x3E"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ebc-jX-8mI" firstAttribute="leading" secondItem="wt8-bq-RGh" secondAttribute="leading" id="3KX-ln-RSA"/>
                             <constraint firstItem="yLT-4v-XjN" firstAttribute="top" secondItem="ebc-jX-8mI" secondAttribute="bottom" id="7uz-yG-Vf6"/>
+                            <constraint firstItem="hVm-PI-G3m" firstAttribute="top" secondItem="PBW-5g-3tz" secondAttribute="bottom" constant="16" id="DuL-6F-7Uw"/>
+                            <constraint firstItem="hVm-PI-G3m" firstAttribute="leading" secondItem="wt8-bq-RGh" secondAttribute="leadingMargin" id="FmM-77-lQb"/>
                             <constraint firstAttribute="trailing" secondItem="ebc-jX-8mI" secondAttribute="trailing" id="GrJ-Wq-dTR"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="hVm-PI-G3m" secondAttribute="trailing" id="HQU-w9-pAN"/>
                             <constraint firstItem="ebc-jX-8mI" firstAttribute="top" secondItem="PBW-5g-3tz" secondAttribute="bottom" constant="1" id="YRs-yx-Zdb"/>
                             <constraint firstItem="yLT-4v-XjN" firstAttribute="top" secondItem="3mj-c9-Ss6" secondAttribute="bottom" id="acN-z3-yLM"/>
                             <constraint firstAttribute="trailing" secondItem="3mj-c9-Ss6" secondAttribute="trailing" id="boi-gE-1Kp"/>
@@ -976,6 +988,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Dz9-gG-h38"/>
                     <connections>
+                        <outlet property="labelNoRecord" destination="hVm-PI-G3m" id="2fj-tX-fWb"/>
                         <outlet property="tableView" destination="ebc-jX-8mI" id="ywE-3b-m3s"/>
                     </connections>
                 </viewController>
