@@ -92,6 +92,9 @@ public class AppsBo implements Serializable {
   @Column(name = "app_terms_url")
   private String appTermsUrl;
 
+  @Column(name = "app_website_url")
+  private String appWebsiteUrl;
+
   @Column(name = "organization_name")
   private String organizationName;
 
@@ -511,5 +514,13 @@ public class AppsBo implements Serializable {
 
   public void setUserId(String userId) {
     this.userId = userId;
+  }
+
+  public String getAppWebsiteUrl() {
+    return appWebsiteUrl;
+  }
+
+  public void setAppWebsiteUrl(String appWebsiteUrl) {
+    this.appWebsiteUrl = appWebsiteUrl;
   }
 }

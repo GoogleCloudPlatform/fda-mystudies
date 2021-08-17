@@ -129,9 +129,9 @@
                               <div class="col-md-6 pl-none mt-lg">
                                 <div class="gray-xs-f mb-xs">App Store URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value="${appBo.appStoreUrl}" name="appStoreUrl" 
+                                    <input type="text" class="form-control" value="${appBo.appStoreUrl}" name="appStoreUrl" id="appStoreUrlId"
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
-                   					title="Include http://" maxlength="100"
+                   					title="Include http://" maxlength="100" 
                   					data-pattern-error="Please enter a valid URL" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
@@ -140,13 +140,38 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs mt-lg">Play Store URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value="${appBo.playStoreUrl}" name="playStoreUrl" 
+                                    <input type="text" class="form-control" value="${appBo.playStoreUrl}" name="playStoreUrl" id="playStoreUrlId"
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
-                   					title="Include http://" maxlength="100"
+                   					title="Include http://" maxlength="100" 
                   					data-pattern-error="Please enter a valid URL" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
+                            
+                            <div class="clearfix"></div>
+                            
+							 <div class="col-md-6 pl-none mt-lg">
+                                <div class="gray-xs-f mb-xs">'From' email for outoging app emails<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="form-group mb-none">
+                                    <input type="text" class="form-control" value="${appBo.fromEmailAddress}" name="fromEmailAddress" 
+                                    required data-error="Please fill out this field" maxlength="100"
+                  					pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
+                   					autocomplete="off" data-pattern-error="Email address is invalid"/>
+                                    <div class="help-block with-errors red-txt"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="gray-xs-f mb-xs mt-lg">App website<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="form-group mb-none">
+                                    <input type="text" class="form-control" value="${appBo.appWebsiteUrl}" name="appWebsiteUrl"
+                                    pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
+                   					title="Include http://" maxlength="100" 
+                  					data-pattern-error="Please enter a valid URL" required data-error="Please fill out this field"/>
+                                    <div class="help-block with-errors red-txt"></div>
+                                </div>
+                            </div>
+							
                            
                         </div>
                         
@@ -165,15 +190,35 @@
 <script>
   $(document).ready(function () {
 	  $('.appClass').addClass('active');
+	  
 	  <c:if test="${not empty permission}">
 	     $('#appPropertiesFormId input').prop('disabled', true);
+	     </c:if>
+	     
+	     <c:if test="${empty permission}">
+	    
+		     <c:if test = "${appBo.appPlatform == 'I,A'} || ${appBo.appPlatform == 'A,I'}">
+		     $('#appStoreUrlId').prop('disabled', false);
+		     $('#playStoreUrlId').prop('disabled', false);
+		     </c:if>
+	     	<c:if test="${appBo.appPlatform == 'I'}">
+	     	 $('#playStoreUrlId').prop('required',false);
+	     	$('#playStoreUrlId').prop('disabled', true);
+	     	$('#appStoreUrlId').prop('disabled', false);
+	     	</c:if>
+	     	<c:if test="${appBo.appPlatform == 'A'}">
+	    	 $('#appStoreUrlId').prop('required',false);
+	    	$('#appStoreUrlId').prop('disabled', true);
+	    	$('#playStoreUrlId').prop('disabled', false);
+	    	</c:if>
 	     </c:if>
 	});
   
   
   $('#saveId').click(
 	        function (e) {
-	        	$('#appPropertiesFormId').validator('destroy');
+	        	
+	          $('#appPropertiesFormId').validator('destroy');
 	          $("#buttonText").val('save');
 	          $("#appPropertiesFormId").submit()
 	        });

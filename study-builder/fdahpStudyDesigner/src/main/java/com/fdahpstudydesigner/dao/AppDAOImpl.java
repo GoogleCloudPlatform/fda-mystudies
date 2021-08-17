@@ -516,6 +516,15 @@ public class AppDAOImpl implements AppDAO {
           if (StringUtils.isNotEmpty(appBo.getPlayStoreUrl())) {
             dbappBo.setPlayStoreUrl(appBo.getPlayStoreUrl());
           }
+
+          if (StringUtils.isNotEmpty(appBo.getFromEmailAddress())) {
+            dbappBo.setFromEmailAddress(appBo.getFromEmailAddress());
+          }
+
+          if (StringUtils.isNotEmpty(appBo.getAppWebsiteUrl())) {
+            dbappBo.setAppWebsiteUrl(appBo.getAppWebsiteUrl());
+          }
+
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
