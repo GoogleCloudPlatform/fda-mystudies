@@ -46,12 +46,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -150,12 +148,7 @@ public class AppMetaDataDao {
           HashMap<String, String> hashMap = new HashMap<>();
           List<String> notificationIdsList = new ArrayList<>();
           List<String> scheduleDateTimes = new ArrayList<>();
-          Set<String> studyIdList = new HashSet<>();
           for (NotificationDto notificationDto : notificationList) {
-            if (StringUtils.isNotEmpty(notificationDto.getStudyId())) {
-              studyIdList.add(notificationDto.getStudyId());
-            }
-
             NotificationsBean notifyBean = new NotificationsBean();
             notifyBean.setNotificationId(notificationDto.getNotificationId().toString());
             if (notificationDto
