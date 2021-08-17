@@ -628,7 +628,6 @@ public class StudyDAOImpl implements StudyDAO {
       resourceQuery = session.createQuery(deleteQuery).setString("resourceInfoId", resourceInfoId);
       resourceCount = resourceQuery.executeUpdate();
 
-
       updateStudyToDraftStatus(studyId, sesOb, session);
 
       StudySequenceBo studySequence =
@@ -639,7 +638,6 @@ public class StudyDAOImpl implements StudyDAO {
                   .uniqueResult();
       studySequence.setMiscellaneousResources(false);
       session.saveOrUpdate(studySequence);
-
 
       if (!resourceVisibility && (resourceCount > 0)) {
         String deleteNotificationQuery =
@@ -5844,6 +5842,8 @@ public class StudyDAOImpl implements StudyDAO {
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(studyBo.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+                String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+                notificationBO.setPlatform(platform);
                 if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                   notificationBO.setAppId(studyBo.getAppId());
                 }
@@ -5938,6 +5938,8 @@ public class StudyDAOImpl implements StudyDAO {
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(liveStudy.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+                String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+                notificationBO.setPlatform(platform);
                 if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                   notificationBO.setAppId(studyBo.getAppId());
                 }
@@ -5968,6 +5970,8 @@ public class StudyDAOImpl implements StudyDAO {
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(liveStudy.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+                String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+                notificationBO.setPlatform(platform);
                 if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                   notificationBO.setAppId(studyBo.getAppId());
                 }
@@ -5999,6 +6003,8 @@ public class StudyDAOImpl implements StudyDAO {
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(liveStudy.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+                String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+                notificationBO.setPlatform(platform);
                 if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                   notificationBO.setAppId(studyBo.getAppId());
                 }

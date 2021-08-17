@@ -131,6 +131,17 @@ public class NotificationBO implements Serializable {
   @Column(name = "sequence_number")
   private Integer sequenceNumber;
 
+  @Column(name = "platform")
+  private String platform;
+
+  public String getPlatform() {
+    return platform;
+  }
+
+  public void setPlatform(String platform) {
+    this.platform = platform;
+  }
+
   public String getActionPage() {
     return actionPage;
   }
