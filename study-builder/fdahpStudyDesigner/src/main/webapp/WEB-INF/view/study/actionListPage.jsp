@@ -6,7 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <style>
-.blue-btn {
+.export-btn {
     color: #fff;
     background: #007cba;
     border-color: #007cba !important;
@@ -17,6 +17,25 @@
 button#exportId {
     margin-right: 7px;
 }
+.modal-footer {
+    border-top: none !important;
+}
+.modal-header {
+    border-bottom: none !important; 
+}
+.copy-version {
+    width: max-content !important; 
+    border-radius: 0px !important; 
+    padding: 20px !important;
+} 
+.exportVersionModel {
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-40%, -40%); 
+}
+
+
 </style>
 
 <div class="col-sm-10 col-rc white-bg p-none">
@@ -152,7 +171,7 @@ button#exportId {
       </div>
       
       <div class="form-group mr-sm" style="white-space: normal;">
-        <button type="button" class="btn btn-default blue-btn "
+        <button type="button" class="btn btn-default export-btn "
                 id="exportId" onclick="exportStudy();"
 
                 <c:choose>
@@ -172,6 +191,33 @@ button#exportId {
 
   </div>
 </div>
+<div class="modal fade exportVersionModel" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"     >
+    <div class="modal-dialog">
+        <div class="modal-content copy-version">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Select the study version to be exported:</h4>
+            </div>
+            <div class="modal-body">
+               
+                      <span class="radio radio-info radio-inline p-40 ">
+                          <input type="radio" id="workingVersion" class="workingVersion copyVersion"  value="workingVersion" name="copy">
+                          <label for="workingVersion">Export working version</label>
+                      </span>
+                      <span class="radio radio-inline ">
+                          <input type="radio" id="publishedVersion" class="publishedVersion copyVersion"  value="publishedVersion" name="copy">
+                          <label for="publishedVersion">Export last published version</label>
+                     </span>
+                     
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default gray-btn" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary blue-btn" id="submit" onclick='copyVersion()' disabled >Submit</button>
+                 <input type="hidden" name="copyVersion" id="copyVersion" value=""/>
+                 <input type="hidden" name="lastpublish" id="lastpublish" value=""/>
+            </div>
+        </div>
+    </div>
+</div>
 <form:form
     action="/studybuilder/adminStudies/updateStudyAction.do?_S=${param._S}"
     name="actionInfoForm" id="actionInfoForm" method="post">
@@ -190,11 +236,11 @@ button#exportId {
     $(".tenth").addClass('active');
     $("#createStudyId").show();
     $('.tenth').removeClass('cursor-none');
-
-    if("${studyBo.exportSignedUrl}" == null || "${studyBo.exportSignedUrl}" == ""){
+    
+    if("${exportSignedUrl}" == null || "${exportSignedUrl}" == ""){
     	$('.copy_to_clipboard').addClass('cursor-none');
     }
-    else if(!validateExpireDate("${studyBo.exportSignedUrl}")){
+    else if(!validateExpireDate("${exportSignedUrl}")){
     	$('.copy_to_clipboard').addClass('cursor-none');
     }else{
         $('.copy_to_clipboard').removeClass('cursor-none');
@@ -335,39 +381,20 @@ button#exportId {
   }
   
   function exportStudy(){
-	  $('.copy_to_clipboard').addClass('cursor-none');
-	   var studyId = "${studyBo.id}";
-	  $
-      .ajax({
-        url: "/studybuilder/studies/${studyBo.id}/export.do",
-        type: "POST",
-        datatype: "json",
-        data: {
-          "${_csrf.parameterName}": "${_csrf.token}",
-        },
-        
-        success: function (data) {
-            var message = data.message;
-            if (message == "SUCCESS") {
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
-              $('#alertMsg').show();
-              setTimeout(function () {
-            	  window.location=window.location;
-                  $('.copy_to_clipboard').removeClass('cursor-none');
-                }, 5000);
-            } else {
-            	showErrMsg1("Export failed. Please try again later.");
-            }
-            setTimeout(hideDisplayMessage, 5000);
-          },
-          error: function (xhr, status, error) {
-            $(item).prop('disabled', false);
-            $('#alertMsg').show();
-            $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-            setTimeout(hideDisplayMessage, 5000);
-          }
-        }); 
-}
+	   if ("${liveStudyBo}" != ""  ? (("${studyBo.hasStudyDraft}" == "1")? true : false ) : false){
+	      $('#myModal').modal('show');
+		 }else{
+			 $('#copyVersion').val("workingVersion");
+			 exportStudyToCloud("${studyBo.id}");
+		 }
+	
+ }
+   function copyVersion() {
+	   var buttonValue = $("input[name='copy']:checked").val();
+	   $('#copyVersion').val(buttonValue);
+		var studyId = (buttonValue == 'publishedVersion') ? "${liveStudyBo.id}" : "${studyBo.id}";
+		exportStudyToCloud(studyId);
+  }
   
   
   $('.copy_to_clipboard').on('click', function () {
@@ -387,7 +414,8 @@ button#exportId {
 
   var expireTime = "";
   function validateExpireDate(result){
-		 var urlArray= result.split("&");
+	    var decodedURL = unescape(result);
+		 var urlArray= decodedURL.split("&");
 		 var expireTimeStamp= urlArray[1].split("=");
 		 expireTime = expireTimeStamp[1];
 		  if(expireTimeStamp[1] < Math.round(new Date().getTime()/1000)){
@@ -402,5 +430,55 @@ button#exportId {
 	  var lastGeneratedTime = new Date(lastGeneratedTimestamp*1000).toLocaleString([], { hour12: true});
 	 $('#copy_to_clipboard').attr("title", "Last generated on " + lastGeneratedTime );
 	}); 
+ 
+ function exportStudyToCloud(studyId) {
+	   $('.copy_to_clipboard').addClass('cursor-none');
+	   var studyId = studyId;
+	   var exportURL = "/studybuilder/studies/"+studyId+"/export.do";
+	  $
+      .ajax({
+        url: exportURL,
+        type: "POST",
+        datatype: "json",
+        data: {
+          "${_csrf.parameterName}": "${_csrf.token}",
+          "copyVersion" : $('#copyVersion').val(),
+        },
+        
+        success: function (data) {
+            var message = data.message;
+            debugger
+            if (message == "SUCCESS") {
+            	 $('#myModal').modal('hide');
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Study exported successfully");
+              $('#alertMsg').show();
+             
+              setTimeout(function () {
+            	  window.location=window.location;
+            	  $('.copy_to_clipboard').removeClass('cursor-none');
+                 
+                }, 5000);
+            } else {
+            	showErrMsg1("Export failed. Please try again later.");
+            }
+            setTimeout(hideDisplayMessage, 5000);
+          },
+          error: function (xhr, status, error) {
+            $(item).prop('disabled', false);
+            $('#alertMsg').show();
+            $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
+            setTimeout(hideDisplayMessage, 5000);
+          }
+        });  
+ }
+ 
+ var radioButton = $("input:radio");
+ radioButton.change(function () {
+     if (radioButton.filter(':checked').length > 0) {
+         $("#submit").removeAttr("disabled");
+     } else {
+         $("#submit").attr("disabled", "disabled");
+     }
+ });
 	   
 </script>

@@ -142,10 +142,8 @@ public class ActivityMetaDataDao {
 
         activeTaskDtoList =
             session
-                .getNamedQuery("getActiveTaskDetailsByCustomStudyId")
-                .setString(
-                    StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
-                    studyVersionDto.getCustomStudyId())
+                .getNamedQuery("getActiveTaskDetailsByStudyId")
+                .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                 .setInteger(StudyMetaDataEnum.QF_LIVE.value(), 1)
                 .setInteger(StudyMetaDataEnum.QF_ACTIVE.value(), 0)
                 .list();
