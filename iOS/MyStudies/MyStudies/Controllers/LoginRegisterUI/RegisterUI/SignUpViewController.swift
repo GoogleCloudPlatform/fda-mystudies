@@ -64,6 +64,9 @@ class SignUpViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    self.navigationController?.navigationBar.backgroundColor = .white
+    navigationController?.navigationBar.barTintColor = .white
+    UINavigationBar.appearance().backgroundColor = .white
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -96,6 +99,9 @@ class SignUpViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    self.navigationController?.navigationBar.backgroundColor = .white
+    navigationController?.navigationBar.barTintColor = .white
+    UINavigationBar.appearance().backgroundColor = .white
 
     if termsPageOpened {
       termsPageOpened = false

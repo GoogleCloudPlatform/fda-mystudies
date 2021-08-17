@@ -257,6 +257,11 @@
                 $("#alertMsg").removeClass('e-box').addClass('s-box').text(
                     "Resource deleted successfully");
                 $('#alertMsg').show();
+                if ($('.eighthResources').find('span').hasClass(
+                'sprites-icons-2 tick pull-right mt-xs')) {
+              	$('.eighthResources').find('span').removeClass(
+                  'sprites-icons-2 tick pull-right mt-xs');
+            	}
                 reloadData(studyId);
               } else {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(
