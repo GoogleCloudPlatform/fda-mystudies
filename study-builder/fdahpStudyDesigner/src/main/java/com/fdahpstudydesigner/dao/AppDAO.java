@@ -44,4 +44,6 @@ public interface AppDAO {
   public AppsBo getAppByLatestVersion(String customAppId);
 
   public String saveOrUpdateAppProperties(AppsBo appsBo, SessionObject sessionObject);
+
+  public boolean validateAppActions(String appId);
 }

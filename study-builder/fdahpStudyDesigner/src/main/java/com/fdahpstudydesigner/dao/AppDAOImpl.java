@@ -40,6 +40,7 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.math.BigInteger;
@@ -405,13 +406,11 @@ public class AppDAOImpl implements AppDAO {
     return message;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
     logger.entry("begin updateAppAction()");
     String message = FAILURE;
     Session session = null;
-    String searchQuery = null;
     AppsBo app = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -419,7 +418,7 @@ public class AppDAOImpl implements AppDAO {
       if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
 
         if (!appId.isEmpty()) {
-          searchQuery = " From AppsBo WHERE id=:appId";
+          String searchQuery = " From AppsBo WHERE id=:appId";
           app = (AppsBo) session.createQuery(searchQuery).setString("appId", appId);
         }
 
@@ -433,7 +432,6 @@ public class AppDAOImpl implements AppDAO {
         }
       }
     } catch (Exception e) {
-
       transaction.rollback();
       logger.error("AppDAOImpl - updateAppAction() - ERROR ", e);
     } finally {
@@ -448,7 +446,7 @@ public class AppDAOImpl implements AppDAO {
 
   @Override
   public AppsBo getAppByLatestVersion(String customAppId) {
-    logger.entry("begin getStudyByLatestVersion()");
+    logger.entry("begin getAppByLatestVersion()");
     Session session = null;
     AppsBo app = null;
     try {
@@ -460,13 +458,13 @@ public class AppDAOImpl implements AppDAO {
                   .setString("customAppId", customAppId)
                   .uniqueResult();
     } catch (Exception e) {
-      logger.error("StudyDAOImpl - getStudyByLatestVersion() - ERROR", e);
+      logger.error("AppDAOImpl - getAppByLatestVersion() - ERROR", e);
     } finally {
       if ((null != session) && session.isOpen()) {
         session.close();
       }
     }
-    logger.exit("getStudyByLatestVersion() - Ends");
+    logger.exit("getAppByLatestVersion() - Ends");
     return app;
   }
 
@@ -558,12 +556,62 @@ public class AppDAOImpl implements AppDAO {
       message = FAILURE;
       transaction.rollback();
       logger.error("AppDAOImpl - saveOrUpdateAppProperties() - ERROR", e);
+    }
+    logger.exit("saveOrUpdateAppProperties() - Ends");
+    return message;
+  }
+
+  public boolean validateAppActions(String appId) {
+    String message = FdahpStudyDesignerConstants.SUCCESS;
+    Session session = null;
+    AppSequenceBo appSequenceBo = null;
+    AppsBo appBo = null;
+    boolean markedAsCompleted = false;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(appId)) {
+        appBo =
+            (AppsBo)
+                session.getNamedQuery("AppsBo.getAppsById").setString("id", appId).uniqueResult();
+        appSequenceBo =
+            (AppSequenceBo)
+                session
+                    .getNamedQuery("getAppSequenceByAppd")
+                    .setString("appId", appBo.getId())
+                    .uniqueResult();
+
+        // 1-all validation mark as completed
+        if (appSequenceBo != null) {
+
+          markedAsCompleted = getErrorForAction(appSequenceBo);
+          if (markedAsCompleted) {
+            return markedAsCompleted;
+          } else {
+            markedAsCompleted = false;
+          }
+        }
+
+      } else {
+        message = "Action is missing";
+      }
+
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - validateStudyAction() - ERROR ", e);
     } finally {
       if ((null != session) && session.isOpen()) {
         session.close();
       }
     }
-    logger.exit("saveOrUpdateAppProperties() - Ends");
-    return message;
+    logger.exit("validateStudyAction() - Ends");
+    return markedAsCompleted;
+  }
+
+  public boolean getErrorForAction(AppSequenceBo appSequenceBo) {
+    boolean completed = false;
+    if (appSequenceBo != null && appSequenceBo.isAppInfo() && appSequenceBo.isAppSettings()) {
+      completed = true;
+      return completed;
+    }
+    return completed;
   }
 }

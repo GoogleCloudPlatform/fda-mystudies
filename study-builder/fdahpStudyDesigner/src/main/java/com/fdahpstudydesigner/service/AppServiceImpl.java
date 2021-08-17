@@ -113,16 +113,16 @@ public class AppServiceImpl implements AppService {
   }
 
   public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
-    logger.entry("StudyServiceImpl - updateAppAction() - Starts");
+    logger.entry("AppServiceImpl - updateAppAction() - Starts");
     String message = "";
     try {
       if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
         message = appDAO.updateAppAction(appId, buttonText, sesObj);
       }
     } catch (Exception e) {
-      logger.error("StudyServiceImpl - updateAppAction() - ERROR ", e);
+      logger.error("AppServiceImpl - updateAppAction() - ERROR ", e);
     }
-    logger.exit("StudyServiceImpl - updateAppAction() - Ends");
+    logger.exit("AppServiceImpl - updateAppAction() - Ends");
     return message;
   }
 
@@ -149,6 +149,7 @@ public class AppServiceImpl implements AppService {
         appDetailsBean.setAppPrivacyUrl(app.getAppPrivacyUrl());
         appDetailsBean.setAppStoreUrl(app.getAppStoreUrl());
         appDetailsBean.setPlayStoreUrl(app.getPlayStoreUrl());
+        appDetailsBean.setAppWebSite(app.getAppWebsite());
 
         appDetailsBean.setAndroidBundleId(app.getAndroidBundleId());
         appDetailsBean.setAndroidServerKey(app.getAndroidServerKey());
@@ -181,5 +182,15 @@ public class AppServiceImpl implements AppService {
     }
     logger.exit("AppServiceImpl - saveOrUpdateAppProperties() - Ends");
     return message;
+  }
+
+  public boolean validateAppActions(String appId) {
+    boolean markAsCompleted = false;
+    try {
+      markAsCompleted = appDAO.validateAppActions(appId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - validateAppActions() - ERROR ", e);
+    }
+    return markAsCompleted;
   }
 }

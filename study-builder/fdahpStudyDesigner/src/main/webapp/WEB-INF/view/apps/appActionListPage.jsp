@@ -54,52 +54,49 @@ button#exportId {
     <div>
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default gray-btn-action "
-                id="lunchId" onclick="validateStudyStatus(this);" style="margin-top:25px;"
+                id="lunchId" onclick="" style="margin-top:25px;"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
               <c:when
-                  test="${not empty studyBo.status && (studyBo.status eq 'Active' || studyBo.status eq 'Paused' || studyBo.status eq 'Deactivated')}">
+                  test="${not empty appBo.appStatus && (appBo.appStatus eq 'Active'|| appBo.appStatus eq 'Deactivated')}">
                 disabled
               </c:when>
               <c:when test="${markAsCompleted eq false}">
                 disabled
                </c:when>
-            </c:choose>
-                <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Create
+            </c:choose>>Create
           app
         </button>
         <div class="form-group mr-sm" style="white-space: normal; margin-top:4px;">
-       This action publishes the study to the mobile app making it live and open to enrollment.  
-        Launching a study requires that all study sections be marked 'completed' indicating that all mandatory and intended content has been entered.
+       This action creates a new app record in the system. Creating an app record requires that the App Information and App Settings be marked complete. 
+       Note that certain fields (such as app ID, type and platforms supported) cannot be edited once the app record is created. 
       </div>
       </div>
 
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default gray-btn-action"
-                id="updatesId" onclick="validateStudyStatus(this);"
+                id="updatesId" onclick=""
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
-              <c:when test="${not empty studyBo.status && empty liveStudyBo && (studyBo.hasStudyDraft==0  || studyBo.status eq 'Pre-launch' || studyBo.status eq 'Pre-launch(Published)' ||
-					             studyBo.status eq 'Paused' || studyBo.status eq 'Deactivated')}">
+              <%-- <c:when test="${not empty appBo.appStatus && appBo.appStatus eq 'Deactivated'}">
                 disabled
-              </c:when>
-              <c:when test="${not empty studyBo.status && not empty liveStudyBo && (studyBo.hasStudyDraft==0  || studyBo.status eq 'Pre-launch' || studyBo.status eq 'Pre-launch(Published)' ||
-					             studyBo.status eq 'Paused' || studyBo.status eq 'Deactivated' || liveStudyBo.status eq 'Paused')}">
+              </c:when> --%>
+              <c:when test="${not empty appBo.appSequenceBo && appBo.appSequenceBo.actions eq false}">
                 disabled
               </c:when>
                <c:when test="${markAsCompleted eq false}">
                 disabled
                </c:when>
-            </c:choose>
-                <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Publish
+            </c:choose>>Publish
           app
         </button>
         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-        This action publishes updates to a study that is live. All sections need to be marked complete in order to publish updates to the study. Note that updates to the Notifications section are published immediately upon marking the section complete and do not need the use of this action.
+        This action publishes (or updates) app properties and configurations to the Participant Datastore thereby making them available for use by the mobile app. 
+        Publishing an app requires that all sections be marked 'completed'. Note that it is essential for the app to have a 'Published' status for it to be usable on the mobile device. 
       </div>
       </div>
 
@@ -122,8 +119,8 @@ button#exportId {
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Mark ios app as distributed
         </button>
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-        This action temporarily pauses the live study. Mobile app users can no longer participate in study activities until the study is resumed again.
-        However, they will still be able to view the dashboard and resources for the study.
+        This action helps flag the iOS app as distributed (via the App Store or other means), live and made available for actual participants to use. 
+        Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
       </div>
       </div>
 
@@ -135,18 +132,15 @@ button#exportId {
                 disabled
               </c:when>
               <c:when
-                  test="${empty liveStudyBo && not empty studyBo.status && (studyBo.status eq 'Pre-launch' || studyBo.status eq 'Pre-launch(Published)' || studyBo.status eq 'Active' || studyBo.status eq 'Deactivated')}">
-                disabled
-              </c:when>
-              <c:when
-                  test="${not empty liveStudyBo && not empty liveStudyBo.status && (liveStudyBo.status eq 'Pre-launch' || liveStudyBo.status eq 'Pre-launch(Published)' || liveStudyBo.status eq 'Active'  || liveStudyBo.status eq 'Deactivated')}">
+                  test="${empty liveAppBo && not empty appBo.appStatus && (appBo.appStatus eq 'Active' || appBo.appStatus eq 'Deactivated')}">
                 disabled
               </c:when>
             </c:choose>
                 <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Mark android app as distributed
         </button>
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-       This action resumes a paused study and brings it back to an 'active' state. Active studies can have updates published to them and can also be deactivated.
+       This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
+       Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
       </div>
       </div>
 
@@ -158,15 +152,14 @@ button#exportId {
                 disabled
               </c:when>
               <c:when
-                  test="${not empty studyBo.status && (studyBo.status eq 'Pre-launch' || studyBo.status eq 'Pre-launch(Published)' || studyBo.status eq 'Deactivated')}">
+                  test="${not empty appBo.appStatus && (appBo.appStatus eq 'Active' || appBo.appStatus eq 'Deactivated')}">
                 disabled
               </c:when>
-            </c:choose>
-                <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Deactivate app
+            </c:choose>>Deactivate app
         </button>
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-       This action closes out a live study and deactivates it in the mobile app. 
-       Once deactivated, mobile app users will no longer be able to participate in the study. Deactivated studies cannot be reactivated.
+       This action deactivates an active app record in the system if there are no active studies mapped to it. Once deactivated, the app cannot be used for new studies. 
+       Active app user accounts get automatically disabled as well (leverage the app notifications section to notify your app users in advance about impending deactivation). Note that deactivated apps cannot be reactivated.
       </div>
       </div>
   </div>
@@ -174,6 +167,7 @@ button#exportId {
 
 <script type="text/javascript">
   $(document).ready(function () {
+	  $('.appClass').addClass('active');
  });
 	   
 </script>

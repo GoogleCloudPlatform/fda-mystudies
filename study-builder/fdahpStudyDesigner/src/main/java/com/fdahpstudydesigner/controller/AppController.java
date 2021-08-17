@@ -515,10 +515,61 @@ public class AppController {
     logger.entry("begin appActionList");
     ModelAndView mav = new ModelAndView("redirect:/adminApps/appList.do");
     ModelMap map = new ModelMap();
-
+    AppsBo appBo = null;
+    String sucMsg = "";
+    String errMsg = "";
+    boolean markAsCompleted = false;
     try {
+      SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
+      Integer sessionAppCount =
+          StringUtils.isNumeric(request.getParameter("_S"))
+              ? Integer.parseInt(request.getParameter("_S"))
+              : 0;
+      if ((sesObj != null)
+          && (sesObj.getAppSession() != null)
+          && sesObj.getAppSession().contains(sessionAppCount)) {
+        if (null != request.getSession().getAttribute(sessionAppCount + SUC_MSG)) {
+          sucMsg = (String) request.getSession().getAttribute(sessionAppCount + SUC_MSG);
+          map.addAttribute(SUC_MSG, sucMsg);
+          request.getSession().removeAttribute(sessionAppCount + SUC_MSG);
+        }
+        if (null != request.getSession().getAttribute(sessionAppCount + ERR_MSG)) {
+          errMsg = (String) request.getSession().getAttribute(sessionAppCount + ERR_MSG);
+          map.addAttribute(ERR_MSG, errMsg);
+          request.getSession().removeAttribute(sessionAppCount + ERR_MSG);
+        }
+        String appId =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String) request.getSession().getAttribute(sessionAppCount + APP_ID))
+                    ? ""
+                    : request.getSession().getAttribute(sessionAppCount + APP_ID));
+        String permission =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String) request.getSession().getAttribute(sessionAppCount + PERMISSION))
+                    ? ""
+                    : request.getSession().getAttribute(sessionAppCount + PERMISSION));
+        String isLive =
+            (String)
+                (FdahpStudyDesignerUtil.isEmpty(
+                        (String) request.getSession().getAttribute(sessionAppCount + IS_LIVE))
+                    ? ""
+                    : request.getSession().getAttribute(sessionAppCount + IS_LIVE));
 
-      mav = new ModelAndView("appActionList", map);
+        if (FdahpStudyDesignerUtil.isEmpty(isLive)) {
+          request.getSession().removeAttribute(sessionAppCount + IS_LIVE);
+        }
+        if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
+          appBo = appService.getAppById(appId, sesObj.getUserId());
+        }
+        markAsCompleted = appService.validateAppActions(appId);
+        map.addAttribute(APP_BO, appBo);
+        map.addAttribute(PERMISSION, permission);
+        map.addAttribute("_S", sessionAppCount);
+        map.addAttribute("markAsCompleted", markAsCompleted);
+        mav = new ModelAndView("appActionList", map);
+      }
     } catch (Exception e) {
       logger.error("AppController - appActionList - ERROR", e);
     }
@@ -673,7 +724,7 @@ public class AppController {
       out = response.getWriter();
       out.print(jsonobject);
     } catch (Exception e) {
-      logger.error("StudyController - updateStudyActionOnAction() - ERROR", e);
+      logger.error("AppController - updateStudyActionOnAction() - ERROR", e);
     }
     logger.exit("updateStudyActionOnAction() - Ends");
     return null;

@@ -70,6 +70,7 @@ public class AppMetadataBean implements Serializable {
   @NotBlank private String appPrivacyUrl;
   @NotBlank private String appStoreUrl;
   @NotBlank private String playStoreUrl;
+  @NotBlank private String appWebsite;
 
   @NotBlank private String oraganizationName;
 

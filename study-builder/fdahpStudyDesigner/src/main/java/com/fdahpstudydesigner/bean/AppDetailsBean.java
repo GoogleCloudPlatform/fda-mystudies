@@ -22,11 +22,6 @@
 
 package com.fdahpstudydesigner.bean;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Setter
-@Getter
 public class AppDetailsBean {
 
   private String appId;
@@ -45,6 +40,7 @@ public class AppDetailsBean {
   private String appPrivacyUrl;
   private String appStoreUrl;
   private String playStoreUrl;
+  private String appWebSite;
 
   private String androidBundleId;
   private String androidServerKey;
@@ -56,4 +52,188 @@ public class AppDetailsBean {
   private String iosAppBuildVersion;
   private Integer iosForceUpgrade;
   private String iosXCodeAppVersion;
+
+  public String getAppId() {
+    return appId;
+  }
+
+  public void setAppId(String appId) {
+    this.appId = appId;
+  }
+
+  public String getAppName() {
+    return appName;
+  }
+
+  public void setAppName(String appName) {
+    this.appName = appName;
+  }
+
+  public String getAppType() {
+    return appType;
+  }
+
+  public void setAppType(String appType) {
+    this.appType = appType;
+  }
+
+  public String getAppPlatform() {
+    return appPlatform;
+  }
+
+  public void setAppPlatform(String appPlatform) {
+    this.appPlatform = appPlatform;
+  }
+
+  public String getOraganizationName() {
+    return oraganizationName;
+  }
+
+  public void setOraganizationName(String oraganizationName) {
+    this.oraganizationName = oraganizationName;
+  }
+
+  public String getContactEmail() {
+    return contactEmail;
+  }
+
+  public void setContactEmail(String contactEmail) {
+    this.contactEmail = contactEmail;
+  }
+
+  public String getFeedBackEmail() {
+    return feedBackEmail;
+  }
+
+  public void setFeedBackEmail(String feedBackEmail) {
+    this.feedBackEmail = feedBackEmail;
+  }
+
+  public String getAppSupportEmail() {
+    return appSupportEmail;
+  }
+
+  public void setAppSupportEmail(String appSupportEmail) {
+    this.appSupportEmail = appSupportEmail;
+  }
+
+  public String getFromEmail() {
+    return fromEmail;
+  }
+
+  public void setFromEmail(String fromEmail) {
+    this.fromEmail = fromEmail;
+  }
+
+  public String getAppTermsUrl() {
+    return appTermsUrl;
+  }
+
+  public void setAppTermsUrl(String appTermsUrl) {
+    this.appTermsUrl = appTermsUrl;
+  }
+
+  public String getAppPrivacyUrl() {
+    return appPrivacyUrl;
+  }
+
+  public void setAppPrivacyUrl(String appPrivacyUrl) {
+    this.appPrivacyUrl = appPrivacyUrl;
+  }
+
+  public String getAppStoreUrl() {
+    return appStoreUrl;
+  }
+
+  public void setAppStoreUrl(String appStoreUrl) {
+    this.appStoreUrl = appStoreUrl;
+  }
+
+  public String getPlayStoreUrl() {
+    return playStoreUrl;
+  }
+
+  public void setPlayStoreUrl(String playStoreUrl) {
+    this.playStoreUrl = playStoreUrl;
+  }
+
+  public String getAppWebSite() {
+    return appWebSite;
+  }
+
+  public void setAppWebSite(String appWebSite) {
+    this.appWebSite = appWebSite;
+  }
+
+  public String getAndroidBundleId() {
+    return androidBundleId;
+  }
+
+  public void setAndroidBundleId(String androidBundleId) {
+    this.androidBundleId = androidBundleId;
+  }
+
+  public String getAndroidServerKey() {
+    return androidServerKey;
+  }
+
+  public void setAndroidServerKey(String androidServerKey) {
+    this.androidServerKey = androidServerKey;
+  }
+
+  public Integer getAndroidForceUpdrade() {
+    return androidForceUpdrade;
+  }
+
+  public void setAndroidForceUpdrade(Integer androidForceUpdrade) {
+    this.androidForceUpdrade = androidForceUpdrade;
+  }
+
+  public String getAndroidAppBuildVersion() {
+    return androidAppBuildVersion;
+  }
+
+  public void setAndroidAppBuildVersion(String androidAppBuildVersion) {
+    this.androidAppBuildVersion = androidAppBuildVersion;
+  }
+
+  public String getIosBundleId() {
+    return iosBundleId;
+  }
+
+  public void setIosBundleId(String iosBundleId) {
+    this.iosBundleId = iosBundleId;
+  }
+
+  public String getIosServerKey() {
+    return iosServerKey;
+  }
+
+  public void setIosServerKey(String iosServerKey) {
+    this.iosServerKey = iosServerKey;
+  }
+
+  public String getIosAppBuildVersion() {
+    return iosAppBuildVersion;
+  }
+
+  public void setIosAppBuildVersion(String iosAppBuildVersion) {
+    this.iosAppBuildVersion = iosAppBuildVersion;
+  }
+
+  public Integer getIosForceUpgrade() {
+    return iosForceUpgrade;
+  }
+
+  public void setIosForceUpgrade(Integer iosForceUpgrade) {
+    this.iosForceUpgrade = iosForceUpgrade;
+  }
+
+  public String getIosXCodeAppVersion() {
+    return iosXCodeAppVersion;
+  }
+
+  public void setIosXCodeAppVersion(String iosXCodeAppVersion) {
+    this.iosXCodeAppVersion = iosXCodeAppVersion;
+  }
 }
