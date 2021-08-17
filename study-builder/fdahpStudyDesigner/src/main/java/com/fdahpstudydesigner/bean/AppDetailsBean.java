@@ -45,6 +45,7 @@ public class AppDetailsBean {
   private String appPrivacyUrl;
   private String appStoreUrl;
   private String playStoreUrl;
+  private String appWebSite;
 
   private String androidBundleId;
   private String androidServerKey;

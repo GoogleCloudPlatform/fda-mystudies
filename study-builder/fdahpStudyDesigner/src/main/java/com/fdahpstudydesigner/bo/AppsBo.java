@@ -171,6 +171,9 @@ public class AppsBo implements Serializable {
   @Column(name = "version")
   private Float version = 0f;
 
+  @Column(name = "app_website")
+  private String appWebsite;
+
   @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
 
   @Transient private AppsBo liveAppsBo = null;
@@ -511,5 +514,13 @@ public class AppsBo implements Serializable {
 
   public void setUserId(String userId) {
     this.userId = userId;
+  }
+
+  public String getAppWebsite() {
+    return appWebsite;
+  }
+
+  public void setAppWebsite(String appWebsite) {
+    this.appWebsite = appWebsite;
   }
 }

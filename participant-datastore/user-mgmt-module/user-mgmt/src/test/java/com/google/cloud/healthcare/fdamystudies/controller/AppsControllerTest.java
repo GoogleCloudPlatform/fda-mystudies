@@ -156,6 +156,7 @@ public class AppsControllerTest extends BaseMockIT {
         "url",
         "url",
         "url",
+        "https://www.web.com",
         "orgName",
         "bundleId",
         "serverKey",

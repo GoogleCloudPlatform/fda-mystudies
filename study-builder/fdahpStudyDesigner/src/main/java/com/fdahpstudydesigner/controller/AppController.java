@@ -673,7 +673,7 @@ public class AppController {
       out = response.getWriter();
       out.print(jsonobject);
     } catch (Exception e) {
-      logger.error("StudyController - updateStudyActionOnAction() - ERROR", e);
+      logger.error("AppController - updateStudyActionOnAction() - ERROR", e);
     }
     logger.exit("updateStudyActionOnAction() - Ends");
     return null;
