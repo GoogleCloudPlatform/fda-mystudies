@@ -46,6 +46,7 @@ public class AppsServiceImpl implements AppsService {
       AppEntity app = new AppEntity();
       app.setAppId(appMetadataBean.getAppId());
       app.setType(appMetadataBean.getAppType());
+      app.setAppPlatform(appMetadataBean.getAppPlatform());
       app.setAndroidBundleId(appMetadataBean.getAndroidBundleId());
       app.setIosBundleId(appMetadataBean.getIosBundleId());
       app.setAndroidServerKey(appMetadataBean.getAndroidServerKey());
@@ -61,7 +62,6 @@ public class AppsServiceImpl implements AppsService {
 
     app.setAppName(appMetadataBean.getAppName());
     //  app.setAppDescription(appMetadataBean.getAppDescription());
-    app.setAppPlatform(appMetadataBean.getAppPlatform());
     app.setFeedBackToEmail(appMetadataBean.getFeedBackEmail());
     app.setContactUsToEmail(appMetadataBean.getContactEmail());
     app.setAppSupportEmailAddress(appMetadataBean.getAppSupportEmail());
@@ -72,6 +72,7 @@ public class AppsServiceImpl implements AppsService {
     app.setOrganizationName(appMetadataBean.getOraganizationName());
     app.setAppStoreUrl(appMetadataBean.getAppStoreUrl());
     app.setPlayStoreUrl(appMetadataBean.getPlayStoreUrl());
+    app.setAppWebsite(appMetadataBean.getAppWebsite());
 
     app.setIosXCodeAppVersion(appMetadataBean.getIosXCodeAppVersion());
     app.setIosAppBuildVersion(appMetadataBean.getIosAppBuildVersion());

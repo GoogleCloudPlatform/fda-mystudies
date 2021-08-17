@@ -406,13 +406,11 @@ public class AppDAOImpl implements AppDAO {
     return message;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
     logger.entry("begin updateAppAction()");
     String message = FAILURE;
     Session session = null;
-    String searchQuery = null;
     AppsBo app = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -420,7 +418,7 @@ public class AppDAOImpl implements AppDAO {
       if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
 
         if (!appId.isEmpty()) {
-          searchQuery = " From AppsBo WHERE id=:appId";
+          String searchQuery = " From AppsBo WHERE id=:appId";
           app = (AppsBo) session.createQuery(searchQuery).setString("appId", appId);
         }
 
@@ -434,7 +432,6 @@ public class AppDAOImpl implements AppDAO {
         }
       }
     } catch (Exception e) {
-
       transaction.rollback();
       logger.error("AppDAOImpl - updateAppAction() - ERROR ", e);
     } finally {
@@ -449,7 +446,7 @@ public class AppDAOImpl implements AppDAO {
 
   @Override
   public AppsBo getAppByLatestVersion(String customAppId) {
-    logger.entry("begin getStudyByLatestVersion()");
+    logger.entry("begin getAppByLatestVersion()");
     Session session = null;
     AppsBo app = null;
     try {
@@ -461,13 +458,13 @@ public class AppDAOImpl implements AppDAO {
                   .setString("customAppId", customAppId)
                   .uniqueResult();
     } catch (Exception e) {
-      logger.error("StudyDAOImpl - getStudyByLatestVersion() - ERROR", e);
+      logger.error("AppDAOImpl - getAppByLatestVersion() - ERROR", e);
     } finally {
       if ((null != session) && session.isOpen()) {
         session.close();
       }
     }
-    logger.exit("getStudyByLatestVersion() - Ends");
+    logger.exit("getAppByLatestVersion() - Ends");
     return app;
   }
 
