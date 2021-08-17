@@ -178,7 +178,8 @@ public class StudyExportImportService {
         customIdsMap.put(NEW_ELIGIBILITY_ID + eligibilityBo.getId(), IdGenerator.id());
       }
 
-      List<ConsentBo> consentBoList = studyDao.getConsentListForStudy(studyBo.getId());
+      List<ConsentBo> consentBoList =
+          studyDao.getConsentListForStudy(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
       List<ConsentInfoBo> consentInfoBoList =
           studyDao.getConsentInfoList(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);

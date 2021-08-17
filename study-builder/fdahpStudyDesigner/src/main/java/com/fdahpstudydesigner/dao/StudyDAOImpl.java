@@ -7885,16 +7885,24 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public List<ConsentBo> getConsentListForStudy(String studyId) {
+  public List<ConsentBo> getConsentListForStudy(
+      String studyId, String customStudyId, String copyVersion) {
     List<ConsentBo> consentBoList = null;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      String searchQuery =
-          " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
-      query = session.createQuery(searchQuery);
-      query.setString("studyId", studyId);
+      if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
+        String searchQuery =
+            " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
+        query = session.createQuery(searchQuery);
+        query.setString("studyId", studyId);
+      } else {
+        String searchQuery =
+            " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId ORDER BY CBO.version desc ";
+        query = session.createQuery(searchQuery);
+        query.setString("customStudyId", customStudyId);
+      }
       consentBoList = query.list();
       transaction.commit();
     } catch (Exception e) {
