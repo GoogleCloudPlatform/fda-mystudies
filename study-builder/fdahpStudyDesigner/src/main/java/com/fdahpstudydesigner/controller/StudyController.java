@@ -258,7 +258,10 @@ public class StudyController {
           map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.expiration.in.hour"));
           map.addAttribute("releaseVersion", propMap.get("release.version"));
           map.addAttribute(
-              "exportSignedUrl", URLEncoder.encode(signedUrl, StandardCharsets.UTF_8.toString()));
+              "exportSignedUrl",
+              StringUtils.isNotEmpty(signedUrl)
+                  ? URLEncoder.encode(signedUrl, StandardCharsets.UTF_8.toString())
+                  : "");
 
           mav = new ModelAndView("actionList", map);
         } else {
