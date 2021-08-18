@@ -202,7 +202,8 @@ public class StudyExportImportService {
         addEligibilityInsertSql(eligibilityBo, insertSqlStatements, customIdsMap);
         addEligibilityTestListInsertSql(eligibilityBoList, insertSqlStatements, customIdsMap);
 
-        addConsentBoListInsertSql(consentBoList, insertSqlStatements, customIdsMap);
+        addConsentBoListInsertSql(
+            consentBoList, insertSqlStatements, customIdsMap, studyBo.getId());
         addConsentInfoBoListInsertSql(
             consentInfoBoList, insertSqlStatements, customIdsMap, studyBo.getId());
 
@@ -1357,7 +1358,8 @@ public class StudyExportImportService {
   private void addConsentBoListInsertSql(
       List<ConsentBo> consentBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String studyId)
       throws Exception {
 
     if (CollectionUtils.isEmpty(consentBoList)) {
@@ -1391,7 +1393,7 @@ public class StudyExportImportService {
               consentBo.getNeedComprehensionTest(),
               consentBo.getShareDataPermissions(),
               consentBo.getShortDescription(),
-              customIdsMap.get(STUDY_ID + consentBo.getStudyId()),
+              customIdsMap.get(STUDY_ID + studyId),
               consentBo.getTaglineDescription(),
               consentBo.getTitle(),
               0f,
