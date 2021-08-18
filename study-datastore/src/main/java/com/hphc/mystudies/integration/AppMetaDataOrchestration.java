@@ -64,12 +64,14 @@ public class AppMetaDataOrchestration {
     return termsPolicyResponse;
   }
 
-  public NotificationsResponse notifications(String skip, String authorization, String appId)
+  public NotificationsResponse notifications(
+      String skip, String authorization, String appId, String verificationTime)
       throws OrchestrationException {
     LOGGER.entry("begin notifications()");
     NotificationsResponse notificationsResponse = new NotificationsResponse();
     try {
-      notificationsResponse = appMetaDataDao.notifications(skip, authorization, appId);
+      notificationsResponse =
+          appMetaDataDao.notifications(skip, authorization, appId, verificationTime);
     } catch (Exception e) {
       LOGGER.error("AppMetaDataOrchestration - notifications() :: ERROR", e);
     }

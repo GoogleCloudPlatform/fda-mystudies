@@ -19,4 +19,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProfileRespBean {
   private String emailId;
+  private String verificationTime;
 }
