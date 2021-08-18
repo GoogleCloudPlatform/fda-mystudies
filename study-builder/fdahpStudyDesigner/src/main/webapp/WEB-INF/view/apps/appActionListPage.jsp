@@ -54,7 +54,7 @@ button#exportId {
     <div>
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default gray-btn-action "
-                id="lunchId" onclick="" style="margin-top:25px;"
+                id="createAppId" onclick="validateAppStatus(this);" style="margin-top:25px;"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
@@ -77,15 +77,15 @@ button#exportId {
 
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default gray-btn-action"
-                id="updatesId" onclick=""
+                id="publishAppId" onclick="validateAppStatus(this);"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
-              <%-- <c:when test="${not empty appBo.appStatus && appBo.appStatus eq 'Deactivated'}">
+              <c:when test="${appBo.isAppPublished}">
                 disabled
-              </c:when> --%>
-              <c:when test="${not empty appBo.appSequenceBo && appBo.appSequenceBo.actions eq false}">
+              </c:when>
+              <c:when test="${not empty appBo.appSequenceBo && (appBo.appSequenceBo.actions eq false || appBo.appSequenceBo.appProperties eq false || appBo.appSequenceBo.developerConfigs eq false)}">
                 disabled
               </c:when>
                <c:when test="${markAsCompleted eq false}">
@@ -102,21 +102,21 @@ button#exportId {
 
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default gray-btn-action "
-                id="pauseId" onclick="validateStudyStatus(this);"
+                id="iosDistributedId" onclick="validateAppStatus(this);"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
               <c:when
-                  test="${empty liveStudyBo && not empty studyBo.status && (studyBo.status eq 'Pre-launch' || studyBo.status eq 'Pre-launch(Published)' || studyBo.status eq 'Paused'  || studyBo.status eq 'Deactivated')}">
+                  test="${empty appBo.liveAppsBo}">
                 disabled
               </c:when>
               <c:when
-                  test="${not empty liveStudyBo && not empty liveStudyBo.status && (liveStudyBo.status eq 'Pre-launch' || liveStudyBo.status eq 'Pre-launch(Published)' || liveStudyBo.status eq 'Paused'  || liveStudyBo.status eq 'Deactivated')}">
+                  test="${not empty appBo.liveAppsBo && appBo.liveAppsBo.iosAppDistributed}">
                 disabled
               </c:when>
             </c:choose>
-                <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Mark ios app as distributed
+                >Mark ios app as distributed
         </button>
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
         This action helps flag the iOS app as distributed (via the App Store or other means), live and made available for actual participants to use. 
@@ -126,17 +126,21 @@ button#exportId {
 
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default gray-btn-action "
-                id="resumeId" onclick="validateStudyStatus(this);"
+                id="androidDistributedId" onclick="validateAppStatus(this);"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
               <c:when
-                  test="${empty liveAppBo && not empty appBo.appStatus && (appBo.appStatus eq 'Active' || appBo.appStatus eq 'Deactivated')}">
+                  test="${empty appBo.liveAppsBo}">
+                disabled
+              </c:when>
+              <c:when
+                  test="${not empty appBo.liveAppsBo && appBo.liveAppsBo.androidAppDistributed}">
                 disabled
               </c:when>
             </c:choose>
-                <c:if test="${not studyPermissionBO.viewPermission}">disabled</c:if>>Mark android app as distributed
+            >Mark android app as distributed
         </button>
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
        This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
@@ -146,13 +150,13 @@ button#exportId {
 
       <div class="form-group mr-sm" style="white-space: normal;">
         <button type="button" class="btn btn-default red-btn-action "
-                id="deactivateId" onclick="validateStudyStatus(this);"
+                id="deactivateId" onclick="validateAppStatus(this)"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
               <c:when
-                  test="${not empty appBo.appStatus && (appBo.appStatus eq 'Active' || appBo.appStatus eq 'Deactivated')}">
+                  test="${not empty appBo.appStatus && appBo.appStatus eq 'Deactivated'}">
                 disabled
               </c:when>
             </c:choose>>Deactivate app
@@ -164,10 +168,51 @@ button#exportId {
       </div>
   </div>
 </div>
-
 <script type="text/javascript">
   $(document).ready(function () {
 	  $('.appClass').addClass('active');
+	  $(".menuNav li.active").removeClass('active');
+	  $(".menuNav li.fifth").addClass('active');
  });
+
+  function validateAppStatus(obj) {
+	  debugger
+	    var buttonText = obj.id;
+	    var messageText = "";
+	    if (buttonText) {
+	      if (buttonText == 'createAppId'
+	          || buttonText == 'deactivateId'|| buttonText == 'publishAppId'|| buttonText == 'iosDistributedId'|| buttonText == 'androidDistributedId') {
+	         if (buttonText == 'createAppId') {
+	        	 messageText = "You are attempting to create a new app record. Are you sure you wish to proceed?";
+	        } else if (buttonText == 'deactivateId') {
+	            messageText = "You are attempting to deactivate the app record. This cannot be undone. Are you sure you wish to proceed?";
+	        } else if (buttonText == 'publishAppId') {
+	            messageText = "You are attempting to publish or update app properties and configurations. Are you sure you wish to proceed?";
+	        } else if (buttonText == 'iosDistributedId') {
+	            messageText = "You are attempting to mark the iOS app as 'distributed'. This action cannot be undone. Are you sure you wish to proceed?";
+	        } else if (buttonText == 'androidDistributedId') {
+	            messageText = "You are attempting to mark the Android app as 'distributed'. This action cannot be undone. Are you sure you wish to proceed?";
+	        }
+	        bootbox.confirm({
+	          closeButton: false,
+	          message: messageText,
+	          buttons: {
+	            'cancel': {
+	              label: 'Cancel',
+	            },
+	            'confirm': {
+	              label: 'OK',
+	            },
+	          },
+	          callback: function (result) {
+	            if (result) {
+	              /* updateStudyByAction(buttonText); */
+	            }
+	          }
+	        });
+	      }
+	    }
+
+	  }
 	   
 </script>

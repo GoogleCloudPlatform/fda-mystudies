@@ -61,14 +61,14 @@ margin-top:16px !important;
                 <div class="col-md-6 pl-none">
                   <div class="gray-xs-f mb-xs">App ID  <span class="requiredStar"> *</span>
                   <span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" 
-                  title="The Tooltip plugin is small pop-up box that appears when the user moves."></span>
+                  title="Enter a human-readable unique app identifier. This helps identify the app across the platform. The App ID cannot be edited once the app record is created."></span>
                   </div>
                   <div class="form-group mb-none">
                     <input type="text" custAttType="cust" autofocus="autofocus"
 	                   class="form-control aq-inp appIdCls" name="customAppId" id="appId"
 	                   maxlength="15" value="${appBo.customAppId}"
-	                <%-- <c:if
-	                    test="${not empty appsBo.status && (appsBo.status == 'Active' || appsBo.status == 'Published' || appsBo.status == 'Paused' || appsBo.status == 'Deactivated')}"> disabled</c:if> --%>
+	                <c:if
+	                    test="${not empty appBo.appStatus && (appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated')}"> disabled</c:if>
 
 	                   required data-error="Please fill out this field"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -76,7 +76,7 @@ margin-top:16px !important;
               </div>
 
               <div class="col-md-6">
-                   <div class="gray-xs-f mb-xs">App Name <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                   <div class="gray-xs-f mb-xs">App Name <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="This is the name of the app displayed on app screens and in app emails."></span></div>
                    <div class="form-group mb-none">
                    <input type="text" class="form-control" name="name"
                    id="appName" value="${fn:escapeXml(appBo.name)}"

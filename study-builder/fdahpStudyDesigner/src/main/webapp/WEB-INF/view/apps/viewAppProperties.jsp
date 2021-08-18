@@ -58,7 +58,7 @@
 
                          <div class="row mt-xlg">
                             <div class="col-md-6 pl-none">
-                                <div class="gray-xs-f mb-xs">Feedback email  <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs">Feedback email  <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter an email to receive feedback submitted by app users. Feedback can be provided anonymously by users via the in-app feedback form."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.feedbackEmailAddress}" name="feedbackEmailAddress" 
                                     required data-error="Please fill out this field" maxlength="100"
@@ -69,7 +69,7 @@
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs">Contact Us email <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs">Contact Us email <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter an email to receive 'Contact Us' forms submitted by app users. Note that app users provide their email as part of this form."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.contactEmailAddress}" name="contactEmailAddress" 
                                     required data-error="Please fill out this field" maxlength="100"
@@ -82,7 +82,7 @@
                             <div class="clearfix"></div>
                             
                              <div class="col-md-6 pl-none mt-lg">
-                                <div class="gray-xs-f mb-xs">App support email  <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs">App support email  <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a support email that app users can write to for any assistance they need. This email appears in app account related emails sent to app users."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.appSupportEmailAddress}" name="appSupportEmailAddress" 
                                     required data-error="Please fill out this field" maxlength="100"
@@ -93,7 +93,7 @@
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs mt-lg">App 'Terms' URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs mt-lg">App 'Terms' URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a URL for the app's Terms"></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.appTermsUrl}" name="appTermsUrl" 
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
@@ -106,7 +106,7 @@
                             <div class="clearfix"></div>
                             
                               <div class="col-md-6 pl-none mt-lg">
-                                <div class="gray-xs-f mb-xs">App Privacy policy URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs">App Privacy policy URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a URL for the app's Privacy Policy"></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.appPrivacyUrl}" name="appPrivacyUrl" 
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
@@ -117,7 +117,7 @@
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs mt-lg">Organization name<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs mt-lg">Organization name<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the name of the organization offering the app. This is typically used in app account related emails sent to app users."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.organizationName}" name="organizationName" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
@@ -127,7 +127,7 @@
                             <div class="clearfix"></div>
                             
                               <div class="col-md-6 pl-none mt-lg">
-                                <div class="gray-xs-f mb-xs">App Store URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs">App Store URL <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the App Store URL from where the app can be downloaded for iPhone users"></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.appStoreUrl}" name="appStoreUrl" id="appStoreUrlId"
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
@@ -138,7 +138,7 @@
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs mt-lg">Play Store URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs mt-lg">Play Store URL<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Play Store URL from where the app can be downloaded for Android users"></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.playStoreUrl}" name="playStoreUrl" id="playStoreUrlId"
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
@@ -151,7 +151,7 @@
                             <div class="clearfix"></div>
                             
 							 <div class="col-md-6 pl-none mt-lg">
-                                <div class="gray-xs-f mb-xs">'From' email for outoging app emails<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs">'From' email for outoging app emails<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a 'sender' email for automated emails that go out to app users."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.fromEmailAddress}" name="fromEmailAddress" 
                                     required data-error="Please fill out this field" maxlength="100"
@@ -162,7 +162,7 @@
                             </div>
                             
                             <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs mt-lg">App website<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="The Tooltip plugin is small pop-up box that appears when the user moves."></span></div>
+                                <div class="gray-xs-f mb-xs mt-lg">App website<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the URL of a website that describes your app, if you have one."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.appWebsiteUrl}" name="appWebsiteUrl"
                                     pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
@@ -190,6 +190,8 @@
 <script>
   $(document).ready(function () {
 	  $('.appClass').addClass('active');
+	  $(".menuNav li.active").removeClass('active');
+	  $(".menuNav li.third").addClass('active');
 	  
 	  <c:if test="${not empty permission}">
 	     $('#appPropertiesFormId input').prop('disabled', true);

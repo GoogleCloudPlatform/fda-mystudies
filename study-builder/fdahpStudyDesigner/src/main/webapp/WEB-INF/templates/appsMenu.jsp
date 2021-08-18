@@ -32,7 +32,10 @@
           <span class="study_status ${empty appBo.customAppId?'hide':''}">${appBo.customAppId}</span>
            <div class="clearfix"></div>
           <div>
-          <span class="study_status  post-launch_txt  pr-sm"> Active </span><span class="right-border"></span>
+          <span class="study_status 
+                    <c:if test="${appBo.appStatus eq 'Active'}"> post-launch_txt </c:if>
+	                <c:if test="${appBo.appStatus eq 'Deactivated'}"> paused_txt </c:if>
+	                pr-sm"> ${appBo.appStatus} </span><span class="right-border"></span>
           <span class="study_status  post-launch_txt  pr-sm pl-sm"> Published </span> <span class="right-border"></span>
           <span class="study_status  post-launch_txt pr-sm pl-sm"> Distributed (1) </span>
           </div>
@@ -66,25 +69,25 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="second active">
+      <li class="second">
         APP SETTINGS
         <c:if test="${appBo.appSequenceBo.appSettings}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span> 
         </c:if>
       </li>
-      <li class="third active">
+      <li class="third">
         APP PROPERTIES
         <c:if test="${appBo.appSequenceBo.appProperties}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fourth active">
+      <li class="fourth">
         DEVELOPER CONFIGURATIONS
         <c:if test="${studyBo.studySequenceBo.eligibility}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fifth active">
+      <li class="fifth">
         ACTIONS
       </li>
     </ul>

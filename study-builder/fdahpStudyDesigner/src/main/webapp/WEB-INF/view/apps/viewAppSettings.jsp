@@ -60,19 +60,24 @@
 					App Type <span>
             </span><span class="requiredStar"> *</span> <span
                   data-toggle="tooltip" data-placement="top"
-                  title="This field can be updated after the study is launched if you wish to stop enrollment at any point during the course of the study."
+                  title="A gateway app is one that holds multiple studies in it whereas a standalone app has a single study in it. App type cannot be edited once the app record is created."
                   class="filled-tooltip"></span>
 				</div>
 				<div class="form-group">
 					<span class="radio radio-info radio-inline p-45"><input
 						type="radio" id="inlineRadio1" value="GT" class="appTypeClass"
 						${appBo.type eq 'GT'?'checked':""} name="type"
-						 required data-error="Please fill out this field"> <label
-						for="inlineRadio1">Gateway</label> </span> <span class="radio radio-inline"><input
-						type="radio" id="inlineRadio2" value="SD" class="appTypeClass"
-						name="type"
-						${appBo.type eq 'SD'?'checked':""}
-						 required data-error="Please fill out this field">
+						 required data-error="Please fill out this field"
+						 <c:if
+	                    test="${not empty appBo.appStatus && (appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated')}"> disabled</c:if>> 
+						 <label for="inlineRadio1">Gateway</label> </span> 
+						 <span class="radio radio-inline"><input
+						  type="radio" id="inlineRadio2" value="SD" class="appTypeClass"
+						  name="type"
+						  ${appBo.type eq 'SD'?'checked':""}
+						 required data-error="Please fill out this field"
+						 <c:if
+	                    test="${not empty appBo.appStatus && (appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated')}"> disabled</c:if>>
 						<label for="inlineRadio2">Standalone</label> </span>
 					<div class="help-block with-errors red-txt"></div>
 				</div>
@@ -85,15 +90,17 @@
           Platform(s) supported
           <span class="requiredStar"> *</span>
           <span
-              class="sprites_v3 filled-tooltip" id="infoIconId"></span>
+                  data-toggle="tooltip" data-placement="top"
+                  title="Choose the mobile platform(s) that you want to make the app available for. This cannot be edited once the app record is created."
+                  class="filled-tooltip"></span>
         </div>
         <div class="form-group">
           <span class="checkbox checkbox-inline p-45"><input
               class="platformClass" type="checkbox" id="inlineCheckbox1"
               name="appPlatform" value="I"
               <c:if test="${fn:contains(appBo.appPlatform,'I')}">checked</c:if>
-              <%-- <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if> --%>
+              <c:if
+	                    test="${not empty appBo.appStatus && (appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated')}"> disabled</c:if>
               data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox1"> iOS </label>
           </span>
@@ -101,8 +108,8 @@
               type="checkbox" class="platformClass" id="inlineCheckbox2"
               name="appPlatform" value="A"
               <c:if test="${fn:contains(appBo.appPlatform,'A')}">checked</c:if>
-              <%-- <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if> --%>
+              <c:if
+	             test="${not empty appBo.appStatus && (appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated')}"> disabled</c:if>
               data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox2"> Android </label>
           </span>
@@ -119,55 +126,11 @@
 
 </div>
 <!-- End right Content here -->
-
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <!-- Modal content-->
-    <div class="modal-content">
-
-      <div class="modal-header cust-hdr pt-lg">
-        <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title pl-lg">
-          <strong>Platform and Feature Support</strong>
-        </h4>
-      </div>
-      <div class="modal-body pt-xs pb-lg pl-xlg pr-xlg">
-        <div>
-          <div>
-            <ul class="no-disc">
-              <li><strong>1. Platform support: </strong><br/>
-                <ul class="no-disc">
-                  <li>Note that once the study is launched, platform support
-                    cannot be revoked. However, adding support for a platform not
-                    previously selected will still be possible.
-                  </li>
-                </ul>
-              </li>
-              <li>&nbsp;</li>
-              <li><strong>2. Feature support on iOS and Android:</strong><br/>
-
-                <ul class="no-disc">
-                  <li>Given below is a list of features currently NOT
-					available for Android as compared to iOS. Please note the same
-                    in your creation of study content:
-                  </li>
-                  <li>i. Active tasks: Tower of hanoi, Spatial span memory
-                  </li>
-                </ul>
-              </li>
-
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
 $(document).ready( function () {
 	$('.appClass').addClass('active');
+	$(".menuNav li.active").removeClass('active');
+    $(".menuNav li.second").addClass('active');
 	  <c:if test="${not empty permission}">
 	     $('#settingFormId input').prop('disabled', true);
 	  </c:if>
