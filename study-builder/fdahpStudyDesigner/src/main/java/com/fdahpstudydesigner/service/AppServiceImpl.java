@@ -193,4 +193,17 @@ public class AppServiceImpl implements AppService {
     }
     return markAsCompleted;
   }
+
+  @Override
+  public String saveOrUpdateAppDeveloperConfig(AppsBo appsBo, SessionObject sessionObject) {
+    logger.entry("AppServiceImpl - saveOrUpdateAppProperties() - Starts");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = appDAO.saveOrUpdateAppDeveloperConfig(appsBo, sessionObject);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - saveOrUpdateAppProperties() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - saveOrUpdateAppProperties() - Ends");
+    return message;
+  }
 }

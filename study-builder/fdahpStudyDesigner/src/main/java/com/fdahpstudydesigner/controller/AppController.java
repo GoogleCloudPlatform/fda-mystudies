@@ -836,4 +836,66 @@ public class AppController {
     logger.exit("saveOrUpdateAppProperties() - Ends");
     return mav;
   }
+
+  @RequestMapping("/adminApps/saveOrUpdateAppDeveloperConfig.do")
+  public ModelAndView saveOrUpdateAppDeveloperConfig(HttpServletRequest request, AppsBo appsBo) {
+    logger.entry("begin saveOrUpdateAppProperties()");
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    ModelAndView mav = new ModelAndView("redirect:/adminApps/appList.do");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    ModelMap map = new ModelMap();
+    try {
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      Integer sessionAppCount =
+          StringUtils.isNumeric(request.getParameter("_S"))
+              ? Integer.parseInt(request.getParameter("_S"))
+              : 0;
+      if ((sesObj != null)
+          && (sesObj.getAppSession() != null)
+          && sesObj.getAppSession().contains(sessionAppCount)) {
+
+        String buttonText =
+            FdahpStudyDesignerUtil.isEmpty(
+                    request.getParameter(FdahpStudyDesignerConstants.BUTTON_TEXT))
+                ? ""
+                : request.getParameter(FdahpStudyDesignerConstants.BUTTON_TEXT);
+        appsBo.setButtonText(buttonText);
+        appsBo.setUserId(sesObj.getUserId());
+        message = appService.saveOrUpdateAppDeveloperConfig(appsBo, sesObj);
+        request.getSession().setAttribute(sessionAppCount + APP_ID, appsBo.getId() + "");
+        map.addAttribute("_S", sessionAppCount);
+        if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
+          if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            map.addAttribute("buttonText", buttonText);
+            request
+                .getSession()
+                .setAttribute(
+                    sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG,
+                    propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
+            return new ModelAndView("redirect:viewDevConfigs.do", map);
+          } else {
+            request
+                .getSession()
+                .setAttribute(
+                    sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG,
+                    propMap.get(FdahpStudyDesignerConstants.SAVE_STUDY_SUCCESS_MESSAGE));
+            return new ModelAndView("redirect:viewAppProperties.do", map);
+          }
+        } else {
+          request
+              .getSession()
+              .setAttribute(
+                  sessionAppCount + FdahpStudyDesignerConstants.ERR_MSG,
+                  "Error encountered. Your settings could not be saved.");
+          return new ModelAndView("redirect:viewAppProperties.do", map);
+        }
+      }
+    } catch (Exception e) {
+      logger.error("AppController - saveOrUpdateAppProperties - ERROR", e);
+    }
+    logger.exit("saveOrUpdateAppProperties() - Ends");
+    return mav;
+  }
 }
