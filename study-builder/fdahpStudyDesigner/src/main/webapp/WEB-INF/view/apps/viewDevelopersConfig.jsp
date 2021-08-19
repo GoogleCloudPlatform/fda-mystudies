@@ -15,11 +15,13 @@
 </style>
 <div class="col-sm-10 col-rc white-bg p-none" id="settingId">
   <form:form
-      action="/studybuilder/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
+      action="/studybuilder/adminApps/saveOrUpdateAppDeveloperConfig.do?_S=${param._S}"
       data-toggle="validator" role="form" id="developerConfigFormId" method="post"
       autocomplete="off">
     
-	
+	 <input type="hidden" name="buttonText" id="buttonText">
+     <input type="hidden" id="settingsAppId" name="id"
+           value="${appBo.id}">
     <!-- Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
@@ -59,7 +61,7 @@
                             <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs mt-md">Android Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Bundle ID for your Android app. Note that you cannot update this field once you have marked the Android app as distributed."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value= "${appBo.androidBundleId}" name="androidBundleId"/>
+                                    <input type="text" class="form-control android" value= "${appBo.androidBundleId}" name="androidBundleId" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -67,7 +69,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs mt-md">Android Server Key <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the server key needed to push notifications to the Android app. Note that you cannot update this field once you have marked the Android app as distributed."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value= "${appBo.androidServerKey}" name="androidServerKey"/>
+                                    <input type="text" class="form-control android" value= "${appBo.androidServerKey}" name="androidServerKey" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -77,7 +79,7 @@
                              <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs mt-md">iOS Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Bundle ID for your iOS app. Note that you cannot update this field once you have marked the iOS app as distributed."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value= "${appBo.iosBundleId}" name="iosBundleId"/>
+                                    <input type="text" class="form-control ios" value= "${appBo.iosBundleId}" name="iosBundleId" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -85,7 +87,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs mt-md">iOS Server Key<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the server key needed to push notifications to the iOS app. Note that you cannot update this field once you have marked the iOS app as distributed."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value= "${appBo.iosServerKey}" name="iosServerKey"/>
+                                    <input type="text" class="form-control ios" value= "${appBo.iosServerKey}" name="iosServerKey" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -97,15 +99,15 @@
                               <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs">Latest XCode app version (for iOS app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Xcode version applicable to the latest build of the iOS app that is available to users. Only digits and the . character are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value= "${appBo.iosXCodeAppVersion}" name="iosXCodeAppVersion"/>
+                                    <input type="text" class="form-control ios" value= "${appBo.iosXCodeAppVersion}" name="iosXCodeAppVersion" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs">Lastest app build version (for iOS app)<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the app build version corresponding to the latest iOS app that is available to users. Only integers are allowed in this field."></span></div>
+                                <div class="gray-xs-f mb-xs">Latest app build version (for iOS app)<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the app build version corresponding to the latest iOS app that is available to users. Only integers are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value= "${appBo.androidAppBuildVersion}" name="androidAppBuildVersion"/>
+                                    <input type="number" class="form-control ios" value= "${appBo.iosAppBuildVersion}" name="iosAppBuildVersion" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -116,12 +118,12 @@
                                 <div class="gray-xs-f mb-xs mt-md">Force upgrade for iOS users? <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="If 'Yes' is selected, iOS app users are forced to upgrade their app before they can conitnue using it."></span></div>
                                <div class="mt-md mb-md">
                          <span class="radio radio-info radio-inline p-45">
-                            <input type="radio" id="inlineRadio1" value="1" name="iosForceUpgrade" <c:if test="${appBo.iosForceUpgrade eq 1}">checked</c:if>>
-                            <label for="inlineRadio1">Yes</label>
+                            <input type="radio" id="iosForceUpgradeYesId" class="ios" value="1" name="iosForceUpgrade" required data-error="Please fill out this field" />
+                            <label for="iosForceUpgradeYesId">Yes</label>
                         </span>
                         <span class="radio radio-inline">
-                            <input type="radio" id="inlineRadio2" value="0" name="iosForceUpgrade" <c:if test="${appBo.iosForceUpgrade eq 0}">checked</c:if>>
-                            <label for="inlineRadio2">NO</label>
+                            <input type="radio" id="iosForceUpgradeNoId" class="ios" value="0" name="iosForceUpgrade"  required data-error="Please fill out this field" checked="checked"/>
+                            <label for="iosForceUpgradeNoId">NO</label>
                         </span>
                     </div>
                             </div>
@@ -130,7 +132,7 @@
                            <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs"> Latest app version code (for Android app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the app version corresponding to the latest Android app that is available to users. Only integers are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control" value= "${appBo.androidBundleId}" name="androidBundleId"/>
+                                    <input type="number" class="form-control android" value= "${appBo.androidAppBuildVersion}" name="androidAppBuildVersion" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -141,12 +143,12 @@
                                 <div class="gray-xs-f mb-xs mt-md">Force upgrade for Android users? <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="If 'Yes' is selected, Android app users are forced to upgrade their app before they can conitnue using it."></span></div>
                                <div class="mt-md mb-md">
                          <span class="radio radio-info radio-inline p-45">
-                            <input type="radio" id="inlineRadio3" value="1" name="androidForceUpgrade" <c:if test="${appBo.androidForceUpgrade eq 1}">checked</c:if>>
-                            <label for="inlineRadio3">Yes</label>
+                            <input type="radio" id="androidForceUpgradeYesId" class="android" value="1" name="androidForceUpgrade"  required data-error="Please fill out this field"/>
+                            <label for="androidForceUpgradeYesId">Yes</label>
                         </span>
                         <span class="radio radio-inline">
-                            <input type="radio" id="inlineRadio4" value="0" name="androidForceUpgrade" <c:if test="${appBo.androidForceUpgrade eq 0}">checked</c:if>>
-                            <label for="inlineRadio4">NO</label>
+                            <input type="radio" id="androidForceUpgradeNoId" class="android" value="0" name="androidForceUpgrade"  required data-error="Please fill out this field"  checked="checked"/>
+                            <label for="androidForceUpgradeNoId">NO</label>
                         </span>
                     </div>
                             </div>
@@ -173,5 +175,65 @@
 	  <c:if test="${not empty permission}">
 	     $('#developerConfigFormId input').prop('disabled', true);
 	  </c:if>
+	  
+	  
+	  <c:if test="${empty permission}">
+	    
+	    <c:if test = "${appBo.appPlatform == 'I,A'} || ${appBo.appPlatform == 'A,I'}">
+		     $('.android').prop('disabled', false);
+		     $('.ios').prop('disabled', false);
+	    </c:if>
+	  	<c:if test="${appBo.appPlatform == 'I'}">
+		  	$('.android').prop('required',false);
+		  	$('.android').prop('disabled', true);
+		  	$('.ios').prop('disabled', false);
+	  	</c:if>
+	  	<c:if test="${appBo.appPlatform == 'A'}">
+		 	 $('.ios').prop('required',false);
+		 	$('.ios').prop('disabled', true);
+		 	$('.android').prop('disabled', false);
+	 	</c:if>
+  	 </c:if>
+	  
+	  <c:if test="${appBo.iosForceUpgrade eq 0}">
+	  		$('#iosForceUpgradeYesId').prop('checked', false);
+	  		$('#iosForceUpgradeNoId').prop('checked', true);
+	  </c:if>
+	  <c:if test="${appBo.iosForceUpgrade eq 1}">
+	  		$('#iosForceUpgradeYesId').prop('checked', true);
+			$('#iosForceUpgradeNoId').prop('checked', false);
+	  </c:if>
+	  
+	  <c:if test="${appBo.androidForceUpgrade eq 0}">
+	  		$('#androidForceUpgradeYesId').prop('checked', false);
+			$('#androidForceUpgradeNoId').prop('checked', true);
+	  </c:if>
+	  <c:if test="${appBo.androidForceUpgrade eq 1}">
+	  		$('#androidForceUpgradeYesId').prop('checked', true);
+			$('#androidForceUpgradeNoId').prop('checked', false);
+	  </c:if>
+	  
+	  
+	  $('#saveId').click(
+		        function (e) {
+		        	
+		          $('#developerConfigFormId').validator('destroy');
+		          $("#buttonText").val('save');
+		          $("#developerConfigFormId").submit()
+		        });
+	  
+	  $('#completedId').click(
+		        function (e) {
+		        	debugger;
+		        	if ($('.radio input:checked').length == 0) {
+		          	    $("input").attr("required", true);
+		              }
+		        	
+		        	 if( isFromValid("#developerConfigFormId")){
+		            	 $("#buttonText").val('completed');
+		            	 $("#developerConfigFormId").submit();
+		             }
+		              
+		        });
 	});
 </script>

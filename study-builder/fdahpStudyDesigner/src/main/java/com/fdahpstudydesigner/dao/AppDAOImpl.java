@@ -555,6 +555,10 @@ public class AppDAOImpl implements AppDAO {
       message = FAILURE;
       transaction.rollback();
       logger.error("AppDAOImpl - saveOrUpdateAppProperties() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("saveOrUpdateAppProperties() - Ends");
     return message;
@@ -612,5 +616,99 @@ public class AppDAOImpl implements AppDAO {
       return completed;
     }
     return completed;
+  }
+
+  @Override
+  public String saveOrUpdateAppDeveloperConfig(AppsBo appBo, SessionObject sessionObject) {
+    logger.entry("begin saveOrUpdateAppDeveloperConfig()");
+    Session session = null;
+    String message = SUCCESS;
+    StudyBuilderAuditEvent auditLogEvent = null;
+    AppSequenceBo appSequenceBo = null;
+    try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+
+      if (StringUtils.isNotEmpty(appBo.getId())) {
+        AppsBo dbappBo =
+            (AppsBo)
+                session
+                    .getNamedQuery("AppsBo.getAppsById")
+                    .setString("id", appBo.getId())
+                    .uniqueResult();
+        if (dbappBo != null) {
+
+          if (StringUtils.isNotEmpty(appBo.getAndroidBundleId())) {
+            dbappBo.setAndroidBundleId(appBo.getAndroidBundleId());
+          }
+          if (StringUtils.isNotEmpty(appBo.getAndroidServerKey())) {
+            dbappBo.setAndroidServerKey(appBo.getAndroidServerKey());
+          }
+
+          if (StringUtils.isNotEmpty(appBo.getIosBundleId())) {
+            dbappBo.setIosBundleId(appBo.getIosBundleId());
+          }
+          if (StringUtils.isNotEmpty(appBo.getIosServerKey())) {
+            dbappBo.setIosServerKey(appBo.getIosServerKey());
+          }
+          if (StringUtils.isNotEmpty(appBo.getIosXCodeAppVersion())) {
+            dbappBo.setIosXCodeAppVersion(appBo.getIosXCodeAppVersion());
+          }
+          if (StringUtils.isNotEmpty(appBo.getIosAppBuildVersion())) {
+            dbappBo.setIosAppBuildVersion(appBo.getIosAppBuildVersion());
+          }
+          if (appBo.getIosForceUpgrade() != null) {
+            dbappBo.setIosForceUpgrade(appBo.getIosForceUpgrade());
+          }
+
+          if (StringUtils.isNotEmpty(appBo.getAndroidAppBuildVersion())) {
+            dbappBo.setAndroidAppBuildVersion(appBo.getAndroidAppBuildVersion());
+          }
+
+          if (appBo.getAndroidForceUpgrade() != null) {
+            dbappBo.setAndroidForceUpgrade(appBo.getAndroidForceUpgrade());
+          }
+
+          dbappBo.setModifiedBy(appBo.getUserId());
+          dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+          appSequenceBo =
+              (AppSequenceBo)
+                  session
+                      .getNamedQuery("getAppSequenceByAppd")
+                      .setString("appId", dbappBo.getId())
+                      .uniqueResult();
+          session.update(dbappBo);
+        }
+      }
+
+      auditRequest.setAppId(appBo.getId());
+      if (appSequenceBo != null) {
+        if (StringUtils.isNotEmpty(appBo.getButtonText())
+            && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
+          appSequenceBo.setDeveloperConfigs(true);
+          // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+        } else if (StringUtils.isNotEmpty(appBo.getButtonText())
+            && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
+          // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+          appSequenceBo.setDeveloperConfigs(false);
+        }
+        session.saveOrUpdate(appSequenceBo);
+      }
+
+      auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
+
+      transaction.commit();
+    } catch (Exception e) {
+      message = FAILURE;
+      transaction.rollback();
+      logger.error("AppDAOImpl - saveOrUpdateAppDeveloperConfig() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("saveOrUpdateAppDeveloperConfig() - Ends");
+    return message;
   }
 }

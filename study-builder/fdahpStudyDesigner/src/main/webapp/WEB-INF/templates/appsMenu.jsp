@@ -83,7 +83,7 @@
       </li>
       <li class="fourth">
         DEVELOPER CONFIGURATIONS
-        <c:if test="${studyBo.studySequenceBo.eligibility}">
+        <c:if test="${appBo.appSequenceBo.developerConfigs}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
