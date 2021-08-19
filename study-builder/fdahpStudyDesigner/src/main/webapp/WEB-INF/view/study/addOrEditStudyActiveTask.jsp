@@ -96,11 +96,12 @@
     }
     
     var actionType = '${actionPage}';
-    if(actionType == 'view'){
-      $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
-    }
-   
     var selectedTask = $('.targetOption').find("option:selected").text();
+    
+        if(actionType == 'view'){
+      		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+        }
+     
 
     if (activeTaskInfoId) {
       $('.targetOption').prop('disabled', true);
@@ -291,4 +292,11 @@
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");
   });
+  
+  var actionType = '${actionPage}';
+  $(".scheduleTaskClass ").click(function () {
+     if(actionType == 'view'){
+   		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+     }
+  })
 </script>
