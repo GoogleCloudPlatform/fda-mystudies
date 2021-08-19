@@ -94,8 +94,14 @@
     if (!activeTaskInfoId) {
       activeTaskInfoId = '${activeTaskInfoId}';
     }
+    
     var actionType = '${actionPage}';
-
+    $(".scheduleTaskClass ").click(function () {
+       if(actionType == 'view'){
+     		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+       }
+    })
+    
     var selectedTask = $('.targetOption').find("option:selected").text();
 
     if (activeTaskInfoId) {

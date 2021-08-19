@@ -1865,12 +1865,11 @@
   $('#dailyFormId input[type="text"]').prop('disabled', true);
   $('#weeklyFormId input[type="text"]').prop('disabled', true);
   $('#monthlyFormId input[type="text"]').prop('disabled', true);
-  $('#customFormId input[type="text"]').prop('disabled', true);
+  $('#customFormId input[type="text"]').prop('disabled', true); 
   $('select').prop('disabled', true);
   $('#inlineRadio1,#inlineRadio2,#inlineRadio3,#inlineRadio4,#inlineRadio5').prop('disabled', true);
   $('.addBtnDis, .remBtnDis').addClass('dis-none');
   </c:if>
-
 
   var count = 0;
   var customCount = 0;
@@ -1882,10 +1881,12 @@
   var multiTimeVal = true;
   var table1;
   var customAnchorCount = 0;
+  var actionType = "${actionType}";
   var scheduletype = "${questionnaireBo.scheduleType}";
   if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined') {
     scheduletype = $('input[name="scheduleType"]:checked').val();
   }
+ 
   $(document).ready(function () {
 	$('.studyClass').addClass("active");
     $("#dailyxdaysId").change(function () {
@@ -1920,6 +1921,11 @@
         $("#monthlyDateId").hide();
         $(".monthlyRegular").hide();
       }
+    	 
+     if(actionType == 'view'){
+   		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+   		  $('.remBtnDis').removeClass('cursor-display').addClass('cursor-none');
+     }
     })
 
     $(".scheduleQusClass").click(function () {
