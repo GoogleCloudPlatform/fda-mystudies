@@ -15,11 +15,13 @@ import org.springframework.stereotype.Component;
 public class AppContactEmailsResponse extends BaseResponse {
   private String contactUsEmail;
   private String fromEmail;
+  private String appName;
 
   public AppContactEmailsResponse(
-      MessageCode messageCode, String contactUsEmail, String fromEmail) {
+      MessageCode messageCode, String contactUsEmail, String fromEmail, String appName) {
     super(messageCode);
     this.contactUsEmail = contactUsEmail;
     this.fromEmail = fromEmail;
+    this.appName = appName;
   }
 }
