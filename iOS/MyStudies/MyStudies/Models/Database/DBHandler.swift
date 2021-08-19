@@ -495,6 +495,7 @@ class DBHandler: NSObject {
 
     StudyUpdates.studyActivitiesUpdated = (dbStudy?.updateActivities)!
     StudyUpdates.studyConsentUpdated = (dbStudy?.updateConsent)!
+    StudyUpdates.studyVersion = (dbStudy?.version)!
     StudyUpdates.studyEnrollAgain = (dbStudy?.updateStudyEnrollAgain)!
     StudyUpdates.studyResourcesUpdated = (dbStudy?.updateResources)!
     StudyUpdates.studyInfoUpdated = (dbStudy?.updateInfo)!
