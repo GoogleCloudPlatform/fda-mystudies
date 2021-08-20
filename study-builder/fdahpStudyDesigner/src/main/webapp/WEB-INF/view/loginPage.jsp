@@ -106,7 +106,7 @@
                        data-pattern-error="Email address is invalid"
                        placeholder="Email address" required data-error="Please fill out this field"  maxlength="100"
                        data-error="Please complete this field"
-                       pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" autofocus
+                       pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$" autofocus
                        autocomplete="off">
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -144,7 +144,7 @@
                        placeholder="Email address"
                        data-pattern-error="Email address is invalid" required data-error="Please fill out this field" maxlength="100"
                        data-error="Please complete this field"
-                       pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
+                       pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$">
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg">

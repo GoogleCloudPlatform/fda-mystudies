@@ -351,10 +351,8 @@ public class SurveyActivity extends AppCompatActivity
           @Override
           public void onClick(View view) {
             closeDrawer();
-            if (previousValue != R.id.mSignOutLayout) {
-              previousValue = R.id.mSignOutLayout;
-              logout();
-            }
+            previousValue = R.id.mSignOutLayout;
+            logout();
           }
         });
 

@@ -9,9 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
-import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
-import java.util.concurrent.TimeUnit;
+import com.google.cloud.storage.StorageOptions;
+import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -35,9 +38,8 @@ public class ParticipantManagerUtil {
 
   @Autowired private AppPropertyConfig appConfig;
 
-  @Autowired private Storage storageService;
+  public String getImageResources(String fileUrl, String customStudyId) {
 
-  public String getSignedUrl(String fileUrl, String customStudyId) {
     try {
       if (StringUtils.isEmpty(fileUrl)) {
         return null;
@@ -57,13 +59,17 @@ public class ParticipantManagerUtil {
                 + fileName;
       }
 
-      BlobInfo blobInfo =
-          BlobInfo.newBuilder(appConfig.getStudyBuilderCloudBucketName(), filePath).build();
-      return storageService
-          .signUrl(blobInfo, appConfig.getSignedUrlDurationInHours(), TimeUnit.HOURS)
-          .toString();
+      if (StringUtils.isNotBlank(filePath)) {
+        Storage storage = StorageOptions.getDefaultInstance().getService();
+        Blob blob = storage.get(BlobId.of(appConfig.getStudyBuilderCloudBucketName(), filePath));
+        if (blob != null) {
+          ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+          blob.downloadTo(outputStream);
+          return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(blob.getContent());
+        }
+      }
     } catch (Exception e) {
-      logger.error("Unable to generate signed url", e);
+      logger.error("Unable to getImageResources", e);
     }
     return null;
   }

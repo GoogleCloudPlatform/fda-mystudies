@@ -24,6 +24,9 @@
 
 package com.fdahpstudydesigner.service;
 
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.PUBLISHED_VERSION;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.WORKING_VERSION;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudyIdBean;
@@ -61,6 +64,7 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -421,7 +425,7 @@ public class StudyServiceImpl implements StudyService {
                     + FdahpStudyDesignerConstants.STUDTYPAGES
                     + FdahpStudyDesignerConstants.PATH_SEPARATOR
                     + s.getImagePath();
-            s.setSignedUrl(FdahpStudyDesignerUtil.getSignedUrl(path, 12));
+            s.setSignedUrl(FdahpStudyDesignerUtil.getImageResources(path));
             if (s.getImagePath().contains("?v=")) {
               String imagePathArr[] = s.getImagePath().split("\\?");
               s.setImagePath(imagePathArr[0] + "?v=" + new Date().getTime());
@@ -1250,7 +1254,7 @@ public class StudyServiceImpl implements StudyService {
           notificationBO = studyDAO.getNotificationByResourceId(resourseId);
           String notificationText = "";
           boolean notiFlag = false;
-          if (null == notificationBO && !(resourceBO2.getResourceText().equals(""))) {
+          if (null == notificationBO && StringUtils.isNotBlank(resourceBO2.getResourceText())) {
             notificationBO = new NotificationBO();
             notificationBO.setStudyId(resourceBO2.getStudyId());
             notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
@@ -1266,20 +1270,20 @@ public class StudyServiceImpl implements StudyService {
             notificationBO.setNotificationStatus(false);
             notificationBO.setCreatedBy(sesObj.getUserId());
             notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-          } else {
+          } else if (null != notificationBO) {
             notiFlag = true;
             notificationBO.setModifiedBy(sesObj.getUserId());
             notificationBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           }
           if (!resourceBO2.isStudyProtocol()) {
-            if (resourceBO.isResourceVisibility()) {
+            if (resourceBO.isResourceVisibility() && null != notificationBO) {
               saveNotiFlag = true;
               notificationText = resourceBO2.getResourceText();
             } else {
               saveNotiFlag = false;
             }
           } else {
-            if (studyBo.getLiveStudyBo() != null) {
+            if (studyBo.getLiveStudyBo() != null && null != notificationBO) {
               String studyName = studyBo.getName();
               String innerText;
               if (notiFlag || (!notiFlag && updateResource)) {
@@ -1296,16 +1300,20 @@ public class StudyServiceImpl implements StudyService {
                       + ". Visit the app to read it now.";
             }
           }
-          notificationBO.setNotificationText(notificationText);
-          if (resourceBO2.isResourceType()) {
-            notificationBO.setAnchorDate(true);
-            notificationBO.setxDays(resourceBO2.getTimePeriodFromDays());
-          } else {
-            notificationBO.setAnchorDate(false);
-            notificationBO.setxDays(null);
+          if (null != notificationBO) {
+            notificationBO.setNotificationText(notificationText);
+
+            if (resourceBO2.isResourceType()) {
+              notificationBO.setAnchorDate(true);
+              notificationBO.setxDays(resourceBO2.getTimePeriodFromDays());
+            } else {
+              notificationBO.setAnchorDate(false);
+              notificationBO.setxDays(null);
+            }
+            notificationBO.setScheduleDate(null);
+            notificationBO.setScheduleTime(null);
           }
-          notificationBO.setScheduleDate(null);
-          notificationBO.setScheduleTime(null);
+
           if (saveNotiFlag) {
             studyDAO.saveResourceNotification(notificationBO, notiFlag);
           }
@@ -1555,7 +1563,10 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public StudyBo replicateStudy(
-      String studyId, SessionObject sessionObject, AuditLogEventRequest auditRequest) {
+      String studyId,
+      String copyVersion,
+      SessionObject sessionObject,
+      AuditLogEventRequest auditRequest) {
 
     StudyBo studyBo = studyDAO.getStudy(studyId);
     auditRequest.setStudyId(studyBo.getCustomStudyId());
@@ -1566,25 +1577,34 @@ public class StudyServiceImpl implements StudyService {
 
     List<ConsentBo> consentBoList = studyDAO.getConsentListForStudy(studyBo.getId());
 
-    List<ConsentInfoBo> consentInfoBoList = studyDAO.getConsentInfoList(studyBo.getId());
+    List<ConsentInfoBo> consentInfoBoList =
+        studyDAO.getConsentInfoList(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     List<ComprehensionTestQuestionBo> comprehensionTestQuestionBoList =
         studyDAO.getComprehensionTestQuestionList(studyBo.getId());
 
-    List<AnchorDateTypeBo> anchorDateList = studyDAO.getAnchorDateDetails(studyBo.getId());
+    List<AnchorDateTypeBo> anchorDateList =
+        studyDAO.getAnchorDateDetails(studyBo.getId(), studyBo.getCustomStudyId());
 
     List<QuestionnaireBo> questionnairesList =
-        studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(studyBo.getId());
+        studyQuestionnaireDAO.getStudyQuestionnairesByStudyId(
+            studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
-    List<NotificationBO> notificationBOs = notificationDAO.getNotificationsList(studyBo.getId());
+    List<NotificationBO> notificationBOs =
+        notificationDAO.getNotificationsList(
+            studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     List<ResourceBO> resourceBOs = studyDAO.getResourceList(studyBo.getId());
 
     List<ActiveTaskBo> activeTaskBos =
-        studyActiveTasksDAO.getStudyActiveTaskByStudyId(studyBo.getId());
+        studyActiveTasksDAO.getStudyActiveTaskByStudyId(
+            studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
+
+    Timestamp launchDate =
+        studyBo.getStudylunchDate() != null ? Timestamp.valueOf(studyBo.getStudylunchDate()) : null;
 
     // replicating study
-    studyDAO.cloneStudy(studyBo, sessionObject);
+    studyDAO.cloneStudy(studyBo, sessionObject, copyVersion);
 
     Map<String, String> anchorDateMap = new HashMap<>();
     if (CollectionUtils.isNotEmpty(anchorDateList)) {
@@ -1644,18 +1664,30 @@ public class StudyServiceImpl implements StudyService {
     if (CollectionUtils.isNotEmpty(notificationBOs)) {
       Integer sequenceNumber = 0;
       for (NotificationBO notificationBO : notificationBOs) {
-        notificationBO.setNotificationId(null);
-        notificationBO.setStudyId(studyBo.getId());
-        notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
-        notificationBO.setSequenceNumber(sequenceNumber++);
-        notificationBO.setNotificationSent(false);
-        if (!notificationBO.isNotificationStatus()) {
-          notificationBO.setNotificationDone(false);
-          notificationBO.setNotificationAction(false);
+
+        boolean flag = false;
+        if (copyVersion.equals(PUBLISHED_VERSION) && launchDate != null) {
+          flag =
+              notificationBO.getCreatedOn() == null
+                  ? true
+                  : Timestamp.valueOf(notificationBO.getCreatedOn()).before(launchDate);
         }
-        notificationBO.setNotificationScheduleType(
-            FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
-        notificationDAO.saveNotification(notificationBO);
+
+        if (copyVersion.equals(WORKING_VERSION)
+            || (copyVersion.equals(PUBLISHED_VERSION) && flag)) {
+          notificationBO.setNotificationId(null);
+          notificationBO.setStudyId(studyBo.getId());
+          notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+          notificationBO.setSequenceNumber(sequenceNumber++);
+          notificationBO.setNotificationSent(false);
+          if (!notificationBO.isNotificationStatus()) {
+            notificationBO.setNotificationDone(false);
+            notificationBO.setNotificationAction(false);
+          }
+          notificationBO.setNotificationScheduleType(
+              FdahpStudyDesignerConstants.NOTIFICATION_NOTIMMEDIATE);
+          notificationDAO.saveNotification(notificationBO);
+        }
       }
     }
 
@@ -1687,6 +1719,8 @@ public class StudyServiceImpl implements StudyService {
         String oldActiveTaskId = activeTask.getId();
         activeTask.setId(null);
         activeTask.setStudyId(studyBo.getId());
+        activeTask.setLive(0);
+        activeTask.setVersion(0f);
         activeTask.setAnchorDateId(anchorDateMap.get(activeTask.getAnchorDateId()));
         studyDAO.saveStudyActiveTask(activeTask);
 

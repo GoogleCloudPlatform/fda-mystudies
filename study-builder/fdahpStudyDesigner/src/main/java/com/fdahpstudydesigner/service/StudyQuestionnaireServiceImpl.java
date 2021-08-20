@@ -299,12 +299,6 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
                       questionnaireCustomScheduleBo.getFrequencyStartTime(),
                       FdahpStudyDesignerConstants.UI_SDF_TIME,
                       FdahpStudyDesignerConstants.SDF_TIME));
-            } else {
-              questionnaireCustomScheduleBo.setFrequencyStartTime(
-                  FdahpStudyDesignerUtil.getFormattedDate(
-                      questionnaireCustomScheduleBo.getFrequencyEndTime(),
-                      FdahpStudyDesignerConstants.UI_SDF_TIME,
-                      FdahpStudyDesignerConstants.SDF_TIME));
             }
           }
         }

@@ -569,7 +569,8 @@ public class ChartActivity extends AppCompatActivity {
     }
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
-    String fname = getIntent().getStringExtra("studyName") + "_Chart.png";
+    String fname = getIntent().getStringExtra("studyName")
+            .replace("/", "\u2215") + "_Chart.png";
     File file = new File(dir, fname);
     if (file.exists()) {
       file.delete();

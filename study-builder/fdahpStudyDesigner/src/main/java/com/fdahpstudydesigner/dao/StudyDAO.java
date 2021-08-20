@@ -229,12 +229,12 @@ public interface StudyDAO {
 
   public StudySequenceBo getStudySequenceByStudyId(String studyId);
 
-  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId);
+  public List<AnchorDateTypeBo> getAnchorDateDetails(String studyId, String customId);
 
   public List<ComprehensionTestResponseBo> getComprehensionTestResponseList(
       List<String> comprehensionTestQuestionIds);
 
-  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject);
+  public void cloneStudy(StudyBo studyBo, SessionObject sessionObject, String copyVersion);
 
   public void cloneEligibility(EligibilityBo eligibilityBo, String studyId);
 
@@ -265,4 +265,7 @@ public interface StudyDAO {
 
   public List<ComprehensionTestResponseBo> getComprehensionTestResponses(
       String comprehensionTestQuestionId);
+
+  public List<ConsentInfoBo> getConsentInfoList(
+      String studyId, String customStudyId, String copyVersion);
 }

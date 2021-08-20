@@ -266,6 +266,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
             + "/"
             + AppController.getHelperSharedPreference()
                 .readPreference(ConsentCompletedActivity.this, getString(R.string.title), "")
+                .replaceAll("/", "\u2215")
             + "_"
             + getString(R.string.signed_consent)
             + ".pdf";

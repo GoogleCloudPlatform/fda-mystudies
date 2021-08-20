@@ -212,7 +212,7 @@ margin-top:16px !important;
           <div class="form-group">
             <input type="text" class="form-control" name="inboxEmailAddress"
                    value="${studyBo.inboxEmailAddress}" required data-error="Please fill out this field"  maxlength="100"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                    autocomplete="off" data-pattern-error="Email address is invalid"/>
             <div class="help-block with-errors red-txt"></div>
           </div>

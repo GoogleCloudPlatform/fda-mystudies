@@ -69,7 +69,8 @@ public interface StudyActiveTasksDAO {
   public List<ActiveStatisticsBean> validateActiveTaskStatIds(
       String customStudyId, List<ActiveStatisticsBean> activeStatisticsBeans);
 
-  public List<ActiveTaskBo> getStudyActiveTaskByStudyId(String studyId);
+  public List<ActiveTaskBo> getStudyActiveTaskByStudyId(
+      String studyId, String customId, String version);
 
   public List<ActiveTaskAtrributeValuesBo> getActiveTaskAtrributeValuesByActiveTaskId(
       List<String> activeTaskId);

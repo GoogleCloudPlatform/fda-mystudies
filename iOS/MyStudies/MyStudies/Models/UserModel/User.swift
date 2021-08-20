@@ -85,6 +85,7 @@ class User {
   var firstName: String?
   var lastName: String?
   var emailId: String?
+  var verificationTime: String?
   var settings: Settings?
   var userType: UserType?
   var userId: String!
@@ -123,6 +124,7 @@ class User {
     self.firstName = ""
     self.lastName = ""
     self.emailId = ""
+    self.verificationTime = ""
     self.settings = Settings()
     self.userType = UserType.anonymousUser
     self.userId = ""
@@ -135,18 +137,21 @@ class User {
   ///   - firstName: `User` First Name
   ///   - lastName: `User` Last Name
   ///   - emailId: `User` Email Id
+  ///   - verificationTime: `User` Verification Time
   ///   - userType: `User` Type
   ///   - userId: `User` ID
   init(
     firstName: String?,
     lastName: String?,
     emailId: String?,
+    verificationTime: String?,
     userType: UserType?,
     userId: String?
   ) {
     self.firstName = firstName
     self.lastName = lastName
     self.emailId = emailId
+    self.verificationTime = verificationTime
     self.userType = userType
     self.userId = userId
   }
@@ -232,7 +237,7 @@ class User {
   ) -> UserActivityStatus {
 
     let activities = self.participatedActivites
-    if let activity = activities?.filter({ $0.activityId == activityId && $0.activityRunId == runId }
+    if let activity = activities?.filter({ $0.activityId == activityId && $0.activityRunId == runId && $0.studyId == studyId }
     ).first {
       activity.status = status
       return activity

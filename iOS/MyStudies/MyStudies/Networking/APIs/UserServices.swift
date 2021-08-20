@@ -28,6 +28,7 @@ let kDeviceToken = "deviceToken"
 let kUserFirstName = "firstName"
 let kUserLastName = "lastName"
 let kUserEmailId = "emailId"
+let kVerificationTime = "verificationTime"
 let kUserSettings = "settings"
 let kUserId = "userId"
 let kLocale = "locale"
@@ -357,13 +358,13 @@ class UserServices: NSObject {
     userSettings.setSettings(dict: settings as NSDictionary)
     user.settings = userSettings
 
-    DBHandler.saveUserSettingsToDatabase()
-
     // profile
     let profile = (response[kUserProfile] as? [String: Any])!
     user.emailId = profile[kUserEmailId] as? String
+    user.verificationTime = profile[kVerificationTime] as? String ?? ""
     user.firstName = profile[kUserFirstName] as? String
     user.lastName = profile[kUserLastName] as? String
+    DBHandler.saveUserSettingsToDatabase()
   }
 
   /// Handles `User` preference response
