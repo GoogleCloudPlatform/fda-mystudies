@@ -87,20 +87,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         completionHandler: { _, _ in }
       )
     }
-    DispatchQueue.main.async {
-      UIApplication.shared.registerForRemoteNotifications()
-    }
+    UIApplication.shared.registerForRemoteNotifications()
     getFCMToken()
-    
   }
   
   func getFCMToken() {
     Messaging.messaging().token { token, error in
-      if let error = error {
-        print("Error fetching FCM registration token: \(error)")
+      if error != nil {
       } else if let token = token {
-        print("FCM registration token: \(token)")
-//        self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
+        if User.currentUser.userType == .loggedInUser {
+          User.currentUser.settings?.remoteNotifications = true
+          User.currentUser.settings?.localNotifications = true
+          // Update device Token to Local server
+          UserServices().updateUserProfile(deviceToken: token, delegate: self)
+        }
       }
     }
   }
@@ -369,13 +369,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
-    let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
-    if User.currentUser.userType == .loggedInUser {
-      User.currentUser.settings?.remoteNotifications = true
-      User.currentUser.settings?.localNotifications = true
-      // Update device Token to Local server
-      UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
-    }
+    _ = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
   }
 
   // MARK: - Jailbreak Methods
@@ -1772,7 +1766,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     didReceive response: UNNotificationResponse,
     withCompletionHandler completionHandler: @escaping () -> Void
   ) {
-
+    print("3---")
     let userInfo = response.notification.request.content.userInfo
     UIApplication.shared.applicationIconBadgeNumber = 0
 

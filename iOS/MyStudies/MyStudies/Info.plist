@@ -30,6 +30,8 @@
 	<string>$(CONSENT_DATASTORE_URL)</string>
 	<key>ENROLLMENT_DATASTORE_URL</key>
 	<string>$(ENROLLMENT_DATASTORE_URL)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<true/>
 	<key>HYDRA_BASE_URL</key>
 	<string>$(HYDRA_BASE_URL)</string>
 	<key>HYDRA_CLIENT_ID</key>
