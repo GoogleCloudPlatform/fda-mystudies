@@ -5609,6 +5609,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         String searchQuery = null;
         newQuestionnaireBo = SerializationUtils.clone(questionnaireBo);
         newQuestionnaireBo.setId(null);
+        newQuestionnaireBo.setCustomStudyId(null);
         newQuestionnaireBo.setLive(0);
         newQuestionnaireBo.setStudyId(studyId);
         newQuestionnaireBo.setCreatedBy(sessionObject.getUserId());
