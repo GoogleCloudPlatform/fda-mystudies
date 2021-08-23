@@ -45,7 +45,7 @@ import org.hibernate.annotations.Type;
       name = "getAppSequenceById",
       query = " From AppSequenceBo SSBO WHERE SSBO.appSequenceId =:appSequenceId"),
   @NamedQuery(
-      name = "getAppSequenceByAppd",
+      name = "getAppSequenceByAppId",
       query = " From AppSequenceBo SSBO WHERE SSBO.appId =:appId")
 })
 public class AppSequenceBo implements Serializable {

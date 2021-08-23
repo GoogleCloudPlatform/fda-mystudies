@@ -219,7 +219,7 @@ public class AppDAOImpl implements AppDAO {
           appSequenceBo =
               (AppSequenceBo)
                   session
-                      .getNamedQuery("getAppSequenceByAppd")
+                      .getNamedQuery("getAppSequenceByAppId")
                       .setString("appId", appId)
                       .uniqueResult();
 
@@ -304,7 +304,7 @@ public class AppDAOImpl implements AppDAO {
           appSequenceBo =
               (AppSequenceBo)
                   session
-                      .getNamedQuery("getAppSequenceByAppd")
+                      .getNamedQuery("getAppSequenceByAppId")
                       .setString("appId", dbappBo.getId())
                       .uniqueResult();
           session.update(dbappBo);
@@ -368,7 +368,7 @@ public class AppDAOImpl implements AppDAO {
           appSequenceBo =
               (AppSequenceBo)
                   session
-                      .getNamedQuery("getAppSequenceByAppd")
+                      .getNamedQuery("getAppSequenceByAppId")
                       .setString("appId", dbappBo.getId())
                       .uniqueResult();
           session.update(dbappBo);
@@ -527,7 +527,7 @@ public class AppDAOImpl implements AppDAO {
           appSequenceBo =
               (AppSequenceBo)
                   session
-                      .getNamedQuery("getAppSequenceByAppd")
+                      .getNamedQuery("getAppSequenceByAppId")
                       .setString("appId", dbappBo.getId())
                       .uniqueResult();
           session.update(dbappBo);
@@ -579,7 +579,7 @@ public class AppDAOImpl implements AppDAO {
         appSequenceBo =
             (AppSequenceBo)
                 session
-                    .getNamedQuery("getAppSequenceByAppd")
+                    .getNamedQuery("getAppSequenceByAppId")
                     .setString("appId", appBo.getId())
                     .uniqueResult();
 
@@ -675,7 +675,7 @@ public class AppDAOImpl implements AppDAO {
           appSequenceBo =
               (AppSequenceBo)
                   session
-                      .getNamedQuery("getAppSequenceByAppd")
+                      .getNamedQuery("getAppSequenceByAppId")
                       .setString("appId", dbappBo.getId())
                       .uniqueResult();
           session.update(dbappBo);
