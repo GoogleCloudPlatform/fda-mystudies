@@ -425,6 +425,11 @@
       $('#saveId,#doneId').hide();
     }
 
+    if ('${isActive}' == 'consentReview') {
+    	 $('.consentReview a').tab('show');
+    } else  {
+    	$('.shareData a').tab('show');
+    }
     //auto select if consent Id is empty
 
     var consentId = "${consentBo.consentDocType}";
@@ -752,8 +757,16 @@
             }
             if (item == "doneId") {
               var a = document.createElement('a');
-              a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
+            	if ($(".consentReview").hasClass("active")) {
+            		a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}&isActive=consentReview";
+              	  
+                }else{
+                	a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}&isActive=shareData";
+                }
+              
               document.body.appendChild(a).click();
+              
+              
             } else {
               $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
