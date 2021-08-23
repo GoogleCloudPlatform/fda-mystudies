@@ -613,4 +613,27 @@ public class AppDAOImpl implements AppDAO {
     }
     return completed;
   }
+
+  @Override
+  public List<AppsBo> getAllApps() {
+    logger.entry("begin getAllStudyList()");
+    Session session = null;
+    List<AppsBo> appList = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      query =
+          session.createQuery(
+              " FROM AppsBo ABO WHERE ABO.version = 0 AND ABO.appStatus <> :deActivateStatus");
+      query.setParameter("deActivateStatus", FdahpStudyDesignerConstants.APP_DEACTIVATED);
+      appList = query.list();
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getAllStudyList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getAllStudyList() - Ends");
+    return appList;
+  }
 }

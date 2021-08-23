@@ -387,6 +387,11 @@ input[type=file]:focus, input[type=checkbox]:focus, input[type=radio]:focus, .ch
   border-bottom: 1px solid #cfd4d7;
 }
 
+.app-selected-item {
+  padding: 10px 0px;
+  border-bottom: 1px solid #cfd4d7;
+}
+
 .blue-link {
   color: #036eb7;
 }

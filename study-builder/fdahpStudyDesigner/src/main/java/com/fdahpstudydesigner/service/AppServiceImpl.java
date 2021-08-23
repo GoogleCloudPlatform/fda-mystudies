@@ -193,4 +193,17 @@ public class AppServiceImpl implements AppService {
     }
     return markAsCompleted;
   }
+
+  @Override
+  public List<AppsBo> getAllApps() {
+    logger.entry("StudyServiceImpl - getAllStudyList() - Starts");
+    List<AppsBo> appList = null;
+    try {
+      appList = appDAO.getAllApps();
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - getAllStudyList() - ERROR ", e);
+    }
+    logger.exit("StudyServiceImpl - getAllStudyList() - Ends");
+    return appList;
+  }
 }

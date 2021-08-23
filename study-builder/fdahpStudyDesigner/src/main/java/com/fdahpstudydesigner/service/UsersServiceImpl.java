@@ -133,6 +133,7 @@ public class UsersServiceImpl implements UsersService {
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,
+      String selectedApps,
       AuditLogEventRequest auditRequest) {
     logger.entry("begin addOrUpdateUserDetails()");
     UserBO userBO2 = null;
@@ -183,7 +184,8 @@ public class UsersServiceImpl implements UsersService {
         }
       }
       UserIdAccessLevelInfo userIdAccessLevelInfo =
-          usersDAO.addOrUpdateUserDetails(userBO2, permissions, selectedStudies, permissionValues);
+          usersDAO.addOrUpdateUserDetails(
+              userBO2, permissions, selectedStudies, permissionValues, selectedApps);
       if (userIdAccessLevelInfo != null) {
         if (addFlag) {
           values.put(

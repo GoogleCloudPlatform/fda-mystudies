@@ -14,6 +14,16 @@
 .filter-option {
   text-transform: inherit !important;
 }
+
+.app-addbtn {
+    padding: 7px 15px;
+    background: #036eb7;
+    margin-left: 10px;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -114,6 +124,7 @@
          value="${userBO.enabled}">
   <input type="hidden" id="selectedStudies" name="selectedStudies">
   <input type="hidden" id="permissionValues" name="permissionValues">
+  <input type="hidden" id="selectedApps" name="selectedApps">
   <input type="hidden" name="ownUser" id="ownUser">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
@@ -290,39 +301,39 @@
           </span>
         </div>
 
-  <!--  Manage studies div  --> 
+  <!--  Manage apps div  --> 
   
         <!-- Gray Widget-->
         <div class="edit-user-list-widget">
           <span class="checkbox checkbox-inline"><input
-              type="checkbox" id="inlineCheckbox4" name="manageStudies"
-              <c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
+              type="checkbox" id="inlineCheckboxApp" name="manageApps"
+              <c:if test="${fn:contains(permissions,10)}">value="1" checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox4"> Manage apps </label>
+            <label for="inlineCheckboxApp"> Manage apps </label>
           </span>
           <div class="mt-lg pl-lg">
             <div class="pb-md bor-dashed">
               <span class="checkbox checkbox-inline"><input
-                  type="checkbox" id="inlineCheckbox5" class="changeView1"
-                  name="addingNewStudy"
-                  value="${fn:contains(permissions,8)?'1':''}"
-              <c:if test="${fn:contains(permissions,8)}"> checked</c:if>
+                  type="checkbox" id="inlineCheckbox6" class="changeView2"
+                  name="addingNewApp"
+                  value="${fn:contains(permissions,9)?'1':''}"
+              <c:if test="${fn:contains(permissions,9)}"> checked</c:if>
                   <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-                <label for="inlineCheckbox5"> Create new studies </label>
+                <label for="inlineCheckbox6"> Create new apps </label>
               </span>
             </div>
-            <div class="mt-md study-list mb-md addHide">
+            <div class="mt-md mb-md addHide app-list">
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
                 <select
-                    class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
-                    title="- Select and add studies -" multiple id="multiple">
-                  <c:forEach items="${studyBOList}" var="study">
-                    <option value="${study.id}"
-                            id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
+                    class="selectpicker col-md-6 p-none changeView3 <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
+                    title="- Select and add apps -" multiple id="multipleApps" id="appIds">
+                  <c:forEach items="${apps}" var="app">
+                    <option value="${app.id}"
+                            id="selectApps${app.id}">${app.name}&nbsp;(${app.customAppId})
                     </option>
                   </c:forEach>
                 </select>
-                <span class="study-addbtn changeView">+</span>
+                <span class="app-addbtn changeView3">+</span>
               </c:if>
             </div>
             <div class="addHide">
@@ -331,42 +342,42 @@
               </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
-                <span class="ablue removeAll changeView">x Remove all</span>
+                <span class="ablue removeAllApps changeView3">x Remove all</span>
               </c:if>
             </div>
-            <!-- Selected Study items -->
-            <div class="study-selected mt-md">
-              <c:forEach items="${studyBOs}" var="study">
-                <div class="study-selected-item selStd" id="std${study.id}">
-                  <input type="hidden" class="stdCls" id="${study.id}" name=""
-                         value="${study.id}"
-                         stdTxt="${study.name}&nbsp;(${study.customStudyId})"
+            <!-- Selected App items -->
+            <div class="app-selected mt-md">
+              <c:forEach items="${apps}" var="app">
+                <div class="app-selected-item selApp" id="app${app.id}">
+                  <input type="hidden" class="appCls" id="${app.id}" name=""
+                         value="${app.id}"
+                         appTxt="${app.name}&nbsp;(${app.customAppId})"
                          <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
                   <c:if test="${actionPage ne 'VIEW_PAGE'}">
                     <span class="mr-md"><img
                         src="/studybuilder/images/icons/close.png"
-                        onclick="del('${study.id}');" alt=""/></span>
+                        onclick="delApp('${app.id}');" alt=""/></span>
                   </c:if>
-                  <span>${study.name}&nbsp;(${study.customStudyId})</span>
+                  <span>${app.name}&nbsp;(${app.customAppId})</span>
                   <span
                       class="pull-right">
                     <span
                         class="radio radio-info radio-inline p-45 mr-xs"><input
-                        type="radio" class="v${study.id} changeView"
-                        id="v1${study.id}" name="radio${study.id}" value="0"
-                        <c:if test="${not study.viewPermission}">checked</c:if>
+                        type="radio" class="v3${app.id} changeView3"
+                        id="v4${app.id}" name="radio${app.id}" value="0"
+                        <c:if test="${not app.viewPermission}">checked</c:if>
                         <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-                      <label for="v1${study.id}"></label></span>
+                      <label for="v4${app.id}"></label></span>
                     <span
                         class="radio radio-inline"><input type="radio"
-                                                          class="v${study.id} changeView"
-                                                          id="v2${study.id}"
-                                                          name="radio${study.id}" value="1"
+                                                          class="v3${app.id} changeView3"
+                                                          id="v5${app.id}"
+                                                          name="radio${app.id}" value="1"
                                                           <c:if
-                                                              test="${study.viewPermission}">checked</c:if>
+                                                              test="${app.viewPermission}">checked</c:if>
                                                           <c:if
                                                               test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-                      <label for="v2${study.id}"></label>
+                      <label for="v5${app.id}"></label>
                     </span>
                   </span>
                 </div>
@@ -496,7 +507,6 @@
 
   $(document).ready(function () {
     $('#rowId').parent().removeClass('white-bg');
-
     <c:if test="${empty studyBOList && empty studyBOs}">
     $('.addHide').hide();
     </c:if>
@@ -506,6 +516,7 @@
     $('[data-toggle="tooltip"]').tooltip();
 
     var isManageStudyChecked = $("#inlineCheckbox4").is(":checked");
+    var isManageAppsChecked = $("#inlineCheckboxApp").is(":checked");
     if (isManageStudyChecked) {
 
     } else {
@@ -515,6 +526,15 @@
       $('.changeView').selectpicker('refresh');
       $('.changeView1').prop('disabled', true);
     }
+    if(!isManageAppsChecked){
+    	$('#inlineCheckbox6').val('');
+        $('#inlineCheckbox6').prop('checked', false);
+        $('.changeView3').prop('disabled', true);
+        $('.changeView3').selectpicker('refresh');
+        $('.changeView2').prop('disabled', true);
+    }
+    
+    
     var role = '${userBO.roleName}';
     <c:if test="${actionPage ne 'VIEW_PAGE'}">
     if (role) {
@@ -536,7 +556,7 @@
     }
     </c:if>
 
-    
+   
     
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
@@ -561,6 +581,24 @@
             });
       });
     });
+    
+    var countCall2 = 0;
+    $(window).on('load', function () {
+    	countCall2 = 1;
+      $('.selApp').each(function () {
+        var appTxt = $(this).find('.AppCls').attr('appTxt');
+        $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+            function () {
+              var ltxt = $(this).text();
+              var a = $.trim(ltxt);
+              var b = $.trim(appTxt);
+              if (a == b) {
+                $(this).parent().parent().hide();
+              }
+            });
+      });
+    });
+
 
     if (countCall == 0) {
       $('.selStd').each(function () {
@@ -576,6 +614,22 @@
             });
       });
     }
+    
+    if (countCall2 == 0) {
+        $('.selApp').each(function () {
+          var appTxt = $(this).find('.appCls').attr('appTxt');
+          $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+              function () {
+                var ltxt = $(this).text();
+                var a = $.trim(ltxt);
+                var b = $.trim(appTxt);
+                if (a == b) {
+                  $(this).parent().parent().hide();
+                }
+              });
+        });
+      }
+    
     $("#emailId").blur(function () {
       var email = $('#emailId').val().toLowerCase();
       var emailCopy = $('#emailId').val();
@@ -639,6 +693,11 @@
       $('#inlineCheckbox5').prop('checked', false);
       $('#inlineCheckbox5').prop('disabled', true);
     }
+    
+    if ($('#inlineCheckboxApp').prop("checked") == false) {
+        $('#inlineCheckbox6').prop('checked', false);
+        $('#inlineCheckbox6').prop('disabled', true);
+      }
 
     $('#inlineCheckbox1').on('click', function () {
       if ($(this).prop("checked") == true) {
@@ -679,6 +738,27 @@
         $('.changeView1').prop('disabled', true);
       }
     });
+    
+    $('#inlineCheckboxApp').on('click', function () {
+        if ($(this).prop("checked") == true) {
+          $(this).val(1);
+          $('.changeView3').prop('disabled', false);
+          $('.changeView3').selectpicker('refresh');
+          var element = $("#roleId option:selected").text();
+          if (element == 'Org-level Admin') {
+            $('.changeView2').prop('disabled', true);
+          } else {
+            $('.changeView2').prop('disabled', false);
+          }
+        } else if ($(this).prop("checked") == false) {
+          $(this).val('');
+          $('#inlineCheckbox6').val('');
+          $('#inlineCheckbox6').prop('checked', false);
+          $('.changeView3').prop('disabled', true);
+          $('.changeView3').selectpicker('refresh');
+          $('.changeView2').prop('disabled', true);
+        }
+      });
 
     $('#inlineCheckbox5').on('click', function () {
       if ($(this).prop("checked") == true) {
@@ -687,6 +767,15 @@
         $(this).val('');
       }
     });
+    
+    $('#inlineCheckbox6').on('click', function () {
+        if ($(this).prop("checked") == true) {
+          $(this).val(1);
+        } else if ($(this).prop("checked") == false) {
+          $(this).val('');
+        }
+      });
+    
     // Adding selected study items
     $(".study-addbtn").click(function () {
 
@@ -722,6 +811,7 @@
 
         $('.study-selected').append(existingStudyDiv);
       });
+      
 
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
@@ -729,6 +819,55 @@
       if (count == tot_items) {
     	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
         $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+      }
+
+    });
+    
+    
+ // Adding selected app items
+    $(".app-addbtn").click(function () {
+
+      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
+
+      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+        if ($(this).text() == "- All items are already selected -") {
+          $(this).remove();
+        }
+      });
+
+      $('#multipleApps :selected').each(function (i, sel) {
+        var selVal = $(sel).val();
+        var selTxt = DOMPurify.sanitize($(sel).text());
+        var existingAppDiv = "<div class='selApp app-selected-item' id='app" + selVal + "'>"
+            + "<input type='hidden' class='appCls' id='" + selVal + "' name='' value='" + selVal
+            + "'>"
+            + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='delApp(\""
+            + selVal + "\");'/></span>"
+            + "<span>" + selTxt + "</span>"
+            + "<span class='pull-right'>"
+            + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
+            + " <input type='radio' class='v3" + selVal + " changeView3' id='v4" + selVal
+            + "' name='radio" + selVal + "' value='0' checked='checked'>"
+            + "<label for='v4" + selVal + "'></label></span>"
+            + "<span class='radio radio-inline'>"
+            + "<input type='radio' class='v3" + selVal + " changeView3' id='v5" + selVal
+            + "' name='radio" + selVal + "' value='1'>"
+            + " <label for='v5" + selVal + "'></label>"
+            + "</span>"
+            + "</span>"
+            + "</div>";
+
+        $('.app-selected').append(existingAppDiv);
+      });
+      
+
+      $(".selectpicker").selectpicker('deselectAll');
+      var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+      var count = $(".app-selected-item").length;
+      if (count == tot_items) {
+    	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+        $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
       }
 
@@ -744,6 +883,19 @@
       });
      
       $(".study-selected-item").remove();
+    });
+    
+  //Removing selected app items
+    $(".removeAllApps").click(function () {
+    	debugger
+      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
+      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+        if ($(this).text() == "- All items are already selected -") {
+        	$(this).remove();
+        }
+      });
+     
+      $(".app-selected-item").remove();
     });
 
     $('.addUpdate').on('click', function () {
@@ -860,6 +1012,7 @@
 
   });
 
+  //delete selected study
   function del(id) {
     var atxt = $('#std' + id).children().text();
 
@@ -882,6 +1035,30 @@
     $('#std' + id).remove();
 
   }
+  
+//delete selected App
+  function delApp(id) {
+	    var atxt = $('#app' + id).children().text();
+
+	    $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+	        function () {
+	          var ltxt = $(this).text();
+	          var a = $.trim(ltxt);
+	          var b = $.trim(atxt);
+	          if (a == b) {
+	            $(this).parent().parent().show();
+	          }
+	        });
+
+	    $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+	      if ($(this).text() == "- All items are already selected -") {
+	        $(this).remove();
+	      }
+	    });
+
+	    $('#app' + id).remove();
+
+	  }
 
   function activateOrDeactivateUser(userId) {
     var status = $('#change' + userId).val();
@@ -918,6 +1095,7 @@
     $('#emailId').prop('disabled', false);
     var selectedStudies = "";
     var permissionValues = "";
+    debugger
     if (isFromValid($('.addUpdate').parents('form'))) {
       $('.selStd').each(function () {
         var studyId = $(this).find('.stdCls').val();
@@ -933,7 +1111,25 @@
           permissionValues += "," + permissionValue;
         }
       });
+      debugger
+      var selectedApps = "";
+      $('.selApp').each(function () {
+          var appId = $(this).find('.appCls').val();
+          var permissionValue = $('#app' + appId).find('input[type=radio]:checked').val();
+          if (selectedApps == "") {
+        	  selectedApps = appId;
+          } else {
+        	  selectedApps += "," + appId;
+          }
+          if (permissionValues == "") {
+            permissionValues = permissionValue;
+          } else {
+            permissionValues += "," + permissionValue;
+          }
+        });
+      
       $('#selectedStudies').val(selectedStudies);
+      $('#selectedApps').val(selectedApps);
       $('#permissionValues').val(permissionValues);
       <c:if test="${sessionObject.userId eq userBO.userId}">
       $('#ownUser').val('1');
@@ -949,6 +1145,7 @@
       $('#inlineCheckbox1').prop('checked', false);
       $('#inlineCheckbox3').prop('checked', false);
       $('.changeView1').prop('checked', false);
+      $('.changeView2').prop('checked', false);
       $('.musr').prop('checked', false);
       $('.mnotf').prop('checked', false);
       $('.musr').prop('disabled', true);
@@ -956,12 +1153,16 @@
       $('#inlineCheckbox1').attr('disabled', true);
       $('#inlineCheckbox3').attr('disabled', true);
       $('.changeView1').prop('disabled', true);
+      $('.changeView2').prop('disabled', true);
       $('#inlineCheckbox5').prop('checked', false);
       $('#inlineCheckbox5').attr('disabled', true);
+      $('#inlineCheckbox6').prop('checked', false);
+      $('#inlineCheckbox6').attr('disabled', true);
     } else {
       $('#inlineCheckbox1').attr('disabled', false);
       $('#inlineCheckbox3').attr('disabled', false);
       $('#inlineCheckbox5').attr('disabled', false);
+      $('#inlineCheckbox6').attr('disabled', false);
     }
 
   }
@@ -969,19 +1170,32 @@
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");
   });
+  
 
   $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       if(element == "Study admin"){ 
+    	  debugger
       	 $('.edit-user-list-widget').show();
       	 $('.perm-assign').show();
       	 $('.pull-right').show();
       	var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
         var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+        var tot_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+        var selected_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+        
         if (selected_study == tot_study) {
       	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
           $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+        }
+        
+        if (selected_app > 0) {
+        	 $(".app-selected-item").remove();
+        }else if(  selected_app == tot_app){
+        	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+              $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+              	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
         }
           } else{
         	  $('.edit-user-list-widget').hide();
@@ -990,6 +1204,7 @@
               }
     });
   
+ 
   
 </script>
 
