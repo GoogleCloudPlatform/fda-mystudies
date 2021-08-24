@@ -580,6 +580,7 @@ public class AppController {
   public ModelAndView viewAppDetails(HttpServletRequest request) {
     Integer sessionAppCount;
     ModelMap map = new ModelMap();
+    AppsBo app = null;
     ModelAndView modelAndView = new ModelAndView("redirect:/adminApps/appList.do");
     String appId =
         FdahpStudyDesignerUtil.isEmpty(request.getParameter(APP_ID))
@@ -593,11 +594,17 @@ public class AppController {
         FdahpStudyDesignerUtil.isEmpty(request.getParameter(IS_LIVE))
             ? ""
             : request.getParameter(IS_LIVE);
+    String customAppId =
+        FdahpStudyDesignerUtil.isEmpty(request.getParameter(CUSTOM_APP_ID))
+            ? ""
+            : request.getParameter(CUSTOM_APP_ID);
     SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
     List<Integer> appSessionList = new ArrayList<>();
     List<AppSessionBean> appSessionBeans = new ArrayList<>();
     AppSessionBean appSessionBean = null;
+
     try {
+
       sessionAppCount =
           (Integer)
               (request.getSession().getAttribute("sessionAppCount") != null
@@ -608,12 +615,21 @@ public class AppController {
           for (AppSessionBean sessionBean : sesObj.getAppSessionBeans()) {
             if ((sessionBean != null)
                 && sessionBean.getPermission().equals(permission)
-                && sessionBean.getIsLive().equals(isLive)
                 && sessionBean.getAppId().equals(appId)) {
               appSessionBean = sessionBean;
             }
           }
         }
+
+        if (StringUtils.isNotEmpty(CUSTOM_APP_ID)) {
+          app = appService.getAppbyCustomAppId(customAppId);
+          if (app != null) {
+            appId = app.getId();
+            boolean appPermission = appService.getAppPermission(app.getId(), sesObj.getUserId());
+            permission = appPermission ? "" : "view";
+          }
+        }
+
         if (appSessionBean != null) {
           sessionAppCount = appSessionBean.getSessionAppCount();
         } else {
@@ -628,7 +644,6 @@ public class AppController {
             appSessionBeans.addAll(sesObj.getAppSessionBeans());
           }
           appSessionBean = new AppSessionBean();
-          appSessionBean.setIsLive(isLive);
           appSessionBean.setPermission(permission);
           appSessionBean.setSessionAppCount(sessionAppCount);
           appSessionBean.setAppId(appId);

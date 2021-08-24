@@ -40,6 +40,7 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(
       name = "AppsBo.getAppsById",
       query = " From AppsBo ABO WHERE ABO.id =:id order by version DESC LIMIT 1"),
+  @NamedQuery(name = "getApps", query = " From AppsBo WHERE appStatus =:status order by createdOn"),
   @NamedQuery(
       name = "getAppByLatestVersion",
       query = " From AppsBo WHERE customAppId =:customAppId order by version DESC LIMIT 1")
@@ -170,9 +171,6 @@ public class AppsBo implements Serializable {
 
   @Column(name = "version")
   private Float version = 0f;
-
-  @Column(name = "app_website")
-  private String appWebsite;
 
   @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
 

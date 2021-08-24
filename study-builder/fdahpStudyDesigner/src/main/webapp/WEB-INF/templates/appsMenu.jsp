@@ -35,8 +35,9 @@
           <span class="study_status 
                     <c:if test="${appBo.appStatus eq 'Active'}"> post-launch_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Deactivated'}"> paused_txt </c:if>
-	                 <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
-	                pr-sm"> ${appBo.appStatus} </span><span class="right-border"></span>
+	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
+	                pr-sm"> ${appBo.appStatus} </span>
+	                <span class="right-border"></span>
           <span class="study_status  post-launch_txt  pr-sm pl-sm"> Published </span> <span class="right-border"></span>
           <span class="study_status  post-launch_txt pr-sm pl-sm"> Distributed (1) </span>
           </div>

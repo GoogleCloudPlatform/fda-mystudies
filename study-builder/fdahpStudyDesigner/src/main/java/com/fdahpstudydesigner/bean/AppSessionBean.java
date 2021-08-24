@@ -25,18 +25,9 @@ package com.fdahpstudydesigner.bean;
 
 public class AppSessionBean {
 
-  private String isLive;
   private String permission;
   private Integer sessionAppCount;
   private String appId;
-
-  public String getIsLive() {
-    return isLive;
-  }
-
-  public void setIsLive(String isLive) {
-    this.isLive = isLive;
-  }
 
   public String getPermission() {
     return permission;

@@ -46,6 +46,10 @@ public interface AppDAO {
   public String saveOrUpdateAppProperties(AppsBo appsBo, SessionObject sessionObject);
 
   public boolean validateAppActions(String appId);
-  
+
   public String saveOrUpdateAppDeveloperConfig(AppsBo appsBo, SessionObject sessionObject);
+
+  public List<AppsBo> getActiveApps(String userId);
+
+  public boolean getAppPermission(String appId, String userId);
 }
