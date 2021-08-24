@@ -524,14 +524,6 @@ public class AppsBo implements Serializable {
     this.appWebsiteUrl = appWebsiteUrl;
   }
 
-  public String getAppWebsite() {
-    return appWebsite;
-  }
-
-  public void setAppWebsite(String appWebsite) {
-    this.appWebsite = appWebsite;
-  }
-
   public VersionInfoBO getVersionInfoBO() {
     return versionInfoBO;
   }
