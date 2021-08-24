@@ -454,7 +454,12 @@ static CGFloat const kForgotPasscodeHeight              = 100.0f;
                     }
                 } else if (error.code != LAErrorUserCancel) {
                     // Display the error message.
-                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ORKLocalizedString(@"PASSCODE_TOUCH_ID_ERROR_ALERT_TITLE", nil)
+                  NSString *localizedReasonTitle = ORKLocalizedString(@"PASSCODE_TOUCH_ID_ERROR_ALERT_TITLE", nil);
+                  if (_touchContext.biometryType == LABiometryTypeFaceID) {
+                    localizedReasonTitle = @"Face ID error";
+                  }
+                  
+                    UIAlertController *alert = [UIAlertController alertControllerWithTitle:localizedReasonTitle
                                                                                    message:error.localizedDescription
                                                                             preferredStyle:UIAlertControllerStyleAlert];
                     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_OK", nil)
