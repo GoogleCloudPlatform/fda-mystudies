@@ -22,6 +22,7 @@ import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.ChangePasswordActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
@@ -215,6 +216,8 @@ public class LoginCallbackActivity extends AppCompatActivity
             "" + userProfileData.getProfile().getEmailId());
     AppController.getHelperSharedPreference()
         .writePreference(LoginCallbackActivity.this, getString(R.string.verified), "true");
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    dbServiceSubscriber.saveUserProfileData(LoginCallbackActivity.this, userProfileData);
     if (userProfileData != null
         && (!userProfileData.getSettings().isLocalNotifications()
             || userProfileData.getSettings().isRemoteNotifications())) {

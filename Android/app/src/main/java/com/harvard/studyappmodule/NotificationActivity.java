@@ -32,6 +32,7 @@ import com.harvard.studyappmodule.studymodel.NotificationData;
 import com.harvard.studyappmodule.studymodel.NotificationDbResources;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
+import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
@@ -113,7 +114,11 @@ public class NotificationActivity extends AppCompatActivity
     AppController.getHelperProgressDialog().showProgress(NotificationActivity.this, "", "", false);
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
     HashMap<String, String> header = new HashMap();
-    String url = Urls.NOTIFICATIONS + "?skip=0";
+    String verificationTime = "";
+    UserProfileData userProfileData = dbServiceSubscriber.getUserProfileData(realm);
+    if (userProfileData != null && userProfileData.getProfile() != null)
+      verificationTime = userProfileData.getProfile().getVerificationTime();
+    String url = Urls.NOTIFICATIONS + "?skip=0" + "&verificationTime=" + verificationTime;
     StudyDatastoreConfigEvent studyDatastoreConfigEvent =
         new StudyDatastoreConfigEvent(
             "get",
