@@ -237,7 +237,7 @@ class User {
   ) -> UserActivityStatus {
 
     let activities = self.participatedActivites
-    if let activity = activities?.filter({ $0.activityId == activityId && $0.activityRunId == runId }
+    if let activity = activities?.filter({ $0.activityId == activityId && $0.activityRunId == runId && $0.studyId == studyId }
     ).first {
       activity.status = status
       return activity

@@ -1578,7 +1578,8 @@ public class StudyServiceImpl implements StudyService {
 
     EligibilityBo eligibilityBo = studyDAO.getStudyEligibiltyByStudyId(studyBo.getId());
 
-    List<ConsentBo> consentBoList = studyDAO.getConsentListForStudy(studyBo.getId());
+    List<ConsentBo> consentBoList =
+        studyDAO.getConsentListForStudy(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     List<ConsentInfoBo> consentInfoBoList =
         studyDAO.getConsentInfoList(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);

@@ -69,6 +69,18 @@ public class RealmMigrationHelper implements RealmMigration {
               });
 
       oldVersion++;
+    } else if (oldVersion == 1) {
+      // Added verificationTime field
+      RealmObjectSchema profile = schema.get("Profile");
+      profile
+          .addField("verificationTime", String.class)
+          .transform(
+              new RealmObjectSchema.Function() {
+                @Override
+                public void apply(DynamicRealmObject obj) {
+                  obj.set("verificationTime", "");
+                }
+              });
     }
   }
 }
