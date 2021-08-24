@@ -628,7 +628,6 @@ public class StudyDAOImpl implements StudyDAO {
       resourceQuery = session.createQuery(deleteQuery).setString("resourceInfoId", resourceInfoId);
       resourceCount = resourceQuery.executeUpdate();
 
-
       updateStudyToDraftStatus(studyId, sesOb, session);
 
       StudySequenceBo studySequence =
@@ -639,7 +638,6 @@ public class StudyDAOImpl implements StudyDAO {
                   .uniqueResult();
       studySequence.setMiscellaneousResources(false);
       session.saveOrUpdate(studySequence);
-
 
       if (!resourceVisibility && (resourceCount > 0)) {
         String deleteNotificationQuery =
@@ -7518,6 +7516,8 @@ public class StudyDAOImpl implements StudyDAO {
 
       consentBo.setId(null);
       consentBo.setStudyId(studyId);
+      consentBo.setCustomStudyId(null);
+      consentBo.setLive(0);
       consentBo.setVersion(0f);
       consentBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       session.save(consentBo);
@@ -7997,16 +7997,24 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
-  public List<ConsentBo> getConsentListForStudy(String studyId) {
+  public List<ConsentBo> getConsentListForStudy(
+      String studyId, String customStudyId, String copyVersion) {
     List<ConsentBo> consentBoList = null;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      String searchQuery =
-          " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
-      query = session.createQuery(searchQuery);
-      query.setString("studyId", studyId);
+      if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
+        String searchQuery =
+            " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
+        query = session.createQuery(searchQuery);
+        query.setString("studyId", studyId);
+      } else {
+        String searchQuery =
+            " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId ORDER BY CBO.version desc ";
+        query = session.createQuery(searchQuery);
+        query.setString("customStudyId", customStudyId);
+      }
       consentBoList = query.list();
       transaction.commit();
     } catch (Exception e) {
