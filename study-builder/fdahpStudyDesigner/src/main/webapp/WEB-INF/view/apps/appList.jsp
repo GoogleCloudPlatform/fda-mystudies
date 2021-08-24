@@ -17,6 +17,8 @@
     #app_Wide_table_list tr th {
     padding-left: 20px !important;
 }
+
+
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
@@ -75,7 +77,9 @@
 					</c:choose>" data-toggle="tooltip" data-placement="top"
                 	title="${(not empty app.liveAppId)?((app.flag)?'Edit draft version':'Edit'):'Edit draft version'}"
                 	appId="${app.id}"></span>
-                    <span class="sprites_icon copy mr-lg" data-toggle="tooltip" data-placement="top" title="View associated studies (${app.studiesCount})"></span>
+                    <span class="sprites_icon  mr-lg" data-toggle="tooltip" data-placement="top" title="View associated studies (${app.studiesCount})">
+                    <img src="../studybuilder/images/icons/file-list-line.svg" >
+                    </span>
                     
                   </td>        
               </tr>

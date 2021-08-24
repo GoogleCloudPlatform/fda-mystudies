@@ -10,6 +10,17 @@
 .uploadImg{
 margin-top:16px !important;
 }
+
+.bootstrap-select.btn-group .dropdown-menu {
+    min-width: 50%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #eef2f5 !important;
+    left: 50%;
+    float: right;
+}
+
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -83,7 +94,91 @@ margin-top:16px !important;
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-        <div class="col-md-6 pr-none">
+        
+         <div class="col-md-6 pr-none">
+          <div class="gray-xs-f mb-xs">
+            Study name
+            <small>(50 characters max)</small>
+            <span
+                class="requiredStar"> *
+            </span>
+            <span class="filled-tooltip"
+                    data-toggle="tooltip" data-placement="top"
+                    data-html="true"
+                    title="<span class='font24 text-weight-light pull-left'></span> A short study name for display in the mobile app">
+            </span>
+          </div>
+          <div class="form-group">
+             <input type="text" class="form-control" name="name"
+                   id="customStudyName" value="${fn:escapeXml(studyBo.name)}"
+                   required data-error="Please fill out this field"/>
+            <div class="help-block with-errors red-txt"></div>
+          </div>
+        </div>
+        
+ 
+      </div>
+      
+       <div class="col-md-12 p-none">
+        <div class="gray-xs-f mb-xs">
+          Descriptive study name
+          <small>(150 characters max)</small>
+          <span
+              class="requiredStar"> *
+          </span>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="fullName"
+                 value="${fn:escapeXml(studyBo.fullName)}" maxlength="150" required data-error="Please fill out this field"/>
+          <div class="help-block with-errors red-txt"></div>
+        </div>
+      </div>
+      
+      <!-- phase2a-sp1 -->
+      <div class="col-md-12 p-none">
+        <div class="col-md-6 pl-none">
+          <div class="gray-xs-f mb-xs">
+            Study website
+            <small>(100
+              characters max)
+            </small>   
+           </div>
+          <div class="form-group">
+            <input type="text" class="form-control" id="studyWebsiteId"
+                   name="studyWebsite" value="${studyBo.studyWebsite}"
+                   pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
+                   title="Include http://" maxlength="100"
+                   data-pattern-error="Please enter a valid URL" data-error="Please fill out this field"/>
+            <div class="help-block with-errors red-txt"></div>
+          </div> 
+        </div>
+        
+           <div class="col-md-6 pr-none">
+          <div class="gray-xs-f mb-xs">
+            Support email (for participants)
+            <small>(100
+              characters max)
+            </small>
+            <span class="requiredStar"> *</span>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="inboxEmailAddress"
+                   value="${studyBo.inboxEmailAddress}" required maxlength="100"
+                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                   autocomplete="off" data-pattern-error="Email address is invalid" data-error="Please fill out this field"/>
+            <div class="help-block with-errors red-txt"></div>
+          </div>
+        </div>
+      </div>
+      <!--phase2a sp1-->
+
+     
+
+      
+      <div class="col-md-12 p-none">
+      
+             <div class="col-md-6 pl-none">
+        
           <div class="gray-xs-f mb-xs">
             App ID
             <small>(15 characters max)</small>
@@ -105,68 +200,46 @@ margin-top:16px !important;
                     test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}"> disabled</c:if>
                    required data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
-          </div>
+          
+          
+          <select class="selectpicker" >
+    <optgroup label="APP94789 | Standalone" >
+      <option>Arthritis Research APP</option>
+    </optgroup>
+    <optgroup label="APP94789 | Standalone">
+ <option>Covid19 Research APP</option>
+    </optgroup>
+  </select>
+  </div>
         </div>
-      </div>
-      <!-- phase2a-sp1 -->
-      <div class="col-md-12 p-none">
-        <div class="col-md-6 pl-none">
-          <div class="gray-xs-f mb-xs">
-            Study name
-            <small>(50 characters max)</small>
-            <span
-                class="requiredStar"> *
-            </span>
-            <span class="filled-tooltip"
-                    data-toggle="tooltip" data-placement="top"
-                    data-html="true"
-                    title="<span class='font24 text-weight-light pull-left'></span> A short study name for display in the mobile app">
-            </span>
-          </div>
+        
+         <div class="col-md-6 pr-none">
+        
+          <div class="gray-xs-f mb-xs"> App Name </div>
           <div class="form-group">
-             <input type="text" class="form-control" name="name"
-                   id="customStudyName" value="${fn:escapeXml(studyBo.name)}"
-                   required data-error="Please fill out this field"/>
+            <input type="text" custAttType="cust" autofocus="autofocus"
+                   class="form-control aq-inp " name="" id=""
+                   maxlength="15" value=""   required data-error="Please fill out this field"  placeholder="Lorem Lorem" disabled/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-
-        <div class="col-md-6 pr-none">
-          <div class="gray-xs-f mb-xs">
-            Study website
-            <small>(100
-              characters max)
-            </small>   
-           </div>
-          <div class="form-group">
-            <input type="text" class="form-control" id="studyWebsiteId"
-                   name="studyWebsite" value="${studyBo.studyWebsite}"
-                   pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
-                   title="Include http://" maxlength="100"
-                   data-pattern-error="Please enter a valid URL" data-error="Please fill out this field"/>
-            <div class="help-block with-errors red-txt"></div>
-          </div> 
-        </div>
+     
       </div>
-      <!--phase2a sp1-->
-
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-xs">
-          Descriptive study name
-          <small>(150 characters max)</small>
-          <span
-              class="requiredStar"> *
-          </span>
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" name="fullName"
-                 value="${fn:escapeXml(studyBo.fullName)}" maxlength="150" required data-error="Please fill out this field"/>
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-      </div>
-
       
-      <div class="col-md-12 p-none">
+      
+       <div class="col-md-12 p-none">
+      
+             <div class="col-md-6 pl-none">
+        
+          <div class="gray-xs-f mb-xs"> App Type </div>
+          <div class="form-group">
+            <input type="text" custAttType="cust" autofocus="autofocus"
+                   class="form-control aq-inp " name="" id=""
+                   maxlength="15" value=""   required data-error="Please fill out this field"  placeholder="GateWay" disabled/>
+            <div class="help-block with-errors red-txt"></div>
+          </div>
+        </div>
+        
         <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
             Study type
@@ -201,23 +274,11 @@ margin-top:16px !important;
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-        <div class="col-md-6 pr-none">
-          <div class="gray-xs-f mb-xs">
-            Support email (for participants)
-            <small>(100
-              characters max)
-            </small>
-            <span class="requiredStar"> *</span>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="inboxEmailAddress"
-                   value="${studyBo.inboxEmailAddress}" required maxlength="100"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                   autocomplete="off" data-pattern-error="Email address is invalid" data-error="Please fill out this field"/>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
+     
       </div>
+      
+      
+      
 		<div class="col-md-12 p-none mb-xxlg">
           <div class="col-md-6 pr-none thumbImageDIv" style="margin-left:-13px">
           <div class="gray-xs-f mb-sm">
