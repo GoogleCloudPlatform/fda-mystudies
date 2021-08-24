@@ -89,7 +89,7 @@
           <td style="display: none;">${study.liveStudyId}</td>
           <td>${study.customStudyId}</td>
 
-          <td>${study.appId}</td>
+          <td><span class="appClass" customAppId="${study.appId}"><u>${study.appId}</u></span></td>
           <td>
             <div class="studylist-txtoverflow">${study.name}</div>
           </td>
@@ -404,5 +404,27 @@
 			});
 		  
 		});
+   
+
+
+   $('.appClass').on('click', function () {
+       var form = document.createElement('form');
+       form.method = 'post';
+       var input = document.createElement('input');
+       input.type = 'hidden';
+       input.name = 'customAppId';
+       input.value = $(this).attr('customAppId');
+       form.appendChild(input);
+
+       input = document.createElement('input');
+       input.type = 'hidden';
+       input.name = '${_csrf.parameterName}';
+       input.value = '${_csrf.token}';
+       form.appendChild(input);
+
+       form.action = '/studybuilder/adminApps/viewAppDetails.do';
+       document.body.appendChild(form);
+       form.submit();
+     });
 
 </script>
