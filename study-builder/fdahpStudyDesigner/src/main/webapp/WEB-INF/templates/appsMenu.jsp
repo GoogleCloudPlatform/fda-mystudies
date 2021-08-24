@@ -90,6 +90,9 @@
       </li>
       <li class="fifth commonCls">
         ACTIONS
+        <c:if test="${appBo.appSequenceBo.actions}">
+          <span class="sprites-icons-2 tick pull-right mt-xs"></span>
+        </c:if>
       </li>
     </ul>
   </div>

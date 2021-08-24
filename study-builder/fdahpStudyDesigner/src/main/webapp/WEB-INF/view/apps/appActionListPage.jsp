@@ -82,7 +82,10 @@ button#exportId {
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
-              <c:when test="${appBo.isAppPublished}">
+             <%--  <c:when test="${appBo.isAppPublished}">
+                disabled
+              </c:when> --%>
+               <c:when test="${appBo.isAppPublished == true && appBo.hasAppDraft ne 1}">
                 disabled
               </c:when>
               <c:when test="${not empty appBo.appSequenceBo && (not appBo.appSequenceBo.actions || not appBo.appSequenceBo.appProperties || not appBo.appSequenceBo.developerConfigs)}">
@@ -107,14 +110,30 @@ button#exportId {
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
-              <c:when
+              
+             <%--  <c:when
                   test="${empty appBo.liveAppsBo}">
                 disabled
               </c:when>
               <c:when
                   test="${not empty appBo.liveAppsBo && appBo.liveAppsBo.iosAppDistributed}">
                 disabled
+              </c:when> --%>
+               <c:when
+                  test="${not empty appBo.appStatus && (appBo.appStatus eq 'Draft'|| appBo.appStatus eq 'Deactivated')}">
+                disabled
               </c:when>
+              
+               <c:when test="${ empty appBo.isAppPublished || appBo.isAppPublished == false}">
+                disabled
+              </c:when>
+              <c:when
+                  test="${not empty appBo.iosAppDistributed && appBo.iosAppDistributed}">
+                disabled
+              </c:when> 
+               <c:when test="${appBo.appPlatform == 'A'}">
+			  	disabled
+			  </c:when>
             </c:choose>
                 >Mark ios app as distributed
         </button>
@@ -131,14 +150,29 @@ button#exportId {
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
-              <c:when
+              <%-- <c:when
                   test="${empty appBo.liveAppsBo}">
                 disabled
               </c:when>
               <c:when
                   test="${not empty appBo.liveAppsBo && appBo.liveAppsBo.androidAppDistributed}">
                 disabled
+              </c:when> --%>
+              <c:when
+                  test="${ empty appBo.appStatus && (appBo.appStatus eq 'Draft'|| appBo.appStatus eq 'Deactivated')}">
+                disabled
               </c:when>
+              <c:when test="${empty appBo.isAppPublished || appBo.isAppPublished == false}">
+                disabled
+              </c:when>
+               <c:when
+                  test="${not empty appBo.androidAppDistributed && appBo.androidAppDistributed}">
+                disabled
+              </c:when> 
+              <c:when test="${appBo.appPlatform == 'I'}">
+			  	disabled
+			  </c:when>
+			  
             </c:choose>
             >Mark android app as distributed
         </button>
@@ -168,11 +202,17 @@ button#exportId {
       </div>
   </div>
 </div>
+
+<form:form
+    action="/studybuilder/adminApps/appList.do?_S=${param._S}"
+    name="appListInfoForm" id="appListInfoForm" method="post">
+</form:form>
 <script type="text/javascript">
   $(document).ready(function () {
 	  $('.appClass').addClass('active');
 	  $(".menuNav li.active").removeClass('active');
 	  $(".menuNav li.fifth").addClass('active');
+	 
  });
 
   function validateAppStatus(obj) {
@@ -205,7 +245,7 @@ button#exportId {
 	          },
 	          callback: function (result) {
 	            if (result) {
-	              /* updateStudyByAction(buttonText); */
+	               updateAppsByAction(buttonText); 
 	            }
 	          }
 	        });
@@ -213,5 +253,36 @@ button#exportId {
 	    }
 
 	  }
-	   
+  
+  function updateAppsByAction(buttonText) {
+	  
+	    if (buttonText) {
+	      var appId = "${appBo.id}";
+	      var customAppId = "${appBo.customAppId}";
+	      $
+	          .ajax({
+	            url: "/studybuilder/adminApps/updateAppAction.do?_S=${param._S}",
+	            type: "POST",
+	            datatype: "json",
+	            data: {
+	              buttonText: buttonText,
+	              appId: appId,
+	              customAppId: customAppId,
+	              "${_csrf.parameterName}": "${_csrf.token}",
+	            },
+	            success: function updateAction(data, status) {
+	              var message = data.message;
+	              
+	                $('#appListInfoForm').submit();
+	            },
+	            error: function status(data, status) {
+	              $("body").removeClass("loading");
+	            },
+	            complete: function () {
+	              $('.actBut').removeAttr('disabled');
+	            }
+	          });
+	    }
+	  }
+ 
 </script>

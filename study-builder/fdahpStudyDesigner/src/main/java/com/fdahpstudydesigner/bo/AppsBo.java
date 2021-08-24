@@ -126,14 +126,11 @@ public class AppsBo implements Serializable {
   @Column(name = "ios_latest_app_build_version")
   private String iosAppBuildVersion;
 
-  @Column(name = "ios_force_upgrade")
-  private Integer iosForceUpgrade;
+  @Transient private Integer iosForceUpgrade;
 
-  @Column(name = "android_latest_app_version")
-  private String androidAppBuildVersion;
+  @Transient private String androidAppBuildVersion;
 
-  @Column(name = "android_force_upgrade")
-  private Integer androidForceUpgrade;
+  @Transient private Integer androidForceUpgrade;
 
   @Column(name = "is_live")
   private Integer live = 0;
@@ -178,6 +175,8 @@ public class AppsBo implements Serializable {
   private String appWebsite;
 
   @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
+
+  @Transient VersionInfoBO versionInfoBO = new VersionInfoBO();
 
   @Transient private AppsBo liveAppsBo = null;
 
@@ -525,5 +524,21 @@ public class AppsBo implements Serializable {
 
   public void setAppWebsiteUrl(String appWebsiteUrl) {
     this.appWebsiteUrl = appWebsiteUrl;
+  }
+
+  public String getAppWebsite() {
+    return appWebsite;
+  }
+
+  public void setAppWebsite(String appWebsite) {
+    this.appWebsite = appWebsite;
+  }
+
+  public VersionInfoBO getVersionInfoBO() {
+    return versionInfoBO;
+  }
+
+  public void setVersionInfoBO(VersionInfoBO versionInfoBO) {
+    this.versionInfoBO = versionInfoBO;
   }
 }

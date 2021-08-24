@@ -62,7 +62,7 @@
                                 <div class="gray-xs-f mb-xs mt-md">Android Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Bundle ID for your Android app. Note that you cannot update this field once you have marked the Android app as distributed."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control android" value= "${appBo.androidBundleId}" name="androidBundleId" required data-error="Please fill out this field"
-                                    <c:if test="${appBo.iosAppDistributed}"> disabled</c:if>/>
+                                    <c:if test="${appBo.androidAppDistributed}"> disabled</c:if>/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -71,7 +71,7 @@
                                 <div class="gray-xs-f mb-xs mt-md">Android Server Key <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the server key needed to push notifications to the Android app. Note that you cannot update this field once you have marked the Android app as distributed."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control android" value= "${appBo.androidServerKey}" name="androidServerKey" required data-error="Please fill out this field"
-                                    <c:if test="${appBo.iosAppDistributed}"> disabled</c:if>/>
+                                    <c:if test="${appBo.androidAppDistributed}"> disabled</c:if>/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -103,7 +103,8 @@
                               <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs">Latest XCode app version (for iOS app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Xcode version applicable to the latest build of the iOS app that is available to users. Only digits and the . character are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control ios" value= "${appBo.iosXCodeAppVersion}" name="iosXCodeAppVersion" required data-error="Please fill out this field"/>
+                                    <input type="text" class="form-control ios" value= "${appBo.iosXCodeAppVersion}" name="iosXCodeAppVersion" 
+                                    required data-error="Please fill out this field"  pattern="^[0-9]*\.?[0-9]*$" data-pattern-error="Please enter a valid App version"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -136,7 +137,7 @@
                            <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs"> Latest app version code (for Android app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the app version corresponding to the latest Android app that is available to users. Only integers are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="number" class="form-control android" value= "${appBo.androidAppBuildVersion}" name="androidAppBuildVersion" required data-error="Please fill out this field"/>
+                                    <input type="number" class="form-control android" value= "${appBo.versionInfoBO.android}" name="androidAppBuildVersion" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -180,7 +181,8 @@
 	     $('#developerConfigFormId input').prop('disabled', true);
 	  </c:if>
 	  
-	  
+	  debugger 
+	  console.log()
 	  <c:if test="${empty permission}">
 	    
 	    <c:if test = "${appBo.appPlatform == 'I,A'} || ${appBo.appPlatform == 'A,I'}">
@@ -190,29 +192,27 @@
 	  	<c:if test="${appBo.appPlatform == 'I'}">
 		  	$('.android').prop('required',false);
 		  	$('.android').prop('disabled', true);
-		  	$('.ios').prop('disabled', false);
 	  	</c:if>
 	  	<c:if test="${appBo.appPlatform == 'A'}">
 		 	 $('.ios').prop('required',false);
 		 	$('.ios').prop('disabled', true);
-		 	$('.android').prop('disabled', false);
 	 	</c:if>
   	 </c:if>
 	  
-	  <c:if test="${appBo.iosForceUpgrade eq 0}">
+	  <c:if test="${appBo.versionInfoBO.iosForceUpgrade eq false}">
 	  		$('#iosForceUpgradeYesId').prop('checked', false);
 	  		$('#iosForceUpgradeNoId').prop('checked', true);
 	  </c:if>
-	  <c:if test="${appBo.iosForceUpgrade eq 1}">
+	  <c:if test="${appBo.versionInfoBO.iosForceUpgrade eq true}">
 	  		$('#iosForceUpgradeYesId').prop('checked', true);
 			$('#iosForceUpgradeNoId').prop('checked', false);
 	  </c:if>
 	  
-	  <c:if test="${appBo.androidForceUpgrade eq 0}">
+	  <c:if test="${appBo.versionInfoBO.androidForceUpgrade eq false}">
 	  		$('#androidForceUpgradeYesId').prop('checked', false);
 			$('#androidForceUpgradeNoId').prop('checked', true);
 	  </c:if>
-	  <c:if test="${appBo.androidForceUpgrade eq 1}">
+	  <c:if test="${appBo.versionInfoBO.androidForceUpgrade eq true}">
 	  		$('#androidForceUpgradeYesId').prop('checked', true);
 			$('#androidForceUpgradeNoId').prop('checked', false);
 	  </c:if>
@@ -228,7 +228,6 @@
 	  
 	  $('#completedId').click(
 		        function (e) {
-		        	debugger;
 		        	if ($('.radio input:checked').length == 0) {
 		          	    $("input").attr("required", true);
 		              }

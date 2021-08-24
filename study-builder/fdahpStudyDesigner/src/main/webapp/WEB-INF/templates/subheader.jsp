@@ -206,6 +206,11 @@ color: #95a2ab;
     if (actionSucMsg) {
     	showSucMsg(actionSucMsg);
     }
+    
+    var sucMsgAppActions = '${sucMsgAppActions}';
+    if (sucMsgAppActions) {
+    	showSucMsg(sucMsgAppActions);
+    }
   });
 
   function showSucMsg(message) {
@@ -213,6 +218,8 @@ color: #95a2ab;
     $('#alertMsg').show('5000');
     setTimeout(hideDisplayMessage, 5000);
   }
+  
+  
 
   function showErrMsg(message) {
     $("#alertMsg").removeClass('s-box').addClass('e-box').text(message);

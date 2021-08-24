@@ -210,9 +210,7 @@ margin-top:16px !important;
                             "This is a required field"));
                     return false;
                   } else {
-                    var appId = $(
-                        '#appId')
-                        .val();
+                    var appId = $('#appId').val();
                     if (null != appId
                         && appId != ''
                         && typeof appId != 'undefined') {
