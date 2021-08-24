@@ -1158,7 +1158,8 @@ public class StudyExportImportService {
                 customIdsMap.get(STUDY_ID + studyBo.getId()),
                 notificationBO.getxDays(),
                 notificationBO.getScheduleTimestamp(),
-                sequenceNumber++);
+                sequenceNumber++,
+                studyBo.getPlatform());
         notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
       }
     }

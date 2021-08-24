@@ -819,13 +819,16 @@ public class StudyMetaDataService {
       @ApiParam(name = "Authorization", required = true) @HeaderParam("Authorization")
           String authorization,
       @ApiParam(name = "applicationId", required = true) @HeaderParam("applicationId") String appId,
+      @ApiParam(name = "verificationTime", required = true) @QueryParam("verificationTime")
+          String verificationTime,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.entry("begin notifications()");
     NotificationsResponse notificationsResponse = new NotificationsResponse();
     try {
       if (StringUtils.isNotEmpty(skip)) {
-        notificationsResponse = appMetaDataOrchestration.notifications(skip, authorization, appId);
+        notificationsResponse =
+            appMetaDataOrchestration.notifications(skip, authorization, appId, verificationTime);
         if (!notificationsResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
