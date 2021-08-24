@@ -175,9 +175,6 @@ public class AppsBo implements Serializable {
   @Column(name = "version")
   private Float version = 0f;
 
-  @Column(name = "app_website")
-  private String appWebsite;
-
   @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
 
   @Transient private AppsBo liveAppsBo = null;

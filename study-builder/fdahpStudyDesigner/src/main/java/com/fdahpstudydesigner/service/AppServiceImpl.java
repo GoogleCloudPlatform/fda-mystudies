@@ -215,9 +215,35 @@ public class AppServiceImpl implements AppService {
         appBos = appDAO.getActiveApps(userId);
       }
     } catch (Exception e) {
-      logger.error("AppServiceImpl - getAppList() - ERROR ", e);
+      logger.error("AppServiceImpl - getActiveApps() - ERROR ", e);
     }
-    logger.exit("AppServiceImpl - getAppList() - Ends");
+    logger.exit("AppServiceImpl - getActiveApps() - Ends");
     return appBos;
+  }
+
+  @Override
+  public AppsBo getAppbyCustomAppId(String customAppId) {
+    logger.entry("AppServiceImpl - getAppbyCustomAppId() - Starts");
+    AppsBo appsBo = null;
+    try {
+      appsBo = appDAO.getAppByLatestVersion(customAppId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getAppbyCustomAppId() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getAppbyCustomAppId() - Ends");
+    return appsBo;
+  }
+
+  @Override
+  public boolean getAppPermission(String appId, String userId) {
+    logger.entry("AppServiceImpl - getAppPermission() - Starts");
+    boolean permission = false;
+    try {
+      permission = appDAO.getAppPermission(appId, userId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getAppPermission() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getAppPermission() - Ends");
+    return permission;
   }
 }

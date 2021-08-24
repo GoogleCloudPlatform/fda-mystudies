@@ -28,6 +28,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.Getter;
@@ -38,6 +40,11 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Entity
 @Table(name = "app_permission")
+@NamedQueries({
+  @NamedQuery(
+      name = "getAppPermission",
+      query = " From AppPermissionBO WHERE appId =:appId and userId =:userId")
+})
 public class AppPermissionBO implements Serializable {
 
   private static final long serialVersionUID = 1L;
