@@ -85,7 +85,7 @@ button#exportId {
               <c:when test="${appBo.isAppPublished}">
                 disabled
               </c:when>
-              <c:when test="${not empty appBo.appSequenceBo && (appBo.appSequenceBo.actions eq false || appBo.appSequenceBo.appProperties eq false || appBo.appSequenceBo.developerConfigs eq false)}">
+              <c:when test="${not empty appBo.appSequenceBo && (not appBo.appSequenceBo.actions || not appBo.appSequenceBo.appProperties || not appBo.appSequenceBo.developerConfigs)}">
                 disabled
               </c:when>
                <c:when test="${markAsCompleted eq false}">
@@ -156,7 +156,7 @@ button#exportId {
                 disabled
               </c:when>
               <c:when
-                  test="${not empty appBo.appStatus && appBo.appStatus eq 'Deactivated'}">
+                  test="${not empty appBo.appStatus && (appBo.appStatus eq 'Deactivated' || appBo.appStatus eq 'Draft')}">
                 disabled
               </c:when>
             </c:choose>>Deactivate app
@@ -176,7 +176,6 @@ button#exportId {
  });
 
   function validateAppStatus(obj) {
-	  debugger
 	    var buttonText = obj.id;
 	    var messageText = "";
 	    if (buttonText) {

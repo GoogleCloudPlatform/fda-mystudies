@@ -356,7 +356,7 @@ public class AppController {
                 .setAttribute(
                     sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:viewAppProperties.do", map);
+            return new ModelAndView("redirect:appActionList.do", map);
           } else {
             request
                 .getSession()

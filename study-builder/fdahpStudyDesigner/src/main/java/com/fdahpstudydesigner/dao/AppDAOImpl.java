@@ -284,6 +284,7 @@ public class AppDAOImpl implements AppDAO {
       if (StringUtils.isEmpty(appBo.getId())) {
         appBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         appSequenceBo = new AppSequenceBo();
+        appBo.setAppStatus("Draft");
         appBo.setCreatedBy(appBo.getUserId());
         appId = (String) session.save(appBo);
 

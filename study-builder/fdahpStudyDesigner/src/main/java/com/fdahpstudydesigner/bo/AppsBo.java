@@ -163,13 +163,13 @@ public class AppsBo implements Serializable {
   private String appStatus;
 
   @Column(name = "ios_app_distributed")
-  private Integer iosAppDistributed;
+  private Boolean iosAppDistributed;
 
   @Column(name = "is_app_published")
   private Boolean isAppPublished;
 
   @Column(name = "android_app_distributed")
-  private Integer androidAppDistributed;
+  private Boolean androidAppDistributed;
 
   @Column(name = "version")
   private Float version = 0f;
@@ -463,11 +463,11 @@ public class AppsBo implements Serializable {
     this.appStatus = appStatus;
   }
 
-  public Integer getIosAppDistributed() {
+  public Boolean getIosAppDistributed() {
     return iosAppDistributed;
   }
 
-  public void setIosAppDistributed(Integer iosAppDistributed) {
+  public void setIosAppDistributed(Boolean iosAppDistributed) {
     this.iosAppDistributed = iosAppDistributed;
   }
 
@@ -479,11 +479,11 @@ public class AppsBo implements Serializable {
     this.isAppPublished = isAppPublished;
   }
 
-  public Integer getAndroidAppDistributed() {
+  public Boolean getAndroidAppDistributed() {
     return androidAppDistributed;
   }
 
-  public void setAndroidAppDistributed(Integer androidAppDistributed) {
+  public void setAndroidAppDistributed(Boolean androidAppDistributed) {
     this.androidAppDistributed = androidAppDistributed;
   }
 
