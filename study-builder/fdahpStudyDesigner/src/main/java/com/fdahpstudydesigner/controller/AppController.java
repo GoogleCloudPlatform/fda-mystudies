@@ -609,7 +609,6 @@ public class AppController {
           for (AppSessionBean sessionBean : sesObj.getAppSessionBeans()) {
             if ((sessionBean != null)
                 && sessionBean.getPermission().equals(permission)
-                && sessionBean.getIsLive().equals(isLive)
                 && sessionBean.getAppId().equals(appId)) {
               appSessionBean = sessionBean;
             }
@@ -629,7 +628,6 @@ public class AppController {
             appSessionBeans.addAll(sesObj.getAppSessionBeans());
           }
           appSessionBean = new AppSessionBean();
-          appSessionBean.setIsLive(isLive);
           appSessionBean.setPermission(permission);
           appSessionBean.setSessionAppCount(sessionAppCount);
           appSessionBean.setAppId(appId);

@@ -55,6 +55,7 @@ import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bean.StudyPageBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.Checklist;
 import com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo;
 import com.fdahpstudydesigner.bo.ConsentBo;
@@ -74,6 +75,7 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.AppService;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.service.StudyExportImportService;
@@ -148,6 +150,8 @@ public class StudyController {
   @Autowired private StudyExportImportService studyExportImportService;
 
   @Autowired private StudyDAO studyDao;
+
+  @Autowired private AppService appService;
 
   @RequestMapping("/adminStudies/actionList.do")
   public ModelAndView actionList(HttpServletRequest request) {
@@ -1832,6 +1836,7 @@ public class StudyController {
     ModelAndView mav = new ModelAndView("loginPage");
     ModelMap map = new ModelMap();
     List<StudyListBean> studyBos = null;
+    List<AppsBo> appList = null;
     String sucMsg = "";
     String errMsg = "";
     String actionSucMsg = "";
@@ -1883,9 +1888,25 @@ public class StudyController {
             != null) {
           request.getSession().removeAttribute(FdahpStudyDesignerConstants.QUESTIONNARIE_STUDY_ID);
         }
+        String appId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter(FdahpStudyDesignerConstants.APP_ID))
+                ? ""
+                : request.getParameter(FdahpStudyDesignerConstants.APP_ID);
         studyBos = studyService.getStudyList(sesObj.getUserId());
-        map.addAttribute("studyBos", studyBos);
+        appList = appService.getActiveApps(sesObj.getUserId());
+        List<StudyListBean> studies = new ArrayList();
+        if (StringUtils.isNotEmpty(appId)) {
+          for (StudyListBean study : studyBos) {
+            if (study.getAppId() != null && study.getAppId().equalsIgnoreCase(appId)) {
+              studies.add(study);
+            }
+          }
+          map.addAttribute("studyBos", studies);
+        } else {
+          map.addAttribute("studyBos", studyBos);
+        }
         map.addAttribute("studyListId", "true");
+        map.addAttribute("appBos", appList);
         auditLogEventHelper.logEvent(STUDY_LIST_VIEWED, auditRequest);
 
         mav = new ModelAndView("studyListPage", map);

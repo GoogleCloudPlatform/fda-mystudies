@@ -125,7 +125,7 @@ button#exportId {
       
       
         
-       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="../studybuilder/images/icons/check-solid.svg" ></span> </span>  </div> 
+       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div> 
        </div>
      
         

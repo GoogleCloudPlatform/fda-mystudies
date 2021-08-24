@@ -206,4 +206,18 @@ public class AppServiceImpl implements AppService {
     logger.exit("AppServiceImpl - saveOrUpdateAppProperties() - Ends");
     return message;
   }
+
+  @Override
+  public List<AppsBo> getActiveApps(String userId) {
+    List<AppsBo> appBos = null;
+    try {
+      if (StringUtils.isNotEmpty(userId)) {
+        appBos = appDAO.getActiveApps(userId);
+      }
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getAppList() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getAppList() - Ends");
+    return appBos;
+  }
 }

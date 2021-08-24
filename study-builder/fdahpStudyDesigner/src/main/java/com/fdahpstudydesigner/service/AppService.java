@@ -49,4 +49,6 @@ public interface AppService {
   public boolean validateAppActions(String appId);
 
   public String saveOrUpdateAppDeveloperConfig(AppsBo appsBo, SessionObject sessionObject);
+
+  public List<AppsBo> getActiveApps(String userId);
 }

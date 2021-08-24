@@ -712,4 +712,45 @@ public class AppDAOImpl implements AppDAO {
     logger.exit("saveOrUpdateAppDeveloperConfig() - Ends");
     return message;
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<AppsBo> getActiveApps(String userId) {
+    Session session = null;
+    List<AppsBo> appListBean = null;
+    try {
+
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      if (StringUtils.isNotEmpty(userId)) {
+
+        query = session.getNamedQuery("getUserById").setString("userId", userId);
+        UserBO userBO = (UserBO) query.uniqueResult();
+
+        if (userBO.getRoleId().equals("1")) {
+          appListBean = session.getNamedQuery("getApps").setString("status", "Active").list();
+
+        } else {
+          query =
+              session.createQuery(
+                  "Select *"
+                      + " from AppsBo a,AppPermissionBO ap, UserBO user"
+                      + " where a.id=ap.appId"
+                      + " and a.version=0"
+                      + " and ap.userId=:impValue"
+                      + " and a.appStatus = 'Active'"
+                      + " order by a.createdOn desc");
+          appListBean = query.setString(IMP_VALUE, userId).list();
+        }
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getAppList() - Ends");
+    return appListBean;
+  }
 }
