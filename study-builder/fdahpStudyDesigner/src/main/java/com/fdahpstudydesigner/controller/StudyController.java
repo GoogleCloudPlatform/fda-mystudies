@@ -453,6 +453,10 @@ public class StudyController {
             studyService.markAsCompleted(
                 studyId, FdahpStudyDesignerConstants.CONESENT_REVIEW, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
+        if (request.getParameter("isActive") != null
+            && request.getParameter("isActive").equals("consentReview")) {
+          map.addAttribute("isActive", "consentReview");
+        }
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
           request
               .getSession()
@@ -1596,6 +1600,12 @@ public class StudyController {
         map.addAttribute("_S", sessionStudyCount);
         map.addAttribute("status", studyBo.getStatus());
         map.addAttribute("lastPublishedVersion", lastPublishedVersion);
+
+        if (request.getParameter("isActive") != null
+            && request.getParameter("isActive").equals("consentReview")) {
+          map.addAttribute("isActive", "consentReview");
+        }
+
         mav = new ModelAndView("consentReviewAndEConsentPage", map);
       }
     } catch (Exception e) {
