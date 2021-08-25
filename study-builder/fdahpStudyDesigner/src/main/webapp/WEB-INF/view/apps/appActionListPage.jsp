@@ -144,7 +144,7 @@ button#exportId {
       
       
         
-       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div> 
+       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.iosAppDistributed?'hide':''}"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div> 
        </div>
      
         
@@ -187,6 +187,7 @@ button#exportId {
             </c:choose>
             >Mark android app as distributed
         </button>
+        <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.androidAppDistributed?'hide':''}"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div>
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
        This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
        Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
