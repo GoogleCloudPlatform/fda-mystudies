@@ -95,7 +95,10 @@ public class AppsServiceImpl implements AppsService {
       AppEntity app = optApp.get();
       appResponse =
           new AppContactEmailsResponse(
-              MessageCode.GET_APP_SUCCESS, app.getContactUsToEmail(), app.getFormEmailId());
+              MessageCode.GET_APP_SUCCESS,
+              app.getContactUsToEmail(),
+              app.getFormEmailId(),
+              app.getAppName());
     }
 
     logger.exit(String.format("customAppId=%s contact details fetched successfully", customAppId));

@@ -206,4 +206,56 @@ public class AppServiceImpl implements AppService {
     logger.exit("StudyServiceImpl - getAllStudyList() - Ends");
     return appList;
   }
+
+  public String saveOrUpdateAppDeveloperConfig(AppsBo appsBo, SessionObject sessionObject) {
+    logger.entry("AppServiceImpl - saveOrUpdateAppProperties() - Starts");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = appDAO.saveOrUpdateAppDeveloperConfig(appsBo, sessionObject);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - saveOrUpdateAppProperties() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - saveOrUpdateAppProperties() - Ends");
+    return message;
+  }
+
+  @Override
+  public List<AppsBo> getActiveApps(String userId) {
+    List<AppsBo> appBos = null;
+    try {
+      if (StringUtils.isNotEmpty(userId)) {
+        appBos = appDAO.getActiveApps(userId);
+      }
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getActiveApps() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getActiveApps() - Ends");
+    return appBos;
+  }
+
+  @Override
+  public AppsBo getAppbyCustomAppId(String customAppId) {
+    logger.entry("AppServiceImpl - getAppbyCustomAppId() - Starts");
+    AppsBo appsBo = null;
+    try {
+      appsBo = appDAO.getAppByLatestVersion(customAppId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getAppbyCustomAppId() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getAppbyCustomAppId() - Ends");
+    return appsBo;
+  }
+
+  @Override
+  public boolean getAppPermission(String appId, String userId) {
+    logger.entry("AppServiceImpl - getAppPermission() - Starts");
+    boolean permission = false;
+    try {
+      permission = appDAO.getAppPermission(appId, userId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getAppPermission() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getAppPermission() - Ends");
+    return permission;
+  }
 }

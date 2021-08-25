@@ -17,6 +17,8 @@
     #app_Wide_table_list tr th {
     padding-left: 20px !important;
 }
+
+
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
@@ -75,7 +77,9 @@
 					</c:choose>" data-toggle="tooltip" data-placement="top"
                 	title="${(not empty app.liveAppId)?((app.flag)?'Edit draft version':'Edit'):'Edit draft version'}"
                 	appId="${app.id}"></span>
-                    <span class="sprites_icon copy mr-lg" data-toggle="tooltip" data-placement="top" title="View associated studies (${app.studiesCount})"></span>
+                    <span class="sprites_icon  mr-lg viewStudiesClass" data-toggle="tooltip" data-placement="top" title="View associated studies (${app.studiesCount})" appId="${app.customAppId}">
+                    <img src="../images/icons/file-list-line.svg" >
+                    </span>
                     
                   </td>        
               </tr>
@@ -176,6 +180,26 @@
         form.appendChild(input);
 
         form.action = '/studybuilder/adminApps/viewAppDetails.do';
+        document.body.appendChild(form);
+        form.submit();
+      });
+
+    $('.viewStudiesClass').on('click', function () {
+        var form = document.createElement('form');
+        form.method = 'post';
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'appId';
+        input.value = $(this).attr('appId');
+        form.appendChild(input);
+
+        input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '${_csrf.parameterName}';
+        input.value = '${_csrf.token}';
+        form.appendChild(input);
+
+        form.action = '/studybuilder/adminStudies/studyList.do';
         document.body.appendChild(form);
         form.submit();
       });

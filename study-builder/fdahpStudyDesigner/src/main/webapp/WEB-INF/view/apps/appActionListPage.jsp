@@ -36,6 +36,8 @@ button#exportId {
 }
 
 
+
+
 </style>
 
 <div class="col-sm-10 col-rc white-bg p-none">
@@ -82,10 +84,13 @@ button#exportId {
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
-              <c:when test="${appBo.isAppPublished}">
+             <%--  <c:when test="${appBo.isAppPublished}">
+                disabled
+              </c:when> --%>
+               <c:when test="${appBo.isAppPublished == true && appBo.hasAppDraft ne 1}">
                 disabled
               </c:when>
-              <c:when test="${not empty appBo.appSequenceBo && (appBo.appSequenceBo.actions eq false || appBo.appSequenceBo.appProperties eq false || appBo.appSequenceBo.developerConfigs eq false)}">
+              <c:when test="${not empty appBo.appSequenceBo && (not appBo.appSequenceBo.actions || not appBo.appSequenceBo.appProperties || not appBo.appSequenceBo.developerConfigs)}">
                 disabled
               </c:when>
                <c:when test="${markAsCompleted eq false}">
@@ -101,23 +106,48 @@ button#exportId {
       </div>
 
       <div class="form-group mr-sm" style="white-space: normal;">
-        <button type="button" class="btn btn-default gray-btn-action "
+      
+      <div class="display__flex__center">
+       <div>   <button type="button" class="btn btn-default gray-btn-action "
                 id="iosDistributedId" onclick="validateAppStatus(this);"
             <c:choose>
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
-              <c:when
+              
+             <%--  <c:when
                   test="${empty appBo.liveAppsBo}">
                 disabled
               </c:when>
               <c:when
                   test="${not empty appBo.liveAppsBo && appBo.liveAppsBo.iosAppDistributed}">
                 disabled
+              </c:when> --%>
+               <c:when
+                  test="${not empty appBo.appStatus && (appBo.appStatus eq 'Draft'|| appBo.appStatus eq 'Deactivated')}">
+                disabled
               </c:when>
+              
+               <c:when test="${ empty appBo.isAppPublished || appBo.isAppPublished == false}">
+                disabled
+              </c:when>
+              <c:when
+                  test="${not empty appBo.iosAppDistributed && appBo.iosAppDistributed}">
+                disabled
+              </c:when> 
+               <c:when test="${appBo.appPlatform == 'A'}">
+			  	disabled
+			  </c:when>
             </c:choose>
                 >Mark ios app as distributed
-        </button>
+        </button> </div>
+      
+      
+        
+       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.iosAppDistributed?'hide':''}"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div> 
+       </div>
+     
+        
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
         This action helps flag the iOS app as distributed (via the App Store or other means), live and made available for actual participants to use. 
         Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
@@ -131,17 +161,33 @@ button#exportId {
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
-              <c:when
+              <%-- <c:when
                   test="${empty appBo.liveAppsBo}">
                 disabled
               </c:when>
               <c:when
                   test="${not empty appBo.liveAppsBo && appBo.liveAppsBo.androidAppDistributed}">
                 disabled
+              </c:when> --%>
+              <c:when
+                  test="${ empty appBo.appStatus && (appBo.appStatus eq 'Draft'|| appBo.appStatus eq 'Deactivated')}">
+                disabled
               </c:when>
+              <c:when test="${empty appBo.isAppPublished || appBo.isAppPublished == false}">
+                disabled
+              </c:when>
+               <c:when
+                  test="${not empty appBo.androidAppDistributed && appBo.androidAppDistributed}">
+                disabled
+              </c:when> 
+              <c:when test="${appBo.appPlatform == 'I'}">
+			  	disabled
+			  </c:when>
+			  
             </c:choose>
             >Mark android app as distributed
         </button>
+        <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.androidAppDistributed?'hide':''}"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div>
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
        This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
        Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
@@ -156,7 +202,7 @@ button#exportId {
                 disabled
               </c:when>
               <c:when
-                  test="${not empty appBo.appStatus && appBo.appStatus eq 'Deactivated'}">
+                  test="${not empty appBo.appStatus && (appBo.appStatus eq 'Deactivated' || appBo.appStatus eq 'Draft')}">
                 disabled
               </c:when>
             </c:choose>>Deactivate app
@@ -168,15 +214,20 @@ button#exportId {
       </div>
   </div>
 </div>
+
+<form:form
+    action="/studybuilder/adminApps/appList.do?_S=${param._S}"
+    name="appListInfoForm" id="appListInfoForm" method="post">
+</form:form>
 <script type="text/javascript">
   $(document).ready(function () {
 	  $('.appClass').addClass('active');
 	  $(".menuNav li.active").removeClass('active');
 	  $(".menuNav li.fifth").addClass('active');
+	 
  });
 
   function validateAppStatus(obj) {
-	  debugger
 	    var buttonText = obj.id;
 	    var messageText = "";
 	    if (buttonText) {
@@ -206,7 +257,7 @@ button#exportId {
 	          },
 	          callback: function (result) {
 	            if (result) {
-	              /* updateStudyByAction(buttonText); */
+	               updateAppsByAction(buttonText); 
 	            }
 	          }
 	        });
@@ -214,5 +265,36 @@ button#exportId {
 	    }
 
 	  }
-	   
+  
+  function updateAppsByAction(buttonText) {
+	  
+	    if (buttonText) {
+	      var appId = "${appBo.id}";
+	      var customAppId = "${appBo.customAppId}";
+	      $
+	          .ajax({
+	            url: "/studybuilder/adminApps/updateAppAction.do?_S=${param._S}",
+	            type: "POST",
+	            datatype: "json",
+	            data: {
+	              buttonText: buttonText,
+	              appId: appId,
+	              customAppId: customAppId,
+	              "${_csrf.parameterName}": "${_csrf.token}",
+	            },
+	            success: function updateAction(data, status) {
+	              var message = data.message;
+	              
+	                $('#appListInfoForm').submit();
+	            },
+	            error: function status(data, status) {
+	              $("body").removeClass("loading");
+	            },
+	            complete: function () {
+	              $('.actBut').removeAttr('disabled');
+	            }
+	          });
+	    }
+	  }
+ 
 </script>

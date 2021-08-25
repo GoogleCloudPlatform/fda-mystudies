@@ -40,6 +40,7 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(
       name = "AppsBo.getAppsById",
       query = " From AppsBo ABO WHERE ABO.id =:id order by version DESC LIMIT 1"),
+  @NamedQuery(name = "getApps", query = " From AppsBo WHERE appStatus =:status order by createdOn"),
   @NamedQuery(
       name = "getAppByLatestVersion",
       query = " From AppsBo WHERE customAppId =:customAppId order by version DESC LIMIT 1")
@@ -126,14 +127,11 @@ public class AppsBo implements Serializable {
   @Column(name = "ios_latest_app_build_version")
   private String iosAppBuildVersion;
 
-  @Column(name = "ios_force_upgrade")
-  private Integer iosForceUpgrade;
+  @Transient private Integer iosForceUpgrade;
 
-  @Column(name = "android_latest_app_version")
-  private String androidAppBuildVersion;
+  @Transient private String androidAppBuildVersion;
 
-  @Column(name = "android_force_upgrade")
-  private Integer androidForceUpgrade;
+  @Transient private Integer androidForceUpgrade;
 
   @Column(name = "is_live")
   private Integer live = 0;
@@ -163,21 +161,20 @@ public class AppsBo implements Serializable {
   private String appStatus;
 
   @Column(name = "ios_app_distributed")
-  private Integer iosAppDistributed;
+  private Boolean iosAppDistributed;
 
   @Column(name = "is_app_published")
   private Boolean isAppPublished;
 
   @Column(name = "android_app_distributed")
-  private Integer androidAppDistributed;
+  private Boolean androidAppDistributed;
 
   @Column(name = "version")
   private Float version = 0f;
 
-  @Column(name = "app_website")
-  private String appWebsite;
-
   @Transient AppSequenceBo appSequenceBo = new AppSequenceBo();
+
+  @Transient VersionInfoBO versionInfoBO = new VersionInfoBO();
 
   @Transient private AppsBo liveAppsBo = null;
 
@@ -465,11 +462,11 @@ public class AppsBo implements Serializable {
     this.appStatus = appStatus;
   }
 
-  public Integer getIosAppDistributed() {
+  public Boolean getIosAppDistributed() {
     return iosAppDistributed;
   }
 
-  public void setIosAppDistributed(Integer iosAppDistributed) {
+  public void setIosAppDistributed(Boolean iosAppDistributed) {
     this.iosAppDistributed = iosAppDistributed;
   }
 
@@ -481,11 +478,11 @@ public class AppsBo implements Serializable {
     this.isAppPublished = isAppPublished;
   }
 
-  public Integer getAndroidAppDistributed() {
+  public Boolean getAndroidAppDistributed() {
     return androidAppDistributed;
   }
 
-  public void setAndroidAppDistributed(Integer androidAppDistributed) {
+  public void setAndroidAppDistributed(Boolean androidAppDistributed) {
     this.androidAppDistributed = androidAppDistributed;
   }
 
@@ -535,5 +532,13 @@ public class AppsBo implements Serializable {
 
   public void setViewPermission(boolean viewPermission) {
     this.viewPermission = viewPermission;
+  }
+
+  public VersionInfoBO getVersionInfoBO() {
+    return versionInfoBO;
+  }
+
+  public void setVersionInfoBO(VersionInfoBO versionInfoBO) {
+    this.versionInfoBO = versionInfoBO;
   }
 }

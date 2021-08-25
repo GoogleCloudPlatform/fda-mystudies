@@ -49,4 +49,12 @@ public interface AppService {
   public boolean validateAppActions(String appId);
 
   public List<AppsBo> getAllApps();
+
+  public String saveOrUpdateAppDeveloperConfig(AppsBo appsBo, SessionObject sessionObject);
+
+  public List<AppsBo> getActiveApps(String userId);
+
+  public AppsBo getAppbyCustomAppId(String customId);
+
+  public boolean getAppPermission(String appId, String userId);
 }

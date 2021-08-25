@@ -34,59 +34,19 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "app_sequence")
+@Table(name = "version_info")
 @NamedQueries({
   @NamedQuery(
-      name = "getAppSequenceById",
-      query = " From AppSequenceBo SSBO WHERE SSBO.appSequenceId =:appSequenceId"),
-  @NamedQuery(
-      name = "getAppSequenceByAppId",
-      query = " From AppSequenceBo SSBO WHERE SSBO.appId =:appId")
+      name = "getVersionByappId",
+      query = " From VersionInfoBO version WHERE version.appId =:appId"),
 })
-public class AppSequenceBo implements Serializable {
+public class VersionInfoBO implements Serializable {
 
   private static final long serialVersionUID = 3573683893623838475L;
-
-  @Column(name = "app_info")
-  @Type(type = "yes_no")
-  private boolean appInfo = false;
-
-  @Column(name = "app_settings")
-  @Type(type = "yes_no")
-  private boolean appSettings = false;
-
-  @Column(name = "app_properties")
-  @Type(type = "yes_no")
-  private boolean appProperties = false;
-
-  @Column(name = "developer_configs")
-  @Type(type = "yes_no")
-  private boolean developerConfigs = false;
-
-  @Column(name = "actions")
-  @Type(type = "yes_no")
-  private boolean actions = false;
-
-  @Column(name = "app_check_list")
-  @Type(type = "yes_no")
-  private boolean appCheckList = false;
-
-  @Column(name = "app_miscellaneous_branding")
-  @Type(type = "yes_no")
-  private boolean appMiscellaneousBranding = false;
-
-  @Column(name = "app_dashboard_chart")
-  @Type(type = "yes_no")
-  private boolean appDashboardChart = false;
-
-  @Column(name = "app_dashboard_stats")
-  @Type(type = "yes_no")
-  private boolean appDashboardStats = false;
 
   @Column(name = "app_id")
   private String appId;
@@ -94,6 +54,18 @@ public class AppSequenceBo implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "app_sequence_id", updatable = false, nullable = false)
-  private String appSequenceId;
+  @Column(name = "version_info_id", updatable = false, nullable = false)
+  private String versionInfoId;
+
+  @Column(name = "ios")
+  private String ios;
+
+  @Column(name = "ios_force_update")
+  private Boolean iosForceUpgrade;
+
+  @Column(name = "android")
+  private String android;
+
+  @Column(name = "android_force_update")
+  private Boolean androidForceUpgrade;
 }

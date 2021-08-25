@@ -386,8 +386,7 @@
           </div>
         </div>
         
-   <!--  Manage studies div  -->  
-      
+   <!--  Manage studies div  -->     
           <!-- Gray Widget-->
         <div class="edit-user-list-widget mt-xxlg">
           <span class="checkbox checkbox-inline"><input

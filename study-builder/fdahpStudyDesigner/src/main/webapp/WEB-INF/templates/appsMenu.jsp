@@ -35,7 +35,9 @@
           <span class="study_status 
                     <c:if test="${appBo.appStatus eq 'Active'}"> post-launch_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Deactivated'}"> paused_txt </c:if>
-	                pr-sm"> ${appBo.appStatus} </span><span class="right-border"></span>
+	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
+	                pr-sm"> ${appBo.appStatus} </span>
+	                <span class="right-border"></span>
           <span class="study_status  post-launch_txt  pr-sm pl-sm"> Published </span> <span class="right-border"></span>
           <span class="study_status  post-launch_txt pr-sm pl-sm"> Distributed (1) </span>
           </div>
@@ -69,26 +71,29 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="second">
+      <li class="second commonCls">
         APP SETTINGS
         <c:if test="${appBo.appSequenceBo.appSettings}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span> 
         </c:if>
       </li>
-      <li class="third">
+      <li class="third commonCls">
         APP PROPERTIES
         <c:if test="${appBo.appSequenceBo.appProperties}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fourth">
+      <li class="fourth commonCls">
         DEVELOPER CONFIGURATIONS
-        <c:if test="${studyBo.studySequenceBo.eligibility}">
+        <c:if test="${appBo.appSequenceBo.developerConfigs}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fifth">
+      <li class="fifth commonCls">
         ACTIONS
+        <c:if test="${appBo.appSequenceBo.actions}">
+          <span class="sprites-icons-2 tick pull-right mt-xs"></span>
+        </c:if>
       </li>
     </ul>
   </div>
@@ -138,12 +143,12 @@
       a.href = "/studybuilder/adminApps/viewAppsInfo.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
-    <c:if test="${true}">
+    <c:if test="${appBo.appSequenceBo.appInfo}">
     $('.second').click(function () {
       a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
-    <c:if test="${true}">
+    <c:if test="${appBo.appSequenceBo.appInfo && appBo.appSequenceBo.appSettings && appBo.appSequenceBo.actions}">
     $('.third').click(function () {
       a.href = "/studybuilder/adminApps/viewAppProperties.do?_S=${param._S}";
       document.body.appendChild(a).click();
@@ -152,19 +157,21 @@
       a.href = "/studybuilder/adminApps/viewDevConfigs.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
+    </c:if>
+    <c:if test="${appBo.appSequenceBo.appSettings}">
     $('.fifth').click(function () {
-      a.href = "/studybuilder/adminApps/appActionList.do?_S=${param._S}";
-      document.body.appendChild(a).click();
-    });
-
+        a.href = "/studybuilder/adminApps/appActionList.do?_S=${param._S}";
+        document.body.appendChild(a).click();
+      });
     </c:if>
     </c:if>
-    <c:if test="${(empty studyBo.status || studyBo.status eq 'Pre-launch') && ((empty studyBo.studySequenceBo) || not studyBo.studySequenceBo.basicInfo)}">
+    <c:if test="${appBo.appStatus eq 'Draft' && (not appBo.appSequenceBo.appInfo)}">
     $('.commonCls').addClass('cursor-none-without-event');
     </c:if>
-    <c:if test="${(empty studyBo.status ||studyBo.status eq 'Pre-launch') && studyBo.studySequenceBo.basicInfo && not studyBo.studySequenceBo.settingAdmins}">
+    <c:if test="${appBo.appSequenceBo.appInfo && not appBo.appSequenceBo.appSettings}">
     $('.commonCls').not('.second').addClass('cursor-none-without-event');
     </c:if>
+    
     $(window).on('load resize', function () {
 
       rtime1 = new Date();
