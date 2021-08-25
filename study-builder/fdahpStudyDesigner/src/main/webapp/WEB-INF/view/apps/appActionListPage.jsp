@@ -153,9 +153,10 @@ button#exportId {
         Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
       </div>
       </div>
-
-      <div class="form-group mr-sm" style="white-space: normal;">
-        <button type="button" class="btn btn-default gray-btn-action "
+       <div class="form-group mr-sm" style="white-space: normal;">
+      
+      <div class="display__flex__center">
+       <div>   <button type="button" class="btn btn-default gray-btn-action "
                 id="androidDistributedId" onclick="validateAppStatus(this);"
             <c:choose>
               <c:when test="${not empty permission}">
@@ -185,11 +186,17 @@ button#exportId {
 			  </c:when>
 			  
             </c:choose>
-            >Mark android app as distributed
-        </button>
-        <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.androidAppDistributed?'hide':''}"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div>
+                >Mark android app as distributed
+        </button> </div>
+      
+      
+        
+       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.androidAppDistributed?'hide':''}"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div> 
+       </div>
+     
+        
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-       This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
+        This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
        Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
       </div>
       </div>

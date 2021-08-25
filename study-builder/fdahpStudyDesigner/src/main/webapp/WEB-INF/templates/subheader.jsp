@@ -98,45 +98,24 @@ color: #95a2ab;
         <li>
           <a href="#">
             <label>
-              <input type="checkbox" class="selectall" />
+              <input type="checkbox" class="selectall fcheckbox" />
               <span class="select-sub_text"> All</span> apps </label>
           </a>
         </li>
         <li class="divider"></li>
+        <c:forEach items="${appBos}" var="app">
         <li>
           <a class="option-link" href="#">
             <label>
-              <input name='options[]' type="checkbox" class="option justone" value='Option 1 ' /> 
+              <input name='options[]' type="checkbox" class="option justone fcheckbox" value='${app.customAppId}'<c:if test="${not empty appId && app.customAppId eq appId}">Checked</c:if>/> 
               <div class="select_drop_parent"> 
- <span class="select-sup_text"> APP94789 | Standalone</span> 
-  <div class="clearfix"></div> 
-  <span class="select-sub_text"> Arthritis Research APP </span> </div> </label>
- </label>
+				<span class="select-sup_text"> ${app.customAppId} | ${app.type}</span> 
+				<div class="clearfix"></div> 
+				<span class="select-sub_text"> ${app.name} </span> 
+			 </div> </label>
           </a>
         </li>
-        <li>
-          <a href="#">
-            <label>
-              <input name='options[]' type="checkbox" class="option justone" value='Option 2 ' /> 
-               <div class="select_drop_parent"> 
-              <span class="select-sup_text"> APP94789 | Standalone</span>
- <div class="clearfix"></div>
-  <span class="select-sub_text"> COVID19 Research APP</span> </div>
-               </label>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <label>
-              <input name='options[]' type="checkbox" class="option justone" value='Option 3 ' /> 
-               <div class="select_drop_parent"> 
-               <span class="select-sup_text"> APP94789 | Standalone</span> 
-                <div class="clearfix"></div> 
-                <span class="select-sub_text"> COVID19 Research APP</span>
-                </div>
-              </label>
-          </a>
-        </li>
+        </c:forEach>
       </ul>
     </div>
     
@@ -175,7 +154,6 @@ color: #95a2ab;
 
 <script type="text/javascript">
   $(document).ready(function () {
-	  
     $('.addEditStudy').on('click', function () {
       $('#addEditStudyForm').submit();
     });
@@ -301,5 +279,4 @@ color: #95a2ab;
 	 }
 	    return true;
   }
-
 </script>
