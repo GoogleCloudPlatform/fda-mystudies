@@ -264,6 +264,24 @@ margin-top:16px !important;
         });
  });
  
+	  var sucMsg = '${sucMsg}';
+	  if (sucMsg.length > 0) {
+	    showSucMsg(sucMsg);
+	  }
+
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminApps/viewAppSettings.do?_S=${param._S}";
+		
+		    }, 5000);
+	  }else{
+	  	setTimeout(hideDisplayMessage, 5000);
+	  }
+	}
+	
 function validateAppId(item, callback) {
     var appId = $("#appId").val();
     var thisAttr = $("#appId");

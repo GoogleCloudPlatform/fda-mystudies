@@ -231,7 +231,7 @@ public class AppController {
                 .setAttribute(
                     sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:viewAppSettings.do", map);
+            return new ModelAndView("redirect:viewAppsInfo.do", map);
           } else {
             request
                 .getSession()
@@ -355,7 +355,7 @@ public class AppController {
                 .setAttribute(
                     sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:appActionList.do", map);
+            return new ModelAndView("redirect:viewAppSettings.do", map);
           } else {
             request
                 .getSession()
@@ -816,7 +816,7 @@ public class AppController {
                 .setAttribute(
                     sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:viewDevConfigs.do", map);
+            return new ModelAndView("redirect:viewAppProperties.do", map);
           } else {
             request
                 .getSession()
@@ -843,7 +843,7 @@ public class AppController {
 
   @RequestMapping("/adminApps/saveOrUpdateAppDeveloperConfig.do")
   public ModelAndView saveOrUpdateAppDeveloperConfig(HttpServletRequest request, AppsBo appsBo) {
-    logger.entry("begin saveOrUpdateAppProperties()");
+    logger.entry("begin saveOrUpdateAppDeveloperConfig()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ModelAndView mav = new ModelAndView("redirect:/adminApps/appList.do");
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -878,7 +878,7 @@ public class AppController {
                 .setAttribute(
                     sessionAppCount + FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get(FdahpStudyDesignerConstants.COMPLETE_STUDY_SUCCESS_MESSAGE));
-            return new ModelAndView("redirect:appActionList.do", map);
+            return new ModelAndView("redirect:viewDevConfigs.do", map);
           } else {
             request
                 .getSession()
@@ -897,9 +897,9 @@ public class AppController {
         }
       }
     } catch (Exception e) {
-      logger.error("AppController - saveOrUpdateAppProperties - ERROR", e);
+      logger.error("AppController - saveOrUpdateAppDeveloperConfig - ERROR", e);
     }
-    logger.exit("saveOrUpdateAppProperties() - Ends");
+    logger.exit("saveOrUpdateAppDeveloperConfig() - Ends");
     return mav;
   }
 }
