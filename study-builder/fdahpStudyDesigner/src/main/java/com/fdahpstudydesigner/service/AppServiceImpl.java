@@ -210,9 +210,24 @@ public class AppServiceImpl implements AppService {
   @Override
   public List<AppsBo> getActiveApps(String userId) {
     List<AppsBo> appBos = null;
+    List<String> permission = null;
     try {
       if (StringUtils.isNotEmpty(userId)) {
         appBos = appDAO.getActiveApps(userId);
+      }
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getActiveApps() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getActiveApps() - Ends");
+    return appBos;
+  }
+
+  @Override
+  public List<AppsBo> getAppsForStudy(String userId) {
+    List<AppsBo> appBos = null;
+    try {
+      if (StringUtils.isNotEmpty(userId)) {
+        appBos = appDAO.getAppsForStudy(userId);
       }
     } catch (Exception e) {
       logger.error("AppServiceImpl - getActiveApps() - ERROR ", e);

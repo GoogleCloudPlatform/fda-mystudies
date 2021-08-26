@@ -4677,11 +4677,19 @@ public class StudyController {
             }
           }
         }
+
+        List<AppsBo> apps = appService.getAppsForStudy(sesObj.getUserId());
+        AppsBo app = appService.getAppbyCustomAppId(studyBo.getAppId());
+        if (app != null) {
+          map.addAttribute("appName", app.getName());
+          map.addAttribute("appType", app.getType());
+        }
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");
         map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("appsList", apps);
         mav = new ModelAndView("viewBasicInfo", map);
       }
     } catch (Exception e) {
