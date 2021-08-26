@@ -54,4 +54,6 @@ public interface AppDAO {
   public List<AppsBo> getActiveApps(String userId);
 
   public boolean getAppPermission(String appId, String userId);
+
+  public List<AppsBo> getAppsForStudy(String userId);
 }

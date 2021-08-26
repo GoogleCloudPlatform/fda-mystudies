@@ -849,7 +849,7 @@ public class AppDAOImpl implements AppDAO {
                   "Select *"
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
-                      + " and a.version=0"
+                      + " and a.version=0 "
                       + " and ap.userId=:impValue"
                       + " and a.appStatus = 'Active'"
                       + " order by a.createdOn desc");
@@ -903,5 +903,52 @@ public class AppDAOImpl implements AppDAO {
 
     logger.exit("getAppPermission() - Ends");
     return permission;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<AppsBo> getAppsForStudy(String userId) {
+    Session session = null;
+    List<AppsBo> appListBean = null;
+    try {
+
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      if (StringUtils.isNotEmpty(userId)) {
+
+        query = session.getNamedQuery("getUserById").setString("userId", userId);
+        UserBO userBO = (UserBO) query.uniqueResult();
+
+        if (userBO.getRoleId().equals("1")) {
+          appListBean =
+              session
+                  .createQuery(
+                      "FROM AppsBo a WHERE a.appStatus = 'Active' AND a.customAppId NOT IN "
+                          + "(SELECT s.appId FROM StudyBo s where s.type='SD' AND s.appId IS NOT NULL) "
+                          + "order by a.createdOn desc ")
+                  .list();
+
+        } else {
+          query =
+              session.createQuery(
+                  " SELECT DISTINCT a from AppsBo a,AppPermissionBO ap, UserBO user"
+                      + " where a.id=ap.appId"
+                      + " and a.version=0 and ap.viewPermission = '1'"
+                      + " and ap.userId=:impValue"
+                      + " and a.appStatus = 'Active' AND a.customAppId NOT IN "
+                      + " (SELECT s.appId FROM StudyBo s where s.type='SD' AND s.appId IS NOT NULL) "
+                      + " order by a.createdOn desc ");
+          appListBean = query.setString(IMP_VALUE, userId).list();
+        }
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getActiveApps() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getActiveApps() - Ends");
+    return appListBean;
   }
 }
