@@ -89,7 +89,7 @@
           <td style="display: none;">${study.liveStudyId}</td>
           <td>${study.customStudyId}</td>
 
-          <td><span class="appClass" customAppId="${study.appId}"><u>${study.appId}</u></span></td>
+          <td><span class="studyAppClass" customAppId="${study.appId}"><u>${study.appId}</u></span></td>
           <td>
             <div class="studylist-txtoverflow">${study.name}</div>
           </td>
@@ -261,6 +261,23 @@
     showActivatedStudies()
 
     oTable.draw();
+    
+    $('.fcheckbox').on('change', function(e){
+ 	      var searchTerms = []
+ 	      $.each($('.fcheckbox'), function(i,elem){
+ 	        if($(elem).prop('checked')){
+ 	          searchTerms.push("^" + $(this).val() + "$")
+ 	        }
+ 	      })
+ 	      oTable.column(3).search(searchTerms.join('|'), true, false, true).draw();
+ 	    });
+    var searchTerms = []
+     $.each($('.fcheckbox'), function(i,elem){
+       if($(elem).prop('checked')){
+         searchTerms.push("^" + $(this).val() + "$")
+       }
+     })
+     oTable.column(3).search(searchTerms.join('|'), true, false, true).draw();
  });
 
   $('.copyStudyClass').on('click', function () {
@@ -407,7 +424,7 @@
    
 
 
-   $('.appClass').on('click', function () {
+   $('.studyAppClass').on('click', function () {
        var form = document.createElement('form');
        form.method = 'post';
        var input = document.createElement('input');
@@ -426,5 +443,5 @@
        document.body.appendChild(form);
        form.submit();
      });
-
+  
 </script>

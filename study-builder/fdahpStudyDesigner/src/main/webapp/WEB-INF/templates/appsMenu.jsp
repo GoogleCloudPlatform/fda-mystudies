@@ -37,33 +37,19 @@
 	                <c:if test="${appBo.appStatus eq 'Deactivated'}"> paused_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
 	                pr-sm"> ${appBo.appStatus} </span>
-	                <span class="right-border"></span>
-          <span class="study_status  post-launch_txt  pr-sm pl-sm"> Published </span> <span class="right-border"></span>
-          <span class="study_status  post-launch_txt pr-sm pl-sm"> Distributed (1) </span>
+	      <c:if test="${appBo.appStatus eq 'Active'}">
+	      <span class="right-border"></span>
+          <span class="study_status  pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not Published </c:if></span> <span class="right-border"></span>
+          <span class="study_status pr-sm pl-sm ${(appBo.iosAppDistributed || appBo.androidAppDistributed)?'post-launch_txt':'pre-launch_txt'}"> 
+          <c:choose>
+              <c:when test="${appBo.iosAppDistributed && appBo.androidAppDistributed}">Distributed (2)</c:when>
+              <c:when test="${appBo.iosAppDistributed || appBo.androidAppDistributed}">Distributed (1)</c:when>
+          <c:when test="${not appBo.iosAppDistributed && not appBo.androidAppDistributed}">Not Distributed</c:when>
+          </c:choose></span>
+          </c:if>
           </div>
           <span class="version"></span>
         </div>
-
-         <%-- <div class="mb-lg ${empty appBo.customAppId?'hide':''}"><span class="study_status">${appBo.customAppId}</span></div>
-        <div class="mb-lg ${empty appBo.appsStatus?'hide':''}">
-          <span class="study_status
-	                <c:if test="${appBo.appsStatus eq 'Active'}">
-
-	                    active_txt
-	                </c:if>
-	                <c:if test="${appBo.appsStatus eq 'Inactive'}">
-	                    paused_txt
-	                </c:if>
-	                ">${appBo.appsStatus}</span><span class="study_status">|</span>
-	                <span class="study_status active_txt"><c:if test="${appBo.isAppPublished}">Published</c:if>
-	                <c:if test="${empty appBo.isAppPublished}">Not published</c:if></span><span class="study_status">|</span>
-	                <span class="study_status active_txt"><c:if test="${appBo.iosAppDistributed eq 1|| appBo.androidAppDistributed  eq 1}">Distributed</c:if>
-	                <c:if test="${appBo.iosAppDistributed eq 0|| appBo.androidAppDistributed  eq 0}">Not distributed</c:if></span>
-
-          <c:set var="isLive">${_S}isLive</c:set>
-          <span
-              class="version">${not empty  sessionScope[isLive]?studyBo.studyVersionBo.studyLVersion:''}</span>
-        </div> --%>
       </li>
       <li class="first active">
         APP INFORMATION
