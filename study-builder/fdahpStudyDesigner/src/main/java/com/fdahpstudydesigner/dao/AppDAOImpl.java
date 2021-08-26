@@ -828,7 +828,7 @@ public class AppDAOImpl implements AppDAO {
         } else {
           query =
               session.createQuery(
-                  "Select *"
+                  "Select DISTINCT a"
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
                       + " and a.version=0 "

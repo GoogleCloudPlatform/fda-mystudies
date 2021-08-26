@@ -109,7 +109,8 @@ color: #95a2ab;
             <label>
               <input name='options[]' type="checkbox" class="option justone fcheckbox" value='${app.customAppId}'<c:if test="${not empty appId && app.customAppId eq appId}">Checked</c:if>/> 
               <div class="select_drop_parent"> 
-				<span class="select-sup_text"> ${app.customAppId} | ${app.type}</span> 
+				<span class="select-sup_text"> ${app.customAppId} | <c:if test="${app.type eq 'GT'}">Gateway</c:if>
+				<c:if test="${app.type eq 'SD'}">Standalone</c:if></span> 
 				<div class="clearfix"></div> 
 				<span class="select-sub_text"> ${app.name} </span> 
 			 </div> </label>
@@ -279,4 +280,5 @@ color: #95a2ab;
 	 }
 	    return true;
   }
+  
 </script>
