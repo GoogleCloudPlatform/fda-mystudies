@@ -124,6 +124,7 @@
          value="${userBO.enabled}">
   <input type="hidden" id="selectedStudies" name="selectedStudies">
   <input type="hidden" id="permissionValues" name="permissionValues">
+  <input type="hidden" id="permissionValuesForApp" name="permissionValuesForApp">
   <input type="hidden" id="selectedApps" name="selectedApps">
   <input type="hidden" name="ownUser" id="ownUser">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
@@ -326,7 +327,7 @@
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
                 <select
                     class="selectpicker col-md-6 p-none changeView3 <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
-                    title="- Select and add apps -" multiple id="multipleApps" id="appIds">
+                    title="- Select and add apps -" multiple id="multipleApps" >
                   <c:forEach items="${apps}" var="app">
                     <option value="${app.id}"
                             id="selectApps${app.id}">${app.name}&nbsp;(${app.customAppId})
@@ -347,7 +348,7 @@
             </div>
             <!-- Selected App items -->
             <div class="app-selected mt-md">
-              <c:forEach items="${apps}" var="app">
+              <c:forEach items="${appBos}" var="app">
                 <div class="app-selected-item selApp" id="app${app.id}">
                   <input type="hidden" class="appCls" id="${app.id}" name=""
                          value="${app.id}"
@@ -396,7 +397,7 @@
             <label for="inlineCheckbox4"> Manage Studies </label>
           </span>
           <div class="mt-lg pl-lg">
-            <div class="pb-md bor-dashed">
+            <div class="pb-md bor-dashed hideStudy">
               <span class="checkbox checkbox-inline"><input
                   type="checkbox" id="inlineCheckbox5" class="changeView1"
                   name="addingNewStudy"
@@ -411,11 +412,9 @@
                 <select
                     class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
                     title="- Select and add studies -" multiple id="multiple">
-                  <c:forEach items="${studyBOList}" var="study">
-                    <option value="${study.id}"
-                            id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
+                    <option  class ="ct">
+                            <!--id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})-->
                     </option>
-                  </c:forEach>
                 </select>
                 <span class="study-addbtn changeView">+</span>
               </c:if>
@@ -516,15 +515,14 @@
 
     var isManageStudyChecked = $("#inlineCheckbox4").is(":checked");
     var isManageAppsChecked = $("#inlineCheckboxApp").is(":checked");
-    if (isManageStudyChecked) {
-
-    } else {
+    if (!isManageStudyChecked) {
       $('#inlineCheckbox5').val('');
       $('#inlineCheckbox5').prop('checked', false);
       $('.changeView').prop('disabled', true);
       $('.changeView').selectpicker('refresh');
       $('.changeView1').prop('disabled', true);
     }
+    
     if(!isManageAppsChecked){
     	$('#inlineCheckbox6').val('');
         $('#inlineCheckbox6').prop('checked', false);
@@ -532,6 +530,10 @@
         $('.changeView3').selectpicker('refresh');
         $('.changeView2').prop('disabled', true);
     }
+    
+    $('#inlineCheckbox4').prop('disabled', true);
+    $('.hideStudy').addClass('disabled', 'disabled');
+    
     
     
     var role = '${userBO.roleName}';
@@ -546,6 +548,17 @@
  	 $('.perm-assign').hide();
  	 $('.pull-right').hide();
     </c:if>
+    
+   <c:if test="${actionPage eq 'EDIT_PAGE'}">
+   $(".selectpicker").selectpicker('deselectAll');
+   var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+   var count = $(".app-selected-item").length;
+   if (count == tot_items) {
+ 	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+     $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+     	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+   }
+    </c:if> 
 
     <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
     if($('#roleId').find('option:selected').text() == 'Superadmin' ){
@@ -825,8 +838,10 @@
     
     
  // Adding selected app items
+    var appIds = "";
     $(".app-addbtn").click(function () {
-
+    	 $('#inlineCheckbox4').prop('disabled', false);
+    	 $('#inlineCheckbox5').prop('disabled', false);
       $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
 
       $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
@@ -860,15 +875,30 @@
         $('.app-selected').append(existingAppDiv);
       });
       
-
+      $('.selApp').each(function () {
+          var appId = $(this).find('.appCls').val();
+          var permissionValue = $('#app' + appId).find('input[type=radio]:checked').val();
+          if (appIds == "") {
+        	  appIds = appId;
+          } else {
+        	  appIds += "," + appId;
+          }
+        });
+      debugger
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(".app-selected-item").length;
       if (count == tot_items) {
+    	  debugger
     	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
         $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
       }
+      getStudiesbyAppIds(appIds);
+      $('#inlineCheckbox4').prop('disabled', false);
+      $('.hideStudy').removeClass('disabled', 'disabled');
+      $('#inlineCheckbox5').prop('disabled', false);
+      $('.changeView').removeClass('disabled', 'disabled');
 
     });
 
@@ -886,7 +916,6 @@
     
   //Removing selected app items
     $(".removeAllApps").click(function () {
-    	debugger
       $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style],.study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").show();
       $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
         if ($(this).text() == "- All items are already selected -") {
@@ -895,6 +924,12 @@
       });
      
       $(".app-selected-item").remove();
+      $('#inlineCheckbox4').prop('disabled', true);
+      $('.hideStudy').addClass("disabled", "disabled");
+      $('.changeView').addClass("disabled", "disabled");
+      $('#inlineCheckbox4').prop('checked', false);
+      $('#inlineCheckbox5').prop("checked", false);
+      $(".study-selected-item").remove();
     });
 
     $('.addUpdate').on('click', function () {
@@ -1036,8 +1071,11 @@
   }
   
 //delete selected App
+ var selApps= "";
   function delApp(id) {
+	  debugger
 	    var atxt = $('#app' + id).children().text();
+	    var selApps = $(".app-selected-item").length;
 
 	    $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
 	        function () {
@@ -1050,12 +1088,36 @@
 	        });
 
 	    $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
+	    	debugger
 	      if ($(this).text() == "- All items are already selected -") {
 	        $(this).remove();
 	      }
 	    });
 
 	    $('#app' + id).remove();
+	    var customAppIds = "";
+	    $('.selApp').each(function () {
+	          var appId = $(this).find('.appCls').val();
+	          var permissionValue = $('#app' + appId).find('input[type=radio]:checked').val();
+	          if (customAppIds == "") {
+	        	  customAppIds = appId;
+	          } else {
+	        	  customAppIds += "," + appId;
+	          }
+	        });
+	    
+	    getStudiesbyAppIds(customAppIds);
+	    selApps--;
+	    
+	    if(selApps == 0){
+	    	  $('#inlineCheckbox4').prop('disabled', true);
+	    	  $('#inlineCheckbox5').addClass('disabled', 'disabled');
+	    	  $('.hideStudy').addClass("disabled", "disabled");
+	          $('.changeView').addClass("disabled", "disabled");
+	          $('#inlineCheckbox4').prop('checked', false);
+	          $('#inlineCheckbox5').prop("checked", false);
+	    	  $(".study-selected-item").remove();
+	    }
 
 	  }
 
@@ -1094,7 +1156,8 @@
     $('#emailId').prop('disabled', false);
     var selectedStudies = "";
     var permissionValues = "";
-    debugger
+    var permissionValuesForApp = "";
+    
     if (isFromValid($('.addUpdate').parents('form'))) {
       $('.selStd').each(function () {
         var studyId = $(this).find('.stdCls').val();
@@ -1110,26 +1173,27 @@
           permissionValues += "," + permissionValue;
         }
       });
-      debugger
+      
       var selectedApps = "";
       $('.selApp').each(function () {
           var appId = $(this).find('.appCls').val();
-          var permissionValue = $('#app' + appId).find('input[type=radio]:checked').val();
+          var permissionValueForApp = $('#app' + appId).find('input[type=radio]:checked').val();
           if (selectedApps == "") {
         	  selectedApps = appId;
           } else {
         	  selectedApps += "," + appId;
           }
-          if (permissionValues == "") {
-            permissionValues = permissionValue;
+          if (permissionValuesForApp == "") {
+        	  permissionValuesForApp = permissionValueForApp;
           } else {
-            permissionValues += "," + permissionValue;
+        	  permissionValuesForApp += "," + permissionValueForApp;
           }
         });
       
       $('#selectedStudies').val(selectedStudies);
       $('#selectedApps').val(selectedApps);
       $('#permissionValues').val(permissionValues);
+      $('#permissionValuesForApp').val(permissionValuesForApp);
       <c:if test="${sessionObject.userId eq userBO.userId}">
       $('#ownUser').val('1');
       </c:if>
@@ -1174,7 +1238,6 @@
   $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       if(element == "Study admin"){ 
-    	  debugger
       	 $('.edit-user-list-widget').show();
       	 $('.perm-assign').show();
       	 $('.pull-right').show();
@@ -1200,10 +1263,61 @@
         	  $('.edit-user-list-widget').hide();
            	 $('.perm-assign').hide();
            	 $('.pull-right').hide();
-              }
+        }
     });
   
- 
+ /*  $('#multipleApps').on('change', function () {
+	  debugger
+	   var tot_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+       var selected_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+       if(  selected_app == tot_app){
+     	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+           $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+     }
+    });
+   */
+
+  function getStudiesbyAppIds(appIds) {
+	  debugger
+	   var customAppIds = appIds;
+	   var studyListUrl = "/studybuilder/apps/studyListForApps.do";
+	  $
+     .ajax({
+       url: studyListUrl,
+       type: "GET",
+       datatype: "json",
+       data: {
+    	   "${_csrf.parameterName}": "${_csrf.token}",
+    	   customAppIds : customAppIds,
+       },
+       
+       success: function (data) {
+           var message = data.message;
+           if (message == "SUCCESS") {
+        	  $('#multiple').empty();
+        	  $('.study-list').find('li').remove();
+           $.each(data.studyList,function(i,obj){
+        	   var customId = obj.customStudyId==null?"":obj.customStudyId;
+        	   var studyName = obj.name + "(" + customId +")";
+               var divData="<option class='val' value="+obj.id+">"+studyName+"</option>";
+               $(divData).appendTo('#multiple'); 
+                   
+               var newList= '<li data-original-index="1"><a tabindex="0" class="val" role="option" '
+                  + 'aria-disabled="false" aria-selected="false"><span class="text" value='+obj.id+'>'+studyName+'</span>'
+                  +' <span class="glyphicon glyphicon-ok check-mark"></span></a></li>';
+                  $('.study-list').find(".inner ").append(newList);
+                   });   
+           } 
+         },
+         error: function (xhr, status, error) {
+           $(item).prop('disabled', false);
+           $('#alertMsg').show();
+           $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
+           setTimeout(hideDisplayMessage, 5000);
+         }
+       });  
+}
   
 </script>
 

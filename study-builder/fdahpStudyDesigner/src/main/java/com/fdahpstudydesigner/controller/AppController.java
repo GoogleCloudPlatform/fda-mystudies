@@ -23,6 +23,7 @@ import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AppSessionBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.AppService;
 import com.fdahpstudydesigner.service.OAuthService;
@@ -32,13 +33,17 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -901,5 +906,50 @@ public class AppController {
     }
     logger.exit("saveOrUpdateAppDeveloperConfig() - Ends");
     return mav;
+  }
+
+  @RequestMapping("/apps/studyListForApps.do")
+  public void getStudiesAssociatedWithApps(
+      HttpServletRequest request, HttpServletResponse response) {
+    logger.entry("begin reloadComprehensionQuestionListPage()");
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    ObjectMapper mapper = new ObjectMapper();
+    JSONArray studyJsonArray = null;
+    try {
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      List<StudyBo> studyList = new ArrayList<>();
+      if (sesObj != null) {
+        String appIds =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("customAppIds"))
+                ? ""
+                : request.getParameter("customAppIds");
+
+        if (StringUtils.isNotEmpty(appIds)) {
+          studyList = appService.getStudiesAssociatedWithApps(appIds);
+          studyList.removeAll(Collections.singletonList(null));
+          if (CollectionUtils.isNotEmpty(studyList)) {
+            studyJsonArray = new JSONArray(mapper.writeValueAsString(studyList));
+          }
+          message = FdahpStudyDesignerConstants.SUCCESS;
+        }
+        jsonobject.put("studyList", studyJsonArray);
+      }
+      jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      out = response.getWriter();
+      out.print(jsonobject);
+    } catch (Exception e) {
+      logger.error("StudyController - reloadConsentListPage - ERROR", e);
+      jsonobject.put(FdahpStudyDesignerConstants.MESSAGE, message);
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      if (out != null) {
+        out.print(jsonobject);
+      }
+    }
+    logger.exit("reloadComprehensionQuestionListPage() - Ends");
   }
 }

@@ -25,6 +25,7 @@ package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 
@@ -56,4 +57,6 @@ public interface AppDAO {
   public boolean getAppPermission(String appId, String userId);
 
   public List<AppsBo> getAppsForStudy(String userId);
+
+  public List<StudyBo> getStudiesAssociatedWithApps(String appIds);
 }

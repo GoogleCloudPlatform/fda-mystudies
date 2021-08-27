@@ -40,7 +40,8 @@ public interface UsersDAO {
       String permissions,
       String selectedStudies,
       String permissionValues,
-      String selectedApps);
+      String selectedApps,
+      String permissionValuesForApp);
 
   public String enforcePasswordChange(String userId, String email);
 

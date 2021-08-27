@@ -35,6 +35,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_ENFO
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
 
+import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
@@ -125,6 +126,7 @@ public class UsersController {
     String actionPage = "";
     List<Integer> permissions = null;
     String usrId = null;
+    List<AppListBean> appBos = new ArrayList<>();
     List<AppsBo> appList = new ArrayList<>();
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
@@ -143,6 +145,7 @@ public class UsersController {
             userBO = usersService.getUserDetails(usrId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
+              appBos = appService.getAppList(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
             }
           } else {
@@ -152,18 +155,6 @@ public class UsersController {
           studyBOList = studyService.getAllStudyList();
           appList = appService.getAllApps();
 
-          Map<String, List<StudyBo>> studiesByAppId = new HashMap<>();
-          List<StudyBo> studiesAssociatedWithApps = null;
-          for (StudyBo studybo : studyBOList) {
-            if (!studiesByAppId.containsKey(studybo.getAppId())) {
-              studiesAssociatedWithApps = new ArrayList<>();
-              studiesAssociatedWithApps.add(studybo);
-              studiesByAppId.put(studybo.getAppId(), studiesAssociatedWithApps);
-            } else {
-              studiesByAppId.get(studybo.getAppId()).add(studybo);
-            }
-          }
-
           map.addAttribute("actionPage", actionPage);
           map.addAttribute("userBO", userBO);
           map.addAttribute("permissions", permissions);
@@ -171,7 +162,7 @@ public class UsersController {
           map.addAttribute("studyBOList", studyBOList);
           map.addAttribute("studyBOs", studyBOs);
           map.addAttribute("apps", appList);
-          map.addAttribute("studiesByAppId", studiesByAppId);
+          map.addAttribute("appBos", appBos);
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -221,6 +212,12 @@ public class UsersController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("permissionValues"))
                 ? ""
                 : request.getParameter("permissionValues");
+
+        String permissionValuesForApp =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("permissionValuesForApp"))
+                ? ""
+                : request.getParameter("permissionValuesForApp");
+
         String ownUser =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("ownUser"))
                 ? ""
@@ -310,11 +307,11 @@ public class UsersController {
               }
             } else {
               selectedApps = "";
-              permissionValues = "";
+              permissionValuesForApp = "";
             }
           } else {
             selectedApps = "";
-            permissionValues = "";
+            permissionValuesForApp = "";
           }
         }
         AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
@@ -327,7 +324,8 @@ public class UsersController {
                 permissionValues,
                 userSession,
                 selectedApps,
-                auditRequest);
+                auditRequest,
+                permissionValuesForApp);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
           if (addFlag) {
             request
@@ -551,6 +549,7 @@ public class UsersController {
     List<Integer> permissions = null;
     Map<String, String> values = new HashMap<>();
     List<AppsBo> appList = new ArrayList<>();
+    List<AppListBean> appBos = new ArrayList<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -568,6 +567,7 @@ public class UsersController {
             userBO = usersService.getUserDetails(userId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
+              appBos = appService.getAppList(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
 
               HttpSession session = request.getSession();
@@ -581,16 +581,17 @@ public class UsersController {
               }
             }
           }
+
           roleBOList = usersService.getUserRoleList();
-          studyBOList = studyService.getAllStudyList();
           appList = appService.getAllApps();
           map.addAttribute("actionPage", actionPage);
           map.addAttribute("userBO", userBO);
           map.addAttribute("permissions", permissions);
           map.addAttribute("roleBOList", roleBOList);
-          map.addAttribute("studyBOList", studyBOList);
           map.addAttribute("studyBOs", studyBOs);
           map.addAttribute("apps", appList);
+          map.addAttribute("appBos", appBos);
+
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:getUserList.do");

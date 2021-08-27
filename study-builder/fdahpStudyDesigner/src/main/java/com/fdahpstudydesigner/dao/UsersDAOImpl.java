@@ -123,7 +123,8 @@ public class UsersDAOImpl implements UsersDAO {
       String permissions,
       String selectedStudies,
       String permissionValues,
-      String selectedApps) {
+      String selectedApps,
+      String permissionValuesForApp) {
     logger.entry("begin addOrUpdateUserDetails()");
     Session session = null;
     String userId = null;
@@ -135,6 +136,7 @@ public class UsersDAOImpl implements UsersDAO {
     String[] selectedStudy = null;
     String[] selectedApp = null;
     String[] permissionValue = null;
+    String[] permissionValueForApp = null;
     boolean updateFlag = false;
     UserIdAccessLevelInfo userIdAccessLevelInfo = null;
 
@@ -193,9 +195,11 @@ public class UsersDAOImpl implements UsersDAO {
 
       if ((StringUtils.isNotEmpty(selectedStudies) || StringUtils.isNotEmpty(selectedApps))
           && StringUtils.isNotEmpty(permissionValues)
+          && StringUtils.isNotEmpty(permissionValuesForApp)
           && userBO2.getRoleId().equals("2")) {
         selectedStudy = selectedStudies.split(",");
         permissionValue = permissionValues.split(",");
+        permissionValueForApp = permissionValuesForApp.split(",");
         selectedApp = selectedApps.split(",");
         List<String> selectedStudiesList = Arrays.asList(selectedStudies.split(","));
         List<String> selectedAppsList = Arrays.asList(selectedApps.split(","));
@@ -223,7 +227,8 @@ public class UsersDAOImpl implements UsersDAO {
         }
 
         for (int i = 0; i < selectedApp.length; i++) {
-          addAppLevelPermissionsToStudyAdmin(session, userId, selectedApp, permissionValue, i);
+          addAppLevelPermissionsToStudyAdmin(
+              session, userId, selectedApp, permissionValueForApp, i);
         }
 
       } else if (userBO2.getRoleId().equals("1")) {
