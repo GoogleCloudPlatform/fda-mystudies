@@ -25,7 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +56,21 @@ public class AppsController {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
 
     ErrorBean errorBean = appsServices.saveAppMetadata(appMetadataBean);
+    if (errorBean.getCode() != ErrorCode.EC_200.code()) {
+      return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+    }
+
+    logger.exit(String.format(STATUS_LOG, errorBean.getCode()));
+    return new ResponseEntity<>(errorBean, HttpStatus.OK);
+  }
+
+  @ApiOperation(value = "Deactivate apps and associated users")
+  @PutMapping("/{customAppId}/appDeactivate")
+  public ResponseEntity<?> deactivateAppAndUsers(
+      @PathVariable String customAppId, HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    ErrorBean errorBean = appsServices.deactivateAppAndUsers(customAppId);
     if (errorBean.getCode() != ErrorCode.EC_200.code()) {
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }

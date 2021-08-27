@@ -518,6 +518,7 @@ public class AppController {
     String sucMsg = "";
     String errMsg = "";
     boolean markAsCompleted = false;
+    int countOfStudiesAssociated = 0;
     try {
       SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
       Integer sessionAppCount =
@@ -562,11 +563,16 @@ public class AppController {
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
+
+        if (FdahpStudyDesignerUtil.isNotEmpty(appBo.getCustomAppId())) {
+          countOfStudiesAssociated = appService.getStudiesByAppId(appBo.getCustomAppId());
+        }
         markAsCompleted = appService.validateAppActions(appId);
         map.addAttribute(APP_BO, appBo);
         map.addAttribute(PERMISSION, permission);
         map.addAttribute("_S", sessionAppCount);
         map.addAttribute("markAsCompleted", markAsCompleted);
+        map.addAttribute("countOfStudiesAssociated", countOfStudiesAssociated);
         mav = new ModelAndView("appActionList", map);
       }
     } catch (Exception e) {
@@ -712,7 +718,7 @@ public class AppController {
               submitAppDetailsResponseToUserRegistrationServer(customAppId, request);
             } else if (buttonText.equalsIgnoreCase("deactivateId")) {
               successMessage = "The App is deactivated";
-              submitAppDetailsResponseToUserRegistrationServer(customAppId, request);
+              deactivateAppsAndUsersInUserRegistrationServer(customAppId, request);
             }
             request.getSession().setAttribute("sucMsgAppActions", successMessage);
 
@@ -777,6 +783,52 @@ public class AppController {
           "AppController - submitAppDetailsResponseToUserRegistrationServer() - ERROR ", e);
     }
     logger.exit("submitAppDetailsResponseToUserRegistrationServer() - Ends ");
+  }
+
+  @SuppressWarnings("unused")
+  private void deactivateAppsAndUsersInUserRegistrationServer(
+      String customAppId, HttpServletRequest request) {
+    logger.entry("begin deactivateAppsAndUsersInUserRegistrationServer()");
+    HttpHeaders headers = null;
+    HttpEntity<String> requestEntity = null;
+    ResponseEntity<?> userRegistrationResponseEntity = null;
+    String userRegistrationDeactivateUrl = "";
+    Map<String, String> map = new HashMap<>();
+    try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      map = FdahpStudyDesignerUtil.getAppProperties();
+      headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+      AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
+
+      userRegistrationDeactivateUrl = map.get("usermanagementServerDeactivateapp");
+
+      requestEntity = new HttpEntity<>(headers);
+
+      userRegistrationResponseEntity =
+          restTemplate.exchange(
+              userRegistrationDeactivateUrl,
+              HttpMethod.PUT,
+              requestEntity,
+              String.class,
+              customAppId);
+
+      if (userRegistrationResponseEntity.getStatusCode() == HttpStatus.OK) {
+        //  auditLogEventHelper.logEvent(STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE,
+        // auditRequest);
+        logger.info(
+            "AppController - deactivateAppsAndUsersInUserRegistrationServer() - INFO ==>> SUCCESS");
+      } else {
+        //    auditLogEventHelper.logEvent(STUDY_METADATA_SEND_OPERATION_FAILED, auditRequest);
+        logger.error(
+            "AppController - deactivateAppsAndUsersInUserRegistrationServer() - ERROR ==>> FAILURE");
+        throw new Exception("There is some issue in submitting data to User Registration Server ");
+      }
+    } catch (Exception e) {
+      logger.error("AppController - deactivateAppsAndUsersInUserRegistrationServer() - ERROR ", e);
+    }
+    logger.exit("deactivateAppsAndUsersInUserRegistrationServer() - Ends ");
   }
 
   @RequestMapping("/adminApps/saveOrUpdateAppProperties.do")

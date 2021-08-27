@@ -162,6 +162,8 @@ public class AppServiceImpl implements AppService {
         appDetailsBean.setIosAppBuildVersion(app.getIosAppBuildVersion());
         appDetailsBean.setIosXCodeAppVersion(app.getIosXCodeAppVersion());
 
+        appDetailsBean.setAppStatus(app.getAppStatus());
+
         return appDetailsBean;
       }
     } catch (Exception e) {
@@ -245,5 +247,18 @@ public class AppServiceImpl implements AppService {
     }
     logger.exit("AppServiceImpl - getAppPermission() - Ends");
     return permission;
+  }
+
+  @Override
+  public int getStudiesByAppId(String customAppId) {
+    logger.entry("AppServiceImpl - getStudiesByAppId() - Starts");
+    int count = 0;
+    try {
+      count = appDAO.getStudiesByAppId(customAppId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getStudiesByAppId() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getStudiesByAppId() - Ends");
+    return count;
   }
 }

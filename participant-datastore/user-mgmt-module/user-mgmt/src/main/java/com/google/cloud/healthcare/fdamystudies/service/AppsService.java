@@ -17,4 +17,6 @@ public interface AppsService {
   public ErrorBean saveAppMetadata(AppMetadataBean appMetadataBean);
 
   public AppContactEmailsResponse getAppContactEmails(String customAppId);
+
+  public ErrorBean deactivateAppAndUsers(String customAppId);
 }

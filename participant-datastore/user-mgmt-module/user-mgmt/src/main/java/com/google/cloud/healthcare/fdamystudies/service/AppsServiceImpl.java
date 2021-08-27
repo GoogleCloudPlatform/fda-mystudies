@@ -12,11 +12,19 @@ import com.google.cloud.healthcare.fdamystudies.bean.AppMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppContactEmailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
+import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
+import java.util.List;
 import java.util.Optional;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +37,12 @@ public class AppsServiceImpl implements AppsService {
   private XLogger logger = XLoggerFactory.getXLogger(AppsServiceImpl.class.getName());
 
   @Autowired private AppRepository appRepository;
+
+  @Autowired UserDetailsRepository userDetailsRepository;
+
+  @Autowired private UserManagementUtil userManagementUtil;
+
+  @Autowired UserProfileManagementDao userProfileManagementDao;
 
   @Override
   @Transactional()
@@ -79,6 +93,7 @@ public class AppsServiceImpl implements AppsService {
     app.setIosForceUpgrade(appMetadataBean.getIosForceUpgrade());
     app.setAndroidAppBuildVersion(appMetadataBean.getAndroidAppBuildVersion());
     app.setAndroidForceUpdrade(appMetadataBean.getAndroidForceUpdrade());
+    app.setAppStatus(appMetadataBean.getAppStatus());
 
     return app;
   }
@@ -103,5 +118,48 @@ public class AppsServiceImpl implements AppsService {
 
     logger.exit(String.format("customAppId=%s contact details fetched successfully", customAppId));
     return appResponse;
+  }
+
+  @Override
+  @Transactional
+  public ErrorBean deactivateAppAndUsers(String customAppId) {
+    logger.entry("Begin deactivateAppAndUsers()");
+
+    Optional<AppEntity> optAppEntity = appRepository.findByAppId(customAppId);
+
+    if (optAppEntity.isPresent()) {
+      AppEntity app = optAppEntity.get();
+      app.setAppStatus(UserStatus.DEACTIVATED.getDescription());
+      appRepository.saveAndFlush(app);
+
+      List<UserDetailsEntity> listOfUserDetails =
+          (List<UserDetailsEntity>)
+              CollectionUtils.emptyIfNull(userDetailsRepository.findByAppId(app.getId()));
+
+      listOfUserDetails.forEach(
+          userDetails -> {
+            try {
+              userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId());
+              userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
+            } catch (ErrorCodeException e) {
+              if (e.getErrorCode()
+                  == com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_NOT_FOUND) {
+                userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
+              } else {
+                logger.warn(
+                    String.format(
+                        "Delete user from %s failed with ErrorCode=%s",
+                        PlatformComponent.SCIM_AUTH_SERVER.getValue(), e.getErrorCode()));
+              }
+            } catch (Exception e) {
+              logger.error("deactivateAppAndUsers() failed with an exception", e);
+            }
+          });
+    } else {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
+    }
+    logger.exit("deactivateAppAndUsers() : ends");
+    return new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
   }
 }

@@ -378,7 +378,9 @@ public enum ErrorCode {
       400,
       "EC_0087",
       Constants.BAD_REQUEST,
-      "This is a default location name in use by the system already. Please enter a different location name.");
+      "This is a default location name in use by the system already. Please enter a different location name."),
+
+  APP_INACTIVE(400, "EC_0089", Constants.BAD_REQUEST, "This app is no longer active.");
 
   private final int status;
   private final String code;

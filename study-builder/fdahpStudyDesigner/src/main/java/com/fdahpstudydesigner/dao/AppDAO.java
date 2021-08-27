@@ -52,4 +52,6 @@ public interface AppDAO {
   public List<AppsBo> getActiveApps(String userId);
 
   public boolean getAppPermission(String appId, String userId);
+
+  public int getStudiesByAppId(String customAppId);
 }

@@ -482,7 +482,7 @@ public class AppDAOImpl implements AppDAO {
           } else if (buttonText.equalsIgnoreCase("androidDistributedId")) {
             app.setAndroidAppDistributed(true);
           } else if (buttonText.equalsIgnoreCase("deactivateId")) {
-            app.setAppStatus("Deactivate");
+            app.setAppStatus("Deactivated");
           }
           session.update(app);
           message = SUCCESS;
@@ -884,5 +884,36 @@ public class AppDAOImpl implements AppDAO {
     }
     logger.exit("getAppPermission() - Ends");
     return permission;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public int getStudiesByAppId(String customAppId) {
+
+    logger.entry("begin getAppById()");
+    Session session = null;
+    List<StudyBo> studyBoList = null;
+    int count = 0;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(customAppId)) {
+
+        studyBoList =
+            session
+                .getNamedQuery("StudyBo.getStudyBycustomAppId")
+                .setString("customAppId", customAppId)
+                .list();
+
+        count = studyBoList.size();
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppById() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getAppById() - Ends");
+    return count;
   }
 }
