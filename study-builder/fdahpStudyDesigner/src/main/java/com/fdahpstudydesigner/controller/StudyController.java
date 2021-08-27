@@ -1846,6 +1846,9 @@ public class StudyController {
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       if (sesObj != null) {
+        if (null != request.getSession().getAttribute("sucMsgAppActions")) {
+          request.getSession().removeAttribute("sucMsgAppActions");
+        }
         if (null != request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG)) {
           sucMsg = (String) request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG);
           map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
@@ -1894,16 +1897,10 @@ public class StudyController {
                 : request.getParameter(FdahpStudyDesignerConstants.APP_ID);
         studyBos = studyService.getStudyList(sesObj.getUserId());
         appList = appService.getActiveApps(sesObj.getUserId());
-        List<StudyListBean> studies = new ArrayList();
+        map.addAttribute("studyBos", studyBos);
+        map.addAttribute("studyListId", "true");
         if (StringUtils.isNotEmpty(appId)) {
-          for (StudyListBean study : studyBos) {
-            if (study.getAppId() != null && study.getAppId().equalsIgnoreCase(appId)) {
-              studies.add(study);
-            }
-          }
-          map.addAttribute("studyBos", studies);
-        } else {
-          map.addAttribute("studyBos", studyBos);
+          map.addAttribute("appId", appId);
         }
         map.addAttribute("studyListId", "true");
         map.addAttribute("appBos", appList);
@@ -4680,11 +4677,19 @@ public class StudyController {
             }
           }
         }
+
+        List<AppsBo> apps = appService.getAppsForStudy(sesObj.getUserId());
+        AppsBo app = appService.getAppbyCustomAppId(studyBo.getAppId());
+        if (app != null) {
+          map.addAttribute("appName", app.getName());
+          map.addAttribute("appType", app.getType());
+        }
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");
         map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("appsList", apps);
         mav = new ModelAndView("viewBasicInfo", map);
       }
     } catch (Exception e) {

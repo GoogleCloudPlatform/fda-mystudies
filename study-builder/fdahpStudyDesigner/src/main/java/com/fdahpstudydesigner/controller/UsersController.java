@@ -419,6 +419,9 @@ public class UsersController {
           map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
           request.getSession().removeAttribute(FdahpStudyDesignerConstants.ERR_MSG);
         }
+        if (null != request.getSession().getAttribute("sucMsgAppActions")) {
+          request.getSession().removeAttribute("sucMsgAppActions");
+        }
         ownUser = (String) request.getSession().getAttribute("ownUser");
         userList = usersService.getUserList();
         roleList = usersService.getUserRoleList();

@@ -57,4 +57,6 @@ public interface AppService {
   public boolean getAppPermission(String appId, String userId);
 
   public int getStudiesByAppId(String customAppId);
+
+  public List<AppsBo> getAppsForStudy(String userId);
 }

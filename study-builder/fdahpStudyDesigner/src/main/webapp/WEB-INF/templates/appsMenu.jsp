@@ -37,33 +37,19 @@
 	                <c:if test="${appBo.appStatus eq 'Deactivated'}"> paused_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
 	                pr-sm"> ${appBo.appStatus} </span>
-	                <span class="right-border"></span>
-          <span class="study_status  post-launch_txt  pr-sm pl-sm"> Published </span> <span class="right-border"></span>
-          <span class="study_status  post-launch_txt pr-sm pl-sm"> Distributed (1) </span>
+	      <c:if test="${appBo.appStatus eq 'Active'}">
+	      <span class="right-border"></span>
+          <span class="study_status  pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not Published </c:if></span> <span class="right-border"></span>
+          <span class="study_status pr-sm pl-sm ${(appBo.iosAppDistributed || appBo.androidAppDistributed)?'post-launch_txt':'pre-launch_txt'}"> 
+          <c:choose>
+              <c:when test="${appBo.iosAppDistributed && appBo.androidAppDistributed}">Distributed (2)</c:when>
+              <c:when test="${appBo.iosAppDistributed || appBo.androidAppDistributed}">Distributed (1)</c:when>
+          <c:when test="${not appBo.iosAppDistributed && not appBo.androidAppDistributed}">Not Distributed</c:when>
+          </c:choose></span>
+          </c:if>
           </div>
           <span class="version"></span>
         </div>
-
-         <%-- <div class="mb-lg ${empty appBo.customAppId?'hide':''}"><span class="study_status">${appBo.customAppId}</span></div>
-        <div class="mb-lg ${empty appBo.appsStatus?'hide':''}">
-          <span class="study_status
-	                <c:if test="${appBo.appsStatus eq 'Active'}">
-
-	                    active_txt
-	                </c:if>
-	                <c:if test="${appBo.appsStatus eq 'Inactive'}">
-	                    paused_txt
-	                </c:if>
-	                ">${appBo.appsStatus}</span><span class="study_status">|</span>
-	                <span class="study_status active_txt"><c:if test="${appBo.isAppPublished}">Published</c:if>
-	                <c:if test="${empty appBo.isAppPublished}">Not published</c:if></span><span class="study_status">|</span>
-	                <span class="study_status active_txt"><c:if test="${appBo.iosAppDistributed eq 1|| appBo.androidAppDistributed  eq 1}">Distributed</c:if>
-	                <c:if test="${appBo.iosAppDistributed eq 0|| appBo.androidAppDistributed  eq 0}">Not distributed</c:if></span>
-
-          <c:set var="isLive">${_S}isLive</c:set>
-          <span
-              class="version">${not empty  sessionScope[isLive]?studyBo.studyVersionBo.studyLVersion:''}</span>
-        </div> --%>
       </li>
       <li class="first active">
         APP INFORMATION
@@ -77,19 +63,19 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span> 
         </c:if>
       </li>
-      <li class="third commonCls">
+      <li class="third commonCls1">
         APP PROPERTIES
         <c:if test="${appBo.appSequenceBo.appProperties}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fourth commonCls">
+      <li class="fourth commonCls1">
         DEVELOPER CONFIGURATIONS
         <c:if test="${appBo.appSequenceBo.developerConfigs}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fifth commonCls">
+      <li class="fifth commonCls1">
         ACTIONS
         <c:if test="${appBo.appSequenceBo.actions}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
@@ -165,13 +151,18 @@
       });
     </c:if>
     </c:if>
-    <c:if test="${appBo.appStatus eq 'Draft' && (not appBo.appSequenceBo.appInfo)}">
+    debugger
+    <c:if test="${not appBo.appSequenceBo.appInfo}">
     $('.commonCls').addClass('cursor-none-without-event');
+    $('.commonCls1').addClass('cursor-none-without-event');
     </c:if>
     <c:if test="${appBo.appSequenceBo.appInfo && not appBo.appSequenceBo.appSettings}">
     $('.commonCls').not('.second').addClass('cursor-none-without-event');
+    $('.commonCls1').addClass('cursor-none-without-event');
     </c:if>
-    
+    <c:if test="${appBo.appSequenceBo.appSettings && not appBo.appSequenceBo.actions}">
+    $('.commonCls1').not('.fifth').addClass('cursor-none-without-event');
+    </c:if> 
     $(window).on('load resize', function () {
 
       rtime1 = new Date();

@@ -177,49 +177,56 @@ margin-top:16px !important;
       
       <div class="col-md-12 p-none">
       
-             <div class="col-md-6 pl-none">
+     <div class="col-md-6 pl-none">
         
           <div class="gray-xs-f mb-xs">
-            App ID
-            <small>(15 characters max)</small>
+            Select App
             <span
                 class="requiredStar"> *
             </span>
             <span>
               <span
                   data-toggle="tooltip" data-placement="top"
-                  title="Enter a unique human-readable identifier corresponding to the app that this study must belong to."
+                  title="Select an app that this study must appear in. The study can be mapped to only 1 app.  Note that gateway type apps have multiple studies within them whereas standalone type apps have a single study in them."
                   class="filled-tooltip"></span>
             </span>
           </div>
+          <div class="form-group" id="appName">
+           <c:choose>
+           <c:when test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}">
+         
+            <input type="text" custAttType="cust" autofocus="autofocus"
+                   class="form-control aq-inp " name="" id=""
+                   maxlength="15" value="${appName}" disabled/>
+            
+           </c:when>
+          
+           <c:otherwise>
+           
+            <select class="selectpicker" required data-error="Please fill out this field"> 
+               <option value="" disabled selected>Select App</option>
+                <c:forEach items="${appsList}" var="app"> 
+                  <optgroup label="${app.customAppId} | <c:if test="${app.type == 'GT'}">Gateway</c:if><c:if test="${app.type == 'SD'}">Standalone</c:if>">
+                    <option value="${app.name} " ${studyBo.appId eq app.customAppId ? 'selected' : ''}> ${app.name} </option> 
+                  </optgroup>
+               </c:forEach>
+                 
+           </select>
+          
+         </c:otherwise>
+         </c:choose>
+        <div class="help-block with-errors red-txt"></div>
+         </div>
+        </div>
+        
+       <div class="col-md-6 pr-none">
+        
+          <div class="gray-xs-f mb-xs"> App ID </div>
           <div class="form-group">
             <input type="text" custAttType="cust" autofocus="autofocus"
                    class="form-control aq-inp appIdCls" name="appId" id="appId"
-                   maxlength="15" value="${studyBo.appId}"
-                <c:if
-                    test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}"> disabled</c:if>
-                   required data-error="Please fill out this field"/>
-            <div class="help-block with-errors red-txt"></div>
-          
-          
-          <select class="selectpicker" >
-    <optgroup label="APP94789 | Standalone" >
-      <option>Arthritis Research APP</option>
-    </optgroup>
-    <optgroup label="APP94789 | Standalone">
- <option>Covid19 Research APP</option>
-    </optgroup>
-  </select>
-  </div>
-        </div>
-        
-         <div class="col-md-6 pr-none">
-        
-          <div class="gray-xs-f mb-xs"> App Name </div>
-          <div class="form-group">
-            <input type="text" custAttType="cust" autofocus="autofocus"
-                   class="form-control aq-inp " name="" id=""
-                   maxlength="15" value=""   required data-error="Please fill out this field"  placeholder="Lorem Lorem" disabled/>
+                   maxlength="15" value="${studyBo.appId}" disabled/>
+           
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
@@ -229,18 +236,19 @@ margin-top:16px !important;
       
        <div class="col-md-12 p-none">
       
-             <div class="col-md-6 pl-none">
+        <div class="col-md-6 pl-none">
         
           <div class="gray-xs-f mb-xs"> App Type </div>
           <div class="form-group">
-            <input type="text" custAttType="cust" autofocus="autofocus"
-                   class="form-control aq-inp " name="" id=""
-                   maxlength="15" value=""   required data-error="Please fill out this field"  placeholder="GateWay" disabled/>
+         <input type="text" custAttType="cust" autofocus="autofocus"
+                   class="form-control aq-inp " name="" id="appType"
+                   maxlength="15" value="<c:if test="${appType eq 'GT'}">Gateway </c:if><c:if test="${appType eq 'SD'}">Standalone </c:if>"
+                   required data-error="Please fill out this field"  placeholder="App Type" disabled/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
         
-        <div class="col-md-6 pl-none">
+         <div class="col-md-6 pl-none hidden">
           <div class="gray-xs-f mb-xs">
             Study type
             <span class="requiredStar"> *</span>
@@ -273,7 +281,7 @@ margin-top:16px !important;
             </span>
             <div class="help-block with-errors red-txt"></div>
           </div>
-        </div>
+        </div> 
      
       </div>
       
@@ -1066,7 +1074,7 @@ margin-top:16px !important;
   function validateAppId(item, callback) {
     var appId = $("#appId").val();
     var studyType = $('input[name=type]:checked').val();
-    var thisAttr = $("#appId");
+    var thisAttr = $("#appName");
     var customStudyId = $("#customStudyId").val();
     var dbcustomStudyId = '${studyBo.customStudyId}';
     if (appId != null && appId != '' && typeof appId != 'undefined') {
@@ -1132,4 +1140,20 @@ margin-top:16px !important;
     	setTimeout(hideDisplayMessage, 5000);
     }
   }
+  
+
+  $( ".selectpicker" ).change(function() {
+    var optgroupArray=$('option:selected', this).closest('optgroup').attr('label'); 
+	var optgroupArray= optgroupArray.split("|");
+	$('#appId').val($.trim(optgroupArray[0]));
+    $('#appType').val($.trim(optgroupArray[1]));
+    if($('#appType').val() == "Standalone"){
+	    $("#inlineRadio6").prop("checked", true);
+	    $('.thumbImageDIv').hide();
+    }else{
+	    $("#inlineRadio5").prop("checked", true);
+	    $('.thumbImageDIv').show();
+    }
+    validateAppId('', function (val) {});
+});
 </script>
