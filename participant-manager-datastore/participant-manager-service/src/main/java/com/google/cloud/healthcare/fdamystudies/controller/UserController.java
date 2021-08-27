@@ -52,7 +52,7 @@ public class UserController {
 
   @Autowired private ManageUserService manageUserService;
 
-  @CrossOrigin(origins = "http://localhost:4200")
+  @CrossOrigin
   @ApiOperation(value = "add new admin with permissions and invite through email")
   @PostMapping(
       value = "/users",
