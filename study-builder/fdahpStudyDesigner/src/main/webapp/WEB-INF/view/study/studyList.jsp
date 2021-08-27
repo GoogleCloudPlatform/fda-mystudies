@@ -89,7 +89,7 @@
           <td style="display: none;">${study.liveStudyId}</td>
           <td>${study.customStudyId}</td>
 
-          <td><span class="studyAppClass" customAppId="${study.appId}"><u>${study.appId}</u></span></td>
+          <td><span class="studyAppClass" customAppId="${study.appId}"><a href="#" style="color: black"><u>${study.appId}</u></a></span></td>
           <td>
             <div class="studylist-txtoverflow">${study.name}</div>
           </td>
