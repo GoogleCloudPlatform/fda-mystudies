@@ -2338,7 +2338,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-3 pl-none">
+                  <div class="col-md-2 pl-none">
                     <div class="form-group">
                       <input type="text" class="form-control ImagechoiceRequired"
                              name="questionResponseSubTypeList[0].text"
@@ -2348,7 +2348,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-3 col-lg-3 pl-none">
+                  <div class="col-md-2 col-lg-2 pl-none">
                     <div class="form-group">
                       <input type="text" class="form-control ImagechoiceRequired imageChoiceVal"
                              name="questionResponseSubTypeList[0].value"
@@ -2425,7 +2425,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-3 pl-none">
+                  <div class="col-md-2 pl-none">
                     <div class="form-group">
                       <input type="text" class="form-control ImagechoiceRequired"
                              name="questionResponseSubTypeList[1].text" data-error="Please fill out this field"
@@ -2435,7 +2435,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-3 col-lg-3 pl-none">
+                  <div class="col-md-2 col-lg-2 pl-none">
                     <div class="form-group">
                       <input type="text" class="form-control ImagechoiceRequired imageChoiceVal"
                              name="questionResponseSubTypeList[1].value" 
