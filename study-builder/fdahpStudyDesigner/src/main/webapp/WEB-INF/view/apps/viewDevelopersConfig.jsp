@@ -104,7 +104,7 @@
                                 <div class="gray-xs-f mb-xs">Latest XCode app version (for iOS app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Xcode version applicable to the latest build of the iOS app that is available to users. Only digits and the . character are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control ios" value= "${appBo.iosXCodeAppVersion}" name="iosXCodeAppVersion" 
-                                    required data-error="Please fill out this field"  pattern="^[0-9]*\.?[0-9]*$" data-pattern-error="Please enter a valid App version"/>
+                                    required data-error="Please fill out this field"  pattern="^\d+(\.\d+)*$" data-pattern-error="Please enter a valid App version"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
