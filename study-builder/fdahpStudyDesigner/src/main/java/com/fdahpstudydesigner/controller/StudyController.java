@@ -4705,6 +4705,7 @@ public class StudyController {
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
+    AppsBo appBo = null;
     String sucMsg = "";
     String errMsg = "";
     String user = "";
@@ -4775,7 +4776,7 @@ public class StudyController {
                         sessionStudyCount + FdahpStudyDesignerConstants.LOGOUT_LOGIN_USER);
         if (FdahpStudyDesignerUtil.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-
+          appBo = appService.getAppbyCustomAppId(studyBo.getAppId());
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
           map.addAttribute("user", user);
@@ -4790,6 +4791,7 @@ public class StudyController {
                   studyBo.getId(), studyBo.getCustomStudyId());
           map.addAttribute("isAnchorForEnrollmentLive", isAnchorForEnrollmentLive);
           map.addAttribute("isAnchorForEnrollmentDraft", isAnchorForEnrollmentDraft);
+          map.addAttribute("appBo", appBo);
 
           mav = new ModelAndView(FdahpStudyDesignerConstants.VIEW_SETTING_AND_ADMINS, map);
         } else {

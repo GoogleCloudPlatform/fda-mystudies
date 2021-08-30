@@ -46,7 +46,9 @@ public interface UsersService {
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,
-      AuditLogEventRequest auditRequest);
+      String selectedApps,
+      AuditLogEventRequest auditRequest,
+      String permissionValuesForApp);
 
   public String enforcePasswordChange(String userId, String email);
 

@@ -25,6 +25,7 @@ package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 
@@ -47,6 +48,8 @@ public interface AppDAO {
 
   public boolean validateAppActions(String appId);
 
+  public List<AppsBo> getAllApps();
+
   public String saveOrUpdateAppDeveloperConfig(AppsBo appsBo, SessionObject sessionObject);
 
   public List<AppsBo> getActiveApps(String userId);
@@ -56,4 +59,6 @@ public interface AppDAO {
   public int getStudiesByAppId(String customAppId);
 
   public List<AppsBo> getAppsForStudy(String userId);
+
+  public List<StudyBo> getStudiesAssociatedWithApps(String appIds);
 }

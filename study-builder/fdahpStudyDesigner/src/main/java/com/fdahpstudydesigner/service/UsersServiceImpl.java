@@ -133,7 +133,9 @@ public class UsersServiceImpl implements UsersService {
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,
-      AuditLogEventRequest auditRequest) {
+      String selectedApps,
+      AuditLogEventRequest auditRequest,
+      String permissionValuesForApp) {
     logger.entry("begin addOrUpdateUserDetails()");
     UserBO userBO2 = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
@@ -183,7 +185,13 @@ public class UsersServiceImpl implements UsersService {
         }
       }
       UserIdAccessLevelInfo userIdAccessLevelInfo =
-          usersDAO.addOrUpdateUserDetails(userBO2, permissions, selectedStudies, permissionValues);
+          usersDAO.addOrUpdateUserDetails(
+              userBO2,
+              permissions,
+              selectedStudies,
+              permissionValues,
+              selectedApps,
+              permissionValuesForApp);
       if (userIdAccessLevelInfo != null) {
         if (addFlag) {
           values.put(

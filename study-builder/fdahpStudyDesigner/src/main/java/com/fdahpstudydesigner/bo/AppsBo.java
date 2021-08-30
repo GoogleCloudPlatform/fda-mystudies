@@ -180,6 +180,8 @@ public class AppsBo implements Serializable {
 
   @Transient private String userId;
 
+  @Transient private boolean viewPermission = true;
+
   public String getButtonText() {
     return buttonText;
   }
@@ -522,6 +524,14 @@ public class AppsBo implements Serializable {
 
   public void setAppWebsiteUrl(String appWebsiteUrl) {
     this.appWebsiteUrl = appWebsiteUrl;
+  }
+
+  public boolean isViewPermission() {
+    return viewPermission;
+  }
+
+  public void setViewPermission(boolean viewPermission) {
+    this.viewPermission = viewPermission;
   }
 
   public VersionInfoBO getVersionInfoBO() {
