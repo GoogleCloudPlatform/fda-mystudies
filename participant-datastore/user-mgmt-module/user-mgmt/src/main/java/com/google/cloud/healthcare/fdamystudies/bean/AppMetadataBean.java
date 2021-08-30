@@ -84,4 +84,6 @@ public class AppMetadataBean implements Serializable {
   private Integer iosForceUpgrade;
   @NotBlank private String androidAppBuildVersion;
   private Integer androidForceUpdrade;
+
+  @NotBlank private String appStatus;
 }

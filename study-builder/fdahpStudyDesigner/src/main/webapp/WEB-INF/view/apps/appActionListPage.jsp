@@ -208,6 +208,9 @@ button#exportId {
               <c:when test="${not empty permission}">
                 disabled
               </c:when>
+               <c:when test="${countOfStudiesAssociated ne 0}">
+                disabled
+               </c:when>
               <c:when
                   test="${not empty appBo.appStatus && (appBo.appStatus eq 'Deactivated' || appBo.appStatus eq 'Draft')}">
                 disabled

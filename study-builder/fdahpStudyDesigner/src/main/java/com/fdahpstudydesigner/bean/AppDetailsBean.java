@@ -53,6 +53,8 @@ public class AppDetailsBean {
   private Integer iosForceUpgrade;
   private String iosXCodeAppVersion;
 
+  private String appStatus;
+
   public String getAppId() {
     return appId;
   }
@@ -235,5 +237,13 @@ public class AppDetailsBean {
 
   public void setAppWebSiteUrl(String appWebSiteUrl) {
     this.appWebSiteUrl = appWebSiteUrl;
+  }
+
+  public String getAppStatus() {
+    return appStatus;
+  }
+
+  public void setAppStatus(String appStatus) {
+    this.appStatus = appStatus;
   }
 }

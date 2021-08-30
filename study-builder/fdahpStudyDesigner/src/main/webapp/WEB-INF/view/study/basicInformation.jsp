@@ -197,7 +197,7 @@ margin-top:16px !important;
          
             <input type="text" custAttType="cust" autofocus="autofocus"
                    class="form-control aq-inp " name="" id=""
-                   maxlength="15" value="${appName}"/>
+                   maxlength="15" value="${appName}" disabled/>
             
            </c:when>
           
@@ -1072,7 +1072,6 @@ margin-top:16px !important;
   }
 
   function validateAppId(item, callback) {
-	  debugger
     var appId = $("#appId").val();
     var studyType = $('input[name=type]:checked').val();
     var thisAttr = $("#appName");
@@ -1144,12 +1143,11 @@ margin-top:16px !important;
   
 
   $( ".selectpicker" ).change(function() {
-	  debugger
     var optgroupArray=$('option:selected', this).closest('optgroup').attr('label'); 
 	var optgroupArray= optgroupArray.split("|");
 	$('#appId').val($.trim(optgroupArray[0]));
     $('#appType').val($.trim(optgroupArray[1]));
-    if(optgroupArray[1] == " Standalone"){
+    if($('#appType').val() == "Standalone"){
 	    $("#inlineRadio6").prop("checked", true);
 	    $('.thumbImageDIv').hide();
     }else{

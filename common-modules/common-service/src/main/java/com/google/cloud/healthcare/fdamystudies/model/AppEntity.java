@@ -184,6 +184,9 @@ public class AppEntity implements Serializable {
   @Column(name = "app_website")
   private String appWebsite;
 
+  @Column(name = "app_status")
+  private String appStatus = "Active";
+
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,

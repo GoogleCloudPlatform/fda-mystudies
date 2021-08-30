@@ -102,8 +102,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     AppOrgInfoBean appOrgInfoBean =
         commonDao.getUserAppDetailsByAllApi(user.getUserId(), user.getAppId());
 
+    Optional<AppEntity> optAppDetails = appRepository.findByAppId(appOrgInfoBean.getAppInfoId());
+    if (optAppDetails.isPresent()) {
+      AppEntity appEntity = optAppDetails.get();
+      if (UserStatus.DEACTIVATED.getDescription().equals(appEntity.getAppStatus())) {
+        throw new ErrorCodeException(ErrorCode.APP_INACTIVE);
+      }
+    }
     // find user by email and appId
-
     Optional<UserDetailsEntity> optUserDetails =
         userDetailsRepository.findByEmailAndAppId(user.getEmailId(), appOrgInfoBean.getAppInfoId());
 

@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,6 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.AppMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.service.AppsService;
@@ -51,6 +54,9 @@ public class AppsControllerTest extends BaseMockIT {
   private static final String CUSTOM_APP_ID = "customAppId";
 
   private static final String GET_APP_CONTACT_EMAILS_PATH = "/participant-user-datastore/apps";
+
+  private static final String APP_DEACTIVATE_PATH =
+      "/participant-user-datastore/apps/{customAppId}/appDeactivate";
 
   @Test
   public void contextLoads() {
@@ -166,7 +172,8 @@ public class AppsControllerTest extends BaseMockIT {
         "0",
         Integer.valueOf(0),
         "0",
-        Integer.valueOf(0));
+        Integer.valueOf(0),
+        "Active");
   }
 
   protected ObjectMapper getObjectMapper() {
@@ -240,5 +247,44 @@ public class AppsControllerTest extends BaseMockIT {
     String contactUsEmailId =
         JsonPath.read(result.getResponse().getContentAsString(), ERROR_DESCRIPTION);
     assertEquals("App not found", contactUsEmailId);
+  }
+
+  @Test
+  public void appDeactivateSuccess() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+
+    mockMvc
+        .perform(
+            put(APP_DEACTIVATE_PATH, "GCPMS003").headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString(String.valueOf(HttpStatus.OK.value()))));
+
+    verifyTokenIntrospectRequest(1);
+
+    Optional<AppEntity> optApp = appRepository.findByAppId("GCPMS003");
+    AppEntity app = optApp.get();
+    assertNotNull(app);
+
+    assertEquals(UserStatus.DEACTIVATED.getDescription(), app.getAppStatus());
+  }
+
+  @Test
+  public void appDeactivateNotFound() throws Exception {
+
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+
+    // without appId
+    MvcResult result =
+        mockMvc
+            .perform(
+                put(APP_DEACTIVATE_PATH, "UnkownApp")
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isNotFound())
+            .andReturn();
+    String errorDesc = JsonPath.read(result.getResponse().getContentAsString(), ERROR_DESCRIPTION);
+    assertEquals(ErrorCode.APP_NOT_FOUND.getDescription(), errorDesc);
   }
 }

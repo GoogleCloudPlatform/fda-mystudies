@@ -484,7 +484,7 @@ public class AppDAOImpl implements AppDAO {
           } else if (buttonText.equalsIgnoreCase("androidDistributedId")) {
             app.setAndroidAppDistributed(true);
           } else if (buttonText.equalsIgnoreCase("deactivateId")) {
-            app.setAppStatus("Deactivate");
+            app.setAppStatus("Deactivated");
           }
           session.update(app);
           message = SUCCESS;
@@ -848,7 +848,7 @@ public class AppDAOImpl implements AppDAO {
         } else {
           query =
               session.createQuery(
-                  "Select *"
+                  "Select DISTINCT a"
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
                       + " and a.version=0 "
@@ -909,6 +909,31 @@ public class AppDAOImpl implements AppDAO {
 
   @SuppressWarnings("unchecked")
   @Override
+  public int getStudiesByAppId(String customAppId) {
+
+    logger.entry("begin getAppById()");
+    Session session = null;
+    List<StudyBo> studyBoList = null;
+    int count = 0;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(customAppId)) {
+
+        studyBoList =
+            session
+                .getNamedQuery("StudyBo.getStudyBycustomAppId")
+                .setString("customAppId", customAppId)
+                .list();
+
+        count = studyBoList.size();
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppById() - ERROR ", e);
+    }
+    logger.exit("getAppById() - Ends");
+    return count;
+  }
+
   public List<AppsBo> getAppsForStudy(String userId) {
     Session session = null;
     List<AppsBo> appListBean = null;

@@ -63,19 +63,19 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span> 
         </c:if>
       </li>
-      <li class="third commonCls">
+      <li class="third commonCls1">
         APP PROPERTIES
         <c:if test="${appBo.appSequenceBo.appProperties}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fourth commonCls">
+      <li class="fourth commonCls1">
         DEVELOPER CONFIGURATIONS
         <c:if test="${appBo.appSequenceBo.developerConfigs}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
       </li>
-      <li class="fifth commonCls">
+      <li class="fifth commonCls1">
         ACTIONS
         <c:if test="${appBo.appSequenceBo.actions}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
@@ -151,13 +151,18 @@
       });
     </c:if>
     </c:if>
-    <c:if test="${appBo.appStatus eq 'Draft' && (not appBo.appSequenceBo.appInfo)}">
+    debugger
+    <c:if test="${not appBo.appSequenceBo.appInfo}">
     $('.commonCls').addClass('cursor-none-without-event');
+    $('.commonCls1').addClass('cursor-none-without-event');
     </c:if>
     <c:if test="${appBo.appSequenceBo.appInfo && not appBo.appSequenceBo.appSettings}">
     $('.commonCls').not('.second').addClass('cursor-none-without-event');
+    $('.commonCls1').addClass('cursor-none-without-event');
     </c:if>
-    
+    <c:if test="${appBo.appSequenceBo.appSettings && not appBo.appSequenceBo.actions}">
+    $('.commonCls1').not('.fifth').addClass('cursor-none-without-event');
+    </c:if> 
     $(window).on('load resize', function () {
 
       rtime1 = new Date();
