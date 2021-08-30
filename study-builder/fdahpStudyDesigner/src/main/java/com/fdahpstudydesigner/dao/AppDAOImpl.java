@@ -35,7 +35,6 @@ import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppPermissionBO;
 import com.fdahpstudydesigner.bo.AppSequenceBo;
 import com.fdahpstudydesigner.bo.AppsBo;
-import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.VersionInfoBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
@@ -87,9 +86,7 @@ public class AppDAOImpl implements AppDAO {
     logger.entry("begin getAppList()");
     Session session = null;
     List<AppListBean> appListBean = null;
-    AppsBo liveApp = null;
     AppsBo appBo = null;
-    StudyBo studyBo = null;
     BigInteger studyCount;
     try {
 
@@ -125,7 +122,7 @@ public class AppDAOImpl implements AppDAO {
         if ((appListBean != null) && !appListBean.isEmpty()) {
           for (AppListBean appDetails : appListBean) {
 
-            if (StringUtils.isNotEmpty(appDetails.getCustomAppId())) {
+            /*if (StringUtils.isNotEmpty(appDetails.getCustomAppId())) {
               liveApp =
                   (AppsBo)
                       session
@@ -137,10 +134,10 @@ public class AppDAOImpl implements AppDAO {
               } else {
                 appDetails.setLiveAppId(null);
               }
-            }
+            }*/
 
             // for draft app
-            if ((appDetails.getId() != null) && (appDetails.getLiveAppId() != null)) {
+            if (appDetails.getId() != null) {
               appBo =
                   (AppsBo)
                       session

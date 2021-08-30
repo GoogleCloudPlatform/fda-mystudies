@@ -73,7 +73,7 @@
               name="platform" value="I"
               <c:if test="${fn:contains(studyBo.platform,'I')}">checked</c:if>
               <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if>
+                  test="${(not empty appBo && appBo.appPlatform eq 'A') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active')}">disabled</c:if>
               data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox1"> iOS </label>
           </span>
@@ -82,7 +82,7 @@
               name="platform" value="A"
               <c:if test="${fn:contains(studyBo.platform,'A')}">checked</c:if>
               <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if>
+                  test="${(not empty appBo && appBo.appPlatform eq 'I') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active')}">disabled</c:if>
               data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox2"> Android </label>
           </span>

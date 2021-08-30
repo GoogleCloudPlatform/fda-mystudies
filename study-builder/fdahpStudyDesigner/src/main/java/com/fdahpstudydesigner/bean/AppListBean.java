@@ -34,7 +34,7 @@ public class AppListBean {
   private String createdOn;
   private boolean flag = false;
   private boolean viewPermission;
-  private String liveAppId;
+  /*  private String liveAppId;*/
   private BigInteger studiesCount;
 
   public AppListBean(
@@ -75,7 +75,7 @@ public class AppListBean {
       String createdOn,
       boolean viewPermission,
       boolean flag,
-      String liveAppId,
+      /* String liveAppId,*/
       BigInteger studiesCount) {
     super();
     this.id = id;
@@ -85,7 +85,7 @@ public class AppListBean {
     this.type = type;
     this.createdOn = createdOn;
     this.viewPermission = viewPermission;
-    this.liveAppId = liveAppId;
+    /*this.liveAppId = liveAppId;*/
     this.flag = flag;
     this.studiesCount = studiesCount;
   }
@@ -154,13 +154,13 @@ public class AppListBean {
     this.viewPermission = viewPermission;
   }
 
-  public String getLiveAppId() {
+  /*public String getLiveAppId() {
     return liveAppId;
   }
 
   public void setLiveAppId(String liveAppId) {
     this.liveAppId = liveAppId;
-  }
+  }*/
 
   public BigInteger getStudiesCount() {
     return studiesCount;
