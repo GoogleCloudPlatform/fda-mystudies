@@ -26,6 +26,7 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE;
 
 import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.dao.AppDAO;
@@ -114,12 +115,13 @@ public class AppServiceImpl implements AppService {
     return message;
   }
 
-  public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
+  public String updateAppAction(
+      String appId, String buttonText, SessionObject sesObj, AuditLogEventRequest auditRequest) {
     logger.entry("AppServiceImpl - updateAppAction() - Starts");
     String message = "";
     try {
       if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
-        message = appDAO.updateAppAction(appId, buttonText, sesObj);
+        message = appDAO.updateAppAction(appId, buttonText, sesObj, auditRequest);
       }
     } catch (Exception e) {
       logger.error("AppServiceImpl - updateAppAction() - ERROR ", e);

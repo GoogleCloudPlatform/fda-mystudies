@@ -24,6 +24,14 @@
 
 package com.fdahpstudydesigner.dao;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_DEVELOPER_CONFIGURATIONS_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_DEVELOPER_CONFIGURATIONS_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_INFORMATION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_INFORMATION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_PROPERTIES_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_PROPERTIES_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_SETTINGS_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.COMPLETED_BUTTON;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMP_VALUE;
@@ -340,10 +348,10 @@ public class AppDAOImpl implements AppDAO {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
           appSequenceBo.setAppInfo(true);
-          // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+          auditLogEvent = APP_INFORMATION_MARKED_COMPLETE;
         } else if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
-          // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+          auditLogEvent = APP_INFORMATION_SAVED_OR_UPDATED;
           appSequenceBo.setAppInfo(false);
         }
         session.saveOrUpdate(appSequenceBo);
@@ -413,10 +421,10 @@ public class AppDAOImpl implements AppDAO {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
           appSequenceBo.setAppSettings(true);
-          // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+          auditLogEvent = APP_SETTINGS_MARKED_COMPLETE;
         } else if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
-          // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+          auditLogEvent = APP_SETTINGS_SAVED_OR_UPDATED;
           appSequenceBo.setAppSettings(false);
         }
         session.saveOrUpdate(appSequenceBo);
@@ -439,7 +447,8 @@ public class AppDAOImpl implements AppDAO {
   }
 
   @Override
-  public String updateAppAction(String appId, String buttonText, SessionObject sesObj) {
+  public String updateAppAction(
+      String appId, String buttonText, SessionObject sesObj, AuditLogEventRequest auditRequest) {
     logger.entry("begin updateAppAction()");
     String message = FAILURE;
     Session session = null;
@@ -456,7 +465,8 @@ public class AppDAOImpl implements AppDAO {
         }
 
         if (app != null) {
-
+          auditRequest.setUserId(sesObj.getUserId());
+          auditRequest.setAppId(app.getCustomAppId());
           if (buttonText.equalsIgnoreCase("createAppId")) {
             app.setAppStatus("Active");
             app.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
@@ -604,10 +614,10 @@ public class AppDAOImpl implements AppDAO {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
           appSequenceBo.setAppProperties(true);
-          // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+          auditLogEvent = APP_PROPERTIES_MARKED_COMPLETE;
         } else if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
-          // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+          auditLogEvent = APP_PROPERTIES_SAVED_OR_UPDATED;
           appSequenceBo.setAppProperties(false);
         }
         session.saveOrUpdate(appSequenceBo);
@@ -801,10 +811,10 @@ public class AppDAOImpl implements AppDAO {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
           appSequenceBo.setDeveloperConfigs(true);
-          // auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+          auditLogEvent = APP_DEVELOPER_CONFIGURATIONS_MARKED_COMPLETE;
         } else if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(SAVE_BUTTON)) {
-          // auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+          auditLogEvent = APP_DEVELOPER_CONFIGURATIONS_SAVED_OR_UPDATED;
           appSequenceBo.setDeveloperConfigs(false);
         }
         session.saveOrUpdate(appSequenceBo);
