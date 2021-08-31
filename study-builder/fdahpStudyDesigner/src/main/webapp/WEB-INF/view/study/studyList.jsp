@@ -39,13 +39,14 @@
     padding-left:3%;
   }
   
-  .select-sub_text { padding-left:13%;}
+  .select-sub_text { padding-left:25px;}
   .select_drop_parent {
   	position: absolute;
     display: contents;
     }
       .custom_checkbox_dropdown { 
-      background: #d9e1e9;
+      background: #d9e1e9 !important;
+      min-width: 200px !important;
       }
       
     .custom_checkbox_dropdown > li >a {

@@ -12,15 +12,20 @@ margin-top:16px !important;
 }
 
 .bootstrap-select.btn-group .dropdown-menu {
-    min-width: 50%;
+    min-width: 100%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     background: #eef2f5 !important;
-    left: 50%;
-    float: right;
+    left: 0%;
+   height: 300px;
+    overflow-x: scroll;
 }
 
+.bootstrap-select.btn-group .dropdown-menu li a.opt {
+    position: relative;
+    padding-left: 22px;
+}
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
