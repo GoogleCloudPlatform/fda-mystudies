@@ -66,9 +66,16 @@ color: #95a2ab;
     color: #2d2926 !important;
 }
 
+.checkbox input[type="checkbox"] {
+    opacity: 1;
+}
+
 </style>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" />
+  
+  
 <!-- create Study Section Start -->
 <div id="" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md tit_con">
   <div class="md-container">
@@ -89,6 +96,28 @@ color: #95a2ab;
       </div>
       
       
+<select id="example-dataprovider-optgroups" multiple="multiple" >
+
+  <optgroup label="Lime No. 2" value="b3a2eff6-5351-4b0f-9861-0d47e136517d">
+    <option value="90b4365b-9ddc-4c08-9e42-03662d73d923" label="Chimneys and Towers"></option>
+    <option value="6a7d30d8-e500-476f-a2c6-7adfb47a3e00" label="Height Safety"></option>
+    <option value="eb89ab4a-0431-4ed2-b6ba-a0c1bc91b0f0" label="Lightning Protection"></option>
+  </optgroup>
+  
+  <optgroup label="Lime No. 4" value="42da4f3e-1944-4f42-a5b7-350871cbffea">
+    <option value="90b4365b-9ddc-4c08-9e42-03662d73d922" label="Chimneys and Towers4"></option>
+    <option value="6a7d30d8-e500-476f-a2c6-7adfb47a3e03" label="Height Safety4"></option>
+    <option value="eb89ab4a-0431-4ed2-b6ba-a0c1bc91b0f3" label="Lightning Protection4"></option>
+  </optgroup>
+  
+  <optgroup label="Lime No. 1" value="46ec4dec-e669-4829-b99a-5ac64340eb84">
+    <option value="90b4365b-9ddc-4c08-9e42-03662d73d9231" label="Chimneys and Towers1"></option>
+    <option value="6a7d30d8-e500-476f-a2c6-7adfb47a3e001" label="Height Safety1"></option>
+    <option value="eb89ab4a-0431-4ed2-b6ba-a0c1bc91b0f01" label="Lightning Protection1"></option>
+  </optgroup>
+</select>
+
+
         <div class="dropdown dropdown_chk_box pl-lg">
       <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
         <span class="dropdown-text">-- Select apps --</span>
@@ -280,5 +309,25 @@ color: #95a2ab;
 	 }
 	    return true;
   }
+
+
   
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	  $('#example-dataprovider-optgroups').multiselect({
+	    enableFiltering: false,
+	    enableClickableOptGroups: true,
+	    includeSelectAllOption: true,
+	  });
+	  $("button").click(function() {
+	    console.clear()
+	    //loop through ul > li which has class active (selected)
+	    $(".multiselect-container").find("li.active:not(.multiselect-group)").each(function(index, item) {
+	      //get li value and get group name
+	      console.log("Selected -- " + $(this).text() +"Values - "+$(this).find("input[type=checkbox]").val()+ " From Group -" + $(this).prevAll(".multiselect-group:first").text()+"Values - "+$(this).prevAll(".multiselect-group:first").find("input[type=checkbox]").val());
+
+	    })
+	  })
+	});
 </script>
