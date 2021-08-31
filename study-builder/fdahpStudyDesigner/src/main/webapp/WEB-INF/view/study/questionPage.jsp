@@ -2162,7 +2162,7 @@
                       title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                 </div>
               </div>
-              <div class="col-md-3 pl-none">
+              <div class="col-md-2 pl-none">
                 <div class="gray-xs-f mb-xs">Display text
                   <span class="requiredStar">*</span>
                   <span
@@ -2170,7 +2170,7 @@
                       title="1 to 100 characters"></span>
                 </div>
               </div>
-              <div class="col-md-3 col-lg-3 pl-none">
+              <div class="col-md-2 col-lg-2 pl-none">
                 <div class="gray-xs-f mb-xs">Value
                   <span class="requiredStar">*</span>
                   <span
@@ -2244,7 +2244,7 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <div class="col-md-3 pl-none">
+                    <div class="col-md-2 pl-none">
                       <div class="form-group">
                         <input type="text" class="form-control ImagechoiceRequired"
                                name="questionResponseSubTypeList[${subtype.index}].text"
@@ -2254,7 +2254,7 @@
                         <div class="help-block with-errors red-txt"></div>
                       </div>
                     </div>
-                    <div class="col-md-3 col-lg-3 pl-none">
+                    <div class="col-md-2 col-lg-2 pl-none">
                       <div class="form-group">
                         <input type="text"
                                class="form-control ImagechoiceRequired imageChoiceVal"
@@ -2337,7 +2337,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-3 pl-none">
+                  <div class="col-md-2 pl-none">
                     <div class="form-group">
                       <input type="text" class="form-control ImagechoiceRequired"
                              name="questionResponseSubTypeList[0].text"
@@ -2347,7 +2347,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-3 col-lg-3 pl-none">
+                  <div class="col-md-2 col-lg-2 pl-none">
                     <div class="form-group">
                       <input type="text" class="form-control ImagechoiceRequired imageChoiceVal"
                              name="questionResponseSubTypeList[0].value"
@@ -2424,7 +2424,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-3 pl-none">
+                  <div class="col-md-2 pl-none">
                     <div class="form-group">
                       <input type="text" class="form-control ImagechoiceRequired"
                              name="questionResponseSubTypeList[1].text" data-error="Please fill out this field" 
@@ -2434,7 +2434,7 @@
                       <div class="help-block with-errors red-txt"></div>
                     </div>
                   </div>
-                  <div class="col-md-3 col-lg-3 pl-none">
+                  <div class="col-md-2 col-lg-2 pl-none">
                     <div class="form-group">
                       <input type="text" class="form-control ImagechoiceRequired imageChoiceVal"
                              name="questionResponseSubTypeList[1].value" data-error="Please fill out this field" 
@@ -4613,7 +4613,7 @@ if(document.getElementById("singleSelect").checked==true){
         "      <div class='help-block with-errors red-txt'></div>" +
         "   </div>" +
         "</div>" +
-        "<div class='col-md-3 pl-none'>" +
+        "<div class='col-md-2 pl-none'>" +
         "   <div class='form-group'>" +
         "      <input type='text' class='form-control ImagechoiceRequired'  data-error='Please fill out this field'  name='questionResponseSubTypeList["
         + imageCount + "].text' id='displayImageChoiceText" + imageCount
@@ -4621,7 +4621,7 @@ if(document.getElementById("singleSelect").checked==true){
         "      <div class='help-block with-errors red-txt'></div>" +
         "   </div>" +
         "</div>" +
-        "<div class='col-md-3 col-lg-3 pl-none'>" +
+        "<div class='col-md-2 col-lg-2 pl-none'>" +
         "   <div class='form-group'>" +
         "      <input type='text' class='form-control ImagechoiceRequired imageChoiceVal'  data-error='Please fill out this field' name='questionResponseSubTypeList["
         + imageCount + "].value' id='displayImageChoiceValue" + imageCount

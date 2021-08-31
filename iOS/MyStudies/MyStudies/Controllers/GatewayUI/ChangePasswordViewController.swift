@@ -171,7 +171,7 @@ class ChangePasswordViewController: UIViewController {
   /// Validations after clicking on submit button
   /// If all the validations satisfy send user feedback request.
   @IBAction func submitButtonAction(_ sender: Any) {
-
+    self.view.endEditing(true)
     if self.oldPassword.isEmpty && self.newPassword.isEmpty && self.confirmPassword.isEmpty {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
     } else if self.oldPassword == "" {
@@ -278,16 +278,19 @@ extension ChangePasswordViewController: UITextFieldDelegate {
     case .oldPassword:
       self.oldPassword = textField.text!
     case .newPassword:
-      if let password = textField.text {
-        if !password.isEmpty,
-          !Utilities.isPasswordValid(text: password)
-        {
+      self.newPassword = textField.text ?? ""
+      if let password = textField.text, !password.isEmpty {
+        if !Utilities.isPasswordValid(text: password) {
           self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+        } else if password == User.currentUser.emailId {
+          self.showAlertMessages(textMessage: kMessagePasswordMatchingToOtherFeilds)
         }
-        self.newPassword = password
       }
     case .confirmPassword:
-      self.confirmPassword = textField.text!
+      self.confirmPassword = textField.text ?? ""
+      if self.confirmPassword != "" && self.newPassword != self.confirmPassword {
+        self.showAlertMessages(textMessage: kMessageProfileValidatePasswords)
+      }
     }
   }
 }
