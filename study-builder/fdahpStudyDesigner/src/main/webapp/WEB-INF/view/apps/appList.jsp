@@ -77,7 +77,9 @@
 					</c:choose>" data-toggle="tooltip" data-placement="top"
                 	title="${app.flag?'Edit draft version':'Edit'}"
                 	appId="${app.id}"></span>
-                    <span class="sprites_icon  mr-lg viewStudiesClass" data-toggle="tooltip" data-placement="top" title="View associated studies (${app.studiesCount})" appId="${app.customAppId}">
+                    <span class="sprites_icon  mr-lg viewStudiesClass <c:if test="${app.studiesCount eq 0}">
+								cursor-none
+						</c:if>" data-toggle="tooltip" data-placement="top" title="View associated studies (${app.studiesCount})" appId="${app.customAppId}">
                     <img src="../images/icons/file-list-line.svg" >
                     </span>
                     
