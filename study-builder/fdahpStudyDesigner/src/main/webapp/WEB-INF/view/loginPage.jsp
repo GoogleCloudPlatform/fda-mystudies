@@ -82,7 +82,7 @@
       <!-- new login -->
       <!-- Logo-->
       <div class="logo__space">
-        <img src="images/logo/logo_landing_welcome.png" alt=""/>
+        <a href="/studybuilder/login.do"><img src="images/logo/logo_landing_welcome.png" alt=""/></a>
       </div>
       <div class="clearfix"></div>
       <div class="login__container">
