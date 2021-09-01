@@ -886,6 +886,9 @@
                           class="hide addBtnDis addbtn mr-sm align-span-center"
                           onclick='addTime();'>+
                     </span>
+                        <span
+                          class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                          onclick='removeTime(this);'></span>
                   </div>
                 </c:if>
                 <c:if
