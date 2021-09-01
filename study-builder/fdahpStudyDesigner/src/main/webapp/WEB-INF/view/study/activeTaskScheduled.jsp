@@ -487,6 +487,9 @@
                 class="addBtnDis addbtn mr-sm align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                 onclick='addTime();'>+
             </span>
+           <span
+                  class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
+                  onclick='removeTime(this);'></span> 
           </div>
         </c:if>
         <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0}">
@@ -2537,7 +2540,7 @@
   }
 
   function addTime() {
-	  $('.dailyTimeDiv').find(".delete ").css("visibility", "visible");
+	  $('.dailyTimeDiv').find(".delete ").css("visibility", "visible"); 
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
