@@ -6,6 +6,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_LIST_VIEW
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_PUBLISHED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_RECORD_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.IOS_APP_MARKED_AS_DISTRIBUTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_APP_CREATION_INITIATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_APP_RECORD_CREATED;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APPLICATION_JSON;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APP_BO;
@@ -162,8 +163,13 @@ public class AppController {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
         auditRequest.setUserId(sesObj.getUserId());
-        //   auditRequest.setAppId(appBo.getCustomAppId());
-        auditLogEventHelper.logEvent(APP_RECORD_VIEWED, auditRequest);
+
+        if (appBo == null) {
+          auditLogEventHelper.logEvent(NEW_APP_CREATION_INITIATED, auditRequest);
+        } else {
+          auditRequest.setAppId(appBo.getCustomAppId());
+          auditLogEventHelper.logEvent(APP_RECORD_VIEWED, auditRequest);
+        }
 
         map.addAttribute(APP_BO, appBo);
         map.addAttribute(PERMISSION, permission);

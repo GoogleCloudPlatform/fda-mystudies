@@ -340,10 +340,11 @@ public class AppDAOImpl implements AppDAO {
             dbappBo.setHasAppDraft(1);
           }
           session.update(dbappBo);
+          auditRequest.setAppId(dbappBo.getCustomAppId());
+          auditRequest.setUserId(sessionObject.getUserId());
         }
       }
 
-      auditRequest.setAppId(appBo.getId());
       if (appSequenceBo != null) {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
@@ -413,10 +414,11 @@ public class AppDAOImpl implements AppDAO {
           }
 
           session.update(dbappBo);
+          auditRequest.setAppId(dbappBo.getCustomAppId());
+          auditRequest.setUserId(sessionObject.getUserId());
         }
       }
 
-      auditRequest.setAppId(appBo.getId());
       if (appSequenceBo != null) {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
@@ -606,10 +608,11 @@ public class AppDAOImpl implements AppDAO {
             dbappBo.setHasAppDraft(1);
           }
           session.update(dbappBo);
+          auditRequest.setAppId(dbappBo.getCustomAppId());
+          auditRequest.setUserId(sessionObject.getUserId());
         }
       }
 
-      auditRequest.setAppId(appBo.getId());
       if (appSequenceBo != null) {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
@@ -803,10 +806,11 @@ public class AppDAOImpl implements AppDAO {
           }
 
           session.update(dbappBo);
+          auditRequest.setAppId(dbappBo.getCustomAppId());
+          auditRequest.setUserId(sessionObject.getUserId());
         }
       }
 
-      auditRequest.setAppId(appBo.getId());
       if (appSequenceBo != null) {
         if (StringUtils.isNotEmpty(appBo.getButtonText())
             && appBo.getButtonText().equalsIgnoreCase(COMPLETED_BUTTON)) {
