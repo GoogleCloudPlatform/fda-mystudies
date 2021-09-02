@@ -397,7 +397,7 @@
             <label for="inlineCheckbox4"> Manage Studies </label>
           </span>
           <div class="mt-lg pl-lg">
-            <div class="pb-md bor-dashed hideStudy">
+            <div class="pb-md bor-dashed">
               <span class="checkbox checkbox-inline"><input
                   type="checkbox" id="inlineCheckbox5" class="changeView1"
                   name="addingNewStudy"
@@ -412,9 +412,11 @@
                 <select
                     class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
                     title="- Select and add studies -" multiple id="multiple">
-                    <option  class ="ct">
-                            <!--id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})-->
+                  <c:forEach items="${studyBOList}" var="study">
+                    <option value="${study.id}"
+                            id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
                     </option>
+                  </c:forEach>
                 </select>
                 <span class="study-addbtn changeView">+</span>
               </c:if>
@@ -530,10 +532,6 @@
         $('.changeView3').selectpicker('refresh');
         $('.changeView2').prop('disabled', true);
     }
-    
-    $('#inlineCheckbox4').prop('disabled', true);
-    $('.hideStudy').addClass('disabled', 'disabled');
-    
     
     
     var role = '${userBO.roleName}';
@@ -884,7 +882,6 @@
         	  appIds += "," + appId;
           }
         });
-      debugger
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(".app-selected-item").length;
@@ -894,12 +891,6 @@
         $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
       }
-      getStudiesbyAppIds(appIds);
-      $('#inlineCheckbox4').prop('disabled', false);
-      $('.hideStudy').removeClass('disabled', 'disabled');
-      $('#inlineCheckbox5').prop('disabled', false);
-      $('.changeView').removeClass('disabled', 'disabled');
-
     });
 
 //Removing selected study items
@@ -924,12 +915,6 @@
       });
      
       $(".app-selected-item").remove();
-      $('#inlineCheckbox4').prop('disabled', true);
-      $('.hideStudy').addClass("disabled", "disabled");
-      $('.changeView').addClass("disabled", "disabled");
-      $('#inlineCheckbox4').prop('checked', false);
-      $('#inlineCheckbox5').prop("checked", false);
-      $(".study-selected-item").remove();
     });
 
     $('.addUpdate').on('click', function () {
@@ -1071,7 +1056,6 @@
   }
   
 //delete selected App
- var selApps= "";
   function delApp(id) {
 	  debugger
 	    var atxt = $('#app' + id).children().text();
@@ -1095,30 +1079,6 @@
 	    });
 
 	    $('#app' + id).remove();
-	    var customAppIds = "";
-	    $('.selApp').each(function () {
-	          var appId = $(this).find('.appCls').val();
-	          var permissionValue = $('#app' + appId).find('input[type=radio]:checked').val();
-	          if (customAppIds == "") {
-	        	  customAppIds = appId;
-	          } else {
-	        	  customAppIds += "," + appId;
-	          }
-	        });
-	    
-	    getStudiesbyAppIds(customAppIds);
-	    selApps--;
-	    
-	    if(selApps == 0){
-	    	  $('#inlineCheckbox4').prop('disabled', true);
-	    	  $('#inlineCheckbox5').addClass('disabled', 'disabled');
-	    	  $('.hideStudy').addClass("disabled", "disabled");
-	          $('.changeView').addClass("disabled", "disabled");
-	          $('#inlineCheckbox4').prop('checked', false);
-	          $('#inlineCheckbox5').prop("checked", false);
-	    	  $(".study-selected-item").remove();
-	    }
-
 	  }
 
   function activateOrDeactivateUser(userId) {
@@ -1236,6 +1196,7 @@
   
 
   $('#roleId').on('change', function () {
+	  debugger
       var element = $(this).find('option:selected').text();
       if(element == "Study admin"){ 
       	 $('.edit-user-list-widget').show();
@@ -1251,8 +1212,8 @@
           $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
         }
-        
-        if (selected_app > 0) {
+        var actionPage = "${actionPage}";
+        if (selected_app > 0 && actionPage == 'ADD_PAGE' ) {
         	 $(".app-selected-item").remove();
         }else if(  selected_app == tot_app){
         	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
@@ -1265,59 +1226,6 @@
            	 $('.pull-right').hide();
         }
     });
-  
- /*  $('#multipleApps').on('change', function () {
-	  debugger
-	   var tot_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-       var selected_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
-       if(  selected_app == tot_app){
-     	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
-           $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
-           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
-     }
-    });
-   */
 
-  function getStudiesbyAppIds(appIds) {
-	  debugger
-	   var customAppIds = appIds;
-	   var studyListUrl = "/studybuilder/apps/studyListForApps.do";
-	  $
-     .ajax({
-       url: studyListUrl,
-       type: "GET",
-       datatype: "json",
-       data: {
-    	   "${_csrf.parameterName}": "${_csrf.token}",
-    	   customAppIds : customAppIds,
-       },
-       
-       success: function (data) {
-           var message = data.message;
-           if (message == "SUCCESS") {
-        	  $('#multiple').empty();
-        	  $('.study-list').find('li').remove();
-           $.each(data.studyList,function(i,obj){
-        	   var customId = obj.customStudyId==null?"":obj.customStudyId;
-        	   var studyName = obj.name + "(" + customId +")";
-               var divData="<option class='val' value="+obj.id+">"+studyName+"</option>";
-               $(divData).appendTo('#multiple'); 
-                   
-               var newList= '<li data-original-index="1"><a tabindex="0" class="val" role="option" '
-                  + 'aria-disabled="false" aria-selected="false"><span class="text" value='+obj.id+'>'+studyName+'</span>'
-                  +' <span class="glyphicon glyphicon-ok check-mark"></span></a></li>';
-                  $('.study-list').find(".inner ").append(newList);
-                   });   
-           } 
-         },
-         error: function (xhr, status, error) {
-           $(item).prop('disabled', false);
-           $('#alertMsg').show();
-           $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-           setTimeout(hideDisplayMessage, 5000);
-         }
-       });  
-}
-  
 </script>
 
