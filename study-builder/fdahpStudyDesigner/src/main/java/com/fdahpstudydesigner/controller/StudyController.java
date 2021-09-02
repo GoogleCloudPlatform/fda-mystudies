@@ -21,6 +21,7 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_ASSOCIATED_STUDIES_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.LAST_PUBLISHED_VERSION_OF_STUDY_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_STUDY_CREATION_INITIATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACCESSED_IN_EDIT_MODE;
@@ -1900,6 +1901,8 @@ public class StudyController {
         map.addAttribute("studyBos", studyBos);
         map.addAttribute("studyListId", "true");
         if (StringUtils.isNotEmpty(appId)) {
+          auditRequest.setAppId(appId);
+          auditLogEventHelper.logEvent(APP_ASSOCIATED_STUDIES_VIEWED, auditRequest);
           map.addAttribute("appId", appId);
         }
         map.addAttribute("studyListId", "true");

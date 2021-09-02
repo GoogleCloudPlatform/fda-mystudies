@@ -95,6 +95,9 @@
     <mapping
       class="com.fdahpstudydesigner.bo.UserPasswordHistory" />
     <mapping class="com.fdahpstudydesigner.bo.UserPermissions" />
-
+    <mapping class="com.fdahpstudydesigner.bo.AppsBo" />
+    <mapping class="com.fdahpstudydesigner.bo.AppSequenceBo" />
+    <mapping class="com.fdahpstudydesigner.bo.AppPermissionBO" />
+    <mapping class="com.fdahpstudydesigner.bo.VersionInfoBO" />
   </session-factory>
 </hibernate-configuration>

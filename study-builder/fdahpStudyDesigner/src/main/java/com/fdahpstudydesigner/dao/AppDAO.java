@@ -24,6 +24,7 @@
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.AppListBean;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
@@ -39,7 +40,8 @@ public interface AppDAO {
 
   public String saveOrUpdateAppSettings(AppsBo appsBo, SessionObject sessionObject);
 
-  public String updateAppAction(String studyId, String buttonText, SessionObject sesObj);
+  public String updateAppAction(
+      String studyId, String buttonText, SessionObject sesObj, AuditLogEventRequest auditRequest);
 
   public AppsBo getAppByLatestVersion(String customAppId);
 

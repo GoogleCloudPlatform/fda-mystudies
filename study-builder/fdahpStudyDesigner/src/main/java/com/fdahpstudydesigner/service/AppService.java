@@ -24,6 +24,7 @@ package com.fdahpstudydesigner.service;
 
 import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
@@ -40,7 +41,8 @@ public interface AppService {
 
   public String saveOrUpdateAppSettings(AppsBo appsBo, SessionObject sessionObject);
 
-  public String updateAppAction(String appId, String buttonText, SessionObject sesObj);
+  public String updateAppAction(
+      String appId, String buttonText, SessionObject sesObj, AuditLogEventRequest auditRequest);
 
   public AppDetailsBean getAppDetailsBean(String customAppId);
 

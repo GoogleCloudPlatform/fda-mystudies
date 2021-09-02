@@ -1,5 +1,13 @@
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ANDROID_APP_MARKED_AS_DISTRIBUTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_DEACTIVATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_LIST_VIEWED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_PUBLISHED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_RECORD_VIEWED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.IOS_APP_MARKED_AS_DISTRIBUTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_APP_CREATION_INITIATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_APP_RECORD_CREATED;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APPLICATION_JSON;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APP_BO;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APP_ID;
@@ -23,6 +31,8 @@ import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AppSessionBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.AppService;
 import com.fdahpstudydesigner.service.OAuthService;
@@ -68,6 +78,8 @@ public class AppController {
 
   @Autowired private RestTemplate restTemplate;
 
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
+
   @RequestMapping("/adminApps/appList.do")
   public ModelAndView getApps(HttpServletRequest request) {
     logger.entry("begin getApps()");
@@ -75,8 +87,10 @@ public class AppController {
     ModelMap map = new ModelMap();
     List<AppListBean> appList = null;
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
       appList = appService.getAppList(sesObj.getUserId());
+      auditLogEventHelper.logEvent(APP_LIST_VIEWED, auditRequest);
       map.addAttribute("appBos", appList);
       mav = new ModelAndView("appListPage", map);
 
@@ -96,6 +110,7 @@ public class AppController {
     String sucMsg = "";
     String errMsg = "";
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
       Integer sessionAppCount =
           StringUtils.isNumeric(request.getParameter("_S"))
@@ -142,6 +157,15 @@ public class AppController {
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
+        auditRequest.setUserId(sesObj.getUserId());
+
+        if (appBo == null) {
+          auditLogEventHelper.logEvent(NEW_APP_CREATION_INITIATED, auditRequest);
+        } else {
+          auditRequest.setAppId(appBo.getCustomAppId());
+          auditLogEventHelper.logEvent(APP_RECORD_VIEWED, auditRequest);
+        }
+
         map.addAttribute(APP_BO, appBo);
         map.addAttribute(PERMISSION, permission);
         map.addAttribute("_S", sessionAppCount);
@@ -219,7 +243,6 @@ public class AppController {
         if (SUCCESS.equals(message)) {
           if (StringUtils.isNotEmpty(appsBo.getCustomAppId())) {
             auditRequest.setAppId(appsBo.getCustomAppId());
-            //  auditLogEventHelper.logEvent(STUDY_SAVED_IN_DRAFT_STATE, auditRequest);
             request
                 .getSession()
                 .setAttribute(sessionAppCount + CUSTOM_STUDY_ID, appsBo.getCustomAppId());
@@ -627,7 +650,7 @@ public class AppController {
           }
         }
 
-        if (StringUtils.isNotEmpty(CUSTOM_APP_ID)) {
+        if (StringUtils.isNotEmpty(customAppId)) {
           app = appService.getAppbyCustomAppId(customAppId);
           if (app != null) {
             appId = app.getId();
@@ -679,7 +702,9 @@ public class AppController {
     PrintWriter out = null;
     String message = FAILURE;
     String successMessage = "";
+    StudyBuilderAuditEvent auditLogEvent = null;
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
       Integer sessionAppCount =
           StringUtils.isNumeric(request.getParameter("_S"))
@@ -702,26 +727,31 @@ public class AppController {
                 ? ""
                 : request.getParameter(BUTTON_TEXT);
         if (StringUtils.isNotEmpty(appId) && StringUtils.isNotEmpty(buttonText)) {
-          message = appService.updateAppAction(appId, buttonText, sesObj);
+          message = appService.updateAppAction(appId, buttonText, sesObj, auditRequest);
           if (message.equalsIgnoreCase(SUCCESS)) {
 
             if (buttonText.equalsIgnoreCase("createAppId")) {
               successMessage = "The App is created";
+              auditLogEvent = NEW_APP_RECORD_CREATED;
             } else if (buttonText.equalsIgnoreCase("publishAppId")) {
               successMessage = "The App is published";
+              auditLogEvent = APP_PUBLISHED;
               submitAppDetailsResponseToUserRegistrationServer(customAppId, request);
             } else if (buttonText.equalsIgnoreCase("iosDistributedId")) {
               successMessage = "The App is distributed in ios";
+              auditLogEvent = IOS_APP_MARKED_AS_DISTRIBUTED;
               submitAppDetailsResponseToUserRegistrationServer(customAppId, request);
             } else if (buttonText.equalsIgnoreCase("androidDistributedId")) {
               successMessage = "The App is distributed in android";
+              auditLogEvent = ANDROID_APP_MARKED_AS_DISTRIBUTED;
               submitAppDetailsResponseToUserRegistrationServer(customAppId, request);
             } else if (buttonText.equalsIgnoreCase("deactivateId")) {
               successMessage = "The App is deactivated";
+              auditLogEvent = APP_DEACTIVATED;
               deactivateAppsAndUsersInUserRegistrationServer(customAppId, request);
             }
             request.getSession().setAttribute("sucMsgAppActions", successMessage);
-
+            auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
           } else {
             if (message.equalsIgnoreCase(FAILURE)) {
               request.getSession().setAttribute(ERR_MSG, FAILURE_UPDATE_STUDY_MESSAGE);
@@ -768,12 +798,9 @@ public class AppController {
               userRegistrationServerUrl, HttpMethod.POST, requestEntity, String.class);
 
       if (userRegistrationResponseEntity.getStatusCode() == HttpStatus.OK) {
-        //  auditLogEventHelper.logEvent(STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE,
-        // auditRequest);
         logger.info(
             "AppController - submitAppDetailsResponseToUserRegistrationServer() - INFO ==>> SUCCESS");
       } else {
-        //    auditLogEventHelper.logEvent(STUDY_METADATA_SEND_OPERATION_FAILED, auditRequest);
         logger.error(
             "AppController - submitResponseToUserRegistrationServer() - ERROR ==>> FAILURE");
         throw new Exception("There is some issue in submitting data to User Registration Server ");
@@ -815,12 +842,12 @@ public class AppController {
               customAppId);
 
       if (userRegistrationResponseEntity.getStatusCode() == HttpStatus.OK) {
-        //  auditLogEventHelper.logEvent(STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE,
+        // auditLogEventHelper.logEvent(STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE,
         // auditRequest);
         logger.info(
             "AppController - deactivateAppsAndUsersInUserRegistrationServer() - INFO ==>> SUCCESS");
       } else {
-        //    auditLogEventHelper.logEvent(STUDY_METADATA_SEND_OPERATION_FAILED, auditRequest);
+        // auditLogEventHelper.logEvent(STUDY_METADATA_SEND_OPERATION_FAILED, auditRequest);
         logger.error(
             "AppController - deactivateAppsAndUsersInUserRegistrationServer() - ERROR ==>> FAILURE");
         throw new Exception("There is some issue in submitting data to User Registration Server ");
