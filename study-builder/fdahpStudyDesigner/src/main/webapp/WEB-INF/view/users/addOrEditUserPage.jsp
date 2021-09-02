@@ -836,7 +836,6 @@
     
     
  // Adding selected app items
-    var appIds = "";
     $(".app-addbtn").click(function () {
     	 $('#inlineCheckbox4').prop('disabled', false);
     	 $('#inlineCheckbox5').prop('disabled', false);
@@ -872,21 +871,11 @@
 
         $('.app-selected').append(existingAppDiv);
       });
-      
-      $('.selApp').each(function () {
-          var appId = $(this).find('.appCls').val();
-          var permissionValue = $('#app' + appId).find('input[type=radio]:checked').val();
-          if (appIds == "") {
-        	  appIds = appId;
-          } else {
-        	  appIds += "," + appId;
-          }
-        });
+     
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(".app-selected-item").length;
       if (count == tot_items) {
-    	  debugger
     	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
         $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
         	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
@@ -1196,7 +1185,6 @@
   
 
   $('#roleId').on('change', function () {
-	  debugger
       var element = $(this).find('option:selected').text();
       if(element == "Study admin"){ 
       	 $('.edit-user-list-widget').show();
