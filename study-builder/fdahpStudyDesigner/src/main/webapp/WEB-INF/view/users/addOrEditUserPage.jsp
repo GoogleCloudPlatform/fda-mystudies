@@ -1046,7 +1046,6 @@
   
 //delete selected App
   function delApp(id) {
-	  debugger
 	    var atxt = $('#app' + id).children().text();
 	    var selApps = $(".app-selected-item").length;
 
@@ -1061,7 +1060,6 @@
 	        });
 
 	    $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
-	    	debugger
 	      if ($(this).text() == "- All items are already selected -") {
 	        $(this).remove();
 	      }
