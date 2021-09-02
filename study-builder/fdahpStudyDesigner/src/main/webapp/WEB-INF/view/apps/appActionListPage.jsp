@@ -139,7 +139,7 @@ button#exportId {
 			  	disabled
 			  </c:when>
             </c:choose>
-                >Mark ios app as distributed
+                >Mark iOS app as distributed
         </button> </div>
       
       
@@ -186,7 +186,7 @@ button#exportId {
 			  </c:when>
 			  
             </c:choose>
-                >Mark android app as distributed
+                >Mark Android app as distributed
         </button> </div>
       
       

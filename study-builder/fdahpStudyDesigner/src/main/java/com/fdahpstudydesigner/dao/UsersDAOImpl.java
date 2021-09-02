@@ -194,8 +194,8 @@ public class UsersDAOImpl implements UsersDAO {
       }
 
       if ((StringUtils.isNotEmpty(selectedStudies) || StringUtils.isNotEmpty(selectedApps))
-          && StringUtils.isNotEmpty(permissionValues)
-          && StringUtils.isNotEmpty(permissionValuesForApp)
+          && (StringUtils.isNotEmpty(permissionValues)
+              || StringUtils.isNotEmpty(permissionValuesForApp))
           && userBO2.getRoleId().equals("2")) {
         selectedStudy = selectedStudies.split(",");
         permissionValue = permissionValues.split(",");
@@ -220,15 +220,19 @@ public class UsersDAOImpl implements UsersDAO {
                   .setParameter("userId", userId);
           query.executeUpdate();
         }
-        for (int i = 0; i < selectedStudy.length; i++) {
-          studyPermissionBO =
-              addStudyLevelPermissionsToStudyAdmin(
-                  session, userId, selectedStudy, permissionValue, i);
+        if (StringUtils.isNotEmpty(selectedStudies)) {
+          for (int i = 0; i < selectedStudy.length; i++) {
+            studyPermissionBO =
+                addStudyLevelPermissionsToStudyAdmin(
+                    session, userId, selectedStudy, permissionValue, i);
+          }
         }
 
-        for (int i = 0; i < selectedApp.length; i++) {
-          addAppLevelPermissionsToStudyAdmin(
-              session, userId, selectedApp, permissionValueForApp, i);
+        if (StringUtils.isNotEmpty(selectedApps)) {
+          for (int i = 0; i < selectedApp.length; i++) {
+            addAppLevelPermissionsToStudyAdmin(
+                session, userId, selectedApp, permissionValueForApp, i);
+          }
         }
 
       } else if (userBO2.getRoleId().equals("1")) {
