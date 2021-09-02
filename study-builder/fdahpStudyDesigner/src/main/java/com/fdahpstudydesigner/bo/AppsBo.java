@@ -142,15 +142,6 @@ public class AppsBo implements Serializable {
   @Column(name = "has_app_draft")
   private Integer hasAppDraft = 0;
 
-  @Column(name = "has_app_settings_draft")
-  private Integer hasAppSettingDraft = 0;
-
-  @Column(name = "has_app_properties_draft")
-  private Integer hasAppPropertiesDraft = 0;
-
-  @Column(name = "has_app_developer_config_draft")
-  private Integer hasAppDevConfigDraft = 0;
-
   @Column(name = "modified_by")
   private String modifiedBy;
 
@@ -412,30 +403,6 @@ public class AppsBo implements Serializable {
 
   public void setHasAppDraft(Integer hasAppDraft) {
     this.hasAppDraft = hasAppDraft;
-  }
-
-  public Integer getHasAppSettingDraft() {
-    return hasAppSettingDraft;
-  }
-
-  public void setHasAppSettingDraft(Integer hasAppSettingDraft) {
-    this.hasAppSettingDraft = hasAppSettingDraft;
-  }
-
-  public Integer getHasAppPropertiesDraft() {
-    return hasAppPropertiesDraft;
-  }
-
-  public void setHasAppPropertiesDraft(Integer hasAppPropertiesDraft) {
-    this.hasAppPropertiesDraft = hasAppPropertiesDraft;
-  }
-
-  public Integer getHasAppDevConfigDraft() {
-    return hasAppDevConfigDraft;
-  }
-
-  public void setHasAppDevConfigDraft(Integer hasAppDevConfigDraft) {
-    this.hasAppDevConfigDraft = hasAppDevConfigDraft;
   }
 
   public String getModifiedBy() {
