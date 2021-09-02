@@ -51,7 +51,7 @@ public class AppsControllerTest extends BaseMockIT {
 
   private static final String ERROR_DESCRIPTION = "$.error_description";
 
-  private static final String CUSTOM_APP_ID = "customAppId";
+  private static final String CUSTOM_APP_ID = "appId";
 
   private static final String GET_APP_CONTACT_EMAILS_PATH = "/participant-user-datastore/apps";
 

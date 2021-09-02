@@ -99,10 +99,10 @@ public class AppsServiceImpl implements AppsService {
   }
 
   @Override
-  public AppContactEmailsResponse getAppContactEmails(String customAppId) {
+  public AppContactEmailsResponse getAppContactEmails(String appId) {
     logger.entry("getAppContactEmails(customAppId)");
     AppContactEmailsResponse appResponse = null;
-    Optional<AppEntity> optApp = appRepository.findByAppId(customAppId);
+    Optional<AppEntity> optApp = appRepository.findByAppId(appId);
     if (!optApp.isPresent()) {
       throw new ErrorCodeException(
           com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
@@ -116,7 +116,7 @@ public class AppsServiceImpl implements AppsService {
               app.getAppName());
     }
 
-    logger.exit(String.format("customAppId=%s contact details fetched successfully", customAppId));
+    logger.exit(String.format("customAppId=%s contact details fetched successfully", appId));
     return appResponse;
   }
 

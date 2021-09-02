@@ -82,14 +82,14 @@ public class AppsController {
   @ApiOperation(value = "Fetch app contact us and from email id")
   @GetMapping()
   public ResponseEntity<AppContactEmailsResponse> getAppContactEmails(
-      @RequestParam String customAppId, HttpServletRequest request) {
+      @RequestParam String appId, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    if (StringUtils.isBlank(customAppId)) {
+    if (StringUtils.isBlank(appId)) {
       throw new ErrorCodeException(
           com.google.cloud.healthcare.fdamystudies.common.ErrorCode.BAD_REQUEST);
     }
 
-    AppContactEmailsResponse appResponse = appsServices.getAppContactEmails(customAppId);
+    AppContactEmailsResponse appResponse = appsServices.getAppContactEmails(appId);
 
     logger.exit(String.format(STATUS_LOG, appResponse.getHttpStatusCode()));
     return new ResponseEntity<>(appResponse, HttpStatus.OK);
