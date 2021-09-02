@@ -22,6 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import java.util.Collections;
@@ -59,19 +60,20 @@ public class UserSupportServiceImpl implements UserSupportService {
     templateArgs.put("orgName", appConfig.getOrgName());
     templateArgs.put("appName", feedbackRequest.getAppName());
 
-    EmailRequest emailRequest = null;
     Optional<AppEntity> optApp = appRepository.findByAppId(feedbackRequest.getAppId());
-    if (optApp.isPresent()) {
-      emailRequest =
-          new EmailRequest(
-              optApp.get().getFormEmailId(),
-              new String[] {optApp.get().getFeedBackToEmail()},
-              null,
-              null,
-              feedbackSubject,
-              feedbackBody,
-              templateArgs);
+    if (!optApp.isPresent()) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
     }
+    EmailRequest emailRequest =
+        new EmailRequest(
+            optApp.get().getFormEmailId(),
+            new String[] {optApp.get().getFeedBackToEmail()},
+            null,
+            null,
+            feedbackSubject,
+            feedbackBody,
+            templateArgs);
     EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
 
     Map<String, String> map =
@@ -104,19 +106,20 @@ public class UserSupportServiceImpl implements UserSupportService {
     templateArgs.put("orgName", appConfig.getOrgName());
     templateArgs.put("appName", contactUsRequest.getAppName());
 
-    EmailRequest emailRequest = null;
     Optional<AppEntity> optApp = appRepository.findByAppId(contactUsRequest.getAppId());
-    if (optApp.isPresent()) {
-      emailRequest =
-          new EmailRequest(
-              optApp.get().getFormEmailId(),
-              new String[] {optApp.get().getContactUsToEmail()},
-              null,
-              null,
-              contactUsSubject,
-              contactUsContent,
-              templateArgs);
+    if (!optApp.isPresent()) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
     }
+    EmailRequest emailRequest =
+        new EmailRequest(
+            optApp.get().getFormEmailId(),
+            new String[] {optApp.get().getContactUsToEmail()},
+            null,
+            null,
+            contactUsSubject,
+            contactUsContent,
+            templateArgs);
     EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
 
     Map<String, String> map =
