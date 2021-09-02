@@ -182,9 +182,9 @@
             <ul class="no-disc">
               <li><strong>1. Platform support: </strong><br/>
                 <ul class="no-disc">
-                  <li>Note that once the study is launched, platform support
-                    cannot be revoked. However, adding support for a platform not
-                    previously selected will still be possible.
+                  <li>The platform(s) allowed for selection here are based on the platform(s) supported by the parent app. If the parent app supports only Android for example, you can only select Android here.
+                  </li>
+                  <li>Note that once the study is launched, platform support settings for the study cannot be revoked. However, adding support for a platform not previously selected will still be possible.
                   </li>
                 </ul>
               </li>
@@ -192,10 +192,9 @@
               <li><strong>2. Feature support on iOS and Android:</strong><br/>
 
                 <ul class="no-disc">
-                  <li>Given below is a list of features currently NOT
-					available for Android as compared to iOS. Please note the same
-                    in your creation of study content:
+                  <li>Given below is a list of features currently available only for iOS. These features are enabled for configuration in the Study Builder only if the study is set up as an iOS-only study in this section.
                   </li>
+                  </br>
                   <li>i. Active tasks: Tower of hanoi, Spatial span memory
                   </li>
                 </ul>
