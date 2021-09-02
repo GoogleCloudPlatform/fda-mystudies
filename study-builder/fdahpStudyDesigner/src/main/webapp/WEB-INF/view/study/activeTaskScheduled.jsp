@@ -490,6 +490,9 @@
                 class="addBtnDis addbtn mr-sm align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
                 onclick='addTime();'>+
             </span>
+            <span
+                  class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(activeTaskBo.isDuplicate > 0)?'cursor-none' : ''}"
+                  onclick='removeTime(this);'></span> 
           </div>
         </c:if>
         <c:if test="${fn:length(activeTaskBo.activeTaskFrequenciesList) gt 0}">
