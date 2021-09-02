@@ -335,6 +335,8 @@ public class FdahpStudyDesignerConstants {
   public static final Integer ROLE_MANAGE_USERS_EDIT = 5;
   public static final Integer ROLE_MANAGE_USERS_VIEW = 7;
   public static final Integer ROLE_SUPERADMIN = 1;
+  public static final Integer ROLE_MANAGE_APPS = 10;
+  public static final Integer ROLE_CREATE_MANAGE_APPS = 9;
   public static final String RUN_BASED = "Run-based";
   // Button Name
   public static final String SAVE_BUTTON = "save";
@@ -454,7 +456,7 @@ public class FdahpStudyDesignerConstants {
   public static final String ADD = "add";
 
   public static final String SUPER_ADMIN_PERMISSIONS =
-      "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW,ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT,ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW";
+      "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW,ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT,ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW,ROLE_MANAGE_APPS,ROLE_CREATE_MANAGE_APPS";
 
   public static final String FAILURE_EXPORT_STUDY_MESSAGE =
       "Sorry, a technical error occurred and the study could not be exported.";
@@ -500,6 +502,13 @@ public class FdahpStudyDesignerConstants {
   public static final String PUBLISHED_VERSION = "publishedVersion";
 
   public static final String WORKING_VERSION = "workingVersion";
+
+  public static final String APP_ID = "appId";
+  public static final String APP_BO = "appBo";
+
+  public static final String CUSTOM_APP_ID = "customAppId";
+
+  public static final String APP_DEACTIVATED = "Deactivated";
 
   private FdahpStudyDesignerConstants() {
     // Do nothing

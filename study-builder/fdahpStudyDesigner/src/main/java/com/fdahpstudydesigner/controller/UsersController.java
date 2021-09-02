@@ -35,14 +35,17 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_ENFO
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
 
+import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyListBean;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.common.StudyBuilderConstants;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.AppService;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.service.UsersService;
@@ -81,6 +84,8 @@ public class UsersController {
   @Autowired private UsersService usersService;
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
+
+  @Autowired private AppService appService;
 
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
@@ -121,6 +126,8 @@ public class UsersController {
     String actionPage = "";
     List<Integer> permissions = null;
     String usrId = null;
+    List<AppListBean> appBos = new ArrayList<>();
+    List<AppsBo> appList = new ArrayList<>();
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
         String userId =
@@ -138,6 +145,7 @@ public class UsersController {
             userBO = usersService.getUserDetails(usrId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
+              appBos = appService.getAppList(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
             }
           } else {
@@ -145,12 +153,16 @@ public class UsersController {
           }
           roleBOList = usersService.getUserRoleList();
           studyBOList = studyService.getAllStudyList();
+          appList = appService.getAllApps();
+
           map.addAttribute("actionPage", actionPage);
           map.addAttribute("userBO", userBO);
           map.addAttribute("permissions", permissions);
           map.addAttribute("roleBOList", roleBOList);
           map.addAttribute("studyBOList", studyBOList);
           map.addAttribute("studyBOs", studyBOs);
+          map.addAttribute("apps", appList);
+          map.addAttribute("appBos", appBos);
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -200,10 +212,31 @@ public class UsersController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("permissionValues"))
                 ? ""
                 : request.getParameter("permissionValues");
+
+        String permissionValuesForApp =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("permissionValuesForApp"))
+                ? ""
+                : request.getParameter("permissionValuesForApp");
+
         String ownUser =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("ownUser"))
                 ? ""
                 : request.getParameter("ownUser");
+
+        String manageApps =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("manageApps"))
+                ? ""
+                : request.getParameter("manageApps");
+        String addingNewApp =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("addingNewApp"))
+                ? ""
+                : request.getParameter("addingNewApp");
+
+        String selectedApps =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("selectedApps"))
+                ? ""
+                : request.getParameter("selectedApps");
+
         if (StringUtils.isEmpty(userBO.getUserId())) {
           addFlag = true;
           userBO.setCreatedBy(userSession.getUserId());
@@ -262,6 +295,24 @@ public class UsersController {
             selectedStudies = "";
             permissionValues = "";
           }
+
+          if (!"".equals(manageApps)) {
+            if ("1".equals(manageApps)) {
+              permissions += count > 1 ? ",ROLE_MANAGE_APPS" : "ROLE_MANAGE_APPS";
+              count++;
+              permissionList.add(FdahpStudyDesignerConstants.ROLE_MANAGE_APPS);
+              if (!"".equals(addingNewApp) && "1".equals(addingNewApp)) {
+                permissions += count > 1 ? ",ROLE_CREATE_MANAGE_APPS" : "ROLE_CREATE_MANAGE_APPS";
+                permissionList.add(FdahpStudyDesignerConstants.ROLE_CREATE_MANAGE_APPS);
+              }
+            } else {
+              selectedApps = "";
+              permissionValuesForApp = "";
+            }
+          } else {
+            selectedApps = "";
+            permissionValuesForApp = "";
+          }
         }
         AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
         msg =
@@ -272,7 +323,9 @@ public class UsersController {
                 selectedStudies,
                 permissionValues,
                 userSession,
-                auditRequest);
+                selectedApps,
+                auditRequest,
+                permissionValuesForApp);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
           if (addFlag) {
             request
@@ -419,6 +472,9 @@ public class UsersController {
           map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
           request.getSession().removeAttribute(FdahpStudyDesignerConstants.ERR_MSG);
         }
+        if (null != request.getSession().getAttribute("sucMsgAppActions")) {
+          request.getSession().removeAttribute("sucMsgAppActions");
+        }
         ownUser = (String) request.getSession().getAttribute("ownUser");
         userList = usersService.getUserList();
         roleList = usersService.getUserRoleList();
@@ -492,6 +548,8 @@ public class UsersController {
     String actionPage = FdahpStudyDesignerConstants.VIEW_PAGE;
     List<Integer> permissions = null;
     Map<String, String> values = new HashMap<>();
+    List<AppsBo> appList = new ArrayList<>();
+    List<AppListBean> appBos = new ArrayList<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -509,6 +567,7 @@ public class UsersController {
             userBO = usersService.getUserDetails(userId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
+              appBos = appService.getAppList(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
 
               HttpSession session = request.getSession();
@@ -522,14 +581,17 @@ public class UsersController {
               }
             }
           }
+
           roleBOList = usersService.getUserRoleList();
-          studyBOList = studyService.getAllStudyList();
+          appList = appService.getAllApps();
           map.addAttribute("actionPage", actionPage);
           map.addAttribute("userBO", userBO);
           map.addAttribute("permissions", permissions);
           map.addAttribute("roleBOList", roleBOList);
-          map.addAttribute("studyBOList", studyBOList);
           map.addAttribute("studyBOs", studyBOs);
+          map.addAttribute("apps", appList);
+          map.addAttribute("appBos", appBos);
+
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:getUserList.do");

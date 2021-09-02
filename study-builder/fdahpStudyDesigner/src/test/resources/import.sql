@@ -133,3 +133,9 @@ INSERT INTO `notification` (`notification_id`, `active_task_id`, `is_anchor_date
 
 INSERT INTO `resources` (`id`, `action`, `anchor_date_id`, `created_by`, `created_on`, `end_date`, `modified_by`, `modified_on`, `pdf_name`, `pdf_url`, `resource_text`, `resource_type`, `resource_visibility`, `rich_text`, `sequence_no`, `start_date`, `status`, `study_id`, `study_protocol`, `text_or_pdf`, `time_period_from_days`, `time_period_to_days`, `title`, `x_days_sign`, `y_days_sign`) VALUES ('fd1b14b3uc653t43d6e910ek4ed1ac364502', true, null, '1', '2021-04-28 18:14:47', '2021-04-30', null, null, '', '', 'edxwe', true, false, '&lt;p&gt;d2eds&lt;/p&gt;', 1, '2021-04-28', true, 'f24b5b94l66b1n4286v8884w9ccb90306363', false, false, null, null, 'e2sdx', false, false);
 
+INSERT INTO `apps` (`id`, `app_platform`, `app_support_email_address`, `contact_us_address`, `created_by`, `created_on`, `custom_app_id`, `feedback_email_address`, `has_app_developer_config_draft`, `has_app_properties_draft`, `has_app_settings_draft`, `is_live`, `modified_by`, `modified_on`, `name`, `type`, `version`, `apps_status`, `has_app_draft`, `app_terms_url`) VALUES ('402883077b963c04017b9645fba20009', 'I,A', 'support@grr.la', 'contact@grr.la', '1', '2021-08-30 14:26:26', 'BTCDEVV004', 'feedback@grr.la', '0', '0', '0', '0', '1', '2021-08-30 15:59:03', 'standalone002', 'SD', '0', 'Active', '0', 'https://google.com');
+
+INSERT INTO `app_sequence` (`app_sequence_id`, `actions`, `app_check_list`, `app_dashboard_chart`, `app_dashboard_stats`, `app_id`, `app_info`, `app_miscellaneous_branding`, `app_properties`, `app_settings`, `developer_configs`) VALUES ('402883077b963c04017b964541740007', 'Y', 'N', 'N', 'N', '402883077b963c04017b9645fba20009', 'Y', 'N', 'N', 'Y', 'N');
+
+INSERT INTO `version_info` (`version_info_id`, `android`, `ios`, `app_id`) VALUES ('2', '1.0.0', '1.0.0', '402883077b963c04017b9645fba20009');
+

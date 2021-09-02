@@ -1484,9 +1484,17 @@ public class SiteServiceImpl implements SiteService {
       templateArgs.put("App Name", optStudy.get().getApp().getAppName());
       templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
       templateArgs.put("contact email address", optStudy.get().getContactEmail());
+
+      if (optStudy.get().getApp().getPlayStoreUrl() != null) {
+        templateArgs.put("PLAY_STORE_LINK", optStudy.get().getApp().getPlayStoreUrl());
+      }
+      if (optStudy.get().getApp().getAppStoreUrl() != null) {
+        templateArgs.put("APP_STORE_LINK", optStudy.get().getApp().getAppStoreUrl());
+      }
+
       EmailRequest emailRequest =
           new EmailRequest(
-              appPropertyConfig.getFromEmail(),
+              optStudy.get().getApp().getFormEmailId(),
               new String[] {participantRegistrySiteEntity.getEmail()},
               null,
               null,

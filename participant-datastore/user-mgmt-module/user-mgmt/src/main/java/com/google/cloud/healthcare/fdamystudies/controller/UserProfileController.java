@@ -226,7 +226,8 @@ public class UserProfileController {
                     appId,
                     participantDetails.getEmailCode(),
                     participantDetails.getEmail(),
-                    appName);
+                    appName,
+                    resetPasswordBean);
             if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
                 .getMessage()
                 .equals(emailResponse.getMessage())) {

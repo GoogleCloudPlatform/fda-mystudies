@@ -274,11 +274,11 @@ public class UserServiceImpl implements UserService {
 
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appName", appName);
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("contactEmail", resetPasswordRequest.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
+            resetPasswordRequest.getFromEmail(),
             new String[] {resetPasswordRequest.getEmail()},
             null,
             null,
@@ -424,11 +424,14 @@ public class UserServiceImpl implements UserService {
     }
 
     // increment login attempts
-    return updateInvalidLoginAttempts(userEntity, userInfo, auditRequest, user.getAppName());
+    return updateInvalidLoginAttempts(userEntity, userInfo, auditRequest, user);
   }
 
   private EmailResponse sendAccountLockedEmail(
-      UserEntity user, String tempPassword, AuditLogEventRequest auditRequest, String appName) {
+      UserEntity user,
+      String tempPassword,
+      AuditLogEventRequest auditRequest,
+      UserRequest userRequest) {
     logger.entry("sendAccountLockedEmail()");
     PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
     if (platformComponent == null) {
@@ -448,12 +451,12 @@ public class UserServiceImpl implements UserService {
             : appConfig.getMailAccountLockedBody();
 
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("appName", appName);
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("appName", userRequest.getAppName());
+    templateArgs.put("contactEmail", userRequest.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
+            userRequest.getFromEmail(),
             new String[] {user.getEmail()},
             null,
             null,
@@ -470,7 +473,7 @@ public class UserServiceImpl implements UserService {
       UserEntity userEntity,
       ObjectNode userInfo,
       AuditLogEventRequest auditRequest,
-      String appName) {
+      UserRequest user) {
     if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_LOCKED);
     }
@@ -486,7 +489,7 @@ public class UserServiceImpl implements UserService {
       setPasswordAndPasswordHistoryFields(
           tempPassword, userInfo, UserAccountStatus.ACCOUNT_LOCKED.getStatus());
       EmailResponse emailResponse =
-          sendAccountLockedEmail(userEntity, tempPassword, auditRequest, appName);
+          sendAccountLockedEmail(userEntity, tempPassword, auditRequest, user);
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getCode().equals(emailResponse.getCode())) {
         auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
       } else {

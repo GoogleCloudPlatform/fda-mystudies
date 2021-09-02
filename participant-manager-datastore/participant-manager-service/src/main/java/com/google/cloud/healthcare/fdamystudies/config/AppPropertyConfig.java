@@ -66,12 +66,6 @@ public class AppPropertyConfig implements Serializable {
   @Value("${auth.server.logout.user.url}")
   private String authLogoutUserUrl;
 
-  @Value("${mail.contact-email}")
-  private String contactEmail;
-
-  @Value("${mail.from-email}")
-  private String fromEmail;
-
   @Value("${study.builder.cloud.bucket.name}")
   private String studyBuilderCloudBucketName;
 }

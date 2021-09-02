@@ -207,7 +207,7 @@ public interface StudyService {
 
   public StudyBo replicateStudy(
       String studyId,
-      String CopyVersion,
+      String copyVersion,
       SessionObject sessionObject,
       AuditLogEventRequest auditRequest);
 }

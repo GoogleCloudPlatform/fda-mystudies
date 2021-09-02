@@ -354,6 +354,9 @@ public class NotificationController {
         map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
         request.getSession().removeAttribute(FdahpStudyDesignerConstants.ERR_MSG);
       }
+      if (null != request.getSession().getAttribute("sucMsgAppActions")) {
+        request.getSession().removeAttribute("sucMsgAppActions");
+      }
       /*
        * Passing 0 in below param as notifications are independent from
        * study and empty string to define it is as global notification

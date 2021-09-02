@@ -32,11 +32,32 @@
     transform: translate(-40%, -40%); 
 }
 
-
+  .select-sup_text { font-size: 14px;
+    line-height: 16px;
+    color: #7c868d;
+    font-weight: 500;
+    padding-left:3%;
+  }
+  
+  .select-sub_text { padding-left:25px;}
+  .select_drop_parent {
+  	position: absolute;
+    display: contents;
+    }
+      .custom_checkbox_dropdown { 
+      background: #d9e1e9 !important;
+      min-width: 200px !important;
+      }
+      
+    .custom_checkbox_dropdown > li >a {
+    padding: 0px 20px;
+    
+}
  
 </style>
 
 <div>
+ 
   <table id="studies_list" class="table wid100 tbl">
     <thead>
       <tr>
@@ -69,7 +90,7 @@
           <td style="display: none;">${study.liveStudyId}</td>
           <td>${study.customStudyId}</td>
 
-          <td>${study.appId}</td>
+          <td><span class="studyAppClass" customAppId="${study.appId}"><a href="#" style="color: black"><u>${study.appId}</u></a></span></td>
           <td>
             <div class="studylist-txtoverflow">${study.name}</div>
           </td>
@@ -241,6 +262,23 @@
     showActivatedStudies()
 
     oTable.draw();
+    
+    $('.fcheckbox').on('change', function(e){
+ 	      var searchTerms = []
+ 	      $.each($('.fcheckbox'), function(i,elem){
+ 	        if($(elem).prop('checked')){
+ 	          searchTerms.push("^" + $(this).val() + "$")
+ 	        }
+ 	      })
+ 	      oTable.column(3).search(searchTerms.join('|'), true, false, true).draw();
+ 	    });
+    var searchTerms = []
+     $.each($('.fcheckbox'), function(i,elem){
+       if($(elem).prop('checked')){
+         searchTerms.push("^" + $(this).val() + "$")
+       }
+     })
+     oTable.column(3).search(searchTerms.join('|'), true, false, true).draw();
  });
 
   $('.copyStudyClass').on('click', function () {
@@ -349,6 +387,62 @@
 	     document.body.appendChild(form);
 	     form.submit(); 
    }
+
+   $(document).ready(function () {
+
+		  $('body').on("click", ".dropdown-menu", function (e) {
+			    $(this).parent().is(".open") && e.stopPropagation();
+			});
+
+			$('.selectall').click(function() {
+			    if ($(this).is(':checked')) {
+			        $('.option').prop('checked', true);
+			        var total = $('input[name="options[]"]:checked').length;
+			        $(".dropdown-text").html('(' + total + ') Selected');
+			        $(".select-text").html(' Deselect');
+			    } else {
+			        $('.option').prop('checked', false);
+			        $(".dropdown-text").html('(0) Selected');
+			        $(".select-text").html(' Select');
+			    }
+			});
+
+			$("input[type='checkbox'].justone").change(function(){
+			    var a = $("input[type='checkbox'].justone");
+			    if(a.length == a.filter(":checked").length){
+			        $('.selectall').prop('checked', true);
+			        $(".select-text").html(' Deselect');
+			    }
+			    else {
+			        $('.selectall').prop('checked', false);
+			        $(".select-text").html(' Select');
+			    }
+			  var total = $('input[name="options[]"]:checked').length;
+			  $(".dropdown-text").html('(' + total + ') Selected');
+			});
+		  
+		});
    
 
+
+   $('.studyAppClass').on('click', function () {
+       var form = document.createElement('form');
+       form.method = 'post';
+       var input = document.createElement('input');
+       input.type = 'hidden';
+       input.name = 'customAppId';
+       input.value = $(this).attr('customAppId');
+       form.appendChild(input);
+
+       input = document.createElement('input');
+       input.type = 'hidden';
+       input.name = '${_csrf.parameterName}';
+       input.value = '${_csrf.token}';
+       form.appendChild(input);
+
+       form.action = '/studybuilder/adminApps/viewAppDetails.do';
+       document.body.appendChild(form);
+       form.submit();
+     });
+  
 </script>

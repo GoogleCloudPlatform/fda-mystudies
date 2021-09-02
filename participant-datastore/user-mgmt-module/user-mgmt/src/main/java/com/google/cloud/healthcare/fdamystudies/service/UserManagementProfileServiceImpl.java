@@ -18,6 +18,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
@@ -325,7 +326,11 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Transactional()
   @Override
   public EmailResponse resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId, String appName) {
+      String applicationId,
+      String securityToken,
+      String emailId,
+      String appName,
+      ResetPasswordBean resetPasswordBean) {
     logger.entry("Begin resendConfirmationthroughEmail()");
     AppEntity appPropertiesDetails = null;
 
@@ -351,11 +356,11 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     templateArgs.put("appName", appName);
     // TODO(#496): replace with actual study's org name.
     templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("contactEmail", resetPasswordBean.getContactEmail());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
+            resetPasswordBean.getFromEmail(),
             new String[] {emailId},
             null,
             null,

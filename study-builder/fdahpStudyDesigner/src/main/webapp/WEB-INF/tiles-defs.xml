@@ -340,5 +340,51 @@
                        value="/WEB-INF/view/users/addOrEditUserPage.jsp"/>
     </definition>
     <!-- Users Section Ends -->
-
+    
+    <!-- My apps -->
+    
+    <!--Template for Apps Page -->
+    <definition name="apps.definition"
+                template="/WEB-INF/templates/layout.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="header"
+                       value="/WEB-INF/templates/header.jsp"/>
+        <put-attribute name="subheader"
+                       value="/WEB-INF/templates/subheader.jsp"/>
+        <put-attribute name="appsMenu"
+                       value="/WEB-INF/templates/appsMenu.jsp"/>
+        <put-attribute name="body" value=""/>
+        <put-attribute name="footer"
+                       value="/WEB-INF/templates/footer.jsp"/>
+    </definition>
+    
+    <definition name="appListPage" extends="base.definition">
+        <put-attribute name="body"
+                       value="/WEB-INF/view/apps/appList.jsp"/>
+    </definition>
+    <definition name="viewAppsInfo" extends="apps.definition">
+        <put-attribute name="body"
+                       value="/WEB-INF/view/apps/appsBasicInformation.jsp"/>
+    </definition>
+    
+    <definition name="viewAppSettings" extends="apps.definition">
+    	<put-attribute name="body"
+                   value="/WEB-INF/view/apps/viewAppSettings.jsp"/>
+    </definition>
+    
+    <definition name="viewAppProperties" extends="apps.definition">
+    	<put-attribute name="body"
+                   value="/WEB-INF/view/apps/viewAppProperties.jsp"/>
+    </definition>
+    
+    <definition name="viewDevConfigs" extends="apps.definition">
+    	<put-attribute name="body"
+                   value="/WEB-INF/view/apps/viewDevelopersConfig.jsp"/>
+    </definition>
+    
+    <definition name="appActionList" extends="apps.definition">
+        <put-attribute name="body"
+                       value="/WEB-INF/view/apps/appActionListPage.jsp"/>
+    </definition>
+    
 </tiles-definitions>
