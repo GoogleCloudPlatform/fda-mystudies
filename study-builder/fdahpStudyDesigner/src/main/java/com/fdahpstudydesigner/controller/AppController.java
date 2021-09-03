@@ -1,9 +1,13 @@
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ANDROID_APP_MARKED_AS_DISTRIBUTED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_LIST_VIEWED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_PUBLISHED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_RECORD_VIEWED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.IOS_APP_MARKED_AS_DISTRIBUTED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_APP_CREATION_INITIATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_APP_RECORD_CREATED;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APPLICATION_JSON;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APP_BO;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.APP_ID;
@@ -754,14 +758,18 @@ public class AppController {
 
             if (buttonText.equalsIgnoreCase("createAppId")) {
               successMessage = "App record created";
+              auditLogEvent = NEW_APP_RECORD_CREATED;
               submitAppDetailsResponseToUserRegistrationServer(customAppId, request);
             } else if (buttonText.equalsIgnoreCase("publishAppId")) {
               successMessage = "App published";
+              auditLogEvent = APP_PUBLISHED;
               submitAppDetailsResponseToUserRegistrationServer(customAppId, request);
             } else if (buttonText.equalsIgnoreCase("iosDistributedId")) {
               successMessage = "App marked as 'distributed'";
+              auditLogEvent = IOS_APP_MARKED_AS_DISTRIBUTED;
             } else if (buttonText.equalsIgnoreCase("androidDistributedId")) {
               successMessage = "App marked as 'distributed'";
+              auditLogEvent = ANDROID_APP_MARKED_AS_DISTRIBUTED;
             } else if (buttonText.equalsIgnoreCase("deactivateId")) {
               successMessage = "App record deactivated";
               auditLogEvent = APP_DEACTIVATED;
