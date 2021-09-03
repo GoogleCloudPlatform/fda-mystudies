@@ -328,8 +328,6 @@ public class FdahpStudyDesignerConstants {
   public static final String RESUME_CHECKLIST_ERROR_MSG =
       "The Checklist section does not have all items marked complete. Do you want to proceed?";
   public static final Integer ROLE_CREATE_MANAGE_STUDIES = 8;
-  public static final Integer ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT = 6;
-  public static final Integer ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW = 4;
   public static final Integer ROLE_MANAGE_REPO = 3;
   public static final Integer ROLE_MANAGE_STUDIES = 2;
   public static final Integer ROLE_MANAGE_USERS_EDIT = 5;

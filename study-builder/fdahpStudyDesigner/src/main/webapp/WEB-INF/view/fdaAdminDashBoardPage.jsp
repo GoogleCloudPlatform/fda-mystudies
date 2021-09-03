@@ -263,10 +263,7 @@
         $(".userListId").addClass('hide');
         $(".userListId").unbind();
         </c:if>
-        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
-        $(".notificationListId").addClass('cursor-none');
-        $(".notificationListId").unbind();
-        </c:if>
+       
 
         $(".appListId").click(function () {
             document.studyListForm.action = "/studybuilder/adminApps/appList.do";
