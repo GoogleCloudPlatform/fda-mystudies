@@ -139,7 +139,13 @@ public class AppsServiceImpl implements AppsService {
       listOfUserDetails.forEach(
           userDetails -> {
             try {
-              userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId());
+
+              userDetails.setStatus(UserStatus.DEACTIVATE_PENDING.getValue());
+              userDetailsRepository.saveAndFlush(userDetails);
+
+              userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId(), true);
+
+              // change the status from DEACTIVATE_PENDING to DEACTIVATED
               userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
             } catch (ErrorCodeException e) {
               if (e.getErrorCode()

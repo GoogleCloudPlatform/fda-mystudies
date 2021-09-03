@@ -56,11 +56,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
@@ -126,7 +128,7 @@ public class UsersController {
     String actionPage = "";
     List<Integer> permissions = null;
     String usrId = null;
-    List<AppListBean> appBos = new ArrayList<>();
+    List<AppListBean> appBos = null;
     List<AppsBo> appList = new ArrayList<>();
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
@@ -151,6 +153,18 @@ public class UsersController {
           } else {
             actionPage = FdahpStudyDesignerConstants.ADD_PAGE;
           }
+
+          // Remove App from the list if Deactivated
+          if (CollectionUtils.isNotEmpty(appBos)) {
+            Iterator<AppListBean> appListIteretor = appBos.iterator();
+            while (appListIteretor.hasNext()) {
+              AppListBean appListBean = appListIteretor.next();
+              if (appListBean.getAppStatus().equals(FdahpStudyDesignerConstants.APP_DEACTIVATED)) {
+                appListIteretor.remove();
+              }
+            }
+          }
+
           roleBOList = usersService.getUserRoleList();
           studyBOList = studyService.getAllStudyList();
           appList = appService.getAllApps();
@@ -475,6 +489,10 @@ public class UsersController {
         if (null != request.getSession().getAttribute("sucMsgAppActions")) {
           request.getSession().removeAttribute("sucMsgAppActions");
         }
+        if (null != request.getSession().getAttribute("errMsgAppActions")) {
+          request.getSession().removeAttribute("errMsgAppActions");
+        }
+
         ownUser = (String) request.getSession().getAttribute("ownUser");
         userList = usersService.getUserList();
         roleList = usersService.getUserRoleList();

@@ -53,8 +53,6 @@ import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -153,7 +151,7 @@ public class AppDAOImpl implements AppDAO {
                           .createQuery("from AppsBo where id=:id")
                           .setParameter("id", appDetails.getId())
                           .uniqueResult();
-              if (appBo.getHasAppDraft() == 1) {
+              if (appBo.getHasAppDraft() != null && appBo.getHasAppDraft() == 1) {
                 appDetails.setFlag(true);
               }
             }
@@ -517,6 +515,42 @@ public class AppDAOImpl implements AppDAO {
   }
 
   @Override
+  public void changeSatusToActive(String appId) {
+    logger.entry("begin changeSatusToActive()");
+    Session session = null;
+    AppsBo app = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      if (StringUtils.isNotEmpty(appId)) {
+
+        if (!appId.isEmpty()) {
+          app =
+              (AppsBo)
+                  session.getNamedQuery("AppsBo.getAppsById").setString("id", appId).uniqueResult();
+        }
+
+        if (app != null) {
+          app.setAppStatus("Active");
+          session.update(app);
+        }
+      }
+
+      transaction.commit();
+
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("AppDAOImpl - changeSatusToActive() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+
+    logger.exit("changeSatusToActive() - Ends");
+  }
+
+  @Override
   public AppsBo getAppByLatestVersion(String customAppId) {
     logger.entry("begin getAppByLatestVersion()");
     Session session = null;
@@ -764,7 +798,7 @@ public class AppDAOImpl implements AppDAO {
               (VersionInfoBO)
                   session
                       .getNamedQuery("getVersionByappId")
-                      .setString("appId", appBo.getId())
+                      .setString("appId", appBo.getCustomAppId())
                       .uniqueResult();
 
           if (versionInfoBO == null) {
@@ -789,7 +823,7 @@ public class AppDAOImpl implements AppDAO {
                 (appBo.getAndroidForceUpgrade() == 1) ? true : false);
           }
 
-          versionInfoBO.setAppId(dbappBo.getId());
+          versionInfoBO.setAppId(dbappBo.getCustomAppId());
           session.saveOrUpdate(versionInfoBO);
 
           dbappBo.setModifiedBy(appBo.getUserId());
@@ -989,39 +1023,5 @@ public class AppDAOImpl implements AppDAO {
     }
     logger.exit("getActiveApps() - Ends");
     return appListBean;
-  }
-
-  @Override
-  public List<StudyBo> getStudiesAssociatedWithApps(String appIds) {
-    logger.entry("begin getAllStudyList()");
-    Session session = null;
-    List<AppsBo> appList = null;
-    List<StudyBo> studyList = null;
-    List<String> customAppIds = new ArrayList<>();
-    try {
-      session = hibernateTemplate.getSessionFactory().openSession();
-      if (StringUtils.isNotEmpty(appIds)) {
-        List<String> selectedAppsList = Arrays.asList(appIds.split(","));
-        query =
-            session.createQuery(
-                " FROM AppsBo ABO WHERE ABO.id in (:selectedAppsList) AND ABO.version=0");
-        query.setParameterList("selectedAppsList", selectedAppsList);
-        appList = query.list();
-
-        for (AppsBo app : appList) {
-          customAppIds.add(app.getCustomAppId());
-        }
-        query =
-            session.createQuery(
-                " FROM StudyBo SBO WHERE SBO.appId in (:customAppIds) AND SBO.version = 0");
-        query.setParameterList("customAppIds", customAppIds);
-        studyList = query.list();
-      }
-
-    } catch (Exception e) {
-      logger.error("StudyDAOImpl - getAllStudyList() - ERROR ", e);
-    }
-    logger.exit("getAllStudyList() - Ends");
-    return studyList;
   }
 }

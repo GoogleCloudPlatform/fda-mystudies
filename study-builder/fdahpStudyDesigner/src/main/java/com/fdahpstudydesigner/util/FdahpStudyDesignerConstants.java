@@ -510,6 +510,12 @@ public class FdahpStudyDesignerConstants {
 
   public static final String APP_DEACTIVATED = "Deactivated";
 
+  public static final String FAILURE_APP_MESSAGE =
+      "Sorry, a technical error occurred and the update(s) could not be published.";
+
+  public static final String FAILURE_DEACTIVATE_APP_MESSAGE =
+      "Sorry, a technical error occurred and App deactivation failed";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

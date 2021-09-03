@@ -28,11 +28,9 @@ import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
-import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.dao.AppDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -278,19 +276,6 @@ public class AppServiceImpl implements AppService {
     }
     logger.exit("AppServiceImpl - getAppPermission() - Ends");
     return permission;
-  }
-
-  @Override
-  public List<StudyBo> getStudiesAssociatedWithApps(String appIds) {
-    logger.entry("AppServiceImpl - getAppPermission() - Starts");
-    List<StudyBo> studyList = new ArrayList<>();
-    try {
-      studyList = appDAO.getStudiesAssociatedWithApps(appIds);
-    } catch (Exception e) {
-      logger.error("AppServiceImpl - getAppPermission() - ERROR ", e);
-    }
-    logger.exit("AppServiceImpl - getAppPermission() - Ends");
-    return studyList;
   }
 
   @Override

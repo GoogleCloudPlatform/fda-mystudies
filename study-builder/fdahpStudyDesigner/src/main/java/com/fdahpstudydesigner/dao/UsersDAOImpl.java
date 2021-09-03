@@ -259,7 +259,8 @@ public class UsersDAOImpl implements UsersDAO {
   private void addAppPermissionsToSuperAdmin(Session session, String userId) {
     Query query = null;
     AppPermissionBO appPermissionBO = null;
-    query = session.createQuery(" FROM AppsBo ABO WHERE ABO.version = 0");
+    query =
+        session.createQuery(" FROM AppsBo ABO WHERE ABO.version = 0 AND ABO.appStatus='Active' ");
     List<AppsBo> appBOList = query.list();
     if (CollectionUtils.isNotEmpty(appBOList)) {
       for (int i = 0; i < appBOList.size(); i++) {

@@ -1863,6 +1863,11 @@ public class StudyController {
         if (null != request.getSession().getAttribute("sucMsgAppActions")) {
           request.getSession().removeAttribute("sucMsgAppActions");
         }
+
+        if (null != request.getSession().getAttribute("errMsgAppActions")) {
+          request.getSession().removeAttribute("errMsgAppActions");
+        }
+
         if (null != request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG)) {
           sucMsg = (String) request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG);
           map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
