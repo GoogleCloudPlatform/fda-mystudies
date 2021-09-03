@@ -235,7 +235,7 @@ public class AppDAOImpl implements AppDAO {
               (VersionInfoBO)
                   session
                       .getNamedQuery("getVersionByappId")
-                      .setString("appId", appId)
+                      .setString("appId", appsBo.getCustomAppId())
                       .uniqueResult();
 
           if (appSequenceBo != null) {
