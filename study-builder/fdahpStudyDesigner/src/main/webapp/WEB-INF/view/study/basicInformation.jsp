@@ -158,7 +158,7 @@ margin-top:16px !important;
           </div> 
         </div>
         
-           <div class="col-md-6 pr-none">
+        <div class="col-md-6 pr-none">
           <div class="gray-xs-f mb-xs">
             Support email (for participants)
             <small>(100
@@ -169,7 +169,7 @@ margin-top:16px !important;
           <div class="form-group">
             <input type="text" class="form-control" name="inboxEmailAddress"
                    value="${studyBo.inboxEmailAddress}" required maxlength="100"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                    autocomplete="off" data-pattern-error="Email address is invalid" data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -287,26 +287,8 @@ margin-top:16px !important;
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-        <div class="col-md-6 pr-none">
-          <div class="gray-xs-f mb-xs">
-            Support email (for participants)
-            <small>(100
-              characters max)
-            </small>
-            <span class="requiredStar"> *</span>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="inboxEmailAddress"
-                   value="${studyBo.inboxEmailAddress}" required maxlength="100"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
-                   autocomplete="off" data-pattern-error="Email address is invalid" data-error="Please fill out this field"/>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
         </div> 
      
-      </div>
-      
       
       
 		<div class="col-md-12 p-none mb-xxlg">

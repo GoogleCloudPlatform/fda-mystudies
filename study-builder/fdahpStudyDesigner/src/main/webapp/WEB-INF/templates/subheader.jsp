@@ -96,7 +96,7 @@ color: #95a2ab;
       </div>
       
       
-<select id="example-dataprovider-optgroups" multiple="multiple" >
+<!-- <select id="example-dataprovider-optgroups" multiple="multiple" >
 
   <optgroup label="Lime No. 2" value="b3a2eff6-5351-4b0f-9861-0d47e136517d">
     <option value="90b4365b-9ddc-4c08-9e42-03662d73d923" label="Chimneys and Towers"></option>
@@ -115,7 +115,7 @@ color: #95a2ab;
     <option value="6a7d30d8-e500-476f-a2c6-7adfb47a3e001" label="Height Safety1"></option>
     <option value="eb89ab4a-0431-4ed2-b6ba-a0c1bc91b0f01" label="Lightning Protection1"></option>
   </optgroup>
-</select>
+</select> -->
 
 
         <div class="dropdown dropdown_chk_box pl-lg">
