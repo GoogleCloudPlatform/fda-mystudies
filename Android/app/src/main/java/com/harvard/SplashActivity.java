@@ -15,6 +15,7 @@
 
 package com.harvard;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,21 +26,36 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.NewPasscodeSetupActivity;
+import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.event.RegisterUserEvent;
+import com.harvard.usermodule.model.Apps;
+import com.harvard.usermodule.webservicemodel.RegistrationData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
+import com.harvard.utils.Urls;
+import com.harvard.utils.realm.RealmEncryptionHelper;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 
-public class SplashActivity extends AppCompatActivity implements VersionChecker.Upgrade {
+import java.util.HashMap;
+
+import io.realm.Realm;
+
+public class SplashActivity extends AppCompatActivity implements VersionChecker.Upgrade, ApiCall.OnAsyncRequestComplete {
 
   private static final int PASSCODE_RESPONSE = 101;
+  private static final int APPS_RESPONSE = 103;
   private VersionChecker versionChecker;
-  private String newVersion = "";
+  private String newVersion = "104";
   private boolean force = false;
   private static final int RESULT_CODE_UPGRADE = 102;
 
@@ -69,13 +85,13 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
               @Override
               public void run() {
                 if (!AppController.getHelperSharedPreference()
-                        .readPreference(
-                            SplashActivity.this, getResources().getString(R.string.userid), "")
-                        .equalsIgnoreCase("")
+                    .readPreference(
+                        SplashActivity.this, getResources().getString(R.string.userid), "")
+                    .equalsIgnoreCase("")
                     && AppController.getHelperSharedPreference()
-                        .readPreference(
-                            SplashActivity.this, getResources().getString(R.string.verified), "")
-                        .equalsIgnoreCase("true")) {
+                    .readPreference(
+                        SplashActivity.this, getResources().getString(R.string.verified), "")
+                    .equalsIgnoreCase("true")) {
                   if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
                     Intent intent = new Intent(SplashActivity.this, StudyActivity.class);
                     startActivity(intent);
@@ -117,20 +133,20 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
       } else {
         if (force) {
           Toast.makeText(
-                  SplashActivity.this,
-                  "Please update the app to continue using",
-                  Toast.LENGTH_SHORT)
+              SplashActivity.this,
+              "Please update the app to continue using",
+              Toast.LENGTH_SHORT)
               .show();
           finish();
         } else {
           Toast.makeText(
-                  SplashActivity.this, "Please consider updating app next time", Toast.LENGTH_SHORT)
+              SplashActivity.this, "Please consider updating app next time", Toast.LENGTH_SHORT)
               .show();
           proceedToApp();
         }
       }
     } else if (requestCode == PASSCODE_RESPONSE) {
-      startmain();
+      getAppsInfo();
     }
   }
 
@@ -157,11 +173,12 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
 
     @Override
     protected void onPostExecute(String result) {
-      startmain();
+      getAppsInfo();
     }
 
     @Override
-    protected void onPreExecute() {}
+    protected void onPreExecute() {
+    }
   }
 
   @Override
@@ -192,9 +209,9 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                            SplashActivity.this,
-                            "Please update the app to continue using",
-                            Toast.LENGTH_SHORT)
+                        SplashActivity.this,
+                        "Please update the app to continue using",
+                        Toast.LENGTH_SHORT)
                         .show();
                     finish();
                   } else {
@@ -211,16 +228,97 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
 
   private void proceedToApp() {
     if (!AppController.getHelperSharedPreference()
-            .readPreference(SplashActivity.this, getResources().getString(R.string.userid), "")
-            .equalsIgnoreCase("")
+        .readPreference(SplashActivity.this, getResources().getString(R.string.userid), "")
+        .equalsIgnoreCase("")
         && AppController.getHelperSharedPreference()
-            .readPreference(SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
-            .equalsIgnoreCase("no")) {
+        .readPreference(SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
+        .equalsIgnoreCase("no")) {
       Intent intent = new Intent(SplashActivity.this, NewPasscodeSetupActivity.class);
       intent.putExtra("from", "signin");
       startActivityForResult(intent, PASSCODE_RESPONSE);
     } else {
       loadsplash();
     }
+  }
+
+
+  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
+  public static String bytesToHex(byte[] bytes) {
+    char[] hexChars = new char[bytes.length * 2];
+    for (int j = 0; j < bytes.length; j++) {
+      int v = bytes[j] & 0xFF;
+      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    }
+    return new String(hexChars);
+  }
+
+  private void getAppsInfo() {
+    AppController.getHelperProgressDialog().showProgress(SplashActivity.this, "", "", false);
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
+            "get",
+            Urls.APPS + "?appId=" + AppConfig.APP_ID_VALUE,
+            APPS_RESPONSE,
+            this,
+            Apps.class,
+            null,
+            null,
+            null,
+            false,
+            this);
+    RegisterUserEvent registerUserEvent = new RegisterUserEvent();
+    registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performRegistration(registerUserEvent);
+  }
+
+  @Override
+  public <T> void asyncResponse(T response, int responseCode) {
+    AppController.getHelperProgressDialog().dismissDialog();
+    if (responseCode == APPS_RESPONSE) {
+      Apps apps = (Apps) response;
+      if (apps != null) {
+        DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+        apps.setAppId(AppConfig.APP_ID_VALUE);
+        dbServiceSubscriber.saveApps(SplashActivity.this, apps);
+        startmain();
+      } else {
+        retryAlert();
+      }
+    }
+  }
+
+  @Override
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
+    AppController.getHelperProgressDialog().dismissDialog();
+    if (responseCode == APPS_RESPONSE) {
+      retryAlert();
+    }
+  }
+
+  private void retryAlert() {
+    AlertDialog.Builder alertDialogBuilder =
+        new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
+    alertDialogBuilder
+        .setMessage("Error can't continue")
+        .setCancelable(false)
+        .setPositiveButton(
+            getResources().getString(R.string.retry),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                getAppsInfo();
+              }
+            })
+        .setNegativeButton(
+            getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                finish();
+              }
+            });
+    alertDialogBuilder.show();
   }
 }
