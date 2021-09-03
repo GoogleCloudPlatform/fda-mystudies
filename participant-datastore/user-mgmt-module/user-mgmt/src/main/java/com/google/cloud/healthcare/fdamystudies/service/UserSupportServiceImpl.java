@@ -55,19 +55,20 @@ public class UserSupportServiceImpl implements UserSupportService {
     logger.entry("Begin feedback()");
     String feedbackSubject = appConfig.getFeedbackMailSubject() + feedbackRequest.getSubject();
     String feedbackBody = appConfig.getFeedbackMailBody();
-    Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("body", feedbackRequest.getBody());
-    templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("appName", feedbackRequest.getAppName());
 
     Optional<AppEntity> optApp = appRepository.findByAppId(feedbackRequest.getAppId());
     if (!optApp.isPresent()) {
       throw new ErrorCodeException(
           com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
     }
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("body", feedbackRequest.getBody());
+    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("appName", feedbackRequest.getAppName());
+
     EmailRequest emailRequest =
         new EmailRequest(
-            optApp.get().getFormEmailId(),
+            optApp.get().getFromEmailId(),
             new String[] {optApp.get().getFeedBackToEmail()},
             null,
             null,
@@ -98,6 +99,11 @@ public class UserSupportServiceImpl implements UserSupportService {
     logger.entry("Begin contactUsDetails()");
     String contactUsSubject = appConfig.getContactusMailSubject() + contactUsRequest.getSubject();
     String contactUsContent = appConfig.getContactusMailBody();
+    Optional<AppEntity> optApp = appRepository.findByAppId(contactUsRequest.getAppId());
+    if (!optApp.isPresent()) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
+    }
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("firstName", contactUsRequest.getFirstName());
     templateArgs.put("email", contactUsRequest.getEmail());
@@ -106,14 +112,9 @@ public class UserSupportServiceImpl implements UserSupportService {
     templateArgs.put("orgName", appConfig.getOrgName());
     templateArgs.put("appName", contactUsRequest.getAppName());
 
-    Optional<AppEntity> optApp = appRepository.findByAppId(contactUsRequest.getAppId());
-    if (!optApp.isPresent()) {
-      throw new ErrorCodeException(
-          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
-    }
     EmailRequest emailRequest =
         new EmailRequest(
-            optApp.get().getFormEmailId(),
+            optApp.get().getFromEmailId(),
             new String[] {optApp.get().getContactUsToEmail()},
             null,
             null,

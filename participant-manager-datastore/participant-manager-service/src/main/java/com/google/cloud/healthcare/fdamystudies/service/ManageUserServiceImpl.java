@@ -959,7 +959,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         .equals(adminRecordToSendEmail.getEmailTemplateType())) {
       emailRequest =
           new EmailRequest(
-              appDetails.getFormEmailId(),
+              appDetails.getFromEmailId(),
               new String[] {admin.getEmail()},
               null,
               null,
@@ -970,7 +970,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       templateArgs.put("ACTIVATION_LINK", appConfig.getUserDetailsLink() + admin.getSecurityCode());
       emailRequest =
           new EmailRequest(
-              appDetails.getFormEmailId(),
+              appDetails.getFromEmailId(),
               new String[] {admin.getEmail()},
               null,
               null,

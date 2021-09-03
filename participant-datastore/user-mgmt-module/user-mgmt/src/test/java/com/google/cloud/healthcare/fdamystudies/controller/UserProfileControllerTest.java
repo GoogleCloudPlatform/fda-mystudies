@@ -397,10 +397,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
-                .content(
-                    asJsonString(
-                        new ResetPasswordBean(
-                            "", Constants.CONTACT_US_EMAIL, Constants.FROM_EMAIL)))
+                .content(asJsonString(new ResetPasswordBean("")))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -410,12 +407,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
-                .content(
-                    asJsonString(
-                        new ResetPasswordBean(
-                            Constants.INVALID_EMAIL,
-                            Constants.CONTACT_US_EMAIL,
-                            Constants.FROM_EMAIL)))
+                .content(asJsonString(new ResetPasswordBean(Constants.INVALID_EMAIL)))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -426,12 +418,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
-                .content(
-                    asJsonString(
-                        new ResetPasswordBean(
-                            Constants.VALID_EMAIL,
-                            Constants.CONTACT_US_EMAIL,
-                            Constants.FROM_EMAIL)))
+                .content(asJsonString(new ResetPasswordBean(Constants.VALID_EMAIL)))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -446,12 +433,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
-                .content(
-                    asJsonString(
-                        new ResetPasswordBean(
-                            Constants.VALID_EMAIL,
-                            Constants.CONTACT_US_EMAIL,
-                            Constants.FROM_EMAIL)))
+                .content(asJsonString(new ResetPasswordBean(Constants.VALID_EMAIL)))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -467,8 +449,9 @@ public class UserProfileControllerTest extends BaseMockIT {
     templateArgs.put("contactEmail", Constants.CONTACT_US_EMAIL);
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);
-
-    verifyMimeMessage(Constants.VALID_EMAIL, Constants.FROM_EMAIL, subject, body);
+    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
+    verifyMimeMessage(Constants.VALID_EMAIL, optApp.get().getFromEmailId(), subject, body);
+    /*verifyMimeMessage(Constants.VALID_EMAIL, Constants.FROM_EMAIL, subject, body);*/
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);

@@ -93,7 +93,7 @@ public class AppEntity implements Serializable {
 
   @ToString.Exclude
   @Column(name = "from_email_id", length = LARGE_LENGTH)
-  private String formEmailId;
+  private String fromEmailId;
 
   @ToString.Exclude
   @Column(name = "from_email_password", length = LARGE_LENGTH)

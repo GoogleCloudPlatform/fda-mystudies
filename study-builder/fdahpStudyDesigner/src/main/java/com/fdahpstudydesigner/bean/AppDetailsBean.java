@@ -29,7 +29,7 @@ public class AppDetailsBean {
   //  private String appDescription;
   private String appType;
   private String appPlatform;
-  private String oraganizationName;
+  private String organizationName;
 
   private String contactEmail;
   private String feedBackEmail;
@@ -44,7 +44,7 @@ public class AppDetailsBean {
 
   private String androidBundleId;
   private String androidServerKey;
-  private Integer androidForceUpdrade;
+  private Integer androidForceUpgrade;
   private String androidAppBuildVersion;
 
   private String iosBundleId;
@@ -87,12 +87,12 @@ public class AppDetailsBean {
     this.appPlatform = appPlatform;
   }
 
-  public String getOraganizationName() {
-    return oraganizationName;
+  public String getOrganizationName() {
+    return organizationName;
   }
 
-  public void setOraganizationName(String oraganizationName) {
-    this.oraganizationName = oraganizationName;
+  public void setOraganizationName(String organizationName) {
+    this.organizationName = organizationName;
   }
 
   public String getContactEmail() {
@@ -176,11 +176,11 @@ public class AppDetailsBean {
   }
 
   public Integer getAndroidForceUpdrade() {
-    return androidForceUpdrade;
+    return androidForceUpgrade;
   }
 
-  public void setAndroidForceUpdrade(Integer androidForceUpdrade) {
-    this.androidForceUpdrade = androidForceUpdrade;
+  public void setAndroidForceUpdrade(Integer androidForceUpgrade) {
+    this.androidForceUpgrade = androidForceUpgrade;
   }
 
   public String getAndroidAppBuildVersion() {

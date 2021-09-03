@@ -78,7 +78,7 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
 
   @Test
   public void shouldSendEmailInvitation() throws Exception {
-    appEntity.setFormEmailId(TestDataHelper.FROM_EMAIL);
+    appEntity.setFromEmailId(TestDataHelper.FROM_EMAIL);
     appEntity.setContactUsToEmail(TestDataHelper.CONTACT_US_EMAIL);
     appRepository.saveAndFlush(appEntity);
 

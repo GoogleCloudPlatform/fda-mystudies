@@ -7,14 +7,6 @@
 		{
 			"path": "password",
 			"message": "must not be blank"
-		},
-		{
-			"path": "fromEmail",
-			"message": "must not be blank"
-		},
-		{
-			"path": "contactEmail",
-			"message": "must not be blank"
 		}
 	],
 	"error_description": "Invalid entries found in the submitted form. Please try again.",
