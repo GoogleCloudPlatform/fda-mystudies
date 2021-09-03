@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.AUTO_EXPIRATION;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -161,14 +162,19 @@ public class UserManagementUtil {
     return emailContentName;
   }
 
-  public void deleteUserInfoInAuthServer(String userId) {
+  public void deleteUserInfoInAuthServer(String userId, boolean isappDeactivate) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
     HttpEntity<Object> entity = new HttpEntity<>(headers);
 
-    restTemplate.exchange(
-        appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, entity, Void.class, userId);
+    String url = "";
+    if (isappDeactivate) {
+      url = appConfig.getAuthServerDeleteStatusUrl() + "?appAndUserDeactivate=" + AUTO_EXPIRATION;
+    } else {
+      url = appConfig.getAuthServerDeleteStatusUrl();
+    }
+    restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class, userId);
   }
 }

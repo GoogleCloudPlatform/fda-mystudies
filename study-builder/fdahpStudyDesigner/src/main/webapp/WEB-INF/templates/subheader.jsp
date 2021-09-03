@@ -204,6 +204,11 @@ color: #95a2ab;
     if (errMsg.length > 0) {
       showErrMsg(errMsg);
     }
+    
+    var errMsgAppActions = '${errMsgAppActions}';
+    if (errMsgAppActions.length > 0) {
+      showErrMsg(errMsgAppActions);
+    }
 
     var resourceErrMsg = '${resourceErrMsg}';
     if (resourceErrMsg) {

@@ -14,7 +14,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,25 +26,27 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
 
   @PostConstruct
   public void init() {
+    /*
 
-    uriTemplateAndMethods.put(
-        String.format("%s/studies/studymetadata", context.getContextPath()),
-        new String[] {HttpMethod.POST.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/studies/sendNotification", context.getContextPath()),
-        new String[] {HttpMethod.POST.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/deactivate", context.getContextPath()),
-        new String[] {HttpMethod.DELETE.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/updateUserProfile", context.getContextPath()),
-        new String[] {HttpMethod.POST.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/userProfile", context.getContextPath()),
-        new String[] {HttpMethod.GET.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/apps/{customAppId}/appDeactivate", context.getContextPath()),
-        new String[] {HttpMethod.PUT.name()});
+      uriTemplateAndMethods.put(
+          String.format("%s/studies/studymetadata", context.getContextPath()),
+          new String[] {HttpMethod.POST.name()});
+      uriTemplateAndMethods.put(
+          String.format("%s/studies/sendNotification", context.getContextPath()),
+          new String[] {HttpMethod.POST.name()});
+      uriTemplateAndMethods.put(
+          String.format("%s/deactivate", context.getContextPath()),
+          new String[] {HttpMethod.DELETE.name()});
+      uriTemplateAndMethods.put(
+          String.format("%s/updateUserProfile", context.getContextPath()),
+          new String[] {HttpMethod.POST.name()});
+      uriTemplateAndMethods.put(
+          String.format("%s/userProfile", context.getContextPath()),
+          new String[] {HttpMethod.GET.name()});
+      uriTemplateAndMethods.put(
+          String.format("%s/apps/{customAppId}/appDeactivate", context.getContextPath()),
+          new String[] {HttpMethod.PUT.name()});
+    */
   }
 
   @Override

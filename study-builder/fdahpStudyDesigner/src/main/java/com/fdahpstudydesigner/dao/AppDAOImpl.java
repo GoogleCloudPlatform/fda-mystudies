@@ -515,6 +515,42 @@ public class AppDAOImpl implements AppDAO {
   }
 
   @Override
+  public void changeSatusToActive(String appId) {
+    logger.entry("begin changeSatusToActive()");
+    Session session = null;
+    AppsBo app = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+      if (StringUtils.isNotEmpty(appId)) {
+
+        if (!appId.isEmpty()) {
+          app =
+              (AppsBo)
+                  session.getNamedQuery("AppsBo.getAppsById").setString("id", appId).uniqueResult();
+        }
+
+        if (app != null) {
+          app.setAppStatus("Active");
+          session.update(app);
+        }
+      }
+
+      transaction.commit();
+
+    } catch (Exception e) {
+      transaction.rollback();
+      logger.error("AppDAOImpl - changeSatusToActive() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+
+    logger.exit("changeSatusToActive() - Ends");
+  }
+
+  @Override
   public AppsBo getAppByLatestVersion(String customAppId) {
     logger.entry("begin getAppByLatestVersion()");
     Session session = null;
@@ -762,7 +798,7 @@ public class AppDAOImpl implements AppDAO {
               (VersionInfoBO)
                   session
                       .getNamedQuery("getVersionByappId")
-                      .setString("appId", appBo.getId())
+                      .setString("appId", appBo.getCustomAppId())
                       .uniqueResult();
 
           if (versionInfoBO == null) {
@@ -787,7 +823,7 @@ public class AppDAOImpl implements AppDAO {
                 (appBo.getAndroidForceUpgrade() == 1) ? true : false);
           }
 
-          versionInfoBO.setAppId(dbappBo.getId());
+          versionInfoBO.setAppId(dbappBo.getCustomAppId());
           session.saveOrUpdate(versionInfoBO);
 
           dbappBo.setModifiedBy(appBo.getUserId());

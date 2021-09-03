@@ -489,6 +489,10 @@ public class UsersController {
         if (null != request.getSession().getAttribute("sucMsgAppActions")) {
           request.getSession().removeAttribute("sucMsgAppActions");
         }
+        if (null != request.getSession().getAttribute("errMsgAppActions")) {
+          request.getSession().removeAttribute("errMsgAppActions");
+        }
+
         ownUser = (String) request.getSession().getAttribute("ownUser");
         userList = usersService.getUserList();
         roleList = usersService.getUserRoleList();

@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,15 +27,17 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
 
   @PostConstruct
   public void init() {
-    uriTemplateAndMethods.put(
-        String.format("%s/users", context.getContextPath()), new String[] {HttpMethod.POST.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/users/{userId}", context.getContextPath()),
-        new String[] {HttpMethod.PUT.name(), HttpMethod.DELETE.name()});
+    /*
+      uriTemplateAndMethods.put(
+          String.format("%s/users", context.getContextPath()), new String[] {HttpMethod.POST.name()});
+      uriTemplateAndMethods.put(
+          String.format("%s/users/{userId}", context.getContextPath()),
+          new String[] {HttpMethod.PUT.name(), HttpMethod.DELETE.name()});
 
-    uriTemplateAndMethods.put(
-        String.format("%s/users/{userId}/change_password", context.getContextPath()),
-        new String[] {HttpMethod.PUT.name()});
+      uriTemplateAndMethods.put(
+          String.format("%s/users/{userId}/change_password", context.getContextPath()),
+          new String[] {HttpMethod.PUT.name()});
+    */
   }
 
   @Override

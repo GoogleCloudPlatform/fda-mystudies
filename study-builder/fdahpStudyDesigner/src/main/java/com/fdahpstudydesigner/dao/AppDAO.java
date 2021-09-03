@@ -60,4 +60,6 @@ public interface AppDAO {
   public int getStudiesByAppId(String customAppId);
 
   public List<AppsBo> getAppsForStudy(String userId);
+
+  public void changeSatusToActive(String appId);
 }
