@@ -533,4 +533,7 @@
     <string name="rsb_next">Next</string>
     <string name="eligibilitytest">Eligibility test</string>
     <string name="rsb_consent_signature_placeholder">Sign here</string>
+
+    <string name="fromEmail">fromEmail</string>
+    <string name="contactEmail">contactEmail</string>
 </resources>

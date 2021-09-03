@@ -28,14 +28,20 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import com.harvard.AppConfig;
 import com.harvard.R;
+import com.harvard.SplashActivity;
 import com.harvard.gatewaymodule.events.GetStartedEvent;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.SignupActivity;
+import com.harvard.usermodule.VerificationStepActivity;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
+
+import io.realm.Realm;
 
 public class GatewayActivity extends AppCompatActivity {
   private static final int UPGRADE = 100;
@@ -188,7 +194,13 @@ public class GatewayActivity extends AppCompatActivity {
             .setExitAnimations(GatewayActivity.this, R.anim.slide_in_left, R.anim.slide_out_right);
 
     CustomTabsIntent customTabsIntent = builder.build();
-    customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(GatewayActivity.this);
+    Apps apps = dbServiceSubscriber.getApps(realm);
+    customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+        .replace("$FromEmail", apps.getFromEmail())
+        .replace("$ContactEmail", apps.getContactUsEmail())));
+    dbServiceSubscriber.closeRealmObj(realm);
     startActivity(customTabsIntent.intent);
   }
 }

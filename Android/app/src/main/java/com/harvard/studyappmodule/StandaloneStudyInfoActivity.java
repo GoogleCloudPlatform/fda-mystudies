@@ -56,7 +56,9 @@ import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.VerificationStepActivity;
 import com.harvard.usermodule.event.GetPreferenceEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
@@ -187,7 +189,10 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                           R.anim.slide_in_left,
                           R.anim.slide_out_right)
                       .build();
-              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+              Apps apps = dbServiceSubscriber.getApps(realm);
+              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+                  .replace("$FromEmail", apps.getFromEmail())
+                  .replace("$ContactEmail", apps.getContactUsEmail())));
               startActivity(customTabsIntent.intent);
             } else {
               loginCallback();

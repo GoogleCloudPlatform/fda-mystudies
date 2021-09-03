@@ -81,6 +81,18 @@ public class RealmMigrationHelper implements RealmMigration {
                   obj.set("verificationTime", "");
                 }
               });
+
+      // Added Apps
+      schema.create("Apps")
+          .addField("message", String.class)
+          .addField("appName", String.class)
+          .addField("appId", String.class)
+          .addField("fromEmail", String.class)
+          .addField("contactUsEmail", String.class)
+          .addField("status", int.class)
+          .addField("code", String.class);
+
+      oldVersion++;
     }
   }
 }

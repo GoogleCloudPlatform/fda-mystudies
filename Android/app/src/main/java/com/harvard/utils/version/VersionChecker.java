@@ -88,6 +88,6 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   }
 
   public String currentVersion() {
-    return BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE;
+    return String.valueOf(BuildConfig.VERSION_CODE);
   }
 }

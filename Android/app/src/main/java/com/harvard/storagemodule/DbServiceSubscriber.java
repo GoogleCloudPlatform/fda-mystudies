@@ -44,6 +44,7 @@ import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.studymodel.StudyResource;
 import com.harvard.studyappmodule.studymodel.StudyUpdate;
 import com.harvard.studyappmodule.studymodel.StudyUpdateListdata;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.ActivityData;
 import com.harvard.usermodule.webservicemodel.ActivityRunPreference;
@@ -1449,6 +1450,18 @@ public class DbServiceSubscriber {
     realm.copyToRealmOrUpdate(userProfileData);
     realm.commitTransaction();
     closeRealmObj(realm);
+  }
+
+  public void saveApps(Context context, Apps apps) {
+    realm = AppController.getRealmobj(context);
+    realm.beginTransaction();
+    realm.copyToRealmOrUpdate(apps);
+    realm.commitTransaction();
+    closeRealmObj(realm);
+  }
+
+  public Apps getApps(Realm realm) {
+    return realm.where(Apps.class).findFirst();
   }
 
   public void deleteUserProfileDataDuplicateRow(Context context) {
