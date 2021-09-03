@@ -188,7 +188,11 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public ResetPasswordResponse resetPassword(
-      ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest, String appName)
+      ResetPasswordRequest resetPasswordRequest,
+      AuditLogEventRequest auditRequest,
+      String appName,
+      String fromEmail,
+      String contactEmail)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
 
@@ -223,7 +227,8 @@ public class UserServiceImpl implements UserService {
 
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse =
-        sendPasswordResetEmail(resetPasswordRequest, tempPassword, auditRequest, appName);
+        sendPasswordResetEmail(
+            resetPasswordRequest, tempPassword, auditRequest, appName, fromEmail, contactEmail);
 
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getCode().equals(emailResponse.getCode())) {
       setPasswordAndPasswordHistoryFields(
@@ -253,7 +258,9 @@ public class UserServiceImpl implements UserService {
       ResetPasswordRequest resetPasswordRequest,
       String tempPassword,
       AuditLogEventRequest auditRequest,
-      String appName) {
+      String appName,
+      String fromMobileEmail,
+      String contactMobileEmail) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
     if (platformComponent == null) {
       logger.warn(
@@ -272,13 +279,22 @@ public class UserServiceImpl implements UserService {
             ? appConfig.getMailResetPasswordBodyForMobileApp()
             : appConfig.getMailResetPasswordBody();
 
+    String contactEmail =
+        PlatformComponent.MOBILE_APPS.equals(platformComponent)
+            ? contactMobileEmail
+            : appConfig.getContactEmail();
+    String fromEmail =
+        PlatformComponent.MOBILE_APPS.equals(platformComponent)
+            ? fromMobileEmail
+            : appConfig.getFromEmail();
+
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appName", appName);
-    templateArgs.put("contactEmail", resetPasswordRequest.getContactEmail());
+    templateArgs.put("contactEmail", contactEmail);
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
-            resetPasswordRequest.getFromEmail(),
+            fromEmail,
             new String[] {resetPasswordRequest.getEmail()},
             null,
             null,
@@ -450,13 +466,22 @@ public class UserServiceImpl implements UserService {
             ? appConfig.getMailAccountLockedBodyForMobileApp()
             : appConfig.getMailAccountLockedBody();
 
+    String contactEmail =
+        PlatformComponent.MOBILE_APPS.equals(platformComponent)
+            ? userRequest.getContactEmail()
+            : appConfig.getContactEmail();
+    String fromEmail =
+        PlatformComponent.MOBILE_APPS.equals(platformComponent)
+            ? userRequest.getFromEmail()
+            : appConfig.getFromEmail();
+
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appName", userRequest.getAppName());
-    templateArgs.put("contactEmail", userRequest.getContactEmail());
+    templateArgs.put("contactEmail", contactEmail);
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
-            userRequest.getFromEmail(),
+            fromEmail,
             new String[] {user.getEmail()},
             null,
             null,

@@ -101,14 +101,6 @@ import org.springframework.util.MultiValueMap;
 
 public class LoginControllerTest extends BaseMockIT {
 
-  private static final String CONTACT_EMAIL_KEY = "contactEmail";
-
-  private static final String FROM_EMAIL_KEY = "fromEmail";
-
-  private static final String CONTACT_US_EMAIL = "contactus@gmail.com";
-
-  private static final String FROM_EMAIL = "fromEmail@gmail.com";
-
   private static final int MAX_LOGIN_ATTEMPTS = 5;
 
   private static final String PASSWORD_VALUE = "0Auth_scim_service_mock!t";
@@ -530,8 +522,6 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(EMAIL, EMAIL_VALUE);
     requestParams.add(PASSWORD, PASSWORD_VALUE);
-    requestParams.add(FROM_EMAIL_KEY, FROM_EMAIL);
-    requestParams.add(CONTACT_EMAIL_KEY, CONTACT_US_EMAIL);
 
     Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
@@ -578,8 +568,6 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(EMAIL, EMAIL_VALUE);
     requestParams.add(PASSWORD, PASSWORD_VALUE);
-    requestParams.add(FROM_EMAIL_KEY, FROM_EMAIL);
-    requestParams.add(CONTACT_EMAIL_KEY, CONTACT_US_EMAIL);
 
     Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
@@ -732,7 +720,8 @@ public class LoginControllerTest extends BaseMockIT {
                 + "account for the MyStudies Participant Manager portal "
                 + "has been temporarily locked");
 
-    MimeMessage mail = verifyMimeMessage(EMAIL_VALUE, FROM_EMAIL, subject, body);
+    MimeMessage mail =
+        verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
     verifyDoesNotContain(mail.getContent().toString(), "@tempPassword@", "@appId");
   }
 
@@ -963,8 +952,6 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(EMAIL, EMAIL_VALUE);
     requestParams.add(PASSWORD, PASSWORD_VALUE);
-    requestParams.add(FROM_EMAIL_KEY, FROM_EMAIL);
-    requestParams.add(CONTACT_EMAIL_KEY, CONTACT_US_EMAIL);
     return requestParams;
   }
 

@@ -30,16 +30,4 @@ public class ResetPasswordRequest {
   @Size(max = 100)
   @NotBlank
   private String appId;
-
-  @ToString.Exclude
-  @Size(max = EMAIL_LENGTH)
-  @Email
-  @NotBlank
-  private String contactEmail;
-
-  @ToString.Exclude
-  @Size(max = EMAIL_LENGTH)
-  @Email
-  @NotBlank
-  private String fromEmail;
 }
