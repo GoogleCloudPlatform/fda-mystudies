@@ -262,6 +262,12 @@
         "operationId" : "deleteUserAccountUsingDELETE",
         "produces" : [ "*/*" ],
         "parameters" : [ {
+          "name" : "appAndUserDeactivate",
+          "in" : "query",
+          "description" : "appAndUserDeactivate",
+          "required" : false,
+          "type" : "string"
+        }, {
           "name" : "userId",
           "in" : "path",
           "description" : "userId",
@@ -432,14 +438,24 @@
     },
     "ResetPasswordRequest" : {
       "type" : "object",
-      "required" : [ "appId", "email" ],
+      "required" : [ "appId", "contactEmail", "email", "fromEmail" ],
       "properties" : {
         "appId" : {
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 100
         },
+        "contactEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
         "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "fromEmail" : {
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 320
@@ -500,7 +516,17 @@
         "appName" : {
           "type" : "string"
         },
+        "contactEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
         "email" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
+        },
+        "fromEmail" : {
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 320

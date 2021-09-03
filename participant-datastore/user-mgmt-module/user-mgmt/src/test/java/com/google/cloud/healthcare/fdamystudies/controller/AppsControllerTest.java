@@ -260,7 +260,7 @@ public class AppsControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(String.valueOf(HttpStatus.OK.value()))));
 
-    verifyTokenIntrospectRequest(1);
+    //   verifyTokenIntrospectRequest(1);
 
     Optional<AppEntity> optApp = appRepository.findByAppId("GCPMS003");
     AppEntity app = optApp.get();
