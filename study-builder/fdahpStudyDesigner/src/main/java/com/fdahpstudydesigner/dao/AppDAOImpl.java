@@ -798,7 +798,7 @@ public class AppDAOImpl implements AppDAO {
               (VersionInfoBO)
                   session
                       .getNamedQuery("getVersionByappId")
-                      .setString("appId", appBo.getCustomAppId())
+                      .setString("appId", dbappBo.getCustomAppId())
                       .uniqueResult();
 
           if (versionInfoBO == null) {
