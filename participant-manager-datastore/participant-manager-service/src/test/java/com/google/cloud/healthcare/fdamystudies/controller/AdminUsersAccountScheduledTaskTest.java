@@ -91,7 +91,7 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
     AppEntity appDetails = new AppEntity();
     appDetails.setAppId(APP_ID);
     appDetails.setAppName("GCPMS001_Name");
-    appDetails.setFormEmailId(TestDataHelper.FROM_EMAIL);
+    appDetails.setFromEmailId(TestDataHelper.FROM_EMAIL);
     appDetails.setContactUsToEmail(TestDataHelper.CONTACT_US_EMAIL);
     appRepository.saveAndFlush(appDetails);
   }

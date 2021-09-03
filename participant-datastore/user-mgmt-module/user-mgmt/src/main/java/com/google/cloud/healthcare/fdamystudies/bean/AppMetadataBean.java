@@ -43,47 +43,43 @@ public class AppMetadataBean implements Serializable {
   private String appPlatform;
 
   @ToString.Exclude
-  @NotBlank
   @Size(max = EMAIL_LENGTH)
   @Email
   private String contactEmail;
 
   @ToString.Exclude
-  @NotBlank
   @Size(max = EMAIL_LENGTH)
   @Email
   private String feedBackEmail;
 
   @ToString.Exclude
-  @NotBlank
   @Size(max = EMAIL_LENGTH)
   @Email
   private String appSupportEmail;
 
   @ToString.Exclude
-  @NotBlank
   @Size(max = EMAIL_LENGTH)
   @Email
   private String fromEmail;
 
-  @NotBlank private String appTermsUrl;
-  @NotBlank private String appPrivacyUrl;
-  @NotBlank private String appStoreUrl;
-  @NotBlank private String playStoreUrl;
-  @NotBlank private String appWebsite;
+  private String appTermsUrl;
+  private String appPrivacyUrl;
+  private String appStoreUrl;
+  private String playStoreUrl;
+  private String appWebSiteUrl;
 
-  @NotBlank private String oraganizationName;
+  private String organizationName;
 
-  @NotBlank private String androidBundleId;
-  @NotBlank private String androidServerKey;
-  @NotBlank private String iosBundleId;
-  @NotBlank private String iosServerKey;
+  private String androidBundleId;
+  private String androidServerKey;
+  private String iosBundleId;
+  private String iosServerKey;
 
-  @NotBlank private String iosXCodeAppVersion;
-  @NotBlank private String iosAppBuildVersion;
+  private String iosXCodeAppVersion;
+  private String iosAppBuildVersion;
   private Integer iosForceUpgrade;
-  @NotBlank private String androidAppBuildVersion;
-  private Integer androidForceUpdrade;
+  private String androidAppBuildVersion;
+  private Integer androidForceUpgrade;
 
-  @NotBlank private String appStatus;
+  private String appStatus;
 }

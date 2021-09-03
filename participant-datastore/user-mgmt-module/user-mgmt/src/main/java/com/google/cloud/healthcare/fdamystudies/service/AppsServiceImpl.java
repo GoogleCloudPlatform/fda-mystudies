@@ -59,12 +59,24 @@ public class AppsServiceImpl implements AppsService {
     } else {
       AppEntity app = new AppEntity();
       app.setAppId(appMetadataBean.getAppId());
-      app.setType(appMetadataBean.getAppType());
-      app.setAppPlatform(appMetadataBean.getAppPlatform());
-      app.setAndroidBundleId(appMetadataBean.getAndroidBundleId());
-      app.setIosBundleId(appMetadataBean.getIosBundleId());
-      app.setAndroidServerKey(appMetadataBean.getAndroidServerKey());
-      app.setIosBundleId(appMetadataBean.getIosBundleId());
+      if (appMetadataBean.getAppType() != null) {
+        app.setType(appMetadataBean.getAppType());
+      }
+      if (appMetadataBean.getAppPlatform() != null) {
+        app.setAppPlatform(appMetadataBean.getAppPlatform());
+      }
+      if (appMetadataBean.getAndroidBundleId() != null) {
+        app.setAndroidBundleId(appMetadataBean.getAndroidBundleId());
+      }
+      if (appMetadataBean.getIosBundleId() != null) {
+        app.setIosBundleId(appMetadataBean.getIosBundleId());
+      }
+      if (appMetadataBean.getAndroidServerKey() != null) {
+        app.setAndroidServerKey(appMetadataBean.getAndroidServerKey());
+      }
+      if (appMetadataBean.getIosBundleId() != null) {
+        app.setIosBundleId(appMetadataBean.getIosBundleId());
+      }
       app = fromAppMetadataBean(appMetadataBean, app);
       app = appRepository.saveAndFlush(app);
     }
@@ -76,24 +88,56 @@ public class AppsServiceImpl implements AppsService {
 
     app.setAppName(appMetadataBean.getAppName());
     //  app.setAppDescription(appMetadataBean.getAppDescription());
-    app.setFeedBackToEmail(appMetadataBean.getFeedBackEmail());
-    app.setContactUsToEmail(appMetadataBean.getContactEmail());
-    app.setAppSupportEmailAddress(appMetadataBean.getAppSupportEmail());
-    app.setFormEmailId(appMetadataBean.getFromEmail());
+    if (appMetadataBean.getFeedBackEmail() != null) {
+      app.setFeedBackToEmail(appMetadataBean.getFeedBackEmail());
+    }
+    if (appMetadataBean.getContactEmail() != null) {
+      app.setContactUsToEmail(appMetadataBean.getContactEmail());
+    }
+    if (appMetadataBean.getAppSupportEmail() != null) {
+      app.setAppSupportEmailAddress(appMetadataBean.getAppSupportEmail());
+    }
+    if (appMetadataBean.getFromEmail() != null) {
+      app.setFromEmailId(appMetadataBean.getFromEmail());
+    }
 
-    app.setAppTermsUrl(appMetadataBean.getAppTermsUrl());
-    app.setAppPrivacyUrl(appMetadataBean.getAppPrivacyUrl());
-    app.setOrganizationName(appMetadataBean.getOraganizationName());
-    app.setAppStoreUrl(appMetadataBean.getAppStoreUrl());
-    app.setPlayStoreUrl(appMetadataBean.getPlayStoreUrl());
-    app.setAppWebsite(appMetadataBean.getAppWebsite());
+    if (appMetadataBean.getAppTermsUrl() != null) {
+      app.setAppTermsUrl(appMetadataBean.getAppTermsUrl());
+    }
+    if (appMetadataBean.getAppPrivacyUrl() != null) {
+      app.setAppPrivacyUrl(appMetadataBean.getAppPrivacyUrl());
+    }
+    if (appMetadataBean.getOrganizationName() != null) {
+      app.setOrganizationName(appMetadataBean.getOrganizationName());
+    }
+    if (appMetadataBean.getAppStoreUrl() != null) {
+      app.setAppStoreUrl(appMetadataBean.getAppStoreUrl());
+    }
+    if (appMetadataBean.getPlayStoreUrl() != null) {
+      app.setPlayStoreUrl(appMetadataBean.getPlayStoreUrl());
+    }
+    if (appMetadataBean.getAppWebSiteUrl() != null) {
+      app.setAppWebsite(appMetadataBean.getAppWebSiteUrl());
+    }
 
-    app.setIosXCodeAppVersion(appMetadataBean.getIosXCodeAppVersion());
-    app.setIosAppBuildVersion(appMetadataBean.getIosAppBuildVersion());
-    app.setIosForceUpgrade(appMetadataBean.getIosForceUpgrade());
-    app.setAndroidAppBuildVersion(appMetadataBean.getAndroidAppBuildVersion());
-    app.setAndroidForceUpdrade(appMetadataBean.getAndroidForceUpdrade());
-    app.setAppStatus(appMetadataBean.getAppStatus());
+    if (appMetadataBean.getIosXCodeAppVersion() != null) {
+      app.setIosXCodeAppVersion(appMetadataBean.getIosXCodeAppVersion());
+    }
+    if (appMetadataBean.getIosAppBuildVersion() != null) {
+      app.setIosAppBuildVersion(appMetadataBean.getIosAppBuildVersion());
+    }
+    if (appMetadataBean.getIosForceUpgrade() != null) {
+      app.setIosForceUpgrade(appMetadataBean.getIosForceUpgrade());
+    }
+    if (appMetadataBean.getAndroidAppBuildVersion() != null) {
+      app.setAndroidAppBuildVersion(appMetadataBean.getAndroidAppBuildVersion());
+    }
+    if (appMetadataBean.getAndroidForceUpgrade() != null) {
+      app.setAndroidForceUpdrade(appMetadataBean.getAndroidForceUpgrade());
+    }
+    if (appMetadataBean.getAppStatus() != null) {
+      app.setAppStatus(appMetadataBean.getAppStatus());
+    }
 
     return app;
   }
@@ -112,7 +156,7 @@ public class AppsServiceImpl implements AppsService {
           new AppContactEmailsResponse(
               MessageCode.GET_APP_SUCCESS,
               app.getContactUsToEmail(),
-              app.getFormEmailId(),
+              app.getFromEmailId(),
               app.getAppName());
     }
 
