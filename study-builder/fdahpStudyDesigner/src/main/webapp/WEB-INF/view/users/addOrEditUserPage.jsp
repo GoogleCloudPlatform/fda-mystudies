@@ -272,36 +272,6 @@
         </div>
         <div class="clearfix"></div>
 
-       
-
-        <div class="edit-user-list-widget">
-          <span class="checkbox checkbox-inline"><input
-              type="checkbox" id="inlineCheckbox3" class="chk" value="option1"
-              <c:if test="${fn:contains(permissions,4)}">checked</c:if>
-              <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox3"> Notifications </label>
-          </span>
-          <span class="pull-right">
-            <span
-                class="radio radio-info radio-inline p-45"><input
-                type="radio" id="inlineRadio5" class="mnotf" value="0"
-                name="manageNotifications"
-                <c:if test="${fn:contains(permissions,4)}">checked</c:if>
-                <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-              <label for="inlineRadio5"></label>
-            </span>
-            <span class="radio radio-inline"><input type="radio"
-                                                    id="inlineRadio6" class="mnotf" value="1"
-                                                    name="manageNotifications"
-                                                    <c:if
-                                                        test="${fn:contains(permissions,6)}">checked</c:if>
-                                                    <c:if
-                                                        test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-              <label for="inlineRadio6"></label>
-            </span>
-          </span>
-        </div>
-
   <!--  Manage apps div  --> 
   
         <!-- Gray Widget-->
@@ -694,10 +664,7 @@
       $('.musr').prop('disabled', true);
     }
 
-    if ($('#inlineCheckbox3').prop("checked") == false) {
-      $('.mnotf').prop('checked', false);
-      $('.mnotf').prop('disabled', true);
-    }
+   
 
     if ($('#inlineCheckbox4').prop("checked") == false) {
       $('#inlineCheckbox5').prop('checked', false);
@@ -719,15 +686,7 @@
       }
     });
 
-    $('#inlineCheckbox3').on('click', function () {
-      if ($(this).prop("checked") == true) {
-        $('.mnotf').prop('disabled', false);
-        $('#inlineRadio5').prop('checked', true);
-      } else if ($(this).prop("checked") == false) {
-        $('.mnotf').prop('checked', false);
-        $('.mnotf').prop('disabled', true);
-      }
-    });
+    
     $('#inlineCheckbox4').on('click', function () {
       if ($(this).prop("checked") == true) {
         $(this).val(1);
@@ -1153,7 +1112,6 @@
   function setStudySettingByRole(element) {
     if (element == 'Org-level Admin') {
       $('#inlineCheckbox1').prop('checked', false);
-      $('#inlineCheckbox3').prop('checked', false);
       $('.changeView1').prop('checked', false);
       $('.changeView2').prop('checked', false);
       $('.musr').prop('checked', false);
@@ -1161,7 +1119,6 @@
       $('.musr').prop('disabled', true);
       $('.mnotf').prop('disabled', true);
       $('#inlineCheckbox1').attr('disabled', true);
-      $('#inlineCheckbox3').attr('disabled', true);
       $('.changeView1').prop('disabled', true);
       $('.changeView2').prop('disabled', true);
       $('#inlineCheckbox5').prop('checked', false);
@@ -1170,7 +1127,6 @@
       $('#inlineCheckbox6').attr('disabled', true);
     } else {
       $('#inlineCheckbox1').attr('disabled', false);
-      $('#inlineCheckbox3').attr('disabled', false);
       $('#inlineCheckbox5').attr('disabled', false);
       $('#inlineCheckbox6').attr('disabled', false);
     }
