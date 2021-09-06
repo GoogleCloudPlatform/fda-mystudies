@@ -458,11 +458,7 @@ public class NotificationDAOImpl implements NotificationDAO {
     String queryString = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      queryString =
-          "select s.app_id from studies s where"
-              + " s.type='GT'"
-              + " and s.version=1"
-              + " and s.app_id IS NOT NULL;";
+      queryString = "SELECT a.custom_app_id FROM apps a WHERE a.type='GT';";
       query = session.createSQLQuery(queryString);
       gatewayAppList = query.list();
     } catch (Exception e) {
