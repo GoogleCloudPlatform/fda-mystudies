@@ -8,11 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.APP_USER_ACCOUNTS_DELETED;
+
 import com.google.cloud.healthcare.fdamystudies.bean.AppMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppContactEmailsResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -22,7 +26,9 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.ext.XLogger;
@@ -43,6 +49,8 @@ public class AppsServiceImpl implements AppsService {
   @Autowired private UserManagementUtil userManagementUtil;
 
   @Autowired UserProfileManagementDao userProfileManagementDao;
+
+  @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
 
   @Override
   @Transactional()
@@ -166,7 +174,7 @@ public class AppsServiceImpl implements AppsService {
 
   @Override
   @Transactional
-  public ErrorBean deactivateAppAndUsers(String customAppId) {
+  public ErrorBean deactivateAppAndUsers(String customAppId, AuditLogEventRequest auditRequest) {
     logger.entry("Begin deactivateAppAndUsers()");
 
     Optional<AppEntity> optAppEntity = appRepository.findByAppId(customAppId);
@@ -210,6 +218,10 @@ public class AppsServiceImpl implements AppsService {
           com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
     }
     logger.exit("deactivateAppAndUsers() : ends");
+
+    Map<String, String> map = Collections.singletonMap("AppID", customAppId);
+
+    userMgmntAuditHelper.logEvent(APP_USER_ACCOUNTS_DELETED, auditRequest, map);
     return new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
   }
 }
