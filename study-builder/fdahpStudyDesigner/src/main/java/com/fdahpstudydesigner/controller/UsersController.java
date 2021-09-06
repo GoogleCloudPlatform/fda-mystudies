@@ -206,10 +206,6 @@ public class UsersController {
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       if (null != userSession) {
 
-        String manageNotifications =
-            FdahpStudyDesignerUtil.isEmpty(request.getParameter("manageNotifications"))
-                ? ""
-                : request.getParameter("manageNotifications");
         String manageStudies =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("manageStudies"))
                 ? ""
@@ -266,31 +262,6 @@ public class UsersController {
           permissions = FdahpStudyDesignerConstants.SUPER_ADMIN_PERMISSIONS;
         } else {
           // Study admin flow
-          if (!"".equals(manageNotifications)) {
-            if ("0".equals(manageNotifications)) {
-              permissions +=
-                  count > 1
-                      ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW"
-                      : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW";
-              count++;
-              permissionList.add(
-                  FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW);
-            } else if ("1".equals(manageNotifications)) {
-              permissions +=
-                  count > 1
-                      ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW"
-                      : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW";
-              count++;
-              permissionList.add(
-                  FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW);
-              permissions +=
-                  count > 1
-                      ? ",ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT"
-                      : "ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT";
-              permissionList.add(
-                  FdahpStudyDesignerConstants.ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT);
-            }
-          }
           if (!"".equals(manageStudies)) {
             if ("1".equals(manageStudies)) {
               permissions += count > 1 ? ",ROLE_MANAGE_STUDIES" : "ROLE_MANAGE_STUDIES";

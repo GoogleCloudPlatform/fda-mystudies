@@ -62,4 +62,6 @@ public interface AppDAO {
   public List<AppsBo> getAppsForStudy(String userId);
 
   public void changeSatusToActive(String appId);
+
+  public boolean getAppPermissionByCustomAppId(String customAppId, String userId);
 }

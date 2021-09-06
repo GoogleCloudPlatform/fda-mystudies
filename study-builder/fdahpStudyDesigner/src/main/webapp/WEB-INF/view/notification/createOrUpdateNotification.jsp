@@ -92,14 +92,7 @@
               <label for="inlineRadio2">Send immediately</label>
             </span>
             <div class="help-block with-errors red-txt"></div>
-            <c:if test="${not empty notificationHistoryNoDateTime}">
-             <div class="gray-xs-f mb-xs mt-xs">Previously sent on: </div>
-              <c:forEach items="${notificationHistoryNoDateTime}" var="notificationHistory">
-                <span
-                    class="lastSendDateTime">${notificationHistory.notificationSentdtTime}</span>
-                <br><br>
-              </c:forEach>
-            </c:if>
+           
             <div class="clearfix"></div>
           </div>
         </div>
@@ -136,8 +129,9 @@
           <div class="form-group">
             <div class="gray-xs-f mb-xs">App to which the notification must be sent</div>
 			<c:choose>
-             <c:when test="${notificationBO.actionPage eq 'view'}">
-               <input type="text" value="${notificationBO.appId}" disabled="">
+             <c:when test="${notificationBO.actionPage eq 'view' || notificationBO.actionPage eq 'resend'}">
+                 <input type="text" id="notificationAppId"
+                    value="${notificationBO.appId}" disabled/>
              </c:when>
              <c:otherwise>
               <select id="appId" class="selectpicker" name="appId">
@@ -153,6 +147,14 @@
           </div>
         </div>
 
+           <c:if test="${not empty notificationHistoryNoDateTime}">
+             <div class="gray-xs-f mb-xs mt-xs">Previously sent on: </div>
+              <c:forEach items="${notificationHistoryNoDateTime}" var="notificationHistory">
+                <span
+                    class="lastSendDateTime">${notificationHistory.notificationSentdtTime}</span>
+                <br><br>
+              </c:forEach>
+            </c:if>
       </div>
     </div>
   </div>
@@ -286,6 +288,7 @@
       $('#immiResendButton').text('Resend');
     }
     $('#buttonType').val('resend');
+    $('#notificationAppId').prop('disabled', true);
     </c:if>
 
     $('#inlineRadio2').on('click', function () {
