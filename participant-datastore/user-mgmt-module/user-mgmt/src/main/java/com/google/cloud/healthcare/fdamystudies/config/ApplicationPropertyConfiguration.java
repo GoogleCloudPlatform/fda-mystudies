@@ -58,8 +58,8 @@ public class ApplicationPropertyConfiguration {
   private String contactusToEmail;*/
   // Feedback & Contactus mail content ends
 
-  @Value("${org.name}")
-  private String orgName;
+  /*@Value("${org.name}")
+  private String orgName;*/
 
   @Value("${auth.server.deleteStatusUrl}")
   private String authServerDeleteStatusUrl;

@@ -77,13 +77,14 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
+    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
+
     String subject = appConfig.getFeedbackMailSubject() + Constants.SUBJECT;
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("body", Constants.BODY);
-    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("orgName", optApp.get().getOrganizationName());
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getFeedbackMailBody(), templateArgs);
-    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
     verifyMimeMessage(
         optApp.get().getFeedBackToEmail(), optApp.get().getFromEmailId(), subject, body);
 
@@ -117,18 +118,18 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
+    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
     String subject = appConfig.getContactusMailSubject() + Constants.SUBJECT;
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("firstName", Constants.FIRST_NAME);
     templateArgs.put("email", Constants.EMAIL_ID);
     templateArgs.put("subject", Constants.SUBJECT);
     templateArgs.put("body", Constants.BODY);
-    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("orgName", optApp.get().getOrganizationName());
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(
             appConfig.getContactusMailBody(), templateArgs);
 
-    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
     verifyMimeMessage(
         optApp.get().getContactUsToEmail(), optApp.get().getFromEmailId(), subject, body);
 

@@ -236,7 +236,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     Optional<AppEntity> optApp = appRepository.findByAppId(user.getAppId());
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", verificationCode);
-    templateArgs.put("orgName", appConfig.getOrgName());
+    /*templateArgs.put("orgName", optApp.get().getOrganizationName());*/
     templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
     templateArgs.put("appName", user.getAppName());
     EmailRequest emailRequest =

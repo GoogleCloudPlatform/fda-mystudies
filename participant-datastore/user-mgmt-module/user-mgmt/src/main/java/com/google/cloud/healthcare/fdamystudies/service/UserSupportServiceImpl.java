@@ -63,7 +63,7 @@ public class UserSupportServiceImpl implements UserSupportService {
     }
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("body", feedbackRequest.getBody());
-    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("orgName", optApp.get().getOrganizationName());
     templateArgs.put("appName", feedbackRequest.getAppName());
 
     EmailRequest emailRequest =
@@ -109,7 +109,7 @@ public class UserSupportServiceImpl implements UserSupportService {
     templateArgs.put("email", contactUsRequest.getEmail());
     templateArgs.put("subject", contactUsRequest.getSubject());
     templateArgs.put("body", contactUsRequest.getBody());
-    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("orgName", optApp.get().getOrganizationName());
     templateArgs.put("appName", contactUsRequest.getAppName());
 
     EmailRequest emailRequest =

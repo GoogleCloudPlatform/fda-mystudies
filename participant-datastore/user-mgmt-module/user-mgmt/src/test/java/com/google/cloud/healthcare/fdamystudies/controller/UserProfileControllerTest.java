@@ -442,14 +442,14 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     List<UserDetailsEntity> listOfUserDetails =
         userDetailsRepository.findByEmail(Constants.VALID_EMAIL);
+    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
     String subject = appConfig.getConfirmationMailSubject();
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", listOfUserDetails.get(0).getEmailCode());
-    templateArgs.put("orgName", appConfig.getOrgName());
+    /*templateArgs.put("orgName", optApp.get().getOrganizationName());*/
     templateArgs.put("contactEmail", Constants.CONTACT_US_EMAIL);
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);
-    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
     verifyMimeMessage(Constants.VALID_EMAIL, optApp.get().getFromEmailId(), subject, body);
     /*verifyMimeMessage(Constants.VALID_EMAIL, Constants.FROM_EMAIL, subject, body);*/
 
