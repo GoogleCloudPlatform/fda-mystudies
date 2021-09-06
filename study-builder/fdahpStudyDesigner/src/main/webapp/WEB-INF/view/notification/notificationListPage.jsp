@@ -64,15 +64,18 @@
                 
                   <c:if test="${notification.notificationSent}">
                     <span
-                        class="sprites-icons-2 send mr-lg notificationDetailsToEdit"
+                        class="sprites-icons-2 send mr-lg notificationDetailsToEdit
+                        <c:if test="${not notification.appPermission}"> cursor-none </c:if> "
                         actionType="resend"
                         notificationId="${notification.notificationId}"
                         data-toggle="tooltip" data-placement="top"
                         title="Resend"></span>
+                       
                   </c:if>
                   <c:if test="${not notification.notificationSent}">
                     <span
-                        class="sprites_icon edit-g mr-lg notificationDetailsToEdit"
+                        class="sprites_icon edit-g mr-lg notificationDetailsToEdit  
+                        <c:if test="${not notification.appPermission}"> cursor-none </c:if> "
                         actionType="edit"
                         notificationId="${notification.notificationId}"
                         data-toggle="tooltip"

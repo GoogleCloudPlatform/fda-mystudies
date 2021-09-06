@@ -1024,4 +1024,44 @@ public class AppDAOImpl implements AppDAO {
     logger.exit("getActiveApps() - Ends");
     return appListBean;
   }
+
+  @Override
+  public boolean getAppPermissionByCustomAppId(String customAppId, String userId) {
+    logger.entry("begin getAppPermissionByCustomAppId()");
+    Session session = null;
+    AppPermissionBO appPermissionBO = null;
+    boolean permission = false;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      query = session.getNamedQuery("getUserById").setString("userId", userId);
+      UserBO userBO = (UserBO) query.uniqueResult();
+
+      if (userBO.getRoleId().equals("1")) {
+        return true;
+      } else {
+        query =
+            session
+                .createQuery(
+                    "SELECT ap From AppPermissionBO ap, AppsBo a"
+                        + " WHERE a.id=ap.appId AND a.customAppId=:customAppId AND ap.userId=:userId")
+                .setString("customAppId", customAppId)
+                .setString("userId", userId);
+        appPermissionBO = (AppPermissionBO) query.uniqueResult();
+
+        if (appPermissionBO != null) {
+          permission = appPermissionBO.isViewPermission();
+        }
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppPermissionByCustomAppId() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+
+    logger.exit("getAppPermissionByCustomAppId() - Ends");
+    return permission;
+  }
 }

@@ -160,7 +160,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/notifications-w.png" alt="">
                     </a>
-                    <div class='studyList'>Send<br> Notifications<br>
+                    <div class='studyList'>Send App-Wide<br> Notifications<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
