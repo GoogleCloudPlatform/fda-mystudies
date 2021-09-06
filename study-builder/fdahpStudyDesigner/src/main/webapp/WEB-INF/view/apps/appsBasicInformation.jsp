@@ -59,7 +59,9 @@ margin-top:16px !important;
 
               <div class="row">
                 <div class="col-md-6 pl-none">
-                  <div class="gray-xs-f mb-xs">App ID  <span class="requiredStar"> *</span>
+                  <div class="gray-xs-f mb-xs">App ID  
+                  <small>(15 characters max)</small>
+                  <span class="requiredStar"> *</span>
                   <span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" 
                   title="Enter a human-readable unique app identifier. This helps identify the app across the platform. The App ID cannot be edited once the app record is created."></span>
                   </div>
@@ -76,9 +78,11 @@ margin-top:16px !important;
               </div>
 
               <div class="col-md-6">
-                   <div class="gray-xs-f mb-xs">App Name <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="This is the name of the app displayed on app screens and in app emails."></span></div>
+                   <div class="gray-xs-f mb-xs">App Name 
+                   <small>(15 characters max)</small>
+                   <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="This is the name of the app displayed on app screens and in app emails."></span></div>
                    <div class="form-group mb-none">
-                   <input type="text" class="form-control" name="name"
+                   <input type="text" class="form-control" name="name" maxlength="15"
                    id="appName" value="${fn:escapeXml(appBo.name)}"
                     required data-error="Please fill out this field"/>
                    <div class="help-block with-errors red-txt"></div>

@@ -59,18 +59,22 @@
 
                          <div class="row mt-xlg">
                             <div class="col-md-6 pl-none">
-                                <div class="gray-xs-f mb-xs mt-md">Android Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Bundle ID for your Android app. Note that you cannot update this field once you have marked the Android app as distributed."></span></div>
+                                <div class="gray-xs-f mb-xs mt-md">Android Bundle ID 
+                                <small>(100 characters max)</small>
+                                <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Bundle ID for your Android app. Note that you cannot update this field once you have marked the Android app as distributed."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control android" value= "${appBo.androidBundleId}" name="androidBundleId" required data-error="Please fill out this field"
+                                    <input type="text" class="form-control android" value= "${appBo.androidBundleId}" name="androidBundleId" required data-error="Please fill out this field" maxlength="100"
                                     <c:if test="${appBo.androidAppDistributed}"> disabled</c:if>/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs mt-md">Android Server Key <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the server key needed to push notifications to the Android app. Note that you cannot update this field once you have marked the Android app as distributed."></span></div>
+                                <div class="gray-xs-f mb-xs mt-md">Android Server Key 
+                                <small>(100 characters max)</small>
+                                <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the server key needed to push notifications to the Android app. Note that you cannot update this field once you have marked the Android app as distributed."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control android" value= "${appBo.androidServerKey}" name="androidServerKey" required data-error="Please fill out this field"
+                                    <input type="text" class="form-control android" value= "${appBo.androidServerKey}" name="androidServerKey" required data-error="Please fill out this field" maxlength="100"
                                     <c:if test="${appBo.androidAppDistributed}"> disabled</c:if>/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
@@ -79,18 +83,22 @@
                             <div class="clearfix"></div>
                             
                              <div class="col-md-6 pl-none">
-                                <div class="gray-xs-f mb-xs mt-md">iOS Bundle ID <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Bundle ID for your iOS app. Note that you cannot update this field once you have marked the iOS app as distributed."></span></div>
+                                <div class="gray-xs-f mb-xs mt-md">iOS Bundle ID 
+                                <small>(100 characters max)</small>
+                                <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Bundle ID for your iOS app. Note that you cannot update this field once you have marked the iOS app as distributed."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control ios" value= "${appBo.iosBundleId}" name="iosBundleId" required data-error="Please fill out this field"
+                                    <input type="text" class="form-control ios" value= "${appBo.iosBundleId}" name="iosBundleId" required data-error="Please fill out this field" maxlength="100"
                                     <c:if test="${appBo.iosAppDistributed}"> disabled</c:if>/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs mt-md">iOS Server Key<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the server key needed to push notifications to the iOS app. Note that you cannot update this field once you have marked the iOS app as distributed."></span></div>
+                                <div class="gray-xs-f mb-xs mt-md">iOS Server Key
+                                <small>(100 characters max)</small>
+                                <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the server key needed to push notifications to the iOS app. Note that you cannot update this field once you have marked the iOS app as distributed."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="text" class="form-control ios" value= "${appBo.iosServerKey}" name="iosServerKey" required data-error="Please fill out this field"
+                                    <input type="text" class="form-control ios" value= "${appBo.iosServerKey}" name="iosServerKey" required data-error="Please fill out this field" maxlength="100"
                                     <c:if test="${appBo.iosAppDistributed}"> disabled</c:if>/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
@@ -101,10 +109,12 @@
                 <div class="clearfix"></div>
                             
                               <div class="col-md-6 pl-none">
-                                <div class="gray-xs-f mb-xs">Latest XCode app version (for iOS app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Xcode version applicable to the latest build of the iOS app that is available to users. Only digits and the . character are allowed in this field."></span></div>
+                                <div class="gray-xs-f mb-xs">Latest XCode app version (for iOS app) 
+                                <small>(100 characters max)</small>
+                                <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the Xcode version applicable to the latest build of the iOS app that is available to users. Only digits and the . character are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control ios" value= "${appBo.iosXCodeAppVersion}" name="iosXCodeAppVersion" 
-                                    required data-error="Please fill out this field"  pattern="^\d+(\.\d+)*$" data-pattern-error="Please enter a valid App version"/>
+                                    required data-error="Please fill out this field"  pattern="^\d+(\.\d+)*$" data-pattern-error="Please enter a valid App version" maxlength="100"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>

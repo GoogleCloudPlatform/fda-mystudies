@@ -57,7 +57,7 @@
          <!-- Start Section-->
 			<div class="col-md-12 p-none">
 				<div class="gray-xs-f mb-sm">
-					App Type <span>
+					App type <span>
             </span><span class="requiredStar"> *</span> <span
                   data-toggle="tooltip" data-placement="top"
                   title="A gateway app is one that holds multiple studies in it whereas a standalone app has a single study in it. App type cannot be edited once the app record is created."
