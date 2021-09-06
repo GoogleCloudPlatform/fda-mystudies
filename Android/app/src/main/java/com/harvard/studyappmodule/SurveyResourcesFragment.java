@@ -837,6 +837,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     resourceArrayList.clear();
     labelArray.add(getResources().getString(R.string.about_study));
     labelArray.add(getResources().getString(R.string.consent_pdf));
+    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
+      labelArray.add(getResources().getString(R.string.resourceTerms));
+      labelArray.add(getResources().getString(R.string.resourcePolicy));
+    }
     labelArray.add(getResources().getString(R.string.leave_study));
 
     for (int i = 0; i < labelArray.size(); i++) {
