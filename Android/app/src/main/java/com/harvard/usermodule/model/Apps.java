@@ -1,6 +1,9 @@
 
 package com.harvard.usermodule.model;
 
+import com.harvard.utils.version.Version;
+import com.harvard.utils.version.VersionModel;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -13,6 +16,10 @@ public class Apps extends RealmObject {
   private String appId;
   private String fromEmail;
   private String contactUsEmail;
+  private String termsUrl;
+  private String privacyPolicyUrl;
+  private String AppWebsite;
+  private VersionModel version;
 
   public int getStatus() {
     return status;
@@ -68,5 +75,37 @@ public class Apps extends RealmObject {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public String getTermsUrl() {
+    return termsUrl;
+  }
+
+  public void setTermsUrl(String termsUrl) {
+    this.termsUrl = termsUrl;
+  }
+
+  public String getPrivacyPolicyUrl() {
+    return privacyPolicyUrl;
+  }
+
+  public void setPrivacyPolicyUrl(String privacyPolicyUrl) {
+    this.privacyPolicyUrl = privacyPolicyUrl;
+  }
+
+  public String getAppWebsite() {
+    return AppWebsite;
+  }
+
+  public void setAppWebsite(String appWebsite) {
+    AppWebsite = appWebsite;
+  }
+
+  public VersionModel getVersion() {
+    return version;
+  }
+
+  public void setVersion(VersionModel version) {
+    this.version = version;
   }
 }

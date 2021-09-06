@@ -48,7 +48,7 @@ public class Urls {
           + "&scope=offline_access"
           + "&response_type=code"
           + "&appId=" + BuildConfig.APP_ID
-          + "&appName=" + FdaApplication.getInstance().getString(R.string.app_name)
+          + "&appName=" + "$AppName"
           + "&appVersion=" + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE
           + "&mobilePlatform=ANDROID"
           + "&source=MOBILE APPS"

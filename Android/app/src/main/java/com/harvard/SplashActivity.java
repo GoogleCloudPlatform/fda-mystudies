@@ -51,14 +51,14 @@ import java.util.HashMap;
 
 import io.realm.Realm;
 
-public class SplashActivity extends AppCompatActivity implements VersionChecker.Upgrade, ApiCall.OnAsyncRequestComplete {
+public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 
   private static final int PASSCODE_RESPONSE = 101;
   private static final int APPS_RESPONSE = 103;
-  private VersionChecker versionChecker;
-  private String newVersion = "104";
+  private String newVersion = "109";
   private boolean force = false;
   private static final int RESULT_CODE_UPGRADE = 102;
+  private Apps apps;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +73,99 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
     // sync registration
     SyncAdapterManager.init(this);
     AppController.keystoreInitilize(SplashActivity.this);
-    versionChecker = new VersionChecker(SplashActivity.this);
-    versionChecker.execute();
+    getAppsInfo();
 
     AppController.getHelperSharedPreference()
         .writePreference(SplashActivity.this, getString(R.string.json_object_filter), "");
+  }
+
+
+  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
+  public static String bytesToHex(byte[] bytes) {
+    char[] hexChars = new char[bytes.length * 2];
+    for (int j = 0; j < bytes.length; j++) {
+      int v = bytes[j] & 0xFF;
+      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    }
+    return new String(hexChars);
+  }
+
+  private void getAppsInfo() {
+    AppController.getHelperProgressDialog().showProgress(SplashActivity.this, "", "", false);
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
+            "get",
+            Urls.APPS + "?appId=" + AppConfig.APP_ID_VALUE,
+            APPS_RESPONSE,
+            this,
+            Apps.class,
+            new HashMap<String, String>(),
+            null,
+            null,
+            false,
+            this);
+    RegisterUserEvent registerUserEvent = new RegisterUserEvent();
+    registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performRegistration(registerUserEvent);
+  }
+
+  @Override
+  public <T> void asyncResponse(T response, int responseCode) {
+    AppController.getHelperProgressDialog().dismissDialog();
+    if (responseCode == APPS_RESPONSE) {
+      apps = (Apps) response;
+      if (apps != null) {
+        DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+        apps.setAppId(AppConfig.APP_ID_VALUE);
+        dbServiceSubscriber.saveApps(SplashActivity.this, apps);
+        Version currVer = new Version(currentVersion());
+//        Version newVer = new Version(apps.getVersion().getAndroid().getLatestVersion());
+//        force = Boolean.parseBoolean(apps.getVersion().getAndroid().getForceUpdate());
+        Version newVer = new Version(newVersion);
+        if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
+          isUpgrade(false, newVersion, force);
+        } else {
+          isUpgrade(true, newVersion, force);
+        }
+      } else {
+        retryAlert();
+      }
+    }
+  }
+
+  @Override
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
+    AppController.getHelperProgressDialog().dismissDialog();
+    if (responseCode == APPS_RESPONSE) {
+      retryAlert();
+    }
+  }
+
+  private void retryAlert() {
+    AlertDialog.Builder alertDialogBuilder =
+        new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
+    alertDialogBuilder
+        .setMessage("Error, can't continue")
+        .setCancelable(false)
+        .setPositiveButton(
+            getResources().getString(R.string.retry),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                getAppsInfo();
+              }
+            })
+        .setNegativeButton(
+            getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                finish();
+              }
+            });
+    alertDialogBuilder.show();
   }
 
   public void loadsplash() {
@@ -132,7 +220,7 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == RESULT_CODE_UPGRADE) {
-      Version currVer = new Version(versionChecker.currentVersion());
+      Version currVer = new Version(currentVersion());
       Version newVer = new Version(newVersion);
       if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
         proceedToApp();
@@ -145,14 +233,24 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
               .show();
           finish();
         } else {
-          Toast.makeText(
-              SplashActivity.this, "Please consider updating app next time", Toast.LENGTH_SHORT)
-              .show();
-          proceedToApp();
+          AlertDialog.Builder alertDialogBuilder =
+              new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
+          alertDialogBuilder.setTitle("Upgrade");
+          alertDialogBuilder
+              .setMessage("Please consider updating app next time")
+              .setCancelable(false)
+              .setPositiveButton(
+                  "ok",
+                  new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                      proceedToApp();
+                    }
+                  }).show();
+
         }
       }
     } else if (requestCode == PASSCODE_RESPONSE) {
-      getAppsInfo();
+      startmain();
     }
   }
 
@@ -179,7 +277,7 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
 
     @Override
     protected void onPostExecute(String result) {
-      getAppsInfo();
+      startmain();
     }
 
     @Override
@@ -187,7 +285,6 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
     }
   }
 
-  @Override
   public void isUpgrade(boolean b, String newVersion, final boolean force) {
     this.newVersion = newVersion;
     this.force = force;
@@ -247,84 +344,7 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
     }
   }
 
-
-  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-
-  public static String bytesToHex(byte[] bytes) {
-    char[] hexChars = new char[bytes.length * 2];
-    for (int j = 0; j < bytes.length; j++) {
-      int v = bytes[j] & 0xFF;
-      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
-    }
-    return new String(hexChars);
-  }
-
-  private void getAppsInfo() {
-    AppController.getHelperProgressDialog().showProgress(SplashActivity.this, "", "", false);
-    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
-        new ParticipantDatastoreConfigEvent(
-            "get",
-            Urls.APPS + "?appId=" + AppConfig.APP_ID_VALUE,
-            APPS_RESPONSE,
-            this,
-            Apps.class,
-            null,
-            null,
-            null,
-            false,
-            this);
-    RegisterUserEvent registerUserEvent = new RegisterUserEvent();
-    registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
-    UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performRegistration(registerUserEvent);
-  }
-
-  @Override
-  public <T> void asyncResponse(T response, int responseCode) {
-    AppController.getHelperProgressDialog().dismissDialog();
-    if (responseCode == APPS_RESPONSE) {
-      Apps apps = (Apps) response;
-      if (apps != null) {
-        DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
-        apps.setAppId(AppConfig.APP_ID_VALUE);
-        dbServiceSubscriber.saveApps(SplashActivity.this, apps);
-        startmain();
-      } else {
-        retryAlert();
-      }
-    }
-  }
-
-  @Override
-  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
-    AppController.getHelperProgressDialog().dismissDialog();
-    if (responseCode == APPS_RESPONSE) {
-      retryAlert();
-    }
-  }
-
-  private void retryAlert() {
-    AlertDialog.Builder alertDialogBuilder =
-        new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
-    alertDialogBuilder
-        .setMessage("Error can't continue")
-        .setCancelable(false)
-        .setPositiveButton(
-            getResources().getString(R.string.retry),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
-                getAppsInfo();
-              }
-            })
-        .setNegativeButton(
-            getResources().getString(R.string.cancel),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-                finish();
-              }
-            });
-    alertDialogBuilder.show();
+  public String currentVersion() {
+    return String.valueOf(BuildConfig.VERSION_CODE);
   }
 }

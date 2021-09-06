@@ -40,6 +40,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.event.RegisterUserEvent;
@@ -56,6 +57,8 @@ import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import io.realm.Realm;
 
 public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
   private static final int UPDATE_USER_PROFILE = 101;
@@ -97,9 +100,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     customTextView(agreeLabel);
     setFont();
     bindEvents();
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(this);
     termsAndConditionData = new TermsAndConditionData();
-    termsAndConditionData.setPrivacy(getString(R.string.privacyurl));
-    termsAndConditionData.setTerms(getString(R.string.termsurl));
+    termsAndConditionData.setPrivacy(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
+    termsAndConditionData.setTerms(dbServiceSubscriber.getApps(realm).getTermsUrl());
   }
 
   private void initializeXmlId() {

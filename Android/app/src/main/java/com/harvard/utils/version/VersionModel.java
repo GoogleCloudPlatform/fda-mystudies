@@ -14,10 +14,10 @@
 
 package com.harvard.utils.version;
 
-public class VersionModel {
-  private Android android;
+import io.realm.RealmObject;
 
-  private Ios ios;
+public class VersionModel extends RealmObject {
+  private Android android;
 
   public Android getAndroid() {
     return android;
@@ -27,11 +27,4 @@ public class VersionModel {
     this.android = android;
   }
 
-  public Ios getIos() {
-    return ios;
-  }
-
-  public void setIos(Ios ios) {
-    this.ios = ios;
-  }
 }

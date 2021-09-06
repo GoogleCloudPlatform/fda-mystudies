@@ -18,15 +18,12 @@
     <!--The following strings may be customized as desired-->
     <string name="app_name">&app_name;</string>
     <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>
-    <string name="website"></string>
     <string name="websitetxt">App website</string>
     <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
     <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
     <string name="delete_account_content">You have chosen to delete your &app_name; account. This will result in automatic withdrawal from the studies you were enrolled in.</string>
     <string name="delete_message">Are you sure you want to delete your app account? </string>
     <string name="studie_your_enrolled">It\'s been a while since you visited the &app_name; app. Your participation in research studies is important. We encourage you to visit the app often and actively participate. </string>
-    <string name="termsurl"></string>
-    <string name="privacyurl"></string>
     <string name="view_consent">View consent</string>
     <string name="visit_website">Visit website</string>
     <string name="join_study">Participate</string>
