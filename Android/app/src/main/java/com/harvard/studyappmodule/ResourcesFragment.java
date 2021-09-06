@@ -52,12 +52,25 @@ public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncReq
     initializeXmlId(view);
     // currently hide this and create temp block then pass to adapter
     // temp block(later u can remove)
+    resourceArrayList = new RealmList<>();
     Resource r = new Resource();
     r.setTitle(context.getResources().getString(R.string.app_glossary));
     r.setType("pdf");
     r.setContent("");
-    resourceArrayList = new RealmList<>();
     resourceArrayList.add(r);
+
+    r = new Resource();
+    r.setTitle(context.getResources().getString(R.string.resourceTerms));
+    r.setType("url");
+    r.setContent(getString(R.string.termsurl));
+    resourceArrayList.add(r);
+
+    r = new Resource();
+    r.setTitle(context.getResources().getString(R.string.resourcePolicy));
+    r.setType("url");
+    r.setContent(getString(R.string.privacyurl));
+    resourceArrayList.add(r);
+
     setResourceAdapter();
     /// till here/////
     return view;

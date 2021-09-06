@@ -536,4 +536,7 @@
 
     <string name="fromEmail">fromEmail</string>
     <string name="contactEmail">contactEmail</string>
+    <string name="resourceTerms">Terms</string>
+    <string name="resourcePolicy">Privacy policy</string>
+
 </resources>

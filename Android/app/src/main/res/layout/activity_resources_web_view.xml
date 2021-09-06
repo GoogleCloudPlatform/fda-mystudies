@@ -84,8 +84,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="25dp" />
+        android:layout_marginRight="10dp" />
 
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
