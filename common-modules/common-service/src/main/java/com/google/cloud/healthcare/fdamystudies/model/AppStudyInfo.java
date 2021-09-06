@@ -22,4 +22,6 @@ public interface AppStudyInfo {
   Long getStudyCount();
 
   Timestamp getCreatedTimestamp();
+
+  String getAppStatus();
 }
