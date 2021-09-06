@@ -31,14 +31,12 @@
                 <a href="javascript:void(0)" id="studySection">Studies</a>
               </li>
             </c:if>
-            <c:if
-                test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
+           
               <li id="notification" class="">
                 <a href="javascript:void(0)"
                    id="manageNotificationSection">Notifications
                 </a>
               </li>
-            </c:if>
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
               <li id="users">
                 <a href="javascript:void(0)" id="usersSection">Admins</a>
