@@ -131,8 +131,7 @@
       "searching": false,
       "pageLength": 10,
     });
-
-    $('.viewAppClass').on('click', function () {
+    $(document).on('click', '.viewAppClass', function(){
         var form = document.createElement('form');
         form.method = 'post';
         var input = document.createElement('input');
@@ -163,8 +162,8 @@
         document.body.appendChild(form);
         form.submit();
       });
-
-    $('.addEditAppClass').on('click', function () {
+    
+    $(document).on('click', '.addEditAppClass', function(){
         var form = document.createElement('form');
         form.method = 'post';
         var input = document.createElement('input');
@@ -190,7 +189,7 @@
         form.submit();
       });
 
-    $('.viewStudiesClass').on('click', function () {
+    $(document).on('click', '.viewStudiesClass', function(){
         var form = document.createElement('form');
         form.method = 'post';
         var input = document.createElement('input');
