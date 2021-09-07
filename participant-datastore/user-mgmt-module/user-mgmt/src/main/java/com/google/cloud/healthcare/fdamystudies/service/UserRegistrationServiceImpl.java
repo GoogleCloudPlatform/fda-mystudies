@@ -237,7 +237,13 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", verificationCode);
     /*templateArgs.put("orgName", optApp.get().getOrganizationName());*/
-    templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
+
+    if (StringUtils.isNotEmpty(optApp.get().getContactUsToEmail())) {
+      templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
+    } else {
+      templateArgs.put("contactEmail", "");
+    }
+
     templateArgs.put("appName", user.getAppName());
     EmailRequest emailRequest =
         new EmailRequest(

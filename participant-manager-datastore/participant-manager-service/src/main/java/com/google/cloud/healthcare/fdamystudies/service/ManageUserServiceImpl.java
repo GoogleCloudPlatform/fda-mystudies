@@ -951,7 +951,11 @@ public class ManageUserServiceImpl implements ManageUserService {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("ORG_NAME", appConfig.getOrgName());
     templateArgs.put("FIRST_NAME", admin.getFirstName());
-    templateArgs.put("CONTACT_EMAIL_ADDRESS", appDetails.getContactUsToEmail());
+    if (StringUtils.isNotEmpty(appDetails.getContactUsToEmail())) {
+      templateArgs.put("CONTACT_EMAIL_ADDRESS", appDetails.getContactUsToEmail());
+    } else {
+      templateArgs.put("CONTACT_EMAIL_ADDRESS", "");
+    }
 
     EmailRequest emailRequest = null;
     if (EmailTemplate.ACCOUNT_UPDATED_EMAIL_TEMPLATE
