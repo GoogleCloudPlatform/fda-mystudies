@@ -263,10 +263,6 @@
         $(".userListId").addClass('hide');
         $(".userListId").unbind();
         </c:if>
-        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
-        $(".appListId").addClass('cursor-none');
-        $(".appListId").unbind();
-        </c:if>
        
 
         $(".appListId").click(function () {
