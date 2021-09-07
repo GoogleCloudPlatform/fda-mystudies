@@ -26,6 +26,7 @@ package com.fdahpstudydesigner.dao;
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.bo.VersionInfoBO;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 
@@ -64,4 +65,6 @@ public interface AppDAO {
   public void changeSatusToActive(String appId);
 
   public boolean getAppPermissionByCustomAppId(String customAppId, String userId);
+
+  public VersionInfoBO getVersionBycustomAppId(String customappId);
 }

@@ -1065,4 +1065,30 @@ public class AppDAOImpl implements AppDAO {
     logger.exit("getAppPermissionByCustomAppId() - Ends");
     return permission;
   }
+
+  @Override
+  public VersionInfoBO getVersionBycustomAppId(String customAppId) {
+    logger.entry("begin getVersionBycustomAppId()");
+    Session session = null;
+    VersionInfoBO versionInfoBO = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(customAppId)) {
+        versionInfoBO =
+            (VersionInfoBO)
+                session
+                    .getNamedQuery("getVersionByappId")
+                    .setString("appId", customAppId)
+                    .uniqueResult();
+      }
+
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getVersionBycustomAppId() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    return versionInfoBO;
+  }
 }

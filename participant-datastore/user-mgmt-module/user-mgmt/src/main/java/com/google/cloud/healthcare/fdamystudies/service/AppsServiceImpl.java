@@ -10,7 +10,9 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.APP_USER_ACCOUNTS_DELETED;
 
+import com.google.cloud.healthcare.fdamystudies.bean.AppDetailsVersionBean;
 import com.google.cloud.healthcare.fdamystudies.bean.AppMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.bean.DeviceVersionBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppContactEmailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
@@ -128,23 +130,21 @@ public class AppsServiceImpl implements AppsService {
       app.setAppWebsite(appMetadataBean.getAppWebSiteUrl());
     }
 
-    if (appMetadataBean.getIosXCodeAppVersion() != null) {
-      app.setIosXCodeAppVersion(appMetadataBean.getIosXCodeAppVersion());
+    if (appMetadataBean.getAppStatus() != null) {
+      app.setAppStatus(appMetadataBean.getAppStatus());
     }
-    if (appMetadataBean.getIosAppBuildVersion() != null) {
-      app.setIosAppBuildVersion(appMetadataBean.getIosAppBuildVersion());
+
+    if (appMetadataBean.getAndroidVersion() != null) {
+      app.setAndroidAppBuildVersion(appMetadataBean.getAndroidVersion());
+    }
+    if (appMetadataBean.getAndroidForceUpgrade() != null) {
+      app.setAndroidForceUpgrade(appMetadataBean.getAndroidForceUpgrade());
+    }
+    if (appMetadataBean.getIosVersion() != null) {
+      app.setIosAppBuildVersion(appMetadataBean.getIosVersion());
     }
     if (appMetadataBean.getIosForceUpgrade() != null) {
       app.setIosForceUpgrade(appMetadataBean.getIosForceUpgrade());
-    }
-    if (appMetadataBean.getAndroidAppBuildVersion() != null) {
-      app.setAndroidAppBuildVersion(appMetadataBean.getAndroidAppBuildVersion());
-    }
-    if (appMetadataBean.getAndroidForceUpgrade() != null) {
-      app.setAndroidForceUpdrade(appMetadataBean.getAndroidForceUpgrade());
-    }
-    if (appMetadataBean.getAppStatus() != null) {
-      app.setAppStatus(appMetadataBean.getAppStatus());
     }
 
     return app;
@@ -160,12 +160,25 @@ public class AppsServiceImpl implements AppsService {
           com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
     } else {
       AppEntity app = optApp.get();
+
+      DeviceVersionBean android =
+          new DeviceVersionBean(
+              app.getAndroidAppBuildVersion(), String.valueOf(app.getAndroidForceUpgrade()));
+
+      DeviceVersionBean ios =
+          new DeviceVersionBean(
+              app.getIosAppBuildVersion(), String.valueOf(app.getIosForceUpgrade()));
+
       appResponse =
           new AppContactEmailsResponse(
               MessageCode.GET_APP_SUCCESS,
               app.getContactUsToEmail(),
               app.getFromEmailId(),
-              app.getAppName());
+              app.getAppName(),
+              app.getAppTermsUrl(),
+              app.getAppPrivacyUrl(),
+              app.getAppWebsite(),
+              new AppDetailsVersionBean(android, ios));
     }
 
     logger.exit(String.format("customAppId=%s contact details fetched successfully", appId));

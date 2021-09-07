@@ -185,7 +185,7 @@ margin-top:16px !important;
      <div class="col-md-6 pl-none">
         
           <div class="gray-xs-f mb-xs">
-            Select App
+            Select app
             <span
                 class="requiredStar"> *
             </span>
@@ -209,7 +209,7 @@ margin-top:16px !important;
            <c:otherwise>
            
             <select class="selectpicker" required data-error="Please fill out this field"> 
-               <option value="" disabled selected>Select App</option>
+               <option value="" disabled selected>Select app</option>
                 <c:forEach items="${appsList}" var="app"> 
                   <optgroup label="${app.customAppId} | <c:if test="${app.type == 'GT'}">Gateway</c:if><c:if test="${app.type == 'SD'}">Standalone</c:if>">
                     <option value="${app.name} " ${studyBo.appId eq app.customAppId ? 'selected' : ''}> ${app.name} </option> 
@@ -243,7 +243,7 @@ margin-top:16px !important;
       
         <div class="col-md-6 pl-none">
         
-          <div class="gray-xs-f mb-xs"> App Type </div>
+          <div class="gray-xs-f mb-xs"> App type </div>
           <div class="form-group">
          <input type="text" custAttType="cust" autofocus="autofocus"
                    class="form-control aq-inp " name="" id="appType"
