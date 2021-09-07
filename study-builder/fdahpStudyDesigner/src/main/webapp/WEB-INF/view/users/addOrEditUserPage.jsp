@@ -309,7 +309,7 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-bold text-uppercase">List of assigned apps with permissions
+                  class="mr-lg text-weight-bold">List of assigned apps with permissions
               </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
@@ -393,7 +393,7 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-bold text-uppercase">List of assigned studies with permissions
+                  class="mr-lg text-weight-bold">List of assigned studies with permissions
               </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
