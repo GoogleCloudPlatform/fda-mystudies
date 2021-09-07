@@ -75,11 +75,10 @@ public class AppMetadataBean implements Serializable {
   private String iosBundleId;
   private String iosServerKey;
 
-  private String iosXCodeAppVersion;
-  private String iosAppBuildVersion;
-  private Integer iosForceUpgrade;
-  private String androidAppBuildVersion;
-  private Integer androidForceUpgrade;
-
   private String appStatus;
+
+  private String iosVersion;
+  private Boolean iosForceUpgrade;
+  private String androidVersion;
+  private Boolean androidForceUpgrade;
 }

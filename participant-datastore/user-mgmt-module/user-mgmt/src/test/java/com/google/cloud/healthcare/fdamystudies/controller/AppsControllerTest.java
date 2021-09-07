@@ -158,22 +158,21 @@ public class AppsControllerTest extends BaseMockIT {
         "feedback@gmail.com",
         "appsSupport@gmail.com",
         "from@gmail.com",
-        "url",
-        "url",
-        "url",
-        "url",
+        "https://www.web.com",
+        "https://www.web.com",
+        "https://www.web.com",
+        "https://www.web.com",
         "https://www.web.com",
         "orgName",
         "bundleId",
         "serverKey",
         "iosBUndleId",
         "iosServerKey",
-        "XCode",
-        "0",
-        Integer.valueOf(0),
-        "0",
-        Integer.valueOf(0),
-        "Active");
+        "Active",
+        "1.0",
+        false,
+        "1.0",
+        true);
   }
 
   protected ObjectMapper getObjectMapper() {
