@@ -28,6 +28,7 @@
       <div class="black-lg-f">
         Manage Apps
       </div>
+        <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_APPS')}">
       <div class="dis-line pull-right ml-md">
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn applistDetailsToEdit"
@@ -36,6 +37,7 @@
             </button>
           </div>
       </div>
+      </c:if>
     </div>
   </div>
   <div class="clearfix"></div>
@@ -59,7 +61,7 @@
           <tr>
                 <td>${app.customAppId}</td>
                 <td>${app.name}</td>
-                <td>${app.type}</td>
+                <td><c:if test="${app.type == 'GT'}">Gateway</c:if><c:if test="${app.type == 'SD'}">Standalone</c:if></td>
                 <td>${app.appStatus}</td>
                 <td class="text-right" style="padding-right: 2% !important; ">
                     <span class="sprites_icon preview-g mr-lg viewAppClass" isLive=""
