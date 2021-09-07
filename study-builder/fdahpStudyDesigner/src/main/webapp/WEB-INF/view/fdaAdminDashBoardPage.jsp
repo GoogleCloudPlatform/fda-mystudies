@@ -265,7 +265,7 @@
         </c:if>   
         
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS') && not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
-        $(".appListId").addClass('hide');
+        $(".appListId").addClass('cursor-none');
         $(".appListId").unbind();
         </c:if> 
        
