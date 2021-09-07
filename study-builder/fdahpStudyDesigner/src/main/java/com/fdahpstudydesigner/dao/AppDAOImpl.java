@@ -969,6 +969,7 @@ public class AppDAOImpl implements AppDAO {
             session
                 .getNamedQuery("StudyBo.getStudyBycustomAppId")
                 .setString("customAppId", customAppId)
+                .setString("status", "Deactivated")
                 .list();
 
         count = studyBoList.size();
