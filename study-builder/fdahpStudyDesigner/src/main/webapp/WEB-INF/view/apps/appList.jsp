@@ -26,7 +26,7 @@
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none">
       <div class="black-lg-f">
-        Manage Apps
+        Manage apps
       </div>
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_APPS')}">
       <div class="dis-line pull-right ml-md">
