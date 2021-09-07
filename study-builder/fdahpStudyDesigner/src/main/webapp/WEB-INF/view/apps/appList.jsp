@@ -28,7 +28,6 @@
       <div class="black-lg-f">
         Manage apps
       </div>
-        <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_APPS')}">
       <div class="dis-line pull-right ml-md">
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn applistDetailsToEdit"
@@ -37,7 +36,6 @@
             </button>
           </div>
       </div>
-      </c:if>
     </div>
   </div>
   <div class="clearfix"></div>
