@@ -22,9 +22,11 @@
              href="javascript:void(0)"
              id="landingScreen"><img src="/studybuilder/images/logo/logo_innerScreens.png"/></a>
           <ul class="nav navbar-nav ml-none">
+           <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
           	  <li class="appClass">
                 <a href="javascript:void(0)" id="appSection">Apps</a>
               </li>
+           </c:if>
               
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
               <li class="studyClass">
