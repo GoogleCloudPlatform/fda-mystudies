@@ -262,7 +262,12 @@
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
         $(".userListId").addClass('hide');
         $(".userListId").unbind();
-        </c:if>
+        </c:if>   
+        
+        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS') && not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
+        $(".appListId").addClass('hide');
+        $(".appListId").unbind();
+        </c:if> 
        
 
         $(".appListId").click(function () {
