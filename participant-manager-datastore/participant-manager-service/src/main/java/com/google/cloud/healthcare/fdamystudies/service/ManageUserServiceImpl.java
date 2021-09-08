@@ -880,15 +880,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 
       UserRegAdminEntity admin = adminOpt.get();
 
-      Optional<AppEntity> optAppDetails =
-          appRepository.findByAppId(adminRecordToSendEmail.getAppId());
-      AppEntity appDetails = null;
-      if (optAppDetails.isPresent()) {
-        appDetails = optAppDetails.get();
-      }
-
-      EmailResponse emailResponse =
-          sendAccountCreatedOrUpdatedEmail(adminRecordToSendEmail, admin, appDetails);
+      EmailResponse emailResponse = sendAccountCreatedOrUpdatedEmail(adminRecordToSendEmail, admin);
 
       // Post success or failed audit log event for sending email
       ParticipantManagerEvent auditEnum = null;
@@ -945,13 +937,11 @@ public class ManageUserServiceImpl implements ManageUserService {
   }
 
   private EmailResponse sendAccountCreatedOrUpdatedEmail(
-      UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail,
-      UserRegAdminEntity admin,
-      AppEntity appDetails) {
+      UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail, UserRegAdminEntity admin) {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("ORG_NAME", appConfig.getOrgName());
     templateArgs.put("FIRST_NAME", admin.getFirstName());
-    templateArgs.put("CONTACT_EMAIL_ADDRESS", appDetails.getContactUsToEmail());
+    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
 
     EmailRequest emailRequest = null;
     if (EmailTemplate.ACCOUNT_UPDATED_EMAIL_TEMPLATE
@@ -959,7 +949,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         .equals(adminRecordToSendEmail.getEmailTemplateType())) {
       emailRequest =
           new EmailRequest(
-              appDetails.getFromEmailId(),
+              appConfig.getFromEmail(),
               new String[] {admin.getEmail()},
               null,
               null,
@@ -970,7 +960,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       templateArgs.put("ACTIVATION_LINK", appConfig.getUserDetailsLink() + admin.getSecurityCode());
       emailRequest =
           new EmailRequest(
-              appDetails.getFromEmailId(),
+              appConfig.getFromEmail(),
               new String[] {admin.getEmail()},
               null,
               null,

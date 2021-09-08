@@ -20,10 +20,8 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.EmailTemplate;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
-import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAccountEmailSchedulerTaskEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
 import java.util.List;
@@ -37,15 +35,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
 
-  private static final String APP_ID = "GCPMS001";
-
   @Autowired private TestDataHelper testDataHelper;
 
   @Autowired private ManageUserService manageUserService;
 
   @Autowired private UserAccountEmailSchedulerTaskRepository addNewAdminEmailServiceRepository;
-
-  @Autowired private AppRepository appRepository;
 
   @BeforeEach
   public void setUp() {}
@@ -56,12 +50,10 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
     admin.setSecurityCode(IdGenerator.id());
     testDataHelper.getUserRegAdminRepository().saveAndFlush(admin);
 
-    createAppEntity();
-
     UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail =
         new UserAccountEmailSchedulerTaskEntity();
     adminRecordToSendEmail.setUserId(admin.getId());
-    adminRecordToSendEmail.setAppId(APP_ID);
+    adminRecordToSendEmail.setAppId("GCPMS001");
     adminRecordToSendEmail.setAppVersion("1.0");
     adminRecordToSendEmail.setCorrelationId(IdGenerator.id());
     adminRecordToSendEmail.setSource("PARTICIPANT MANAGER");
@@ -87,27 +79,16 @@ public class AdminUsersAccountScheduledTaskTest extends BaseMockIT {
     verifyAuditEventCall(auditEventMap, NEW_ADMIN_INVITATION_EMAIL_SENT);
   }
 
-  private void createAppEntity() {
-    AppEntity appDetails = new AppEntity();
-    appDetails.setAppId(APP_ID);
-    appDetails.setAppName("GCPMS001_Name");
-    appDetails.setFromEmailId(TestDataHelper.FROM_EMAIL);
-    appDetails.setContactUsToEmail(TestDataHelper.CONTACT_US_EMAIL);
-    appRepository.saveAndFlush(appDetails);
-  }
-
   @Test
   public void shouldSendEmailInvitationForUpdateAdmin() throws Exception {
     UserRegAdminEntity admin = testDataHelper.createNonSuperAdmin();
     admin.setSecurityCode(IdGenerator.id());
     testDataHelper.getUserRegAdminRepository().saveAndFlush(admin);
 
-    createAppEntity();
-
     UserAccountEmailSchedulerTaskEntity adminRecordToSendEmail =
         new UserAccountEmailSchedulerTaskEntity();
     adminRecordToSendEmail.setUserId(admin.getId());
-    adminRecordToSendEmail.setAppId(APP_ID);
+    adminRecordToSendEmail.setAppId("GCPMS001");
     adminRecordToSendEmail.setAppVersion("1.0");
     adminRecordToSendEmail.setCorrelationId(IdGenerator.id());
     adminRecordToSendEmail.setSource("PARTICIPANT MANAGER");

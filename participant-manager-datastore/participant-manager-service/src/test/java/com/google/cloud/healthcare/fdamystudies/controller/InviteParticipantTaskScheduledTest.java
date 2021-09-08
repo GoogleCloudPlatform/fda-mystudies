@@ -27,7 +27,6 @@ import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.InviteParticipantsEmailRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
@@ -59,8 +58,6 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
 
   @Autowired private InviteParticipantsEmailRepository invitedParticipantsEmailRepository;
 
-  @Autowired private AppRepository appRepository;
-
   @BeforeEach
   public void setUp() {
     locationEntity = testDataHelper.createLocation();
@@ -78,9 +75,6 @@ public class InviteParticipantTaskScheduledTest extends BaseMockIT {
 
   @Test
   public void shouldSendEmailInvitation() throws Exception {
-    appEntity.setFromEmailId(TestDataHelper.FROM_EMAIL);
-    appEntity.setContactUsToEmail(TestDataHelper.CONTACT_US_EMAIL);
-    appRepository.saveAndFlush(appEntity);
 
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
