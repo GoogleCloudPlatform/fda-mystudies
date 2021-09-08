@@ -4701,9 +4701,13 @@ public class StudyController {
 
         List<AppsBo> apps = appService.getAppsForStudy(sesObj.getUserId());
         AppsBo app = appService.getAppbyCustomAppId(studyBo.getAppId());
+
         if (app != null) {
           map.addAttribute("appName", app.getName());
           map.addAttribute("appType", app.getType());
+          if (app.getType().equals("SD")) {
+            apps.add(app);
+          }
         }
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
