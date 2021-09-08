@@ -21,48 +21,51 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.fdahpstudydesigner.service;
+package com.fdahpstudydesigner.bo;
 
-import com.fdahpstudydesigner.bean.AuditLogEventRequest;
-import com.fdahpstudydesigner.bo.RoleBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.util.SessionObject;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
-public interface UsersService {
+@Setter
+@Getter
+@Entity
+@Table(name = "version_info")
+@NamedQueries({
+  @NamedQuery(
+      name = "getVersionByappId",
+      query = " From VersionInfoBO version WHERE version.appId =:appId"),
+})
+public class VersionInfoBO implements Serializable {
 
-  public String activateOrDeactivateUser(
-      String userId,
-      int userStatus,
-      String loginUser,
-      SessionObject userSession,
-      HttpServletRequest request);
+  private static final long serialVersionUID = 3573683893623838475L;
 
-  public String addOrUpdateUserDetails(
-      HttpServletRequest request,
-      UserBO userBO,
-      String permissions,
-      String selectedStudies,
-      String permissionValues,
-      SessionObject userSession,
-      String selectedApps,
-      AuditLogEventRequest auditRequest,
-      String permissionValuesForApp);
+  @Column(name = "app_id")
+  private String appId;
 
-  public String enforcePasswordChange(String userId, String email);
+  @Id
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "version_info_id", updatable = false, nullable = false)
+  private String versionInfoId;
 
-  public List<String> getActiveUserEmailIds();
+  @Column(name = "ios")
+  private String ios;
 
-  public List<Integer> getPermissionsByUserId(String userId);
+  @Column(name = "ios_force_update")
+  private Boolean iosForceUpgrade;
 
-  public UserBO getUserDetails(String userId);
+  @Column(name = "android")
+  private String android;
 
-  public List<UserBO> getUserList();
-
-  public String getUserPermissionByUserId(String sessionUserId);
-
-  public RoleBO getUserRole(String roleId);
-
-  public List<RoleBO> getUserRoleList();
+  @Column(name = "android_force_update")
+  private Boolean androidForceUpgrade;
 }

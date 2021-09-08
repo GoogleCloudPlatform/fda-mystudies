@@ -21,48 +21,35 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.fdahpstudydesigner.service;
+package com.fdahpstudydesigner.bean;
 
-import com.fdahpstudydesigner.bean.AuditLogEventRequest;
-import com.fdahpstudydesigner.bo.RoleBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.util.SessionObject;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+public class AppSessionBean {
 
-public interface UsersService {
+  private String permission;
+  private Integer sessionAppCount;
+  private String appId;
 
-  public String activateOrDeactivateUser(
-      String userId,
-      int userStatus,
-      String loginUser,
-      SessionObject userSession,
-      HttpServletRequest request);
+  public String getPermission() {
+    return permission;
+  }
 
-  public String addOrUpdateUserDetails(
-      HttpServletRequest request,
-      UserBO userBO,
-      String permissions,
-      String selectedStudies,
-      String permissionValues,
-      SessionObject userSession,
-      String selectedApps,
-      AuditLogEventRequest auditRequest,
-      String permissionValuesForApp);
+  public void setPermission(String permission) {
+    this.permission = permission;
+  }
 
-  public String enforcePasswordChange(String userId, String email);
+  public Integer getSessionAppCount() {
+    return sessionAppCount;
+  }
 
-  public List<String> getActiveUserEmailIds();
+  public void setSessionAppCount(Integer sessionAppCount) {
+    this.sessionAppCount = sessionAppCount;
+  }
 
-  public List<Integer> getPermissionsByUserId(String userId);
+  public String getAppId() {
+    return appId;
+  }
 
-  public UserBO getUserDetails(String userId);
-
-  public List<UserBO> getUserList();
-
-  public String getUserPermissionByUserId(String sessionUserId);
-
-  public RoleBO getUserRole(String roleId);
-
-  public List<RoleBO> getUserRoleList();
+  public void setAppId(String appId) {
+    this.appId = appId;
+  }
 }

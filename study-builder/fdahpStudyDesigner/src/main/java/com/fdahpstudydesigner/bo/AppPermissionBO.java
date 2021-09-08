@@ -21,48 +21,48 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.fdahpstudydesigner.service;
+package com.fdahpstudydesigner.bo;
 
-import com.fdahpstudydesigner.bean.AuditLogEventRequest;
-import com.fdahpstudydesigner.bo.RoleBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.util.SessionObject;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
-public interface UsersService {
+@Setter
+@Getter
+@Entity
+@Table(name = "app_permission")
+@NamedQueries({
+  @NamedQuery(
+      name = "getAppPermission",
+      query = " From AppPermissionBO WHERE appId =:appId and userId =:userId")
+})
+public class AppPermissionBO implements Serializable {
 
-  public String activateOrDeactivateUser(
-      String userId,
-      int userStatus,
-      String loginUser,
-      SessionObject userSession,
-      HttpServletRequest request);
+  private static final long serialVersionUID = 1L;
 
-  public String addOrUpdateUserDetails(
-      HttpServletRequest request,
-      UserBO userBO,
-      String permissions,
-      String selectedStudies,
-      String permissionValues,
-      SessionObject userSession,
-      String selectedApps,
-      AuditLogEventRequest auditRequest,
-      String permissionValuesForApp);
+  @Column(name = "app_id")
+  private String appId;
 
-  public String enforcePasswordChange(String userId, String email);
+  @Id
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String appPermissionId;
 
-  public List<String> getActiveUserEmailIds();
+  @Transient private String userFullName;
 
-  public List<Integer> getPermissionsByUserId(String userId);
+  @Column(name = "user_id")
+  private String userId;
 
-  public UserBO getUserDetails(String userId);
-
-  public List<UserBO> getUserList();
-
-  public String getUserPermissionByUserId(String sessionUserId);
-
-  public RoleBO getUserRole(String roleId);
-
-  public List<RoleBO> getUserRoleList();
+  @Column(name = "view_permission", length = 1)
+  private boolean viewPermission;
 }

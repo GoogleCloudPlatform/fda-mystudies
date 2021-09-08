@@ -21,48 +21,50 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.fdahpstudydesigner.service;
+package com.fdahpstudydesigner.dao;
 
+import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
-import com.fdahpstudydesigner.bo.RoleBO;
-import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.bo.VersionInfoBO;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
-public interface UsersService {
+public interface AppDAO {
+  public List<AppListBean> getAppList(String userId);
 
-  public String activateOrDeactivateUser(
-      String userId,
-      int userStatus,
-      String loginUser,
-      SessionObject userSession,
-      HttpServletRequest request);
+  public AppsBo getAppById(String appId, String userId);
 
-  public String addOrUpdateUserDetails(
-      HttpServletRequest request,
-      UserBO userBO,
-      String permissions,
-      String selectedStudies,
-      String permissionValues,
-      SessionObject userSession,
-      String selectedApps,
-      AuditLogEventRequest auditRequest,
-      String permissionValuesForApp);
+  public boolean validateAppId(String appId);
 
-  public String enforcePasswordChange(String userId, String email);
+  public String saveOrUpdateApp(AppsBo appBo, SessionObject sessionObject);
 
-  public List<String> getActiveUserEmailIds();
+  public String saveOrUpdateAppSettings(AppsBo appsBo, SessionObject sessionObject);
 
-  public List<Integer> getPermissionsByUserId(String userId);
+  public String updateAppAction(
+      String studyId, String buttonText, SessionObject sesObj, AuditLogEventRequest auditRequest);
 
-  public UserBO getUserDetails(String userId);
+  public AppsBo getAppByLatestVersion(String customAppId);
 
-  public List<UserBO> getUserList();
+  public String saveOrUpdateAppProperties(AppsBo appsBo, SessionObject sessionObject);
 
-  public String getUserPermissionByUserId(String sessionUserId);
+  public boolean validateAppActions(String appId);
 
-  public RoleBO getUserRole(String roleId);
+  public List<AppsBo> getAllApps();
 
-  public List<RoleBO> getUserRoleList();
+  public String saveOrUpdateAppDeveloperConfig(AppsBo appsBo, SessionObject sessionObject);
+
+  public List<AppsBo> getActiveApps(String userId);
+
+  public boolean getAppPermission(String appId, String userId);
+
+  public int getStudiesByAppId(String customAppId);
+
+  public List<AppsBo> getAppsForStudy(String userId);
+
+  public void changeSatusToActive(String appId);
+
+  public boolean getAppPermissionByCustomAppId(String customAppId, String userId);
+
+  public VersionInfoBO getVersionBycustomAppId(String customappId);
 }
