@@ -1915,7 +1915,7 @@ public class StudyController {
                 ? ""
                 : request.getParameter(FdahpStudyDesignerConstants.APP_ID);
         studyBos = studyService.getStudyList(sesObj.getUserId());
-        appList = appService.getActiveApps(sesObj.getUserId());
+        appList = appService.getApps(sesObj.getUserId());
         map.addAttribute("studyBos", studyBos);
         map.addAttribute("studyListId", "true");
         if (StringUtils.isNotEmpty(appId)) {
