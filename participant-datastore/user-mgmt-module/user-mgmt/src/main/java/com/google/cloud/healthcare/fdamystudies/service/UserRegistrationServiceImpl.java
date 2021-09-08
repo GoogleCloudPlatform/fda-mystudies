@@ -41,6 +41,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
+import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -194,7 +195,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private UserDetailsEntity fromUserRegistrationForm(UserRegistrationForm user) {
     UserDetailsEntity userDetails = new UserDetailsEntity();
     userDetails.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
-    userDetails.setVerificationDate(new Timestamp(System.currentTimeMillis()));
+    userDetails.setVerificationDate(
+        UserManagementUtil.getCurrentDate() + " " + UserManagementUtil.getCurrentTime());
     userDetails.setUserId(user.getUserId());
     userDetails.setEmail(user.getEmailId());
     userDetails.setUsePassCode(user.isUsePassCode());

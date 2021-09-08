@@ -106,6 +106,17 @@ public class NotificationDto implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
+  @Column(name = "platform")
+  private String platform;
+
+  public String getPlatform() {
+    return platform;
+  }
+
+  public void setPlatform(String platform) {
+    this.platform = platform;
+  }
+
   public String getNotificationId() {
     return notificationId;
   }

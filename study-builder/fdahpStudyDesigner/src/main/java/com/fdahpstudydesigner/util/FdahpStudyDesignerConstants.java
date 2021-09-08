@@ -376,6 +376,9 @@ public class FdahpStudyDesignerConstants {
   // android
   public static final String STUDY_PLATFORM_TYPE_IOS = "I"; // platform
 
+  // supported both ios and android
+  public static final String STUDY_PLATFORM_TYPE_IOS_ANDROID = "I,A";
+
   // Study Status
   public static final String STUDY_PRE_LAUNCH = "Pre-launch";
   public static final String STUDY_PRE_PUBLISH = "Pre-launch(Published)";

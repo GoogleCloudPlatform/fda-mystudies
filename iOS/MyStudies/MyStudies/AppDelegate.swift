@@ -1192,6 +1192,9 @@ extension AppDelegate: NMWebServiceDelegate {
 
       self.addAndRemoveProgress(add: false)
       self.studyEnrollmentFinished()
+      if let currentStudy = Study.currentStudy {
+        currentStudy.version = currentStudy.newVersion
+      }
 
     } else if requestName as String == WCPMethods.studyUpdates.rawValue {
       self.handleStudyUpdatedInformation()

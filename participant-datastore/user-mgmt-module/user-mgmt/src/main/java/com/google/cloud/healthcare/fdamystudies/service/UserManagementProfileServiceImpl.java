@@ -84,11 +84,16 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     logger.entry("Begin getParticipantInfoDetails()");
     UserDetailsEntity userDetails = null;
     UserProfileRespBean userProfileRespBean = null;
+    String verificationDate = null;
 
     userDetails = userProfileManagementDao.getParticipantInfoDetails(userId);
     if (userDetails != null) {
       userProfileRespBean = new UserProfileRespBean();
       userProfileRespBean.getProfile().setEmailId(userDetails.getEmail());
+      verificationDate = userDetails.getVerificationDate();
+      userProfileRespBean
+          .getProfile()
+          .setVerificationTime(StringUtils.defaultIfEmpty(verificationDate, ""));
       userProfileRespBean
           .getSettings()
           .setRemoteNotifications(userDetails.getRemoteNotificationFlag());

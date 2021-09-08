@@ -78,6 +78,8 @@ public class NotificationDAOImpl implements NotificationDAO {
 
   @Autowired private HttpServletRequest request;
 
+  @Autowired private StudyDAO studyDAO;
+
   @Override
   public String deleteNotification(
       String notificationIdForDelete, SessionObject sessionObject, String notificationType) {
@@ -316,11 +318,16 @@ public class NotificationDAOImpl implements NotificationDAO {
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
           notificationBOUpdate.setCustomStudyId(notificationBO.getCustomStudyId());
           notificationBOUpdate.setStudyId(notificationBO.getStudyId());
+          StudyBo studyDetails =
+              studyDAO.getStudyByLatestVersion(notificationBO.getCustomStudyId());
+          notificationBOUpdate.setPlatform(studyDetails.getPlatform());
           notificationBOUpdate.setNotificationAction(notificationBO.isNotificationAction());
         } else {
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_GT);
           notificationBOUpdate.setStudyId(null);
           notificationBOUpdate.setCustomStudyId("");
+          notificationBOUpdate.setPlatform(
+              FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS_ANDROID);
           notificationBOUpdate.setNotificationAction(false);
           notificationBOUpdate.setNotificationDone(true);
         }

@@ -185,7 +185,8 @@ public class StudyExportImportService {
         customIdsMap.put(NEW_ELIGIBILITY_ID + eligibilityBo.getId(), IdGenerator.id());
       }
 
-      List<ConsentBo> consentBoList = studyDao.getConsentListForStudy(studyBo.getId());
+      List<ConsentBo> consentBoList =
+          studyDao.getConsentListForStudy(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
       List<ConsentInfoBo> consentInfoBoList =
           studyDao.getConsentInfoList(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
@@ -211,7 +212,8 @@ public class StudyExportImportService {
         addEligibilityInsertSql(eligibilityBo, insertSqlStatements, customIdsMap);
         addEligibilityTestListInsertSql(eligibilityBoList, insertSqlStatements, customIdsMap);
 
-        addConsentBoListInsertSql(consentBoList, insertSqlStatements, customIdsMap);
+        addConsentBoListInsertSql(
+            consentBoList, insertSqlStatements, customIdsMap, studyBo.getId());
         addConsentInfoBoListInsertSql(
             consentInfoBoList, insertSqlStatements, customIdsMap, studyBo.getId());
 
@@ -1156,7 +1158,8 @@ public class StudyExportImportService {
                 customIdsMap.get(STUDY_ID + studyBo.getId()),
                 notificationBO.getxDays(),
                 notificationBO.getScheduleTimestamp(),
-                sequenceNumber++);
+                sequenceNumber++,
+                studyBo.getPlatform());
         notificationBoBoInsertQueryList.add(notificationBoInsertQuery);
       }
     }
@@ -1326,7 +1329,8 @@ public class StudyExportImportService {
   private void addConsentBoListInsertSql(
       List<ConsentBo> consentBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      String studyId)
       throws Exception {
 
     if (CollectionUtils.isEmpty(consentBoList)) {
@@ -1360,7 +1364,7 @@ public class StudyExportImportService {
               consentBo.getNeedComprehensionTest(),
               consentBo.getShareDataPermissions(),
               consentBo.getShortDescription(),
-              customIdsMap.get(STUDY_ID + consentBo.getStudyId()),
+              customIdsMap.get(STUDY_ID + studyId),
               consentBo.getTaglineDescription(),
               consentBo.getTitle(),
               0f,

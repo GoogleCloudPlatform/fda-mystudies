@@ -1259,6 +1259,8 @@ public class StudyServiceImpl implements StudyService {
             notificationBO = new NotificationBO();
             notificationBO.setStudyId(resourceBO2.getStudyId());
             notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+            String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+            notificationBO.setPlatform(platform);
             if (StringUtils.isNotEmpty(studyBo.getAppId())) {
               notificationBO.setAppId(studyBo.getAppId());
             }
@@ -1576,7 +1578,8 @@ public class StudyServiceImpl implements StudyService {
 
     EligibilityBo eligibilityBo = studyDAO.getStudyEligibiltyByStudyId(studyBo.getId());
 
-    List<ConsentBo> consentBoList = studyDAO.getConsentListForStudy(studyBo.getId());
+    List<ConsentBo> consentBoList =
+        studyDAO.getConsentListForStudy(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
 
     List<ConsentInfoBo> consentInfoBoList =
         studyDAO.getConsentInfoList(studyBo.getId(), studyBo.getCustomStudyId(), copyVersion);
@@ -1679,6 +1682,7 @@ public class StudyServiceImpl implements StudyService {
           notificationBO.setNotificationId(null);
           notificationBO.setStudyId(studyBo.getId());
           notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+          notificationBO.setPlatform(studyBo.getPlatform());
           notificationBO.setSequenceNumber(sequenceNumber++);
           notificationBO.setNotificationSent(false);
           if (!notificationBO.isNotificationStatus()) {

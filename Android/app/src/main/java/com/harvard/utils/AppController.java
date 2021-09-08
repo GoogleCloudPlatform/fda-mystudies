@@ -260,7 +260,7 @@ public class AppController {
       config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
-              .schemaVersion(1)
+              .schemaVersion(2)
               .migration(new RealmMigrationHelper())
               .build();
     }

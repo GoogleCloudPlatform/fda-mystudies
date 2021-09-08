@@ -4257,6 +4257,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               notificationBO = new NotificationBO();
               notificationBO.setStudyId(questionnaireBo.getStudyId());
               notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+              String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+              notificationBO.setPlatform(platform);
               if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                 notificationBO.setAppId(studyBo.getAppId());
               }
@@ -5609,6 +5611,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         String searchQuery = null;
         newQuestionnaireBo = SerializationUtils.clone(questionnaireBo);
         newQuestionnaireBo.setId(null);
+        newQuestionnaireBo.setCustomStudyId(null);
         newQuestionnaireBo.setLive(0);
         newQuestionnaireBo.setStudyId(studyId);
         newQuestionnaireBo.setCreatedBy(sessionObject.getUserId());
