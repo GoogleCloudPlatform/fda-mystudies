@@ -146,14 +146,14 @@ public class AppDAOImpl implements AppDAO {
             }
 
             // for draft app
-            if (appDetails.getId() != null) {
+            if (appDetails.getId() != null && (appDetails.getLiveAppId() != null)) {
               appBo =
                   (AppsBo)
                       session
                           .createQuery("from AppsBo where id=:id")
                           .setParameter("id", appDetails.getId())
                           .uniqueResult();
-              if (appDetails.getLiveAppId() != null) {
+              if (appBo.getHasAppDraft() == 1) {
                 appDetails.setFlag(true);
               }
             }
