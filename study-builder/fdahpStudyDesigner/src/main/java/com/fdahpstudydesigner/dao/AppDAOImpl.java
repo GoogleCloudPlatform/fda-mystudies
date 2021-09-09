@@ -395,7 +395,9 @@ public class AppDAOImpl implements AppDAO {
           if (StringUtils.isNotEmpty(appBo.getType())) {
             dbappBo.setType(appBo.getType());
           }
-          dbappBo.setAppPlatform(appBo.getAppPlatform());
+          if (StringUtils.isNotEmpty(appBo.getAppPlatform())) {
+            dbappBo.setAppPlatform(appBo.getAppPlatform());
+          }
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
@@ -592,16 +594,39 @@ public class AppDAOImpl implements AppDAO {
                     .setString("id", appBo.getId())
                     .uniqueResult();
         if (dbappBo != null) {
-          dbappBo.setFeedbackEmailAddress(appBo.getFeedbackEmailAddress());
-          dbappBo.setContactEmailAddress(appBo.getContactEmailAddress());
-          dbappBo.setAppSupportEmailAddress(appBo.getAppSupportEmailAddress());
-          dbappBo.setAppTermsUrl(appBo.getAppTermsUrl());
-          dbappBo.setAppPrivacyUrl(appBo.getAppPrivacyUrl());
-          dbappBo.setOrganizationName(appBo.getOrganizationName());
-          dbappBo.setAppStoreUrl(appBo.getAppStoreUrl());
-          dbappBo.setPlayStoreUrl(appBo.getPlayStoreUrl());
-          dbappBo.setFromEmailAddress(appBo.getFromEmailAddress());
-          dbappBo.setAppWebsiteUrl(appBo.getAppWebsiteUrl());
+          if (appBo.getFeedbackEmailAddress() != null) {
+            dbappBo.setFeedbackEmailAddress(appBo.getFeedbackEmailAddress());
+          }
+          if (appBo.getContactEmailAddress() != null) {
+            dbappBo.setContactEmailAddress(appBo.getContactEmailAddress());
+          }
+
+          if (appBo.getAppSupportEmailAddress() != null) {
+            dbappBo.setAppSupportEmailAddress(appBo.getAppSupportEmailAddress());
+          }
+          if (appBo.getAppTermsUrl() != null) {
+            dbappBo.setAppTermsUrl(appBo.getAppTermsUrl());
+          }
+          if (appBo.getAppPrivacyUrl() != null) {
+            dbappBo.setAppPrivacyUrl(appBo.getAppPrivacyUrl());
+          }
+          if (appBo.getOrganizationName() != null) {
+            dbappBo.setOrganizationName(appBo.getOrganizationName());
+          }
+          if (appBo.getAppStoreUrl() != null) {
+            dbappBo.setAppStoreUrl(appBo.getAppStoreUrl());
+          }
+          if (appBo.getPlayStoreUrl() != null) {
+            dbappBo.setPlayStoreUrl(appBo.getPlayStoreUrl());
+          }
+
+          if (appBo.getFromEmailAddress() != null) {
+            dbappBo.setFromEmailAddress(appBo.getFromEmailAddress());
+          }
+
+          if (appBo.getAppWebsiteUrl() != null) {
+            dbappBo.setAppWebsiteUrl(appBo.getAppWebsiteUrl());
+          }
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
