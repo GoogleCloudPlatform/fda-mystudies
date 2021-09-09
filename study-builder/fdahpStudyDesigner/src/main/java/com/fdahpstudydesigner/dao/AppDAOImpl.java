@@ -559,14 +559,14 @@ public class AppDAOImpl implements AppDAO {
     logger.entry("begin getAppByLatestVersion()");
     Session session = null;
     AppsBo app = null;
+
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      app =
-          (AppsBo)
-              session
-                  .getNamedQuery("getAppByLatestVersion")
-                  .setString("customAppId", customAppId)
-                  .uniqueResult();
+      query = session.getNamedQuery("getAppByLatestVersion").setString("customAppId", customAppId);
+
+      query.setMaxResults(1);
+      app = (AppsBo) query.uniqueResult();
+
     } catch (Exception e) {
       logger.error("AppDAOImpl - getAppByLatestVersion() - ERROR", e);
     } finally {
