@@ -139,6 +139,7 @@ $(document).ready( function () {
 	
 $('#saveId').click(
         function (e) {
+        	debugger
          $('#settingFormId').validator('destroy');
           $("#buttonText").val('save');
           $("#settingFormId").submit()

@@ -320,7 +320,10 @@ public class AppDAOImpl implements AppDAO {
           if (StringUtils.isNotEmpty(appBo.getCustomAppId())) {
             dbappBo.setCustomAppId(appBo.getCustomAppId());
           }
-          dbappBo.setName(appBo.getName());
+
+          if (appBo.getName() != null) {
+            dbappBo.setName(appBo.getName());
+          }
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
 
@@ -738,13 +741,32 @@ public class AppDAOImpl implements AppDAO {
                     .setString("id", appBo.getId())
                     .uniqueResult();
         if (dbappBo != null) {
-          dbappBo.setAndroidBundleId(appBo.getAndroidBundleId());
-          dbappBo.setAndroidServerKey(appBo.getAndroidServerKey());
-          dbappBo.setIosBundleId(appBo.getIosBundleId());
-          dbappBo.setIosServerKey(appBo.getIosServerKey());
-          dbappBo.setIosXCodeAppVersion(appBo.getIosXCodeAppVersion());
-          dbappBo.setIosAppBuildVersion(appBo.getIosAppBuildVersion());
-          dbappBo.setAndroidAppBuildVersion(appBo.getAndroidAppBuildVersion());
+
+          if (appBo.getAndroidBundleId() != null) {
+            dbappBo.setAndroidBundleId(appBo.getAndroidBundleId());
+          }
+
+          if (appBo.getAndroidServerKey() != null) {
+            dbappBo.setAndroidServerKey(appBo.getAndroidServerKey());
+          }
+          if (appBo.getIosBundleId() != null) {
+            dbappBo.setIosBundleId(appBo.getIosBundleId());
+          }
+
+          if (appBo.getIosServerKey() != null) {
+            dbappBo.setIosServerKey(appBo.getIosServerKey());
+          }
+
+          if (appBo.getIosXCodeAppVersion() != null) {
+            dbappBo.setIosXCodeAppVersion(appBo.getIosXCodeAppVersion());
+          }
+          if (appBo.getIosAppBuildVersion() != null) {
+            dbappBo.setIosAppBuildVersion(appBo.getIosAppBuildVersion());
+          }
+
+          if (appBo.getAndroidAppBuildVersion() != null) {
+            dbappBo.setAndroidAppBuildVersion(appBo.getAndroidAppBuildVersion());
+          }
 
           VersionInfoBO versionInfoBO =
               (VersionInfoBO)
@@ -757,7 +779,7 @@ public class AppDAOImpl implements AppDAO {
             versionInfoBO = new VersionInfoBO();
           }
 
-          if (StringUtils.isNotEmpty(appBo.getAndroidAppBuildVersion())) {
+          if (appBo.getAndroidAppBuildVersion() != null) {
             versionInfoBO.setAndroid(appBo.getAndroidAppBuildVersion());
           }
 
