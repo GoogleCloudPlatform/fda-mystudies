@@ -392,10 +392,10 @@ public class AppDAOImpl implements AppDAO {
                     .setString("id", appBo.getId())
                     .uniqueResult();
         if (dbappBo != null) {
-          if (StringUtils.isNotEmpty(appBo.getType())) {
+          if (appBo.getType() != null) {
             dbappBo.setType(appBo.getType());
           }
-          if (StringUtils.isNotEmpty(appBo.getAppPlatform())) {
+          if (appBo.getAppPlatform() != null) {
             dbappBo.setAppPlatform(appBo.getAppPlatform());
           }
           dbappBo.setModifiedBy(appBo.getUserId());
