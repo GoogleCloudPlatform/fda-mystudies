@@ -7,6 +7,7 @@ export interface AppDetails {
   participants: Participant[];
   status: number;
   message: string;
+  appStatus: number;
   code: string;
   totalParticipantCount: number;
 }
