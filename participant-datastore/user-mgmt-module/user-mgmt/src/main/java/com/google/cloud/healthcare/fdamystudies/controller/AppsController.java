@@ -10,8 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.bean.AppMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppContactEmailsResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.AppsService;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import io.micrometer.core.instrument.util.StringUtils;
@@ -69,8 +71,9 @@ public class AppsController {
   public ResponseEntity<?> deactivateAppAndUsers(
       @PathVariable String customAppId, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    ErrorBean errorBean = appsServices.deactivateAppAndUsers(customAppId);
+    ErrorBean errorBean = appsServices.deactivateAppAndUsers(customAppId, auditRequest);
     if (errorBean.getCode() != ErrorCode.EC_200.code()) {
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }

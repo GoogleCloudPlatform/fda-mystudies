@@ -26,8 +26,10 @@
     <!-- widgets section-->
     <div class="col-sm-12 col-md-12 col-lg-12 p-none">
       <div class="black-lg-f">
-        Manage Apps
+        Manage apps
       </div>
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN') || 
+      fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_APPS')}">
       <div class="dis-line pull-right ml-md">
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn applistDetailsToEdit"
@@ -36,6 +38,8 @@
             </button>
           </div>
       </div>
+      </c:if>
+      
     </div>
   </div>
   <div class="clearfix"></div>
@@ -51,7 +55,7 @@
                 <th id="">APP NAME <span class="sort"></span></th>
                 <th id="">TYPE <span class="sort"></span></th>
                 <th id="">STATUS<span class="sort"></span></th>
-                <th id="" class="linkDis text-right" style="padding-right: 3% !important; "  >Actions</th>
+                <th id="" class="linkDis text-right" style="padding-right: 8% !important; "  >Actions</th>
               </tr>
         </thead>
         <tbody>
@@ -59,7 +63,7 @@
           <tr>
                 <td>${app.customAppId}</td>
                 <td>${app.name}</td>
-                <td>${app.type}</td>
+                <td><c:if test="${app.type == 'GT'}">Gateway</c:if><c:if test="${app.type == 'SD'}">Standalone</c:if></td>
                 <td>${app.appStatus}</td>
                 <td class="text-right" style="padding-right: 2% !important; ">
                     <span class="sprites_icon preview-g mr-lg viewAppClass" isLive=""
@@ -127,8 +131,7 @@
       "searching": false,
       "pageLength": 10,
     });
-
-    $('.viewAppClass').on('click', function () {
+    $(document).on('click', '.viewAppClass', function(){
         var form = document.createElement('form');
         form.method = 'post';
         var input = document.createElement('input');
@@ -159,8 +162,8 @@
         document.body.appendChild(form);
         form.submit();
       });
-
-    $('.addEditAppClass').on('click', function () {
+    
+    $(document).on('click', '.addEditAppClass', function(){
         var form = document.createElement('form');
         form.method = 'post';
         var input = document.createElement('input');
@@ -186,7 +189,7 @@
         form.submit();
       });
 
-    $('.viewStudiesClass').on('click', function () {
+    $(document).on('click', '.viewStudiesClass', function(){
         var form = document.createElement('form');
         form.method = 'post';
         var input = document.createElement('input');

@@ -28,6 +28,7 @@ import com.fdahpstudydesigner.bean.AppDetailsBean;
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.AppsBo;
+import com.fdahpstudydesigner.bo.VersionInfoBO;
 import com.fdahpstudydesigner.dao.AppDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -140,7 +141,7 @@ public class AppServiceImpl implements AppService {
         appDetailsBean.setAppName(app.getName());
         appDetailsBean.setAppType(app.getType());
         appDetailsBean.setAppPlatform(app.getAppPlatform());
-        appDetailsBean.setOraganizationName(app.getOrganizationName());
+        appDetailsBean.setOrganizationName(app.getOrganizationName());
 
         appDetailsBean.setContactEmail(app.getContactEmailAddress());
         appDetailsBean.setFeedBackEmail(app.getFeedbackEmailAddress());
@@ -155,16 +156,26 @@ public class AppServiceImpl implements AppService {
 
         appDetailsBean.setAndroidBundleId(app.getAndroidBundleId());
         appDetailsBean.setAndroidServerKey(app.getAndroidServerKey());
-        appDetailsBean.setAndroidForceUpdrade(app.getAndroidForceUpgrade());
-        appDetailsBean.setAndroidAppBuildVersion(app.getAndroidAppBuildVersion());
 
         appDetailsBean.setIosBundleId(app.getIosBundleId());
         appDetailsBean.setIosServerKey(app.getIosServerKey());
-        appDetailsBean.setIosForceUpgrade(app.getIosForceUpgrade());
-        appDetailsBean.setIosAppBuildVersion(app.getIosAppBuildVersion());
-        appDetailsBean.setIosXCodeAppVersion(app.getIosXCodeAppVersion());
 
         appDetailsBean.setAppStatus(app.getAppStatus());
+        VersionInfoBO versionInfoBO = appDAO.getVersionBycustomAppId(app.getCustomAppId());
+        if (versionInfoBO != null) {
+          if (StringUtils.isNotEmpty(versionInfoBO.getAndroid())) {
+            appDetailsBean.setAndroidVersion(versionInfoBO.getAndroid());
+          }
+          if (StringUtils.isNotEmpty(versionInfoBO.getIos())) {
+            appDetailsBean.setIosVersion(versionInfoBO.getIos());
+          }
+          if (versionInfoBO.getAndroidForceUpgrade() != null) {
+            appDetailsBean.setAndroidForceUpgrade(versionInfoBO.getAndroidForceUpgrade());
+          }
+          if (versionInfoBO.getIosForceUpgrade() != null) {
+            appDetailsBean.setIosForceUpgrade(versionInfoBO.getIosForceUpgrade());
+          }
+        }
 
         return appDetailsBean;
       }
@@ -224,12 +235,12 @@ public class AppServiceImpl implements AppService {
   }
 
   @Override
-  public List<AppsBo> getActiveApps(String userId) {
+  public List<AppsBo> getApps(String userId) {
     List<AppsBo> appBos = null;
     List<String> permission = null;
     try {
       if (StringUtils.isNotEmpty(userId)) {
-        appBos = appDAO.getActiveApps(userId);
+        appBos = appDAO.getApps(userId);
       }
     } catch (Exception e) {
       logger.error("AppServiceImpl - getActiveApps() - ERROR ", e);

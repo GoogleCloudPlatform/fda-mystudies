@@ -160,7 +160,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/notifications-w.png" alt="">
                     </a>
-                    <div class='studyList'>Send<br> Notifications<br>
+                    <div class='studyList'>Send App-Wide<br> Notifications<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -262,11 +262,13 @@
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
         $(".userListId").addClass('hide');
         $(".userListId").unbind();
-        </c:if>
-        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
-        $(".notificationListId").addClass('cursor-none');
-        $(".notificationListId").unbind();
-        </c:if>
+        </c:if>   
+        
+        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS') && not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
+        $(".appListId").addClass('cursor-none');
+        $(".appListId").unbind();
+        </c:if> 
+       
 
         $(".appListId").click(function () {
             document.studyListForm.action = "/studybuilder/adminApps/appList.do";

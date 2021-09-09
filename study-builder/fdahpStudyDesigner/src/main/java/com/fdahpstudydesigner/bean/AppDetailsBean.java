@@ -44,16 +44,15 @@ public class AppDetailsBean {
 
   private String androidBundleId;
   private String androidServerKey;
-  private Integer androidForceUpgrade;
-  private String androidAppBuildVersion;
-
   private String iosBundleId;
   private String iosServerKey;
-  private String iosAppBuildVersion;
-  private Integer iosForceUpgrade;
-  private String iosXCodeAppVersion;
 
   private String appStatus;
+
+  private String iosVersion;
+  private Boolean iosForceUpgrade;
+  private String androidVersion;
+  private Boolean androidForceUpgrade;
 
   public String getAppId() {
     return appId;
@@ -91,7 +90,7 @@ public class AppDetailsBean {
     return organizationName;
   }
 
-  public void setOraganizationName(String organizationName) {
+  public void setOrganizationName(String organizationName) {
     this.organizationName = organizationName;
   }
 
@@ -159,6 +158,14 @@ public class AppDetailsBean {
     this.playStoreUrl = playStoreUrl;
   }
 
+  public String getAppWebSiteUrl() {
+    return appWebSiteUrl;
+  }
+
+  public void setAppWebSiteUrl(String appWebSiteUrl) {
+    this.appWebSiteUrl = appWebSiteUrl;
+  }
+
   public String getAndroidBundleId() {
     return androidBundleId;
   }
@@ -173,22 +180,6 @@ public class AppDetailsBean {
 
   public void setAndroidServerKey(String androidServerKey) {
     this.androidServerKey = androidServerKey;
-  }
-
-  public Integer getAndroidForceUpdrade() {
-    return androidForceUpgrade;
-  }
-
-  public void setAndroidForceUpdrade(Integer androidForceUpgrade) {
-    this.androidForceUpgrade = androidForceUpgrade;
-  }
-
-  public String getAndroidAppBuildVersion() {
-    return androidAppBuildVersion;
-  }
-
-  public void setAndroidAppBuildVersion(String androidAppBuildVersion) {
-    this.androidAppBuildVersion = androidAppBuildVersion;
   }
 
   public String getIosBundleId() {
@@ -207,43 +198,43 @@ public class AppDetailsBean {
     this.iosServerKey = iosServerKey;
   }
 
-  public String getIosAppBuildVersion() {
-    return iosAppBuildVersion;
-  }
-
-  public void setIosAppBuildVersion(String iosAppBuildVersion) {
-    this.iosAppBuildVersion = iosAppBuildVersion;
-  }
-
-  public Integer getIosForceUpgrade() {
-    return iosForceUpgrade;
-  }
-
-  public void setIosForceUpgrade(Integer iosForceUpgrade) {
-    this.iosForceUpgrade = iosForceUpgrade;
-  }
-
-  public String getIosXCodeAppVersion() {
-    return iosXCodeAppVersion;
-  }
-
-  public void setIosXCodeAppVersion(String iosXCodeAppVersion) {
-    this.iosXCodeAppVersion = iosXCodeAppVersion;
-  }
-
-  public String getAppWebSiteUrl() {
-    return appWebSiteUrl;
-  }
-
-  public void setAppWebSiteUrl(String appWebSiteUrl) {
-    this.appWebSiteUrl = appWebSiteUrl;
-  }
-
   public String getAppStatus() {
     return appStatus;
   }
 
   public void setAppStatus(String appStatus) {
     this.appStatus = appStatus;
+  }
+
+  public String getIosVersion() {
+    return iosVersion;
+  }
+
+  public void setIosVersion(String iosVersion) {
+    this.iosVersion = iosVersion;
+  }
+
+  public Boolean getIosForceUpgrade() {
+    return iosForceUpgrade;
+  }
+
+  public void setIosForceUpgrade(Boolean iosForceUpgrade) {
+    this.iosForceUpgrade = iosForceUpgrade;
+  }
+
+  public String getAndroidVersion() {
+    return androidVersion;
+  }
+
+  public void setAndroidVersion(String androidVersion) {
+    this.androidVersion = androidVersion;
+  }
+
+  public Boolean getAndroidForceUpgrade() {
+    return androidForceUpgrade;
+  }
+
+  public void setAndroidForceUpgrade(Boolean androidForceUpgrade) {
+    this.androidForceUpgrade = androidForceUpgrade;
   }
 }

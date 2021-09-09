@@ -1494,7 +1494,7 @@ public class SiteServiceImpl implements SiteService {
 
       EmailRequest emailRequest =
           new EmailRequest(
-              optStudy.get().getApp().getFromEmailId(),
+              appPropertyConfig.getFromEmail(),
               new String[] {participantRegistrySiteEntity.getEmail()},
               null,
               null,

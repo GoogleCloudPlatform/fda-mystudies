@@ -94,6 +94,9 @@ public class NotificationController {
     List<NotificationHistoryBO> notificationHistoryNoDateTime = null;
     List<String> gatewayAppList = null;
     try {
+      SessionObject sessionObject =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       String notificationId =
           FdahpStudyDesignerUtil.isEmpty(
                   request.getParameter(FdahpStudyDesignerConstants.NOTIFICATIONID))
@@ -113,7 +116,7 @@ public class NotificationController {
                   request.getParameter(FdahpStudyDesignerConstants.ACTION_TYPE))
               ? ""
               : request.getParameter(FdahpStudyDesignerConstants.ACTION_TYPE);
-      gatewayAppList = notificationService.getGatwayAppList();
+      gatewayAppList = notificationService.getGatwayAppList(sessionObject.getUserId());
       map.addAttribute("gatewayAppList", gatewayAppList);
       if (!"".equals(chkRefreshflag)) {
         if (!"".equals(notificationId)) {
@@ -344,6 +347,9 @@ public class NotificationController {
     ModelAndView mav = new ModelAndView("login", map);
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      SessionObject sessionObject =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       if (null != request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG)) {
         sucMsg = (String) request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG);
         map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
@@ -366,7 +372,7 @@ public class NotificationController {
        * Passing 0 in below param as notifications are independent from
        * study and empty string to define it is as global notification
        */
-      notificationList = notificationService.getNotificationList(null, "");
+      notificationList = notificationService.getViewNotificationList(sessionObject.getUserId());
       if (CollectionUtils.isNotEmpty(notificationList)) {
         for (NotificationBO notification : notificationList) {
           if (!notification.isNotificationSent()

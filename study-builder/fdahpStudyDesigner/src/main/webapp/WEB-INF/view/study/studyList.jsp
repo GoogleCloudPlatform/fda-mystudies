@@ -398,11 +398,12 @@
 			    if ($(this).is(':checked')) {
 			        $('.option').prop('checked', true);
 			        var total = $('input[name="options[]"]:checked').length;
-			        $(".dropdown-text").html('(' + total + ') Selected');
+			        $(".dropdown-text").html('Showing all apps');
 			        $(".select-text").html(' Deselect');
 			    } else {
 			        $('.option').prop('checked', false);
-			        $(".dropdown-text").html('(0) Selected');
+			        var total = $('input[name="options[]"]:checked').length;
+			        $(".dropdown-text").html('-- Select apps --');
 			        $(".select-text").html(' Select');
 			    }
 			});
@@ -418,7 +419,12 @@
 			        $(".select-text").html(' Select');
 			    }
 			  var total = $('input[name="options[]"]:checked').length;
-			  $(".dropdown-text").html('(' + total + ') Selected');
+			  if(total == 0){
+				  $(".dropdown-text").html('-- Select apps --');
+			  }else{
+				  $(".dropdown-text").html('Showing ' + total + ' app(s)');
+			  }
+			  
 			});
 		  
 		});

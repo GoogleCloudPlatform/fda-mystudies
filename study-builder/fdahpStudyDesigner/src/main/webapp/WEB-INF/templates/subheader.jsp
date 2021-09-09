@@ -126,9 +126,14 @@ color: #95a2ab;
       <ul class="dropdown-menu custom_checkbox_dropdown">
         <li>
           <a href="#">
+           <c:if test="${not empty appBos}">
             <label>
               <input type="checkbox" class="selectall fcheckbox" />
               <span class="select-sub_text"> All</span> apps </label>
+            </c:if>
+            <c:if test="${empty appBos}">
+            <label>No app records found</label>
+            </c:if>
           </a>
         </li>
         <li class="divider"></li>

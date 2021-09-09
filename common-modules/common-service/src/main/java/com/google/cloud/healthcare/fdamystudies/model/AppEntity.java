@@ -170,13 +170,13 @@ public class AppEntity implements Serializable {
   private String iosAppBuildVersion;
 
   @Column(name = "ios_force_upgrade")
-  private Integer iosForceUpgrade;
+  private Boolean iosForceUpgrade;
 
   @Column(name = "android_latest_app_version")
   private String androidAppBuildVersion;
 
   @Column(name = "android_force_upgrade")
-  private Integer androidForceUpdrade;
+  private Boolean androidForceUpgrade;
 
   @Column(name = "type")
   private String type;

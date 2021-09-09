@@ -320,10 +320,7 @@ public class AppDAOImpl implements AppDAO {
           if (StringUtils.isNotEmpty(appBo.getCustomAppId())) {
             dbappBo.setCustomAppId(appBo.getCustomAppId());
           }
-          if (StringUtils.isNotEmpty(appBo.getName())) {
-            dbappBo.setName(appBo.getName());
-          }
-
+          dbappBo.setName(appBo.getName());
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
 
@@ -395,9 +392,7 @@ public class AppDAOImpl implements AppDAO {
           if (StringUtils.isNotEmpty(appBo.getType())) {
             dbappBo.setType(appBo.getType());
           }
-          if (StringUtils.isNotEmpty(appBo.getAppPlatform())) {
-            dbappBo.setAppPlatform(appBo.getAppPlatform());
-          }
+          dbappBo.setAppPlatform(appBo.getAppPlatform());
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
@@ -594,41 +589,16 @@ public class AppDAOImpl implements AppDAO {
                     .setString("id", appBo.getId())
                     .uniqueResult();
         if (dbappBo != null) {
-
-          if (StringUtils.isNotEmpty(appBo.getFeedbackEmailAddress())) {
-            dbappBo.setFeedbackEmailAddress(appBo.getFeedbackEmailAddress());
-          }
-          if (StringUtils.isNotEmpty(appBo.getContactEmailAddress())) {
-            dbappBo.setContactEmailAddress(appBo.getContactEmailAddress());
-          }
-
-          if (StringUtils.isNotEmpty(appBo.getAppSupportEmailAddress())) {
-            dbappBo.setAppSupportEmailAddress(appBo.getAppSupportEmailAddress());
-          }
-          if (StringUtils.isNotEmpty(appBo.getAppTermsUrl())) {
-            dbappBo.setAppTermsUrl(appBo.getAppTermsUrl());
-          }
-          if (StringUtils.isNotEmpty(appBo.getAppPrivacyUrl())) {
-            dbappBo.setAppPrivacyUrl(appBo.getAppPrivacyUrl());
-          }
-          if (StringUtils.isNotEmpty(appBo.getOrganizationName())) {
-            dbappBo.setOrganizationName(appBo.getOrganizationName());
-          }
-          if (StringUtils.isNotEmpty(appBo.getAppStoreUrl())) {
-            dbappBo.setAppStoreUrl(appBo.getAppStoreUrl());
-          }
-          if (StringUtils.isNotEmpty(appBo.getPlayStoreUrl())) {
-            dbappBo.setPlayStoreUrl(appBo.getPlayStoreUrl());
-          }
-
-          if (StringUtils.isNotEmpty(appBo.getFromEmailAddress())) {
-            dbappBo.setFromEmailAddress(appBo.getFromEmailAddress());
-          }
-
-          if (StringUtils.isNotEmpty(appBo.getAppWebsiteUrl())) {
-            dbappBo.setAppWebsiteUrl(appBo.getAppWebsiteUrl());
-          }
-
+          dbappBo.setFeedbackEmailAddress(appBo.getFeedbackEmailAddress());
+          dbappBo.setContactEmailAddress(appBo.getContactEmailAddress());
+          dbappBo.setAppSupportEmailAddress(appBo.getAppSupportEmailAddress());
+          dbappBo.setAppTermsUrl(appBo.getAppTermsUrl());
+          dbappBo.setAppPrivacyUrl(appBo.getAppPrivacyUrl());
+          dbappBo.setOrganizationName(appBo.getOrganizationName());
+          dbappBo.setAppStoreUrl(appBo.getAppStoreUrl());
+          dbappBo.setPlayStoreUrl(appBo.getPlayStoreUrl());
+          dbappBo.setFromEmailAddress(appBo.getFromEmailAddress());
+          dbappBo.setAppWebsiteUrl(appBo.getAppWebsiteUrl());
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
@@ -768,31 +738,13 @@ public class AppDAOImpl implements AppDAO {
                     .setString("id", appBo.getId())
                     .uniqueResult();
         if (dbappBo != null) {
-
-          if (StringUtils.isNotEmpty(appBo.getAndroidBundleId())) {
-            dbappBo.setAndroidBundleId(appBo.getAndroidBundleId());
-          }
-          if (StringUtils.isNotEmpty(appBo.getAndroidServerKey())) {
-            dbappBo.setAndroidServerKey(appBo.getAndroidServerKey());
-          }
-
-          if (StringUtils.isNotEmpty(appBo.getIosBundleId())) {
-            dbappBo.setIosBundleId(appBo.getIosBundleId());
-          }
-          if (StringUtils.isNotEmpty(appBo.getIosServerKey())) {
-            dbappBo.setIosServerKey(appBo.getIosServerKey());
-          }
-
-          if (StringUtils.isNotEmpty(appBo.getIosXCodeAppVersion())) {
-            dbappBo.setIosXCodeAppVersion(appBo.getIosXCodeAppVersion());
-          }
-          if (StringUtils.isNotEmpty(appBo.getIosAppBuildVersion())) {
-            dbappBo.setIosAppBuildVersion(appBo.getIosAppBuildVersion());
-          }
-
-          if (StringUtils.isNotEmpty(appBo.getAndroidAppBuildVersion())) {
-            dbappBo.setAndroidAppBuildVersion(appBo.getAndroidAppBuildVersion());
-          }
+          dbappBo.setAndroidBundleId(appBo.getAndroidBundleId());
+          dbappBo.setAndroidServerKey(appBo.getAndroidServerKey());
+          dbappBo.setIosBundleId(appBo.getIosBundleId());
+          dbappBo.setIosServerKey(appBo.getIosServerKey());
+          dbappBo.setIosXCodeAppVersion(appBo.getIosXCodeAppVersion());
+          dbappBo.setIosAppBuildVersion(appBo.getIosAppBuildVersion());
+          dbappBo.setAndroidAppBuildVersion(appBo.getAndroidAppBuildVersion());
 
           VersionInfoBO versionInfoBO =
               (VersionInfoBO)
@@ -876,7 +828,7 @@ public class AppDAOImpl implements AppDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<AppsBo> getActiveApps(String userId) {
+  public List<AppsBo> getApps(String userId) {
     Session session = null;
     List<AppsBo> appListBean = null;
     try {
@@ -889,7 +841,7 @@ public class AppDAOImpl implements AppDAO {
         UserBO userBO = (UserBO) query.uniqueResult();
 
         if (userBO.getRoleId().equals("1")) {
-          appListBean = session.getNamedQuery("getApps").setString("status", "Active").list();
+          appListBean = session.getNamedQuery("getApps").list();
 
         } else {
           query =
@@ -899,7 +851,7 @@ public class AppDAOImpl implements AppDAO {
                       + " where a.id=ap.appId"
                       + " and a.version=0 "
                       + " and ap.userId=:impValue"
-                      + " and a.appStatus = 'Active'"
+                      + " and a.appStatus IN ('Active','Deactivated')"
                       + " order by a.createdOn desc");
           appListBean = query.setString(IMP_VALUE, userId).list();
         }
@@ -969,6 +921,7 @@ public class AppDAOImpl implements AppDAO {
             session
                 .getNamedQuery("StudyBo.getStudyBycustomAppId")
                 .setString("customAppId", customAppId)
+                .setString("status", "Deactivated")
                 .list();
 
         count = studyBoList.size();
@@ -1023,5 +976,71 @@ public class AppDAOImpl implements AppDAO {
     }
     logger.exit("getActiveApps() - Ends");
     return appListBean;
+  }
+
+  @Override
+  public boolean getAppPermissionByCustomAppId(String customAppId, String userId) {
+    logger.entry("begin getAppPermissionByCustomAppId()");
+    Session session = null;
+    AppPermissionBO appPermissionBO = null;
+    boolean permission = false;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      query = session.getNamedQuery("getUserById").setString("userId", userId);
+      UserBO userBO = (UserBO) query.uniqueResult();
+
+      if (userBO.getRoleId().equals("1")) {
+        return true;
+      } else {
+        query =
+            session
+                .createQuery(
+                    "SELECT ap From AppPermissionBO ap, AppsBo a"
+                        + " WHERE a.id=ap.appId AND a.customAppId=:customAppId AND ap.userId=:userId")
+                .setString("customAppId", customAppId)
+                .setString("userId", userId);
+        appPermissionBO = (AppPermissionBO) query.uniqueResult();
+
+        if (appPermissionBO != null) {
+          permission = appPermissionBO.isViewPermission();
+        }
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppPermissionByCustomAppId() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+
+    logger.exit("getAppPermissionByCustomAppId() - Ends");
+    return permission;
+  }
+
+  @Override
+  public VersionInfoBO getVersionBycustomAppId(String customAppId) {
+    logger.entry("begin getVersionBycustomAppId()");
+    Session session = null;
+    VersionInfoBO versionInfoBO = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(customAppId)) {
+        versionInfoBO =
+            (VersionInfoBO)
+                session
+                    .getNamedQuery("getVersionByappId")
+                    .setString("appId", customAppId)
+                    .uniqueResult();
+      }
+
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getVersionBycustomAppId() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    return versionInfoBO;
   }
 }
