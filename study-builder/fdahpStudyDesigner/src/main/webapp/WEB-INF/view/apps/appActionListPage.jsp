@@ -150,7 +150,7 @@ button#exportId {
         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
         This action helps flag the iOS app as distributed (via the App Store or other means), live and made available for actual participants to use. 
-        Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
+        Once the app is marked 'distributed' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
       </div>
       </div>
        <div class="form-group mr-sm" style="white-space: normal;">
@@ -197,7 +197,7 @@ button#exportId {
         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
         This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
-       Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
+       Once the app is marked 'distributed' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
       </div>
       </div>
 
