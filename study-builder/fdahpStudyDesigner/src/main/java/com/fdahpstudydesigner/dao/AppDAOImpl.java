@@ -851,6 +851,7 @@ public class AppDAOImpl implements AppDAO {
                       + " where a.id=ap.appId"
                       + " and a.version=0 "
                       + " and ap.userId=:impValue"
+                      + " and a.appStatus IN ('Active','Deactivated')"
                       + " order by a.createdOn desc");
           appListBean = query.setString(IMP_VALUE, userId).list();
         }
