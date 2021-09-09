@@ -55,6 +55,7 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.math.BigInteger;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -94,6 +95,7 @@ public class AppDAOImpl implements AppDAO {
     Session session = null;
     List<AppListBean> appListBean = null;
     AppsBo appBo = null;
+    AppsBo liveApp = null;
     BigInteger studyCount;
     try {
 
@@ -129,7 +131,7 @@ public class AppDAOImpl implements AppDAO {
         if ((appListBean != null) && !appListBean.isEmpty()) {
           for (AppListBean appDetails : appListBean) {
 
-            /*if (StringUtils.isNotEmpty(appDetails.getCustomAppId())) {
+            if (StringUtils.isNotEmpty(appDetails.getCustomAppId())) {
               liveApp =
                   (AppsBo)
                       session
@@ -141,7 +143,7 @@ public class AppDAOImpl implements AppDAO {
               } else {
                 appDetails.setLiveAppId(null);
               }
-            }*/
+            }
 
             // for draft app
             if (appDetails.getId() != null) {
@@ -151,7 +153,7 @@ public class AppDAOImpl implements AppDAO {
                           .createQuery("from AppsBo where id=:id")
                           .setParameter("id", appDetails.getId())
                           .uniqueResult();
-              if (appBo.getHasAppDraft() != null && appBo.getHasAppDraft() == 1) {
+              if (appDetails.getLiveAppId() != null) {
                 appDetails.setFlag(true);
               }
             }
@@ -486,6 +488,8 @@ public class AppDAOImpl implements AppDAO {
             app.setIsAppPublished(true);
             app.setAppLaunchDate(FdahpStudyDesignerUtil.getCurrentDateTime());
             app.setHasAppDraft(0);
+
+            appDraftCreation(app, session, auditRequest);
 
           } else if (buttonText.equalsIgnoreCase("iosDistributedId")) {
             app.setIosAppDistributed(true);
@@ -1063,5 +1067,72 @@ public class AppDAOImpl implements AppDAO {
 
     logger.exit("getAppPermissionByCustomAppId() - Ends");
     return permission;
+  }
+
+  private void appDraftCreation(AppsBo app, Session session, AuditLogEventRequest auditRequest) {
+
+    if (app.getHasAppDraft().equals(0)) {
+      logger.info("AppDAOImpl - appDraftCreation() updateAppVersion- Starts");
+      // update all studies to archive (live as 2)
+      // pass customstudyId and making all study status belongs to same customstudyId
+      // as 2(archive)
+      query =
+          session
+              .getNamedQuery("updateAppVersion")
+              .setString(FdahpStudyDesignerConstants.CUSTOM_APP_ID, app.getCustomAppId());
+      query.executeUpdate();
+      logger.info("AppDAOImpl - appDraftCreation() updateAppVersion- Ends");
+
+      int countOfApps = getAppsByCustomAppId(app.getCustomAppId());
+      // create new Study and made it draft study
+      AppsBo appDraftBo = SerializationUtils.clone(app);
+      if (countOfApps == 1) {
+        appDraftBo.setVersion(1.0f);
+      } else {
+        AppsBo appLatestVersion = getAppByLatestVersion(app.getCustomAppId());
+        appDraftBo.setVersion(appLatestVersion.getVersion() + 0.1f);
+      }
+
+      appDraftBo.setLive(1);
+      appDraftBo.setId(null);
+      session.save(appDraftBo);
+
+      AppSequenceBo appSequenceBo =
+          (AppSequenceBo)
+              session
+                  .getNamedQuery("getAppSequenceByAppId")
+                  .setString("appId", app.getId())
+                  .uniqueResult();
+      AppSequenceBo appSequenceBoDraft = SerializationUtils.clone(appSequenceBo);
+      appSequenceBoDraft.setAppId(appDraftBo.getId());
+      appSequenceBoDraft.setAppSequenceId(null);
+      session.save(appSequenceBoDraft);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private int getAppsByCustomAppId(String customAppId) {
+
+    logger.entry("begin getAppsByCustomAppId()");
+    Session session = null;
+    List<AppsBo> appBoList = null;
+    int count = 0;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(customAppId)) {
+
+        appBoList =
+            session
+                .getNamedQuery("AppsBo.getAppByCustomAppId")
+                .setString("customAppId", customAppId)
+                .list();
+
+        count = appBoList.size();
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppsByCustomAppId() - ERROR ", e);
+    }
+    logger.exit("getAppsByCustomAppId() - Ends");
+    return count;
   }
 }

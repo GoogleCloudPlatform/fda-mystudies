@@ -43,7 +43,13 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(name = "getApps", query = " From AppsBo WHERE appStatus =:status order by createdOn"),
   @NamedQuery(
       name = "getAppByLatestVersion",
-      query = " From AppsBo WHERE customAppId =:customAppId order by version DESC LIMIT 1")
+      query = " From AppsBo WHERE customAppId =:customAppId order by version DESC LIMIT 1"),
+  @NamedQuery(
+      name = "updateAppVersion",
+      query = "UPDATE AppsBo SET live=2 WHERE customAppId =:customAppId and live=1"),
+  @NamedQuery(
+      name = "AppsBo.getAppByCustomAppId",
+      query = " From AppsBo WHERE customAppId =:customAppId")
 })
 public class AppsBo implements Serializable {
 
