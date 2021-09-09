@@ -132,7 +132,7 @@
       document.body.appendChild(a).click();
     });
    
-    <c:if test="${(appBo.appSequenceBo.appInfo && appBo.appSequenceBo.appSettings) || appBo.appStatus == 'Active'}">
+    <c:if test="${appBo.appStatus == 'Active'}">
     $('.third').click(function () {
       a.href = "/studybuilder/adminApps/viewAppProperties.do?_S=${param._S}";
       document.body.appendChild(a).click();

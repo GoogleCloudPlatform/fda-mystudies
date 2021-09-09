@@ -75,7 +75,7 @@
 							  cursor-none
 						</c:when>
 					</c:choose>" data-toggle="tooltip" data-placement="top"
-                	title="${(not empty app.liveAppId)?((app.flag)?'Edit draft version':'Edit'):'Edit draft version'}"
+                	title="${(not empty app.liveAppId)?((app.flag)?'Edit draft version':'Edit'):((app.createFlag)?'Edit':'Edit draft version')}"
                 	appId="${app.id}"></span>
                     <span class="sprites_icon  mr-lg viewStudiesClass <c:if test="${app.studiesCount eq 0}">
 								cursor-none
