@@ -33,6 +33,7 @@ public class AppListBean {
   private String type;
   private String createdOn;
   private boolean flag = false;
+  private boolean createFlag = false;
   private boolean viewPermission;
   private String liveAppId;
   private BigInteger studiesCount;
@@ -168,5 +169,13 @@ public class AppListBean {
 
   public void setLiveAppId(String liveAppId) {
     this.liveAppId = liveAppId;
+  }
+
+  public boolean isCreateFlag() {
+    return createFlag;
+  }
+
+  public void setCreateFlag(boolean createFlag) {
+    this.createFlag = createFlag;
   }
 }

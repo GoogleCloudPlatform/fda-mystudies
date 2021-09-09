@@ -65,7 +65,7 @@
                     <span class="sprites_icon preview-g mr-lg viewAppClass" isLive=""
                   appId="${app.id}"
                   permission="view" data-toggle="tooltip" data-placement="top" title="View"></span>
-                    <span class="${(not empty app.liveAppId)?((app.flag)?'edit-inc-draft mr-md':'edit-inc mr-md'):'edit-inc-draft mr-md'}
+                    <span class="${(not empty app.liveAppId)?((app.flag)?'edit-inc-draft mr-md':'edit-inc mr-md'):((app.createFlag)?'edit-inc mr-md':'edit-inc-draft mr-md')}
                     addEditAppClass 
                     <c:choose>
 						<c:when test="${not app.viewPermission}">

@@ -141,6 +141,18 @@ public class AppDAOImpl implements AppDAO {
               if (liveApp != null) {
                 appDetails.setLiveAppId(liveApp.getId());
               } else {
+                AppSequenceBo appSequenceBo =
+                    (AppSequenceBo)
+                        session
+                            .getNamedQuery("getAppSequenceByAppId")
+                            .setString("appId", appDetails.getId())
+                            .uniqueResult();
+
+                if (appSequenceBo.isAppInfo()
+                    && appSequenceBo.isAppSettings()
+                    && appSequenceBo.isActions()) {
+                  appDetails.setCreateFlag(true);
+                }
                 appDetails.setLiveAppId(null);
               }
             }
@@ -153,6 +165,7 @@ public class AppDAOImpl implements AppDAO {
                           .createQuery("from AppsBo where id=:id")
                           .setParameter("id", appDetails.getId())
                           .uniqueResult();
+
               if (appBo.getHasAppDraft() == 1) {
                 appDetails.setFlag(true);
               }
@@ -355,6 +368,7 @@ public class AppDAOImpl implements AppDAO {
           auditLogEvent = APP_INFORMATION_SAVED_OR_UPDATED;
           appSequenceBo.setAppInfo(false);
         }
+        appSequenceBo.setActions(false);
         session.saveOrUpdate(appSequenceBo);
       }
 
@@ -429,6 +443,7 @@ public class AppDAOImpl implements AppDAO {
           auditLogEvent = APP_SETTINGS_SAVED_OR_UPDATED;
           appSequenceBo.setAppSettings(false);
         }
+        appSequenceBo.setActions(false);
         session.saveOrUpdate(appSequenceBo);
       }
 
@@ -661,6 +676,7 @@ public class AppDAOImpl implements AppDAO {
           auditLogEvent = APP_PROPERTIES_SAVED_OR_UPDATED;
           appSequenceBo.setAppProperties(false);
         }
+        appSequenceBo.setActions(false);
         session.saveOrUpdate(appSequenceBo);
       }
 
