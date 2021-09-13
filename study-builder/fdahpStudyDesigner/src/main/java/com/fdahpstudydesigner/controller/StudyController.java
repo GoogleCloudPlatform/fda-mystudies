@@ -58,6 +58,7 @@ import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bean.StudyPageBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.Checklist;
 import com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo;
 import com.fdahpstudydesigner.bo.ConsentBo;
@@ -77,6 +78,7 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.AppService;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.service.StudyExportImportService;
@@ -151,6 +153,8 @@ public class StudyController {
   @Autowired private StudyDAO studyDao;
 
   @Autowired private OAuthService oauthService;
+
+  @Autowired private AppService appService;
 
   @RequestMapping("/adminStudies/actionList.do")
   public ModelAndView actionList(HttpServletRequest request) {
@@ -4536,6 +4540,13 @@ public class StudyController {
             }
           }
         }
+        List<AppsBo> apps = appService.getAppsForStudy(sesObj.getUserId());
+        AppsBo app = appService.getAppbyCustomAppId(studyBo.getAppId());
+        if (app != null) {
+          map.addAttribute("appName", app.getName());
+          map.addAttribute("appType", app.getType());
+        }
+        map.addAttribute("appsList", apps);
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");
