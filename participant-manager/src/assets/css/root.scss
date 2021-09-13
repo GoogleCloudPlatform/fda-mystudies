@@ -1723,3 +1723,8 @@ meter::-moz-meter-bar {
     display: none !important;
   }
 }
+@media only screen and (max-width: 340px) and (min-width: 320px) {
+  .btn_mb_2 {
+    margin-bottom: 20px !important;
+  }
+}
