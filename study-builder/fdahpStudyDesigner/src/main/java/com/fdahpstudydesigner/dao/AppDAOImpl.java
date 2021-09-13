@@ -112,7 +112,7 @@ public class AppDAOImpl implements AppDAO {
                   "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appStatus,a.type,a.createdOn)"
                       + " from AppsBo a, UserBO user"
                       + " where user.userId = a.createdBy"
-                      + " and a.version=0"
+                      + " and a.live=0"
                       + " order by a.createdOn desc");
 
         } else {
@@ -122,7 +122,7 @@ public class AppDAOImpl implements AppDAO {
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
                       + " and user.userId = a.createdBy"
-                      + " and a.version=0"
+                      + " and a.live=0"
                       + " and ap.userId=:impValue"
                       + " order by a.createdOn desc");
           query.setString(IMP_VALUE, userId);
@@ -917,7 +917,7 @@ public class AppDAOImpl implements AppDAO {
                   "Select DISTINCT a"
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
-                      + " and a.version=0 "
+                      + " and a.live=0 "
                       + " and ap.userId=:impValue"
                       + " and a.appStatus = 'Active'"
                       + " order by a.createdOn desc");

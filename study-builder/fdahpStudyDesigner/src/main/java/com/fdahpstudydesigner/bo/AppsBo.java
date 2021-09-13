@@ -38,7 +38,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "apps")
 @NamedQueries({
   @NamedQuery(name = "AppsBo.getAppsById", query = " From AppsBo ABO WHERE ABO.id =:id"),
-  @NamedQuery(name = "getApps", query = " From AppsBo WHERE appStatus =:status order by createdOn"),
+  @NamedQuery(
+      name = "getApps",
+      query = " From AppsBo WHERE appStatus =:status and live=0 order by createdOn"),
   @NamedQuery(
       name = "getAppByLatestVersion",
       query = " From AppsBo WHERE customAppId =:customAppId order by version DESC"),
