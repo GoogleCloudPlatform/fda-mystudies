@@ -90,7 +90,7 @@ button#exportId {
                <c:when test="${appBo.isAppPublished == true && appBo.hasAppDraft ne 1}">
                 disabled
               </c:when>
-              <c:when test="${not empty appBo.appSequenceBo && (not appBo.appSequenceBo.actions || not appBo.appSequenceBo.appProperties || not appBo.appSequenceBo.developerConfigs)}">
+              <c:when test="${not empty appBo.appSequenceBo && (appBo.appStatus ne 'Active' || not appBo.appSequenceBo.appProperties || not appBo.appSequenceBo.developerConfigs)}">
                 disabled
               </c:when>
                <c:when test="${markAsCompleted eq false}">
@@ -234,6 +234,8 @@ button#exportId {
 	  $('.appClass').addClass('active');
 	  $(".menuNav li.active").removeClass('active');
 	  $(".menuNav li.fifth").addClass('active');
+	  
+	  console.log("${markAsCompleted}");
 	 
  });
 
