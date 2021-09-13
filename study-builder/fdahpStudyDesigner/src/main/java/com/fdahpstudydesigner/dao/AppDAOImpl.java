@@ -55,6 +55,7 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.math.BigInteger;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -94,6 +95,7 @@ public class AppDAOImpl implements AppDAO {
     Session session = null;
     List<AppListBean> appListBean = null;
     AppsBo appBo = null;
+    AppsBo liveApp = null;
     BigInteger studyCount;
     try {
 
@@ -110,7 +112,7 @@ public class AppDAOImpl implements AppDAO {
                   "select new com.fdahpstudydesigner.bean.AppListBean(a.id,a.customAppId,a.name,a.appStatus,a.type,a.createdOn)"
                       + " from AppsBo a, UserBO user"
                       + " where user.userId = a.createdBy"
-                      + " and a.version=0"
+                      + " and a.live=0"
                       + " order by a.createdOn desc");
 
         } else {
@@ -120,7 +122,7 @@ public class AppDAOImpl implements AppDAO {
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
                       + " and user.userId = a.createdBy"
-                      + " and a.version=0"
+                      + " and a.live=0"
                       + " and ap.userId=:impValue"
                       + " order by a.createdOn desc");
           query.setString(IMP_VALUE, userId);
@@ -129,7 +131,7 @@ public class AppDAOImpl implements AppDAO {
         if ((appListBean != null) && !appListBean.isEmpty()) {
           for (AppListBean appDetails : appListBean) {
 
-            /*if (StringUtils.isNotEmpty(appDetails.getCustomAppId())) {
+            if (StringUtils.isNotEmpty(appDetails.getCustomAppId())) {
               liveApp =
                   (AppsBo)
                       session
@@ -139,19 +141,32 @@ public class AppDAOImpl implements AppDAO {
               if (liveApp != null) {
                 appDetails.setLiveAppId(liveApp.getId());
               } else {
+                AppSequenceBo appSequenceBo =
+                    (AppSequenceBo)
+                        session
+                            .getNamedQuery("getAppSequenceByAppId")
+                            .setString("appId", appDetails.getId())
+                            .uniqueResult();
+
+                if (appSequenceBo.isAppInfo()
+                    && appSequenceBo.isAppSettings()
+                    && appSequenceBo.isActions()) {
+                  appDetails.setCreateFlag(true);
+                }
                 appDetails.setLiveAppId(null);
               }
-            }*/
+            }
 
             // for draft app
-            if (appDetails.getId() != null) {
+            if (appDetails.getId() != null && (appDetails.getLiveAppId() != null)) {
               appBo =
                   (AppsBo)
                       session
                           .createQuery("from AppsBo where id=:id")
                           .setParameter("id", appDetails.getId())
                           .uniqueResult();
-              if (appBo.getHasAppDraft() != null && appBo.getHasAppDraft() == 1) {
+
+              if (appBo.getHasAppDraft() == 1) {
                 appDetails.setFlag(true);
               }
             }
@@ -320,7 +335,10 @@ public class AppDAOImpl implements AppDAO {
           if (StringUtils.isNotEmpty(appBo.getCustomAppId())) {
             dbappBo.setCustomAppId(appBo.getCustomAppId());
           }
-          dbappBo.setName(appBo.getName());
+
+          if (appBo.getName() != null) {
+            dbappBo.setName(appBo.getName());
+          }
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
 
@@ -350,6 +368,7 @@ public class AppDAOImpl implements AppDAO {
           auditLogEvent = APP_INFORMATION_SAVED_OR_UPDATED;
           appSequenceBo.setAppInfo(false);
         }
+        appSequenceBo.setActions(false);
         session.saveOrUpdate(appSequenceBo);
       }
 
@@ -389,10 +408,12 @@ public class AppDAOImpl implements AppDAO {
                     .setString("id", appBo.getId())
                     .uniqueResult();
         if (dbappBo != null) {
-          if (StringUtils.isNotEmpty(appBo.getType())) {
+          if (appBo.getType() != null) {
             dbappBo.setType(appBo.getType());
           }
-          dbappBo.setAppPlatform(appBo.getAppPlatform());
+          if (appBo.getAppPlatform() != null) {
+            dbappBo.setAppPlatform(appBo.getAppPlatform());
+          }
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
@@ -422,6 +443,7 @@ public class AppDAOImpl implements AppDAO {
           auditLogEvent = APP_SETTINGS_SAVED_OR_UPDATED;
           appSequenceBo.setAppSettings(false);
         }
+        appSequenceBo.setActions(false);
         session.saveOrUpdate(appSequenceBo);
       }
 
@@ -481,6 +503,8 @@ public class AppDAOImpl implements AppDAO {
             app.setIsAppPublished(true);
             app.setAppLaunchDate(FdahpStudyDesignerUtil.getCurrentDateTime());
             app.setHasAppDraft(0);
+
+            appDraftCreation(app, session, auditRequest);
 
           } else if (buttonText.equalsIgnoreCase("iosDistributedId")) {
             app.setIosAppDistributed(true);
@@ -550,14 +574,14 @@ public class AppDAOImpl implements AppDAO {
     logger.entry("begin getAppByLatestVersion()");
     Session session = null;
     AppsBo app = null;
+
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      app =
-          (AppsBo)
-              session
-                  .getNamedQuery("getAppByLatestVersion")
-                  .setString("customAppId", customAppId)
-                  .uniqueResult();
+      query = session.getNamedQuery("getAppByLatestVersion").setString("customAppId", customAppId);
+
+      query.setMaxResults(1);
+      app = (AppsBo) query.uniqueResult();
+
     } catch (Exception e) {
       logger.error("AppDAOImpl - getAppByLatestVersion() - ERROR", e);
     } finally {
@@ -589,16 +613,39 @@ public class AppDAOImpl implements AppDAO {
                     .setString("id", appBo.getId())
                     .uniqueResult();
         if (dbappBo != null) {
-          dbappBo.setFeedbackEmailAddress(appBo.getFeedbackEmailAddress());
-          dbappBo.setContactEmailAddress(appBo.getContactEmailAddress());
-          dbappBo.setAppSupportEmailAddress(appBo.getAppSupportEmailAddress());
-          dbappBo.setAppTermsUrl(appBo.getAppTermsUrl());
-          dbappBo.setAppPrivacyUrl(appBo.getAppPrivacyUrl());
-          dbappBo.setOrganizationName(appBo.getOrganizationName());
-          dbappBo.setAppStoreUrl(appBo.getAppStoreUrl());
-          dbappBo.setPlayStoreUrl(appBo.getPlayStoreUrl());
-          dbappBo.setFromEmailAddress(appBo.getFromEmailAddress());
-          dbappBo.setAppWebsiteUrl(appBo.getAppWebsiteUrl());
+          if (appBo.getFeedbackEmailAddress() != null) {
+            dbappBo.setFeedbackEmailAddress(appBo.getFeedbackEmailAddress());
+          }
+          if (appBo.getContactEmailAddress() != null) {
+            dbappBo.setContactEmailAddress(appBo.getContactEmailAddress());
+          }
+
+          if (appBo.getAppSupportEmailAddress() != null) {
+            dbappBo.setAppSupportEmailAddress(appBo.getAppSupportEmailAddress());
+          }
+          if (appBo.getAppTermsUrl() != null) {
+            dbappBo.setAppTermsUrl(appBo.getAppTermsUrl());
+          }
+          if (appBo.getAppPrivacyUrl() != null) {
+            dbappBo.setAppPrivacyUrl(appBo.getAppPrivacyUrl());
+          }
+          if (appBo.getOrganizationName() != null) {
+            dbappBo.setOrganizationName(appBo.getOrganizationName());
+          }
+          if (appBo.getAppStoreUrl() != null) {
+            dbappBo.setAppStoreUrl(appBo.getAppStoreUrl());
+          }
+          if (appBo.getPlayStoreUrl() != null) {
+            dbappBo.setPlayStoreUrl(appBo.getPlayStoreUrl());
+          }
+
+          if (appBo.getFromEmailAddress() != null) {
+            dbappBo.setFromEmailAddress(appBo.getFromEmailAddress());
+          }
+
+          if (appBo.getAppWebsiteUrl() != null) {
+            dbappBo.setAppWebsiteUrl(appBo.getAppWebsiteUrl());
+          }
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
@@ -627,6 +674,7 @@ public class AppDAOImpl implements AppDAO {
           auditLogEvent = APP_PROPERTIES_SAVED_OR_UPDATED;
           appSequenceBo.setAppProperties(false);
         }
+        appSequenceBo.setActions(false);
         session.saveOrUpdate(appSequenceBo);
       }
 
@@ -738,13 +786,32 @@ public class AppDAOImpl implements AppDAO {
                     .setString("id", appBo.getId())
                     .uniqueResult();
         if (dbappBo != null) {
-          dbappBo.setAndroidBundleId(appBo.getAndroidBundleId());
-          dbappBo.setAndroidServerKey(appBo.getAndroidServerKey());
-          dbappBo.setIosBundleId(appBo.getIosBundleId());
-          dbappBo.setIosServerKey(appBo.getIosServerKey());
-          dbappBo.setIosXCodeAppVersion(appBo.getIosXCodeAppVersion());
-          dbappBo.setIosAppBuildVersion(appBo.getIosAppBuildVersion());
-          dbappBo.setAndroidAppBuildVersion(appBo.getAndroidAppBuildVersion());
+
+          if (appBo.getAndroidBundleId() != null) {
+            dbappBo.setAndroidBundleId(appBo.getAndroidBundleId());
+          }
+
+          if (appBo.getAndroidServerKey() != null) {
+            dbappBo.setAndroidServerKey(appBo.getAndroidServerKey());
+          }
+          if (appBo.getIosBundleId() != null) {
+            dbappBo.setIosBundleId(appBo.getIosBundleId());
+          }
+
+          if (appBo.getIosServerKey() != null) {
+            dbappBo.setIosServerKey(appBo.getIosServerKey());
+          }
+
+          if (appBo.getIosXCodeAppVersion() != null) {
+            dbappBo.setIosXCodeAppVersion(appBo.getIosXCodeAppVersion());
+          }
+          if (appBo.getIosAppBuildVersion() != null) {
+            dbappBo.setIosAppBuildVersion(appBo.getIosAppBuildVersion());
+          }
+
+          if (appBo.getAndroidAppBuildVersion() != null) {
+            dbappBo.setAndroidAppBuildVersion(appBo.getAndroidAppBuildVersion());
+          }
 
           VersionInfoBO versionInfoBO =
               (VersionInfoBO)
@@ -757,7 +824,7 @@ public class AppDAOImpl implements AppDAO {
             versionInfoBO = new VersionInfoBO();
           }
 
-          if (StringUtils.isNotEmpty(appBo.getAndroidAppBuildVersion())) {
+          if (appBo.getAndroidAppBuildVersion() != null) {
             versionInfoBO.setAndroid(appBo.getAndroidAppBuildVersion());
           }
 
@@ -849,7 +916,7 @@ public class AppDAOImpl implements AppDAO {
                   "Select DISTINCT a"
                       + " from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
-                      + " and a.version=0 "
+                      + " and a.live=0 "
                       + " and ap.userId=:impValue"
                       + " and a.appStatus IN ('Active','Deactivated')"
                       + " order by a.createdOn desc");
@@ -1042,5 +1109,71 @@ public class AppDAOImpl implements AppDAO {
       }
     }
     return versionInfoBO;
+  }
+
+  private void appDraftCreation(AppsBo app, Session session, AuditLogEventRequest auditRequest) {
+    if (app.getHasAppDraft().equals(0)) {
+      logger.info("AppDAOImpl - appDraftCreation() updateAppVersion- Starts");
+      // update all studies to archive (live as 2)
+      // pass customstudyId and making all study status belongs to same customstudyId
+      // as 2(archive)
+      query =
+          session
+              .getNamedQuery("updateAppVersion")
+              .setString(FdahpStudyDesignerConstants.CUSTOM_APP_ID, app.getCustomAppId());
+      query.executeUpdate();
+      logger.info("AppDAOImpl - appDraftCreation() updateAppVersion- Ends");
+
+      int countOfApps = getAppsByCustomAppId(app.getCustomAppId());
+      // create new Study and made it draft study
+      AppsBo appDraftBo = SerializationUtils.clone(app);
+      if (countOfApps == 1) {
+        appDraftBo.setVersion(1.0f);
+      } else {
+        AppsBo appLatestVersion = getAppByLatestVersion(app.getCustomAppId());
+        appDraftBo.setVersion(appLatestVersion.getVersion() + 0.1f);
+      }
+
+      appDraftBo.setLive(1);
+      appDraftBo.setId(null);
+      session.save(appDraftBo);
+
+      AppSequenceBo appSequenceBo =
+          (AppSequenceBo)
+              session
+                  .getNamedQuery("getAppSequenceByAppId")
+                  .setString("appId", app.getId())
+                  .uniqueResult();
+      AppSequenceBo appSequenceBoDraft = SerializationUtils.clone(appSequenceBo);
+      appSequenceBoDraft.setAppId(appDraftBo.getId());
+      appSequenceBoDraft.setAppSequenceId(null);
+      session.save(appSequenceBoDraft);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private int getAppsByCustomAppId(String customAppId) {
+
+    logger.entry("begin getAppsByCustomAppId()");
+    Session session = null;
+    List<AppsBo> appBoList = null;
+    int count = 0;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(customAppId)) {
+
+        appBoList =
+            session
+                .getNamedQuery("AppsBo.getAppByCustomAppId")
+                .setString("customAppId", customAppId)
+                .list();
+
+        count = appBoList.size();
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppsByCustomAppId() - ERROR ", e);
+    }
+    logger.exit("getAppsByCustomAppId() - Ends");
+    return count;
   }
 }
