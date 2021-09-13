@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.APP_STUDY_ID_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.EMAIL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 
@@ -84,7 +85,7 @@ public class AppEntity implements Serializable {
 
   @ToString.Exclude
   @Column(name = "from_email_id", length = LARGE_LENGTH)
-  private String formEmailId;
+  private String fromEmailId;
 
   @ToString.Exclude
   @Column(name = "from_email_password", length = LARGE_LENGTH)
@@ -123,6 +124,60 @@ public class AppEntity implements Serializable {
   @Column(name = "created_time")
   @CreationTimestamp
   private Timestamp created;
+
+  @ToString.Exclude
+  @Column(name = "contact_us_to_email", length = EMAIL_LENGTH)
+  private String contactUsToEmail;
+
+  @ToString.Exclude
+  @Column(name = "feedback_to_email", length = EMAIL_LENGTH)
+  private String feedBackToEmail;
+
+  @ToString.Exclude
+  @Column(name = "app_support_email_address", length = EMAIL_LENGTH)
+  private String appSupportEmailAddress;
+
+  @Column(name = "app_platform")
+  private String appPlatform;
+
+  @Column(name = "app_store_url")
+  private String appStoreUrl;
+
+  @Column(name = "app_privacy_url")
+  private String appPrivacyUrl;
+
+  @Column(name = "play_store_url")
+  private String playStoreUrl;
+
+  @Column(name = "app_terms_url")
+  private String appTermsUrl;
+
+  @Column(name = "organization_name")
+  private String organizationName;
+
+  @Column(name = "ios_latest_xcode_app_version")
+  private String iosXCodeAppVersion;
+
+  @Column(name = "ios_latest_app_build_version")
+  private String iosAppBuildVersion;
+
+  @Column(name = "ios_force_upgrade")
+  private Boolean iosForceUpgrade;
+
+  @Column(name = "android_latest_app_version")
+  private String androidAppBuildVersion;
+
+  @Column(name = "android_force_upgrade")
+  private Boolean androidForceUpgrade;
+
+  @Column(name = "type")
+  private String type;
+
+  @Column(name = "app_website")
+  private String appWebsite;
+
+  @Column(name = "app_status")
+  private String appStatus = "Active";
 
   @OneToMany(
       cascade = CascadeType.ALL,
