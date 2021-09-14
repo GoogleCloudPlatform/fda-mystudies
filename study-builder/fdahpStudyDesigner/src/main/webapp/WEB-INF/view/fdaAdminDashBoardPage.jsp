@@ -256,7 +256,7 @@
         });
 
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
-        $(".studyListId").addClass('cursor-none');
+        $(".studyListId").addClass('hide');
         $(".studyListId").unbind();
         </c:if>
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
@@ -265,8 +265,10 @@
         </c:if>   
         
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS') && not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
-        $(".appListId").addClass('cursor-none');
+        $(".appListId").addClass('hide');
         $(".appListId").unbind();
+        $(".notificationListId").addClass('hide');
+        $(".notificationListId").unbind();
         </c:if> 
        
 

@@ -33,6 +33,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.IOS_APP_MARKE
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_APP_CREATION_INITIATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_APP_RECORD_CREATED;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.BUTTON_TEXT;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.CUSTOM_APP_ID;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SESSION_OBJECT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -345,6 +346,7 @@ public class AppControllerTest extends BaseMockIT {
             post(UPDATE_APP_ACTION.getPath())
                 .param("appId", APP_ID_VALUE)
                 .param(BUTTON_TEXT, "publishAppId")
+                .param(CUSTOM_APP_ID, "BTCDEVV004")
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
