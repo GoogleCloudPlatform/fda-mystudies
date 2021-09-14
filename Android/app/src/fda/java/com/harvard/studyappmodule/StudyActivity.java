@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.customtabs.CustomTabsIntent;
@@ -70,6 +71,8 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
+import com.harvard.utils.version.Version;
+import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import io.realm.Realm;
@@ -110,6 +113,7 @@ public class StudyActivity extends AppCompatActivity
   private AppCompatTextView signOutLabel;
   private int previousValue = 0; // 0 means signup 1 means signout
   private static final int LOGOUT_REPSONSE_CODE = 100;
+  private static final int RESULT_CODE_UPGRADE = 101;
   private AppCompatTextView editTxt;
   private ProfileFragment profileFragment;
   private boolean isExit = false;
@@ -124,6 +128,11 @@ public class StudyActivity extends AppCompatActivity
   private RelativeLayout clearLayout;
   private String intentFrom = "";
   private BroadcastReceiver receiver;
+  private static AlertDialog alertDialog;
+  VersionReceiver versionReceiver;
+  private String latestVersion;
+  private boolean force = false;
+  AlertDialog.Builder alertDialogBuilder;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +192,11 @@ public class StudyActivity extends AppCompatActivity
         Logger.log(e);
       }
     }
+
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(BuildConfig.APPLICATION_ID);
+    versionReceiver = new VersionReceiver();
+    registerReceiver(versionReceiver, filter);
   }
 
   @Override
@@ -192,6 +206,17 @@ public class StudyActivity extends AppCompatActivity
       this.unregisterReceiver(this.receiver);
     } catch (Exception e) {
       Logger.log(e);
+    }
+    try {
+      unregisterReceiver(versionReceiver);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      if (alertDialog != null)
+        alertDialog.dismiss();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
@@ -1093,6 +1118,36 @@ public class StudyActivity extends AppCompatActivity
             .replace(R.id.frameLayoutContainer, new ResourcesFragment(), "fragment")
             .commit();
       }
+    }else if (requestCode == RESULT_CODE_UPGRADE) {
+      Version currVer = new Version(AppController.currentVersion());
+      Version latestVer = new Version(latestVersion);
+      if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
+        Logger.info(BuildConfig.APPLICATION_ID, "App Updated");
+      } else {
+        if (force) {
+          Toast.makeText(
+              StudyActivity.this,
+              "Please update the app to continue using",
+              Toast.LENGTH_SHORT)
+              .show();
+          finish();
+        } else {
+          AlertDialog.Builder alertDialogBuilder =
+              new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
+          alertDialogBuilder.setTitle("Upgrade");
+          alertDialogBuilder
+              .setMessage("Please consider updating app next time")
+              .setCancelable(false)
+              .setPositiveButton(
+                  "ok",
+                  new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                      dialog.dismiss();
+                    }
+                  }).show();
+
+        }
+      }
     }
   }
 
@@ -1199,5 +1254,86 @@ public class StudyActivity extends AppCompatActivity
       Logger.log(e);
     }
     return key;
+  }
+
+  public class VersionReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (intent.getStringExtra("api").equalsIgnoreCase("success")) {
+        Version currVer = new Version(AppController.currentVersion());
+        Version latestVer = new Version(intent.getStringExtra("latestVersion"));
+
+        latestVersion = intent.getStringExtra("latestVersion");
+        force = Boolean.parseBoolean(intent.getStringExtra("force"));
+
+        if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
+          isUpgrade(false, latestVersion, force);
+        } else {
+          AppController.getHelperSharedPreference().writePreference(StudyActivity.this, "versionalert", "done");
+          isUpgrade(true, latestVersion, force);
+        }
+      } else {
+        Toast.makeText(StudyActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT < 21) {
+          finishAffinity();
+        } else {
+          finishAndRemoveTask();
+        }
+      }
+    }
+  }
+
+  public void isUpgrade(boolean b, String latestVersion, final boolean force) {
+    this.latestVersion = latestVersion;
+    this.force = force;
+    String msg;
+    String positiveButton;
+    String negativeButton;
+    if (b) {
+      if (force) {
+        msg = "Please upgrade the app to continue.";
+        positiveButton = "Ok";
+        negativeButton = "Cancel";
+      } else {
+        msg = "A new version of this app is available. Do you want to update it now?";
+        positiveButton = "Yes";
+        negativeButton = "Skip";
+      }
+      alertDialogBuilder =
+          new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder.setTitle("Upgrade");
+      alertDialogBuilder
+          .setMessage(msg)
+          .setCancelable(false)
+          .setPositiveButton(
+              positiveButton,
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  startActivityForResult(
+                      new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
+                      RESULT_CODE_UPGRADE);
+                }
+              })
+          .setNegativeButton(
+              negativeButton,
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  dialog.dismiss();
+                  if (force) {
+                    Toast.makeText(
+                        StudyActivity.this,
+                        "Please update the app to continue using",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                    finish();
+                  } else {
+                    dialog.dismiss();
+                  }
+                }
+              });
+      alertDialog = alertDialogBuilder.create();
+      alertDialog.show();
+    }
   }
 }

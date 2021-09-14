@@ -64,10 +64,16 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
       } else {
         title.setText(getIntent().getStringExtra("title"));
       }
+      AppController.getHelperProgressDialog().showProgress(TermsPrivacyPolicyActivity.this,"","",false);
       webView.getSettings().setLoadsImagesAutomatically(true);
       webView.getSettings().setJavaScriptEnabled(true);
-      webView.setWebViewClient(new WebViewClient());
       webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+      webView.setWebViewClient(new WebViewClient() {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+          AppController.getHelperProgressDialog().dismissDialog();
+        }
+      });
       if (getIntent().getStringExtra("url") == null) {
         DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
         Realm realm = AppController.getRealmobj(TermsPrivacyPolicyActivity.this);

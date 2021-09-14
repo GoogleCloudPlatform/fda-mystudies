@@ -459,6 +459,7 @@ public class NotificationModuleSubscriber {
   public void cancleResourcesLocalNotification(Context context) {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+    Realm realm = AppController.getRealmobj(context);
     RealmResults<PendingIntentsResources> pendingIntentses =
             dbServiceSubscriber.getPendingIntentIdResources(realm);
     if (pendingIntentses == null) {
@@ -484,6 +485,7 @@ public class NotificationModuleSubscriber {
       broadcast.cancel();
       alarmManager.cancel(broadcast);
     }
+    new DbServiceSubscriber().closeRealmObj(realm);
   }
 
   public void cancleResourcesLocalNotificationByIds(
@@ -551,6 +553,7 @@ public class NotificationModuleSubscriber {
   public void cancleActivityLocalNotification(Context context) {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+    Realm realm = AppController.getRealmobj(context);
     RealmResults<PendingIntents> pendingIntentses = dbServiceSubscriber.getPendingIntentId(realm);
     if (pendingIntentses != null) {
       for (PendingIntents pendingIntents : pendingIntentses) {
@@ -574,6 +577,7 @@ public class NotificationModuleSubscriber {
         alarmManager.cancel(broadcast);
       }
     }
+    new DbServiceSubscriber().closeRealmObj(realm);
   }
 
   private void updateNotificationToDbAndSetAlarm(

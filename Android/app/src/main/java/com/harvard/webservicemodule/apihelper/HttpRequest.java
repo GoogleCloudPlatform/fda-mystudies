@@ -23,6 +23,9 @@ import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
+import com.harvard.usermodule.model.Apps;
+import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import java.io.BufferedReader;
@@ -55,6 +58,8 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONObject;
+
+import io.realm.Realm;
 
 public class HttpRequest {
 
@@ -194,7 +199,14 @@ public class HttpRequest {
         }
         httppost.addHeader(CONTENT_TYPE_KEY, APPLICATION_JSON);
         httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        httppost.addHeader(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
+        DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+        Realm realm = AppController.getRealmobj(FdaApplication.getInstance());
+        Apps apps = dbServiceSubscriber.getApps(realm);
+        if (apps == null)
+          httppost.addHeader(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
+        else
+          httppost.addHeader(APP_NAME_KEY, dbServiceSubscriber.getApps(realm).getAppName());
+        dbServiceSubscriber.closeRealmObj(realm);
         httppost.addHeader(SOURCE_KEY, SOURCE_VALUE);
         httppost.addHeader(MOBILE_PLATFORM_KEY, MOBILE_PLATFORM_VALUE);
         httppost.addHeader(CORRELATION_ID_KEY, FdaApplication.getRandomString());
@@ -300,7 +312,14 @@ public class HttpRequest {
       conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestProperty(CONTENT_TYPE_KEY, APPLICATION_JSON);
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
+      DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+      Realm realm = AppController.getRealmobj(FdaApplication.getInstance());
+      Apps apps = dbServiceSubscriber.getApps(realm);
+      if (apps == null)
+        conn.setRequestProperty(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
+      else
+        conn.setRequestProperty(APP_NAME_KEY, apps.getAppName());
+      dbServiceSubscriber.closeRealmObj(realm);
       conn.setRequestProperty(SOURCE_KEY, SOURCE_VALUE);
       conn.setRequestProperty(MOBILE_PLATFORM_KEY, MOBILE_PLATFORM_VALUE);
       conn.setRequestProperty(CORRELATION_ID_KEY, FdaApplication.getRandomString());

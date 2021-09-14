@@ -55,7 +55,7 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
 
   private static final int PASSCODE_RESPONSE = 101;
   private static final int APPS_RESPONSE = 103;
-  private String newVersion = "109";
+  private String newVersion;
   private boolean force = false;
   private static final int RESULT_CODE_UPGRADE = 102;
   private Apps apps;
@@ -117,14 +117,14 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
     AppController.getHelperProgressDialog().dismissDialog();
     if (responseCode == APPS_RESPONSE) {
       apps = (Apps) response;
-      if (apps != null) {
+      if (apps != null && apps.getVersion().getAndroid().getLatestVersion() != null) {
         DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
         apps.setAppId(AppConfig.APP_ID_VALUE);
         dbServiceSubscriber.saveApps(SplashActivity.this, apps);
-        Version currVer = new Version(currentVersion());
-//        Version newVer = new Version(apps.getVersion().getAndroid().getLatestVersion());
-//        force = Boolean.parseBoolean(apps.getVersion().getAndroid().getForceUpdate());
-        Version newVer = new Version(newVersion);
+        Version currVer = new Version(AppController.currentVersion());
+        Version newVer = new Version(apps.getVersion().getAndroid().getLatestVersion());
+        newVersion = apps.getVersion().getAndroid().getLatestVersion();
+        force = Boolean.parseBoolean(apps.getVersion().getAndroid().getForceUpdate());
         if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
           isUpgrade(false, newVersion, force);
         } else {
@@ -220,7 +220,7 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == RESULT_CODE_UPGRADE) {
-      Version currVer = new Version(currentVersion());
+      Version currVer = new Version(AppController.currentVersion());
       Version newVer = new Version(newVersion);
       if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
         proceedToApp();
@@ -288,15 +288,27 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
   public void isUpgrade(boolean b, String newVersion, final boolean force) {
     this.newVersion = newVersion;
     this.force = force;
+    String msg;
+    String positiveButton;
+    String negativeButton;
     if (b) {
+      if (force) {
+        msg = "Please upgrade the app to continue.";
+        positiveButton = "Ok";
+        negativeButton = "Cancel";
+      } else {
+        msg = "A new version of this app is available. Do you want to update it now?";
+        positiveButton = "Yes";
+        negativeButton = "Skip";
+      }
       AlertDialog.Builder alertDialogBuilder =
           new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle("Upgrade");
       alertDialogBuilder
-          .setMessage("Please upgrade the app to continue.")
+          .setMessage(msg)
           .setCancelable(false)
           .setPositiveButton(
-              "Upgrade",
+              positiveButton,
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                   startActivityForResult(
@@ -305,7 +317,7 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
                 }
               })
           .setNegativeButton(
-              "Cancel",
+              negativeButton,
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -342,9 +354,5 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
     } else {
       loadsplash();
     }
-  }
-
-  public String currentVersion() {
-    return String.valueOf(BuildConfig.VERSION_CODE);
   }
 }

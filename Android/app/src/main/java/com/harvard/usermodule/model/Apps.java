@@ -18,7 +18,7 @@ public class Apps extends RealmObject {
   private String contactUsEmail;
   private String termsUrl;
   private String privacyPolicyUrl;
-  private String AppWebsite;
+  private String appWebsite;
   private VersionModel version;
 
   public int getStatus() {
@@ -94,11 +94,11 @@ public class Apps extends RealmObject {
   }
 
   public String getAppWebsite() {
-    return AppWebsite;
+    return appWebsite;
   }
 
   public void setAppWebsite(String appWebsite) {
-    AppWebsite = appWebsite;
+    this.appWebsite = appWebsite;
   }
 
   public VersionModel getVersion() {

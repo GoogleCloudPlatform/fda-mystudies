@@ -1042,9 +1042,15 @@ public class DbServiceSubscriber {
   public void deleteDb(Context context) {
     try {
       realm = AppController.getRealmobj(context);
+      Apps apps = getApps(realm);
+      Apps tempApps = null;
       realm.beginTransaction();
+      if (apps != null)
+         tempApps = realm.copyFromRealm(apps);
       realm.deleteAll();
       realm.commitTransaction();
+      if (tempApps != null)
+        saveApps(context, tempApps);
       closeRealmObj(realm);
     } catch (Exception e) {
       Logger.log(e);
