@@ -17,6 +17,7 @@
 package com.harvard.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,6 +37,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
 import com.harvard.R;
 import com.harvard.SplashActivity;
 import com.harvard.gatewaymodule.GatewayActivity;
@@ -1029,5 +1031,20 @@ public class AppController {
       }
     }
     return params;
+  }
+
+  public static String currentVersion() {
+    return String.valueOf(BuildConfig.VERSION_CODE);
+  }
+
+  public static boolean isMyServiceRunning(Context context, Class<?> serviceClass) {
+    ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+    for (ActivityManager.RunningServiceInfo service :
+        manager.getRunningServices(Integer.MAX_VALUE)) {
+      if (serviceClass.getName().equals(service.service.getClassName())) {
+        return true;
+      }
+    }
+    return false;
   }
 }

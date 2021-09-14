@@ -102,7 +102,7 @@ public class RealmMigrationHelper implements RealmMigration {
           .addField("status", int.class)
           .addField("code", String.class)
           .addField("termsUrl", String.class)
-          .addField("AppWebsite", String.class)
+          .addField("appWebsite", String.class)
           .addField("version", VersionModel.class);
 
       oldVersion++;

@@ -135,13 +135,19 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         displayPdfView(finalSharingFile.getAbsolutePath());
       }
     } else if (intentType.equalsIgnoreCase("url")) {
+      AppController.getHelperProgressDialog().showProgress(GatewayResourcesWebViewActivity.this,"","",false);
       shareBtn.setVisibility(View.GONE);
       pdfView.setVisibility(View.GONE);
       webView.setVisibility(View.VISIBLE);
       title.setText(intentTitle);
       webView.getSettings().setLoadsImagesAutomatically(true);
       webView.getSettings().setJavaScriptEnabled(true);
-      webView.setWebViewClient(new WebViewClient());
+      webView.setWebViewClient(new WebViewClient() {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+          AppController.getHelperProgressDialog().dismissDialog();
+        }
+      });
       webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
       webView.loadUrl(getIntent().getStringExtra("content"));
     }

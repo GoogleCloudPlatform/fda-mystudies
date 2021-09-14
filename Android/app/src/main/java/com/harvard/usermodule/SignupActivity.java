@@ -105,6 +105,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     termsAndConditionData = new TermsAndConditionData();
     termsAndConditionData.setPrivacy(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
     termsAndConditionData.setTerms(dbServiceSubscriber.getApps(realm).getTermsUrl());
+    dbServiceSubscriber.closeRealmObj(realm);
   }
 
   private void initializeXmlId() {
