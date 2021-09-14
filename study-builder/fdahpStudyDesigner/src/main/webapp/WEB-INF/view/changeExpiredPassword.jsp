@@ -112,7 +112,7 @@
                        maxlength="64" data-minlength="8" placeholder="New password"
                        data-error="Password is invalid"
                        required data-error="Please fill out this field" 
-                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,14}"
+                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
                 <span class="arrowLeftSugg"></span>
