@@ -19,7 +19,6 @@ import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ERR_MSG;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE_APP_MESSAGE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FAILURE_DEACTIVATE_APP_MESSAGE;
-import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IS_LIVE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.MESSAGE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.PERMISSION;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.SAVE_STUDY_SUCCESS_MESSAGE;
@@ -168,16 +167,6 @@ public class AppController {
                         (String) request.getSession().getAttribute(sessionAppCount + PERMISSION))
                     ? ""
                     : request.getSession().getAttribute(sessionAppCount + PERMISSION));
-        String isLive =
-            (String)
-                (FdahpStudyDesignerUtil.isEmpty(
-                        (String) request.getSession().getAttribute(sessionAppCount + IS_LIVE))
-                    ? ""
-                    : request.getSession().getAttribute(sessionAppCount + IS_LIVE));
-
-        if (FdahpStudyDesignerUtil.isEmpty(isLive)) {
-          request.getSession().removeAttribute(sessionAppCount + IS_LIVE);
-        }
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
@@ -336,16 +325,6 @@ public class AppController {
                         (String) request.getSession().getAttribute(sessionAppCount + PERMISSION))
                     ? ""
                     : request.getSession().getAttribute(sessionAppCount + PERMISSION));
-        String isLive =
-            (String)
-                (FdahpStudyDesignerUtil.isEmpty(
-                        (String) request.getSession().getAttribute(sessionAppCount + IS_LIVE))
-                    ? ""
-                    : request.getSession().getAttribute(sessionAppCount + IS_LIVE));
-
-        if (FdahpStudyDesignerUtil.isEmpty(isLive)) {
-          request.getSession().removeAttribute(sessionAppCount + IS_LIVE);
-        }
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
 
@@ -466,16 +445,6 @@ public class AppController {
                         (String) request.getSession().getAttribute(sessionAppCount + PERMISSION))
                     ? ""
                     : request.getSession().getAttribute(sessionAppCount + PERMISSION));
-        String isLive =
-            (String)
-                (FdahpStudyDesignerUtil.isEmpty(
-                        (String) request.getSession().getAttribute(sessionAppCount + IS_LIVE))
-                    ? ""
-                    : request.getSession().getAttribute(sessionAppCount + IS_LIVE));
-
-        if (FdahpStudyDesignerUtil.isEmpty(isLive)) {
-          request.getSession().removeAttribute(sessionAppCount + IS_LIVE);
-        }
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
@@ -530,16 +499,6 @@ public class AppController {
                         (String) request.getSession().getAttribute(sessionAppCount + PERMISSION))
                     ? ""
                     : request.getSession().getAttribute(sessionAppCount + PERMISSION));
-        String isLive =
-            (String)
-                (FdahpStudyDesignerUtil.isEmpty(
-                        (String) request.getSession().getAttribute(sessionAppCount + IS_LIVE))
-                    ? ""
-                    : request.getSession().getAttribute(sessionAppCount + IS_LIVE));
-
-        if (FdahpStudyDesignerUtil.isEmpty(isLive)) {
-          request.getSession().removeAttribute(sessionAppCount + IS_LIVE);
-        }
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
@@ -597,16 +556,6 @@ public class AppController {
                         (String) request.getSession().getAttribute(sessionAppCount + PERMISSION))
                     ? ""
                     : request.getSession().getAttribute(sessionAppCount + PERMISSION));
-        String isLive =
-            (String)
-                (FdahpStudyDesignerUtil.isEmpty(
-                        (String) request.getSession().getAttribute(sessionAppCount + IS_LIVE))
-                    ? ""
-                    : request.getSession().getAttribute(sessionAppCount + IS_LIVE));
-
-        if (FdahpStudyDesignerUtil.isEmpty(isLive)) {
-          request.getSession().removeAttribute(sessionAppCount + IS_LIVE);
-        }
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
         }
@@ -643,10 +592,6 @@ public class AppController {
         FdahpStudyDesignerUtil.isEmpty(request.getParameter(PERMISSION))
             ? ""
             : request.getParameter(PERMISSION);
-    String isLive =
-        FdahpStudyDesignerUtil.isEmpty(request.getParameter(IS_LIVE))
-            ? ""
-            : request.getParameter(IS_LIVE);
     String customAppId =
         FdahpStudyDesignerUtil.isEmpty(request.getParameter(CUSTOM_APP_ID))
             ? ""
@@ -710,7 +655,6 @@ public class AppController {
       request.getSession().setAttribute("sessionStudyCount", sessionAppCount);
       request.getSession().setAttribute(sessionAppCount + APP_ID, appId);
       request.getSession().setAttribute(sessionAppCount + PERMISSION, permission);
-      request.getSession().setAttribute(sessionAppCount + IS_LIVE, isLive);
 
       modelAndView = new ModelAndView("redirect:/adminApps/viewAppsInfo.do", map);
     } catch (Exception e) {

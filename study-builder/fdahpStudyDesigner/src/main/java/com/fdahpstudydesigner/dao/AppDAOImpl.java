@@ -577,9 +577,12 @@ public class AppDAOImpl implements AppDAO {
 
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.getNamedQuery("getAppByLatestVersion").setString("customAppId", customAppId);
+      query =
+          session
+              .getNamedQuery("getAppByLatestVersion")
+              .setString("customAppId", customAppId)
+              .setMaxResults(1);
 
-      query.setMaxResults(1);
       app = (AppsBo) query.uniqueResult();
 
     } catch (Exception e) {
@@ -757,7 +760,7 @@ public class AppDAOImpl implements AppDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       query =
           session.createQuery(
-              " FROM AppsBo ABO WHERE ABO.version = 0 AND ABO.appStatus <> :deActivateStatus");
+              " FROM AppsBo ABO WHERE ABO.live = 0 AND ABO.appStatus <> :deActivateStatus");
       query.setParameter("deActivateStatus", FdahpStudyDesignerConstants.APP_DEACTIVATED);
       appList = query.list();
     } catch (Exception e) {
@@ -1016,7 +1019,7 @@ public class AppDAOImpl implements AppDAO {
           appListBean =
               session
                   .createQuery(
-                      "FROM AppsBo a WHERE a.appStatus = 'Active' AND a.customAppId NOT IN "
+                      "FROM AppsBo a WHERE a.appStatus = 'Active' AND a.live=0 AND a.customAppId NOT IN "
                           + "(SELECT s.appId FROM StudyBo s where s.type='SD' AND s.appId IS NOT NULL) "
                           + "order by a.createdOn desc ")
                   .list();
@@ -1026,7 +1029,7 @@ public class AppDAOImpl implements AppDAO {
               session.createQuery(
                   " SELECT DISTINCT a from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
-                      + " and a.version=0 and ap.viewPermission = '1'"
+                      + " and a.live=0 and ap.viewPermission = '1'"
                       + " and ap.userId=:impValue"
                       + " and a.appStatus = 'Active' AND a.customAppId NOT IN "
                       + " (SELECT s.appId FROM StudyBo s where s.type='SD' AND s.appId IS NOT NULL) "
@@ -1112,43 +1115,41 @@ public class AppDAOImpl implements AppDAO {
   }
 
   private void appDraftCreation(AppsBo app, Session session, AuditLogEventRequest auditRequest) {
-    if (app.getHasAppDraft().equals(0)) {
-      logger.info("AppDAOImpl - appDraftCreation() updateAppVersion- Starts");
-      // update all studies to archive (live as 2)
-      // pass customstudyId and making all study status belongs to same customstudyId
-      // as 2(archive)
-      query =
-          session
-              .getNamedQuery("updateAppVersion")
-              .setString(FdahpStudyDesignerConstants.CUSTOM_APP_ID, app.getCustomAppId());
-      query.executeUpdate();
-      logger.info("AppDAOImpl - appDraftCreation() updateAppVersion- Ends");
+    logger.info("AppDAOImpl - appDraftCreation() updateAppVersion- Starts");
+    // update all studies to archive (live as 2)
+    // pass customstudyId and making all study status belongs to same customstudyId
+    // as 2(archive)
+    query =
+        session
+            .getNamedQuery("updateAppVersion")
+            .setString(FdahpStudyDesignerConstants.CUSTOM_APP_ID, app.getCustomAppId());
+    query.executeUpdate();
+    logger.info("AppDAOImpl - appDraftCreation() updateAppVersion- Ends");
 
-      int countOfApps = getAppsByCustomAppId(app.getCustomAppId());
-      // create new Study and made it draft study
-      AppsBo appDraftBo = SerializationUtils.clone(app);
-      if (countOfApps == 1) {
-        appDraftBo.setVersion(1.0f);
-      } else {
-        AppsBo appLatestVersion = getAppByLatestVersion(app.getCustomAppId());
-        appDraftBo.setVersion(appLatestVersion.getVersion() + 0.1f);
-      }
-
-      appDraftBo.setLive(1);
-      appDraftBo.setId(null);
-      session.save(appDraftBo);
-
-      AppSequenceBo appSequenceBo =
-          (AppSequenceBo)
-              session
-                  .getNamedQuery("getAppSequenceByAppId")
-                  .setString("appId", app.getId())
-                  .uniqueResult();
-      AppSequenceBo appSequenceBoDraft = SerializationUtils.clone(appSequenceBo);
-      appSequenceBoDraft.setAppId(appDraftBo.getId());
-      appSequenceBoDraft.setAppSequenceId(null);
-      session.save(appSequenceBoDraft);
+    int countOfApps = getAppsByCustomAppId(app.getCustomAppId());
+    // create new Study and made it draft study
+    AppsBo appDraftBo = SerializationUtils.clone(app);
+    if (countOfApps == 1) {
+      appDraftBo.setVersion(1.0f);
+    } else {
+      AppsBo appLatestVersion = getAppByLatestVersion(app.getCustomAppId());
+      appDraftBo.setVersion(appLatestVersion.getVersion() + 0.1f);
     }
+
+    appDraftBo.setLive(1);
+    appDraftBo.setId(null);
+    session.save(appDraftBo);
+
+    AppSequenceBo appSequenceBo =
+        (AppSequenceBo)
+            session
+                .getNamedQuery("getAppSequenceByAppId")
+                .setString("appId", app.getId())
+                .uniqueResult();
+    AppSequenceBo appSequenceBoDraft = SerializationUtils.clone(appSequenceBo);
+    appSequenceBoDraft.setAppId(appDraftBo.getId());
+    appSequenceBoDraft.setAppSequenceId(null);
+    session.save(appSequenceBoDraft);
   }
 
   @SuppressWarnings("unchecked")
