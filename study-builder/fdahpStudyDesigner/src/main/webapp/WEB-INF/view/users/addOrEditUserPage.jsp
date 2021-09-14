@@ -284,7 +284,7 @@
           </span>
           <div class="mt-lg pl-lg">
             <div class="pb-md bor-dashed">
-              <span class="checkbox checkbox-inline"><input
+              <span class="checkbox checkbox-inline dis-checkbox-app"><input
                   type="checkbox" id="inlineCheckbox6" class="changeView2"
                   name="addingNewApp"
                   value="${fn:contains(permissions,9)?'1':''}"
@@ -317,7 +317,7 @@
               </c:if>
             </div>
             <!-- Selected App items -->
-            <div class="app-selected mt-md">
+            <div class="app-selected mt-md" >
               <c:forEach items="${appBos}" var="app">
                 <div class="app-selected-item selApp" id="app${app.id}">
                   <input type="hidden" class="appCls" id="${app.id}" name=""
@@ -368,7 +368,7 @@
           </span>
           <div class="mt-lg pl-lg">
             <div class="pb-md bor-dashed">
-              <span class="checkbox checkbox-inline"><input
+              <span class="checkbox checkbox-inline dis-checkbox-st"><input
                   type="checkbox" id="inlineCheckbox5" class="changeView1"
                   name="addingNewStudy"
                   value="${fn:contains(permissions,8)?'1':''}"
@@ -502,7 +502,6 @@
         $('.changeView3').selectpicker('refresh');
         $('.changeView2').prop('disabled', true);
     }
-    
     
     var role = '${userBO.roleName}';
     <c:if test="${actionPage ne 'VIEW_PAGE'}">
@@ -692,6 +691,7 @@
         $(this).val(1);
         $('.changeView').prop('disabled', false);
         $('.changeView').selectpicker('refresh');
+        $('.dis-checkbox-st').removeClass('disabled', 'disabled');
         var element = $("#roleId option:selected").text();
         if (element == 'Org-level Admin') {
           $('.changeView1').prop('disabled', true);
@@ -713,6 +713,7 @@
           $(this).val(1);
           $('.changeView3').prop('disabled', false);
           $('.changeView3').selectpicker('refresh');
+          $('.dis-checkbox-app').removeClass('disabled', 'disabled');
           var element = $("#roleId option:selected").text();
           if (element == 'Org-level Admin') {
             $('.changeView2').prop('disabled', true);
@@ -1060,53 +1061,18 @@
 
   function saveUser() {
     $('#emailId').prop('disabled', false);
-    var selectedStudies = "";
-    var permissionValues = "";
-    var permissionValuesForApp = "";
-    
-    if (isFromValid($('.addUpdate').parents('form'))) {
-      $('.selStd').each(function () {
-        var studyId = $(this).find('.stdCls').val();
-        var permissionValue = $('#std' + studyId).find('input[type=radio]:checked').val();
-        if (selectedStudies == "") {
-          selectedStudies = studyId;
-        } else {
-          selectedStudies += "," + studyId;
+        var element = $('#roleId').find('option:selected').text();
+        if( element == "Study admin"){
+        if($('#inlineCheckboxApp').is(":checked") || $('#inlineCheckbox6').is(":checked") 
+    		|| $('#inlineCheckbox4').is(":checked") || $('#inlineCheckbox5').is(":checked")){
+        	addUser();
+        }else {
+            $("body").removeClass("loading");
+            showErrMsg("Please assign the admin at least one permission from the permissions set shown");
         }
-        if (permissionValues == "") {
-          permissionValues = permissionValue;
-        } else {
-          permissionValues += "," + permissionValue;
-        }
-      });
-      
-      var selectedApps = "";
-      $('.selApp').each(function () {
-          var appId = $(this).find('.appCls').val();
-          var permissionValueForApp = $('#app' + appId).find('input[type=radio]:checked').val();
-          if (selectedApps == "") {
-        	  selectedApps = appId;
-          } else {
-        	  selectedApps += "," + appId;
-          }
-          if (permissionValuesForApp == "") {
-        	  permissionValuesForApp = permissionValueForApp;
-          } else {
-        	  permissionValuesForApp += "," + permissionValueForApp;
-          }
-        });
-      
-      $('#selectedStudies').val(selectedStudies);
-      $('#selectedApps').val(selectedApps);
-      $('#permissionValues').val(permissionValues);
-      $('#permissionValuesForApp').val(permissionValuesForApp);
-      <c:if test="${sessionObject.userId eq userBO.userId}">
-      $('#ownUser').val('1');
-      </c:if>
-      $('.addUpdate').parents('form').submit();
-    } else {
-      $("body").removeClass("loading");
-    }
+  }else{
+	  addUser();
+  }
   }
 
   function setStudySettingByRole(element) {
@@ -1144,6 +1110,13 @@
       	 $('.edit-user-list-widget').show();
       	 $('.perm-assign').show();
       	 $('.pull-right').show();
+      	 $('#inlineCheckbox5').val('');
+	     $('#inlineCheckbox5').prop('checked', false);
+	     $('.dis-checkbox-st').addClass('disabled', 'disabled');
+	     $('#inlineCheckbox5').prop('checked', false);
+	     $('.dis-checkbox-app').addClass('disabled', 'disabled');
+      	        
+      	 
       	var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
         var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
         var tot_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
@@ -1162,12 +1135,69 @@
               $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
               	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
         }
+        
           } else{
         	  $('.edit-user-list-widget').hide();
            	 $('.perm-assign').hide();
            	 $('.pull-right').hide();
         }
+     
     });
-
+  
+  function showErrMsg(message) {
+	    $("#alertMsg").removeClass('s-box').addClass('e-box').text(message);
+	    $('#alertMsg').show('10000');
+	    setTimeout(hideDisplayMessage, 10000);
+	  }
+  
+  function addUser(){
+	  var selectedStudies = "";
+	    var permissionValues = "";
+	    var permissionValuesForApp = "";
+	    
+	  if (isFromValid($('.addUpdate').parents('form'))) {
+	      $('.selStd').each(function () {
+	        var studyId = $(this).find('.stdCls').val();
+	        var permissionValue = $('#std' + studyId).find('input[type=radio]:checked').val();
+	        if (selectedStudies == "") {
+	          selectedStudies = studyId;
+	        } else {
+	          selectedStudies += "," + studyId;
+	        }
+	        if (permissionValues == "") {
+	          permissionValues = permissionValue;
+	        } else {
+	          permissionValues += "," + permissionValue;
+	        }
+	      });
+	      
+	      var selectedApps = "";
+	      $('.selApp').each(function () {
+	          var appId = $(this).find('.appCls').val();
+	          var permissionValueForApp = $('#app' + appId).find('input[type=radio]:checked').val();
+	          if (selectedApps == "") {
+	        	  selectedApps = appId;
+	          } else {
+	        	  selectedApps += "," + appId;
+	          }
+	          if (permissionValuesForApp == "") {
+	        	  permissionValuesForApp = permissionValueForApp;
+	          } else {
+	        	  permissionValuesForApp += "," + permissionValueForApp;
+	          }
+	        });
+	      
+	      $('#selectedStudies').val(selectedStudies);
+	      $('#selectedApps').val(selectedApps);
+	      $('#permissionValues').val(permissionValues);
+	      $('#permissionValuesForApp').val(permissionValuesForApp);
+	      <c:if test="${sessionObject.userId eq userBO.userId}">
+	      $('#ownUser').val('1');
+	      </c:if>
+	      $('.addUpdate').parents('form').submit();
+	    }else {
+	        $("body").removeClass("loading");
+	    }
+  }
 </script>
 
