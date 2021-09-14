@@ -138,6 +138,9 @@ button#exportId {
                <c:when test="${appBo.appPlatform == 'A'}">
 			  	disabled
 			  </c:when>
+			  <c:when test="${appBo.isAppPublished == true && appBo.hasAppDraft eq 1}">
+                disabled
+              </c:when>
             </c:choose>
                 >Mark iOS app as distributed
         </button> </div>
@@ -184,7 +187,9 @@ button#exportId {
               <c:when test="${appBo.appPlatform == 'I'}">
 			  	disabled
 			  </c:when>
-			  
+			  <c:when test="${appBo.isAppPublished == true && appBo.hasAppDraft eq 1}">
+                disabled
+              </c:when>
             </c:choose>
                 >Mark Android app as distributed
         </button> </div>
