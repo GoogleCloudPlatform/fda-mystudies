@@ -1,4 +1,4 @@
-import {EnrollmentStatus, OnboardingStatus, StudyType} from './enums';
+import {EnrollmentStatus, OnboardingStatus, Status, StudyType} from './enums';
 import {Permission} from './permission-enums';
 
 export interface RegistryParticipant {
@@ -14,6 +14,7 @@ export interface RegistryParticipant {
   customStudyId?: string;
   studyName?: string;
   customAppId?: string;
+  appStatus?: string;
   appName?: string;
   onboardingStatus: OnboardingStatus;
   invitationDate?: string;

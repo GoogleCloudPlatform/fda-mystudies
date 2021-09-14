@@ -69,7 +69,7 @@
                     <span class="sprites_icon preview-g mr-lg viewAppClass" isLive=""
                   appId="${app.id}"
                   permission="view" data-toggle="tooltip" data-placement="top" title="View"></span>
-                    <span class="${app.flag?'edit-inc-draft mr-md':'edit-inc mr-md'}
+                    <span class="${(not empty app.liveAppId)?((app.flag)?'edit-inc-draft mr-md':'edit-inc mr-md'):((app.createFlag)?'edit-inc mr-md':'edit-inc-draft mr-md')}
                     addEditAppClass 
                     <c:choose>
 						<c:when test="${not app.viewPermission}">
@@ -79,7 +79,7 @@
 							  cursor-none
 						</c:when>
 					</c:choose>" data-toggle="tooltip" data-placement="top"
-                	title="${app.flag?'Edit draft version':'Edit'}"
+                	title="${(not empty app.liveAppId)?((app.flag)?'Edit draft version':'Edit'):((app.createFlag)?'Edit':'Edit draft version')}"
                 	appId="${app.id}"></span>
                     <span class="sprites_icon  mr-lg viewStudiesClass <c:if test="${app.studiesCount eq 0}">
 								cursor-none

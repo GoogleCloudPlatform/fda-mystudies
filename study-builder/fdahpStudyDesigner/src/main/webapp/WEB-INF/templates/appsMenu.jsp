@@ -77,9 +77,6 @@
       </li>
       <li class="fifth commonCls1">
         ACTIONS
-        <c:if test="${appBo.appSequenceBo.actions}">
-          <span class="sprites-icons-2 tick pull-right mt-xs"></span>
-        </c:if>
       </li>
     </ul>
   </div>
@@ -129,12 +126,13 @@
       a.href = "/studybuilder/adminApps/viewAppsInfo.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
-    <c:if test="${appBo.appSequenceBo.appInfo}">
+    <c:if test="${appBo.appSequenceBo.appInfo || appBo.appStatus == 'Active'}">
     $('.second').click(function () {
       a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
-    <c:if test="${appBo.appSequenceBo.appInfo && appBo.appSequenceBo.appSettings && appBo.appSequenceBo.actions}">
+   
+    <c:if test="${appBo.appStatus == 'Active'}">
     $('.third').click(function () {
       a.href = "/studybuilder/adminApps/viewAppProperties.do?_S=${param._S}";
       document.body.appendChild(a).click();
@@ -144,23 +142,23 @@
       document.body.appendChild(a).click();
     });
     </c:if>
-    <c:if test="${appBo.appSequenceBo.appSettings}">
+    <c:if test="${(appBo.appSequenceBo.appSettings) || appBo.appStatus == 'Active'}">
     $('.fifth').click(function () {
         a.href = "/studybuilder/adminApps/appActionList.do?_S=${param._S}";
         document.body.appendChild(a).click();
       });
     </c:if>
     </c:if>
-    debugger
-    <c:if test="${not appBo.appSequenceBo.appInfo}">
+    
+    <c:if test="${not appBo.appSequenceBo.appInfo && appBo.appStatus != 'Active'}">
     $('.commonCls').addClass('cursor-none-without-event');
     $('.commonCls1').addClass('cursor-none-without-event');
     </c:if>
-    <c:if test="${appBo.appSequenceBo.appInfo && not appBo.appSequenceBo.appSettings}">
+    <c:if test="${appBo.appSequenceBo.appInfo && not appBo.appSequenceBo.appSettings && appBo.appStatus != 'Active'}">
     $('.commonCls').not('.second').addClass('cursor-none-without-event');
     $('.commonCls1').addClass('cursor-none-without-event');
     </c:if>
-    <c:if test="${appBo.appSequenceBo.appSettings && not appBo.appSequenceBo.actions}">
+    <c:if test="${appBo.appSequenceBo.appSettings && appBo.appStatus != 'Active'}">
     $('.commonCls1').not('.fifth').addClass('cursor-none-without-event');
     </c:if> 
     $(window).on('load resize', function () {
