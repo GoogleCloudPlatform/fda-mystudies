@@ -55,7 +55,7 @@
                 <th id="">APP NAME <span class="sort"></span></th>
                 <th id="">TYPE <span class="sort"></span></th>
                 <th id="">STATUS<span class="sort"></span></th>
-                <th id="" class="linkDis text-right" style="padding-right: 3% !important; "  >Actions</th>
+                <th id="" class="linkDis text-right" style="padding-right: 8% !important; "  >Actions</th>
               </tr>
         </thead>
         <tbody>
