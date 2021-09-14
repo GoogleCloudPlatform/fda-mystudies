@@ -34,7 +34,7 @@
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn applistDetailsToEdit"
                     actionType="add">
-             Create New
+             Create new
             </button>
           </div>
       </div>
