@@ -71,7 +71,7 @@
                             </div>
 
                            <div class="col-md-6">
-                                <div class="gray-xs-f mb-xs">Contact Us email 
+                                <div class="gray-xs-f mb-xs">'Contact Us' email 
                                 <small>(100 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter an email to receive 'Contact Us' forms submitted by app users. Note that app users provide their email as part of this form."></span></div>
                                 <div class="form-group mb-none">
@@ -114,7 +114,7 @@
                             <div class="clearfix"></div>
                             
                               <div class="col-md-6 pl-none mt-lg">
-                                <div class="gray-xs-f mb-xs">App Privacy policy URL 
+                                <div class="gray-xs-f mb-xs">App Privacy Policy URL 
                                 <small>(100 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a URL for the app's Privacy Policy"></span></div>
                                 <div class="form-group mb-none">
@@ -167,7 +167,7 @@
                             <div class="clearfix"></div>
                             
 							 <div class="col-md-6 pl-none mt-lg">
-                                <div class="gray-xs-f mb-xs">'From' email for outoging app emails
+                                <div class="gray-xs-f mb-xs">'From' email for outgoing app emails 
                                 <small>(100 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a 'sender' email for automated emails that go out to app users."></span></div>
                                 <div class="form-group mb-none">
