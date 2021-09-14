@@ -225,7 +225,7 @@ color: #95a2ab;
     	showSucMsg(actionSucMsg);
     }
     
-    var sucMsgAppActions = '${sucMsgAppActions}';
+    var sucMsgAppActions = "${sucMsgAppActions}";
     if (sucMsgAppActions) {
     	showSucMsg(sucMsgAppActions);
     }

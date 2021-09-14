@@ -34,7 +34,7 @@
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn applistDetailsToEdit"
                     actionType="add">
-             Create New
+             Create new
             </button>
           </div>
       </div>
@@ -66,7 +66,7 @@
                 <td><c:if test="${app.type == 'GT'}">Gateway</c:if><c:if test="${app.type == 'SD'}">Standalone</c:if></td>
                 <td>${app.appStatus}</td>
                 <td class="text-right" style="padding-right: 2% !important; ">
-                    <span class="sprites_icon preview-g mr-lg viewAppClass" isLive=""
+                    <span class="sprites_icon preview-g mr-lg viewAppClass"
                   appId="${app.id}"
                   permission="view" data-toggle="tooltip" data-placement="top" title="View"></span>
                     <span class="${(not empty app.liveAppId)?((app.flag)?'edit-inc-draft mr-md':'edit-inc mr-md'):((app.createFlag)?'edit-inc mr-md':'edit-inc-draft mr-md')}
@@ -146,12 +146,6 @@
         input1.value = $(this).attr('permission');
         form.appendChild(input1);
 
-        var input2 = document.createElement('input');
-        input2.type = 'hidden';
-        input2.name = 'isLive';
-        input2.value = $(this).attr('isLive');
-        form.appendChild(input2);
-
         input = document.createElement('input');
         input.type = 'hidden';
         input.name = '${_csrf.parameterName}';
@@ -171,12 +165,6 @@
         input.name = 'appId';
         input.value = $(this).attr('appId');
         form.appendChild(input);
-
-        var input2 = document.createElement('input');
-        input2.type = 'hidden';
-        input2.name = 'isLive';
-        input2.value = $(this).attr('isLive');
-        form.appendChild(input2);
 
         input = document.createElement('input');
         input.type = 'hidden';

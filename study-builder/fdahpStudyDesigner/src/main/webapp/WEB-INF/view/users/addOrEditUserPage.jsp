@@ -1062,53 +1062,18 @@
 
   function saveUser() {
     $('#emailId').prop('disabled', false);
-    var selectedStudies = "";
-    var permissionValues = "";
-    var permissionValuesForApp = "";
-    
-    if (isFromValid($('.addUpdate').parents('form'))) {
-      $('.selStd').each(function () {
-        var studyId = $(this).find('.stdCls').val();
-        var permissionValue = $('#std' + studyId).find('input[type=radio]:checked').val();
-        if (selectedStudies == "") {
-          selectedStudies = studyId;
-        } else {
-          selectedStudies += "," + studyId;
+        var element = $('#roleId').find('option:selected').text();
+        if( element == "Study admin"){
+        if($('#inlineCheckboxApp').is(":checked") || $('#inlineCheckbox6').is(":checked") 
+    		|| $('#inlineCheckbox4').is(":checked") || $('#inlineCheckbox5').is(":checked")){
+        	addUser();
+        }else {
+            $("body").removeClass("loading");
+            showErrMsg("Please assign the admin at least one permission from the permissions set shown");
         }
-        if (permissionValues == "") {
-          permissionValues = permissionValue;
-        } else {
-          permissionValues += "," + permissionValue;
-        }
-      });
-      
-      var selectedApps = "";
-      $('.selApp').each(function () {
-          var appId = $(this).find('.appCls').val();
-          var permissionValueForApp = $('#app' + appId).find('input[type=radio]:checked').val();
-          if (selectedApps == "") {
-        	  selectedApps = appId;
-          } else {
-        	  selectedApps += "," + appId;
-          }
-          if (permissionValuesForApp == "") {
-        	  permissionValuesForApp = permissionValueForApp;
-          } else {
-        	  permissionValuesForApp += "," + permissionValueForApp;
-          }
-        });
-      
-      $('#selectedStudies').val(selectedStudies);
-      $('#selectedApps').val(selectedApps);
-      $('#permissionValues').val(permissionValues);
-      $('#permissionValuesForApp').val(permissionValuesForApp);
-      <c:if test="${sessionObject.userId eq userBO.userId}">
-      $('#ownUser').val('1');
-      </c:if>
-      $('.addUpdate').parents('form').submit();
-    } else {
-      $("body").removeClass("loading");
-    }
+  }else{
+	  addUser();
+  }
   }
 
   function setStudySettingByRole(element) {
@@ -1179,6 +1144,61 @@
         }
      
     });
-
+  
+  function showErrMsg(message) {
+	    $("#alertMsg").removeClass('s-box').addClass('e-box').text(message);
+	    $('#alertMsg').show('10000');
+	    setTimeout(hideDisplayMessage, 10000);
+	  }
+  
+  function addUser(){
+	  var selectedStudies = "";
+	    var permissionValues = "";
+	    var permissionValuesForApp = "";
+	    
+	  if (isFromValid($('.addUpdate').parents('form'))) {
+	      $('.selStd').each(function () {
+	        var studyId = $(this).find('.stdCls').val();
+	        var permissionValue = $('#std' + studyId).find('input[type=radio]:checked').val();
+	        if (selectedStudies == "") {
+	          selectedStudies = studyId;
+	        } else {
+	          selectedStudies += "," + studyId;
+	        }
+	        if (permissionValues == "") {
+	          permissionValues = permissionValue;
+	        } else {
+	          permissionValues += "," + permissionValue;
+	        }
+	      });
+	      
+	      var selectedApps = "";
+	      $('.selApp').each(function () {
+	          var appId = $(this).find('.appCls').val();
+	          var permissionValueForApp = $('#app' + appId).find('input[type=radio]:checked').val();
+	          if (selectedApps == "") {
+	        	  selectedApps = appId;
+	          } else {
+	        	  selectedApps += "," + appId;
+	          }
+	          if (permissionValuesForApp == "") {
+	        	  permissionValuesForApp = permissionValueForApp;
+	          } else {
+	        	  permissionValuesForApp += "," + permissionValueForApp;
+	          }
+	        });
+	      
+	      $('#selectedStudies').val(selectedStudies);
+	      $('#selectedApps').val(selectedApps);
+	      $('#permissionValues').val(permissionValues);
+	      $('#permissionValuesForApp').val(permissionValuesForApp);
+	      <c:if test="${sessionObject.userId eq userBO.userId}">
+	      $('#ownUser').val('1');
+	      </c:if>
+	      $('.addUpdate').parents('form').submit();
+	    }else {
+	        $("body").removeClass("loading");
+	    }
+  }
 </script>
 
