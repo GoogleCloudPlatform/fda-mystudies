@@ -757,7 +757,7 @@ public class AppDAOImpl implements AppDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       query =
           session.createQuery(
-              " FROM AppsBo ABO WHERE ABO.version = 0 AND ABO.appStatus <> :deActivateStatus");
+              " FROM AppsBo ABO WHERE ABO.live = 0 AND ABO.appStatus <> :deActivateStatus");
       query.setParameter("deActivateStatus", FdahpStudyDesignerConstants.APP_DEACTIVATED);
       appList = query.list();
     } catch (Exception e) {
