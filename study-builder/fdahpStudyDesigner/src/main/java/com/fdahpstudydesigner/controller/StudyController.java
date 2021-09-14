@@ -4545,6 +4545,9 @@ public class StudyController {
         if (app != null) {
           map.addAttribute("appName", app.getName());
           map.addAttribute("appType", app.getType());
+          if (app.getType().equals("SD")) {
+            apps.add(app);
+          }
         }
         map.addAttribute("appsList", apps);
         map.addAttribute("categoryList", categoryList);
