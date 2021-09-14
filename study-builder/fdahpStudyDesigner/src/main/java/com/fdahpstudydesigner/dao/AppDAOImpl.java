@@ -1016,7 +1016,7 @@ public class AppDAOImpl implements AppDAO {
           appListBean =
               session
                   .createQuery(
-                      "FROM AppsBo a WHERE a.appStatus = 'Active' AND a.customAppId NOT IN "
+                      "FROM AppsBo a WHERE a.appStatus = 'Active' AND a.live=0 AND a.customAppId NOT IN "
                           + "(SELECT s.appId FROM StudyBo s where s.type='SD' AND s.appId IS NOT NULL) "
                           + "order by a.createdOn desc ")
                   .list();
@@ -1026,7 +1026,7 @@ public class AppDAOImpl implements AppDAO {
               session.createQuery(
                   " SELECT DISTINCT a from AppsBo a,AppPermissionBO ap, UserBO user"
                       + " where a.id=ap.appId"
-                      + " and a.version=0 and ap.viewPermission = '1'"
+                      + " and a.live=0 and ap.viewPermission = '1'"
                       + " and ap.userId=:impValue"
                       + " and a.appStatus = 'Active' AND a.customAppId NOT IN "
                       + " (SELECT s.appId FROM StudyBo s where s.type='SD' AND s.appId IS NOT NULL) "
