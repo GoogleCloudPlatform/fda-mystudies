@@ -37,6 +37,7 @@ public class AppListBean {
   private boolean viewPermission;
   private String liveAppId;
   private BigInteger studiesCount;
+  private BigInteger studyPermissionCount;
 
   public AppListBean(
       String id, String customAppId, String name, String appStatus, String type, String createdOn) {
@@ -177,5 +178,13 @@ public class AppListBean {
 
   public void setCreateFlag(boolean createFlag) {
     this.createFlag = createFlag;
+  }
+
+  public BigInteger getStudyPermissionCount() {
+    return studyPermissionCount;
+  }
+
+  public void setStudyPermissionCount(BigInteger studyPermissionCount) {
+    this.studyPermissionCount = studyPermissionCount;
   }
 }

@@ -514,6 +514,9 @@ public class FdahpStudyDesignerConstants {
   public static final String FAILURE_DEACTIVATE_APP_MESSAGE =
       "Sorry, a technical error occurred and App deactivation failed";
 
+  public static final String VIEW_ASSOCIATED_STUDIES_MESSAGE =
+      "Studies seen in the list are based on the permissions you have in the Study Builder";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

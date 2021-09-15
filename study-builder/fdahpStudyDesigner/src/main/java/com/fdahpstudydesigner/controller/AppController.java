@@ -109,6 +109,10 @@ public class AppController {
         request.getSession().removeAttribute("errMsgAppActions");
       }
 
+      if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
+        request.getSession().removeAttribute("sucMsgViewAssocStudies");
+      }
+
       map.addAttribute("appBos", appList);
       mav = new ModelAndView("appListPage", map);
 
