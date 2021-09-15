@@ -377,6 +377,14 @@ public class NotificationController {
         request.getSession().removeAttribute(FdahpStudyDesignerConstants.ERR_MSG);
       }
 
+      if (null != request.getSession().getAttribute("sucMsgAppActions")) {
+        request.getSession().removeAttribute("sucMsgAppActions");
+      }
+
+      if (null != request.getSession().getAttribute("errMsgAppActions")) {
+        request.getSession().removeAttribute("errMsgAppActions");
+      }
+
       notificationList = notificationService.getViewNotificationList(sessionObject.getUserId());
       if (CollectionUtils.isNotEmpty(notificationList)) {
         for (NotificationBO notification : notificationList) {

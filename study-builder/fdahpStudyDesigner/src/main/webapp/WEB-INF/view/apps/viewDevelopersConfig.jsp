@@ -122,7 +122,7 @@
                            <div class="col-md-6">
                                 <div class="gray-xs-f mb-xs">Latest app build version (for iOS app)<span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the app build version corresponding to the latest iOS app that is available to users. Only integers are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="number" class="form-control ios" value= "${appBo.iosAppBuildVersion}" name="iosAppBuildVersion" required data-error="Please fill out this field"/>
+                                    <input type="number" min="0" onkeypress="return isNumber(event)" class="form-control ios" value= "${appBo.iosAppBuildVersion}" name="iosAppBuildVersion" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@
                            <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs"> Latest app version code (for Android app) <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter the app version corresponding to the latest Android app that is available to users. Only integers are allowed in this field."></span></div>
                                 <div class="form-group mb-none">
-                                    <input type="number" class="form-control android" value= "${appBo.versionInfoBO.android}" name="androidAppBuildVersion" required data-error="Please fill out this field"/>
+                                    <input type="number" min="0" onkeypress="return isNumber(event)" class="form-control android" value= "${appBo.versionInfoBO.android}" name="androidAppBuildVersion" required data-error="Please fill out this field"/>
                                     <div class="help-block with-errors red-txt"></div>
                                 </div>
                             </div>
@@ -267,4 +267,12 @@
 		
 	}
 	});
+  function isNumber(evt) {
+	    evt = (evt) ? evt : window.event;
+	    var charCode = (evt.which) ? evt.which : evt.keyCode;
+	    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+	      return false;
+	    }
+	    return true;
+	  }
 </script>

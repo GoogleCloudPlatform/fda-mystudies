@@ -54,7 +54,7 @@ public interface AppService {
 
   public String saveOrUpdateAppDeveloperConfig(AppsBo appsBo, SessionObject sessionObject);
 
-  public List<AppsBo> getActiveApps(String userId);
+  public List<AppsBo> getApps(String userId);
 
   public AppsBo getAppbyCustomAppId(String customId);
 

@@ -162,17 +162,6 @@ public class UserManagementUtil {
     return emailContentName;
   }
 
-  public void deleteUserInfoInAuthServer(String userId) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
-
-    HttpEntity<Object> entity = new HttpEntity<>(headers);
-
-    restTemplate.exchange(
-        appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, entity, Void.class, userId);
-  }
-
   public static String getCurrentDate() {
     Calendar currentDate = Calendar.getInstance();
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

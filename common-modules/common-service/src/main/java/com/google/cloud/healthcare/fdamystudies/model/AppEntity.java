@@ -9,9 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.APP_STUDY_ID_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.EMAIL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -71,17 +71,25 @@ public class AppEntity implements Serializable {
   private String androidBundleId;
 
   @ToString.Exclude
-  @Column(name = "ios_certificate")
+  @Column(name = "ios_authorization_token")
   @Type(type = "text")
-  private String iosCertificate;
+  private String iosAuthorizationToken;
 
   @ToString.Exclude
-  @Column(name = "ios_certificate_password", length = SMALL_LENGTH)
-  private String iosCertificatePassword;
+  @Column(name = "ios_key_id", length = SMALL_LENGTH)
+  private String iosKeyId;
+
+  @ToString.Exclude
+  @Column(name = "ios_team_id", length = SMALL_LENGTH)
+  private String iosTeamId;
 
   @ToString.Exclude
   @Column(name = "android_server_key", length = LARGE_LENGTH)
   private String androidServerKey;
+
+  @ToString.Exclude
+  @Column(name = "ios_server_key", length = LARGE_LENGTH)
+  private String iosServerKey;
 
   @ToString.Exclude
   @Column(name = "from_email_id", length = LARGE_LENGTH)

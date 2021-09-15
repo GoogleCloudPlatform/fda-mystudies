@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,7 +29,6 @@ import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.jayway.jsonpath.JsonPath;
 import java.util.Optional;
-import javax.ws.rs.core.MediaType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -177,75 +175,6 @@ public class AppsControllerTest extends BaseMockIT {
 
   protected ObjectMapper getObjectMapper() {
     return objectMapper;
-  }
-
-  @Test
-  public void getAppContactEmailsSuccess() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-    headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
-    MvcResult result =
-        mockMvc
-            .perform(
-                get(GET_APP_CONTACT_EMAILS_PATH)
-                    .param(CUSTOM_APP_ID, "GCPMS002")
-                    .headers(headers)
-                    .contextPath(getContextPath()))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
-
-    String contactUsEmailId =
-        JsonPath.read(result.getResponse().getContentAsString(), "$.contactUsEmail");
-    assertEquals(Constants.CONTACT_US_EMAIL, contactUsEmailId);
-
-    String fromEmailId = JsonPath.read(result.getResponse().getContentAsString(), "$.fromEmail");
-    assertEquals(Constants.FROM_EMAIL, fromEmailId);
-
-    String appName = JsonPath.read(result.getResponse().getContentAsString(), "$.appName");
-    assertEquals(Constants.APP_NAME_TEST, appName);
-  }
-
-  @Test
-  public void getAppContactEmailsBadRequest() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-    headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
-    MvcResult result =
-        mockMvc
-            .perform(
-                get(GET_APP_CONTACT_EMAILS_PATH)
-                    .param(CUSTOM_APP_ID, "")
-                    .headers(headers)
-                    .contextPath(getContextPath()))
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andReturn();
-
-    String contactUsEmailId =
-        JsonPath.read(result.getResponse().getContentAsString(), ERROR_DESCRIPTION);
-    assertEquals("The request cannot be fulfilled due to bad syntax", contactUsEmailId);
-  }
-
-  @Test
-  public void getAppContactEmailsNotFound() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-    headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
-    MvcResult result =
-        mockMvc
-            .perform(
-                get(GET_APP_CONTACT_EMAILS_PATH)
-                    .param(CUSTOM_APP_ID, "GCPMS0012")
-                    .headers(headers)
-                    .contextPath(getContextPath()))
-            .andDo(print())
-            .andExpect(status().isNotFound())
-            .andReturn();
-
-    String contactUsEmailId =
-        JsonPath.read(result.getResponse().getContentAsString(), ERROR_DESCRIPTION);
-    assertEquals("App not found", contactUsEmailId);
   }
 
   @Test

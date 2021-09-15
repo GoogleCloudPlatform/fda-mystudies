@@ -114,7 +114,7 @@
                             <div class="clearfix"></div>
                             
                               <div class="col-md-6 pl-none mt-lg">
-                                <div class="gray-xs-f mb-xs">App Privacy Policy URL 
+                                <div class="gray-xs-f mb-xs">App Privacy Policy URL  
                                 <small>(100 characters max)</small>
                                 <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a URL for the app's Privacy Policy"></span></div>
                                 <div class="form-group mb-none">

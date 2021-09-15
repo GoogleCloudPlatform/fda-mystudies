@@ -501,6 +501,9 @@ public class FdahpStudyDesignerConstants {
 
   public static final Integer ROLE_CREATE_MANAGE_APPS = 9;
 
+  public static final String VIEW_ASSOCIATED_STUDIES_MESSAGE =
+      "Studies seen in the list are based on the permissions you have in the Study Builder";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

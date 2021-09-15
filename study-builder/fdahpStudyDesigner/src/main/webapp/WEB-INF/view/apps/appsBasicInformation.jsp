@@ -78,7 +78,7 @@ margin-top:16px !important;
               </div>
 
               <div class="col-md-6">
-                   <div class="gray-xs-f mb-xs">App Name 
+                   <div class="gray-xs-f mb-xs">App name 
                    <small>(15 characters max)</small>
                    <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="This is the name of the app displayed on app screens and in app emails."></span></div>
                    <div class="form-group mb-none">

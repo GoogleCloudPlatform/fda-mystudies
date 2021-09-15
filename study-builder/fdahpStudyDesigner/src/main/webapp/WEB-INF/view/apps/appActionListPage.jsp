@@ -90,7 +90,7 @@ button#exportId {
                <c:when test="${appBo.isAppPublished == true && appBo.hasAppDraft ne 1}">
                 disabled
               </c:when>
-              <c:when test="${not empty appBo.appSequenceBo && (not appBo.appSequenceBo.actions || not appBo.appSequenceBo.appProperties || not appBo.appSequenceBo.developerConfigs)}">
+              <c:when test="${not empty appBo.appSequenceBo && (appBo.appStatus ne 'Active' || not appBo.appSequenceBo.appProperties || not appBo.appSequenceBo.developerConfigs)}">
                 disabled
               </c:when>
                <c:when test="${markAsCompleted eq false}">
@@ -138,6 +138,9 @@ button#exportId {
                <c:when test="${appBo.appPlatform == 'A'}">
 			  	disabled
 			  </c:when>
+			  <c:when test="${appBo.isAppPublished == true && appBo.hasAppDraft eq 1}">
+                disabled
+              </c:when>
             </c:choose>
                 >Mark iOS app as distributed
         </button> </div>
@@ -150,7 +153,7 @@ button#exportId {
         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
         This action helps flag the iOS app as distributed (via the App Store or other means), live and made available for actual participants to use. 
-        Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
+        Once the app is marked 'distributed' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
       </div>
       </div>
        <div class="form-group mr-sm" style="white-space: normal;">
@@ -184,7 +187,9 @@ button#exportId {
               <c:when test="${appBo.appPlatform == 'I'}">
 			  	disabled
 			  </c:when>
-			  
+			  <c:when test="${appBo.isAppPublished == true && appBo.hasAppDraft eq 1}">
+                disabled
+              </c:when>
             </c:choose>
                 >Mark Android app as distributed
         </button> </div>
@@ -197,7 +202,7 @@ button#exportId {
         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
         This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
-       Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
+       Once the app is marked 'distributed' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
       </div>
       </div>
 
@@ -234,6 +239,8 @@ button#exportId {
 	  $('.appClass').addClass('active');
 	  $(".menuNav li.active").removeClass('active');
 	  $(".menuNav li.fifth").addClass('active');
+	  
+	  console.log("${markAsCompleted}");
 	 
  });
 

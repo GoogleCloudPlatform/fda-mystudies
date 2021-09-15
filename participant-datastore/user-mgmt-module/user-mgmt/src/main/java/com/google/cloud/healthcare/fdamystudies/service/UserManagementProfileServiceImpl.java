@@ -224,7 +224,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     listOfUserDetails.forEach(
         userDetails -> {
           try {
-            userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId());
+            userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId(), false);
             userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
           } catch (ErrorCodeException e) {
             if (e.getErrorCode() == ErrorCode.USER_NOT_FOUND) {
@@ -302,7 +302,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userDetailsEntity.setStatus(UserStatus.DEACTIVATE_PENDING.getValue());
       userDetailsRepository.saveAndFlush(userDetailsEntity);
 
-      userManagementUtil.deleteUserInfoInAuthServer(userId);
+      userManagementUtil.deleteUserInfoInAuthServer(userId, false);
 
       // change the status from DEACTIVATE_PENDING to DEACTIVATED
       userProfileManagementDao.deactivateUserAccount(userId);
