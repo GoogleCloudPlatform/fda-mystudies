@@ -1,3 +1,4 @@
+import { Status } from 'src/app/shared/enums';
 import {ParticipantRegistryDetail} from 'src/app/shared/participant-registry-detail';
 
 export interface StudyDetails {
@@ -6,4 +7,5 @@ export interface StudyDetails {
   message: string;
   code: string;
   totalParticipantCount: number;
+  appStatus: Status;
 }

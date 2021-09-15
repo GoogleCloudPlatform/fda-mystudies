@@ -9,7 +9,7 @@
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">password</property>
     <property name="hibernate.connection.url">
-      jdbc:h2:mem:testdb;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      jdbc:h2:mem:testdb;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DEFAULT_LOCK_TIMEOUT=10000;LOCK_MODE=0
     </property>
 
     <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
@@ -95,6 +95,9 @@
     <mapping
       class="com.fdahpstudydesigner.bo.UserPasswordHistory" />
     <mapping class="com.fdahpstudydesigner.bo.UserPermissions" />
-
+    <mapping class="com.fdahpstudydesigner.bo.AppsBo" />
+    <mapping class="com.fdahpstudydesigner.bo.AppSequenceBo" />
+    <mapping class="com.fdahpstudydesigner.bo.AppPermissionBO" />
+    <mapping class="com.fdahpstudydesigner.bo.VersionInfoBO" />
   </session-factory>
 </hibernate-configuration>

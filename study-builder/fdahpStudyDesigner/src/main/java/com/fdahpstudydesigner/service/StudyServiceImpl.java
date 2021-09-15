@@ -35,6 +35,7 @@ import com.fdahpstudydesigner.bo.ActiveTaskBo;
 import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
 import com.fdahpstudydesigner.bo.ActiveTaskFrequencyBo;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.Checklist;
 import com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo;
 import com.fdahpstudydesigner.bo.ComprehensionTestResponseBo;
@@ -50,6 +51,7 @@ import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
+import com.fdahpstudydesigner.dao.AppDAO;
 import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.StudyActiveTasksDAO;
 import com.fdahpstudydesigner.dao.StudyDAO;
@@ -93,6 +95,8 @@ public class StudyServiceImpl implements StudyService {
   @Autowired private NotificationDAO notificationDAO;
 
   @Autowired private StudyActiveTasksDAO studyActiveTasksDAO;
+
+  @Autowired private AppDAO appDAO;
 
   @Override
   public String checkActiveTaskTypeValidation(String studyId) {
@@ -1526,8 +1530,13 @@ public class StudyServiceImpl implements StudyService {
         //        studyDetails.setStudySponsor(studyBo.getResearchSponsor());
         studyDetails.setStudyEnrolling(studyBo.getEnrollingParticipants());
         studyDetails.setAppId(studyBo.getAppId());
-        studyDetails.setAppName("App Name_" + studyBo.getAppId());
-        studyDetails.setAppDescription("App Desc_" + studyBo.getAppId());
+
+        AppsBo appBO = appDAO.getAppByLatestVersion(studyBo.getAppId());
+
+        if (appBO != null) {
+          studyDetails.setAppName(appBO.getName());
+          studyDetails.setAppDescription("App Desc_" + appBO.getCustomAppId());
+        }
 
         studyDetails.setLogoImageUrl(
             StringUtils.isEmpty(studyBo.getThumbnailImage())

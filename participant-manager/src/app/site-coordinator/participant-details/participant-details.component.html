@@ -68,6 +68,23 @@
                 <div>
                   <div class="banner__label">
                     {{ participant.participantDetails.customAppId }}
+                    -
+                    <!-- appStatus -->
+                    <span
+                      [ngClass]="{
+                        active_text:
+                          participant.participantDetails.appStatus ===
+                          appStatus.Active,
+                        paused_text:
+                          participant.participantDetails.appStatus ===
+                          appStatus.Paused,
+                        deactivated_text:
+                          participant.participantDetails.appStatus ===
+                          appStatus.Deactivated
+                      }"
+                    >
+                      {{ participant.participantDetails.appStatus }}
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ participant.participantDetails.appName }}

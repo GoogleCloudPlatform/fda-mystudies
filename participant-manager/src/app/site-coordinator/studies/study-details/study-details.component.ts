@@ -31,7 +31,7 @@ export class StudyDetailsComponent
   enrollmentStatus = EnrollmentStatus;
   permission = Permission;
   studyStatus = Status;
-
+  appStatus = Status;
   // pagination
   limit = 10;
   currentPage = 0;

@@ -21,6 +21,7 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_ASSOCIATED_STUDIES_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.LAST_PUBLISHED_VERSION_OF_STUDY_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_STUDY_CREATION_INITIATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACCESSED_IN_EDIT_MODE;
@@ -55,6 +56,7 @@ import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bean.StudyPageBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.Checklist;
 import com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo;
 import com.fdahpstudydesigner.bo.ConsentBo;
@@ -74,6 +76,7 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.AppService;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.service.StudyExportImportService;
@@ -148,6 +151,8 @@ public class StudyController {
   @Autowired private StudyExportImportService studyExportImportService;
 
   @Autowired private StudyDAO studyDao;
+
+  @Autowired private AppService appService;
 
   @RequestMapping("/adminStudies/actionList.do")
   public ModelAndView actionList(HttpServletRequest request) {
@@ -1845,6 +1850,7 @@ public class StudyController {
     ModelAndView mav = new ModelAndView("loginPage");
     ModelMap map = new ModelMap();
     List<StudyListBean> studyBos = null;
+    List<AppsBo> appList = null;
     String sucMsg = "";
     String errMsg = "";
     String actionSucMsg = "";
@@ -1854,6 +1860,14 @@ public class StudyController {
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       if (sesObj != null) {
+        if (null != request.getSession().getAttribute("sucMsgAppActions")) {
+          request.getSession().removeAttribute("sucMsgAppActions");
+        }
+
+        if (null != request.getSession().getAttribute("errMsgAppActions")) {
+          request.getSession().removeAttribute("errMsgAppActions");
+        }
+
         if (null != request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG)) {
           sucMsg = (String) request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG);
           map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
@@ -1896,9 +1910,21 @@ public class StudyController {
             != null) {
           request.getSession().removeAttribute(FdahpStudyDesignerConstants.QUESTIONNARIE_STUDY_ID);
         }
+        String appId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter(FdahpStudyDesignerConstants.APP_ID))
+                ? ""
+                : request.getParameter(FdahpStudyDesignerConstants.APP_ID);
         studyBos = studyService.getStudyList(sesObj.getUserId());
+        appList = appService.getApps(sesObj.getUserId());
         map.addAttribute("studyBos", studyBos);
         map.addAttribute("studyListId", "true");
+        if (StringUtils.isNotEmpty(appId)) {
+          auditRequest.setAppId(appId);
+          auditLogEventHelper.logEvent(APP_ASSOCIATED_STUDIES_VIEWED, auditRequest);
+          map.addAttribute("appId", appId);
+        }
+        map.addAttribute("studyListId", "true");
+        map.addAttribute("appBos", appList);
         auditLogEventHelper.logEvent(STUDY_LIST_VIEWED, auditRequest);
 
         mav = new ModelAndView("studyListPage", map);
@@ -4672,11 +4698,23 @@ public class StudyController {
             }
           }
         }
+
+        List<AppsBo> apps = appService.getAppsForStudy(sesObj.getUserId());
+        AppsBo app = appService.getAppbyCustomAppId(studyBo.getAppId());
+
+        if (app != null) {
+          map.addAttribute("appName", app.getName());
+          map.addAttribute("appType", app.getType());
+          if (app.getType().equals("SD")) {
+            apps.add(app);
+          }
+        }
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");
         map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("appsList", apps);
         mav = new ModelAndView("viewBasicInfo", map);
       }
     } catch (Exception e) {
@@ -4692,6 +4730,7 @@ public class StudyController {
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
+    AppsBo appBo = null;
     String sucMsg = "";
     String errMsg = "";
     String user = "";
@@ -4762,7 +4801,7 @@ public class StudyController {
                         sessionStudyCount + FdahpStudyDesignerConstants.LOGOUT_LOGIN_USER);
         if (FdahpStudyDesignerUtil.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-
+          appBo = appService.getAppbyCustomAppId(studyBo.getAppId());
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
           map.addAttribute("user", user);
@@ -4777,6 +4816,7 @@ public class StudyController {
                   studyBo.getId(), studyBo.getCustomStudyId());
           map.addAttribute("isAnchorForEnrollmentLive", isAnchorForEnrollmentLive);
           map.addAttribute("isAnchorForEnrollmentDraft", isAnchorForEnrollmentDraft);
+          map.addAttribute("appBo", appBo);
 
           mav = new ModelAndView(FdahpStudyDesignerConstants.VIEW_SETTING_AND_ADMINS, map);
         } else {

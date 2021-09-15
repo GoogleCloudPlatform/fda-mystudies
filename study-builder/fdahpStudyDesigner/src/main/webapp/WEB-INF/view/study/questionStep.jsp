@@ -41,7 +41,7 @@
   .bootstrap-select.btn-group .dropdown-toggle .filter-option {
     text-transform: inherit; !important
 	}
-  
+	
 </style>
 <script type="text/javascript">
   function isNumber(evt) {
@@ -1815,7 +1815,7 @@
               <div class="col-md-3 pl-none">
                 <div class="gray-xs-f mb-xs">Display text (1 to 100 characters)
                   <span
-                      class="requiredStar" style="float: right;">*
+                      class="requiredStar">*
                   </span>
                 </div>
               </div>
