@@ -164,6 +164,9 @@ public class LoginController {
     String contactEmail = cookieHelper.getCookieValue(request, CONTACT_EMAIL_COOKIE);
     String deeplinkCookie = cookieHelper.getCookieValue(request, DEEPLINK_URL_COOKIE);
 
+    logger.warn(String.format("'%s' MOBILE APPS fromEmail", fromEmail));
+    logger.warn(String.format("'%s' MOBILE APPS contactEmail", contactEmail));
+
     boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source, deeplinkCookie);
     if (!attrsAdded) {
       return ERROR_VIEW_NAME;

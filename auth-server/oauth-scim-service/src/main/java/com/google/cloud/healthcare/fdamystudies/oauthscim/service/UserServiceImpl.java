@@ -269,6 +269,9 @@ public class UserServiceImpl implements UserService {
               auditRequest.getSource()));
     }
 
+    logger.warn(String.format("'%s' MOBILE APPS fromMobileEmail", fromMobileEmail));
+    logger.warn(String.format("'%s' MOBILE APPS contactMobileEmail", contactMobileEmail));
+
     String emailSubject =
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
             ? appConfig.getMailResetPasswordSubjectForMobileApp()
