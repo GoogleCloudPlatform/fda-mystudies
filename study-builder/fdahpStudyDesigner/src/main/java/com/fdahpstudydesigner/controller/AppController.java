@@ -109,6 +109,10 @@ public class AppController {
         request.getSession().removeAttribute("errMsgAppActions");
       }
 
+      if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
+        request.getSession().removeAttribute("sucMsgViewAssocStudies");
+      }
+
       map.addAttribute("appBos", appList);
       mav = new ModelAndView("appListPage", map);
 
@@ -582,7 +586,6 @@ public class AppController {
   public ModelAndView viewAppDetails(HttpServletRequest request) {
     Integer sessionAppCount;
     ModelMap map = new ModelMap();
-    AppsBo app = null;
     ModelAndView modelAndView = new ModelAndView("redirect:/adminApps/appList.do");
     String appId =
         FdahpStudyDesignerUtil.isEmpty(request.getParameter(APP_ID))
@@ -592,10 +595,6 @@ public class AppController {
         FdahpStudyDesignerUtil.isEmpty(request.getParameter(PERMISSION))
             ? ""
             : request.getParameter(PERMISSION);
-    String customAppId =
-        FdahpStudyDesignerUtil.isEmpty(request.getParameter(CUSTOM_APP_ID))
-            ? ""
-            : request.getParameter(CUSTOM_APP_ID);
     SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
     List<Integer> appSessionList = new ArrayList<>();
     List<AppSessionBean> appSessionBeans = new ArrayList<>();
@@ -616,15 +615,6 @@ public class AppController {
                 && sessionBean.getAppId().equals(appId)) {
               appSessionBean = sessionBean;
             }
-          }
-        }
-
-        if (StringUtils.isNotEmpty(customAppId)) {
-          app = appService.getAppbyCustomAppId(customAppId);
-          if (app != null) {
-            appId = app.getId();
-            boolean appPermission = appService.getAppPermission(app.getId(), sesObj.getUserId());
-            permission = appPermission ? "" : "view";
           }
         }
 

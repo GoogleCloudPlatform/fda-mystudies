@@ -368,6 +368,10 @@ public class NotificationController {
         request.getSession().removeAttribute("errMsgAppActions");
       }
 
+      if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
+        request.getSession().removeAttribute("sucMsgViewAssocStudies");
+      }
+
       /*
        * Passing 0 in below param as notifications are independent from
        * study and empty string to define it is as global notification

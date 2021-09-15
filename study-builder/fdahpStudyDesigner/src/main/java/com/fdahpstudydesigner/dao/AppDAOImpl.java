@@ -170,16 +170,17 @@ public class AppDAOImpl implements AppDAO {
                 appDetails.setFlag(true);
               }
             }
+
+            BigInteger totalStudyCount =
+                (BigInteger)
+                    session
+                        .createSQLQuery(
+                            "select count(*) from studies"
+                                + " WHERE app_id=:customAppId AND is_live=0")
+                        .setString("customAppId", appDetails.getCustomAppId())
+                        .uniqueResult();
+            appDetails.setStudiesCount(totalStudyCount);
             if (userBO.getRoleId().equals("1")) {
-              studyCount =
-                  (BigInteger)
-                      session
-                          .createSQLQuery(
-                              "select count(*) from studies"
-                                  + " WHERE app_id=:customAppId AND is_live=0")
-                          .setString("customAppId", appDetails.getCustomAppId())
-                          .uniqueResult();
-              appDetails.setStudiesCount(studyCount);
               appDetails.setViewPermission(true);
             } else {
               studyCount =
@@ -196,7 +197,7 @@ public class AppDAOImpl implements AppDAO {
                           .setString("customAppId", appDetails.getCustomAppId())
                           .setString(IMP_VALUE, userId)
                           .uniqueResult();
-              appDetails.setStudiesCount(studyCount);
+              appDetails.setStudyPermissionCount(studyCount);
             }
           }
         }

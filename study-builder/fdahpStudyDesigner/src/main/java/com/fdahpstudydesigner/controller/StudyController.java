@@ -1864,6 +1864,10 @@ public class StudyController {
           request.getSession().removeAttribute("sucMsgAppActions");
         }
 
+        if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
+          request.getSession().removeAttribute("sucMsgViewAssocStudies");
+        }
+
         if (null != request.getSession().getAttribute("errMsgAppActions")) {
           request.getSession().removeAttribute("errMsgAppActions");
         }
@@ -1922,6 +1926,11 @@ public class StudyController {
           auditRequest.setAppId(appId);
           auditLogEventHelper.logEvent(APP_ASSOCIATED_STUDIES_VIEWED, auditRequest);
           map.addAttribute("appId", appId);
+          request
+              .getSession()
+              .setAttribute(
+                  "sucMsgViewAssocStudies",
+                  FdahpStudyDesignerConstants.VIEW_ASSOCIATED_STUDIES_MESSAGE);
         }
         map.addAttribute("studyListId", "true");
         map.addAttribute("appBos", appList);

@@ -81,10 +81,14 @@
 					</c:choose>" data-toggle="tooltip" data-placement="top"
                 	title="${(not empty app.liveAppId)?((app.flag)?'Edit draft version':'Edit'):((app.createFlag)?'Edit':'Edit draft version')}"
                 	appId="${app.id}"></span>
-                    <span class="sprites_icon  mr-lg viewStudiesClass <c:if test="${app.studiesCount eq 0}">
+                    <span class="sprites_icon  mr-lg 
+                    <c:choose>
+                        <c:when test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN') && app.studiesCount gt 0}">viewStudiesClass</c:when>
+                        <c:when test="${not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN') && (not empty app.studyPermissionCount && app.studyPermissionCount gt 0)}">viewStudiesClass</c:when> 
+                    </c:choose>" data-toggle="tooltip" data-placement="top" title="${app.studiesCount} associated studies" appId="${app.customAppId}">
+                    <img class="<c:if test="${app.studiesCount eq 0 || (not empty app.studyPermissionCount && app.studyPermissionCount eq 0)}">
 								cursor-none
-						</c:if>" data-toggle="tooltip" data-placement="top" title="View associated studies (${app.studiesCount})" appId="${app.customAppId}">
-                    <img src="../images/icons/file-list-line.svg" >
+						</c:if>" src="../images/icons/file-list-line.svg" >
                     </span>
                     
                   </td>        
@@ -176,7 +180,7 @@
         document.body.appendChild(form);
         form.submit();
       });
-
+    
     $(document).on('click', '.viewStudiesClass', function(){
         var form = document.createElement('form');
         form.method = 'post';

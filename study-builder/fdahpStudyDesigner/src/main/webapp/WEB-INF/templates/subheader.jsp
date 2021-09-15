@@ -229,6 +229,11 @@ color: #95a2ab;
     if (sucMsgAppActions) {
     	showSucMsg(sucMsgAppActions);
     }
+
+    var sucMsgViewAssocStudies = "${sucMsgViewAssocStudies}";
+    if (sucMsgViewAssocStudies) {
+    	showSucMsg(sucMsgViewAssocStudies);
+    }
   });
 
   function showSucMsg(message) {
