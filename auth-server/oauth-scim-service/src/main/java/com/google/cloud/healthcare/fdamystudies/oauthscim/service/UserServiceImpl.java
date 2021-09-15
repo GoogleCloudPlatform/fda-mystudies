@@ -269,9 +269,6 @@ public class UserServiceImpl implements UserService {
               auditRequest.getSource()));
     }
 
-    logger.warn(String.format("'%s' MOBILE APPS fromMobileEmail", fromMobileEmail));
-    logger.warn(String.format("'%s' MOBILE APPS contactMobileEmail", contactMobileEmail));
-
     String emailSubject =
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
             ? appConfig.getMailResetPasswordSubjectForMobileApp()
@@ -290,6 +287,11 @@ public class UserServiceImpl implements UserService {
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
             ? fromMobileEmail
             : appConfig.getFromEmail();
+
+    logger.warn(String.format("'%s' fromEmail value for password reset email", fromEmail));
+    logger.warn(String.format("'%s' contactEmail value for password reset email", contactEmail));
+    logger.warn(
+        String.format("'%s' platformComponent value for password reset email", platformComponent));
 
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appName", appName);
