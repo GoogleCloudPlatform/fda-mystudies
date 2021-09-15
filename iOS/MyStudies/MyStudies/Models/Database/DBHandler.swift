@@ -1546,17 +1546,24 @@ class DBHandler: NSObject {
     date: Date
   ) {
 
+    let studyId = Study.currentStudy?.studyId ?? ""
     let realm = DBHandler.getRealmObject()!
-    let dbStatisticsList = realm.objects(DBStatistics.self).filter(
-      "activityId == %@ && dataSourceKey == %@",
+    
+    var dbStatisticsList: Results<DBStatistics>
+    var dbChartsList: Results<DBCharts>
+    
+    dbStatisticsList = realm.objects(DBStatistics.self).filter(
+      "activityId == %@ && dataSourceKey == %@ && studyId == %@",
       activityId,
-      key
+      key,
+      studyId
     )
 
-    let dbChartsList = realm.objects(DBCharts.self).filter(
-      "activityId == %@ && dataSourceKey == %@",
+    dbChartsList = realm.objects(DBCharts.self).filter(
+      "activityId == %@ && dataSourceKey == %@ && studyId == %@",
       activityId,
-      key
+      key,
+      studyId
     )
 
     let dbStatistics = dbStatisticsList.last

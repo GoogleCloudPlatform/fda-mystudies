@@ -26,7 +26,7 @@ let kUnwindToStudyListIdentifier = "unwindeToStudyListResourcesIdentifier"
 
 private enum TableRow: ResourceRow {
 
-  case about, consent, leave
+  case about, consent, terms, privacy, leave
 
   var title: String {
     switch self {
@@ -34,6 +34,10 @@ private enum TableRow: ResourceRow {
       return LocalizableString.aboutStudy.localizedString
     case .consent:
       return Branding.consentPDFTitle
+    case .terms:
+      return LocalizableString.resourceTerms.localizedString
+    case .privacy:
+      return LocalizableString.resourcePrivacy.localizedString
     case .leave:
       return Branding.leaveStudyTitle
     }
@@ -66,6 +70,8 @@ class ResourcesViewController: UIViewController {
   var shouldDeleteData: Bool? = false
 
   var leaveStudy: String = TableRow.leave.title
+  var resourceTerms: String = TableRow.terms.title
+  var resourcePrivacy: String = TableRow.privacy.title
   var aboutTheStudy: String = TableRow.about.title
   var consentPDF: String = TableRow.consent.title
 
@@ -133,6 +139,19 @@ class ResourcesViewController: UIViewController {
   // MARK: - Utils
 
   private func getStaticResources() -> [ResourceRow] {
+    if Utilities.isStandaloneApp() {
+      let linkTerm: String = Branding.termsAndConditionURL
+      let linkPrivacy: String = Branding.privacyPolicyURL
+      if linkTerm != "" && linkPrivacy != "" {
+        return [TableRow.about, TableRow.consent, TableRow.terms, TableRow.privacy, TableRow.leave]
+      } else if linkTerm != "" {
+        return [TableRow.about, TableRow.consent, TableRow.terms, TableRow.leave]
+      } else if linkPrivacy != "" {
+        return [TableRow.about, TableRow.consent, TableRow.privacy, TableRow.leave]
+      }
+      
+      return [TableRow.about, TableRow.consent, TableRow.leave]
+    }
     return [TableRow.about, TableRow.consent, TableRow.leave]
   }
 
@@ -239,6 +258,18 @@ class ResourcesViewController: UIViewController {
 
     }
     tableRows = [TableRow.about, TableRow.consent] + resources
+    if Utilities.isStandaloneApp() {
+      let linkTerm: String = Branding.termsAndConditionURL
+      let linkPrivacy: String = Branding.privacyPolicyURL
+      if linkTerm != "" && linkPrivacy != "" {
+        tableRows.append(TableRow.terms)
+        tableRows.append(TableRow.privacy)
+      } else if linkTerm != "" {
+        tableRows.append(TableRow.terms)
+      } else if linkPrivacy != "" {
+        tableRows.append(TableRow.privacy)
+      }
+    }
     tableRows.append(TableRow.leave)
     tableView?.isHidden = false
     tableView?.reloadData()
@@ -247,6 +278,36 @@ class ResourcesViewController: UIViewController {
     DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
   }
 
+  func handelTerms() {
+    let link: String = Branding.termsAndConditionURL
+    let title: String = kNavigationTitleTerms
+    
+    guard !link.isEmpty else { return }
+    let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+        as? UINavigationController)!
+    let webview = (webViewController.viewControllers[0] as? WebViewController)!
+    webview.requestLink = link
+    webview.title = title
+    self.navigationController?.present(webViewController, animated: true, completion: nil)
+  }
+  
+  func handelPrivacy() {
+    let link: String = Branding.privacyPolicyURL
+    let title: String = kNavigationTitlePrivacyPolicy
+    
+    guard !link.isEmpty else { return }
+    let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+        as? UINavigationController)!
+    let webview = (webViewController.viewControllers[0] as? WebViewController)!
+    webview.requestLink = link
+    webview.title = title
+    self.navigationController?.present(webViewController, animated: true, completion: nil)
+  }
+  
   func handleLeaveStudy() {
 
     var withdrawalMessage = Study.currentStudy?.withdrawalConfigration?.message
@@ -489,7 +550,7 @@ class ResourcesViewController: UIViewController {
 
     for activityStatus in userActivityStatusList {
       let index = currentUser.participatedActivites.firstIndex(
-        where: { $0.activityId == activityStatus.activityId })
+        where: { $0.activityId == activityStatus.activityId && $0.studyId == activityStatus.studyId })
       currentUser.participatedActivites.remove(at: index!)
     }
 
@@ -607,6 +668,10 @@ extension ResourcesViewController: UITableViewDelegate {
         }
       case .leave:
         self.handleLeaveStudy()
+      case .terms:
+        handelTerms()
+      case .privacy:
+        handelPrivacy()
       }
     } else if let resource = self.tableRows[indexPath.row] as? Resource {
       resourceLink = resource.file?.getFileLink()
