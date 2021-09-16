@@ -35,6 +35,11 @@ button#exportId {
     transform: translate(-40%, -40%); 
 }
 
+.distributed_image{
+	width: 13px;
+    margin-left: 4px;
+    margin-bottom: 4px;
+}
 
 
 
@@ -147,7 +152,7 @@ button#exportId {
       
       
         
-       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.iosAppDistributed?'hide':''}"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div> 
+       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.iosAppDistributed?'hide':''}"> Distributed  <img class="distributed_image"  src="/studybuilder/images/icons/check-solid.svg" > </span>  </div> 
        </div>
      
         
@@ -196,7 +201,7 @@ button#exportId {
       
       
         
-       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.androidAppDistributed?'hide':''}"> Distributed <span class="sprites-icons-2  pull-right mt-xs ml-xs">  <img src="/studybuilder/images/icons/check-solid.svg" ></span> </span>  </div> 
+       <div> <span class="study_status  post-launch_txt  pr-sm pl-sm empty ${not appBo.androidAppDistributed?'hide':''}"> Distributed <img class="distributed_image" src="/studybuilder/images/icons/check-solid.svg" > </span>  </div> 
        </div>
      
         
