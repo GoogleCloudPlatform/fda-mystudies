@@ -1107,6 +1107,7 @@
   $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
       if(element == "Study admin"){ 
+      var actionPage = "${actionPage}";
       	 $('.edit-user-list-widget').show();
       	 $('.perm-assign').show();
       	 $('.pull-right').show();
@@ -1115,29 +1116,39 @@
 	     $('.dis-checkbox-st').addClass('disabled', 'disabled');
 	     $('#inlineCheckbox5').prop('checked', false);
 	     $('.dis-checkbox-app').addClass('disabled', 'disabled');
+	     if(actionPage == 'EDIT_PAGE' && "${userBO.accessLevel}"== "SUPERADMIN"){
+	    	 $('#inlineCheckbox5').prop('checked', true);
+		     $('.dis-checkbox-st').removeClass('disabled', 'disabled');
+		     $('.dis-checkbox-app').removeClass('disabled', 'disabled');
+		     $('#inlineCheckboxApp').prop('checked', true);
+		     $('#inlineCheckbox6').prop('checked', true);
+		     $('#inlineCheckboxApp').val(1);
+		     $('.changeView3').prop('disabled', false);
+	         $('.changeView3').selectpicker('refresh');
+	     }
       	        
-      	 
       	var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
         var selected_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
         var tot_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-        var selected_app = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li[style]").length;
+        var selected_app = $(".app-selected-item").length;
         
         if (selected_study == tot_study) {
       	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
           $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
         }
-        var actionPage = "${actionPage}";
+       
         if (selected_app > 0 && actionPage == 'ADD_PAGE' ) {
         	 $(".app-selected-item").remove();
-        }else if(  selected_app == tot_app){
+        }
+        
+        if(  selected_app == tot_app){
         	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
               $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
               	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
         }
-        
           } else{
-        	  $('.edit-user-list-widget').hide();
+        	 $('.edit-user-list-widget').hide();
            	 $('.perm-assign').hide();
            	 $('.pull-right').hide();
         }
