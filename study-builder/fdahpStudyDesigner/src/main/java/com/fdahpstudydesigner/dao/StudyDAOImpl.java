@@ -139,6 +139,8 @@ public class StudyDAOImpl implements StudyDAO {
 
   @Autowired private NotificationDAO notificationDAO;
 
+  @Autowired private AppDAO appDAO;
+
   @Autowired private StudyExportImportService studyExportImportService;
 
   HibernateTemplate hibernateTemplate;
@@ -4394,6 +4396,18 @@ public class StudyDAOImpl implements StudyDAO {
           dbStudyBo.setThumbnailImage(studyBo.getThumbnailImage());
           dbStudyBo.setModifiedBy(studyBo.getUserId());
           dbStudyBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+          if (studyBo.getAppId() != null
+              && dbStudyBo.getAppId() != null
+              && !dbStudyBo.getAppId().equals(studyBo.getAppId())) {
+            studySequenceBo =
+                (StudySequenceBo)
+                    session
+                        .getNamedQuery(FdahpStudyDesignerConstants.STUDY_SEQUENCE_BY_ID)
+                        .setString(FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId())
+                        .uniqueResult();
+            studySequenceBo.setSettingAdmins(false);
+            session.update(studySequenceBo);
+          }
           dbStudyBo.setAppId(studyBo.getAppId());
           session.update(dbStudyBo);
 
