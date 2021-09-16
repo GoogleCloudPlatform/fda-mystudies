@@ -27,7 +27,11 @@ public interface UserService {
   public UserResponse createUser(UserRequest userRequest);
 
   public ResetPasswordResponse resetPassword(
-      ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest, String appName)
+      ResetPasswordRequest resetPasswordRequest,
+      AuditLogEventRequest auditRequest,
+      String appName,
+      String fromEmail,
+      String contactEmail)
       throws JsonProcessingException;
 
   public ChangePasswordResponse changePassword(
