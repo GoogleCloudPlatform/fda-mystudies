@@ -129,6 +129,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -176,6 +177,8 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
   @Autowired private ParticipantManagerUtil participantManagerUtil;
+
+  @Autowired ResourceLoader resourceLoader;
 
   @Override
   @Transactional
@@ -1501,7 +1504,29 @@ public class SiteServiceImpl implements SiteService {
               appPropertyConfig.getParticipantInviteSubject(),
               appPropertyConfig.getParticipantInviteBody(),
               templateArgs);
-      EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
+
+      Map<String, String> inlineImages = new HashMap<>();
+
+      try {
+        inlineImages.put(
+            "image_play_store",
+            resourceLoader
+                .getResource("classpath:Logos/Play_Store_Logo.png")
+                .getFile()
+                .getAbsolutePath());
+
+        inlineImages.put(
+            "image_app_store",
+            resourceLoader
+                .getResource("classpath:Logos/App_Store_Logo.png")
+                .getFile()
+                .getAbsolutePath());
+
+      } catch (IOException e) {
+        logger.error("sendInvitationEmail() failed with an exception.", e);
+      }
+
+      EmailResponse emailResponse = emailService.sendMimeMailWithImages(emailRequest, inlineImages);
 
       SiteEntity site = participantRegistrySiteEntity.getSite();
       Map<String, String> map =

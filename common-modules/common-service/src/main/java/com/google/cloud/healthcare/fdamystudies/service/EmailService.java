@@ -10,8 +10,12 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
+import java.util.Map;
 
 public interface EmailService {
 
   public EmailResponse sendMimeMail(EmailRequest emailRequest);
+
+  public EmailResponse sendMimeMailWithImages(
+      EmailRequest emailRequest, Map<String, String> inlineImages);
 }
