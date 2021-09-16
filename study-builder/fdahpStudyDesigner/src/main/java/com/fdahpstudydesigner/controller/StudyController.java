@@ -4515,6 +4515,9 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
+          request.getSession().removeAttribute("sucMsgViewAssocStudies");
+        }
         AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
         if (null
             != request
