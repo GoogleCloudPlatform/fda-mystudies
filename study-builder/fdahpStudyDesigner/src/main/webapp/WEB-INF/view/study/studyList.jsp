@@ -419,6 +419,8 @@
 			        $(".select-text").html(' Select');
 			    }
 			  var total = $('input[name="options[]"]:checked').length;
+			    
+			 
 			  if(total == 0){
 				  $(".dropdown-text").html('-- Select apps --');
 			  }else{
@@ -427,6 +429,11 @@
 			  
 			});
 		  
+			 
+		    <c:if test="${not empty appId}">
+		    	$(".dropdown-text").html('Showing ' + 1 + ' app(s)');
+		    </c:if>
+		 
 		});
   
 </script>
