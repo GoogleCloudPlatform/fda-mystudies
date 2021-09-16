@@ -139,8 +139,6 @@ public class StudyDAOImpl implements StudyDAO {
 
   @Autowired private NotificationDAO notificationDAO;
 
-  @Autowired private AppDAO appDAO;
-
   @Autowired private StudyExportImportService studyExportImportService;
 
   HibernateTemplate hibernateTemplate;
