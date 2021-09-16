@@ -379,7 +379,6 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
           UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
         }
-        HomeViewController.setRootView()
       } else {
         self.slideMenuController()?.leftViewController?.navigationController?
           .popToRootViewController(animated: false)
