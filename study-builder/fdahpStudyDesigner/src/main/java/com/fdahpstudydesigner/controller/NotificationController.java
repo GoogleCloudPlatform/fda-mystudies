@@ -385,6 +385,10 @@ public class NotificationController {
         request.getSession().removeAttribute("errMsgAppActions");
       }
 
+      if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
+        request.getSession().removeAttribute("sucMsgViewAssocStudies");
+      }
+
       notificationList = notificationService.getViewNotificationList(sessionObject.getUserId());
       if (CollectionUtils.isNotEmpty(notificationList)) {
         for (NotificationBO notification : notificationList) {

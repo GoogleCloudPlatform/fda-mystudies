@@ -1474,7 +1474,6 @@ public class StudyController {
     List<ConsentInfoBo> consentInfoBoList = null;
     List<ConsentBo> consentBoList = null;
     String lastPublishedVersion = null;
-
     StudyBo studyBo = null;
     ConsentBo consentBo = null;
     String sucMsg = "";
@@ -1602,15 +1601,14 @@ public class StudyController {
         }
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_ID, studyId);
         map.addAttribute("consentBo", consentBo);
-        map.addAttribute("_S", sessionStudyCount);
         map.addAttribute("status", studyBo.getStatus());
+        map.addAttribute("_S", sessionStudyCount);
         map.addAttribute("lastPublishedVersion", lastPublishedVersion);
 
         if (request.getParameter("isActive") != null
             && request.getParameter("isActive").equals("consentReview")) {
           map.addAttribute("isActive", "consentReview");
         }
-
         mav = new ModelAndView("consentReviewAndEConsentPage", map);
       }
     } catch (Exception e) {
@@ -4378,6 +4376,9 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
+          request.getSession().removeAttribute("sucMsgViewAssocStudies");
+        }
         AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
         if (null
             != request
@@ -4570,8 +4571,10 @@ public class StudyController {
             }
           }
         }
+
         List<AppsBo> apps = appService.getAppsForStudy(sesObj.getUserId());
         AppsBo app = appService.getAppbyCustomAppId(studyBo.getAppId());
+
         if (app != null) {
           map.addAttribute("appName", app.getName());
           map.addAttribute("appType", app.getType());
@@ -4579,12 +4582,12 @@ public class StudyController {
             apps.add(app);
           }
         }
-        map.addAttribute("appsList", apps);
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         map.addAttribute("createStudyId", "true");
         map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
         map.addAttribute("_S", sessionStudyCount);
+        map.addAttribute("appsList", apps);
         mav = new ModelAndView("viewBasicInfo", map);
       }
     } catch (Exception e) {
@@ -4600,6 +4603,7 @@ public class StudyController {
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
+    AppsBo appBo = null;
     String sucMsg = "";
     String errMsg = "";
     String user = "";
@@ -4670,7 +4674,7 @@ public class StudyController {
                         sessionStudyCount + FdahpStudyDesignerConstants.LOGOUT_LOGIN_USER);
         if (FdahpStudyDesignerUtil.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-
+          appBo = appService.getAppbyCustomAppId(studyBo.getAppId());
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
           map.addAttribute(FdahpStudyDesignerConstants.PERMISSION, permission);
           map.addAttribute("user", user);
@@ -4685,6 +4689,7 @@ public class StudyController {
                   studyBo.getId(), studyBo.getCustomStudyId());
           map.addAttribute("isAnchorForEnrollmentLive", isAnchorForEnrollmentLive);
           map.addAttribute("isAnchorForEnrollmentDraft", isAnchorForEnrollmentDraft);
+          map.addAttribute("appBo", appBo);
 
           mav = new ModelAndView(FdahpStudyDesignerConstants.VIEW_SETTING_AND_ADMINS, map);
         } else {
