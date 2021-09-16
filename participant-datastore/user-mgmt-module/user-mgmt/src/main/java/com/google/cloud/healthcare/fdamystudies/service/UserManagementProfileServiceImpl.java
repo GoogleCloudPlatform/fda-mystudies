@@ -343,14 +343,18 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       subject = appPropertiesDetails.getRegEmailSub();
     }
 
+    Optional<AppEntity> optApp = appRepository.findByAppId(applicationId);
+    if (!optApp.isPresent()) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
+    }
+
     templateArgs.put("appName", appName);
-    // TODO(#496): replace with actual study's org name.
-    templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
+            optApp.get().getFromEmailId(),
             new String[] {emailId},
             null,
             null,
