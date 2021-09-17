@@ -301,4 +301,17 @@ public class AppServiceImpl implements AppService {
     logger.exit("AppServiceImpl - getStudiesByAppId() - Ends");
     return count;
   }
+
+  @Override
+  public int getStudiesCountByAppId(String customAppId) {
+    logger.entry("AppServiceImpl - getStudiesCountByAppId() - Starts");
+    int count = 0;
+    try {
+      count = appDAO.getStudiesCountByAppId(customAppId);
+    } catch (Exception e) {
+      logger.error("AppServiceImpl - getStudiesCountByAppId() - ERROR ", e);
+    }
+    logger.exit("AppServiceImpl - getStudiesCountByAppId() - Ends");
+    return count;
+  }
 }

@@ -63,4 +63,6 @@ public interface AppService {
   public int getStudiesByAppId(String customAppId);
 
   public List<AppsBo> getAppsForStudy(String userId);
+
+  public int getStudiesCountByAppId(String customAppId);
 }

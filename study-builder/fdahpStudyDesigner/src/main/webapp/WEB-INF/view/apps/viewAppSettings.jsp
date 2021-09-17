@@ -150,10 +150,35 @@ $('#completedId').click(
       if ($('.checkbox input:checked').length == 0) {
     	    $("input").attr("required", true);
         }
-     if( isFromValid("#settingFormId")){
-    	 $("#buttonText").val('completed');
-    	 $("#settingFormId").submit();
-     }
+      var count = "${countOfStudies}";
+    	  if(document.getElementById('inlineRadio2').checked == true && count > 1) {
+	        bootbox.confirm({
+	            closeButton: false,
+	            message: "This app seems to be linked to multiple studies. Please select the 'gateway'",
+	            buttons: {
+	              'cancel': {
+	                label: 'Cancel',
+	              },
+	              'confirm': {
+	                label: 'OK',
+	              },
+	            },
+	            callback: function (result) {
+	              if (result) {
+	            	  var a = document.createElement('a');
+	                  a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=${param._S}";
+	                  document.body.appendChild(a).click();
+	              } else {
+	                $('.cancelBut').prop('disabled', false);
+	              }
+	            }
+	          });
+	    }else{
+		    if( isFromValid("#settingFormId")){
+		   	 $("#buttonText").val('completed');
+		   	 $("#settingFormId").submit();
+		    }
+         }
     });
     
 	var sucMsg = '${sucMsg}';
