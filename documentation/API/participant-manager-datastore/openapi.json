@@ -40,7 +40,7 @@
     "/apps" : {
       "get" : {
         "tags" : [ "Apps" ],
-        "summary" : "Returns a list of apps based on permissions",
+        "summary" : "fetch a list of apps that correspond to the Studies to which user have permissions",
         "operationId" : "getAppsUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -114,7 +114,7 @@
     "/apps/{appId}/participants" : {
       "get" : {
         "tags" : [ "Apps" ],
-        "summary" : "Returns a response of app registrants with enrolled studies and sites",
+        "summary" : "fetch app registrants with enrolled studies",
         "operationId" : "getAppParticipantsUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -198,7 +198,7 @@
     "/consents/{consentId}/consentDocument" : {
       "get" : {
         "tags" : [ "Get Consent Document" ],
-        "summary" : "Returns a response of encoded base 64 consent document",
+        "summary" : "fetch consent document",
         "operationId" : "getConsentDocumentUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -285,7 +285,7 @@
     "/locations" : {
       "get" : {
         "tags" : [ "Locations" ],
-        "summary" : "Returns a list of location details",
+        "summary" : "fetch location details",
         "operationId" : "getLocationsUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -374,7 +374,7 @@
       },
       "post" : {
         "tags" : [ "Locations" ],
-        "summary" : "Valid data submitted to this resource will create a new location",
+        "summary" : "create a new location",
         "operationId" : "addNewLocationUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "*/*" ],
@@ -425,7 +425,7 @@
     "/locations/{locationId}" : {
       "get" : {
         "tags" : [ "Locations" ],
-        "summary" : "Returns a response containing location based on location id",
+        "summary" : "fetch location based on location id",
         "operationId" : "getLocationByIdUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -471,7 +471,7 @@
       },
       "put" : {
         "tags" : [ "Locations" ],
-        "summary" : "Updates existing location",
+        "summary" : "update existing location",
         "operationId" : "updateLocationUsingPUT",
         "consumes" : [ "application/json" ],
         "produces" : [ "*/*" ],
@@ -528,7 +528,7 @@
     "/sites" : {
       "get" : {
         "tags" : [ "Sites" ],
-        "summary" : "Returns a response containing list of sites based on permission",
+        "summary" : "fetch a list of sites that user have permissions",
         "operationId" : "getSitesUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -590,7 +590,7 @@
       },
       "post" : {
         "tags" : [ "Sites" ],
-        "summary" : "Creates a new site for a study based on permission",
+        "summary" : "create a new site for a study",
         "operationId" : "addNewSiteUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -641,7 +641,7 @@
     "/sites/{participantRegistrySiteId}/participant" : {
       "get" : {
         "tags" : [ "Sites" ],
-        "summary" : "Returns participant details with enrollment history",
+        "summary" : "fetch participant details with enrollment history",
         "operationId" : "getParticipantDetailsUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -703,7 +703,7 @@
     "/sites/{siteId}/decommission" : {
       "put" : {
         "tags" : [ "Sites" ],
-        "summary" : "Activate/Deactivate's site for a study",
+        "summary" : "Activate/Deactivate site for a study",
         "operationId" : "decomissionSiteUsingPUT",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -752,7 +752,7 @@
     "/sites/{siteId}/participants" : {
       "get" : {
         "tags" : [ "Sites" ],
-        "summary" : "Returns a list of site participants with onboarding status",
+        "summary" : "fetch participants related to particular site",
         "operationId" : "getSiteParticipantUsingGET",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -818,7 +818,7 @@
       },
       "post" : {
         "tags" : [ "Sites" ],
-        "summary" : "Add a new participant for a site",
+        "summary" : "add a new participant for a site",
         "operationId" : "addNewParticipantUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -875,7 +875,7 @@
     "/sites/{siteId}/participants/import" : {
       "post" : {
         "tags" : [ "Sites" ],
-        "summary" : "Imports participants from a file",
+        "summary" : "import participants from file",
         "operationId" : "importParticipantsUsingPOST",
         "consumes" : [ "multipart/form-data" ],
         "produces" : [ "application/json" ],
@@ -930,7 +930,7 @@
     "/sites/{siteId}/participants/invite" : {
       "post" : {
         "tags" : [ "Sites" ],
-        "summary" : "Send/Resend's invitation to participants",
+        "summary" : "Send/Resend invitation to participants",
         "operationId" : "inviteParticipantsUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "*/*" ],
@@ -987,7 +987,7 @@
     "/sites/{siteId}/participants/status" : {
       "patch" : {
         "tags" : [ "Sites" ],
-        "summary" : "Updates onbording status for a participant",
+        "summary" : "update onbording status for a participant",
         "operationId" : "updateOnboardingStatusUsingPATCH",
         "consumes" : [ "application/json" ],
         "produces" : [ "*/*" ],
@@ -1026,7 +1026,7 @@
     "/studies" : {
       "get" : {
         "tags" : [ "Studies" ],
-        "summary" : "Return a list study details",
+        "summary" : "fetch a list of studies for which user have permissions",
         "operationId" : "getStudiesUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -1090,7 +1090,7 @@
     "/studies/{studyId}/participants" : {
       "get" : {
         "tags" : [ "Studies" ],
-        "summary" : "Returns a response containing study participant details",
+        "summary" : "fetch study participant details",
         "operationId" : "getStudyParticipantsUsingGET",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -1184,7 +1184,7 @@
     "/studies/{studyId}/targetEnrollment" : {
       "patch" : {
         "tags" : [ "Studies" ],
-        "summary" : "Updates target enrollment value for the study",
+        "summary" : "update target enrollment for the study",
         "operationId" : "updateTargetEnrollmentUsingPATCH",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -1223,7 +1223,7 @@
     "/users" : {
       "get" : {
         "tags" : [ "Users" ],
-        "summary" : "Returns list of all admin details",
+        "summary" : "fetch all admin details",
         "operationId" : "getUsersUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -1299,7 +1299,7 @@
       },
       "post" : {
         "tags" : [ "Users" ],
-        "summary" : "Add new admin with permissions by sending an email",
+        "summary" : "add new admin with permissions and invite through email",
         "operationId" : "addNewUserSiteCoordinatorUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -1350,7 +1350,7 @@
     "/users/admin/{adminId}" : {
       "get" : {
         "tags" : [ "Users" ],
-        "summary" : "Returns a response containing particular admin detail",
+        "summary" : "fetch particular admin detail",
         "operationId" : "getAdminDetailsAndAppsUsingGET",
         "produces" : [ "*/*" ],
         "parameters" : [ {
@@ -1404,7 +1404,7 @@
     "/users/securitycodes/{securityCode}" : {
       "get" : {
         "tags" : [ "User Profile" ],
-        "summary" : "Returns a response containing user profile by security code",
+        "summary" : "fetch user profile by security code",
         "operationId" : "getUserDetailsUsingGET",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -1446,7 +1446,7 @@
     "/users/setUpAccount" : {
       "post" : {
         "tags" : [ "User Profile" ],
-        "summary" : "Set up an account by activating user after registration",
+        "summary" : "set up account by activating user after registration",
         "operationId" : "setUpAccountUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -1491,7 +1491,7 @@
     "/users/{adminUserId}/" : {
       "put" : {
         "tags" : [ "Users" ],
-        "summary" : "Updates admin with permissions by sending an email",
+        "summary" : "update admin with permissions and send permission update email",
         "operationId" : "updateUserSiteCoordinatorUsingPUT",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -1548,7 +1548,7 @@
     "/users/{userId}" : {
       "get" : {
         "tags" : [ "User Profile" ],
-        "summary" : "Returns user profile information",
+        "summary" : "fetch user profile",
         "operationId" : "getUserProfileUsingGET",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -1588,7 +1588,7 @@
       },
       "delete" : {
         "tags" : [ "User Profile" ],
-        "summary" : "Delete invitation of the user",
+        "summary" : "delete invitation of the user",
         "operationId" : "deleteInvitationUsingDELETE",
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -1634,7 +1634,7 @@
       },
       "patch" : {
         "tags" : [ "User Profile" ],
-        "summary" : "Updates user account status",
+        "summary" : "update user account status",
         "operationId" : "updateUserAccountStatusUsingPATCH",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -1673,7 +1673,7 @@
     "/users/{userId}/invite" : {
       "post" : {
         "tags" : [ "Users" ],
-        "summary" : "Resends invitation email to the admin",
+        "summary" : "resend invitation email to the user",
         "operationId" : "sendInvitationUsingPOST",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -1722,7 +1722,7 @@
     "/users/{userId}/profile" : {
       "put" : {
         "tags" : [ "User Profile" ],
-        "summary" : "Updates user account details",
+        "summary" : "update user account details",
         "operationId" : "updateUserProfileUsingPUT",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
@@ -1794,6 +1794,9 @@
     "AppDetails" : {
       "type" : "object",
       "properties" : {
+        "appStatus" : {
+          "type" : "string"
+        },
         "appUsersCount" : {
           "type" : "integer",
           "format" : "int64"
@@ -1844,6 +1847,9 @@
       "type" : "object",
       "properties" : {
         "appId" : {
+          "type" : "string"
+        },
+        "appStatus" : {
           "type" : "string"
         },
         "code" : {
@@ -2335,6 +2341,9 @@
         "appName" : {
           "type" : "string"
         },
+        "appStatus" : {
+          "type" : "string"
+        },
         "consentHistory" : {
           "type" : "array",
           "items" : {
@@ -2487,6 +2496,9 @@
           "type" : "string"
         },
         "appName" : {
+          "type" : "string"
+        },
+        "appStatus" : {
           "type" : "string"
         },
         "code" : {

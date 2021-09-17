@@ -99,6 +99,7 @@ public final class ParticipantMapper {
       participants.setAppName(study.getApp().getAppName());
       participants.setCustomAppId(study.getApp().getAppId());
       participants.setAppId(study.getApp().getAppId());
+      participants.setAppStatus(study.getApp().getAppStatus());
     }
   }
 
@@ -181,6 +182,7 @@ public final class ParticipantMapper {
     participantDetail.setCustomLocationId(
         participantRegistry.getSite().getLocation().getCustomId());
     participantDetail.setEmail(participantRegistry.getEmail());
+    participantDetail.setAppStatus(participantRegistry.getStudy().getApp().getAppStatus());
 
     String invitedDate = DateTimeUtils.format(participantRegistry.getInvitationDate());
     participantDetail.setInvitationDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
@@ -195,7 +197,7 @@ public final class ParticipantMapper {
     participantDetail.setOnboardingStatus(status);
 
     ParticipantStudyEntity participantStudy = participantRegistry.getParticipantStudies().get(0);
-    
+
     if (participantRegistry.getStudy().getType().equals(CommonConstants.OPEN_STUDY)
         && !EnrollmentStatus.ENROLLED.getStatus().equals(participantStudy.getStatus())) {
       participantDetail.setEnrollmentStatus(EnrollmentStatus.WITHDRAWN.getDisplayValue());
@@ -234,6 +236,7 @@ public final class ParticipantMapper {
     participantRegistryDetail.setAppId(studyAppDetails.getAppId());
     participantRegistryDetail.setAppName(studyAppDetails.getAppName());
     participantRegistryDetail.setCustomAppId(studyAppDetails.getCustomAppId());
+    participantRegistryDetail.setAppStatus(studyAppDetails.getAppStatus());
     participantRegistryDetail.setTargetEnrollment(studyAppDetails.getTargetEnrollment());
     Integer permission = user.isSuperAdmin() ? Permission.EDIT.value() : studyAppDetails.getEdit();
 
