@@ -13,7 +13,7 @@
     line-height: 16px;
     color: #7c868d;
     font-weight: 500;
-    padding-left:3%;
+    padding-left:6px;
   }
   
   .select-sub_text { padding-left:13%;}
