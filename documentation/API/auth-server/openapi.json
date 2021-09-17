@@ -124,6 +124,12 @@
           "required" : true,
           "type" : "string"
         }, {
+          "name" : "fromEmail",
+          "in" : "header",
+          "description" : "fromEmail",
+          "required" : true,
+          "type" : "string"
+        }, {
           "in" : "body",
           "name" : "resetPasswordRequest",
           "description" : "resetPasswordRequest",
@@ -131,6 +137,12 @@
           "schema" : {
             "$ref" : "#/definitions/ResetPasswordRequest"
           }
+        }, {
+          "name" : "supportEmail",
+          "in" : "header",
+          "description" : "supportEmail",
+          "required" : false,
+          "type" : "string"
         } ],
         "responses" : {
           "200" : {
@@ -438,24 +450,14 @@
     },
     "ResetPasswordRequest" : {
       "type" : "object",
-      "required" : [ "appId", "contactEmail", "email", "fromEmail" ],
+      "required" : [ "appId", "email" ],
       "properties" : {
         "appId" : {
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 100
         },
-        "contactEmail" : {
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 320
-        },
         "email" : {
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 320
-        },
-        "fromEmail" : {
           "type" : "string",
           "minLength" : 0,
           "maxLength" : 320
@@ -516,11 +518,6 @@
         "appName" : {
           "type" : "string"
         },
-        "contactEmail" : {
-          "type" : "string",
-          "minLength" : 0,
-          "maxLength" : 320
-        },
         "email" : {
           "type" : "string",
           "minLength" : 0,
@@ -538,6 +535,11 @@
         "status" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "supportEmail" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 320
         }
       },
       "title" : "UserRequest"

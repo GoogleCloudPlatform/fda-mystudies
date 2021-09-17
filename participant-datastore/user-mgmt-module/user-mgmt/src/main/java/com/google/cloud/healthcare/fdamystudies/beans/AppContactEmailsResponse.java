@@ -20,6 +20,7 @@ public class AppContactEmailsResponse extends BaseResponse {
   private String termsUrl;
   private String privacyPolicyUrl;
   private String appWebsite;
+  private String supportEmail;
   private AppDetailsVersionBean version;
 
   public AppContactEmailsResponse(
@@ -30,6 +31,7 @@ public class AppContactEmailsResponse extends BaseResponse {
       String termsUrl,
       String privacyPolicyUrl,
       String appWebsite,
+      String supportEmail,
       AppDetailsVersionBean version) {
     super(messageCode);
     this.contactUsEmail = contactUsEmail;
@@ -38,6 +40,7 @@ public class AppContactEmailsResponse extends BaseResponse {
     this.termsUrl = termsUrl;
     this.privacyPolicyUrl = privacyPolicyUrl;
     this.appWebsite = appWebsite;
+    this.supportEmail = supportEmail;
     this.version = version;
   }
 }

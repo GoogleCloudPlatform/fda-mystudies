@@ -178,6 +178,7 @@ public class AppsServiceImpl implements AppsService {
               app.getAppTermsUrl(),
               app.getAppPrivacyUrl(),
               app.getAppWebsite(),
+              app.getAppSupportEmailAddress(),
               new AppDetailsVersionBean(android, ios));
     }
 
