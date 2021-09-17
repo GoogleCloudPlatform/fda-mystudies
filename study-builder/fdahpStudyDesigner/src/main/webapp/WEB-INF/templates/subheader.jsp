@@ -37,7 +37,7 @@ display: inline-block;
 }
 
 .dropdown_chk_box button { 
-width:200px;
+width:270px;
 text-align: left;
 color: #95a2ab;
 }
@@ -129,7 +129,7 @@ color: #95a2ab;
            <c:if test="${not empty appBos}">
             <label>
               <input type="checkbox" class="selectall fcheckbox" />
-              <span class="select-sub_text"> All</span> apps </label>
+              <span class="pl-7"> All</span> apps </label>
             </c:if>
             <c:if test="${empty appBos}">
             <label>No app records found</label>
