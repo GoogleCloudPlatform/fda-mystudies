@@ -4720,6 +4720,8 @@ public class StudyController {
           if (app.getType().equals("SD")) {
             apps.add(app);
           }
+          boolean appPermission = appService.getAppPermission(app.getId(), sesObj.getUserId());
+          map.addAttribute("appPermission", appPermission);
         }
         map.addAttribute("categoryList", categoryList);
         map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);

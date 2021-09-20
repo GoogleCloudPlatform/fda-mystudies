@@ -36,22 +36,27 @@
     line-height: 16px;
     color: #7c868d;
     font-weight: 500;
-    padding-left:3%;
+    padding-left:6px;
   }
   
-  .select-sub_text { padding-left:25px;}
+  .select-sub_text { padding-left:23px;}
   .select_drop_parent {
   	position: absolute;
     display: contents;
     }
       .custom_checkbox_dropdown { 
-      background: #d9e1e9 !important;
-      min-width: 200px !important;
+   background: #fff!important;
+    min-width: 200px !important;
+    height: 300px;
+    overflow-y: scroll;
       }
       
     .custom_checkbox_dropdown > li >a {
     padding: 0px 20px;
     
+}
+.pl-7 {
+padding-left: 7px;
 }
  
 </style>

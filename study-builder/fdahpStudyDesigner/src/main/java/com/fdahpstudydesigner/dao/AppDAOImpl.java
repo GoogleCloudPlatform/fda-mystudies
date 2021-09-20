@@ -1179,4 +1179,31 @@ public class AppDAOImpl implements AppDAO {
     logger.exit("getAppsByCustomAppId() - Ends");
     return count;
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public int getStudiesCountByAppId(String customAppId) {
+
+    logger.entry("begin getStudiesCountByAppId()");
+    Session session = null;
+    List<StudyBo> studyList = null;
+    int count = 0;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      if (StringUtils.isNotEmpty(customAppId)) {
+
+        studyList =
+            session
+                .getNamedQuery("StudyBo.getStudyCountBycustomAppId")
+                .setString("customAppId", customAppId)
+                .list();
+
+        count = studyList.size();
+      }
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getStudiesCountByAppId() - ERROR ", e);
+    }
+    logger.exit("getAppById() - Ends");
+    return count;
+  }
 }

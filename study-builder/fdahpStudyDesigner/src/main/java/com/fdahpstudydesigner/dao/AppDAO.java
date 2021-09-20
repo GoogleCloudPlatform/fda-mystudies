@@ -67,4 +67,6 @@ public interface AppDAO {
   public boolean getAppPermissionByCustomAppId(String customAppId, String userId);
 
   public VersionInfoBO getVersionBycustomAppId(String customappId);
+
+  public int getStudiesCountByAppId(String customAppId);
 }

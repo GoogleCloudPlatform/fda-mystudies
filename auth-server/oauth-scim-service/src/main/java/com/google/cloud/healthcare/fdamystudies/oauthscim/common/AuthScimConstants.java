@@ -125,7 +125,7 @@ public final class AuthScimConstants {
 
   public static final String FROM_EMAIL_COOKIE = "mystudies_fromEmail";
 
-  public static final String CONTACT_EMAIL_COOKIE = "mystudies_contactEmail";
+  public static final String SUPPORT_EMAIL_COOKIE = "mystudies_supportEmail";
 
   public static final String DEEPLINK_URL_COOKIE = "mystudies_deeplinkUrl";
 

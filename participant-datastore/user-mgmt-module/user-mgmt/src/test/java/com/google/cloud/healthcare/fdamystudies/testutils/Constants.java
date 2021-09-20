@@ -79,4 +79,5 @@ public final class Constants {
   public static final String APP_NAME_TEST = "app-name-1";
   public static final String FROM_EMAIL = "from_email_test@grr.la";
   public static final String CONTACT_US_EMAIL = "contactus_app_test@grr.la";
+  public static final String SUPPORT_EMAIL = "support_email@grr.la";
 }

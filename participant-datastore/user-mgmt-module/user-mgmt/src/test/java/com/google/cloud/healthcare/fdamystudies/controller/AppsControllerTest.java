@@ -204,6 +204,10 @@ public class AppsControllerTest extends BaseMockIT {
 
     String appName = JsonPath.read(result.getResponse().getContentAsString(), "$.appName");
     assertEquals(Constants.APP_NAME_TEST, appName);
+
+    String supportEmail =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.supportEmail");
+    assertEquals(Constants.SUPPORT_EMAIL, supportEmail);
   }
 
   @Test

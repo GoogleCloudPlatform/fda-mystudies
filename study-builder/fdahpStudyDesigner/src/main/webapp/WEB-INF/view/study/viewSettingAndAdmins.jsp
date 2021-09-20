@@ -210,6 +210,14 @@
 <script>
   $(document).ready(function () {
 	$('.studyClass').addClass("active");
+	<c:if test="${studyBo.status eq 'Pre-launch'}">
+	if($('#inlineCheckbox1').is(':disabled')){
+  	  $('#inlineCheckbox1').attr('checked', false);
+     }
+    if($('#inlineCheckbox2').is(':disabled')){
+  	  $('#inlineCheckbox2').attr('checked', false);
+     }
+    </c:if>
     <c:if test="${empty permission && fn:contains(permissions,5)}">
    
     $('[data-toggle="tooltip"]').tooltip();
@@ -224,7 +232,6 @@
       $('[name=case]:checked').each(function () {
         count++;
       });
-      
     });
     </c:if>
     table = $('#studyAdminsTable').DataTable({
