@@ -12,7 +12,22 @@
               </a>
             </div>
             <div class="pl-1">
-              <div class="mb-xs">App user registry - {{ appDetails.appStatus }}
+              <div class="mb-xs">App user registry 
+                <span
+                  [ngClass]="
+                    appDetails.appStatus === 'Active'
+                      ? 'active__'
+                      : 'inActive__'
+                  "
+                >
+
+                  {{
+                     appDetails.appStatus  === 'Active'
+                      ? "Active"
+                      : "Deactivated"
+                  }}
+                </span>
+                
                 
               </div>
               <div>
