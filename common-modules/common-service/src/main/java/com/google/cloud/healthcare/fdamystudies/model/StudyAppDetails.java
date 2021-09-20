@@ -26,6 +26,8 @@ public interface StudyAppDetails {
 
   String getAppName();
 
+  String getAppStatus();
+
   Integer getTargetEnrollment();
 
   Integer getEdit();
