@@ -151,27 +151,7 @@ $('#completedId').click(
         }
       var count = "${countOfStudies}";
     	  if($('.checkbox input:checked').length >= 1 && document.getElementById('inlineRadio2').checked == true && count > 1) {
-	        bootbox.confirm({
-	            closeButton: false,
-	            message: "This app seems to be linked to multiple studies. Please select the 'gateway'",
-	            buttons: {
-	              'cancel': {
-	                label: 'Cancel',
-	              },
-	              'confirm': {
-	                label: 'OK',
-	              },
-	            },
-	            callback: function (result) {
-	              if (result) {
-	            	  var a = document.createElement('a');
-	                  a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=${param._S}";
-	                  document.body.appendChild(a).click();
-	              } else {
-	                $('.cancelBut').prop('disabled', false);
-	              }
-	            }
-	          });
+  	            bootbox.alert("This app seems to be linked to multiple studies. Please select the 'gateway' app type to proceed.") ;
 	    }else{
 		    if( isFromValid("#settingFormId")){
 		   	 $("#buttonText").val('completed');
