@@ -139,7 +139,6 @@ $(document).ready( function () {
 	
 $('#saveId').click(
         function (e) {
-        	debugger
          $('#settingFormId').validator('destroy');
           $("#buttonText").val('save');
           $("#settingFormId").submit()
@@ -151,7 +150,7 @@ $('#completedId').click(
     	    $("input").attr("required", true);
         }
       var count = "${countOfStudies}";
-    	  if(document.getElementById('inlineRadio2').checked == true && count > 1) {
+    	  if($('.checkbox input:checked').length >= 1 && document.getElementById('inlineRadio2').checked == true && count > 1) {
 	        bootbox.confirm({
 	            closeButton: false,
 	            message: "This app seems to be linked to multiple studies. Please select the 'gateway'",
