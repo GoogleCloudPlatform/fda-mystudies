@@ -412,9 +412,10 @@ public class AppDAOImpl implements AppDAO {
           if (appBo.getType() != null) {
             dbappBo.setType(appBo.getType());
           }
-          if (appBo.getAppPlatform() != null) {
+          if (!dbappBo.getAppStatus().equals("Active")) {
             dbappBo.setAppPlatform(appBo.getAppPlatform());
           }
+
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
