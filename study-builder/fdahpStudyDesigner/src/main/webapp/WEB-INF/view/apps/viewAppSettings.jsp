@@ -151,7 +151,7 @@ $('#completedId').click(
         }
       var count = "${countOfStudies}";
     	  if($('.checkbox input:checked').length >= 1 && document.getElementById('inlineRadio2').checked == true && count > 1) {
-  	            bootbox.alert("This app seems to be linked to multiple studies. Please select the 'gateway' app type to proceed.") ;
+  	            bootbox.alert("This app seems to be linked to multiple studies. Please select the 'Gateway' app type to proceed.") ;
 	    }else{
 		    if( isFromValid("#settingFormId")){
 		   	 $("#buttonText").val('completed');
