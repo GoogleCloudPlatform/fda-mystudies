@@ -181,9 +181,10 @@ export class AddNewUserComponent
           this.disableButton = false;
         },
       );
-    } else {
+    } else 
+    {
       this.toastr.error(
-        'Please assign the user at least one permission from the permissions set shown.',
+        'Please assign the admin at least one permission from the permissions set shown.',
       );
       return;
     }

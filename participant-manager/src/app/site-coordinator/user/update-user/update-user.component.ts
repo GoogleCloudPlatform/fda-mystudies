@@ -221,9 +221,10 @@ export class UpdateUserComponent
           } else this.toastr.success('Success');
           void this.router.navigate([`/coordinator/users/${this.adminId}`]);
         });
-    } else {
+    } else 
+    {
       this.toastr.error(
-        'Please assign the user at least one permission from the permissions set shown.',
+        'Please assign the admin at least one permission from the permissions set shown.',
       );
       return;
     }
