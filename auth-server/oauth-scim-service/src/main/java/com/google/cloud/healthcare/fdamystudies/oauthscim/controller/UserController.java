@@ -90,7 +90,7 @@ public class UserController {
   public ResponseEntity<?> resetPassword(
       @RequestHeader String appName,
       @RequestHeader String fromEmail,
-      @RequestHeader String contactEmail,
+      @RequestHeader(value = "supportEmail", required = false) String supportEmail,
       @Valid @RequestBody ResetPasswordRequest resetPasswordRequest,
       HttpServletRequest request)
       throws JsonProcessingException {
@@ -99,7 +99,7 @@ public class UserController {
     auditHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
     ResetPasswordResponse resetPasswordResponse =
         userService.resetPassword(
-            resetPasswordRequest, auditRequest, appName, fromEmail, contactEmail);
+            resetPasswordRequest, auditRequest, appName, fromEmail, supportEmail);
 
     logger.exit(String.format(STATUS_LOG, resetPasswordResponse.getHttpStatusCode()));
     return ResponseEntity.status(resetPasswordResponse.getHttpStatusCode())

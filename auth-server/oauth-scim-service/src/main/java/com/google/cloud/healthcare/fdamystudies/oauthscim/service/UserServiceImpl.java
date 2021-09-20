@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
       AuditLogEventRequest auditRequest,
       String appName,
       String fromEmail,
-      String contactEmail)
+      String supportEmail)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
 
@@ -228,7 +228,7 @@ public class UserServiceImpl implements UserService {
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse =
         sendPasswordResetEmail(
-            resetPasswordRequest, tempPassword, auditRequest, appName, fromEmail, contactEmail);
+            resetPasswordRequest, tempPassword, auditRequest, appName, fromEmail, supportEmail);
 
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getCode().equals(emailResponse.getCode())) {
       setPasswordAndPasswordHistoryFields(
@@ -260,7 +260,7 @@ public class UserServiceImpl implements UserService {
       AuditLogEventRequest auditRequest,
       String appName,
       String fromMobileEmail,
-      String contactMobileEmail) {
+      String supportEmail) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
     if (platformComponent == null) {
       logger.warn(
@@ -281,7 +281,7 @@ public class UserServiceImpl implements UserService {
 
     String contactEmail =
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
-            ? contactMobileEmail
+            ? supportEmail
             : appConfig.getContactEmail();
     String fromEmail =
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
@@ -466,9 +466,9 @@ public class UserServiceImpl implements UserService {
             ? appConfig.getMailAccountLockedBodyForMobileApp()
             : appConfig.getMailAccountLockedBody();
 
-    String contactEmail =
+    String supportEMail =
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
-            ? userRequest.getContactEmail()
+            ? userRequest.getSupportEmail()
             : appConfig.getContactEmail();
     String fromEmail =
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
@@ -477,7 +477,7 @@ public class UserServiceImpl implements UserService {
 
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appName", userRequest.getAppName());
-    templateArgs.put("contactEmail", contactEmail);
+    templateArgs.put("contactEmail", supportEMail);
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(

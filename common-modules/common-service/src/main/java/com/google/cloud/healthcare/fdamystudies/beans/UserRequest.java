@@ -48,7 +48,7 @@ public class UserRequest {
   @ToString.Exclude
   @Size(max = EMAIL_LENGTH)
   @Email
-  private String contactEmail;
+  private String supportEmail;
 
   @ToString.Exclude
   @Size(max = EMAIL_LENGTH)
