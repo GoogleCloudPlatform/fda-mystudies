@@ -364,7 +364,7 @@
               type="checkbox" id="inlineCheckbox4" name="manageStudies"
               <c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-            <label for="inlineCheckbox4"> Manage Studies </label>
+            <label for="inlineCheckbox4"> Manage studies </label>
           </span>
           <div class="mt-lg pl-lg">
             <div class="pb-md bor-dashed">
