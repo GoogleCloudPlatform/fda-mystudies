@@ -61,8 +61,7 @@ describe('AddEmailComponent', () => {
 
   it('should add the particpants when add participants clicked', fakeAsync(async () => {
     const addParticipantSpy = spyOn(component, 'addParticipant');
-    const addParticipantButton =
-      addParticipant.nativeElement as HTMLInputElement;
+    const addParticipantButton = addParticipant.nativeElement as HTMLInputElement;
     const emailInputs = emailInput.nativeElement as HTMLInputElement;
     emailInputs.value = 'prak@grr.la';
     dispatchEvent(new Event('input'));

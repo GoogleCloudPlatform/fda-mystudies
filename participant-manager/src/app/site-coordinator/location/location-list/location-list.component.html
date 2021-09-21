@@ -59,12 +59,7 @@
             </thead>
             <tbody class="custom__tbody table_row_hover_shadow">
               <tr
-                class="
-                  location_row
-                  border__bottom__red
-                  border-top__c4d1e6
-                  progress__bar
-                "
+                class="location_row border__bottom__red border-top__c4d1e6 progress__bar"
                 *ngFor="let location of mf.data"
                 (click)="locationDetails(location.locationId)"
               >
@@ -121,12 +116,7 @@
               <tr *ngIf="manageLocations.locations.length === 0">
                 <td
                   colspan="4"
-                  class="
-                    text-center
-                    font12
-                    txt__light-gray
-                    mob_tbl_footer_text_center
-                  "
+                  class="text-center font12 txt__light-gray mob_tbl_footer_text_center"
                 >
                   No records found
                 </td>

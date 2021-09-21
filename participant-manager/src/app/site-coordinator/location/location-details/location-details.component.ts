@@ -14,8 +14,7 @@ import {Permission} from 'src/app/shared/permission-enums';
 })
 export class LocationDetailsComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   location = {} as Location;
   locationBackup = {} as Location;
   locationId = '';

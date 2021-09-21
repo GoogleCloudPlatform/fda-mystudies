@@ -16,8 +16,7 @@ import {Site, SiteResponse} from '../../studies/shared/site.model';
 })
 export class AddSiteComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   @Input() study = {} as Study;
   @Output() closeModalEvent = new EventEmitter<Site>();
   @Output() cancelEvent = new EventEmitter();

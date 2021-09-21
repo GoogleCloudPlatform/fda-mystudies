@@ -7,11 +7,7 @@
       <div class="max__w__1280 m-none">
         <div class="flex__justify__space-between">
           <div
-            class="
-              subheader__title
-              flex__justify__space-between
-              align__items__baseline
-            "
+            class="subheader__title flex__justify__space-between align__items__baseline"
           >
             <div (click)="backClicked()">
               <a class="subheader__title cursor__pointer">
@@ -105,14 +101,7 @@
                     hasCompletedEnrollment(participant.participantDetails)
                   "
                   name="sendInvite"
-                  class="
-                    btn
-                    banner__primary__btn
-                    white__text
-                    flex__row__reverse
-                    pad__5__13
-                    font14
-                  "
+                  class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
                   (click)="
                     sendInvitation(participant.participantDetails.siteId)
                   "
@@ -132,13 +121,7 @@
                     hasCompletedEnrollment(participant.participantDetails)
                   "
                   name="toggleInvite"
-                  class="
-                    btn
-                    banner__default__btn
-                    flex__row__reverse
-                    pad__5__13
-                    font14
-                  "
+                  class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
                   (click)="
                     toggleInvitation(
                       participant.participantDetails.siteId,
@@ -180,15 +163,7 @@
           <button
             [disabled]="hasCompletedEnrollment(participant.participantDetails)"
             name="sendInvite"
-            class="
-              btn
-              banner__primary__btn
-              white__text
-              flex__row__reverse
-              pad__5__13
-              font14
-              mob_mr-10
-            "
+            class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14 mob_mr-10"
             (click)="sendInvitation(participant.participantDetails.siteId)"
           >
             {{ sendResend }}
@@ -204,13 +179,7 @@
           <button
             [disabled]="hasCompletedEnrollment(participant.participantDetails)"
             name="toggleInvite"
-            class="
-              btn
-              banner__default__btn
-              flex__row__reverse
-              pad__5__13
-              font14
-            "
+            class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
             (click)="
               toggleInvitation(
                 participant.participantDetails.siteId,
@@ -226,14 +195,7 @@
 
     <section class="max__w__1280 m-none site__participant">
       <div
-        class="
-          bg__white
-          card__inside__pad
-          box__shadow-cmn
-          m-none
-          mb__padding__lg
-          scrollable-element
-        "
+        class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg scrollable-element"
       >
         <div class="blue__text__md">Participant email</div>
         <div class="participant__label font26">
@@ -390,12 +352,7 @@
           <tr *ngIf="participant.participantDetails.enrollments.length === 0">
             <td
               colspan="6"
-              class="
-                text-center
-                font12
-                txt__light-gray
-                mob_tbl_footer_text_center
-              "
+              class="text-center font12 txt__light-gray mob_tbl_footer_text_center"
             >
               No records found
             </td>
@@ -488,12 +445,7 @@
             >
               <td
                 colspan="4"
-                class="
-                  text-center
-                  font12
-                  txt__light-gray
-                  mob_tbl_footer_text_center
-                "
+                class="text-center font12 txt__light-gray mob_tbl_footer_text_center"
               >
                 No records found
               </td>

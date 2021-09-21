@@ -27,8 +27,7 @@ import {
 })
 export class SetUpAccountComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit
-{
+  implements OnInit {
   user = {} as SetUpUser;
   setUpCode = '';
   tempRegId = '';

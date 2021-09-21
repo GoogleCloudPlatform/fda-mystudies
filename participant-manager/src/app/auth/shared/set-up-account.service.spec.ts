@@ -60,8 +60,9 @@ describe('SetUpAccountService', () => {
   }));
 
   it('should post the expected User Details', fakeAsync(() => {
-    setUpAccountService =
-      TestBed.inject<SetUpAccountService>(SetUpAccountService);
+    setUpAccountService = TestBed.inject<SetUpAccountService>(
+      SetUpAccountService,
+    );
     const httpTest = TestBed.inject(HttpTestingController);
 
     setUpAccountService
