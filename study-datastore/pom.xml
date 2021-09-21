@@ -113,12 +113,12 @@
 		<dependency>
 		    <groupId>io.swagger</groupId>
 		    <artifactId>swagger-jaxrs</artifactId>
-		    <version>1.5.11</version>
+		    <version>1.5.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>io.swagger</groupId>
 		    <artifactId>swagger-core</artifactId>
-		    <version>1.5.11</version>
+		    <version>1.5.0</version>
 		</dependency>
 		<dependency>
 		    <groupId>io.swagger</groupId>
@@ -128,7 +128,7 @@
 		<dependency>
 		    <groupId>io.swagger</groupId>
 		    <artifactId>swagger-jersey2-jaxrs</artifactId>
-		    <version>1.5.11</version>
+		    <version>1.5.0</version>
 		</dependency>
 	    <dependency>
 	        <groupId>org.apache.tomcat</groupId>
@@ -280,7 +280,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-ext</artifactId>
-      <version>1.7.26</version>
+      <version>1.7.2</version>
     </dependency>
     <dependency>
 		<groupId>org.apache.commons</groupId>
