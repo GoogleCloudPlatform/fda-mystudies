@@ -685,7 +685,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
               "Please update the app to continue using",
               Toast.LENGTH_SHORT)
               .show();
-          finish();
+          moveTaskToBack(true);
+          if (Build.VERSION.SDK_INT < 21) {
+            finishAffinity();
+          } else {
+            finishAndRemoveTask();
+          }
         } else {
           AlertDialog.Builder alertDialogBuilder =
               new AlertDialog.Builder(StandaloneStudyInfoActivity.this, R.style.MyAlertDialogStyle);
@@ -917,7 +922,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                         "Please update the app to continue using",
                         Toast.LENGTH_SHORT)
                         .show();
-                    finish();
+                    moveTaskToBack(true);
+                    if (Build.VERSION.SDK_INT < 21) {
+                      finishAffinity();
+                    } else {
+                      finishAndRemoveTask();
+                    }
                   } else {
                     dialog.dismiss();
                   }

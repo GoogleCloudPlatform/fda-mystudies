@@ -830,7 +830,12 @@ public class SurveyActivity extends AppCompatActivity
                         "Please update the app to continue using",
                         Toast.LENGTH_SHORT)
                         .show();
-                    finish();
+                    moveTaskToBack(true);
+                    if (Build.VERSION.SDK_INT < 21) {
+                      finishAffinity();
+                    } else {
+                      finishAndRemoveTask();
+                    }
                   } else {
                     dialog.dismiss();
                   }
@@ -856,7 +861,12 @@ public class SurveyActivity extends AppCompatActivity
               "Please update the app to continue using",
               Toast.LENGTH_SHORT)
               .show();
-          finish();
+          moveTaskToBack(true);
+          if (Build.VERSION.SDK_INT < 21) {
+            finishAffinity();
+          } else {
+            finishAndRemoveTask();
+          }
         } else {
           AlertDialog.Builder alertDialogBuilder =
               new AlertDialog.Builder(SurveyActivity.this, R.style.MyAlertDialogStyle);
