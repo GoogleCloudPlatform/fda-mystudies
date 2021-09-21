@@ -46,6 +46,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
@@ -65,14 +66,16 @@ import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
+
 import java.util.HashMap;
 
 public class SurveyActivity extends AppCompatActivity
     implements View.OnClickListener,
-        ActivityCompat.OnRequestPermissionsResultCallback,
-        ApiCall.OnAsyncRequestComplete {
+    ActivityCompat.OnRequestPermissionsResultCallback,
+    ApiCall.OnAsyncRequestComplete {
   private RelativeLayout dashboardButtonLayout;
   private AppCompatImageView dashboardButton;
   private AppCompatTextView dashboardButtonLabel;
@@ -196,7 +199,8 @@ public class SurveyActivity extends AppCompatActivity
     drawer.addDrawerListener(
         new DrawerLayout.DrawerListener() {
           @Override
-          public void onDrawerSlide(View drawerView, float slideOffset) {}
+          public void onDrawerSlide(View drawerView, float slideOffset) {
+          }
 
           @Override
           public void onDrawerOpened(View drawerView) {
@@ -204,10 +208,12 @@ public class SurveyActivity extends AppCompatActivity
           }
 
           @Override
-          public void onDrawerClosed(View drawerView) {}
+          public void onDrawerClosed(View drawerView) {
+          }
 
           @Override
-          public void onDrawerStateChanged(int newState) {}
+          public void onDrawerStateChanged(int newState) {
+          }
         });
   }
 
@@ -406,7 +412,7 @@ public class SurveyActivity extends AppCompatActivity
                     "Authorization",
                     "Bearer "
                         + SharedPreferenceHelper.readPreference(
-                            SurveyActivity.this, getString(R.string.auth), ""));
+                        SurveyActivity.this, getString(R.string.auth), ""));
                 header.put("correlationId", "" + FdaApplication.getRandomString());
                 header.put("appId", "" + BuildConfig.APP_ID);
                 header.put("mobilePlatform", "ANDROID");
@@ -417,7 +423,7 @@ public class SurveyActivity extends AppCompatActivity
                         Urls.AUTH_SERVICE
                             + "/"
                             + SharedPreferenceHelper.readPreference(
-                                SurveyActivity.this, getString(R.string.userid), "")
+                            SurveyActivity.this, getString(R.string.userid), "")
                             + Urls.LOGOUT,
                         LOGOUT_REPSONSECODE,
                         SurveyActivity.this,
@@ -654,7 +660,8 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   @Override
-  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {}
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
+  }
 
   private class ClearNotification extends AsyncTask<String, Void, String> {
 
@@ -714,12 +721,10 @@ public class SurveyActivity extends AppCompatActivity
   protected void onStart() {
     super.onStart();
 
-    if(AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(BuildConfig.APPLICATION_ID);
-      versionReceiver = new VersionReceiver();
-      registerReceiver(versionReceiver, filter);
-    }
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(BuildConfig.APPLICATION_ID);
+    versionReceiver = new VersionReceiver();
+    registerReceiver(versionReceiver, filter);
   }
 
   @Override
@@ -839,7 +844,7 @@ public class SurveyActivity extends AppCompatActivity
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-     if (requestCode == RESULT_CODE_UPGRADE) {
+    if (requestCode == RESULT_CODE_UPGRADE) {
       Version currVer = new Version(AppController.currentVersion());
       Version latestVer = new Version(latestVersion);
       if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {

@@ -232,7 +232,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   protected void onDestroy() {
     super.onDestroy();
     try {
-      if (finalSharingFile.exists()) {
+      if (finalSharingFile != null && finalSharingFile.exists()) {
         finalSharingFile.delete();
       }
 
