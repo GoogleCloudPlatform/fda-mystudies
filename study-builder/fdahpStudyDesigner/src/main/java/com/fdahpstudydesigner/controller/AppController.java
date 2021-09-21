@@ -298,6 +298,7 @@ public class AppController {
     AppsBo appBo = null;
     String sucMsg = "";
     String errMsg = "";
+    int countOfStudies = 0;
     try {
       SessionObject sesObj = (SessionObject) request.getSession().getAttribute(SESSION_OBJECT);
       Integer sessionAppCount =
@@ -332,6 +333,8 @@ public class AppController {
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
 
+          countOfStudies = appService.getStudiesCountByAppId(appBo.getCustomAppId());
+
           if (appBo.getType() == null) {
             appBo.setType(FdahpStudyDesignerConstants.STUDY_TYPE_GT);
           }
@@ -339,6 +342,7 @@ public class AppController {
         map.addAttribute(APP_BO, appBo);
         map.addAttribute(PERMISSION, permission);
         map.addAttribute("_S", sessionAppCount);
+        map.addAttribute("countOfStudies", countOfStudies);
         mav = new ModelAndView("viewAppSettings", map);
       }
     } catch (Exception e) {
