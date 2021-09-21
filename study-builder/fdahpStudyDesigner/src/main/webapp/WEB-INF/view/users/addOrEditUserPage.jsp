@@ -219,7 +219,7 @@
             <div class="blue-md-f mt-lg mb-md">
               Role
               <span class="requiredStar"> *</span>
-              <span data-toggle="tooltip" data-placement="top" title="" class="filled-tooltip" data-original-title="Superadmin users have application-wide permissions. They can manage admins of the Study Builder and in addition, can manage app-level notifications and studies as well. Non-superadmins or 'study admins' will have permissions-based access to specific sections and studies only." aria-describedby="tooltip739612"></span>
+              <span data-toggle="tooltip" data-placement="top" title="" class="filled-tooltip" data-original-title="Superadmin users have application-wide permissions. They can manage users of the Study Builder and in addition, can manage app-level notifications and studies as well. Non-superadmins or 'study admins' will have permissions-based access to specific sections and studies only." aria-describedby="tooltip739612"></span>
             </div>
             <div class="form-group">
               <select id="roleId"
@@ -249,7 +249,7 @@
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
                           test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged}">disabled</c:if>
-                          onclick="activateOrDeactivateUser('${userBO.userId}');">
+                      onclick="activateOrDeactivateUser('${userBO.userId}');">
                     <span class="switch-label bg-transparent" data-on="On"
                           data-off="Off"></span>
                     <span class="switch-handle"></span>
@@ -543,7 +543,6 @@
     });
 
    
-
     var countCall = 0;
     $(window).on('load', function () {
       countCall = 1;
@@ -565,7 +564,7 @@
     $(window).on('load', function () {
     	countCall2 = 1;
       $('.selApp').each(function () {
-        var appTxt = $(this).find('.AppCls').attr('appTxt');
+        var appTxt = $(this).find('.appCls').attr('appTxt');
         $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
             function () {
               var ltxt = $(this).text();
@@ -698,6 +697,21 @@
         } else {
           $('.changeView1').prop('disabled', false);
         }
+        
+        $('.selStd').each(function () {
+            var stdTxt = $(this).find('.stdCls').attr('stdTxt');
+            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+                function () {
+                  var ltxt = $(this).text();
+                  var a = $.trim(ltxt);
+                  var b = $.trim(stdTxt);
+                  if (a == b) {
+                    $(this).parent().parent().hide();
+                  }
+                });
+          });
+       
+        
       } else if ($(this).prop("checked") == false) {
         $(this).val('');
         $('#inlineCheckbox5').val('');
@@ -720,6 +734,20 @@
           } else {
             $('.changeView2').prop('disabled', false);
           }
+          
+          $('.selApp').each(function () {
+  	          var appTxt = $(this).find('.appCls').attr('appTxt');
+  	          $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li a span:first-child").each(
+  	              function () {
+  	                var ltxt = $(this).text();
+  	                var a = $.trim(ltxt);
+  	                var b = $.trim(appTxt);
+  	                if (a == b) {
+  	                  $(this).parent().parent().hide();
+  	                }
+  	              });
+  	        });
+          
         } else if ($(this).prop("checked") == false) {
           $(this).val('');
           $('#inlineCheckbox6').val('');
@@ -761,8 +789,8 @@
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
         var existingStudyDiv = "<div class='study-selected-item selStd' id='std" + selVal + "'>"
-            + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal
-            + "'>"
+            + "<input type='hidden' class='stdCls' id='" + selVal + "' name='' value='" + selVal +"'"
+            + "stdTxt='"+selTxt+"'>"
             + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='del(\""
             + selVal + "\");'/></span>"
             + "<span>" + selTxt + "</span>"
@@ -811,8 +839,8 @@
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
         var existingAppDiv = "<div class='selApp app-selected-item' id='app" + selVal + "'>"
-            + "<input type='hidden' class='appCls' id='" + selVal + "' name='' value='" + selVal
-            + "'>"
+            + "<input type='hidden' class='appCls' id='" + selVal + "' name='' value='" + selVal +"'"
+            + "appTxt='"+selTxt+"'>"
             + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='delApp(\""
             + selVal + "\");'/></span>"
             + "<span>" + selTxt + "</span>"

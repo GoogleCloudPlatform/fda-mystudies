@@ -427,6 +427,10 @@
 			  
 			});
 		  
+			  <c:if test="${not empty appId}">
+		    	$(".dropdown-text").html('Showing ' + 1 + ' app(s)');
+		    </c:if>
+		    
 		});
   
 </script>
