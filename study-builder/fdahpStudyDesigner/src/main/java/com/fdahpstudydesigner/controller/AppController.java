@@ -333,9 +333,7 @@ public class AppController {
         if (FdahpStudyDesignerUtil.isNotEmpty(appId)) {
           appBo = appService.getAppById(appId, sesObj.getUserId());
 
-          if (appBo != null && appBo.getCustomAppId() != null) {
-            countOfStudies = appService.getStudiesCountByAppId(appBo.getCustomAppId());
-          }
+          countOfStudies = appService.getStudiesCountByAppId(appBo.getCustomAppId());
 
           if (appBo.getType() == null) {
             appBo.setType(FdahpStudyDesignerConstants.STUDY_TYPE_GT);
