@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -231,7 +232,12 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
               "Please update the app to continue using",
               Toast.LENGTH_SHORT)
               .show();
-          finish();
+          moveTaskToBack(true);
+          if (Build.VERSION.SDK_INT < 21) {
+            finishAffinity();
+          } else {
+            finishAndRemoveTask();
+          }
         } else {
           AlertDialog.Builder alertDialogBuilder =
               new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
@@ -328,7 +334,12 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
                         "Please update the app to continue using",
                         Toast.LENGTH_SHORT)
                         .show();
-                    finish();
+                    moveTaskToBack(true);
+                    if (Build.VERSION.SDK_INT < 21) {
+                      finishAffinity();
+                    } else {
+                      finishAndRemoveTask();
+                    }
                   } else {
                     proceedToApp();
                   }
