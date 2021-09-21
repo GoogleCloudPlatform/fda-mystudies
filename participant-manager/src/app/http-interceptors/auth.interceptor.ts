@@ -155,39 +155,37 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   handleError<T>(): OperatorFunction<T, T> {
-    return catchError(
-      (err: unknown): Observable<T> => {
-        if (err instanceof HttpErrorResponse) {
-          if (err.url === `${environment.authServerUrl}/oauth2/token`) {
-            sessionStorage.clear();
-            void this.router.navigate(['/error/', 'EC_0080']);
-          } else if (err.error instanceof ErrorEvent) {
-            this.toasterService.error(err.error.message);
-          } else {
-            const customError = err.error as ApiResponse;
-            if (getMessage(customError.error_code)) {
-              if (
-                customError.error_code !== 'EC_0070' &&
-                customError.error_code !== 'EC_0071' &&
-                customError.error_code !== 'EC_0072'
-              ) {
-                this.toasterService.error(getMessage(customError.error_code));
-              }
-            } else if (
-              getGenericMessage(customError.error_code as GenericErrorCode)
-            ) {
-              void this.router.navigate(['/error/', customError.error_code]);
-            } else {
-              this.toasterService.error(
-                `Error Code: ${err.status}\nMessage: ${err.message}`,
-              );
-            }
-          }
+    return catchError((err: unknown): Observable<T> => {
+      if (err instanceof HttpErrorResponse) {
+        if (err.url === `${environment.authServerUrl}/oauth2/token`) {
+          sessionStorage.clear();
+          void this.router.navigate(['/error/', 'EC_0080']);
+        } else if (err.error instanceof ErrorEvent) {
+          this.toasterService.error(err.error.message);
         } else {
-          this.toasterService.error('An error occurred');
+          const customError = err.error as ApiResponse;
+          if (getMessage(customError.error_code)) {
+            if (
+              customError.error_code !== 'EC_0070' &&
+              customError.error_code !== 'EC_0071' &&
+              customError.error_code !== 'EC_0072'
+            ) {
+              this.toasterService.error(getMessage(customError.error_code));
+            }
+          } else if (
+            getGenericMessage(customError.error_code as GenericErrorCode)
+          ) {
+            void this.router.navigate(['/error/', customError.error_code]);
+          } else {
+            this.toasterService.error(
+              `Error Code: ${err.status}\nMessage: ${err.message}`,
+            );
+          }
         }
-        return throwError(err);
-      },
-    );
+      } else {
+        this.toasterService.error('An error occurred');
+      }
+      return throwError(err);
+    });
   }
 }

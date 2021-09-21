@@ -23,7 +23,8 @@ import {Permission} from 'src/app/shared/permission-enums';
 })
 export class ParticipantDetailsComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   participantId = '';
   sendResend = '';
   enableDisable = '';

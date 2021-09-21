@@ -27,7 +27,8 @@ import {ParticipantRegistryDetail} from 'src/app/shared/participant-registry-det
 })
 export class SiteDetailsComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   query$ = new BehaviorSubject('');
   siteParticipants$: Observable<SiteParticipants> = of();
   siteDetailsBackup = {} as SiteParticipants;
@@ -113,19 +114,21 @@ export class SiteDetailsComponent
           },
         );
 
-        this.invitedYetToEnrollCount = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
-          function (participant) {
-            return (
-              participant.enrollmentStatus === EnrollmentStatus.YetToEnroll
-            );
-          },
-        ).length;
+        this.invitedYetToEnrollCount =
+          this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
+            function (participant) {
+              return (
+                participant.enrollmentStatus === EnrollmentStatus.YetToEnroll
+              );
+            },
+          ).length;
 
         this.newlyImportedParticipants = [];
-        this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
-          (participant: RegistryParticipant) =>
-            participant.email?.toLowerCase().includes(query.toLowerCase()),
-        );
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants =
+          this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
+            (participant: RegistryParticipant) =>
+              participant.email?.toLowerCase().includes(query.toLowerCase()),
+          );
         return this.siteDetailsBackup;
       }),
     );

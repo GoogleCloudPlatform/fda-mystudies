@@ -77,7 +77,8 @@ describe('AddLocationComponent', () => {
   it('should not show a validation error if the input field is filled', () => {
     const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
     const nameInputs = nameInput.nativeElement as HTMLInputElement;
-    const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
+    const descriptionInputs =
+      descriptionInput.nativeElement as HTMLInputElement;
     customIdInputs.value = 'customid3';
     nameInputs.value = 'Location Name';
     descriptionInputs.value = 'Testing description value';
@@ -140,7 +141,8 @@ describe('AddLocationComponent', () => {
     const submitButton = submitLocation.nativeElement as HTMLInputElement;
     const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
     const nameInputs = nameInput.nativeElement as HTMLInputElement;
-    const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
+    const descriptionInputs =
+      descriptionInput.nativeElement as HTMLInputElement;
     customIdInputs.value = 'customid3';
     nameInputs.value = 'Location Name';
     descriptionInputs.value = `A location description includes the location details and related information so that the user is able to understand more about the location. The description gives the user an idea of the location or explain the location details.`;

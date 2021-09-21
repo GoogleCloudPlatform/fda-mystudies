@@ -146,7 +146,8 @@ describe('AddNewUserComponent', () => {
       const firstNameInputs = firstNameInput.nativeElement as HTMLInputElement;
       const lastNameInputs = lastNameInput.nativeElement as HTMLInputElement;
       const emailInputs = emailInput.nativeElement as HTMLInputElement;
-      const superAdminInputs = superAdminInput.nativeElement as HTMLInputElement;
+      const superAdminInputs =
+        superAdminInput.nativeElement as HTMLInputElement;
       await fixture.whenStable();
 
       firstNameInputs.value = addUserRequest.firstName as string;

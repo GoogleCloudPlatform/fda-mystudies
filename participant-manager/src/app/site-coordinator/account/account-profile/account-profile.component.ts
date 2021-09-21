@@ -18,7 +18,8 @@ import {UserService} from 'src/app/service/user.service';
 })
 export class AccountProfileComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   profileForm: FormGroup;
   user = {} as Profile;
   constructor(

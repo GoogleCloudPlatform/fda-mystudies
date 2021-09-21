@@ -23,7 +23,8 @@ import {Location} from '@angular/common';
 })
 export class StudyDetailsComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   studyId = '';
   studyDetail$: Observable<StudyDetails> = of();
   studyTypes = StudyType;
@@ -128,7 +129,8 @@ export class StudyDetailsComponent
   closeModal(targetEnrollment: number): void {
     this.studyDetail$ = this.studyDetail$.pipe(
       map((studyDetails) => {
-        studyDetails.participantRegistryDetail.targetEnrollment = targetEnrollment;
+        studyDetails.participantRegistryDetail.targetEnrollment =
+          targetEnrollment;
         return studyDetails;
       }),
     );

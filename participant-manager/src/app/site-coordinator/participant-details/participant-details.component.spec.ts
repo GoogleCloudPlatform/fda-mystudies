@@ -29,10 +29,11 @@ describe('ParticipantDetailsComponent', () => {
   let sendInviteButton: DebugElement;
   let toggleInviteButton: DebugElement;
   beforeEach(async(async () => {
-    const participantDetailsSpy = jasmine.createSpyObj<ParticipantDetailsService>(
-      'ParticipantDetailsService',
-      ['get', 'toggleInvitation', 'sendInvitation'],
-    );
+    const participantDetailsSpy =
+      jasmine.createSpyObj<ParticipantDetailsService>(
+        'ParticipantDetailsService',
+        ['get', 'toggleInvitation', 'sendInvitation'],
+      );
 
     await TestBed.configureTestingModule({
       declarations: [ParticipantDetailsComponent],

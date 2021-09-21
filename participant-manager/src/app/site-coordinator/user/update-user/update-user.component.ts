@@ -27,7 +27,8 @@ import {Status} from 'src/app/shared/enums';
 })
 export class UpdateUserComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   appDetails = {} as AppDetails;
   appDetailsBackup = {} as AppDetails;
   selectedApps: App[] = [];
@@ -141,8 +142,9 @@ export class UpdateUserComponent
   }
 
   studyCheckBoxChange(study: Study, app: App): void {
-    const alreadySelectedSitesCount = study.sites.filter((s) => s.selected)
-      .length;
+    const alreadySelectedSitesCount = study.sites.filter(
+      (s) => s.selected,
+    ).length;
     if (!app.selectedSitesCount) {
       app.selectedSitesCount = 0;
     }

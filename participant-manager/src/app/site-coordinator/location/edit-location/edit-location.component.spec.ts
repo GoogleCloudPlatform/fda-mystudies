@@ -75,7 +75,8 @@ describe('EditLocationComponent', () => {
 
   it('should not show a validation error if the input field are auto filled', () => {
     const nameInputs = nameInput.nativeElement as HTMLInputElement;
-    const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
+    const descriptionInputs =
+      descriptionInput.nativeElement as HTMLInputElement;
     nameInputs.value = 'Location Name';
     descriptionInputs.value = 'Testing description value';
     fixture.detectChanges();
@@ -91,7 +92,8 @@ describe('EditLocationComponent', () => {
     component.location = updatedLocation;
     const updateButton = updateLocation.nativeElement as HTMLInputElement;
     const nameInputs = nameInput.nativeElement as HTMLInputElement;
-    const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
+    const descriptionInputs =
+      descriptionInput.nativeElement as HTMLInputElement;
     nameInputs.value = updatedLocation.name;
     descriptionInputs.value = updatedLocation.description;
     dispatchEvent(new Event('input'));

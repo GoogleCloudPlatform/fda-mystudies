@@ -14,7 +14,8 @@ import {App} from '../shared/app-details';
 })
 export class UserDetailsComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   adminId = '';
   user = {} as User;
   permission = Permission;

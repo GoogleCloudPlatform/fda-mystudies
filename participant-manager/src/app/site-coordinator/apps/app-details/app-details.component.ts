@@ -16,7 +16,8 @@ import {SearchService} from 'src/app/shared/search.service';
 })
 export class AppDetailsComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   appId = '';
   appDetail$: Observable<AppDetails> = of();
   statusEnum = Status;

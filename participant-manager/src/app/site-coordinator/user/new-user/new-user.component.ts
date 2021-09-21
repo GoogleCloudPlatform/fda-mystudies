@@ -23,7 +23,8 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
 })
 export class AddNewUserComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   appDetails = {} as AppDetails;
   appDetailsBackup = {} as AppDetails;
   selectedApps: App[] = [];
@@ -98,8 +99,9 @@ export class AddNewUserComponent
   }
 
   studyCheckBoxChange(study: Study, app: App): void {
-    const alreadySelectedSitesCount = study.sites.filter((s) => s.selected)
-      .length;
+    const alreadySelectedSitesCount = study.sites.filter(
+      (s) => s.selected,
+    ).length;
     if (!app.selectedSitesCount) {
       app.selectedSitesCount = 0;
     }

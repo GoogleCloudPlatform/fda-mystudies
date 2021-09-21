@@ -20,7 +20,8 @@ import {
 })
 export class ChangePasswordComponent
   extends UnsubscribeOnDestroyAdapter
-  implements OnInit {
+  implements OnInit
+{
   resetPasswordForm: FormGroup;
   changePasswordTitle = 'Change password';
   currentPasswordValidationMessage = 'Enter your current password';
