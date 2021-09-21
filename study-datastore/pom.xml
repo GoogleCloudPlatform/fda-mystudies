@@ -65,7 +65,6 @@
     <dependency>
 	  <groupId>com.fasterxml.jackson.jaxrs</groupId>
 	  <artifactId>jackson-jaxrs-json-provider</artifactId>
-	  <version>2.3.3</version>
 	</dependency>
     <dependency>
       <groupId>org.apache.ibatis</groupId>
@@ -108,12 +107,18 @@
 		<dependency>
 		    <groupId>io.swagger</groupId>
 		    <artifactId>swagger-jaxrs</artifactId>
-		    <version>1.5.0</version>
+		    <version>1.5.11</version>
+		    <exclusions>
+			    <exclusion>
+		            <groupId>javax.ws.rs</groupId>
+		            <artifactId>jsr311-api</artifactId>
+	            </exclusion>
+   			</exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>io.swagger</groupId>
 		    <artifactId>swagger-core</artifactId>
-		    <version>1.5.0</version>
+		    <version>1.5.11</version>
 		</dependency>
 		<dependency>
 		    <groupId>io.swagger</groupId>
@@ -123,7 +128,7 @@
 		<dependency>
 		    <groupId>io.swagger</groupId>
 		    <artifactId>swagger-jersey2-jaxrs</artifactId>
-		    <version>1.5.0</version>
+		    <version>1.5.11</version>
 		</dependency>
 	    <dependency>
 	        <groupId>org.apache.tomcat</groupId>
@@ -244,7 +249,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.6.2</version>
+			<version>2.9.10.8</version>
 		</dependency>
         
 		 <dependency>
@@ -275,7 +280,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-ext</artifactId>
-      <version>1.7.2</version>
+      <version>1.7.26</version>
     </dependency>
     <dependency>
 		<groupId>org.apache.commons</groupId>
