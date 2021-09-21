@@ -198,8 +198,8 @@ margin-top:16px !important;
           </div>
           <div class="form-group" id="appName">
            <c:choose>
-           <c:when test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}">
-         
+            <c:when test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || 
+                      studyBo.status == 'Deactivated' || permission == 'view' || empty appsList)}">
             <input type="text" custAttType="cust" autofocus="autofocus"
                    class="form-control aq-inp " name="" id=""
                    maxlength="15" value="${appName}" disabled/>
@@ -209,7 +209,9 @@ margin-top:16px !important;
            <c:otherwise>
            
             <select class="selectpicker" required data-error="Please fill out this field"> 
-               <option value="" disabled selected>Select app</option>
+                <c:if test="${not empty appPermission && not appPermission}">
+               <option value="${appName}" class="hidden" selected>${appName}</option></c:if>
+               <option value="" class="hidden">Select app</option>
                 <c:forEach items="${appsList}" var="app"> 
                   <optgroup label="${app.customAppId} | <c:if test="${app.type == 'GT'}">Gateway</c:if><c:if test="${app.type == 'SD'}">Standalone</c:if>">
                     <option value="${app.name} " ${studyBo.appId eq app.customAppId ? 'selected' : ''}> ${app.name} </option> 
