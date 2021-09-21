@@ -12,29 +12,28 @@
               </a>
             </div>
             <div class="pl-1">
-              <div class="mb-xs">App user registry 
-                <span
-                  [ngClass]="
-                    appDetails.appStatus === 'Active'
-                      ? 'active__'
-                      : 'inActive__'
-                  "
-                >
-
-                  {{
-                     appDetails.appStatus  === 'Active'
-                      ? "Active"
-                      : "Deactivated"
-                  }}
-                </span>
-                
-                
-              </div>
+              <div class="mb-xs">App user registry </div>
               <div>
                 <div class="pr-xlg flex__justify__space-between flex__text">
                   <div class="banner__label mr-xs">
                     {{ appDetails.customId }}
-                    <span class="banner__text">{{ appDetails.name }}</span>
+                    <span class="banner__text">{{ appDetails.name }}
+                    -
+                    <span
+                      [ngClass]="
+                        appDetails.appStatus === 'Active'
+                          ? 'active_text'
+                          : 'deactivated_text'
+                      "
+                    >
+
+                      {{
+                        appDetails.appStatus  === 'Active'
+                        ? "ACTIVE"
+                        : "DEACTIVATED"
+                      }}
+                    </span>
+                  </span>
                   </div>
                 </div>
               </div>
