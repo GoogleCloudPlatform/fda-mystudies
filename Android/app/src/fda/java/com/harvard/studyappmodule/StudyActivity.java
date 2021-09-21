@@ -803,6 +803,7 @@ public class StudyActivity extends AppCompatActivity
           Apps apps = dbServiceSubscriber.getApps(realm);
           customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
               .replace("$FromEmail", apps.getFromEmail())
+              .replace("$SupportEmail", apps.getSupportEmail())
               .replace("$AppName", apps.getAppName())
               .replace("$ContactEmail", apps.getContactUsEmail())));
           dbServiceSubscriber.closeRealmObj(realm);
@@ -1191,6 +1192,7 @@ public class StudyActivity extends AppCompatActivity
       Apps apps = dbServiceSubscriber.getApps(realm);
       customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
           .replace("$FromEmail", apps.getFromEmail())
+          .replace("$SupportEmail", apps.getSupportEmail())
           .replace("$AppName", apps.getAppName())
           .replace("$ContactEmail", apps.getContactUsEmail())));
       startActivity(customTabsIntent.intent);

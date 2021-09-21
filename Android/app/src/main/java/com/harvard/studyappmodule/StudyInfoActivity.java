@@ -236,6 +236,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
               Apps apps = dbServiceSubscriber.getApps(realm);
               customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
                   .replace("$FromEmail", apps.getFromEmail())
+                  .replace("$SupportEmail", apps.getSupportEmail())
                   .replace("$AppName", apps.getAppName())
                   .replace("$ContactEmail", apps.getContactUsEmail())));
               startActivity(customTabsIntent.intent);

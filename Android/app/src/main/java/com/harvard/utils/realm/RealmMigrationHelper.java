@@ -99,6 +99,7 @@ public class RealmMigrationHelper implements RealmMigration {
           .addField("appId", String.class)
           .addField("fromEmail", String.class)
           .addField("contactUsEmail", String.class)
+          .addField("supportEmail", String.class)
           .addField("status", int.class)
           .addField("code", String.class)
           .addField("termsUrl", String.class)

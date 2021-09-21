@@ -16,6 +16,7 @@ public class Apps extends RealmObject {
   private String appId;
   private String fromEmail;
   private String contactUsEmail;
+  private String supportEmail;
   private String termsUrl;
   private String privacyPolicyUrl;
   private String appWebsite;
@@ -107,5 +108,13 @@ public class Apps extends RealmObject {
 
   public void setVersion(VersionModel version) {
     this.version = version;
+  }
+
+  public String getSupportEmail() {
+    return supportEmail;
+  }
+
+  public void setSupportEmail(String supportEmail) {
+    this.supportEmail = supportEmail;
   }
 }

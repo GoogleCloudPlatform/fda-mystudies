@@ -149,6 +149,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
     Realm realm = AppController.getRealmobj(ForgotPasswordActivity.this);
     Apps apps = dbServiceSubscriber.getApps(realm);
     headers.put("contactEmail", apps.getContactUsEmail());
+    headers.put("supportEmail", apps.getSupportEmail());
     headers.put("fromEmail", apps.getFromEmail());
     dbServiceSubscriber.closeRealmObj(realm);
 
