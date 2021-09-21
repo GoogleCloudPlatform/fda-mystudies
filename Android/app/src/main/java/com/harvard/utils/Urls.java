@@ -59,6 +59,7 @@ public class Urls {
           + "&state=" + FdaApplication.getRandomString()
           + "&fromEmail=" + "$FromEmail"
           + "&contactEmail=" + "$ContactEmail"
+          + "&supportEmail=" + "$SupportEmail"
           + "&deeplinkUrl=" + "app://" + FdaApplication.getInstance().getString(R.string.deeplink_host) + "/mystudies";
 
   // Deeplinks

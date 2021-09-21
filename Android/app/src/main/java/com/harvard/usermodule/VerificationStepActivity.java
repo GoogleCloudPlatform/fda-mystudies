@@ -287,6 +287,7 @@ public class VerificationStepActivity extends AppCompatActivity
     loginUrl.append(Urls.LOGIN_URL).toString()
         .replace("$FromEmail", apps.getFromEmail())
         .replace("$AppName", apps.getAppName())
+        .replace("$SupportEmail", apps.getSupportEmail())
         .replace("$ContactEmail", apps.getContactUsEmail());
     if (getIntent().getStringExtra("type") != null
         && !getIntent().getStringExtra("type").equalsIgnoreCase("ForgotPasswordActivity")
