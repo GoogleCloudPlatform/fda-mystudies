@@ -299,7 +299,7 @@ public class UserServiceImpl implements UserService {
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
-            fromEmail,
+            "mobileapps@boston-technology.com",
             new String[] {resetPasswordRequest.getEmail()},
             null,
             null,
