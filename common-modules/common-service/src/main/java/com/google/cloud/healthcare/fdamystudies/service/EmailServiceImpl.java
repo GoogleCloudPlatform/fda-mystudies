@@ -61,6 +61,7 @@ public class EmailServiceImpl implements EmailService {
         helper.setBcc(emailRequest.getBcc());
       }
 
+      message.setFrom(new InternetAddress(emailRequest.getFrom()));
       message.setSubject(getSubject(emailRequest));
       message.setText(getBodyContent(emailRequest), "utf-8", "html");
       message.setSentDate(Calendar.getInstance().getTime());
