@@ -38,6 +38,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -80,6 +81,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -704,33 +706,33 @@ public class UserControllerTest extends BaseMockIT {
     String subject = getMailResetSubject();
     String body = "Thank you for reaching out for password help";
 
-    //    MimeMessage mail =
-    //        verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
-    //    verifyDoesNotContain(mail.getContent().toString(), "@tempPassword@");
-    //    // Step-2 Find UserEntity by userId and then compare the password hash values
-    //    userEntity = repository.findByUserId(userEntity.getUserId()).get();
-    //    assertNotNull(userEntity);
-    //    assertEquals(EMAIL_VALUE, userEntity.getEmail());
-    //    assertEquals(APP_ID_VALUE, userEntity.getAppId());
-    //
-    //    // Step 2A- assert password hash value and password_history size
-    //    JsonNode userInfoNode = userEntity.getUserInfo();
-    //    JsonNode passwordNode = userInfoNode.get(PASSWORD);
-    //    String salt = getTextValue(passwordNode, SALT);
-    //    String actualPasswordHash = getTextValue(passwordNode, HASH);
-    //    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
-    //
-    //    assertNotEquals(expectedPasswordHash, actualPasswordHash);
-    //
-    //    assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
-    //
-    //    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    //    auditRequest.setUserId(userEntity.getUserId());
-    //
-    //    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    //    auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
-    //
-    //    verifyAuditEventCall(auditEventMap, PASSWORD_HELP_REQUESTED);
+    MimeMessage mail =
+        verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
+    verifyDoesNotContain(mail.getContent().toString(), "@tempPassword@");
+    // Step-2 Find UserEntity by userId and then compare the password hash values
+    userEntity = repository.findByUserId(userEntity.getUserId()).get();
+    assertNotNull(userEntity);
+    assertEquals(EMAIL_VALUE, userEntity.getEmail());
+    assertEquals(APP_ID_VALUE, userEntity.getAppId());
+
+    // Step 2A- assert password hash value and password_history size
+    JsonNode userInfoNode = userEntity.getUserInfo();
+    JsonNode passwordNode = userInfoNode.get(PASSWORD);
+    String salt = getTextValue(passwordNode, SALT);
+    String actualPasswordHash = getTextValue(passwordNode, HASH);
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
+
+    assertNotEquals(expectedPasswordHash, actualPasswordHash);
+
+    assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PASSWORD_HELP_REQUESTED);
   }
 
   @Test
