@@ -73,6 +73,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -427,6 +428,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
+  @Disabled
   public void resendConfirmationSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
