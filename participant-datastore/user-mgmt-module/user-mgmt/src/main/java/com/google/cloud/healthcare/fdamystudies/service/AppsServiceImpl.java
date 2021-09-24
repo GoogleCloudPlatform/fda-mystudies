@@ -75,18 +75,6 @@ public class AppsServiceImpl implements AppsService {
       if (appMetadataBean.getAppPlatform() != null) {
         app.setAppPlatform(appMetadataBean.getAppPlatform());
       }
-      if (appMetadataBean.getAndroidBundleId() != null) {
-        app.setAndroidBundleId(appMetadataBean.getAndroidBundleId());
-      }
-      if (appMetadataBean.getIosBundleId() != null) {
-        app.setIosBundleId(appMetadataBean.getIosBundleId());
-      }
-      if (appMetadataBean.getAndroidServerKey() != null) {
-        app.setAndroidServerKey(appMetadataBean.getAndroidServerKey());
-      }
-      if (appMetadataBean.getIosBundleId() != null) {
-        app.setIosBundleId(appMetadataBean.getIosBundleId());
-      }
       app = fromAppMetadataBean(appMetadataBean, app);
       app = appRepository.saveAndFlush(app);
     }
@@ -145,6 +133,19 @@ public class AppsServiceImpl implements AppsService {
     }
     if (appMetadataBean.getIosForceUpgrade() != null) {
       app.setIosForceUpgrade(appMetadataBean.getIosForceUpgrade());
+    }
+
+    if (appMetadataBean.getAndroidBundleId() != null) {
+      app.setAndroidBundleId(appMetadataBean.getAndroidBundleId());
+    }
+    if (appMetadataBean.getIosBundleId() != null) {
+      app.setIosBundleId(appMetadataBean.getIosBundleId());
+    }
+    if (appMetadataBean.getAndroidServerKey() != null) {
+      app.setAndroidServerKey(appMetadataBean.getAndroidServerKey());
+    }
+    if (appMetadataBean.getIosServerKey() != null) {
+      app.setIosServerKey(appMetadataBean.getIosServerKey());
     }
 
     return app;
