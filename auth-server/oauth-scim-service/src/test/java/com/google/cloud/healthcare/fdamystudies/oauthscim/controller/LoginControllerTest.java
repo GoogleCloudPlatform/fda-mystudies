@@ -85,6 +85,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
@@ -94,7 +95,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -720,9 +720,9 @@ public class LoginControllerTest extends BaseMockIT {
                 + "account for the MyStudies Participant Manager portal "
                 + "has been temporarily locked");
 
-    SimpleMailMessage mail =
+    MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
-    verifyDoesNotContain(mail.getText().toString(), "@tempPassword@", "@appId");
+    verifyDoesNotContain(mail.getContent().toString(), "@tempPassword@", "@appId");
   }
 
   private String getMailAccountLockedSubject() {

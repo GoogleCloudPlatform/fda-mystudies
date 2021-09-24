@@ -81,6 +81,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +93,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserControllerTest extends BaseMockIT {
@@ -706,9 +706,9 @@ public class UserControllerTest extends BaseMockIT {
     String subject = getMailResetSubject();
     String body = "Thank you for reaching out for password help";
 
-    SimpleMailMessage mail =
+    MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
-    verifyDoesNotContain(mail.getText().toString(), "@tempPassword@");
+    verifyDoesNotContain(mail.getContent().toString(), "@tempPassword@");
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
     assertNotNull(userEntity);
