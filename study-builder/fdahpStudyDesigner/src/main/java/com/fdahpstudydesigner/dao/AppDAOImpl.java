@@ -1206,4 +1206,27 @@ public class AppDAOImpl implements AppDAO {
     logger.exit("getAppById() - Ends");
     return count;
   }
+
+  @Override
+  public AppsBo getAppByCustomAppId(String customAppId) {
+    logger.entry("begin getAppByCustomAppId()");
+    Session session = null;
+    AppsBo app = null;
+
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      query = session.getNamedQuery("AppsBo.getAppByAppId").setString("customAppId", customAppId);
+
+      app = (AppsBo) query.uniqueResult();
+
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppByCustomAppId() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getAppByCustomAppId() - Ends");
+    return app;
+  }
 }

@@ -69,4 +69,6 @@ public interface AppDAO {
   public VersionInfoBO getVersionBycustomAppId(String customappId);
 
   public int getStudiesCountByAppId(String customAppId);
+
+  public AppsBo getAppByCustomAppId(String customAppId);
 }
