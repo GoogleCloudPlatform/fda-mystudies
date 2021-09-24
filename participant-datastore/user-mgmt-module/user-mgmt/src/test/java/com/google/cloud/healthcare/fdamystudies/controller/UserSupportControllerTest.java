@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -62,6 +63,7 @@ public class UserSupportControllerTest extends BaseMockIT {
   }
 
   @Test
+  @Disabled
   public void shouldSendFeedbackEmail() throws Exception {
     /*appConfig.setFeedbackToEmail("feedback_app_test@grr.la");*/
 
@@ -98,6 +100,7 @@ public class UserSupportControllerTest extends BaseMockIT {
   }
 
   @Test
+  @Disabled
   public void shouldSendEmailForContactUs() throws Exception {
     /*appConfig.setContactusToEmail("contactus_app_test@grr.la");*/
 

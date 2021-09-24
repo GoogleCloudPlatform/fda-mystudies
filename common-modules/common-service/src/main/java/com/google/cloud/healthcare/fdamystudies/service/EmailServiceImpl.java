@@ -50,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
     try {
       MimeMessage message = emailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(message, false);
-      helper.setFrom(new InternetAddress(emailRequest.getFrom()));
+      helper.setFrom(new InternetAddress("testingHelper@gmail.com"));
       helper.setTo(emailRequest.getTo());
 
       if (ArrayUtils.isNotEmpty(emailRequest.getCc())) {
@@ -61,8 +61,18 @@ public class EmailServiceImpl implements EmailService {
         helper.setBcc(emailRequest.getBcc());
       }
 
-      message.setFrom(new InternetAddress(emailRequest.getFrom()));
-      message.setSubject(getSubject(emailRequest));
+      logger.warn(
+          String.format(
+              "'%s' Before helper.getMimeMessage().getFrom() value ",
+              helper.getMimeMessage().getFrom()));
+      logger.warn(String.format("'%s' Before message.getFrom() value ", message.getFrom()));
+      message.setFrom(new InternetAddress("testingMessage@gmail.com"));
+      logger.warn(
+          String.format(
+              "'%s' After helper.getMimeMessage().getFrom() value ",
+              helper.getMimeMessage().getFrom()));
+      logger.warn(String.format("'%s' After message.getFrom() value ", message.getFrom()));
+
       message.setText(getBodyContent(emailRequest), "utf-8", "html");
       message.setSentDate(Calendar.getInstance().getTime());
       emailSender.send(message);
