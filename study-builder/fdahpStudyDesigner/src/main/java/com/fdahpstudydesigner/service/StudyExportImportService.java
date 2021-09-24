@@ -1752,7 +1752,7 @@ public class StudyExportImportService {
       if (e instanceof DuplicateKeyException) {
         return IMPORT_FAILED_DUE_TO_ALREADY_USED_URL;
       }
-      return e.getMessage();
+      return IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE;
     }
     return SUCCESS;
   }
