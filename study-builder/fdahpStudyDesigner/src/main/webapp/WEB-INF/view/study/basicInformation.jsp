@@ -16,7 +16,7 @@ margin-top:16px !important;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    background: #eef2f5 !important;
+    background: #fff !important;
     left: 0%;
    height: 300px;
     overflow-x: scroll;
