@@ -19,7 +19,6 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -29,6 +28,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -48,22 +48,29 @@ public class EmailServiceImpl implements EmailService {
   public EmailResponse sendMimeMail(EmailRequest emailRequest) {
     logger.entry("Begin sendMimeMail()");
     try {
-      MimeMessage message = emailSender.createMimeMessage();
-      MimeMessageHelper helper = new MimeMessageHelper(message, false);
-      helper.setFrom(new InternetAddress(emailRequest.getFrom()));
-      helper.setTo(emailRequest.getTo());
+      SimpleMailMessage message = new SimpleMailMessage();
+      message.setFrom(emailRequest.getFrom());
+      message.setTo(emailRequest.getTo());
+      //   message.setSubject(subject);
+      //   message.setText(text);
+      //  emailSender.send(message);
+
+      //  MimeMessage message = emailSender.createMimeMessage();
+      //  MimeMessageHelper helper = new MimeMessageHelper(message, false);
+      //  helper.setFrom(new InternetAddress(emailRequest.getFrom()));
+      //   helper.setTo(emailRequest.getTo());
 
       if (ArrayUtils.isNotEmpty(emailRequest.getCc())) {
-        helper.setCc(emailRequest.getCc());
+        message.setCc(emailRequest.getCc());
       }
 
       if (ArrayUtils.isNotEmpty(emailRequest.getBcc())) {
-        helper.setBcc(emailRequest.getBcc());
+        message.setBcc(emailRequest.getBcc());
       }
 
-      message.setFrom(new InternetAddress(emailRequest.getFrom()));
+      //   message.setFrom(new InternetAddress(emailRequest.getFrom()));
       message.setSubject(getSubject(emailRequest));
-      message.setText(getBodyContent(emailRequest), "utf-8", "html");
+      message.setText(getBodyContent(emailRequest));
       message.setSentDate(Calendar.getInstance().getTime());
       emailSender.send(message);
       logger.exit(String.format("status=%d", HttpStatus.ACCEPTED.value()));
