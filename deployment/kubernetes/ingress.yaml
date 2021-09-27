@@ -10,7 +10,6 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: btcsoft-dev-ingress-ip
     networking.gke.io/managed-certificates: btcsoft-dev-cert-participants,btcsoft-dev-cert-studies
-    kubernetes.io/ingress.allow-http: "false"
 spec:
   rules:
     - host: participants.btcsoft-dev.boston-technology.com
