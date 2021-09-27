@@ -138,7 +138,8 @@ extension UIViewController {
           appDelegate.showAppVersionUpdate()
         } else {
           let valIsShowUpdateAppVersion = ud.value(forKey: kIsShowUpdateAppVersion) as? Bool ?? false
-          if (valFromBackground >= Upgrade.onceDisplayed.rawValue && valFromBackground != Upgrade.pendingUpdate.rawValue) && !valIsShowUpdateAppVersion {
+          if (valFromBackground >= Upgrade.onceDisplayed.rawValue &&
+                valFromBackground != Upgrade.pendingUpdate.rawValue) && !valIsShowUpdateAppVersion {
             appDelegate.showAppVersionUpdate()
             ud.set(Upgrade.optionalShown.rawValue, forKey: kFromBackground)
             ud.synchronize()
