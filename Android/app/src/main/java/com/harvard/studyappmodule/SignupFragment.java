@@ -59,8 +59,8 @@ import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-import java.util.HashMap;
 import io.realm.Realm;
+import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
