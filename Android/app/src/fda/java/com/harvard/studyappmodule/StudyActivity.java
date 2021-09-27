@@ -213,8 +213,9 @@ public class StudyActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null)
+      if (alertDialog != null) {
         alertDialog.dismiss();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1119,7 +1120,7 @@ public class StudyActivity extends AppCompatActivity
             .replace(R.id.frameLayoutContainer, new ResourcesFragment(), "fragment")
             .commit();
       }
-    }else if (requestCode == RESULT_CODE_UPGRADE) {
+    } else if (requestCode == RESULT_CODE_UPGRADE) {
       Version currVer = new Version(AppController.currentVersion());
       Version latestVer = new Version(latestVersion);
       if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {

@@ -54,11 +54,10 @@ import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import io.realm.Realm;
 
 public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
   private static final int UPDATE_USER_PROFILE = 101;

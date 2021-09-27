@@ -47,10 +47,7 @@ import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-
 import java.util.HashMap;
-
-import io.realm.Realm;
 
 public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 

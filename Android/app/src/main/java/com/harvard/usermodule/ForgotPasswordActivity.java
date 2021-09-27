@@ -35,9 +35,8 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import java.util.HashMap;
-
 import io.realm.Realm;
+import java.util.HashMap;
 
 public class ForgotPasswordActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {

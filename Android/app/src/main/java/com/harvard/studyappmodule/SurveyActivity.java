@@ -705,18 +705,6 @@ public class SurveyActivity extends AppCompatActivity
     finish();
   }
 
-//  @Override
-//  protected void onResume() {
-//    super.onResume();
-//
-//    if(AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-//      IntentFilter filter = new IntentFilter();
-//      filter.addAction(BuildConfig.APPLICATION_ID);
-//      versionReceiver = new VersionReceiver();
-//      registerReceiver(versionReceiver, filter);
-//    }
-//  }
-
   @Override
   protected void onStart() {
     super.onStart();
@@ -737,28 +725,13 @@ public class SurveyActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null)
+      if (alertDialog != null) {
         alertDialog.dismiss();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
-
-//  @Override
-//  protected void onPause() {
-//    super.onPause();
-//
-//    try {
-//      unregisterReceiver(versionReceiver);
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//    try {
-//      alertDialog.dismiss();
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//  }
 
   public class VersionReceiver extends BroadcastReceiver {
     @Override

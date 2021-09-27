@@ -41,9 +41,8 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-import java.util.HashMap;
-
 import io.realm.Realm;
+import java.util.HashMap;
 
 public class VerificationStepActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {

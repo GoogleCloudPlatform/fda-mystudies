@@ -845,8 +845,9 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null)
+      if (alertDialog != null) {
         alertDialog.dismiss();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

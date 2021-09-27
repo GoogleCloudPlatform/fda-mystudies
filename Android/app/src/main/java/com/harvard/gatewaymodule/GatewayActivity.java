@@ -52,7 +52,6 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
-
 import io.realm.Realm;
 
 public class GatewayActivity extends AppCompatActivity {
@@ -90,7 +89,7 @@ public class GatewayActivity extends AppCompatActivity {
   public class VersionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-      if(intent.getStringExtra("api").equalsIgnoreCase("success")){
+      if (intent.getStringExtra("api").equalsIgnoreCase("success")) {
         Version currVer = new Version(AppController.currentVersion());
         Version latestVer = new Version(intent.getStringExtra("latestVersion"));
 
@@ -138,8 +137,9 @@ public class GatewayActivity extends AppCompatActivity {
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null)
+      if (alertDialog != null) {
         alertDialog.dismiss();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

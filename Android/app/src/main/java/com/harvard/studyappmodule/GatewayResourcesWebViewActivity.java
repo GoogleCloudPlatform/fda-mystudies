@@ -135,7 +135,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         displayPdfView(finalSharingFile.getAbsolutePath());
       }
     } else if (intentType.equalsIgnoreCase("url")) {
-      AppController.getHelperProgressDialog().showProgress(GatewayResourcesWebViewActivity.this,"","",false);
+      AppController.getHelperProgressDialog().showProgress(GatewayResourcesWebViewActivity.this, "", "", false);
       shareBtn.setVisibility(View.GONE);
       pdfView.setVisibility(View.GONE);
       webView.setVisibility(View.VISIBLE);

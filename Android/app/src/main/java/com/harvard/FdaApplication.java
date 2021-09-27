@@ -65,7 +65,7 @@ public class FdaApplication extends Application {
         new AppVisibilityDetector.AppVisibilityCallback() {
           @Override
           public void onAppGotoForeground() {
-            if(!AppController.isMyServiceRunning(getInstance(),VersionCheckerService.class)) {
+            if (!AppController.isMyServiceRunning(getInstance(), VersionCheckerService.class)) {
               startService(new Intent(getInstance(), VersionCheckerService.class));
             }
             if (AppController.getHelperSharedPreference()

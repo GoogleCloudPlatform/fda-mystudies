@@ -60,10 +60,9 @@ import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
+import io.realm.Realm;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import io.realm.Realm;
 
 public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestComplete {
   private static final int GET_TERMS_AND_CONDITION = 3;

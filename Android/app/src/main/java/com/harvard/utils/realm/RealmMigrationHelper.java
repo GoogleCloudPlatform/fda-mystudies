@@ -87,8 +87,8 @@ public class RealmMigrationHelper implements RealmMigration {
 
       // Added Apps
       schema.create("Android")
-          .addField("latestVersion",String.class)
-          .addField("forceUpdate",String.class);
+          .addField("latestVersion", String.class)
+          .addField("forceUpdate", String.class);
 
       schema.create("VersionModel")
           .addField("android", Android.class);

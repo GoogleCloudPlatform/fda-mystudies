@@ -30,7 +30,6 @@ import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.studyappmodule.studymodel.StudyResource;
 import com.harvard.utils.AppController;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-
 import io.realm.Realm;
 import io.realm.RealmList;
 
