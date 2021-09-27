@@ -61,6 +61,10 @@ class StudyListViewController: UIViewController {
       self?.setupStudyListTableView()
     }
   }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    self.addProgressIndicator()
+  }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
@@ -112,6 +116,21 @@ class StudyListViewController: UIViewController {
       labelHelperText.isHidden = false
       labelHelperText.text = kHelperTextForOffline
     }
+    
+    if User.currentUser.userType != .loggedInUser {
+      ud.set(true, forKey: kIsStudylistGeneral)
+      ud.synchronize()
+    } else {
+      ud.set(false, forKey: kIsStudylistGeneral)
+      ud.synchronize()
+    }
+    checkBlockerScreen()
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    let ud = UserDefaults.standard
+    ud.set(false, forKey: kIsStudylistGeneral)
+    ud.synchronize()
   }
 
   // MARK: - UI Utils
@@ -401,6 +420,10 @@ class StudyListViewController: UIViewController {
         }
       }
     }
+    let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+      self.removeProgressIndicator()
+      appdelegate.window?.removeProgressIndicatorFromWindow()
+
   }
 
   /// Sort Studies based on the Study Status.
@@ -654,9 +677,11 @@ class StudyListViewController: UIViewController {
   }
 
   @objc func loadStudyDetails() {
+    let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
     guard let study = Study.currentStudy
     else {
       self.removeProgressIndicator()
+      appdelegate.window?.removeProgressIndicatorFromWindow()
       return
     }
     DBHandler.loadStudyDetailsToUpdate(
@@ -665,6 +690,7 @@ class StudyListViewController: UIViewController {
 
         self.pushToStudyDashboard()
         self.removeProgressIndicator()
+        appdelegate.window?.removeProgressIndicatorFromWindow()
       }
     )
   }

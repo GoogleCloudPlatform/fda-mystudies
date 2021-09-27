@@ -140,6 +140,7 @@ class ActivitiesViewController: UIViewController {
       self.tableView?.isHidden = false
       self.labelNoNetworkAvailable?.isHidden = true
     }
+    checkBlockerScreen()
 
   }
 

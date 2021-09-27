@@ -65,6 +65,7 @@ class FeedBackViewController: UIViewController {
   /// If all the validations satisfy send user feedback request
   /// - Parameter sender: Instance of submit UIButton.
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
+    self.view.endEditing(true)
 
     if FeedbackDetail.subject.isEmpty && FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(

@@ -340,6 +340,18 @@ class Utilities: NSObject {
   class func currentDevicePlatform() -> String {
     return "IOS"
   }
+  
+  static func isVisible(view: UIView) -> Bool {
+    func isVisible(view: UIView, inView: UIView?) -> Bool {
+      guard let inView = inView else { return true }
+      let viewFrame = inView.convert(view.bounds, from: view)
+      if viewFrame.intersects(inView.bounds) {
+        return isVisible(view: view, inView: inView.superview)
+      }
+      return false
+    }
+    return isVisible(view: view, inView: view.superview)
+  }
 
   // MARK: Alert handlers
 
@@ -381,12 +393,13 @@ class Utilities: NSObject {
   /// This method will get the user defined name of the app from info.plist.
   /// - Returns: Name of the app.
   static func appName() -> String {
+    var varBundelName = ""
     if let bundleDisplayName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String {
-      return bundleDisplayName
+      varBundelName = bundleDisplayName
     } else if let bundleName = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String {
-      return bundleName
+      varBundelName = bundleName
     }
-    return ""
+    return UserManageApps.appDetails?.appName ?? varBundelName
   }
 }
 

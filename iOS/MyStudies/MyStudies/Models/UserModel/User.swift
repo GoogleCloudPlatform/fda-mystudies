@@ -596,6 +596,62 @@ class TermsAndPolicy {
 
 }
 
+// MARK: Manage Apps
+class UserManageApps {
+  var appName: String?
+  var code: String?
+  var contactUsEmail: String?
+  var supportEmail: String?
+  var fromEmail: String?
+  var appWebsite: String?
+  var privacyPolicyUrl: String?
+  var termsUrl: String?
+  var latestVersion: String?
+  var isForceUpdate: String?
+  static var appDetails: UserManageApps?
+
+  /// Default Initializer
+  init() {
+    self.appName = ""
+    self.code = ""
+    self.contactUsEmail = ""
+    self.supportEmail = ""
+    self.fromEmail = ""
+    self.appWebsite = ""
+    self.privacyPolicyUrl = ""
+    self.termsUrl = ""
+    self.latestVersion = ""
+    self.isForceUpdate = ""
+  }
+
+  /// Initializes all properties of `Manage Apps`
+  /// - Parameters:
+  ///   - appName: AppName
+  ///   - contactUsEmail: ContactUs Email
+  ///   - supportEmail: Support Email
+  ///   - fromEmail: From Email
+  ///   - appWebsite: App Website
+  ///   - termsUrl: Terms Url
+  ///   - privacyPolicyUrl: Policy Url
+  ///   - version: Array of Latest Version, Is Force Update Required, Code
+  func initWith(_ appName: String, _ contactUsEmail: String,
+                _ supportEmail: String, _ fromEmail: String,
+                _ appWebsite: String, _ privacyPolicyUrl: String,
+                _ termsUrl: String, _ version: [String]) {
+    self.appName = appName
+    self.code = version[2]
+    self.contactUsEmail = contactUsEmail
+    self.supportEmail = supportEmail
+    self.fromEmail = fromEmail
+    self.appWebsite = appWebsite
+    self.privacyPolicyUrl = privacyPolicyUrl
+    self.termsUrl = termsUrl
+    self.latestVersion = version[0]
+    self.isForceUpdate = version[1]
+  }
+
+}
+
 // MARK: ActivityStatus
 class UserActivityStatus {
 
