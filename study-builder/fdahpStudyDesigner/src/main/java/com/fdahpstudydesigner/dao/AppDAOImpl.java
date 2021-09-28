@@ -919,23 +919,24 @@ public class AppDAOImpl implements AppDAO {
           query =
               session.createQuery(
                   "Select DISTINCT a"
-                      + " from AppsBo a,AppPermissionBO ap, UserBO user"
-                      + " where a.id=ap.appId"
+                      + " from AppsBo a,StudyPermissionBO sp, StudyBo s"
+                      + " where a.customAppId=s.appId"
+                      + " AND s.id = sp.studyId"
                       + " and a.live=0 "
-                      + " and ap.userId=:impValue"
+                      + " and sp.userId=:impValue"
                       + " and a.appStatus IN ('Active','Deactivated')"
                       + " order by a.createdOn desc");
           appListBean = query.setString(IMP_VALUE, userId).list();
         }
       }
     } catch (Exception e) {
-      logger.error("AppDAOImpl - getActiveApps() - ERROR ", e);
+      logger.error("AppDAOImpl - getApps() - ERROR ", e);
     } finally {
       if ((null != session) && session.isOpen()) {
         session.close();
       }
     }
-    logger.exit("getActiveApps() - Ends");
+    logger.exit("getApps() - Ends");
     return appListBean;
   }
 
