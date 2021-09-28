@@ -204,6 +204,7 @@ public class StudiesServicesImpl implements StudiesServices {
     notificationBean.setNotificationType(AppConstants.STUDY);
     FcmPushNotificationResponse pushNotificationResponse = null;
     if (deviceTokensMap != null) {
+      System.out.println("inside deviceTokensMap");
       // if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
       if (AppConstants.DEVICE_ANDROID.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
@@ -345,6 +346,12 @@ public class StudiesServicesImpl implements StudiesServices {
           String.format(
               "FCM Notification Response status=%d, response=%s",
               conn.getResponseCode(), response));
+
+      logger.info(
+          String.format(
+              "FCM Notification Response status=%d, response=%s",
+              conn.getResponseCode(), response));
+      System.out.println("response = " + response);
       return fcmNotificationResponse;
     }
 
