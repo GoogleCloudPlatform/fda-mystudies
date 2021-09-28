@@ -205,6 +205,7 @@ public class StudiesServicesImpl implements StudiesServices {
     FcmPushNotificationResponse pushNotificationResponse = null;
     if (deviceTokensMap != null) {
       System.out.println("inside deviceTokensMap");
+      logger.info("inside deviceTokensMap");
       // if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
       if (AppConstants.DEVICE_ANDROID.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
