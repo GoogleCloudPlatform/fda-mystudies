@@ -78,6 +78,8 @@ public class NotificationDAOImpl implements NotificationDAO {
 
   @Autowired private HttpServletRequest request;
 
+  @Autowired private StudyDAO studyDAO;
+
   @Override
   public String deleteNotification(
       String notificationIdForDelete, SessionObject sessionObject, String notificationType) {
@@ -286,6 +288,8 @@ public class NotificationDAOImpl implements NotificationDAO {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
+      StudyBo studyDetails = studyDAO.getStudyByLatestVersion(notificationBO.getCustomStudyId());
+
       if (StringUtils.isEmpty(notificationBO.getNotificationId())) {
         notificationBOUpdate = new NotificationBO();
         notificationBOUpdate.setNotificationText(notificationBO.getNotificationText().trim());
@@ -316,11 +320,14 @@ public class NotificationDAOImpl implements NotificationDAO {
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
           notificationBOUpdate.setCustomStudyId(notificationBO.getCustomStudyId());
           notificationBOUpdate.setStudyId(notificationBO.getStudyId());
+          notificationBOUpdate.setPlatform(studyDetails.getPlatform());
           notificationBOUpdate.setNotificationAction(notificationBO.isNotificationAction());
         } else {
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_GT);
           notificationBOUpdate.setStudyId(null);
           notificationBOUpdate.setCustomStudyId("");
+          notificationBOUpdate.setPlatform(
+              FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS_ANDROID);
           notificationBOUpdate.setNotificationAction(false);
           notificationBOUpdate.setNotificationDone(true);
         }
@@ -369,11 +376,14 @@ public class NotificationDAOImpl implements NotificationDAO {
         if (notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
           notificationBOUpdate.setNotificationDone(notificationBO.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
+          notificationBOUpdate.setPlatform(studyDetails.getPlatform());
           notificationBOUpdate.setNotificationAction(notificationBO.isNotificationAction());
         } else {
           notificationBOUpdate.setNotificationDone(notificationBOUpdate.isNotificationDone());
           notificationBOUpdate.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_GT);
           notificationBOUpdate.setNotificationAction(notificationBOUpdate.isNotificationAction());
+          notificationBOUpdate.setPlatform(
+              FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS_ANDROID);
         }
         notificationBOUpdate.setNotificationSubType(
             FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_ANNOUNCEMENT);

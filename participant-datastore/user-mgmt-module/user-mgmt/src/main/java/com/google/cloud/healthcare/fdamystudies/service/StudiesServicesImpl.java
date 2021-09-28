@@ -204,14 +204,25 @@ public class StudiesServicesImpl implements StudiesServices {
     notificationBean.setNotificationType(AppConstants.STUDY);
     FcmPushNotificationResponse pushNotificationResponse = null;
     if (deviceTokensMap != null) {
-      if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
+      if (AppConstants.DEVICE_ANDROID.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
         pushNotificationResponse =
             pushFcmNotification(
                 notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-      }
-      if (deviceTokensMap.get(AppConstants.DEVICE_IOS) != null) {
+      } else if (AppConstants.DEVICE_IOS.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_IOS));
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      } else {
+        notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
+        notificationBean.setDeviceType(AppConstants.DEVICE_ANDROID);
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+
+        notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_IOS));
+        notificationBean.setDeviceType(AppConstants.DEVICE_IOS);
         pushNotificationResponse =
             pushFcmNotification(
                 notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));

@@ -21,6 +21,8 @@ enum LocalizableString: String {
   // MARK: Resources
   case resourceNotAvailable = "This resource is currently unavailable."
   case aboutStudy = "About the study"
+  case resourceTerms = "Terms"
+  case resourcePrivacy = "Privacy policy"
   case leaveSubtitle = "This will also delete your app account."
   case newResourceMessage = "New resource available"
 

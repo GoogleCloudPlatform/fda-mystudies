@@ -20,4 +20,9 @@ import UIKit
 
 class ResourcesListCell: UITableViewCell {
   @IBOutlet var labelResourceTitle: UILabel?
+  
+  func populateCellData(data: String) {
+    labelResourceTitle?.text = data
+  }
+  
 }

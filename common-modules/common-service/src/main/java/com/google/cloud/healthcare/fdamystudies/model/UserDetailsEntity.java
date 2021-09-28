@@ -100,8 +100,7 @@ public class UserDetailsEntity implements Serializable {
   private String locale;
 
   @Column(name = "verification_time")
-  @CreationTimestamp
-  private Timestamp verificationDate;
+  private String verificationDate;
 
   @Column(name = "code_expire_time")
   @CreationTimestamp
