@@ -261,6 +261,7 @@
     $("#completedId").on('click', function (e) {
       if ($('.checkbox input:checked').length == 0) {
     	    $("input").attr("required", true);
+    	    $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
       }
       
       var rowCount = 0;
@@ -280,6 +281,15 @@
           $('#completedId').prop('disabled', true);
           platformTypeValidation('completed');
         }
+      }else{
+    	  <c:if
+          test="${(not empty appBo && appBo.appPlatform eq 'A') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active')}">
+          $('#inlineCheckbox1').prop('disabled', true);
+          </c:if>
+      	  <c:if
+          test="${(not empty appBo && appBo.appPlatform eq 'I') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active')}">
+          $('#inlineCheckbox2').prop('disabled', true);
+          </c:if>
       }
     });
     $("#saveId").click(function () {
