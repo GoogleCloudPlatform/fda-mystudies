@@ -2726,6 +2726,10 @@ width:100% !important;
     padding-top: 20px !important;
     }
 
+.tooltip-inner {
+    max-width: 400px !important;
+}
+
 .checkbox input[type="checkbox"] {
     margin-top: 1px !important;
 }
