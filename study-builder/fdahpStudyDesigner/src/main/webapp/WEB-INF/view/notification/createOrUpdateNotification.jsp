@@ -124,14 +124,15 @@
 
      <div class=" ">
           <div class="form-group">
-            <div class="gray-xs-f mb-xs">App to which the notification must be sent</div>
+            <div class="gray-xs-f mb-xs">App to which the notification must be sent
+            <span class="requiredStar">*</span></div>
 			<c:choose>
                <c:when test="${notificationBO.actionPage eq 'view' || notificationBO.actionPage eq 'resend'}">
                  <input type="text" id="notificationAppId"
                     value="${notificationBO.appId}" disabled/>
              </c:when>
              <c:otherwise>
-              <select id="appId" class="selectpicker" name="appId">
+             <select id="appId" class="selectpicker" name="appId" required data-error="Please fill out this field">
               <option value=''>Select app ID</option>
               <c:forEach items="${gatewayAppList}" var="app">
                 <option
