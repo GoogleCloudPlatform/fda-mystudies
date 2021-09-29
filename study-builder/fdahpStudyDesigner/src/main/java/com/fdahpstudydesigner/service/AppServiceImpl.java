@@ -268,7 +268,7 @@ public class AppServiceImpl implements AppService {
     logger.entry("AppServiceImpl - getAppbyCustomAppId() - Starts");
     AppsBo appsBo = null;
     try {
-      appsBo = appDAO.getAppByLatestVersion(customAppId);
+      appsBo = appDAO.getAppByCustomAppId(customAppId);
     } catch (Exception e) {
       logger.error("AppServiceImpl - getAppbyCustomAppId() - ERROR ", e);
     }

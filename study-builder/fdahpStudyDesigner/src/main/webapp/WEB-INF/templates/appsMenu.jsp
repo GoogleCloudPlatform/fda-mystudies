@@ -32,7 +32,7 @@
           <span class="study_status ${empty appBo.customAppId?'hide':''}">${appBo.customAppId}</span>
            <div class="clearfix"></div>
           <div>
-          <span class="study_status right-border 
+          <span class="study_status right-border ${empty appBo.customAppId?'hide':''}
                     <c:if test="${appBo.appStatus eq 'Active'}"> post-launch_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Deactivated'}"> paused_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>

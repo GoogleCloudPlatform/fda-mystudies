@@ -1195,6 +1195,7 @@ input[type=radio]:disabled + label::after {
 .changeView div.dropdown-menu ul.dropdown-menu {
   max-height: 0px !important;
   overflow-y: auto !important;
+  overflow-x: hidden !important;
   min-height: 110px !important;
 }
 
@@ -2727,4 +2728,16 @@ width:100% !important;
     max-width: 400px !important;
 }
 
+.checkbox input[type="checkbox"] {
+    margin-top: 1px !important;
+    margin-left: -18px !important;
+}
+
+.bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+    margin-right: 0px !important;
+}
+
+.changeView div.dropdown-menu ul.dropdown-menu > li > a {
+    padding: 8px 0px 8px 20px !important;
+}
     

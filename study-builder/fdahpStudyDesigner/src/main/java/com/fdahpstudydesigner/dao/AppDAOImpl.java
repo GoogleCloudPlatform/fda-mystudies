@@ -918,23 +918,24 @@ public class AppDAOImpl implements AppDAO {
           query =
               session.createQuery(
                   "Select DISTINCT a"
-                      + " from AppsBo a,AppPermissionBO ap, UserBO user"
-                      + " where a.id=ap.appId"
+                      + " from AppsBo a,StudyPermissionBO sp, StudyBo s"
+                      + " where a.customAppId=s.appId"
+                      + " AND s.id = sp.studyId"
                       + " and a.live=0 "
-                      + " and ap.userId=:impValue"
+                      + " and sp.userId=:impValue"
                       + " and a.appStatus IN ('Active','Deactivated')"
                       + " order by a.createdOn desc");
           appListBean = query.setString(IMP_VALUE, userId).list();
         }
       }
     } catch (Exception e) {
-      logger.error("AppDAOImpl - getActiveApps() - ERROR ", e);
+      logger.error("AppDAOImpl - getApps() - ERROR ", e);
     } finally {
       if ((null != session) && session.isOpen()) {
         session.close();
       }
     }
-    logger.exit("getActiveApps() - Ends");
+    logger.exit("getApps() - Ends");
     return appListBean;
   }
 
@@ -1204,5 +1205,28 @@ public class AppDAOImpl implements AppDAO {
     }
     logger.exit("getStudiesCountByAppId() - Ends");
     return count;
+  }
+
+  @Override
+  public AppsBo getAppByCustomAppId(String customAppId) {
+    logger.entry("begin getAppByCustomAppId()");
+    Session session = null;
+    AppsBo app = null;
+
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      query = session.getNamedQuery("AppsBo.getAppByAppId").setString("customAppId", customAppId);
+
+      app = (AppsBo) query.uniqueResult();
+
+    } catch (Exception e) {
+      logger.error("AppDAOImpl - getAppByCustomAppId() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getAppByCustomAppId() - Ends");
+    return app;
   }
 }

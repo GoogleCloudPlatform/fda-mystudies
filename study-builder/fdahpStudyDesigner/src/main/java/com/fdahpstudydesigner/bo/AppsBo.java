@@ -50,7 +50,10 @@ import org.hibernate.annotations.GenericGenerator;
       query = "UPDATE AppsBo SET live=2 WHERE customAppId =:customAppId and live=1"),
   @NamedQuery(
       name = "AppsBo.getAppByCustomAppId",
-      query = " From AppsBo WHERE customAppId =:customAppId")
+      query = " From AppsBo WHERE customAppId =:customAppId"),
+  @NamedQuery(
+      name = "AppsBo.getAppByAppId",
+      query = " From AppsBo WHERE customAppId =:customAppId and live=0")
 })
 public class AppsBo implements Serializable {
 

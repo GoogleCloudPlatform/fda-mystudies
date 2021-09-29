@@ -47,6 +47,7 @@
      .custom_checkbox_dropdown { 
    background: #fff!important;
     min-width: 200px !important;
+     width: 268px !important;
     height: 300px;
     overflow-y: scroll;
       }
@@ -402,12 +403,12 @@ padding-left: 7px;
 			    if ($(this).is(':checked')) {
 			        $('.option').prop('checked', true);
 			        var total = $('input[name="options[]"]:checked').length;
-			        $(".dropdown-text").html('Showing all apps');
+			        $(".dropdown-text").html('All apps');
 			        $(".select-text").html(' Deselect');
 			    } else {
 			        $('.option').prop('checked', false);
 			        var total = $('input[name="options[]"]:checked').length;
-			        $(".dropdown-text").html('-- Select apps --');
+			        $(".dropdown-text").html('Filter by apps');
 			        $(".select-text").html(' Select');
 			    }
 			});
@@ -424,15 +425,15 @@ padding-left: 7px;
 			    }
 			  var total = $('input[name="options[]"]:checked').length;
 			  if(total == 0){
-				  $(".dropdown-text").html('-- Select apps --');
+				  $(".dropdown-text").html('Filter by apps');
 			  }else{
-				  $(".dropdown-text").html('Showing ' + total + ' app(s)');
+				  $(".dropdown-text").html(total + ' app(s)');
 			  }
 			  
 			});
 		  
 			  <c:if test="${not empty appId}">
-		    	$(".dropdown-text").html('Showing ' + 1 + ' app(s)');
+		    	$(".dropdown-text").html(1 + ' app(s)');
 		    </c:if>
 		    
 		});

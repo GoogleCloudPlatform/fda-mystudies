@@ -97,7 +97,7 @@ color: #95a2ab;
       
         <div class="dropdown dropdown_chk_box pl-lg">
       <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-        <span class="dropdown-text">-- Select apps --</span>
+        <span class="dropdown-text">Filter by apps</span>
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu custom_checkbox_dropdown">
@@ -109,7 +109,7 @@ color: #95a2ab;
               <span class="pl-7"> All</span> apps </label>
             </c:if>
             <c:if test="${empty appBos}">
-            <label>No app records found</label>
+            <label class="select-sup_text">No app records found</label>
             </c:if>
           </a>
         </li>
