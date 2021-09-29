@@ -47,6 +47,7 @@
      .custom_checkbox_dropdown { 
    background: #fff!important;
     min-width: 200px !important;
+     width: 268px !important;
     height: 300px;
     overflow-y: scroll;
       }
