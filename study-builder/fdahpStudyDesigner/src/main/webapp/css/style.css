@@ -2726,4 +2726,6 @@ width:100% !important;
     padding-top: 20px !important;
     }
 
-
+input[type="checkbox"], input[type="radio"] {
+    margin: 2px 0 0 !important;
+}

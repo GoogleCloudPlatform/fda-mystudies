@@ -586,3 +586,7 @@ table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dat
 		height:460px;
 	}
 } */
+
+input[type="checkbox"], input[type="radio"] {
+    margin: 2px 0 0 !important;
+}
