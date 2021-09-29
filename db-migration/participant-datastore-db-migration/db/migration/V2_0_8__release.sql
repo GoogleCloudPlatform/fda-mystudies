@@ -20,3 +20,7 @@ ALTER TABLE `mystudies_participant_datastore`.`app_info` ADD COLUMN `android_for
 ALTER TABLE `mystudies_participant_datastore`.`app_info` ADD COLUMN `type` VARCHAR(255) DEFAULT NULL;
 ALTER TABLE `mystudies_participant_datastore`.`app_info` ADD COLUMN `app_website`  VARCHAR(255) DEFAULT NULL;
 ALTER TABLE `mystudies_participant_datastore`.`app_info` ADD COLUMN `app_status`  VARCHAR(255) DEFAULT 'Active';
+
+ALTER TABLE `mystudies_participant_datastore`.`app_info` modify `android_force_upgrade` BIT DEFAULT NULL;
+
+ALTER TABLE `mystudies_participant_datastore`.`app_info` modify `ios_force_upgrade` BIT DEFAULT NULL;
