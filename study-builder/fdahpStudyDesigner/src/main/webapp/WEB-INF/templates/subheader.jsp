@@ -132,7 +132,7 @@ color: #95a2ab;
               <span class="pl-7"> All</span> apps </label>
             </c:if>
             <c:if test="${empty appBos}">
-            <label>No app records found</label>
+            <label class="select-sup_text" >No app records found</label>
             </c:if>
           </a>
         </li>

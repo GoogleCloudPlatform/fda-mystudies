@@ -2726,4 +2726,14 @@ width:100% !important;
     padding-top: 20px !important;
     }
 
+.checkbox input[type="checkbox"] {
+    margin-top: 1px !important;
+}
 
+.bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+    margin-right: 0px !important;
+}
+
+.changeView div.dropdown-menu ul.dropdown-menu > li > a {
+    padding: 8px 0px 8px 20px !important;
+}
