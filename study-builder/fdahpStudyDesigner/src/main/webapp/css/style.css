@@ -2733,6 +2733,7 @@ width:100% !important;
 
 .checkbox input[type="checkbox"] {
     margin-top: 1px !important;
+     margin-left: -18px !important;
 }
 
 .bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
