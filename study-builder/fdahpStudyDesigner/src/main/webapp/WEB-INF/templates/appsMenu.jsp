@@ -120,7 +120,7 @@
       document.body.appendChild(a).click();
       </c:if>
     });
-
+    
     var a = document.createElement('a');
     $('.first').click(function () {
       a.href = "/studybuilder/adminApps/viewAppsInfo.do?_S=${param._S}";
@@ -132,7 +132,7 @@
       document.body.appendChild(a).click();
     });
    
-    <c:if test="${appBo.appStatus == 'Active'}">
+    <c:if test="${appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated'}">
     $('.third').click(function () {
       a.href = "/studybuilder/adminApps/viewAppProperties.do?_S=${param._S}";
       document.body.appendChild(a).click();
@@ -161,6 +161,12 @@
     <c:if test="${appBo.appSequenceBo.appSettings && appBo.appStatus != 'Active'}">
     $('.commonCls1').not('.fifth').addClass('cursor-none-without-event');
     </c:if> 
+    
+    <c:if test="${appBo.appStatus == 'Deactivated'}">
+    $('.commonCls').removeClass('cursor-none-without-event');
+    $('.commonCls1').removeClass('cursor-none-without-event');
+    
+    </c:if>
     $(window).on('load resize', function () {
 
       rtime1 = new Date();
