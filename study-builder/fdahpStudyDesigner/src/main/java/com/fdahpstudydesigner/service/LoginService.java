@@ -37,6 +37,8 @@ public interface LoginService {
 
   public UserBO checkSecurityToken(String securityToken);
 
+  public String addOrUpdateOrgUser();
+
   public Boolean isFrocelyLogOutUser(SessionObject sessionObject);
 
   public Boolean isUserEnabled(SessionObject sessionObject);

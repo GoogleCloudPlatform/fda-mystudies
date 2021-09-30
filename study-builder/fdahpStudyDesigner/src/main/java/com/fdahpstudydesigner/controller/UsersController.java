@@ -403,6 +403,7 @@ public class UsersController {
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     List<UserBO> userList = null;
+    List<UserBO> adminList = new ArrayList<UserBO>();
     String sucMsg = "";
     String errMsg = "";
     String ownUser = "";
@@ -422,6 +423,15 @@ public class UsersController {
         ownUser = (String) request.getSession().getAttribute("ownUser");
         userList = usersService.getUserList();
         roleList = usersService.getUserRoleList();
+
+        for (int i = 0; i < userList.size(); i++) {
+          if (StringUtils.isNotEmpty(userList.get(i).getCreatedBy())
+              && userList.get(i).getCreatedBy().equals("gci")) {
+            adminList.add(userList.get(i));
+          }
+        }
+
+        map.addAttribute("adminList", adminList);
         map.addAttribute("roleList", roleList);
         map.addAttribute("userList", userList);
         map.addAttribute("ownUser", ownUser);

@@ -722,7 +722,7 @@ $(document)
                       isValidLoginForm = true;
                     }
                     if (isValidLoginForm) {
-                      var username = $('#email').val();
+                      var email = $('#email').val();
                       $('#email').val('');
                       var password = $('#password').val();
                       var passwordLength = "";
@@ -737,6 +737,21 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc');
+
+				   	  firebase.auth().onAuthStateChanged(function(user) {
+				   	    if (user) {
+				   	    alert("authenticate user.email  " + user.email);
+				   	      document.getElementById("message").innerHTML = "Welcome, " + user.email;
+				   	    } else {
+				   	      document.getElementById("message").innerHTML = "No user signed in.";
+				   	    }
+				   	  });
+			
+				   	  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+				   	    document.getElementById("message").innerHTML = error.message;
+				   	    $("#errMsg").text(error.message);
+				   	  });
+    	   	 
                       var fdaLink = $('#fdaLink').val();
                       $("body").addClass("loading");
                       $
@@ -745,7 +760,7 @@ $(document)
                             type: "POST",
                             datatype: "json",
                             data: {
-                              username: username,
+                              username: email,
                               password: password,
                             },
                             success: function (data) {
@@ -760,6 +775,7 @@ $(document)
                                     .submit();
                                 var a = document
                                     .createElement('a');
+                                    alert("a" + a);
                                 a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
                                 document.body
                                     .appendChild(
@@ -787,7 +803,7 @@ $(document)
                                         "password");
                                 $('#email')
                                     .val(
-                                        username);
+                                        email);
                                 $("body")
                                     .removeClass(
                                         "loading");

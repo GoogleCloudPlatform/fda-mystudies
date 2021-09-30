@@ -27,6 +27,7 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SESSION_EXPIRY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -37,6 +38,9 @@ import com.fdahpstudydesigner.service.LoginServiceImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.UpdateRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
@@ -176,6 +180,14 @@ public class LoginController {
               : "";
       message = loginService.changePassword(userId, newPassword, oldPassword, sesObj);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
+
+        // GCI user record update
+        UpdateRequest updateRequest =
+            new UpdateRequest(userId).setEmailVerified(true).setPassword(newPassword);
+
+        UserRecord userRecord = FirebaseAuth.getInstance().updateUser(updateRequest);
+        System.out.println("Successfully updated user: " + userRecord.getUid());
+
         sesObj.setPasswordExpiryDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
         mv =
             new ModelAndView(
@@ -257,6 +269,8 @@ public class LoginController {
     String errMsg;
     ModelMap map = new ModelMap();
     MasterDataBO masterDataBO = null;
+
+    loginService.addOrUpdateOrgUser();
     if (null != request.getSession().getAttribute("sucMsg")) {
       sucMsg = (String) request.getSession().getAttribute("sucMsg");
       map.addAttribute("sucMsg", sucMsg);

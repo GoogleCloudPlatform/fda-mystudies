@@ -63,7 +63,8 @@
     <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
-    
+    <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
+       
     <style>
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
@@ -126,6 +127,11 @@
                    href="javascript:void(0)">Forgot password?
                 </a>
               </div>
+              
+                        <div>Identity Platform Quickstart</div>
+<div id="message">Loading...</div>
+
+
             </div>
             <input type="password" name="password" id="hidePass" style="display: none;"/>
           </form:form>
@@ -217,6 +223,13 @@
     <script>
       var isChanged = true;
       $(document).ready(function (e) {
+
+      var config = {
+   	    apiKey: "AIzaSyB0Dlx5-qXxVXsNOu2MGx5v7Ry1F0PyYOg",
+   	    authDomain: "clean-mountain-326213.firebaseapp.com",
+   	  };
+   	  firebase.initializeApp(config);
+  	    
         // Internet Explorer 6-11
         var isIE = false || !!document.documentMode;
 

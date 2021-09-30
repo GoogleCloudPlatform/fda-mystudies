@@ -37,7 +37,7 @@
         </form>
       </div>
 
-      <div class="dis-line pull-right ml-md">
+      <div class="dis-line pull-right ml-md" >
         <div class="form-group mb-none mt-xs">
           <c:if
               test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
@@ -55,7 +55,21 @@
           </c:if>
         </div>
       </div>
-      <div class="dis-line pull-right"
+      
+       <div class="dis-line pull-right"
+           style="margin-top: 10px; height: auto;">
+        <div class="mb-none mt-xs">
+          <select class="selectpicker btn-md" id="filterRole">
+            <option value="" selected>Invite admins</option>
+            <c:forEach items="${adminList}" var="admin">
+              <option value="${admin.userEmail}">${admin.userEmail}</option>
+            </c:forEach>
+          </select>
+        </div>
+      </div>
+      
+      
+      <div class="dis-line pull-right mr-md"
            style="margin-top: 10px; height: auto;">
         <div class="mb-none mt-xs">
           <select class="selectpicker btn-md" id="filterRole">

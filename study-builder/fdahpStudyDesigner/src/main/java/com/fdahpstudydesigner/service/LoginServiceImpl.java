@@ -44,11 +44,15 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.common.StudyBuilderConstants;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.dao.LoginDAOImpl;
+import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
+import com.google.firebase.auth.ExportedUserRecord;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.ListUsersPage;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,7 +82,11 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Autowired private EmailNotification emailNotification;
 
+  @Autowired private UsersService usersService;
+
   private LoginDAOImpl loginDAO;
+
+  @Autowired private UsersDAO usersDAO;
 
   @Override
   public String authAndAddPassword(
@@ -198,6 +206,103 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     }
     logger.exit("checkSecurityToken() - Ends");
     return result;
+  }
+
+  @Override
+  public String addOrUpdateOrgUser() {
+    logger.entry("begin addOrUpdateOrgUser()");
+    UserBO userBO2 = null;
+    List<UserBO> userList = null;
+
+    try {
+      // Get study builder user list
+      userList = usersService.getUserList();
+
+      // Start listing identity platform users from the beginning, 1000 at a time.
+      ListUsersPage page;
+
+      page = FirebaseAuth.getInstance().listUsers(null);
+
+      while (page != null) {
+        for (ExportedUserRecord user : page.getValues()) {
+
+          boolean addFlag = true;
+          for (int i = 0; i < userList.size(); i++) {
+            if (user.getEmail().equalsIgnoreCase(userList.get(i).getUserEmail())) {
+              addFlag = false;
+            }
+          }
+
+          if (addFlag) {
+            userBO2 = new UserBO();
+            userBO2.setFirstName(
+                null != user.getDisplayName()
+                    ? user.getDisplayName().trim()
+                    : "Google identity platform admin");
+            userBO2.setUserEmail(
+                (StringUtils.isNotEmpty(user.getEmail()) ? user.getEmail().trim() : "")
+                    .toLowerCase());
+            userBO2.setPhoneNumber(
+                StringUtils.isNotEmpty(user.getPhoneNumber()) ? user.getPhoneNumber().trim() : "");
+            userBO2.setRoleId("2");
+            userBO2.setCreatedBy("gci");
+            String createdOn =
+                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                    .format(user.getUserMetadata().getCreationTimestamp());
+            userBO2.setCreatedOn(createdOn);
+            String lastLogin =
+                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                    .format(user.getUserMetadata().getLastSignInTimestamp());
+            userBO2.setUserLastLoginDateTime(lastLogin);
+            userBO2.setEnabled(true);
+            userBO2.setCredentialsNonExpired(true);
+            userBO2.setAccountNonExpired(true);
+            userBO2.setAccountNonLocked(true);
+            loginDAO.updateUser(userBO2);
+
+          } else {
+
+            userBO2 = loginDAO.getValidUserByEmail(user.getEmail());
+            if (null != userBO2) {
+              userBO2.setFirstName(
+                  StringUtils.isNotEmpty(user.getDisplayName())
+                      ? user.getDisplayName().trim()
+                      : "Google identity platform admin");
+              userBO2.setUserEmail(
+                  (StringUtils.isNotEmpty(user.getEmail()) ? user.getEmail().trim() : "")
+                      .toLowerCase());
+              userBO2.setPhoneNumber(
+                  StringUtils.isNotEmpty(user.getPhoneNumber())
+                      ? user.getPhoneNumber().trim()
+                      : "");
+              userBO2.setRoleId("2");
+              userBO2.setCreatedBy("gci");
+              String createdOn =
+                  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                      .format(user.getUserMetadata().getCreationTimestamp());
+              userBO2.setCreatedOn(createdOn);
+              String lastLogin =
+                  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                      .format(user.getUserMetadata().getLastSignInTimestamp());
+              userBO2.setUserLastLoginDateTime(lastLogin);
+              userBO2.setEnabled(true);
+              userBO2.setCredentialsNonExpired(true);
+              userBO2.setAccountNonExpired(true);
+              userBO2.setAccountNonLocked(true);
+              loginDAO.updateUser(userBO2);
+            } else {
+              continue;
+            }
+          }
+        }
+        page = page.getNextPage();
+      }
+
+    } catch (Exception e) {
+      logger.error("UsersServiceImpl - addOrUpdateOrgUser() - ERROR", e);
+    }
+    logger.exit("addOrUpdateOrgUser() - Ends");
+    return "";
   }
 
   @Override
