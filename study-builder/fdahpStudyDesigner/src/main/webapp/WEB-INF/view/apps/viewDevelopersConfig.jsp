@@ -57,7 +57,7 @@
     
          <!-- Start Section-->
 
-                         <div class="row mt-xlg">
+                         <div class="row">
                             <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs mt-md">Android Bundle ID 
                                 <small>(100 characters max)</small>

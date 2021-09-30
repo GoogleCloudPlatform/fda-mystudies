@@ -56,7 +56,7 @@
     
          <!-- Start Section-->
 
-                         <div class="row mt-xlg">
+                         <div class="row">
                             <div class="col-md-6 pl-none">
                                 <div class="gray-xs-f mb-xs">Feedback email  
                                 <small>(100 characters max)</small>
