@@ -31,14 +31,13 @@
           <span class="study_status ${empty appBo.customAppId?'hide':''}">${appBo.customAppId}</span>
            <div class="clearfix"></div>
           <div>
-          <span class="study_status right-border ${empty appBo.customAppId?'hide':''}
+          <span class="study_status right-border no-border ${empty appBo.customAppId?'hide':''}
                     <c:if test="${appBo.appStatus eq 'Active'}"> post-launch_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Deactivated'}"> paused_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
 	                pr-sm"> ${appBo.appStatus} </span>
 	      <c:if test="${appBo.appStatus eq 'Active'}">
-<!-- 	      <span class="right-border"></span> -->
-          <span class="study_status  right-border pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not published </c:if></span> <span class="right-border"></span>
+          <span class="study_status right-border pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not published </c:if></span>
           <span class="study_status pl-sm ${(appBo.iosAppDistributed || appBo.androidAppDistributed)?'post-launch_txt':'pre-launch_txt'}"> 
           <c:choose>
               <c:when test="${appBo.iosAppDistributed && appBo.androidAppDistributed}">Distributed (2)</c:when>
@@ -87,6 +86,13 @@
     $("#rowId").addClass('lc-gray-bg');
     $('#createStudyId').show();
     $("#myNavbar li.studyClass").addClass('active');
+    
+    <c:if test="${appBo.appStatus == 'Draft' || appBo.appStatus == 'Deactivated'}">
+	 $('.no-border').removeClass("right-border");
+	</c:if>
+
+
+
     $('[data-toggle="tooltip"]').tooltip();
     $('.cancelBut').click(function () {
       <c:if test="${empty permission}">
@@ -125,13 +131,13 @@
       a.href = "/studybuilder/adminApps/viewAppsInfo.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
-    <c:if test="${appBo.appSequenceBo.appInfo || appBo.appStatus == 'Active'}">
+    <c:if test="${appBo.appSequenceBo.appInfo || appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated'}">
     $('.second').click(function () {
       a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
    
-    <c:if test="${appBo.appStatus == 'Active'}">
+    <c:if test="${appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated'}">
     $('.third').click(function () {
       a.href = "/studybuilder/adminApps/viewAppProperties.do?_S=${param._S}";
       document.body.appendChild(a).click();
@@ -141,7 +147,7 @@
       document.body.appendChild(a).click();
     });
     </c:if>
-    <c:if test="${(appBo.appSequenceBo.appSettings) || appBo.appStatus == 'Active'}">
+    <c:if test="${(appBo.appSequenceBo.appSettings) || appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated'}">
     $('.fifth').click(function () {
         a.href = "/studybuilder/adminApps/appActionList.do?_S=${param._S}";
         document.body.appendChild(a).click();
@@ -160,6 +166,13 @@
     <c:if test="${appBo.appSequenceBo.appSettings && appBo.appStatus != 'Active'}">
     $('.commonCls1').not('.fifth').addClass('cursor-none-without-event');
     </c:if> 
+    
+    <c:if test="${appBo.appStatus == 'Deactivated'}">
+    $('.commonCls').removeClass('cursor-none-without-event');
+    $('.commonCls1').removeClass('cursor-none-without-event');
+    
+    </c:if>
+    
     $(window).on('load resize', function () {
 
       rtime1 = new Date();
