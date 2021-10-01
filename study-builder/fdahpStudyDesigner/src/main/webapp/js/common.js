@@ -737,80 +737,127 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc');
-
-				   	  firebase.auth().onAuthStateChanged(function(user) {
-				   	    if (user) {
-				   	    alert("authenticate user.email  " + user.email);
-				   	      document.getElementById("message").innerHTML = "Welcome, " + user.email;
-				   	    } else {
-				   	      document.getElementById("message").innerHTML = "No user signed in.";
-				   	    }
-				   	  });
-			
-				   	  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-				   	    document.getElementById("message").innerHTML = error.message;
-				   	    $("#errMsg").text(error.message);
-				   	  });
     	   	 
                       var fdaLink = $('#fdaLink').val();
                       $("body").addClass("loading");
-                      $
-                          .ajax({
-                            url: fdaLink,
-                            type: "POST",
-                            datatype: "json",
-                            data: {
-                              username: email,
-                              password: password,
-                            },
-                            success: function (data) {
-                              var jsonobject = data;
-                              var message = jsonobject.message;
-                              if (message == "SUCCESS") {
-                                $('#email')
-                                    .val('');
-                                $('#password')
-                                    .val(passwordLength);
-                                $('#landingId')
-                                    .submit();
-                                var a = document
-                                    .createElement('a');
-                                    alert("a" + a);
-                                a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
-                                document.body
-                                    .appendChild(
-                                        a)
-                                    .click();
-                              } else {
-                                $('#password')
-                                    .val('');
-                                $(
-                                    ".askSignInCls")
-                                    .addClass(
-                                        'hide');
-                                $("#errMsg")
-                                    .text(
-                                        message);
-                                $("#errMsg")
-                                    .show(
-                                        "fast");
-                                setTimeout(
-                                    hideDisplayMessage,
-                                    5000);
-                                $('#password')
-                                    .attr(
-                                        "type",
-                                        "password");
-                                $('#email')
-                                    .val(
-                                        email);
-                                $("body")
-                                    .removeClass(
-                                        "loading");
-                              }
-                            },
-                            global: false
-                          })
-                    }
-                  });
+                      
+                      
+                       $
+                            .ajax({
+                              url: "/studybuilder/isGCIUser.do?"
+                                  + csrfDetcsrfParamName
+                                  + "="
+                                  + csrfToken,
+                              type: "POST",
+                              datatype: "json",
+                              data: {
+                                email: email,
+                              },
+                              success: function getResponse(
+                                  data) {
+                                var message = data.message;
+                                if ('SUCCESS' == message) {
+                                
+                                    alert("isGCIUser " + message);                   
+			                     firebase.auth().onAuthStateChanged(function(user) {
+							   	  alert("user " + user);
+							   	    if (user) {
+							   	    alert("sucess  " + email);
+							   	  //    document.getElementById("message").innerHTML = "Welcome, " + email;
+							   	    } else {
+							   	    alert("No user signed in " + email);
+							   	    //  document.getElementById("message").innerHTML = "No user signed in.";
+							   	    }
+							   	  });
+						
+							   	  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+							   	   alert("error email  " + email);
+					   	           $('#password')
+			                            .val('');
+			                        $(
+			                            ".askSignInCls")
+			                            .addClass(
+			                                'hide');
+			                        $("#errMsg")
+			                            .text(
+			                                error.message);
+			                        $("#errMsg")
+			                            .show(
+			                                "fast");
+			                        setTimeout(
+			                            hideDisplayMessage,
+			                            5000);
+			                        $('#password')
+			                            .attr(
+			                                "type",
+			                                "password");
+			                        $('#email')
+			                            .val(
+			                                email);
+			                        $("body")
+			                            .removeClass(
+			                                "loading");
+							   	  });
+							   	  
+				   	  
+                               } 
+				   	  
+	                      $
+	                          .ajax({
+	                            url: fdaLink,
+	                            type: "POST",
+	                            datatype: "json",
+	                            data: {
+	                              username: email,
+	                              password: password,
+	                            },
+	                            success: function (data) {
+	                              var jsonobject = data;
+	                              var message = jsonobject.message;
+	                              if (message == "SUCCESS") {
+	                                $('#email')
+	                                    .val('');
+	                                $('#password')
+	                                    .val(passwordLength);
+	                                $('#landingId')
+	                                    .submit();
+	                                var a = document
+	                                    .createElement('a');
+	                                a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
+	                                document.body
+	                                    .appendChild(
+	                                        a)
+	                                    .click();
+	                              } else {
+	                                $('#password')
+	                                    .val('');
+	                                $(
+	                                    ".askSignInCls")
+	                                    .addClass(
+	                                        'hide');
+	                                $("#errMsg")
+	                                    .text(
+	                                        message);
+	                                $("#errMsg")
+	                                    .show(
+	                                        "fast");
+	                                setTimeout(
+	                                    hideDisplayMessage,
+	                                    5000);
+	                                $('#password')
+	                                    .attr(
+	                                        "type",
+	                                        "password");
+	                                $('#email')
+	                                    .val(
+	                                        email);
+	                                $("body")
+	                                    .removeClass(
+	                                        "loading");
+	                              }
+	                            },
+	                            global: false
+	                          })
+	                    }
+	                  });
         });

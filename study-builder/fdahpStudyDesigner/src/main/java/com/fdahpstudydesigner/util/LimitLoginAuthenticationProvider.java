@@ -110,7 +110,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
         logger.error("LimitLoginAuthenticationProvider - authenticate - ERROR", e);
       }
 
-      if (StringUtils.isNotEmpty(userBO.getCreatedBy()) && userBO.getCreatedBy().equals("gci")) {
+      if (userBO.isGciUser()) {
 
         // if reach here, means login success, else an exception will be thrown
         Authentication auth =

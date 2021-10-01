@@ -48,6 +48,7 @@
 
     <!-- Head Libs -->
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
      <style>
    
 .arrow {
@@ -107,7 +108,7 @@
                   </a>
                   <hr align="left" width="100%">
                   <a href="/studybuilder/sessionOut.do"
-                     class="blue-link text-weight-normal text-uppercase">
+                     class="blue-link text-weight-normal text-uppercase" id="signOut">
                     <span>sign Out</span>
                     <span
                         class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span>
@@ -224,7 +225,6 @@
     <script src="/studybuilder/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
     <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/studybuilder/js/jquery.mask.min.js"></script>
-
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
 
     <!-- Theme Custom JS-->
@@ -277,6 +277,22 @@
           document.studyListForm.action = "/studybuilder/adminDashboard/viewUserDetails.do";
           document.studyListForm.submit();
         });
+        
+        var config = {
+	   	  apiKey: "AIzaSyB0Dlx5-qXxVXsNOu2MGx5v7Ry1F0PyYOg",
+	   	  authDomain: "clean-mountain-326213.firebaseapp.com",
+	   	};
+	   	firebase.initializeApp(config);
+        	  
+        $('#signOut').on('click', function () {
+            firebase.auth().signOut()
+        	   .then(function() {
+        	      alert('1Signout Succesfull')
+        	   }, function(error) {
+        		  alert('1Signout Failed' + error)
+        	   });
+         });
+        
         if ('${sessionScope.sessionObject}' != '') {
           setTimeout(function () {
             window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';

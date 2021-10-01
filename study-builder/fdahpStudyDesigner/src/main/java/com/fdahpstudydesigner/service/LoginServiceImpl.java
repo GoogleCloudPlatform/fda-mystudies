@@ -235,15 +235,13 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
           if (addFlag) {
             userBO2 = new UserBO();
-            userBO2.setFirstName(
-                null != user.getDisplayName()
-                    ? user.getDisplayName().trim()
-                    : "Google identity platform admin");
+            userBO2.setFirstName(null != user.getDisplayName() ? user.getDisplayName().trim() : "");
             userBO2.setUserEmail(
                 (StringUtils.isNotEmpty(user.getEmail()) ? user.getEmail().trim() : "")
                     .toLowerCase());
             userBO2.setPhoneNumber(
                 StringUtils.isNotEmpty(user.getPhoneNumber()) ? user.getPhoneNumber().trim() : "");
+            // TODO: remove, hardcoded for testing
             userBO2.setRoleId("2");
             userBO2.setCreatedBy("gci");
             String createdOn =
@@ -254,6 +252,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
                     .format(user.getUserMetadata().getLastSignInTimestamp());
             userBO2.setUserLastLoginDateTime(lastLogin);
+            userBO2.setGciUser(true);
             userBO2.setEnabled(true);
             userBO2.setCredentialsNonExpired(true);
             userBO2.setAccountNonExpired(true);
@@ -267,7 +266,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               userBO2.setFirstName(
                   StringUtils.isNotEmpty(user.getDisplayName())
                       ? user.getDisplayName().trim()
-                      : "Google identity platform admin");
+                      : "");
               userBO2.setUserEmail(
                   (StringUtils.isNotEmpty(user.getEmail()) ? user.getEmail().trim() : "")
                       .toLowerCase());
@@ -275,6 +274,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                   StringUtils.isNotEmpty(user.getPhoneNumber())
                       ? user.getPhoneNumber().trim()
                       : "");
+              // TODO: remove, hardcoded for testing
               userBO2.setRoleId("2");
               userBO2.setCreatedBy("gci");
               String createdOn =
@@ -285,6 +285,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                   new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
                       .format(user.getUserMetadata().getLastSignInTimestamp());
               userBO2.setUserLastLoginDateTime(lastLogin);
+              userBO2.setGciUser(true);
               userBO2.setEnabled(true);
               userBO2.setCredentialsNonExpired(true);
               userBO2.setAccountNonExpired(true);

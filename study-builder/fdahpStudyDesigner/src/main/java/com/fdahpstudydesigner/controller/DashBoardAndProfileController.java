@@ -139,6 +139,27 @@ public class DashBoardAndProfileController {
     logger.exit("isEmailValid() - Ends ");
   }
 
+  @RequestMapping("/isGCIUser.do")
+  public void isGCIUser(HttpServletResponse response, String email) {
+    logger.entry("begin isGCIUser()");
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      if (FdahpStudyDesignerUtil.isNotEmpty(email)) {
+        message = dashBoardAndProfileService.isGCIUser(email);
+      }
+      jsonobject.put("message", message);
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      out = response.getWriter();
+      out.print(jsonobject);
+    } catch (Exception e) {
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      logger.error("DashBoardAndProfileController - isGCIUser() - ERROR " + e);
+    }
+    logger.exit("isGCIUser() - Ends ");
+  }
+
   @RequestMapping("/adminDashboard/updateUserDetails.do")
   public ModelAndView updateProfileDetails(HttpServletRequest request, UserBO userBO) {
     logger.entry("begin updateProfileDetails()");

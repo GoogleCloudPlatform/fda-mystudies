@@ -95,6 +95,33 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
     return message;
   }
 
+  @Override
+  public String isGCIUser(String email) {
+    logger.entry("begin isGCIUser()");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    Session session = null;
+    String queryString = null;
+    Query query = null;
+    UserBO user = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      queryString = "FROM UserBO where userEmail = :email and gci_user='Y'";
+      query = session.createQuery(queryString).setParameter("email", email);
+      user = (UserBO) query.uniqueResult();
+      if (null != user) {
+        message = FdahpStudyDesignerConstants.SUCCESS;
+      }
+    } catch (Exception e) {
+      logger.error("DashBoardAndProfileDAOImpl - isGCIUser() - ERROR " + e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    logger.exit("isGCIUser() - Ends");
+    return message;
+  }
+
   @Autowired
   public void setSessionFactory(SessionFactory sessionFactory) {
     this.hibernateTemplate = new HibernateTemplate(sessionFactory);

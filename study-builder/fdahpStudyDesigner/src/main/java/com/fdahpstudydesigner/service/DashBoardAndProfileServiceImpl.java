@@ -72,6 +72,11 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
   }
 
   @Override
+  public String isGCIUser(String email) {
+    return dashBoardAndProfiledao.isGCIUser(email);
+  }
+
+  @Override
   public String updateProfileDetails(UserBO userBO, String userId, SessionObject userSession) {
     logger.entry("begin updateProfileDetails()");
     String message = FdahpStudyDesignerConstants.FAILURE;

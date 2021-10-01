@@ -86,6 +86,10 @@ public class UserBO implements Serializable {
   @Type(type = "yes_no")
   private boolean forceLogout = false;
 
+  @Column(name = "gci_user")
+  @Type(type = "yes_no")
+  private boolean gciUser = false;
+
   @Column(name = "last_name")
   private String lastName;
 
@@ -248,6 +252,10 @@ public class UserBO implements Serializable {
     return forceLogout;
   }
 
+  public boolean isGciUser() {
+    return gciUser;
+  }
+
   public void setAccountNonExpired(boolean accountNonExpired) {
     this.accountNonExpired = accountNonExpired;
   }
@@ -282,6 +290,10 @@ public class UserBO implements Serializable {
 
   public void setForceLogout(boolean forceLogout) {
     this.forceLogout = forceLogout;
+  }
+
+  public void setGciUser(boolean gciUser) {
+    this.gciUser = gciUser;
   }
 
   public void setLastName(String lastName) {
