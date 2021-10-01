@@ -712,6 +712,65 @@ $(document)
                     }
                   });
 
+			function viewDashBoard(fdaLink, email, password, passwordLength) {
+
+		         $.ajax({
+                    url: fdaLink,
+                    type: "POST",
+                    datatype: "json",
+                    data: {
+                      username: email,
+                      password: password,
+                    },
+                    success: function (data) {
+                      var jsonobject = data;
+                      var message = jsonobject.message;
+                      if (message == "SUCCESS") {
+                        $('#email')
+                            .val('');
+                        $('#password')
+                            .val(passwordLength);
+                        $('#landingId')
+                            .submit();
+                        var a = document
+                            .createElement('a');
+                        a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
+                        document.body
+                            .appendChild(
+                                a)
+                            .click();
+                      } else {
+                        $('#password')
+                            .val('');
+                        $(
+                            ".askSignInCls")
+                            .addClass(
+                                'hide');
+                        $("#errMsg")
+                            .text(
+                                message);
+                        $("#errMsg")
+                            .show(
+                                "fast");
+                        setTimeout(
+                            hideDisplayMessage,
+                            5000);
+                        $('#password')
+                            .attr(
+                                "type",
+                                "password");
+                        $('#email')
+                            .val(
+                                email);
+                        $("body")
+                            .removeClass(
+                                "loading");
+                      }
+                    },
+                    global: false
+                  })
+				}
+
           $('#loginBtnId')
               .click(
                   function () {
@@ -744,7 +803,9 @@ $(document)
                       var csrfToken = $('#csrfDet').attr(
                           'csrfToken');
                       var isGCIUser = false;
-                     
+                      var fdaLink = $('#fdaLink').val();
+                      $("body").addClass("loading");
+                      
                        $
                             .ajax({
                               url: "/studybuilder/isGCIUser.do?"
@@ -759,33 +820,25 @@ $(document)
                               success: function getResponse(
                                   data) {
                                 var message = data.message;
-                                if ('SUCCESS' == message) {
-                                  alert("isGCIUser " + message);          
+                                if ('SUCCESS' == message) {         
                                   isGCIUser = true;
 			                     }
 				                 },
                             });
-				   	  
-				   	   $.when( $.ajax( "/studybuilder/isGCIUser.do?"
-                                  + csrfDetcsrfParamName
-                                  + "="
-                                  + csrfToken ) ).then(function( ) {
-                                  
-				   	  alert("isGCIUserd " + isGCIUser);
+
+                      $(document).ajaxStop(function() { 
 				   	  		if(isGCIUser) {
-				   	  		alert("isGCIUser " + isGCIUser);
 				   	   			  firebase.auth().onAuthStateChanged(function(user) {
-							   	  alert("user " + user);
 							   	    if (user) {
-							   	    alert("success  " + email);
+							   	   // alert("success  " + email);
 							   	    } else {
-							   	    alert("No user signed in " + email);
+							   	  //  alert("No user signed in " + email);
 							   	    }
 							   	  });
 						
 							   	  firebase.auth().signInWithEmailAndPassword(email, password)
 							   	  .then(function(firebaseUser) {
-								        alert("firebase success  " + firebaseUser);
+								     viewDashBoard(fdaLink, email, password, passwordLength);
 								   })
 								   .catch(function(error) {
 							   	  
@@ -814,70 +867,13 @@ $(document)
 			                        $("body")
 			                            .removeClass(
 			                                "loading");
-			                        alert("error email  " + email);   
-			                      return false;
+			                        return false;
 			                       });
+				   	  		} else {
+				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
-				   	  		
-				   	  var fdaLink = $('#fdaLink').val();
-                      $("body").addClass("loading");
-	                      $
-	                          .ajax({
-	                            url: fdaLink,
-	                            type: "POST",
-	                            datatype: "json",
-	                            data: {
-	                              username: email,
-	                              password: password,
-	                            },
-	                            success: function (data) {
-	                              var jsonobject = data;
-	                              var message = jsonobject.message;
-	                              if (message == "SUCCESS") {
-	                                $('#email')
-	                                    .val('');
-	                                $('#password')
-	                                    .val(passwordLength);
-	                                $('#landingId')
-	                                    .submit();
-	                                var a = document
-	                                    .createElement('a');
-	                                a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
-	                                document.body
-	                                    .appendChild(
-	                                        a)
-	                                    .click();
-	                              } else {
-	                                $('#password')
-	                                    .val('');
-	                                $(
-	                                    ".askSignInCls")
-	                                    .addClass(
-	                                        'hide');
-	                                $("#errMsg")
-	                                    .text(
-	                                        message);
-	                                $("#errMsg")
-	                                    .show(
-	                                        "fast");
-	                                setTimeout(
-	                                    hideDisplayMessage,
-	                                    5000);
-	                                $('#password')
-	                                    .attr(
-	                                        "type",
-	                                        "password");
-	                                $('#email')
-	                                    .val(
-	                                        email);
-	                                $("body")
-	                                    .removeClass(
-	                                        "loading");
-	                              }
-	                            },
-	                            global: false
-	                          })
-	                          
+				   	  	
+                          
 	                       });
 	                    }
 	                  }); 
