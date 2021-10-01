@@ -59,10 +59,10 @@
        <div class="dis-line pull-right"
            style="margin-top: 10px; height: auto;">
         <div class="mb-none mt-xs">
-          <select class="selectpicker btn-md" id="filterRole">
+          <select class="selectpicker btn-md" id="filterEmail">
             <option value="" selected>Invite admins</option>
             <c:forEach items="${adminList}" var="admin">
-              <option value="${admin.userEmail}">${admin.userEmail}</option>
+              <option class="viewAdminClass" value="${admin.emailId}" id="email">${admin.emailId}</option>
             </c:forEach>
           </select>
         </div>
@@ -161,6 +161,7 @@
            id="addOrEditUserForm" name="addOrEditUserForm" method="post">
   <input type="hidden" id="userId" name="userId" value="">
   <input type="hidden" id="checkRefreshFlag" name="checkRefreshFlag">
+  <input type="hidden" id="emailId" name="emailId">
 </form:form>
 
 <form:form action="/studybuilder/adminUsersView/viewUserDetails.do"
@@ -177,6 +178,12 @@
     $('#users').addClass('active');
 
     $('[data-toggle="tooltip"]').tooltip();
+    $('#filterEmail').on('change', function () {
+        var email = $(this).find("option:selected").val();
+    	$('#emailId').val(email);
+        $('#checkRefreshFlag').val('Y');
+        $('#addOrEditUserForm').submit();
+      });
 
     <c:if test="${ownUser eq '1'}">
     bootbox.alert({

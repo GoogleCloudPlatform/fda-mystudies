@@ -36,6 +36,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bean.GciAdminList;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.StudyBo;
@@ -49,6 +50,9 @@ import com.fdahpstudydesigner.service.UsersService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
+import com.google.firebase.auth.ExportedUserRecord;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.ListUsersPage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -131,6 +135,10 @@ public class UsersController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("checkRefreshFlag"))
                 ? ""
                 : request.getParameter("checkRefreshFlag");
+        String emailId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("emailId"))
+                ? ""
+                : request.getParameter("emailId");
         if (!"".equalsIgnoreCase(checkRefreshFlag)) {
           if (!"".equals(userId)) {
             usrId = userId;
@@ -151,6 +159,9 @@ public class UsersController {
           map.addAttribute("roleBOList", roleBOList);
           map.addAttribute("studyBOList", studyBOList);
           map.addAttribute("studyBOs", studyBOs);
+          if (StringUtils.isNotEmpty(emailId)) {
+            map.addAttribute("emailId", emailId);
+          }
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -403,7 +414,7 @@ public class UsersController {
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     List<UserBO> userList = null;
-    List<UserBO> adminList = new ArrayList<UserBO>();
+    List<GciAdminList> gciAdminList = new ArrayList();
     String sucMsg = "";
     String errMsg = "";
     String ownUser = "";
@@ -424,10 +435,29 @@ public class UsersController {
         userList = usersService.getUserList();
         roleList = usersService.getUserRoleList();
 
-        for (int i = 0; i < userList.size(); i++) {
-          if (StringUtils.isNotEmpty(userList.get(i).getCreatedBy())
-              && userList.get(i).getCreatedBy().equals("gci")) {
-            adminList.add(userList.get(i));
+        List<GciAdminList> users = new ArrayList();
+        Map<String, GciAdminList> userMap = new HashMap<>();
+        for (UserBO user : userList) {
+          GciAdminList sbUser = new GciAdminList();
+          sbUser.setEmailId(user.getUserEmail());
+          users.add(sbUser);
+          userMap.put(user.getUserEmail(), sbUser);
+        }
+
+        // Start listing users from the beginning, 1000 at a time.
+        ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
+
+        for (ExportedUserRecord user : page.iterateAll()) {
+          GciAdminList admin = new GciAdminList();
+          /*System.out.println("User: " + user.getUid());*/
+          admin.setEmailId(user.getEmail());
+          admin.setUid(user.getUid());
+          gciAdminList.add(admin);
+        }
+        List<GciAdminList> adminList = new ArrayList();
+        for (GciAdminList a1 : gciAdminList) {
+          if (!userMap.containsKey(a1.getEmailId())) {
+            adminList.add(a1);
           }
         }
 
