@@ -1,8 +1,3 @@
-ALTER TABLE fda_hphc.studies ADD export_time DATETIME DEFAULT NULL;
-
-/* ISSUE #3855 [Mobile] > Notification list should display only the notifications which are related to that particular platform */
-ALTER TABLE fda_hphc.notification ADD platform VARCHAR(20) DEFAULT NULL;
-
 /* ISSUE #3911 Ability to manage apps via the Study Builder
 ISSUE #3909 Provision to configure app-specific email addresses */
 USE `fda_hphc`;
