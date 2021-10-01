@@ -120,13 +120,12 @@
       document.body.appendChild(a).click();
       </c:if>
     });
-    
     var a = document.createElement('a');
     $('.first').click(function () {
       a.href = "/studybuilder/adminApps/viewAppsInfo.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
-    <c:if test="${appBo.appSequenceBo.appInfo || appBo.appStatus == 'Active'}">
+    <c:if test="${appBo.appSequenceBo.appInfo || appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated'}">
     $('.second').click(function () {
       a.href = "/studybuilder/adminApps/viewAppSettings.do?_S=${param._S}";
       document.body.appendChild(a).click();
@@ -142,7 +141,7 @@
       document.body.appendChild(a).click();
     });
     </c:if>
-    <c:if test="${(appBo.appSequenceBo.appSettings) || appBo.appStatus == 'Active'}">
+    <c:if test="${(appBo.appSequenceBo.appSettings) || appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated'}">
     $('.fifth').click(function () {
         a.href = "/studybuilder/adminApps/appActionList.do?_S=${param._S}";
         document.body.appendChild(a).click();
