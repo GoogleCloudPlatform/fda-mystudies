@@ -105,8 +105,7 @@ button#exportId {
           app
         </button>
         <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-        This action publishes (or updates) app properties and configurations to the Participant Datastore thereby making them available for use by the mobile app. 
-        Publishing an app requires that all sections be marked 'completed'. Note that it is essential for the app to have a 'Published' status for it to be usable on the mobile device. 
+          This action publishes or updates app properties and configurations to the Participant Datastore, that are required to run the mobile app(s). The 'Published' status for the app, displayed at the top of the left menu, is set the first time you publish the app, indicating the app can be run on the mobile device. Note that this action is enabled after the app is created and all app sections are filled out and marked 'completed'. Once used, this button remains disabled unless there are subsequent updates that need to be published.
       </div>
       </div>
 
@@ -157,8 +156,7 @@ button#exportId {
      
         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-        This action helps flag the iOS app as distributed (via the App Store or other means), live and made available for actual participants to use. 
-        Once the app is marked 'distributed' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
+          This action helps flag the iOS app as 'distributed' (via the App Store or other means), live and made available for actual participants to use. Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. The latest available app properties must be published to the backend using the 'Publish app' action before marking the app as 'distributed'.
       </div>
       </div>
        <div class="form-group mr-sm" style="white-space: normal;">
@@ -206,8 +204,7 @@ button#exportId {
      
         
          <div class="form-group mr-sm" style="white-space: normal; margin-top: 4px;">
-        This action helps flag the Android app as distributed (via the Play Store or other means), live and made available for actual participants to use. 
-       Once the app is marked 'distributed' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. 
+       This action helps flag the Android app as 'distributed' (via the Play Store or other means), live and made available for actual participants to use. Once the app is marked 'distrbuted' , key developer configurations that drive the app, get locked disallowing further editing. This action cannot be undone. The latest available app properties must be published to the backend using the 'Publish app' action before marking the app as 'distributed'.
       </div>
       </div>
 
