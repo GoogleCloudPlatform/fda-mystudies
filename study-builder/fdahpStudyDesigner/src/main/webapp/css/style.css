@@ -1199,6 +1199,10 @@ input[type=radio]:disabled + label::after {
   min-height: 110px !important;
 }
 
+.changeView div.dropdown-menu {
+  width: 100% !important;
+}
+
 .dis-ellipsis {
   color: #2d2926;
   overflow: hidden;

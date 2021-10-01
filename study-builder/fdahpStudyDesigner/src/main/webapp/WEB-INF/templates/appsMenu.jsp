@@ -14,8 +14,7 @@
 .right-border { 
 	border-right: 1px solid #95a2ab;
     height: 15px;
-    position: absolute;
-/*     margin-top: 2px; */
+    margin-top: 2px;
 }
 </style>
 
@@ -38,8 +37,8 @@
 	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
 	                pr-sm"> ${appBo.appStatus} </span>
 	      <c:if test="${appBo.appStatus eq 'Active'}">
-          <span class="study_status right-border pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not published </c:if></span> <span class="right-border"></span>
-          <span class="study_status pr-sm pl-sm ${(appBo.iosAppDistributed || appBo.androidAppDistributed)?'post-launch_txt':'pre-launch_txt'}"> 
+          <span class="study_status right-border pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not published </c:if></span>
+          <span class="study_status pl-sm ${(appBo.iosAppDistributed || appBo.androidAppDistributed)?'post-launch_txt':'pre-launch_txt'}"> 
           <c:choose>
               <c:when test="${appBo.iosAppDistributed && appBo.androidAppDistributed}">Distributed (2)</c:when>
               <c:when test="${appBo.iosAppDistributed || appBo.androidAppDistributed}">Distributed (1)</c:when>
