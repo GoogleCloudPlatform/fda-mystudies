@@ -737,16 +737,14 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc');
-    	   	 
-                      var fdaLink = $('#fdaLink').val();
-                      $("body").addClass("loading");
                       
                       var csrfDetcsrfParamName = $(
                           '#csrfDet').attr(
                           'csrfParamName');
                       var csrfToken = $('#csrfDet').attr(
                           'csrfToken');
-                      
+                      var isGCIUser = false;
+                     
                        $
                             .ajax({
                               url: "/studybuilder/isGCIUser.do?"
@@ -762,21 +760,35 @@ $(document)
                                   data) {
                                 var message = data.message;
                                 if ('SUCCESS' == message) {
-                                
-                                    alert("isGCIUser " + message);                   
-			                     firebase.auth().onAuthStateChanged(function(user) {
+                                  alert("isGCIUser " + message);          
+                                  isGCIUser = true;
+			                     }
+				                 },
+                            });
+				   	  
+				   	   $.when( $.ajax( "/studybuilder/isGCIUser.do?"
+                                  + csrfDetcsrfParamName
+                                  + "="
+                                  + csrfToken ) ).then(function( ) {
+                                  
+				   	  alert("isGCIUserd " + isGCIUser);
+				   	  		if(isGCIUser) {
+				   	  		alert("isGCIUser " + isGCIUser);
+				   	   			  firebase.auth().onAuthStateChanged(function(user) {
 							   	  alert("user " + user);
 							   	    if (user) {
-							   	    alert("sucess  " + email);
-							   	  //    document.getElementById("message").innerHTML = "Welcome, " + email;
+							   	    alert("success  " + email);
 							   	    } else {
 							   	    alert("No user signed in " + email);
-							   	    //  document.getElementById("message").innerHTML = "No user signed in.";
 							   	    }
 							   	  });
 						
-							   	  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-							   	   alert("error email  " + email);
+							   	  firebase.auth().signInWithEmailAndPassword(email, password)
+							   	  .then(function(firebaseUser) {
+								        alert("firebase success  " + firebaseUser);
+								   })
+								   .catch(function(error) {
+							   	  
 					   	           $('#password')
 			                            .val('');
 			                        $(
@@ -802,11 +814,13 @@ $(document)
 			                        $("body")
 			                            .removeClass(
 			                                "loading");
+			                        alert("error email  " + email);   
+			                      return false;
 			                       });
-			                     }
-				                 }
-                            })
-				   	  
+				   	  		}
+				   	  		
+				   	  var fdaLink = $('#fdaLink').val();
+                      $("body").addClass("loading");
 	                      $
 	                          .ajax({
 	                            url: fdaLink,
@@ -863,6 +877,8 @@ $(document)
 	                            },
 	                            global: false
 	                          })
+	                          
+	                       });
 	                    }
-	                  });
+	                  }); 
         });

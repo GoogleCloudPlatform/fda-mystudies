@@ -127,11 +127,6 @@
                    href="javascript:void(0)">Forgot password?
                 </a>
               </div>
-              
-                        <div>Identity Platform Quickstart</div>
-<div id="message">Loading...</div>
-
-
             </div>
             <input type="password" name="password" id="hidePass" style="display: none;"/>
           </form:form>

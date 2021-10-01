@@ -105,7 +105,8 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
     UserBO user = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      queryString = "FROM UserBO where userEmail = :email and gci_user='Y'";
+      queryString =
+          "FROM UserBO UBO where lower(UBO.userEmail) = :email and UBO.gciUser = 'Y' and enabled = '1'";
       query = session.createQuery(queryString).setParameter("email", email);
       user = (UserBO) query.uniqueResult();
       if (null != user) {
