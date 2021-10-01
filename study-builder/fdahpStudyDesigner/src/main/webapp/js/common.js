@@ -741,6 +741,11 @@ $(document)
                       var fdaLink = $('#fdaLink').val();
                       $("body").addClass("loading");
                       
+                      var csrfDetcsrfParamName = $(
+                          '#csrfDet').attr(
+                          'csrfParamName');
+                      var csrfToken = $('#csrfDet').attr(
+                          'csrfToken');
                       
                        $
                             .ajax({
@@ -797,10 +802,10 @@ $(document)
 			                        $("body")
 			                            .removeClass(
 			                                "loading");
-							   	  });
-							   	  
-				   	  
-                               } 
+			                       });
+			                     }
+				                 }
+                            })
 				   	  
 	                      $
 	                          .ajax({
