@@ -128,7 +128,6 @@
     });
 
     $('#signOut').on('click', function () {
-    	 alert('signOutheader ');
        firebase.auth().signOut()
    	   .then(function() {
    	      alert('Signout Succesfull');

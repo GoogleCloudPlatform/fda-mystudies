@@ -796,7 +796,7 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc');
-                      
+                       $("body").addClass("loading");
                       var csrfDetcsrfParamName = $(
                           '#csrfDet').attr(
                           'csrfParamName');
@@ -804,7 +804,6 @@ $(document)
                           'csrfToken');
                       var isGCIUser = false;
                       var fdaLink = $('#fdaLink').val();
-                      $("body").addClass("loading");
                       
                        $
                             .ajax({

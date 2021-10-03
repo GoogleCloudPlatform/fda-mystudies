@@ -53,6 +53,8 @@ import com.fdahpstudydesigner.util.SessionObject;
 import com.google.firebase.auth.ExportedUserRecord;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.ListUsersPage;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.UpdateRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -123,6 +125,26 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                         : userBO.getLastName()))) {
           isValidPassword = false;
         }
+
+        // Start listing identity platform users from the beginning, 1000 at a time.
+        ListUsersPage page;
+
+        page = FirebaseAuth.getInstance().listUsers(null);
+        boolean isGciUser = false;
+        outerloop:
+        while (page != null) {
+          for (ExportedUserRecord user : page.iterateAll()) {
+            if (user.getEmail().equalsIgnoreCase(userBO.getUserEmail())) {
+              isGciUser = true;
+              break outerloop;
+            }
+          }
+        }
+
+        UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userBO.getUserEmail());
+        // See the UserRecord reference doc for the contents of userRecord.
+        System.out.println("Successfully fetched user data: " + userRecord.getEmail());
+
         if (isValidPassword) {
           passwordHistories = loginDAO.getPasswordHistory(userBO.getUserId());
           if ((passwordHistories != null) && !passwordHistories.isEmpty()) {
@@ -147,7 +169,19 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 null != userBO2.getPhoneNumber()
                     ? userBO2.getPhoneNumber().trim()
                     : userBO.getPhoneNumber());
-            userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
+
+            if (isGciUser) {
+              // GCI user password update
+              UpdateRequest updateRequest =
+                  new UpdateRequest(userRecord.getUid())
+                      .setEmailVerified(true)
+                      .setPassword(password);
+
+              UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
+              System.out.println("Successfully updated user: " + userRecordUpdated.getUid());
+            } else {
+              userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
+            }
             userBO.setTokenUsed(true);
             userBO.setEnabled(true);
             userBO.setAccountNonExpired(true);
