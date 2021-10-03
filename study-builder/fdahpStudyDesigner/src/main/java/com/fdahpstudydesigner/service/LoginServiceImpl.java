@@ -143,7 +143,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
         UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userBO.getUserEmail());
         // See the UserRecord reference doc for the contents of userRecord.
-        System.out.println("Successfully fetched user data: " + userRecord.getEmail());
+        logger.info("Successfully fetched user data: ", userRecord.getEmail());
 
         if (isValidPassword) {
           passwordHistories = loginDAO.getPasswordHistory(userBO.getUserId());
@@ -178,7 +178,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                       .setPassword(password);
 
               UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
-              System.out.println("Successfully updated user: " + userRecordUpdated.getUid());
+              logger.info("Successfully updated user data: ", userRecordUpdated.getEmail());
+              userBO.setGciUser(true);
             } else {
               userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
             }
