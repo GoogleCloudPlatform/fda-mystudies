@@ -175,12 +175,14 @@
             <div class="form-group">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" 
-                     oldVal="${userBO.userEmail}" value="${userBO.userEmail}"
+                     oldVal="${userBO.userEmail}" 
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                      data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
                      required
                      <c:if
-                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled value="${userBO.userEmail}"</c:if> 
+                         test="${not empty userBO}">value="${userBO.userEmail}"</c:if> 
+                     <c:if
+                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> 
                          <c:if
                          test="${not empty emailId}">disabled value="${emailId}"</c:if> />
               <div class="help-block with-errors red-txt"></div>
