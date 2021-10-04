@@ -508,7 +508,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
     self.navigationController?.popToRootViewController(animated: true)
-    HomeViewController.setRootView()
+    if !Utilities.isStandaloneApp() {
+      HomeViewController.setRootView()
+    }
   }
 
 }

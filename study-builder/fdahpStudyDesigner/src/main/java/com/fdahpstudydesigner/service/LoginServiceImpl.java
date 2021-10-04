@@ -236,7 +236,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               countList.add(Character.toString(c));
             }
             if ((passwordMaxCharMatchCount != null)
-                && (countPassChar > passwordMaxCharMatchCount)) {
+                && (countPassChar >= passwordMaxCharMatchCount)) {
               isValidPassword = true;
               break;
             }

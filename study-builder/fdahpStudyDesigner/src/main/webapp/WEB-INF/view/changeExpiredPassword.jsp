@@ -101,7 +101,7 @@
               <div class="mb-lg form-group">
                 <input type="password" class="form-control input-field wow_input" id="oldPassword"
                        name=""
-                       maxlength="14" data-minlength="8" placeholder="Previous password"
+                       maxlength="64" data-minlength="8" placeholder="Previous password"
                        data-error="Invalid previous password" required data-error="Please fill out this field" 
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
@@ -109,10 +109,10 @@
               </div>
               <div class="mb-lg form-group">
                 <input type="password" class="form-control input-field wow_input" id="password" name=""
-                       maxlength="14" data-minlength="8" placeholder="New password"
+                       maxlength="64" data-minlength="8" placeholder="New password"
                        data-error="Password is invalid"
                        required data-error="Please fill out this field" 
-                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,14}"
+                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                        autocomplete="off"/>
                 <div class="help-block with-errors"></div>
                 <span class="arrowLeftSugg"></span>
@@ -120,7 +120,7 @@
               <div class="mb-lg form-group">
                 <input type="password" class="form-control input-field wow_input" id="cfnPassword"
                        name=""
-                       maxlength="14" data-match="#password"
+                       maxlength="64" data-match="#password"
                        data-match-error="Passwords do not match"
                        placeholder="Confirm new password"
                        required data-error="Please fill out this field" autocomplete="off"/>
