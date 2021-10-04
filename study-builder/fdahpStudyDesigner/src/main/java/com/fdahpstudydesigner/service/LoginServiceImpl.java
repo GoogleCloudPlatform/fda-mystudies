@@ -253,85 +253,21 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       // Get study builder user list
       userList = usersService.getUserList();
 
-      // Start listing identity platform users from the beginning, 1000 at a time.
-      ListUsersPage page;
-
-      page = FirebaseAuth.getInstance().listUsers(null);
-
-      while (page != null) {
-        for (ExportedUserRecord user : page.getValues()) {
-
-          boolean addFlag = true;
-          for (int i = 0; i < userList.size(); i++) {
-            if (user.getEmail().equalsIgnoreCase(userList.get(i).getUserEmail())) {
-              addFlag = false;
-            }
-          }
-
-          if (addFlag) {
-            userBO2 = new UserBO();
-            userBO2.setFirstName(null != user.getDisplayName() ? user.getDisplayName().trim() : "");
-            userBO2.setUserEmail(
-                (StringUtils.isNotEmpty(user.getEmail()) ? user.getEmail().trim() : "")
-                    .toLowerCase());
-            userBO2.setPhoneNumber(
-                StringUtils.isNotEmpty(user.getPhoneNumber()) ? user.getPhoneNumber().trim() : "");
-            // TODO: remove, hardcoded for testing
-            userBO2.setRoleId("2");
-            userBO2.setCreatedBy("gci");
-            String createdOn =
-                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                    .format(user.getUserMetadata().getCreationTimestamp());
-            userBO2.setCreatedOn(createdOn);
-            String lastLogin =
-                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                    .format(user.getUserMetadata().getLastSignInTimestamp());
-            userBO2.setUserLastLoginDateTime(lastLogin);
-            userBO2.setGciUser(true);
-            userBO2.setEnabled(true);
-            userBO2.setCredentialsNonExpired(true);
-            userBO2.setAccountNonExpired(true);
-            userBO2.setAccountNonLocked(true);
-            loginDAO.updateUser(userBO2);
-
-          } else {
-
-            userBO2 = loginDAO.getValidUserByEmail(user.getEmail());
-            if (null != userBO2) {
-              userBO2.setFirstName(
-                  StringUtils.isNotEmpty(user.getDisplayName())
-                      ? user.getDisplayName().trim()
-                      : "");
-              userBO2.setUserEmail(
-                  (StringUtils.isNotEmpty(user.getEmail()) ? user.getEmail().trim() : "")
-                      .toLowerCase());
-              userBO2.setPhoneNumber(
-                  StringUtils.isNotEmpty(user.getPhoneNumber())
-                      ? user.getPhoneNumber().trim()
-                      : "");
-              // TODO: remove, hardcoded for testing
-              userBO2.setRoleId("2");
-              userBO2.setCreatedBy("gci");
-              String createdOn =
-                  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                      .format(user.getUserMetadata().getCreationTimestamp());
-              userBO2.setCreatedOn(createdOn);
-              String lastLogin =
-                  new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                      .format(user.getUserMetadata().getLastSignInTimestamp());
-              userBO2.setUserLastLoginDateTime(lastLogin);
-              userBO2.setGciUser(true);
-              userBO2.setEnabled(true);
-              userBO2.setCredentialsNonExpired(true);
-              userBO2.setAccountNonExpired(true);
-              userBO2.setAccountNonLocked(true);
-              loginDAO.updateUser(userBO2);
+      ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
+      for (UserBO user : userList) {
+        userBO2 = loginDAO.getValidUserByEmail(user.getUserEmail());
+        for (ExportedUserRecord gciUser : page.iterateAll()) {
+          if (null != userBO2
+              && userBO2.isGciUser()
+              && gciUser.getEmail().equals(userBO2.getUserEmail())) {
+            if (gciUser.isDisabled()) {
+              userBO2.setEnabled(false);
             } else {
-              continue;
+              userBO2.setEnabled(true);
             }
+            loginDAO.updateUser(userBO2);
           }
         }
-        page = page.getNextPage();
       }
 
     } catch (Exception e) {
