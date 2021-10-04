@@ -56,6 +56,7 @@ export const expectedAppDetails = {
           ],
         },
       ],
+      appStatus : "Active"
     },
     {
       id: '2',
@@ -107,6 +108,7 @@ export const expectedAppDetails = {
           ],
         },
       ],
+      
     },
   ],
   studyPermissionCount: 0,
