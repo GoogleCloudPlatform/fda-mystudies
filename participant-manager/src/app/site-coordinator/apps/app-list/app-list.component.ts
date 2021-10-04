@@ -5,7 +5,7 @@ import {of} from 'rxjs';
 import {AppsService} from '../shared/apps.service';
 import {ManageApps, App} from '../shared/app.model';
 import {Permission} from 'src/app/shared/permission-enums';
-import {Status, StudyType} from 'src/app/shared/enums';
+import {Status} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
 import {ToastrService} from 'ngx-toastr';
 import {SearchParameterService} from 'src/app/service/search-parameter.service';
