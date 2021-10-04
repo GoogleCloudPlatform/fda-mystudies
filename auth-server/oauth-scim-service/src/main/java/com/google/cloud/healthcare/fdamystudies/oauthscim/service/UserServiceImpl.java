@@ -466,7 +466,7 @@ public class UserServiceImpl implements UserService {
             ? appConfig.getMailAccountLockedBodyForMobileApp()
             : appConfig.getMailAccountLockedBody();
 
-    String supportEMail =
+    String supportEmail =
         PlatformComponent.MOBILE_APPS.equals(platformComponent)
             ? userRequest.getSupportEmail()
             : appConfig.getContactEmail();
@@ -477,7 +477,7 @@ public class UserServiceImpl implements UserService {
 
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appName", userRequest.getAppName());
-    templateArgs.put("contactEmail", supportEMail);
+    templateArgs.put("contactEmail", supportEmail);
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
