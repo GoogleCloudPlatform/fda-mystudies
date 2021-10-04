@@ -18,7 +18,7 @@ export interface Study {
   invited?: number;
   enrolled?: number;
   studyStatus: Status;
-    appStatus: Status;
+  appStatus: Status;
 }
 
 export interface StudyResponse {
