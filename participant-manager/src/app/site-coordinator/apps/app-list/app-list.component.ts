@@ -18,6 +18,7 @@ export class AppListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   manageApp$: Observable<ManageApps> = of();
   appList: App[] = [];
+  appStatus = Status;
   manageAppsBackup = {} as ManageApps;
   appUsersMessageMapping: {[k: string]: string} = {
     '=0': 'No app users',
