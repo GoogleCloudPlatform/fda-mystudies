@@ -71,19 +71,6 @@ public class AppEntity implements Serializable {
   private String androidBundleId;
 
   @ToString.Exclude
-  @Column(name = "ios_authorization_token")
-  @Type(type = "text")
-  private String iosAuthorizationToken;
-
-  @ToString.Exclude
-  @Column(name = "ios_key_id", length = SMALL_LENGTH)
-  private String iosKeyId;
-
-  @ToString.Exclude
-  @Column(name = "ios_team_id", length = SMALL_LENGTH)
-  private String iosTeamId;
-
-  @ToString.Exclude
   @Column(name = "android_server_key", length = LARGE_LENGTH)
   private String androidServerKey;
 
