@@ -357,7 +357,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     templateArgs.put("appName", appName);
     // TODO(#496): replace with actual study's org name.
     /*templateArgs.put("orgName", optApp.get().getOrganizationName());*/
-    templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
+    templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
