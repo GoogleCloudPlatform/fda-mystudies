@@ -204,6 +204,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    
+    // Check if Database needs migration
+    self.checkForRealmMigration()
+    blockerScreen?.isHidden = true
+    blockerScreen?.removeFromSuperview()
     // Override point for customization after application launch.
     UNUserNotificationCenter.current().delegate = self
     self.isAppLaunched = true
@@ -217,9 +222,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     UIView.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor =
       kUIColorForSubmitButtonBackground
 
-    // Check For Updates
-    self.checkForAppUpdate()
-
+    /// Check For Manage Apps details
+    self.addAndRemoveProgress(add: true)
+    UserServices().getUserManageApps(self)
+    
     UIApplication.shared.applicationIconBadgeNumber = 0
 
     let ud1 = UserDefaults.standard
@@ -248,9 +254,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         ud.synchronize()
       }
     }
-
-    // Check if Database needs migration
-    self.checkForRealmMigration()
     return true
   }
 
@@ -266,6 +269,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     // set Flag to handle foreground to background transition
     self.appIsResignedButDidNotEnteredBackground = false
+    blockerScreen?.isHidden = true
+    blockerScreen?.removeFromSuperview()
   }
 
   func application(
@@ -282,8 +287,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     if number >= 1 {
       self.updateNotification()
     }
-    // Check For Updates
-    self.checkForAppUpdate()
+    // Check For Manage Apps details
+    self.addAndRemoveProgress(add: true)
+    UserServices().getUserManageApps(self)
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
@@ -360,6 +366,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   func applicationWillTerminate(_ application: UIApplication) {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    blockerScreen?.isHidden = true
+    blockerScreen?.removeFromSuperview()
   }
 
   // MARK: - NOTIFICATION
@@ -484,11 +492,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   }
 
   // MARK: - Checker Methods
-
-  /// Get the current App version from App Store and Adds the blocker screen if it is of lower version
-  func checkForAppUpdate() {
-    WCPServices().checkForAppUpdates(delegate: self)
-  }
 
   /// Registers pending notifications based on UserType
   func checkForRegisteredNotifications() {
@@ -1171,19 +1174,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 extension AppDelegate {
 
   /// Handle App update
-  private func handleAppUpdateResponse(response: JSONDictionary) {
-
-    if let iosDict = response["ios"] as? JSONDictionary,
-      let latestVersion = iosDict["latestVersion"] as? String,
-      let isForceUpdate = iosDict["forceUpdate"] as? String
-    {
+  private func handleAppUpdateResponse() {
+    blockerScreen?.isHidden = true
+    blockerScreen?.removeFromSuperview()
+    if let latestVersion = UserManageApps.appDetails?.latestVersion,
+       let isForceUpdate = UserManageApps.appDetails?.isForceUpdate {
       let appVersion = Utilities.getAppVersion()
-      guard let isForceUpdate = Bool(isForceUpdate) else { return }
-
+      guard var isForceUpdate = Bool(isForceUpdate) else { return }
+      
+      let ud = UserDefaults.standard
+      let valFromSplash = ud.value(forKey: kFromSplashScreen) as? Bool ?? false
+      let valFromBackground = ud.value(forKey: kFromBackground) as? Int ?? 0
+      let valIsStudylistGeneral = ud.value(forKey: kIsStudylistGeneral) as? Bool ?? false
+      
+      if valFromSplash {
+        isForceUpdate = true
+      } else if valFromBackground < Upgrade.fromSplash.rawValue {
+        if !isForceUpdate {
+          ud.set(Upgrade.optionalShown.rawValue, forKey: kFromBackground)
+          ud.synchronize()
+        }
+        isForceUpdate = true
+        ud.set(true, forKey: kIsShowUpdateAppVersion)
+        ud.synchronize()
+      } else if valIsStudylistGeneral && valFromBackground >= Upgrade.pendingUpdate.rawValue {
+        isForceUpdate = true
+        ud.set(Upgrade.optionalShown.rawValue, forKey: kFromBackground)
+        ud.set(true, forKey: kIsShowUpdateAppVersion)
+        ud.synchronize()
+      } else {
+        let ud = UserDefaults.standard
+        var valFromBackground = ud.value(forKey: kFromBackground) as? Int ?? 0
+        valFromBackground += 1
+        ud.set(valFromBackground, forKey: kFromBackground)
+        ud.synchronize()
+        
+        isForceUpdate = false
+        blockerScreen?.isHidden = true
+        blockerScreen?.removeFromSuperview()
+      }
+      ud.set(false, forKey: kFromSplashScreen)
+      ud.synchronize()
+      
       if appVersion != latestVersion,
-        latestVersion.compare(appVersion, options: .numeric, range: nil, locale: nil)
-          == ComparisonResult.orderedDescending, isForceUpdate
-      {
+         latestVersion.compare(appVersion, options: .numeric, range: nil, locale: nil)
+          == ComparisonResult.orderedDescending, isForceUpdate {
         if let windowBounds = UIApplication.shared.keyWindow?.bounds {
           // load and Update blockerScreen
           self.shouldAddForceUpgradeScreen = true
@@ -1193,6 +1228,9 @@ extension AppDelegate {
           if User.currentUser.userType == .loggedInUser {
             if User.currentUser.settings?.passcode == false {
               UIApplication.shared.keyWindow?.addSubview(blockerView)
+            } else {
+              UIApplication.shared.keyWindow?.addSubview(blockerView)
+              blockerView.isHidden = true
             }
           } else {
             UIApplication.shared.keyWindow?.addSubview(blockerView)
@@ -1201,6 +1239,39 @@ extension AppDelegate {
       }
     }
   }
+  
+  /// Handle App update
+  func showAppVersionUpdate() {
+    let ud = UserDefaults.standard
+    
+    ud.set(Upgrade.optionalShown.rawValue, forKey: kFromBackground)
+    ud.set(true, forKey: kIsShowUpdateAppVersion)
+    ud.synchronize()
+    if let latestVersion = UserManageApps.appDetails?.latestVersion,
+       (UserManageApps.appDetails?.isForceUpdate) != nil {
+      let appVersion = Utilities.getAppVersion()
+      
+      if appVersion != latestVersion,
+         latestVersion.compare(appVersion, options: .numeric, range: nil, locale: nil)
+          == ComparisonResult.orderedDescending {
+        if let windowBounds = UIApplication.shared.keyWindow?.bounds {
+          // load and Update blockerScreen
+          self.shouldAddForceUpgradeScreen = true
+          let blockerView = AppUpdateBlocker.instanceFromNib(frame: windowBounds, detail: [:])
+          self.blockerScreen = blockerView
+          self.blockerScreen?.configureView(with: latestVersion)
+          if User.currentUser.userType == .loggedInUser {
+            blockerScreen?.isHidden = false
+            UIApplication.shared.keyWindow?.addSubview(blockerView)
+          } else {
+            blockerScreen?.isHidden = false
+            UIApplication.shared.keyWindow?.addSubview(blockerView)
+          }
+        }
+      }
+    }
+  }
+  
 }
 
 // MARK: Webservices delegates
@@ -1209,27 +1280,17 @@ extension AppDelegate: NMWebServiceDelegate {
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-
-    if requestName as String == WCPMethods.versionInfo.method.methodName {
-
-      if let response = response as? JSONDictionary {
-        handleAppUpdateResponse(response: response)
-      }
-
-    } else if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
+    if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
       self.createEligibilityConsentTask()
 
     } else if requestName as String
       == ConsentServerMethods.updateEligibilityConsentStatus.method
-      .methodName
-    {
-
+      .methodName {
       self.addAndRemoveProgress(add: false)
       self.studyEnrollmentFinished()
       if let currentStudy = Study.currentStudy {
         currentStudy.version = currentStudy.newVersion
       }
-
     } else if requestName as String == WCPMethods.studyUpdates.rawValue {
       self.handleStudyUpdatedInformation()
 
@@ -1242,6 +1303,9 @@ extension AppDelegate: NMWebServiceDelegate {
       let ud = UserDefaults.standard
       ud.set(false, forKey: kNotificationRegistrationIsPending)
       ud.synchronize()
+    } else if requestName as String ==  RegistrationMethods.apps.description {
+      handleAppUpdateResponse()
+      self.addAndRemoveProgress(add: false)
     }
   }
 
@@ -1250,6 +1314,11 @@ extension AppDelegate: NMWebServiceDelegate {
     self.addAndRemoveProgress(add: false)
     if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
       self.popViewControllerAfterConsentDisagree()
+    } else if requestName as String ==  RegistrationMethods.apps.description {
+      let ud = UserDefaults.standard
+      ud.set(false, forKey: kFromSplashScreen)
+      ud.set(Upgrade.fromSplash.rawValue, forKey: kFromBackground)
+      ud.synchronize()
     }
   }
 }
@@ -1797,8 +1866,7 @@ extension UIWindow {
 
   /// Adds progress below navigation bar
   func addProgressIndicatorOnWindow(with message: String = "") {
-    var frame = UIScreen.main.bounds
-    frame.origin.y += 64
+    let frame = UIApplication.shared.keyWindow?.bounds ?? UIScreen.main.bounds
     addProgressIndicatorOnWindowFromTop(with: message, frame: frame)
   }
 
@@ -1815,6 +1883,12 @@ extension UIWindow {
         progressView.showLoader(with: message)
         progressView.alpha = 0
         self.addSubview(progressView)
+        
+        let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+        if let valBlocker = appDelegate.blockerScreen, Utilities.isVisible(view: valBlocker) {
+          UIApplication.shared.keyWindow?.bringSubviewToFront(appDelegate.blockerScreen!)
+        }
+        
         UIView.animate(withDuration: 0.3) {
           progressView.alpha = 1
         }
