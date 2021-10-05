@@ -58,7 +58,7 @@ import org.springframework.web.multipart.MultipartFile;
   @NamedQuery(name = "getStudy", query = " From StudyBo SBO WHERE SBO.id=:id"),
   @NamedQuery(
       name = "StudyBo.getStudyBycustomAppId",
-      query = " From StudyBo SBO WHERE appId=:customAppId and status<>:status"),
+      query = " From StudyBo SBO WHERE appId=:customAppId and status<>:status and version=0"),
   @NamedQuery(
       name = "StudyBo.getStudyCountBycustomAppId",
       query = " From StudyBo SBO WHERE appId=:customAppId and version=0")
