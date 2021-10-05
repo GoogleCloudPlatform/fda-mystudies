@@ -15,6 +15,7 @@ def main_pods
   pod 'Toast-Swift'
   pod 'ReachabilitySwift'
   pod 'Alamofire'
+  pod 'Firebase/Messaging'
 end
 
 target 'MyStudies' do

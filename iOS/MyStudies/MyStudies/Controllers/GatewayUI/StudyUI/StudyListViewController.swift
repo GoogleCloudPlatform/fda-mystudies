@@ -427,9 +427,8 @@ class StudyListViewController: UIViewController {
   static func configureNotifications() {
     // Checking if registering notification is pending.
     if UserDefaults.standard.bool(forKey: kNotificationRegistrationIsPending),
-      let appDelegate = UIApplication.shared.delegate as? AppDelegate
-    {
-      appDelegate.askForNotification()
+       let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+      appDelegate.askForFCMNotification()
     }
   }
   // MARK: - Button Actions
