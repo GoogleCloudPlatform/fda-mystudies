@@ -350,7 +350,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     }
 
     templateArgs.put("appName", appName);
-    templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
+    templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
