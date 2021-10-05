@@ -17,6 +17,8 @@
 package com.harvard.storagemodule;
 
 import android.content.Context;
+
+import com.harvard.AppConfig;
 import com.harvard.notificationmodule.PendingIntents;
 import com.harvard.notificationmodule.model.NotificationDb;
 import com.harvard.offlinemodule.model.OfflineData;
@@ -1469,7 +1471,7 @@ public class DbServiceSubscriber {
   }
 
   public Apps getApps(Realm realm) {
-    return realm.where(Apps.class).findFirst();
+    return realm.where(Apps.class).equalTo("appId", AppConfig.APP_ID_VALUE).findFirst();
   }
 
   public void deleteUserProfileDataDuplicateRow(Context context) {
