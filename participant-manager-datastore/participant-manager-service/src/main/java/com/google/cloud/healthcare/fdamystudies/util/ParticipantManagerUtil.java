@@ -10,12 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.util;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -40,35 +38,6 @@ public class ParticipantManagerUtil {
   @Autowired private AppPropertyConfig appConfig;
 
   @Autowired private Storage storageService;
-
-  public String getSignedUrl(String fileUrl, int signedUrlDurationInHours, String customStudyId) {
-    try {
-      if (StringUtils.isEmpty(fileUrl)) {
-        return null;
-      }
-      String fileName = fileUrl.substring(fileUrl.lastIndexOf(PATH_SEPARATOR) + 1);
-      String filePath;
-      if (DEFAULT_IMAGE.equals(fileName)) {
-        filePath = DEFAULT_IMAGES_FOLDER_NAME + PATH_SEPARATOR + fileName;
-      } else {
-        filePath =
-            STUDIES
-                + PATH_SEPARATOR
-                + customStudyId
-                + PATH_SEPARATOR
-                + STUDYLOGO
-                + PATH_SEPARATOR
-                + fileName;
-      }
-
-      BlobInfo blobInfo =
-          BlobInfo.newBuilder(appConfig.getStudyBuilderCloudBucketName(), filePath).build();
-      return storageService.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
-    } catch (Exception e) {
-      logger.error("Unable to generate signed url", e);
-    }
-    return null;
-  }
 
   public String getImageResources(String fileUrl, String customStudyId) {
 

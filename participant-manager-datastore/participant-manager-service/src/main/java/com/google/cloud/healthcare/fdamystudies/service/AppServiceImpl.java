@@ -210,7 +210,7 @@ public class AppServiceImpl implements AppService {
             enrolledCount - appEnrolledWithoutTargetMap.get(appDetails.getId()).getCount();
       }
 
-      if (invitedCount != null && invitedCount != 0) {
+      if (invitedCount != 0) {
         double percentage = (Double.valueOf(enrolledCount) * 100) / Double.valueOf(invitedCount);
         appDetails.setEnrollmentPercentage(percentage);
       }
