@@ -34,9 +34,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
@@ -73,6 +75,8 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Autowired private AuthInfoRepository authInfoRepository;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private AppRepository appRepository;
 
   @Value("${register.url}")
   private String authRegisterUrl;
@@ -113,8 +117,9 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForInvalidPassword() throws Exception {
+
+    // invalid  password
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-    headers.add("appName", "AppName_BTCDEV001");
 
     // invalid  password
     String requestJson = getRegisterUser("mockito123@gmail.com", Constants.INVALID_PASSWORD);
@@ -133,7 +138,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnBadRequestForEmailExists() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-    headers.add("appName", "AppName_BTCDEV001");
 
     // user exists
     String requestJson = getRegisterUser(Constants.EMAIL_ID, Constants.PASSWORD);
@@ -161,7 +165,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Test
   public void shouldRegisterUser() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-    headers.add("appName", "AppName_BTCDEV001");
 
     String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
     MvcResult result =
@@ -185,16 +188,15 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     }
 
     assertEquals(Constants.EMAIL, userDetails.getEmail());
-
+    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
     String subject = appConfig.getConfirmationMailSubject();
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", userDetails.getEmailCode());
-    templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);
 
-    verifyMimeMessage(Constants.EMAIL, appConfig.getFromEmail(), subject, body);
+    verifyMimeMessage(Constants.EMAIL, optApp.get().getFromEmailId(), subject, body);
 
     verify(
         1,

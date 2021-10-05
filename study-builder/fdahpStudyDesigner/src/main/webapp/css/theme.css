@@ -27,6 +27,8 @@ body {
 	margin: 0;	
 	padding: 0px !important;
 	overflow-x: hidden;
+	min-height: 100vh !important;
+    height: 100% !important;
 }
 
 a:hover{

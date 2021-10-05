@@ -56,6 +56,7 @@ export const expectedAppDetails = {
           ],
         },
       ],
+      appStatus: 'Active',
     },
     {
       id: '2',

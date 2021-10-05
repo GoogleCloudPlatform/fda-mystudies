@@ -1235,7 +1235,7 @@
           <span
                 class="light-txt opacity06">
                 <span
-                    style="padding-right: 5px; padding-left: 5px">to
+                    style="padding-right: 0px; padding-left: 5px">to
                 </span>
                 Anchor date
               </span>
@@ -3823,7 +3823,7 @@
         + "</span>"
         
         +"<span class='light-txt opacity06'>"
-        +"<span style='padding-right:5px;padding-left:5px'>to </span>  Anchor date </span></span>"
+        +"<span style='padding-right:0px;padding-left:5px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].yDaysSign' id='ySign" + customAnchorCount + "'>"

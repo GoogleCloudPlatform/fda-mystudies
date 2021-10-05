@@ -26,6 +26,7 @@ package com.fdahpstudydesigner.service;
 
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
+import com.fdahpstudydesigner.dao.AppDAO;
 import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
@@ -49,6 +50,8 @@ public class NotificationServiceImpl implements NotificationService {
   @Autowired private NotificationDAO notificationDAO;
 
   @Autowired private StudyDAO studyDAO;
+
+  @Autowired private AppDAO appDAO;
 
   @Override
   public String deleteNotification(
@@ -191,5 +194,31 @@ public class NotificationServiceImpl implements NotificationService {
     List<String> gatewayAppList = new ArrayList<>(new HashSet(notificationDAO.getGatwayAppList()));
     logger.exit("getGatwayAppList() - Ends");
     return gatewayAppList;
+  }
+
+  @Override
+  public List<String> getGatwayAppList(String userId) {
+    logger.entry("begin getGatwayAppList()");
+    List<String> gatewayAppList =
+        new ArrayList<>(new HashSet(notificationDAO.getGatwayAppListForNotification(userId)));
+    logger.exit("getGatwayAppList() - Ends");
+    return gatewayAppList;
+  }
+
+  @Override
+  public List<NotificationBO> getViewNotificationList(String userId) {
+    logger.entry("begin getViewNotificationList()");
+    List<NotificationBO> notificationList = null;
+    try {
+      notificationList = notificationDAO.getViewNotificationList(userId);
+      for (NotificationBO notification : notificationList) {
+        notification.setAppPermission(
+            appDAO.getAppPermissionByCustomAppId(notification.getAppId(), userId));
+      }
+    } catch (Exception e) {
+      logger.error("NotificationServiceImpl - getViewNotificationList() - ERROR ", e);
+    }
+    logger.exit("getViewNotificationList() - Ends");
+    return notificationList;
   }
 }

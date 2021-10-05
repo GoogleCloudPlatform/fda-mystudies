@@ -689,6 +689,7 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+
     userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
     userRepository.saveAndFlush(userEntity);
 
@@ -703,7 +704,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message").value(MessageCode.FORGOT_PASSWORD.getMessage()));
 
     String subject = getMailResetSubject();
-    String body = "Thanks for reaching out for password help";
+    String body = "Thank you for reaching out for password help";
 
     MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
@@ -743,6 +744,7 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+
     userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     userRepository.saveAndFlush(userEntity);
 
@@ -978,6 +980,8 @@ public class UserControllerTest extends BaseMockIT {
     headers.add("studyId", "MyStudies");
     headers.add("source", "SCIM AUTH SERVER");
     headers.add("appName", "App Name_BTCDEV001");
+    headers.add("fromEmail", EMAIL_VALUE);
+    headers.add("contactEmail", EMAIL_VALUE);
     return headers;
   }
 

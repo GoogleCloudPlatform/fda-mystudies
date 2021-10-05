@@ -37,4 +37,6 @@ public class AppDetails {
   private int totalSitesCount;
 
   private List<AppStudyResponse> studies = new ArrayList<>();
+
+  private String appStatus;
 }
