@@ -298,6 +298,11 @@
                 <select
                     class="selectpicker col-md-6 p-none changeView3 <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
                     title="- Select and add apps -" multiple id="multipleApps" >
+                    
+                     <c:if test="${empty apps}">
+                     <option value="" id="">No app records found
+                     </option>
+                      </c:if>
                   <c:forEach items="${apps}" var="app">
                     <option value="${app.id}"
                             id="selectApps${app.id}">${app.name}&nbsp;(${app.customAppId})
