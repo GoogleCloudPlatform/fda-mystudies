@@ -450,9 +450,11 @@ public class UsersController {
         for (ExportedUserRecord user : page.iterateAll()) {
           GciAdminList admin = new GciAdminList();
           /*System.out.println("User: " + user.getUid());*/
-          admin.setEmailId(user.getEmail());
-          admin.setUid(user.getUid());
-          gciAdminList.add(admin);
+          if (!user.isDisabled()) {
+            admin.setEmailId(user.getEmail());
+            admin.setUid(user.getUid());
+            gciAdminList.add(admin);
+          }
         }
         List<GciAdminList> adminList = new ArrayList();
         for (GciAdminList a1 : gciAdminList) {
