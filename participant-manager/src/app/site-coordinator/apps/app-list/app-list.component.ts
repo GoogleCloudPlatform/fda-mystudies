@@ -5,6 +5,7 @@ import {of} from 'rxjs';
 import {AppsService} from '../shared/apps.service';
 import {ManageApps, App} from '../shared/app.model';
 import {Permission} from 'src/app/shared/permission-enums';
+import {Status} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
 import {ToastrService} from 'ngx-toastr';
 import {SearchParameterService} from 'src/app/service/search-parameter.service';
@@ -17,6 +18,7 @@ export class AppListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   manageApp$: Observable<ManageApps> = of();
   appList: App[] = [];
+  appStatus = Status;
   manageAppsBackup = {} as ManageApps;
   appUsersMessageMapping: {[k: string]: string} = {
     '=0': 'No app users',

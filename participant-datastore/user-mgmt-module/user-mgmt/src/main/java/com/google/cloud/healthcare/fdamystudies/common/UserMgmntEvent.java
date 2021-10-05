@@ -216,7 +216,15 @@ public enum UserMgmntEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       "Content submitted by app user via 'Contact Us' form in mobile app, could not be emailed to ${contactus_destination_email_address}.",
-      "CONTACT_US_CONTENT_EMAIL_FAILED");
+      "CONTACT_US_CONTENT_EMAIL_FAILED"),
+
+  APP_USER_ACCOUNTS_DELETED(
+      STUDY_BUILDER,
+      PARTICIPANT_USER_DATASTORE,
+      null,
+      "User records for app (with App ID '${AppID}') deactivated on Participant Datastore and "
+          + "deleted from Auth Server, after the app was deactivated via the Study Builder.",
+      "APP_USER_ACCOUNTS_DELETED");
 
   private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;

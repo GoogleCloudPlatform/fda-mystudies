@@ -6,6 +6,7 @@ import {ParticipantDetailsService} from './participant-details.service';
 import {ActivatedRoute} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {getMessage} from 'src/app/shared/success.codes.enum';
+
 import {
   EnrollmentStatus,
   OnboardingStatus,
@@ -32,6 +33,7 @@ export class ParticipantDetailsComponent
   studyTypes = StudyType;
   permission = Permission;
   studyStatus = Status;
+  appStatus = Status;
   enrollmentStatus = EnrollmentStatus;
   constructor(
     private readonly locationLibrary: Location,

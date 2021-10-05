@@ -21,6 +21,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_DESCRIPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FROM_EMAIL_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_VIEW_NAME;
@@ -31,6 +32,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SUPPORT_EMAIL_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
@@ -158,6 +160,8 @@ public class LoginController {
     String mobilePlatform = cookieHelper.getCookieValue(request, MOBILE_PLATFORM_COOKIE);
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
     String appName = cookieHelper.getCookieValue(request, APP_NAME_COOKIE);
+    String fromEmail = cookieHelper.getCookieValue(request, FROM_EMAIL_COOKIE);
+    String supportEmail = cookieHelper.getCookieValue(request, SUPPORT_EMAIL_COOKIE);
     String deeplinkCookie = cookieHelper.getCookieValue(request, DEEPLINK_URL_COOKIE);
 
     boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source, deeplinkCookie);
@@ -187,6 +191,8 @@ public class LoginController {
     user.setPassword(loginRequest.getPassword());
     user.setAppId(appId);
     user.setAppName(appName);
+    user.setSupportEmail(supportEmail);
+    user.setFromEmail(fromEmail);
 
     AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
 
@@ -257,6 +263,8 @@ public class LoginController {
         MOBILE_PLATFORM_COOKIE,
         SOURCE_COOKIE,
         APP_NAME_COOKIE,
+        FROM_EMAIL_COOKIE,
+        SUPPORT_EMAIL_COOKIE,
         DEEPLINK_URL_COOKIE);
 
     String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);

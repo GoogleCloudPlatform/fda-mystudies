@@ -312,8 +312,6 @@ public class FdahpStudyDesignerConstants {
   public static final String RESUME_CHECKLIST_ERROR_MSG =
       "The Checklist section does not have all items marked complete. Do you want to proceed?";
   public static final Integer ROLE_CREATE_MANAGE_STUDIES = 8;
-  public static final Integer ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT = 6;
-  public static final Integer ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW = 4;
   public static final Integer ROLE_MANAGE_REPO = 3;
   public static final Integer ROLE_MANAGE_STUDIES = 2;
   public static final Integer ROLE_MANAGE_USERS_EDIT = 5;
@@ -439,7 +437,7 @@ public class FdahpStudyDesignerConstants {
   public static final String ADD = "add";
 
   public static final String SUPER_ADMIN_PERMISSIONS =
-      "ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW,ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT,ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW";
+      "ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW,ROLE_MANAGE_APPS,ROLE_CREATE_MANAGE_APPS";
 
   public static final String PATH_SEPARATOR = "/";
 
@@ -485,6 +483,26 @@ public class FdahpStudyDesignerConstants {
   public static final String PUBLISHED_VERSION = "publishedVersion";
 
   public static final String WORKING_VERSION = "workingVersion";
+
+  public static final String APP_ID = "appId";
+  public static final String APP_BO = "appBo";
+
+  public static final String CUSTOM_APP_ID = "customAppId";
+
+  public static final String APP_DEACTIVATED = "Deactivated";
+
+  public static final String FAILURE_APP_MESSAGE =
+      "Sorry, a technical error occurred and the update(s) could not be published.";
+
+  public static final String FAILURE_DEACTIVATE_APP_MESSAGE =
+      "Sorry, a technical error occurred and App deactivation failed";
+
+  public static final Integer ROLE_MANAGE_APPS = 10;
+
+  public static final Integer ROLE_CREATE_MANAGE_APPS = 9;
+
+  public static final String VIEW_ASSOCIATED_STUDIES_MESSAGE =
+      "Studies seen in the list are based on the permissions you have in the Study Builder";
 
   private FdahpStudyDesignerConstants() {
     // Do nothing

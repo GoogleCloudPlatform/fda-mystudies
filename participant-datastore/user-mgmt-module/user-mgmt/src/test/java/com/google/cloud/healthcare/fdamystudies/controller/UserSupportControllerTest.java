@@ -25,11 +25,14 @@ import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +52,8 @@ public class UserSupportControllerTest extends BaseMockIT {
 
   @Autowired private ObjectMapper objectMapper;
 
+  @Autowired private AppRepository appRepository;
+
   @Test
   public void contextLoads() {
     assertNotNull(controller);
@@ -58,10 +63,10 @@ public class UserSupportControllerTest extends BaseMockIT {
 
   @Test
   public void shouldSendFeedbackEmail() throws Exception {
-    appConfig.setFeedbackToEmail("feedback_app_test@grr.la");
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
     headers.set("appName", Constants.APP_NAME);
+    headers.set("appId", Constants.APP_ID_VALUE);
     String requestJson = getFeedBackDetails(Constants.SUBJECT, Constants.BODY);
 
     mockMvc
@@ -71,14 +76,16 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
+    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
+
     String subject = appConfig.getFeedbackMailSubject() + Constants.SUBJECT;
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("body", Constants.BODY);
-    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("orgName", optApp.get().getOrganizationName());
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getFeedbackMailBody(), templateArgs);
-
-    verifyMimeMessage(appConfig.getFeedbackToEmail(), appConfig.getFromEmail(), subject, body);
+    verifyMimeMessage(
+        optApp.get().getFeedBackToEmail(), optApp.get().getFromEmailId(), subject, body);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -91,7 +98,6 @@ public class UserSupportControllerTest extends BaseMockIT {
 
   @Test
   public void shouldSendEmailForContactUs() throws Exception {
-    appConfig.setContactusToEmail("contactus_app_test@grr.la");
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.USER_ID_HEADER);
@@ -110,18 +116,20 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
+    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
     String subject = appConfig.getContactusMailSubject() + Constants.SUBJECT;
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("firstName", Constants.FIRST_NAME);
     templateArgs.put("email", Constants.EMAIL_ID);
     templateArgs.put("subject", Constants.SUBJECT);
     templateArgs.put("body", Constants.BODY);
-    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("orgName", optApp.get().getOrganizationName());
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(
             appConfig.getContactusMailBody(), templateArgs);
 
-    verifyMimeMessage(appConfig.getContactusToEmail(), appConfig.getFromEmail(), subject, body);
+    verifyMimeMessage(
+        optApp.get().getContactUsToEmail(), optApp.get().getFromEmailId(), subject, body);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -134,12 +142,13 @@ public class UserSupportControllerTest extends BaseMockIT {
 
   private String getContactUsRequest(String subject, String body, String firstName, String email)
       throws JsonProcessingException {
-    ContactUsReqBean contactUsReqBean = new ContactUsReqBean(subject, body, firstName, email, "");
+    ContactUsReqBean contactUsReqBean =
+        new ContactUsReqBean(subject, body, firstName, email, "", "");
     return getObjectMapper().writeValueAsString(contactUsReqBean);
   }
 
   private String getFeedBackDetails(String subject, String body) throws JsonProcessingException {
-    FeedbackReqBean feedbackReqBean = new FeedbackReqBean(subject, body, "");
+    FeedbackReqBean feedbackReqBean = new FeedbackReqBean(subject, body, "", "GCPMS001");
     return getObjectMapper().writeValueAsString(feedbackReqBean);
   }
 
