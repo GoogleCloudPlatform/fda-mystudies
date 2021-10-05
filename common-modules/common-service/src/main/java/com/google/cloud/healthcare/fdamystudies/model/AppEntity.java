@@ -83,6 +83,10 @@ public class AppEntity implements Serializable {
   private String androidServerKey;
 
   @ToString.Exclude
+  @Column(name = "ios_server_key", length = LARGE_LENGTH)
+  private String iosServerKey;
+
+  @ToString.Exclude
   @Column(name = "from_email_id", length = LARGE_LENGTH)
   private String formEmailId;
 
