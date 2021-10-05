@@ -21,6 +21,8 @@ import UIKit
 class AppUpdateBlocker: UIView {
 
   @IBOutlet var buttonUpgrade: UIButton!
+  @IBOutlet var buttonYes: UIButton!
+  @IBOutlet var buttonSkip: UIButton!
   @IBOutlet var labelMessage: UILabel!
   @IBOutlet var labelVersionNumber: UILabel!
   @IBOutlet var appIconView: UIImageView!
@@ -42,6 +44,18 @@ class AppUpdateBlocker: UIView {
     super.init(coder: aDecoder)
     // Used to set border color for bottom view
     buttonUpgrade?.layer.borderColor = UIColor.white.cgColor
+    
+    if Bool(UserManageApps.appDetails?.isForceUpdate ?? "false") ?? false {
+      buttonUpgrade?.isHidden = false
+      buttonYes?.isHidden = true
+      buttonSkip?.isHidden = true
+      labelMessage?.text = kMandatoryForceUMessage
+    } else {
+      buttonUpgrade?.isHidden = true
+      buttonYes?.isHidden = false
+      buttonSkip?.isHidden = false
+      labelMessage?.text = kOpionalForceUMessage
+    }
   }
 
   /// Class Func to Initialize the `AppUpdateBlocker`
@@ -57,12 +71,25 @@ class AppUpdateBlocker: UIView {
       UINib(nibName: "AppUpdateBlocker", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! AppUpdateBlocker
     view.frame = frame
     view.layoutIfNeeded()
+    if Bool(UserManageApps.appDetails?.isForceUpdate ?? "false") ?? false {
+      view.buttonUpgrade?.isHidden = false
+      view.buttonYes?.isHidden = true
+      view.buttonSkip?.isHidden = true
+      view.labelMessage?.text = kMandatoryForceUMessage
+    } else {
+      view.buttonUpgrade?.isHidden = true
+      view.buttonYes?.isHidden = false
+      view.buttonSkip?.isHidden = false
+      view.labelMessage?.text = kOpionalForceUMessage
+    }
+    
     return view
   }
 
   func configureView(with latestVersion: String) {
     self.buttonUpgrade.layer.borderColor = #colorLiteral(red: 0, green: 0.4862745098, blue: 0.7294117647, alpha: 1)
-    self.labelMessage.text = LocalizableString.blockerScreenLabelText.localizedString
+    self.buttonYes.layer.borderColor = #colorLiteral(red: 0, green: 0.4862745098, blue: 0.7294117647, alpha: 1)
+    self.buttonSkip.layer.borderColor = #colorLiteral(red: 0, green: 0.4862745098, blue: 0.7294117647, alpha: 1)
     self.appIconView.image = self.appIcon
   }
 
@@ -79,6 +106,24 @@ class AppUpdateBlocker: UIView {
     if let url = URL(string: appLink), UIApplication.shared.canOpenURL(url) {
       UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
+  }
+  
+  @IBAction func buttonYesAction() {
+    guard let appleID = Branding.appleID, !appleID.isEmpty else {
+      // Ask user to update from AppStore.
+      self.makeToast(LocalizableString.appStoreUpdateText.localizedString)
+      return
+    }
+    let appStoreLink = "https://apps.apple.com/app/apple-store"
+    let appLink = appStoreLink + "/id" + appleID
+    if let url = URL(string: appLink), UIApplication.shared.canOpenURL(url) {
+      UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+  }
+  
+  @IBAction func buttonSkipAction() {
+    self.isHidden = true
+    self.removeFromSuperview()
   }
 
 }
