@@ -19,6 +19,7 @@ package com.harvard.utils;
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
+import com.harvard.SplashActivity;
 
 public class Urls {
   public static String BASE_URL_STUDY_DATASTORE = BuildConfig.BASE_URL_STUDY_DATASTORE;
@@ -45,7 +46,7 @@ public class Urls {
           + "&scope=offline_access"
           + "&response_type=code"
           + "&appId=" + BuildConfig.APP_ID
-          + "&appName=" + FdaApplication.getInstance().getString(R.string.app_name)
+          + "&appName=" + "$AppName"
           + "&appVersion=" + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE
           + "&mobilePlatform=ANDROID"
           + "&source=MOBILE APPS"
@@ -54,6 +55,9 @@ public class Urls {
           + "&correlationId=" + FdaApplication.getRandomString()
           + "&redirect_uri=" + AUTH_SERVER_REDIRECT_URL
           + "&state=" + FdaApplication.getRandomString()
+          + "&fromEmail=" + "$FromEmail"
+          + "&contactEmail=" + "$ContactEmail"
+          + "&supportEmail=" + "$SupportEmail"
           + "&deeplinkUrl=" + "app://" + FdaApplication.getInstance().getString(R.string.deeplink_host) + "/mystudies";
 
   // Deeplinks
@@ -70,7 +74,8 @@ public class Urls {
   public static String WITHDRAW = "/withdrawfromstudy";
   public static String CONTACT_US = "/contactUs";
   public static String FEEDBACK = "/feedback";
-  
+  public static String APPS = "/apps";
+
   // participant-datastore Enrollment Server
   public static String UPDATE_STUDY_PREFERENCE = "/updateStudyState";
   public static String STUDY_STATE = "/studyState";

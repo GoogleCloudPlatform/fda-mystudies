@@ -87,7 +87,7 @@ public class GatewayResourcesListAdapter
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              if (items.get(i).getType() != null) {
+              if (items.get(i).getType() != null && items.get(i).getContent() != null) {
                 Intent intent = new Intent(context, GatewayResourcesWebViewActivity.class);
                 intent.putExtra("title", "" + items.get(i).getTitle().toString());
                 intent.putExtra("type", "" + items.get(i).getType().toString());
