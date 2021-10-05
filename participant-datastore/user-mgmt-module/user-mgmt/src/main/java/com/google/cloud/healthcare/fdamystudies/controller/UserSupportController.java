@@ -60,6 +60,7 @@ public class UserSupportController {
   public ResponseEntity<?> feedbackDetails(
       @Valid @RequestBody FeedbackReqBean reqBean,
       @RequestHeader String appName,
+      @RequestHeader String appId,
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
@@ -69,6 +70,7 @@ public class UserSupportController {
     ResponseBean responseBean = new ResponseBean();
 
     reqBean.setAppName(appName);
+    reqBean.setAppId(appId);
     EmailResponse emailResponse = supportService.feedback(reqBean, auditRequest);
 
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
@@ -90,6 +92,7 @@ public class UserSupportController {
   public ResponseEntity<?> contactUsDetails(
       @Valid @RequestBody ContactUsReqBean reqBean,
       @RequestHeader String appName,
+      @RequestHeader String appId,
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
@@ -98,6 +101,7 @@ public class UserSupportController {
 
     ResponseBean responseBean = new ResponseBean();
     reqBean.setAppName(appName);
+    reqBean.setAppId(appId);
     EmailResponse emailResponse = supportService.contactUsDetails(reqBean, auditRequest);
 
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {

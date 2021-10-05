@@ -210,6 +210,14 @@
 <script>
   $(document).ready(function () {
 	$('.studyClass').addClass("active");
+	<c:if test="${studyBo.status eq 'Pre-launch'}">
+	if($('#inlineCheckbox1').is(':disabled')){
+  	  $('#inlineCheckbox1').attr('checked', false);
+     }
+    if($('#inlineCheckbox2').is(':disabled')){
+  	  $('#inlineCheckbox2').attr('checked', false);
+     }
+    </c:if>
     <c:if test="${empty permission && fn:contains(permissions,5)}">
    
     $('[data-toggle="tooltip"]').tooltip();
@@ -253,6 +261,7 @@
     $("#completedId").on('click', function (e) {
       if ($('.checkbox input:checked').length == 0) {
     	    $("input").attr("required", true);
+    	    $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
       }
       
       var rowCount = 0;
@@ -272,6 +281,15 @@
           $('#completedId').prop('disabled', true);
           platformTypeValidation('completed');
         }
+      }else{
+    	  <c:if
+          test="${(not empty appBo && appBo.appPlatform eq 'A') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active')}">
+          $('#inlineCheckbox1').prop('disabled', true);
+          </c:if>
+      	  <c:if
+          test="${(not empty appBo && appBo.appPlatform eq 'I') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active')}">
+          $('#inlineCheckbox2').prop('disabled', true);
+          </c:if>
       }
     });
     $("#saveId").click(function () {

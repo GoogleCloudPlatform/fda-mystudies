@@ -14,7 +14,14 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import java.util.Calendar;
+import java.util.Map;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -79,5 +86,66 @@ public class EmailServiceImpl implements EmailService {
           emailRequest.getBody(), emailRequest.getTemplateArgs());
     }
     return emailRequest.getBody();
+  }
+
+  @Override
+  public EmailResponse sendMimeMailWithImages(
+      EmailRequest emailRequest, Map<String, String> inlineImages) {
+    logger.entry("Begin sendMimeMailWithImages()");
+
+    try {
+      // Create a default MimeMessage object.
+      MimeMessage message = emailSender.createMimeMessage();
+
+      MimeMessageHelper helper = new MimeMessageHelper(message, false);
+      helper.setFrom(emailRequest.getFrom());
+      helper.setTo(emailRequest.getTo());
+
+      if (ArrayUtils.isNotEmpty(emailRequest.getCc())) {
+        helper.setCc(emailRequest.getCc());
+      }
+
+      if (ArrayUtils.isNotEmpty(emailRequest.getBcc())) {
+        helper.setBcc(emailRequest.getBcc());
+      }
+
+      message.setSubject(getSubject(emailRequest));
+
+      // This mail has 2 part, the BODY and the embedded image
+      MimeMultipart multipart = new MimeMultipart("related");
+
+      // first part (the html)
+      BodyPart messageBodyPart = new MimeBodyPart();
+      String htmlText = getBodyContent(emailRequest);
+      messageBodyPart.setContent(htmlText, "text/html");
+      // add it
+      multipart.addBodyPart(messageBodyPart);
+
+      // adds inline image attachments
+      if (inlineImages != null && inlineImages.size() > 0) {
+
+        for (Map.Entry<String, String> entry : inlineImages.entrySet()) {
+          // second part (the image)
+          messageBodyPart = new MimeBodyPart();
+          DataSource fds = new FileDataSource(entry.getValue());
+
+          messageBodyPart.setDataHandler(new DataHandler(fds));
+          messageBodyPart.setHeader("Content-ID", "<" + entry.getKey() + ">");
+          messageBodyPart.setFileName(entry.getKey() + ".png");
+
+          // add image to the multipart
+          multipart.addBodyPart(messageBodyPart);
+        }
+      }
+      // put everything together
+      message.setContent(multipart);
+      // Send message
+      emailSender.send(message);
+      logger.exit(String.format("status=%d", HttpStatus.ACCEPTED.value()));
+      return new EmailResponse(MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER);
+    } catch (Exception e) {
+      logger.error("sendMimeMailWithImagess() failed with an exception.", e);
+      return new EmailResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
+    }
   }
 }

@@ -4392,6 +4392,18 @@ public class StudyDAOImpl implements StudyDAO {
           dbStudyBo.setThumbnailImage(studyBo.getThumbnailImage());
           dbStudyBo.setModifiedBy(studyBo.getUserId());
           dbStudyBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+          if (studyBo.getAppId() != null
+              && dbStudyBo.getAppId() != null
+              && !dbStudyBo.getAppId().equals(studyBo.getAppId())) {
+            studySequenceBo =
+                (StudySequenceBo)
+                    session
+                        .getNamedQuery(FdahpStudyDesignerConstants.STUDY_SEQUENCE_BY_ID)
+                        .setString(FdahpStudyDesignerConstants.STUDY_ID, studyBo.getId())
+                        .uniqueResult();
+            studySequenceBo.setSettingAdmins(false);
+            session.update(studySequenceBo);
+          }
           dbStudyBo.setAppId(studyBo.getAppId());
           session.update(dbStudyBo);
 
@@ -7371,10 +7383,7 @@ public class StudyDAOImpl implements StudyDAO {
       studyBo.setId(null);
       studyBo.setStatus(FdahpStudyDesignerConstants.STUDY_PRE_LAUNCH);
       studyBo.setStudylunchDate(null);
-      studyBo.setAppId(
-          studyBo.getType().equals(FdahpStudyDesignerConstants.STUDY_TYPE_SD)
-              ? null
-              : studyBo.getAppId());
+      studyBo.setAppId(null);
       studyBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
       studyBo.setDestinationCustomStudyId(studyBo.getCustomStudyId() + "@COPY" + copyVersion);
       studyBo.setEnrollingParticipants(FdahpStudyDesignerConstants.YES);

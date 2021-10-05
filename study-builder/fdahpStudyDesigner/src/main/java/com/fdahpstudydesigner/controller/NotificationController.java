@@ -110,6 +110,9 @@ public class NotificationController {
     List<NotificationHistoryBO> notificationHistoryNoDateTime = null;
     List<String> gatewayAppList = null;
     try {
+      SessionObject sessionObject =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       String notificationId =
           FdahpStudyDesignerUtil.isEmpty(
                   request.getParameter(FdahpStudyDesignerConstants.NOTIFICATIONID))
@@ -129,7 +132,7 @@ public class NotificationController {
                   request.getParameter(FdahpStudyDesignerConstants.ACTION_TYPE))
               ? ""
               : request.getParameter(FdahpStudyDesignerConstants.ACTION_TYPE);
-      gatewayAppList = notificationService.getGatwayAppList();
+      gatewayAppList = notificationService.getGatwayAppList(sessionObject.getUserId());
       map.addAttribute("gatewayAppList", gatewayAppList);
       if (!"".equals(chkRefreshflag)) {
         if (!"".equals(notificationId)) {
@@ -359,6 +362,9 @@ public class NotificationController {
     List<NotificationBO> notificationList = null;
     ModelAndView mav = new ModelAndView("login", map);
     try {
+      SessionObject sessionObject =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       if (null != request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG)) {
         sucMsg = (String) request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG);
@@ -370,11 +376,20 @@ public class NotificationController {
         map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
         request.getSession().removeAttribute(FdahpStudyDesignerConstants.ERR_MSG);
       }
-      /*
-       * Passing 0 in below param as notifications are independent from
-       * study and empty string to define it is as global notification
-       */
-      notificationList = notificationService.getNotificationList(null, "");
+
+      if (null != request.getSession().getAttribute("sucMsgAppActions")) {
+        request.getSession().removeAttribute("sucMsgAppActions");
+      }
+
+      if (null != request.getSession().getAttribute("errMsgAppActions")) {
+        request.getSession().removeAttribute("errMsgAppActions");
+      }
+
+      if (null != request.getSession().getAttribute("sucMsgViewAssocStudies")) {
+        request.getSession().removeAttribute("sucMsgViewAssocStudies");
+      }
+
+      notificationList = notificationService.getViewNotificationList(sessionObject.getUserId());
       if (CollectionUtils.isNotEmpty(notificationList)) {
         for (NotificationBO notification : notificationList) {
           if (!notification.isNotificationSent()

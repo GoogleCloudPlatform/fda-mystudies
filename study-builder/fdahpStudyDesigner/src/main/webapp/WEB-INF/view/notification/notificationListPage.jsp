@@ -25,15 +25,12 @@
         Send notifications to app users
       </div>
       <div class="dis-line pull-right ml-md">
-        <c:if
-            test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">
           <div class="form-group mb-none mt-xs">
             <button type="button" class="btn btn-primary blue-btn notificationDetailsToEdit"
                     actionType="add">
               Create notification
             </button>
           </div>
-        </c:if>
       </div>
     </div>
   </div>
@@ -64,19 +61,21 @@
                       notificationId="${notification.notificationId}"
                       data-toggle="tooltip"
                       data-placement="top" title="View"></span>
-                <c:if
-                    test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">
+                
                   <c:if test="${notification.notificationSent}">
                     <span
-                        class="sprites-icons-2 send mr-lg notificationDetailsToEdit"
+                        class="sprites-icons-2 send mr-lg notificationDetailsToEdit
+                        <c:if test="${not notification.appPermission}"> cursor-none </c:if> "
                         actionType="resend"
                         notificationId="${notification.notificationId}"
                         data-toggle="tooltip" data-placement="top"
                         title="Resend"></span>
+                       
                   </c:if>
                   <c:if test="${not notification.notificationSent}">
                     <span
-                        class="sprites_icon edit-g mr-lg notificationDetailsToEdit"
+                        class="sprites_icon edit-g mr-lg notificationDetailsToEdit  
+                        <c:if test="${not notification.appPermission}"> cursor-none </c:if> "
                         actionType="edit"
                         notificationId="${notification.notificationId}"
                         data-toggle="tooltip"
@@ -85,7 +84,6 @@
                   <span class="sprites_icon copy notificationDetailsToEdit" actionType="add"
                         notificationText="${fn:escapeXml(notification.notificationText)}"
                         data-toggle="tooltip" data-placement="top" title="Copy-into-new"></span>
-                </c:if>
               </td>
             </tr>
           </c:forEach>
