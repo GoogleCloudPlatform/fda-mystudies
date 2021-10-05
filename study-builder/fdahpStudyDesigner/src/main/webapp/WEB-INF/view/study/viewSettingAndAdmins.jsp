@@ -307,7 +307,6 @@
   
   function platformTypeValidation(buttonText) {
     var platformNames = '';
-    debugger;
     $("input:checkbox[name=platform]:checked").each(function () {
       platformNames = platformNames + $(this).val();
     });
