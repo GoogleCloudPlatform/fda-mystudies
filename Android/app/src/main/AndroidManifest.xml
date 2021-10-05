@@ -443,6 +443,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"></activity>
+        <service android:name = ".VersionCheckerService"/>
     </application>
 
 </manifest>

@@ -43,6 +43,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.SignupActivity;
 import com.harvard.usermodule.TermsPrivacyPolicyActivity;
 import com.harvard.usermodule.UserModulePresenter;
@@ -58,6 +59,7 @@ import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -103,9 +105,12 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     customTextView(agreeLabel);
     setFont();
     bindEvents();
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(getContext());
     termsAndConditionData = new TermsAndConditionData();
-    termsAndConditionData.setPrivacy(getString(R.string.privacyurl));
-    termsAndConditionData.setTerms(getString(R.string.termsurl));
+    termsAndConditionData.setPrivacy(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
+    termsAndConditionData.setTerms(dbServiceSubscriber.getApps(realm).getTermsUrl());
+    dbServiceSubscriber.closeRealmObj(realm);
     return view;
   }
 

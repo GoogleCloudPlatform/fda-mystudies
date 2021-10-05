@@ -15,30 +15,48 @@
 
 package com.harvard.gatewaymodule;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
 import com.harvard.R;
+import com.harvard.SplashActivity;
 import com.harvard.gatewaymodule.events.GetStartedEvent;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
+import com.harvard.studyappmodule.SurveyActivity;
 import com.harvard.usermodule.SignupActivity;
+import com.harvard.usermodule.VerificationStepActivity;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
+import com.harvard.utils.version.Version;
+import com.harvard.utils.version.VersionChecker;
+import io.realm.Realm;
 
 public class GatewayActivity extends AppCompatActivity {
   private static final int UPGRADE = 100;
+  private static final int RESULT_CODE_UPGRADE = 101;
   private AppCompatTextView getStarted;
   private RelativeLayout newUserLayout;
   private AppCompatTextView newUserButton;
@@ -48,6 +66,10 @@ public class GatewayActivity extends AppCompatActivity {
   private static final String FROM = "from";
   private static final String TYPEFACE_REGULAR = "regular";
   private static AlertDialog alertDialog;
+  VersionReceiver versionReceiver;
+  private String latestVersion;
+  private boolean force = false;
+  AlertDialog.Builder alertDialogBuilder;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +86,63 @@ public class GatewayActivity extends AppCompatActivity {
     }
   }
 
+  public class VersionReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (intent.getStringExtra("api").equalsIgnoreCase("success")) {
+        Version currVer = new Version(AppController.currentVersion());
+        Version latestVer = new Version(intent.getStringExtra("latestVersion"));
+
+        latestVersion = intent.getStringExtra("latestVersion");
+        force = Boolean.parseBoolean(intent.getStringExtra("force"));
+
+        if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
+          isUpgrade(false, latestVersion, force);
+        } else {
+          AppController.getHelperSharedPreference().writePreference(GatewayActivity.this, "versionalert", "done");
+          isUpgrade(true, latestVersion, force);
+        }
+      } else {
+        Toast.makeText(GatewayActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT < 21) {
+          finishAffinity();
+        } else {
+          finishAndRemoveTask();
+        }
+      }
+    }
+  }
+
+
   @Override
   protected void onResume() {
     super.onResume();
     AppController.getHelperHideKeyboard(GatewayActivity.this);
     AppController.getHelperSharedPreference()
         .writePreference(GatewayActivity.this, getString(R.string.join), "false");
+
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(BuildConfig.APPLICATION_ID);
+    versionReceiver = new VersionReceiver();
+    registerReceiver(versionReceiver, filter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+
+    try {
+      unregisterReceiver(versionReceiver);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      if (alertDialog != null) {
+        alertDialog.dismiss();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   private void initializeXmlId() {
@@ -170,6 +243,41 @@ public class GatewayActivity extends AppCompatActivity {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == UPGRADE) {
       alertDialog.dismiss();
+    } else if (requestCode == RESULT_CODE_UPGRADE) {
+      Version currVer = new Version(AppController.currentVersion());
+      Version latestVer = new Version(latestVersion);
+      if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
+        Logger.info(BuildConfig.APPLICATION_ID, "App Updated");
+      } else {
+        if (force) {
+          Toast.makeText(
+              GatewayActivity.this,
+              "Please update the app to continue using",
+              Toast.LENGTH_SHORT)
+              .show();
+          moveTaskToBack(true);
+          if (Build.VERSION.SDK_INT < 21) {
+            finishAffinity();
+          } else {
+            finishAndRemoveTask();
+          }
+        } else {
+          AlertDialog.Builder alertDialogBuilder =
+              new AlertDialog.Builder(GatewayActivity.this, R.style.MyAlertDialogStyle);
+          alertDialogBuilder.setTitle("Upgrade");
+          alertDialogBuilder
+              .setMessage("Please consider updating app next time")
+              .setCancelable(false)
+              .setPositiveButton(
+                  "ok",
+                  new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                      dialog.dismiss();
+                    }
+                  }).show();
+
+        }
+      }
     }
   }
 
@@ -188,7 +296,74 @@ public class GatewayActivity extends AppCompatActivity {
             .setExitAnimations(GatewayActivity.this, R.anim.slide_in_left, R.anim.slide_out_right);
 
     CustomTabsIntent customTabsIntent = builder.build();
-    customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(GatewayActivity.this);
+    Apps apps = dbServiceSubscriber.getApps(realm);
+    customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+        .replace("$FromEmail", apps.getFromEmail())
+        .replace("$SupportEmail", apps.getSupportEmail())
+        .replace("$AppName", apps.getAppName())
+        .replace("$ContactEmail", apps.getContactUsEmail())));
+    dbServiceSubscriber.closeRealmObj(realm);
     startActivity(customTabsIntent.intent);
+  }
+
+  public void isUpgrade(boolean b, String latestVersion, final boolean force) {
+    this.latestVersion = latestVersion;
+    this.force = force;
+    String msg;
+    String positiveButton;
+    String negativeButton;
+    if (b) {
+      if (force) {
+        msg = "Please upgrade the app to continue.";
+        positiveButton = "Ok";
+        negativeButton = "Cancel";
+      } else {
+        msg = "A new version of this app is available. Do you want to update it now?";
+        positiveButton = "Yes";
+        negativeButton = "Skip";
+      }
+      alertDialogBuilder =
+          new AlertDialog.Builder(GatewayActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder.setTitle("Upgrade");
+      alertDialogBuilder
+          .setMessage(msg)
+          .setCancelable(false)
+          .setPositiveButton(
+              positiveButton,
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  startActivityForResult(
+                      new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
+                      RESULT_CODE_UPGRADE);
+                }
+              })
+          .setNegativeButton(
+              negativeButton,
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  dialog.dismiss();
+                  if (force) {
+                    Toast.makeText(
+                        GatewayActivity.this,
+                        "Please update the app to continue using",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                    moveTaskToBack(true);
+                    if (Build.VERSION.SDK_INT < 21) {
+                      finishAffinity();
+                    } else {
+                      finishAndRemoveTask();
+                    }
+                  } else {
+                    dialog.dismiss();
+                  }
+                }
+              });
+      alertDialog = alertDialogBuilder.create();
+      alertDialog.show();
+    }
   }
 }
