@@ -756,7 +756,7 @@ public class AppController {
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      //   headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+      headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
       AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
       userRegistrationServerUrl = map.get("userRegistrationServerAppMetadataUrl");
@@ -796,7 +796,7 @@ public class AppController {
     map = FdahpStudyDesignerUtil.getAppProperties();
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    // headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
     AuditEventMapper.addAuditEventHeaderParams(headers, auditRequest);
 
     userRegistrationDeactivateUrl = map.get("usermanagementServerDeactivateapp");
