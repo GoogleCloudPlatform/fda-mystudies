@@ -1,4 +1,4 @@
-import {StudyType} from 'src/app/shared/enums';
+import {Status, StudyType} from 'src/app/shared/enums';
 
 export interface AppDetails {
   appId: string;
@@ -9,6 +9,7 @@ export interface AppDetails {
   message: string;
   code: string;
   totalParticipantCount: number;
+  appStatus: Status;
 }
 
 export interface Participant {

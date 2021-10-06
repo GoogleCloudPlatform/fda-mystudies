@@ -1,4 +1,5 @@
 import {Permission} from 'src/app/shared/permission-enums';
+import {Status, StudyType} from 'src/app/shared/enums';
 
 export interface Site {
   siteId: string;
@@ -40,4 +41,5 @@ export interface AppDetails {
   status: number;
   message: string;
   code: string;
+  appStatus: Status;
 }
