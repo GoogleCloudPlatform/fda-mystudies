@@ -372,8 +372,8 @@ class Schedule {
 
       if activityEndTime! > updatedStartTime! {
 
-        let updatedEndTime = runEndDate?.addingTimeInterval(TimeInterval(offset!))
-        if !(updatedEndTime! < startTime) {
+        let updatedEndTime = runEndDate?.addingTimeInterval(TimeInterval(offset!))        
+        if !(updatedEndTime! < startTime!) {
           // append in activityRun array
           let activityRun = ActivityRun()
           activityRun.runId = runId

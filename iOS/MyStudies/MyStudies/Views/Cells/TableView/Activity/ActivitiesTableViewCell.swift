@@ -154,11 +154,27 @@ class ActivitiesTableViewCell: UITableViewCell {
       "Run: " + currentRunId + " of " + String(activity.totalRuns) + ", "
       + String(activity.compeltedRuns) + " done" + ", " + String(activity.incompletedRuns)
       + " missed"
-
-    if activity.totalRuns <= 1 {
-      self.buttonMoreSchedules?.isHidden = true
-      self.buttonMoreSchedulesBottomLine?.isHidden = true
-
+    
+    if activity.frequencyType == .scheduled {
+      if let frequencyRun = activity.frequencyRuns, frequencyRun.count > 1 {
+        let moreSchedulesTitle = "+" + String(frequencyRun.count - 1) + " more"
+        self.buttonMoreSchedules?.setTitle(moreSchedulesTitle, for: .normal)
+        self.buttonMoreSchedules?.isHidden = false
+        self.buttonMoreSchedulesBottomLine?.isHidden = false
+      } else {
+        self.buttonMoreSchedules?.isHidden = true
+        self.buttonMoreSchedulesBottomLine?.isHidden = true
+      }
+    } else if activity.totalRuns <= 1 {
+      if let frequencyRun = activity.frequencyRuns, frequencyRun.count > 1 {
+        let moreSchedulesTitle = "+" + String(frequencyRun.count - 1) + " more"
+        self.buttonMoreSchedules?.setTitle(moreSchedulesTitle, for: .normal)
+        self.buttonMoreSchedules?.isHidden = false
+        self.buttonMoreSchedulesBottomLine?.isHidden = false
+      } else {
+        self.buttonMoreSchedules?.isHidden = true
+        self.buttonMoreSchedulesBottomLine?.isHidden = true
+      }
     } else {
       self.buttonMoreSchedules?.isHidden = false
       self.buttonMoreSchedulesBottomLine?.isHidden = false
@@ -294,24 +310,94 @@ class ActivitiesTableViewCell: UITableViewCell {
     case .scheduled:
       var runStartDate: Date?
       var runEndDate: Date?
-      if let firstRun = activity.activityRuns.first {
+      
+      if activity.currentRun == nil {
+        if let upcomingRun = activity.activityRuns.filter({ $0.runId == activity.currentRunId + 1 }).first {
+          runStartDate = upcomingRun.startDate
+          runEndDate = upcomingRun.endDate
+        } else {
+          let run = activity.activityRuns.filter({ $0.runId == activity.currentRunId }).first
+          runStartDate = run?.startDate
+          runEndDate = run?.endDate
+        }
+      } else if let currentRun = activity.currentRun {
+        if let status = activity.userParticipationStatus,
+           status.status == .abandoned || status.status == .completed {
+          if let upcomingRun = activity.activityRuns.filter({ $0.runId == activity.currentRunId + 1 }).first {
+            runStartDate = upcomingRun.startDate
+            runEndDate = upcomingRun.endDate
+          } else {
+            let run = activity.activityRuns.filter({ $0.runId == activity.currentRunId }).first
+            runStartDate = run?.startDate
+            runEndDate = run?.endDate
+          }
+        } else {
+          runStartDate = currentRun.startDate
+          runEndDate = currentRun.endDate
+        }
+      } else if let firstRun = activity.activityRuns.first {
         runStartDate = firstRun.startDate
         runEndDate = firstRun.endDate
-      } else if activity.currentRun != nil {
-        runStartDate = activity.currentRun.startDate
-        runEndDate = activity.currentRun.endDate
       } else {
         let run = activity.activityRuns.filter({ $0.runId == activity.currentRunId }).first
         runStartDate = run?.startDate
         runEndDate = run?.endDate
       }
+      
       if runEndDate == nil || runStartDate == nil {
-        runStartDate = activity.startDate
-        runEndDate = activity.endDate
-      }
-      if var startDate = runStartDate,
-        var endDate = runEndDate
-      {
+        if let status = activity.userParticipationStatus,
+           status.status == .expired || status.status == .abandoned, let lastRun = activity.frequencyRuns?.last {
+          if let startDate = lastRun["startTime"] as? String, let endDate = lastRun["endTime"] as? String {
+            if var startTime = Utilities.getDateFromStringWithOutTimezone(
+              dateString: (startDate)
+            ),
+            var endTime = Utilities.getDateFromStringWithOutTimezone(
+              dateString: (endDate)
+            ) {
+              startTime.updateWithOffset()
+              endTime.updateWithOffset()
+              labelTime?.text =
+                ActivitySchedules.formatter.string(from: startTime)
+                + " to "
+                + ActivitySchedules.formatter.string(from: endTime)
+            } else {
+              labelTime?.text = scheduledEmpty(activity: activity)
+            }
+            
+          } else {
+            runStartDate = activity.startDate
+            runEndDate = activity.endDate
+            if var startDate = runStartDate,
+               var endDate = runEndDate {
+              startDate.updateWithOffset()
+              endDate.updateWithOffset()
+              let currentRunStartDate = ActivitiesTableViewCell.customScheduleFormatter.string(
+                from: startDate
+              )
+              let currentRunEndDate = ActivitiesTableViewCell.customScheduleFormatter.string(
+                from: endDate
+              )
+              labelTime?.text = currentRunStartDate + " to " + currentRunEndDate
+            }
+          }
+        } else {
+          runStartDate = activity.startDate
+          runEndDate = activity.endDate
+          if var startDate = runStartDate,
+             var endDate = runEndDate {
+            startDate.updateWithOffset()
+            endDate.updateWithOffset()
+            let currentRunStartDate = ActivitiesTableViewCell.customScheduleFormatter.string(
+              from: startDate
+            )
+            let currentRunEndDate = ActivitiesTableViewCell.customScheduleFormatter.string(
+              from: endDate
+            )
+            labelTime?.text = currentRunStartDate + " to " + currentRunEndDate
+          }
+        }
+      } else if var startDate = runStartDate,
+                var endDate = runEndDate {
         startDate.updateWithOffset()
         endDate.updateWithOffset()
         let currentRunStartDate = ActivitiesTableViewCell.customScheduleFormatter.string(
@@ -323,6 +409,185 @@ class ActivitiesTableViewCell: UITableViewCell {
         labelTime?.text = currentRunStartDate + " to " + currentRunEndDate
       }
     }
+  }
+  
+  func scheduledEmpty(activity: Activity) -> String {
+    let frequencyType = activity.frequencyType
+    var valText = ""
+    
+    if frequencyType == Frequency.scheduled {
+      var valActivityRuns = activity.activityRuns ?? []
+      let val1 = self.getRunsForActivity(activity: activity)
+      
+      let valStartdate = val1.startDate ?? activity.startDate
+      var valEnddate = activity.endDate
+      if val1.startDate != nil {
+        valEnddate = val1.endDate ?? activity.endDate
+      }
+      
+      valActivityRuns = self.setScheduledRuns(activity: activity,
+                                              startTime: valStartdate, endTime: valEnddate, valActivityRuns: valActivityRuns)
+      if var startDate = valActivityRuns.last?.startDate,
+         var endDate = valActivityRuns.last?.endDate {
+        startDate.updateWithOffset()
+        endDate.updateWithOffset()
+        valText =
+          ActivitySchedules.formatter.string(from: startDate)
+          + " to "
+          + ActivitySchedules.formatter.string(from: endDate)
+      }
+    }
+    return valText
+  }
+  
+  /// Sets Schedule Runs
+  func setScheduledRuns(activity: Activity, startTime: Date?, endTime: Date?, valActivityRuns: [ActivityRun]) -> [ActivityRun] {
+    var scheduledTimings: [[String: Any]] = []
+    let endTime = endTime
+    var activityRuns: [ActivityRun]! = []
+    
+    let offset = UserDefaults.standard.value(forKey: "offset") as? Int
+    let activityEndTime = endTime?.addingTimeInterval(TimeInterval(offset!))
+    var runId = 1
+    
+    let schedulingType = activity.schedulingType
+    if schedulingType == .anchorDate {
+      scheduledTimings = activity.anchorRuns!
+    } else {
+      scheduledTimings = activity.frequencyRuns!
+    }
+    
+    for timing in scheduledTimings {
+      var runStartDate: Date?
+      var runEndDate: Date?
+      
+      if schedulingType == .anchorDate {
+        let startDays = timing["startDays"] as? Int ?? 0
+        let endDays = timing["endDays"] as? Int ?? 0
+        _ = timing["time"] as? String ?? "00:00:00"
+        
+        var anchorDateInitial: Date?
+        if activity.anchorDate?.anchorDateValue != nil {
+          anchorDateInitial = activity.anchorDate?.anchorDateValue
+        } else {
+          var enrollmentDate = Study.currentStudy?.userParticipateState.joiningDate
+          
+          // update start date
+          var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate!)
+          let startTimeEnrollment = "00:00:00"
+          startDateStringEnrollment =
+            (startDateStringEnrollment ?? "") + " "
+            + startTimeEnrollment
+          enrollmentDate = Utilities.findDateFromString(
+            dateString: startDateStringEnrollment ?? ""
+          )
+          anchorDateInitial = enrollmentDate
+        }
+        
+        guard let anchorDate = anchorDateInitial else { return valActivityRuns }
+        
+        let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
+        let endDateInterval = TimeInterval(60 * 60 * 24 * (endDays))
+        
+        runStartDate = anchorDate.addingTimeInterval(startDateInterval)
+        runEndDate = anchorDate.addingTimeInterval(endDateInterval)
+        
+        // update start date
+        var startDateString = Utilities.formatterShort?.string(from: runStartDate!)
+        let startTime = timing["startTime"] as? String ?? "00:00:00"
+        startDateString = (startDateString ?? "") + " " + startTime
+        let startdate = Utilities.findDateFromString(dateString: startDateString ?? "")
+        
+        // update end date
+        var endDateString = Utilities.formatterShort?.string(from: runEndDate!)
+        let endTime = timing["endTime"] as? String ?? "23:59:59"
+        endDateString = (endDateString ?? "") + " " + endTime
+        let endDate = Utilities.findDateFromString(dateString: endDateString ?? "")
+        
+        runStartDate = startdate
+        runEndDate = endDate
+      } else {
+        // run start time creation
+        let scheduledStartTime = timing[kScheduleStartTime]
+        runStartDate = Utilities.getDateFromStringWithOutTimezone(
+          dateString: scheduledStartTime! as! String
+        )
+        
+        // run end time creation
+        let scheduledEndTime = timing[kScheduleEndTime]
+        runEndDate = Utilities.getDateFromStringWithOutTimezone(
+          dateString: scheduledEndTime! as! String
+        )
+      }
+      let offset = UserDefaults.standard.value(forKey: "offset") as? Int
+      let updatedStartTime = runStartDate?.addingTimeInterval(TimeInterval(offset!))
+      
+      let updatedEndTime = runEndDate?.addingTimeInterval(TimeInterval(offset!))
+      
+      if activityEndTime! > updatedStartTime! {
+        if !(updatedEndTime! < updatedStartTime!) {
+          // append in activityRun array
+          let activityRun = ActivityRun()
+          activityRun.runId = runId
+          activityRun.startDate = updatedStartTime
+          activityRun.endDate = updatedEndTime
+          activityRuns.append(activityRun)
+          
+          runId += 1
+        }
+      } else if updatedEndTime! > updatedStartTime! {
+        let updatedEndTime = runEndDate?.addingTimeInterval(TimeInterval(offset!))
+        
+        if !(updatedEndTime! < updatedStartTime!) {
+          // append in activityRun array
+          let activityRun = ActivityRun()
+          activityRun.runId = runId
+          activityRun.startDate = updatedStartTime
+          activityRun.endDate = updatedEndTime
+          activityRuns.append(activityRun)
+          
+          runId += 1
+        }
+      }
+    }
+    return activityRuns
+  }
+  
+  func getRunsForActivity(activity: Activity) -> (startDate: Date?, endDate: Date?) {
+    var startTime: Date?
+    var endTime: Date?
+    guard activity.state == "active" else {
+      return (nil, nil)
+    }
+    // get joiningDate
+    let studyStatus = User.currentUser.participatedStudies.filter({ $0.studyId == activity.studyId }
+    ).last
+    guard let joiningDate = studyStatus?.joiningDate else {
+      return (nil, nil)
+    }
+    let start = activity.startDate?.utcDate()
+    
+    var endDateResult: ComparisonResult?
+    if activity.endDate != nil {
+      let end = activity.endDate?.utcDate()
+      endDateResult = (end?.compare(joiningDate))! as ComparisonResult
+    }
+    let startDateResult = (start?.compare(joiningDate)) ?? .orderedAscending
+    
+    // check if user joined after activity is ended
+    if endDateResult != nil && endDateResult == .orderedAscending {
+      
+    } else {
+      // check if user joined before activity is started
+      if startDateResult == .orderedDescending {
+        startTime = start
+      } else {
+        startTime = joiningDate
+      }
+      
+      endTime = activity.endDate?.utcDate()
+    }
+    return (startTime, endTime)
   }
 
   private func setActivityTimingsForOneTime(
