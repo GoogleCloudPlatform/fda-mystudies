@@ -12,28 +12,48 @@
               </a>
             </div>
             <div class="pl-1">
-              <div class="mb-xs">App user registry </div>
+              <div class="mb-xs">App user registry</div>
               <div>
                 <div class="pr-xlg flex__justify__space-between flex__text">
                   <div class="banner__label mr-xs">
                     {{ appDetails.customId }}
-                    <span class="banner__text">{{ appDetails.name }}
-                    -
-                    <span
-                      [ngClass]="
-                        appDetails.appStatus === 'Active'
-                          ? 'active_text'
-                          : 'deactivated_text'
-                      "
-                    >
-
-                      {{
-                        appDetails.appStatus  === 'Active'
-                        ? "ACTIVE"
-                        : "DEACTIVATED"
-                      }}
+                    <<<<<<< HEAD
+                    <span class="banner__text">
+                      {{ appDetails.name }}
+                      -
+                      <span
+                        [ngClass]="
+                          appDetails.appStatus === 'Active'
+                            ? 'active_text'
+                            : 'deactivated_text'
+                        "
+                      >
+                        {{
+                          appDetails.appStatus === "Active"
+                            ? "ACTIVE"
+                            : "DEACTIVATED"
+                        }}
+                      </span>
                     </span>
-                  </span>
+                    =======
+                    <span class="banner__text">
+                      {{ appDetails.name }}
+                      -
+                      <span
+                        [ngClass]="
+                          appDetails.appStatus === 'Active'
+                            ? 'active_text'
+                            : 'deactivated_text'
+                        "
+                      >
+                        {{
+                          appDetails.appStatus === "Active"
+                            ? "ACTIVE"
+                            : "DEACTIVATED"
+                        }}
+                      </span>
+                    </span>
+                    >>>>>>> d95b03f7db2f3770cf40d717e389beecbd558cd3
                   </div>
                 </div>
               </div>

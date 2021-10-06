@@ -214,6 +214,7 @@ public class AppServiceImpl implements AppService {
         double percentage = (Double.valueOf(enrolledCount) * 100) / Double.valueOf(invitedCount);
         appDetails.setEnrollmentPercentage(percentage);
       }
+      appDetails.setAppStatus(app.getAppStatus());
       appDetailsList.add(appDetails);
     }
     return new AppResponse(
@@ -243,6 +244,7 @@ public class AppServiceImpl implements AppService {
       appDetails.setStudiesCount(appStudyInfo.getStudyCount());
       appDetails.setName(appStudyInfo.getAppName());
       appDetails.setAppUsersCount(appIdbyUsersCount.get(appStudyInfo.getAppId()));
+      appDetails.setAppStatus(appStudyInfo.getAppStatus());
 
       if (appPermissionsByAppInfoId.get(appStudyInfo.getAppId()) != null) {
         Integer appEditPermission =
@@ -528,7 +530,8 @@ public class AppServiceImpl implements AppService {
             MessageCode.GET_APP_PARTICIPANTS_SUCCESS,
             app.getId(),
             app.getAppId(),
-            app.getAppName());
+            app.getAppName(),
+            app.getAppStatus());
     appParticipantsResponse.getParticipants().addAll(participants);
 
     auditRequest.setAppId(app.getAppId());

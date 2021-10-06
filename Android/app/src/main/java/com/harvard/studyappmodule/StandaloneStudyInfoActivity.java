@@ -16,14 +16,20 @@
 
 package com.harvard.studyappmodule;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -40,6 +46,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
 import com.harvard.R;
 import com.harvard.WebViewActivity;
 import com.harvard.eligibilitymodule.CustomViewTaskActivity;
@@ -56,13 +63,17 @@ import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.VerificationStepActivity;
 import com.harvard.usermodule.event.GetPreferenceEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
+import com.harvard.utils.version.Version;
+import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
@@ -85,6 +96,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   private static final int STUDY_INFO = 104;
   private static final int GET_CONSENT_DOC = 102;
   private static final int GET_PREFERENCES = 101;
+  private static final int RESULT_CODE_UPGRADE = 105;
 
   private RelativeLayout backBtn;
   private AppCompatTextView consentLayButton;
@@ -98,6 +110,11 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   private Realm realm;
   private RealmList<Studies> userPreferenceStudies;
   private EligibilityConsent eligibilityConsent;
+  private static AlertDialog alertDialog;
+  VersionReceiver versionReceiver;
+  private String latestVersion;
+  private boolean force = false;
+  AlertDialog.Builder alertDialogBuilder;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -187,7 +204,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                           R.anim.slide_in_left,
                           R.anim.slide_out_right)
                       .build();
-              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+              Apps apps = dbServiceSubscriber.getApps(realm);
+              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+                  .replace("$FromEmail", apps.getFromEmail())
+                  .replace("$SupportEmail", apps.getSupportEmail())
+                  .replace("$AppName", apps.getAppName())
+                  .replace("$ContactEmail", apps.getContactUsEmail())));
               startActivity(customTabsIntent.intent);
             } else {
               loginCallback();
@@ -651,6 +673,41 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           startActivity(intent);
         }
       }
+    } else if (requestCode == RESULT_CODE_UPGRADE) {
+      Version currVer = new Version(AppController.currentVersion());
+      Version latestVer = new Version(latestVersion);
+      if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
+        Logger.info(BuildConfig.APPLICATION_ID, "App Updated");
+      } else {
+        if (force) {
+          Toast.makeText(
+              StandaloneStudyInfoActivity.this,
+              "Please update the app to continue using",
+              Toast.LENGTH_SHORT)
+              .show();
+          moveTaskToBack(true);
+          if (Build.VERSION.SDK_INT < 21) {
+            finishAffinity();
+          } else {
+            finishAndRemoveTask();
+          }
+        } else {
+          AlertDialog.Builder alertDialogBuilder =
+              new AlertDialog.Builder(StandaloneStudyInfoActivity.this, R.style.MyAlertDialogStyle);
+          alertDialogBuilder.setTitle("Upgrade");
+          alertDialogBuilder
+              .setMessage("Please consider updating app next time")
+              .setCancelable(false)
+              .setPositiveButton(
+                  "ok",
+                  new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                      dialog.dismiss();
+                    }
+                  }).show();
+
+        }
+      }
     }
   }
 
@@ -767,4 +824,119 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(BuildConfig.APPLICATION_ID);
+    versionReceiver = new VersionReceiver();
+    registerReceiver(versionReceiver, filter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+
+    try {
+      unregisterReceiver(versionReceiver);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      if (alertDialog != null) {
+        alertDialog.dismiss();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public class VersionReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (intent.getStringExtra("api").equalsIgnoreCase("success")) {
+        Version currVer = new Version(AppController.currentVersion());
+        Version latestVer = new Version(intent.getStringExtra("latestVersion"));
+
+        latestVersion = intent.getStringExtra("latestVersion");
+        force = Boolean.parseBoolean(intent.getStringExtra("force"));
+
+        if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
+          isUpgrade(false, latestVersion, force);
+        } else {
+          AppController.getHelperSharedPreference().writePreference(StandaloneStudyInfoActivity.this, "versionalert", "done");
+          isUpgrade(true, latestVersion, force);
+        }
+      } else {
+        Toast.makeText(StandaloneStudyInfoActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT < 21) {
+          finishAffinity();
+        } else {
+          finishAndRemoveTask();
+        }
+      }
+    }
+  }
+
+  public void isUpgrade(boolean b, String latestVersion, final boolean force) {
+    this.latestVersion = latestVersion;
+    this.force = force;
+    String msg;
+    String positiveButton;
+    String negativeButton;
+    if (b) {
+      if (force) {
+        msg = "Please upgrade the app to continue.";
+        positiveButton = "Ok";
+        negativeButton = "Cancel";
+      } else {
+        msg = "A new version of this app is available. Do you want to update it now?";
+        positiveButton = "Yes";
+        negativeButton = "Skip";
+      }
+      alertDialogBuilder =
+          new AlertDialog.Builder(StandaloneStudyInfoActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder.setTitle("Upgrade");
+      alertDialogBuilder
+          .setMessage(msg)
+          .setCancelable(false)
+          .setPositiveButton(
+              positiveButton,
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  startActivityForResult(
+                      new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
+                      RESULT_CODE_UPGRADE);
+                }
+              })
+          .setNegativeButton(
+              negativeButton,
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  dialog.dismiss();
+                  if (force) {
+                    Toast.makeText(
+                        StandaloneStudyInfoActivity.this,
+                        "Please update the app to continue using",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                    moveTaskToBack(true);
+                    if (Build.VERSION.SDK_INT < 21) {
+                      finishAffinity();
+                    } else {
+                      finishAndRemoveTask();
+                    }
+                  } else {
+                    dialog.dismiss();
+                  }
+                }
+              });
+      alertDialog = alertDialogBuilder.create();
+      alertDialog.show();
+    }
+  }
+
 }

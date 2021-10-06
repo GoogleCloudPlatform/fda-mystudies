@@ -44,4 +44,14 @@ public class UserRequest {
   @NotNull private Integer status;
 
   private String appName;
+
+  @ToString.Exclude
+  @Size(max = EMAIL_LENGTH)
+  @Email
+  private String supportEmail;
+
+  @ToString.Exclude
+  @Size(max = EMAIL_LENGTH)
+  @Email
+  private String fromEmail;
 }

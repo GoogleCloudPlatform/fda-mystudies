@@ -24,4 +24,5 @@ public class FeedbackReqBean {
   @NotBlank private String subject;
   @NotBlank private String body;
   private String appName;
+  private String appId;
 }

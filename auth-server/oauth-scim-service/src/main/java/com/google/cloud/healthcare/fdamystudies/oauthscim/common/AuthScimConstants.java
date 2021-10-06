@@ -123,6 +123,10 @@ public final class AuthScimConstants {
 
   public static final String APP_NAME_COOKIE = "mystudies_appName";
 
+  public static final String FROM_EMAIL_COOKIE = "mystudies_fromEmail";
+
+  public static final String SUPPORT_EMAIL_COOKIE = "mystudies_supportEmail";
+
   public static final String DEEPLINK_URL_COOKIE = "mystudies_deeplinkUrl";
 
   public static final String LOGIN_CHALLENGE_COOKIE = "mystudies_login_challenge";

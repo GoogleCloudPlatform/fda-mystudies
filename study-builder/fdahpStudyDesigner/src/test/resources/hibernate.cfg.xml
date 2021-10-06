@@ -9,7 +9,7 @@
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">password</property>
     <property name="hibernate.connection.url">
-      jdbc:h2:mem:testdb;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      jdbc:h2:mem:testdb;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DEFAULT_LOCK_TIMEOUT=10000;LOCK_MODE=0
     </property>
 
     <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
@@ -17,8 +17,8 @@
     <!-- SQL -->
     <property name="hibernate.format_sql">false</property>
     <property name="hibernate.show_sql">false</property>
-    <property name="hbm2ddl.auto">create-drop</property>
-    <property name="hibernate.hbm2ddl.import_files">import.sql</property>
+    <property name="hbm2ddl.auto">create-drop</property> 
+   <property name="hibernate.hbm2ddl.import_files">import.sql</property> 
     <!-- C3P0 -->
     <property name="hibernate.c3p0.acquire_increment">2</property>
     <property name="hibernate.c3p0.max_size">20</property>
@@ -95,6 +95,9 @@
     <mapping
       class="com.fdahpstudydesigner.bo.UserPasswordHistory" />
     <mapping class="com.fdahpstudydesigner.bo.UserPermissions" />
-
+    <mapping class="com.fdahpstudydesigner.bo.AppsBo" />
+    <mapping class="com.fdahpstudydesigner.bo.AppSequenceBo" />
+    <mapping class="com.fdahpstudydesigner.bo.AppPermissionBO" />
+    <mapping class="com.fdahpstudydesigner.bo.VersionInfoBO" />
   </session-factory>
 </hibernate-configuration>

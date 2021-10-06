@@ -33,6 +33,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFIC
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NEW_NOTIFICATION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NOTIFICATION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.OLD_NOTIFICATION_ID;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.IMP_VALUE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.NOTIFICATION_ST;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.WORKING_VERSION;
 
@@ -41,6 +42,7 @@ import com.fdahpstudydesigner.bean.PushNotificationBean;
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
 import com.fdahpstudydesigner.bo.StudyBo;
+import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
@@ -461,11 +463,7 @@ public class NotificationDAOImpl implements NotificationDAO {
     String queryString = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      queryString =
-          "select s.app_id from studies s where"
-              + " s.type='GT'"
-              + " and s.version=1"
-              + " and s.app_id IS NOT NULL;";
+      queryString = "SELECT a.custom_app_id FROM apps a WHERE a.type='GT';";
       query = session.createSQLQuery(queryString);
       gatewayAppList = query.list();
     } catch (Exception e) {
@@ -558,5 +556,97 @@ public class NotificationDAOImpl implements NotificationDAO {
     }
     logger.exit("getNotificationList() - Ends");
     return notificationBOs;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<NotificationBO> getViewNotificationList(String userId) {
+    logger.entry("begin getNotificationList()");
+    List<NotificationBO> notificationList = null;
+    Session session = null;
+    String queryString = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      if (StringUtils.isNotEmpty(userId)) {
+
+        query = session.getNamedQuery("getUserById").setString("userId", userId);
+        UserBO userBO = (UserBO) query.uniqueResult();
+
+        if (userBO.getRoleId().equals("1")) {
+
+          query =
+              session.createQuery(
+                  "from NotificationBO NBO where NBO.studyId IS NULL"
+                      + " and NBO.notificationType = 'GT' and NBO.notificationStatus = 0 order by NBO.createdOn desc");
+        } else {
+          query =
+              session
+                  .createQuery(
+                      "Select DISTINCT NBO"
+                          + " from NotificationBO NBO, AppsBo a,AppPermissionBO ap, UserBO user"
+                          + " where NBO.studyId IS NULL and NBO.notificationType = 'GT'"
+                          + " and NBO.notificationStatus = 0 and a.id=ap.appId"
+                          + " and ap.userId=:userId and a.customAppId = NBO.appId"
+                          + " order by NBO.createdOn desc")
+                  .setString("userId", userId);
+        }
+        notificationList = query.list();
+      }
+
+    } catch (Exception e) {
+      logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    logger.exit("getNotificationList() - Ends");
+    return notificationList;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<String> getGatwayAppListForNotification(String userId) {
+    logger.entry("begin getGatwayAppListForNotification()");
+    Session session = null;
+    List<String> appIds = null;
+    try {
+
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      if (StringUtils.isNotEmpty(userId)) {
+
+        query = session.getNamedQuery("getUserById").setString("userId", userId);
+        UserBO userBO = (UserBO) query.uniqueResult();
+
+        if (userBO.getRoleId().equals("1")) {
+          appIds =
+              session
+                  .createQuery(
+                      "Select a.customAppId FROM AppsBo a WHERE a.appStatus = 'Active' and a.type='GT' "
+                          + "order by a.createdOn desc ")
+                  .list();
+
+        } else {
+          query =
+              session.createQuery(
+                  " SELECT a.customAppId from AppsBo a,AppPermissionBO ap, UserBO user"
+                      + " where a.id=ap.appId and a.type='GT'"
+                      + " and ap.viewPermission = '1'"
+                      + " and ap.userId=:impValue"
+                      + " and a.appStatus = 'Active'"
+                      + " order by a.createdOn desc ");
+          appIds = query.setString(IMP_VALUE, userId).list();
+        }
+      }
+    } catch (Exception e) {
+      logger.error("NotificationDAOImpl - getGatwayAppListForNotification() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.exit("getGatwayAppListForNotification() - Ends");
+    return appIds;
   }
 }

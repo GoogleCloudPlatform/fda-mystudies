@@ -87,24 +87,14 @@ public class StudiesDaoImpl implements StudiesDao {
       appInfo = session.createQuery(appCriteria).uniqueResult();
 
       List<AppPermissionEntity> appPermissionList = new ArrayList<>();
-      if (appInfo == null) {
-        appInfo = new AppEntity();
-        appInfo.setAppId(studyMetadataBean.getAppId());
-        appInfo.setAppName(studyMetadataBean.getAppName());
-        appInfo.setAppDescription(studyMetadataBean.getAppDescription());
-        appInfo.setCreatedBy(String.valueOf(0));
-        appInfo.setCreated(Timestamp.from(Instant.now()));
-        session.save(appInfo);
-      } else {
-        CriteriaQuery<AppPermissionEntity> appPermissionCriteria =
-            builder.createQuery(AppPermissionEntity.class);
-        Root<AppPermissionEntity> appPermissionRoot =
-            appPermissionCriteria.from(AppPermissionEntity.class);
-        Predicate[] appPermissionPredicate = new Predicate[1];
-        appPermissionPredicate[0] = builder.equal(appPermissionRoot.get("app"), appInfo);
-        appPermissionCriteria.select(appPermissionRoot).where(appPermissionPredicate);
-        appPermissionList = session.createQuery(appPermissionCriteria).getResultList();
-      }
+      CriteriaQuery<AppPermissionEntity> appPermissionCriteria =
+          builder.createQuery(AppPermissionEntity.class);
+      Root<AppPermissionEntity> appPermissionRoot =
+          appPermissionCriteria.from(AppPermissionEntity.class);
+      Predicate[] appPermissionPredicate = new Predicate[1];
+      appPermissionPredicate[0] = builder.equal(appPermissionRoot.get("app"), appInfo);
+      appPermissionCriteria.select(appPermissionRoot).where(appPermissionPredicate);
+      appPermissionList = session.createQuery(appPermissionCriteria).getResultList();
 
       studyInfo = new StudyEntity();
       studyInfo.setCustomId(studyMetadataBean.getStudyId());

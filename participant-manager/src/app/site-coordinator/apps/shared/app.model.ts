@@ -7,12 +7,13 @@ export interface App {
   enrollmentPercentage: number;
   id: string;
   invitedCount: number;
+  appStatus: Status;
   name?: string;
   studiesCount: number;
-  appStatus: Status;
 }
 export interface ManageApps {
   apps: App[];
   studyPermissionCount: number;
   superAdmin: boolean;
+  status: number;
 }

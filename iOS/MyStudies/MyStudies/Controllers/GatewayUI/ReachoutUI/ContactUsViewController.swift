@@ -97,7 +97,7 @@ class ContactUsViewController: UIViewController {
   /// Validations after clicking on submit button
   /// If all the validations satisfy send contact-us request
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
-
+    self.view.endEditing(true)
     if ContactUsFields.firstName.isEmpty && ContactUsFields.email.isEmpty
       && ContactUsFields
         .subject

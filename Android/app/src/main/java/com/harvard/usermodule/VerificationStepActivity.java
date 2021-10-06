@@ -30,8 +30,10 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.event.ResendEmailEvent;
 import com.harvard.usermodule.event.VerifyUserEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
@@ -39,6 +41,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 
 public class VerificationStepActivity extends AppCompatActivity
@@ -277,12 +280,20 @@ public class VerificationStepActivity extends AppCompatActivity
                             VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
                     .build();
     StringBuilder loginUrl = new StringBuilder();
-    loginUrl.append(Urls.LOGIN_URL);
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(VerificationStepActivity.this);
+    Apps apps = dbServiceSubscriber.getApps(realm);
+    loginUrl.append(Urls.LOGIN_URL).toString()
+        .replace("$FromEmail", apps.getFromEmail())
+        .replace("$AppName", apps.getAppName())
+        .replace("$SupportEmail", apps.getSupportEmail())
+        .replace("$ContactEmail", apps.getContactUsEmail());
     if (getIntent().getStringExtra("type") != null
-            && !getIntent().getStringExtra("type").equalsIgnoreCase("ForgotPasswordActivity")
-            && loginData.getTempRegId() != null) {
+        && !getIntent().getStringExtra("type").equalsIgnoreCase("ForgotPasswordActivity")
+        && loginData.getTempRegId() != null) {
       loginUrl.append("&tempRegId=").append(loginData.getTempRegId());
     }
+    dbServiceSubscriber.closeRealmObj(realm);
     customTabsIntent.intent.setData(Uri.parse(loginUrl.toString()));
     startActivity(customTabsIntent.intent);
   }

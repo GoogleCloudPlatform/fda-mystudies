@@ -40,6 +40,6 @@ export interface AppDetails {
   studyPermissionCount: number;
   status: number;
   message: string;
-  code: string;
   appStatus: Status;
+  code: string;
 }

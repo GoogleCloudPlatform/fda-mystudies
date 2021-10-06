@@ -61,6 +61,37 @@ class PageViewController: UIPageViewController {
     let scrollView = (self.view.subviews.filter { $0 is UIScrollView }.first as? UIScrollView)!
     scrollView.delegate = self
   }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(false)
+    
+    let ud = UserDefaults.standard
+    let valFromBackground = ud.value(forKey: kFromBackground) as? Int ?? 0
+    if valFromBackground > Upgrade.pendingUpdate.rawValue {
+      ud.set(Upgrade.onceDisplayed.rawValue, forKey: kFromBackground)
+      ud.synchronize()
+      checkBlockerScreen()
+    } else {
+      let valIsShowUpdateAppVersion = ud.value(forKey: kIsShowUpdateAppVersion) as? Bool ?? false
+      
+      if !valIsShowUpdateAppVersion {
+        ud.set(Upgrade.requiresUpgrade.rawValue, forKey: kFromBackground)
+        ud.synchronize()
+      } else {
+        ud.set(Upgrade.optionalShown.rawValue, forKey: kFromBackground)
+        ud.synchronize()
+      }
+    }
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    let ud = UserDefaults.standard
+    let valFromBackground = ud.value(forKey: kFromBackground) as? Int ?? 0
+    if valFromBackground != Upgrade.optionalShown.rawValue {
+      ud.set(Upgrade.pendingUpdate.rawValue, forKey: kFromBackground)
+      ud.synchronize()
+    }
+  }
 
   // MARK: - Scroll Delegates
 
