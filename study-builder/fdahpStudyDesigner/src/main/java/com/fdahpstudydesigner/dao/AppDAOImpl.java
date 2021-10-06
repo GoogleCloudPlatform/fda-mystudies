@@ -488,7 +488,6 @@ public class AppDAOImpl implements AppDAO {
           auditRequest.setAppId(app.getCustomAppId());
           if (buttonText.equalsIgnoreCase("createAppId")) {
             app.setAppStatus("Active");
-            app.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
             app.setCreatedBy(sesObj.getUserId());
             AppSequenceBo appSequenceBo =
                 (AppSequenceBo)
