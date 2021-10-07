@@ -14,7 +14,6 @@ margin-top:16px !important;
 .bootstrap-select.btn-group .dropdown-menu {
     padding: 7px 15px;
     background:  #fff !important;
-    margin-left: 10px;
     color: #fff;
     border-radius: 5px;
 }
@@ -22,6 +21,12 @@ margin-top:16px !important;
 .bootstrap-select.btn-group .dropdown-menu li a.opt {
     position: relative;
     padding-left: 22px;
+}
+li.divider {
+    margin: 1px !important;
+}
+li.dropdown-header {
+    padding-bottom: 0px !important;
 }
 </style>
 <!-- ============================================================== -->

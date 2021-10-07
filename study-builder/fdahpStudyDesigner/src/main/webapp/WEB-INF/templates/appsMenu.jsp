@@ -30,19 +30,19 @@
          <div class="mb-lg ">
           <span class="study_status ${empty appBo.customAppId?'hide':''}">${appBo.customAppId}</span>
            <div class="clearfix"></div>
-          <div>
+          <div style="display: inline-flex;">
           <span class="study_status right-border no-border ${empty appBo.customAppId?'hide':''}
                     <c:if test="${appBo.appStatus eq 'Active'}"> post-launch_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Deactivated'}"> paused_txt </c:if>
 	                <c:if test="${appBo.appStatus eq 'Draft'}"> paused_txt </c:if>
 	                pr-sm"> ${appBo.appStatus} </span>
 	      <c:if test="${appBo.appStatus eq 'Active'}">
-          <span class="study_status right-border pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not published </c:if></span>
+          <span class="study_status right-border pr-sm pl-sm ${appBo.isAppPublished?'post-launch_txt':'pre-launch_txt'}"> <c:if test="${appBo.isAppPublished}">Published </c:if><c:if test="${not appBo.isAppPublished}">Not<span class="visibility_hidden">_</span>published </c:if></span>
           <span class="study_status pl-sm ${(appBo.iosAppDistributed || appBo.androidAppDistributed)?'post-launch_txt':'pre-launch_txt'}"> 
           <c:choose>
               <c:when test="${appBo.iosAppDistributed && appBo.androidAppDistributed}">Distributed (2)</c:when>
               <c:when test="${appBo.iosAppDistributed || appBo.androidAppDistributed}">Distributed (1)</c:when>
-          <c:when test="${not appBo.iosAppDistributed && not appBo.androidAppDistributed}">Not distributed</c:when>
+          <c:when test="${not appBo.iosAppDistributed && not appBo.androidAppDistributed}">Not<span class="visibility_hidden">_</span>distributed</c:when>
           </c:choose></span>
           </c:if>
           </div>

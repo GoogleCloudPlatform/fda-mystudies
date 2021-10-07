@@ -383,13 +383,13 @@ input[type=file]:focus, input[type=checkbox]:focus, input[type=radio]:focus, .ch
 }
 
 .study-selected-item {
-  padding: 10px 0px;
-  border-bottom: 1px solid #cfd4d7;
+  padding: 10px 0px !important;
+  border-bottom: 1px solid #cfd4d7 !important;
 }
 
 .app-selected-item {
-  padding: 10px 0px;
-  border-bottom: 1px solid #cfd4d7;
+  padding: 10px 0px !important;
+  border-bottom: 1px solid #cfd4d7 !important;
 }
 
 .blue-link {
