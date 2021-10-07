@@ -14,7 +14,7 @@
 .right-border { 
 	border-right: 1px solid #95a2ab;
     height: 15px;
-    margin-top: 2px;
+/*     margin-top: 2px; */
 }
 </style>
 
