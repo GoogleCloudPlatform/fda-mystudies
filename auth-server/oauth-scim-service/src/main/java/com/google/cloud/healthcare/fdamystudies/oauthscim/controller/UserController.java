@@ -89,7 +89,7 @@ public class UserController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resetPassword(
       @RequestHeader String appName,
-      @RequestHeader String fromEmail,
+      @RequestHeader(value = "fromEmail", required = false) String fromEmail,
       @RequestHeader(value = "supportEmail", required = false) String supportEmail,
       @Valid @RequestBody ResetPasswordRequest resetPasswordRequest,
       HttpServletRequest request)
