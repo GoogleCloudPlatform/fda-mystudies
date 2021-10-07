@@ -24,6 +24,15 @@
     cursor: pointer;
 }
 
+.study-selected-item {
+  padding: 10px 0px;
+  border-bottom: 10px solid #cfd4d7;
+}
+
+.app-selected-item {
+  padding: 10px 0px !important;
+  border-bottom: 10px solid #cfd4d7 !important;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -843,7 +852,7 @@
       $('#multipleApps :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
-        var existingAppDiv = "<div class='selApp app-selected-item' id='app" + selVal + "'>"
+        var existingAppDiv = "<div class='app-selected-item selApp' id='app" + selVal + "'>"
             + "<input type='hidden' class='appCls' id='" + selVal + "' name='' value='" + selVal +"'"
             + "appTxt='"+selTxt+"'>"
             + "<span class='mr-md cls cur-pointer'><img src='/studybuilder/images/icons/close.png' onclick='delApp(\""
