@@ -7,6 +7,7 @@ export interface Site {
   customLocationId: string;
   locationName: string;
   selected: boolean;
+  
   permission: Permission | null;
   locationDescription: string;
 }
