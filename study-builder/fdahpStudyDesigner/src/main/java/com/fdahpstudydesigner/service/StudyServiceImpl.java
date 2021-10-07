@@ -1524,6 +1524,7 @@ public class StudyServiceImpl implements StudyService {
         studyDetails.setStudyStatus(studyBo.getStatus());
 
         studyDetails.setStudyEnrolling(studyBo.getEnrollingParticipants());
+        studyDetails.setAppId(studyBo.getAppId());
         AppsBo appBO = appDAO.getAppByLatestVersion(studyBo.getAppId());
 
         if (appBO != null) {
