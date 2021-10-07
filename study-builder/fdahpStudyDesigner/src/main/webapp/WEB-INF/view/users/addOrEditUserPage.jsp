@@ -26,12 +26,12 @@
 
 .study-selected-item {
   padding: 10px 0px;
-  border-bottom: 10px solid #cfd4d7;
+  border-bottom: 1px solid #cfd4d7;
 }
 
 .app-selected-item {
   padding: 10px 0px !important;
-  border-bottom: 10px solid #cfd4d7 !important;
+  border-bottom: 1px solid #cfd4d7 !important;
 }
 </style>
 
