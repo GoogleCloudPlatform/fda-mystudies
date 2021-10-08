@@ -92,7 +92,9 @@ class StudyDashboardViewController: UIViewController {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }
-
+    if #available(iOS 15, *) {
+      tableView?.sectionHeaderTopPadding = 0
+    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -125,6 +127,9 @@ class StudyDashboardViewController: UIViewController {
     DBHandler.loadStatisticsForStudy(studyId: study.studyId) { (statiticsList) in
       if !statiticsList.isEmpty {
         StudyDashboard.instance.statistics = statiticsList
+        self.tableView?.reloadData()
+      } else {
+        StudyDashboard.instance.statistics = []
         self.tableView?.reloadData()
       }
     }
