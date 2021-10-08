@@ -465,7 +465,7 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
-                  + "u.password,u.email_changed,u.access_level,u.created_by FROM users u,roles r WHERE r.role_id = u.role_id  "
+                  + "u.password,u.email_changed,u.access_level,u.created_by, u.gci_user FROM users u,roles r WHERE r.role_id = u.role_id  "
                   + " ORDER BY u.user_id DESC ");
       objList = query.list();
       if ((null != objList) && !objList.isEmpty()) {
@@ -483,6 +483,8 @@ public class UsersDAOImpl implements UsersDAO {
           userBO.setAccessLevel(null != obj[8] ? String.valueOf(obj[8]) : "");
           userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
           userBO.setCreatedBy(null != obj[9] ? String.valueOf(obj[9]) : "");
+          boolean isGciUser = ((null != obj[10] ? (char) obj[10] : 'N') == 'Y') ? true : false;
+          userBO.setGciUser(isGciUser);
           userList.add(userBO);
         }
       }

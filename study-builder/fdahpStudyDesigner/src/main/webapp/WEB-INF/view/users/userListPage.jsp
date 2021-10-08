@@ -4,6 +4,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import = "java.util.ResourceBundle" %>
+<% ResourceBundle resource = ResourceBundle.getBundle("application");
+			String gciEnabled=resource.getString("gciEnabled");
+%>
 
 <style>
     #user_list tr td {
@@ -55,7 +59,7 @@
           </c:if>
         </div>
       </div>
-      
+     <c:if test="${testvar eq true}">
        <div class="dis-line pull-right"
            style="margin-top: 10px; height: auto;">
         <div class="mb-none mt-xs">
@@ -67,6 +71,7 @@
           </select>
         </div>
       </div>
+      </c:if>
       
       
       <div class="dis-line pull-right mr-md"
@@ -130,20 +135,20 @@
                                              data-toggle="tooltip" id="label${user.userId}"
                                              data-placement="top"
                                              <c:if
-                                                 test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"
+                                                 test="${user.gciUser eq false && empty user.userPassword}">title="Account status: Invitation sent, pending activation"
                                                  </c:if>
                                              <c:if
                                                  test="${user.emailChanged}">title="Account status: Pending verification"</c:if>
                                              <c:if
-                                                 test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Account status: Active"</c:if>
+                                                 test="${!user.emailChanged && (user.gciUser eq true || not empty user.userPassword) && user.enabled}">title="Account status: Active"</c:if>
                                              <c:if
-                                                 test="${!user.emailChanged && not empty user.userPassword &&  not user.enabled}">title="Account status: Deactivated"</c:if>>
+                                                 test="${!user.emailChanged && (user.gciUser eq true || not empty user.userPassword) &&  not user.enabled}">title="Account status: Deactivated"</c:if>>
                     <input type="checkbox" class="switch-input"
                            value="${user.enabled ? 1 : 0}" id="${user.userId}"
                            <c:if test="${user.enabled}">checked</c:if>
                            onchange="activateOrDeactivateUser('${user.userId}')"
                            <c:if
-                               test="${empty user.userPassword || user.emailChanged}">disabled</c:if>>
+                               test="${user.gciUser eq false && (empty user.userPassword || user.emailChanged)}">disabled</c:if>>
                     <span class="switch-label" data-on="On" data-off="Off"></span>
                     <span class="switch-handle"></span>
                   </label>
@@ -176,7 +181,7 @@
     $('#rowId').parent().removeClass('#white-bg');
 
     $('#users').addClass('active');
-
+	
     $('[data-toggle="tooltip"]').tooltip();
     $('#filterEmail').on('change', function () {
         var email = $(this).find("option:selected").val();
