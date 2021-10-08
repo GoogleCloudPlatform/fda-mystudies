@@ -222,7 +222,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
       
       appearance.configureWithOpaqueBackground()
       appearance.backgroundColor = .white
-      navigationBar.standardAppearance = appearance;
+      navigationBar.standardAppearance = appearance
       UINavigationBar.appearance().standardAppearance.backgroundColor = .white
       UINavigationBar.appearance().standardAppearance.shadowColor = .white
       UINavigationBar.appearance().scrollEdgeAppearance = appearance
