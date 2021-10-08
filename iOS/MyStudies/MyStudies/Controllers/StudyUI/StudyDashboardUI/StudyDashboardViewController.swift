@@ -92,9 +92,6 @@ class StudyDashboardViewController: UIViewController {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }
-    if #available(iOS 15, *) {
-      tableView?.sectionHeaderTopPadding = 0
-    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
