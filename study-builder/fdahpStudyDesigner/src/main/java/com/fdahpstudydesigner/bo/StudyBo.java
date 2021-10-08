@@ -58,6 +58,12 @@ import org.springframework.web.multipart.MultipartFile;
       name = "getStudyDraftVersion",
       query = " From StudyBo SBO WHERE SBO.live IN (0,2) AND customStudyId=:customStudyId"),
   @NamedQuery(name = "getStudy", query = " From StudyBo SBO WHERE SBO.id=:id"),
+  @NamedQuery(
+      name = "StudyBo.getStudyBycustomAppId",
+      query = " From StudyBo SBO WHERE appId=:customAppId and status<>:status and version=0"),
+  @NamedQuery(
+      name = "StudyBo.getStudyCountBycustomAppId",
+      query = " From StudyBo SBO WHERE appId=:customAppId and version=0")
 })
 public class StudyBo implements Serializable {
 

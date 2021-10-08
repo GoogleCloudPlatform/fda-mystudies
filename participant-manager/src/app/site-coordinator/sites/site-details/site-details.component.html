@@ -75,7 +75,24 @@
                 </div>
                 <div>
                   <div class="banner__label">
-                    {{ siteParticipants.participantRegistryDetail.customAppId }}
+                    {{
+                      siteParticipants.participantRegistryDetail.customAppId
+                    }}-
+                    <span
+                      [ngClass]="
+                        siteParticipants.participantRegistryDetail.appStatus ===
+                        'Active'
+                          ? 'active_text'
+                          : 'deactivated_text'
+                      "
+                    >
+                      {{
+                        siteParticipants.participantRegistryDetail.appStatus ===
+                        "Active"
+                          ? "ACTIVE"
+                          : "DEACTIVATED"
+                      }}
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ siteParticipants.participantRegistryDetail.appName }}

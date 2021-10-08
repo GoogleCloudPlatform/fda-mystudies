@@ -24,6 +24,7 @@
 
 package com.fdahpstudydesigner.util;
 
+import com.fdahpstudydesigner.bean.AppSessionBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import java.io.Serializable;
 import java.util.List;
@@ -60,6 +61,8 @@ public class SessionObject implements Serializable {
   private String gcpBucketName;
   private String storagePath;
   private String exportStudiesBucketName;
+  private List<Integer> appSession;
+  private List<AppSessionBean> appSessionBeans;
 
   public String getCorrelationId() {
     return correlationId;
@@ -285,5 +288,21 @@ public class SessionObject implements Serializable {
 
   public void setExportStudiesBucketName(String exportStudiesBucketName) {
     this.exportStudiesBucketName = exportStudiesBucketName;
+  }
+
+  public List<Integer> getAppSession() {
+    return appSession;
+  }
+
+  public List<AppSessionBean> getAppSessionBeans() {
+    return appSessionBeans;
+  }
+
+  public void setAppSessionBeans(List<AppSessionBean> appSessionBeans) {
+    this.appSessionBeans = appSessionBeans;
+  }
+
+  public void setAppSession(List<Integer> appSession) {
+    this.appSession = appSession;
   }
 }

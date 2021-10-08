@@ -456,27 +456,6 @@ The deployment process takes the following approach:
 1. You will be asked to change your password; afterwards you can create any additional administrative accounts that you might need
 1. Confirm your new study is visible in the `Participant manager` interface
 
-### Prepare your mobile applications
-
-1. Follow the instructions in either or both [`Android`](/Android/) and [`iOS`](/iOS/) deployment guides (if you haven’t created a study yet, you can configure the mobile applications with the `APP_ID` you plan on using when you create your first study in the [`Study builder`](/study-builder/))
-1. Open Secret Manager in your `{PREFIX}-{ENV}-secrets` project and update the secrets you previously configured with placeholder values (you can skip this step if you already configured your secrets with the appropriate values - if you do update secret values, make sure to refresh your Kubernetes cluster and applications as described above)
-    - `manual-mobile-app-appid` is the value of the `App ID` (15 characters max) that you configured, or will configure, on the Settings page of the [`Study builder`](/study-builder/)
-    - `manual-android-bundle-id` is the value of [`applicationId`](https://developer.android.com/studio/build/application-id) that you configured in [`Android/app/build.gradle`](/Android/app/build.gradle), for example `{PREFIX}_{ENV}.{DOMAIN}` (note that some characters are not permitted)
-    - `manual-fcm-api-url` is the URL of your [Firebase Cloud Messaging API](https://firebase.google.com/docs/reference/fcm/rest)
-    - `manual-android-server-key` is your Firebase Cloud Messaging [server key](https://firebase.google.com/docs/cloud-messaging/auth-server#authorize-legacy-protocol-send-requests)
-    - `manual-android-deeplink-url` is the URL to redirect to after Android login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`)
-    - `manual-ios-bundle-id` is the value you obtained from Xcode (in production use-cases, this  bundle ID needs to be [verified with Apple](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids))
-    - `manual-ios-certificate` is the value of the Base64 converted `.p12` file
-    - `manual-ios-certificate-password` is the value of the password for the `.p12` certificate 
-    - `manual-ios-deeplink-url` is the URL to redirect to after iOS login
-1. Initialize your `Participant datastore` database to work with your mobile applications
-    - Once a study with the `App ID` corresponding to the `manual-mobile-app-appid` secret is created and published using the [`Study builder`](/study-builder) user interface, a corresponding 
-app record will appear in the [`Participant manager`](/participant-manager/) user interface (if you created a study before all of your platform components were operational, you can reinitialize this process by using the `Study builder` user interface to pause and resume the study) 
-    - Once the `App ID` appears in `Participant manager`, run the [`deployment/scripts/copy_app_info_to_sql.sh`](/deployment/scripts/copy_app_info_to_sql.sh) script to update the remaining databases, for example:
-         ```bash
-         $GIT_ROOT/deployment/scripts/copy_app_info_to_sql.sh $PREFIX $ENV
-         ```
-
 ### Clean up
 
 1. Remove your user account from the groups you no longer need access to

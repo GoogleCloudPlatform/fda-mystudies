@@ -1,6 +1,5 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -134,7 +133,9 @@ public class UsersServiceImpl implements UsersService {
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,
-      AuditLogEventRequest auditRequest) {
+      String selectedApps,
+      AuditLogEventRequest auditRequest,
+      String permissionValuesForApp) {
     logger.entry("begin addOrUpdateUserDetails()");
     UserBO userBO2 = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
@@ -184,7 +185,13 @@ public class UsersServiceImpl implements UsersService {
         }
       }
       UserIdAccessLevelInfo userIdAccessLevelInfo =
-          usersDAO.addOrUpdateUserDetails(userBO2, permissions, selectedStudies, permissionValues);
+          usersDAO.addOrUpdateUserDetails(
+              userBO2,
+              permissions,
+              selectedStudies,
+              permissionValues,
+              selectedApps,
+              permissionValuesForApp);
       if (userIdAccessLevelInfo != null) {
         if (addFlag) {
           values.put(

@@ -57,4 +57,8 @@ public interface NotificationDAO {
 
   public List<NotificationBO> getNotificationsList(
       String studyId, String customStudyId, String copyVersion);
+
+  public List<NotificationBO> getViewNotificationList(String userId);
+
+  public List<String> getGatwayAppListForNotification(String userId);
 }

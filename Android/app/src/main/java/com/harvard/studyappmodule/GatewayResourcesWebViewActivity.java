@@ -31,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
@@ -108,6 +109,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
 
   private void defaultPdfShow() {
     if (intentType.equalsIgnoreCase("pdf")) {
+      shareBtn.setVisibility(View.VISIBLE);
       webView.setVisibility(View.GONE);
       title.setText(intentTitle);
       // checking the permissions
@@ -132,6 +134,22 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         finalSharingFile = getAssetsPdfPath();
         displayPdfView(finalSharingFile.getAbsolutePath());
       }
+    } else if (intentType.equalsIgnoreCase("url")) {
+      AppController.getHelperProgressDialog().showProgress(GatewayResourcesWebViewActivity.this, "", "", false);
+      shareBtn.setVisibility(View.GONE);
+      pdfView.setVisibility(View.GONE);
+      webView.setVisibility(View.VISIBLE);
+      title.setText(intentTitle);
+      webView.getSettings().setLoadsImagesAutomatically(true);
+      webView.getSettings().setJavaScriptEnabled(true);
+      webView.setWebViewClient(new WebViewClient() {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+          AppController.getHelperProgressDialog().dismissDialog();
+        }
+      });
+      webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+      webView.loadUrl(getIntent().getStringExtra("content"));
     }
   }
 
@@ -214,7 +232,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   protected void onDestroy() {
     super.onDestroy();
     try {
-      if (finalSharingFile.exists()) {
+      if (finalSharingFile != null && finalSharingFile.exists()) {
         finalSharingFile.delete();
       }
 

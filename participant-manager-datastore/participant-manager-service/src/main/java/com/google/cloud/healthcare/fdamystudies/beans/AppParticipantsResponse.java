@@ -34,11 +34,14 @@ public class AppParticipantsResponse extends BaseResponse {
 
   private Long totalParticipantCount;
 
+  private String appStatus;
+
   public AppParticipantsResponse(
-      MessageCode messageCode, String appId, String customId, String name) {
+      MessageCode messageCode, String appId, String customId, String name, String appStatus) {
     super(messageCode);
     this.appId = appId;
     this.customId = customId;
     this.name = name;
+    this.appStatus = appStatus;
   }
 }

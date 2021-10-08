@@ -33,6 +33,7 @@ export const expectedAppDetails = {
   appId: '1',
   customId: 'MyStudies-Id-1',
   name: 'MyStudies-1',
+  appStatus: 'Active',
   totalParticipantCount: 2,
   participants: [
     {
@@ -130,6 +131,7 @@ export const filteredEmail = {
   appId: '1',
   customId: 'MyStudies-Id-1',
   name: 'MyStudies-1',
+  appStatus: 'Active',
   totalParticipantCount: 1,
   participants: [
     {

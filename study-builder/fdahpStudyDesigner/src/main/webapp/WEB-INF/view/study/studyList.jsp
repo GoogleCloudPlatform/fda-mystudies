@@ -6,10 +6,10 @@
 
 <style>
 #studies_list tr th {
-    padding-left: 20px !important;
+    padding-left: 10px !important;
 }
 #studies_list tr td {
-    padding-left: 20px !important;
+    padding-left: 10px !important;
 }
 .mr-lg {
     margin-right: 15px !important;
@@ -32,11 +32,37 @@
     transform: translate(-40%, -40%); 
 }
 
-
- 
+  .select-sup_text { font-size: 14px;
+    line-height: 16px;
+    color: #7c868d;
+    font-weight: 500;
+    padding-left:3%;
+  }
+  
+  .select-sub_text { padding-left:25px;}
+  .select_drop_parent {
+  	position: absolute;
+    display: contents;
+    }
+     .custom_checkbox_dropdown { 
+   background: #fff!important;
+    min-width: 200px !important;
+     width: 268px !important;
+    max-height: 300px;
+    overflow-y: scroll;
+      }
+      
+    .custom_checkbox_dropdown > li >a {
+    padding: 0px 20px;
+    
+}
+.pl-7 {
+padding-left: 7px;
+}
 </style>
 
 <div>
+ 
   <table id="studies_list" class="table wid100 tbl">
     <thead>
       <tr>
@@ -241,6 +267,23 @@
     showActivatedStudies()
 
     oTable.draw();
+    
+    $('.fcheckbox').on('change', function(e){
+ 	      var searchTerms = []
+ 	      $.each($('.fcheckbox'), function(i,elem){
+ 	        if($(elem).prop('checked')){
+ 	          searchTerms.push("^" + $(this).val() + "$")
+ 	        }
+ 	      })
+ 	      oTable.column(3).search(searchTerms.join('|'), true, false, true).draw();
+ 	    });
+    var searchTerms = []
+     $.each($('.fcheckbox'), function(i,elem){
+       if($(elem).prop('checked')){
+         searchTerms.push("^" + $(this).val() + "$")
+       }
+     })
+     oTable.column(3).search(searchTerms.join('|'), true, false, true).draw();
  });
 
   $('.copyStudyClass').on('click', function () {
@@ -349,6 +392,50 @@
 	     document.body.appendChild(form);
 	     form.submit(); 
    }
-   
 
+   $(document).ready(function () {
+
+		  $('body').on("click", ".dropdown-menu", function (e) {
+			    $(this).parent().is(".open") && e.stopPropagation();
+			});
+
+			$('.selectall').click(function() {
+			    if ($(this).is(':checked')) {
+			        $('.option').prop('checked', true);
+			        var total = $('input[name="options[]"]:checked').length;
+			        $(".dropdown-text").html('All apps');
+			        $(".select-text").html(' Deselect');
+			    } else {
+			        $('.option').prop('checked', false);
+			        var total = $('input[name="options[]"]:checked').length;
+			        $(".dropdown-text").html('Filter by apps');
+			        $(".select-text").html(' Select');
+			    }
+			});
+
+			$("input[type='checkbox'].justone").change(function(){
+			    var a = $("input[type='checkbox'].justone");
+			    if(a.length == a.filter(":checked").length){
+			        $('.selectall').prop('checked', true);
+			        $(".select-text").html(' Deselect');
+			    }
+			    else {
+			        $('.selectall').prop('checked', false);
+			        $(".select-text").html(' Select');
+			    }
+			  var total = $('input[name="options[]"]:checked').length;
+			  if(total == 0){
+				  $(".dropdown-text").html('Filter by apps');
+			  }else{
+				  $(".dropdown-text").html(total + ' app(s)');
+			  }
+			  
+			});
+		  
+			  <c:if test="${not empty appId}">
+		    	$(".dropdown-text").html(1 + ' app(s)');
+		    </c:if>
+		    
+		});
+  
 </script>

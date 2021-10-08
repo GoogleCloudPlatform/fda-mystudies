@@ -10,13 +10,31 @@
 .uploadImg{
 margin-top:16px !important;
 }
+
+.bootstrap-select.btn-group .dropdown-menu {
+    padding: 7px 15px;
+    background:  #fff !important;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.bootstrap-select.btn-group .dropdown-menu li a.opt {
+    position: relative;
+    padding-left: 22px;
+}
+li.divider {
+    margin: 1px !important;
+}
+li.dropdown-header {
+    padding-bottom: 0px !important;
+}
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
 
+      
 <div class="col-sm-10 col-rc white-bg p-none">
-
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateBasicInfo.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
       data-toggle="validator" role="form" id="basicInfoFormId" method="post"
@@ -79,38 +97,12 @@ margin-top:16px !important;
                    value="${studyBo.customStudyId}"
                 <c:if
                     test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}"> disabled</c:if>
-                   required data-error="Please fill out this field" />
+                   required data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-        <div class="col-md-6 pr-none">
-          <div class="gray-xs-f mb-xs">
-            App ID
-            <small>(15 characters max)</small>
-            <span
-                class="requiredStar"> *
-            </span>
-            <span>
-              <span
-                  data-toggle="tooltip" data-placement="top"
-                  title="Enter a unique human-readable identifier corresponding to the app that this study must belong to."
-                  class="filled-tooltip"></span>
-            </span>
-          </div>
-          <div class="form-group">
-            <input type="text" custAttType="cust" autofocus="autofocus"
-                   class="form-control aq-inp appIdCls" name="appId" id="appId"
-                   maxlength="15" value="${studyBo.appId}"
-                <c:if
-                    test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}"> disabled</c:if>
-                   required data-error="Please fill out this field" />
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-      </div>
-      <!-- phase2a-sp1 -->
-      <div class="col-md-12 p-none">
-        <div class="col-md-6 pl-none">
+        
+         <div class="col-md-6 pr-none">
           <div class="gray-xs-f mb-xs">
             Study name
             <small>(50 characters max)</small>
@@ -126,12 +118,32 @@ margin-top:16px !important;
           <div class="form-group">
              <input type="text" class="form-control" name="name"
                    id="customStudyName" value="${fn:escapeXml(studyBo.name)}"
-                   required data-error="Please fill out this field" />
+                   required data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-
-        <div class="col-md-6 pr-none">
+        
+ 
+      </div>
+      
+       <div class="col-md-12 p-none">
+        <div class="gray-xs-f mb-xs">
+          Descriptive study name
+          <small>(150 characters max)</small>
+          <span
+              class="requiredStar"> *
+          </span>
+        </div>
+        <div class="form-group">
+          <input type="text" class="form-control" name="fullName"
+                 value="${fn:escapeXml(studyBo.fullName)}" maxlength="150" required data-error="Please fill out this field"/>
+          <div class="help-block with-errors red-txt"></div>
+        </div>
+      </div>
+      
+      <!-- phase2a-sp1 -->
+      <div class="col-md-12 p-none">
+        <div class="col-md-6 pl-none">
           <div class="gray-xs-f mb-xs">
             Study website
             <small>(100
@@ -143,31 +155,113 @@ margin-top:16px !important;
                    name="studyWebsite" value="${studyBo.studyWebsite}"
                    pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                    title="Include http://" maxlength="100"
-                   data-pattern-error="Please enter a valid URL"/>
+                   data-pattern-error="Please enter a valid URL" data-error="Please fill out this field"/>
             <div class="help-block with-errors red-txt"></div>
           </div> 
+        </div>
+        
+        <div class="col-md-6 pr-none">
+          <div class="gray-xs-f mb-xs">
+            Support email (for participants)
+            <small>(100
+              characters max)
+            </small>
+            <span class="requiredStar"> *</span>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control" name="inboxEmailAddress"
+                   value="${studyBo.inboxEmailAddress}" required maxlength="100"
+                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
+                   autocomplete="off" data-pattern-error="Email address is invalid" data-error="Please fill out this field"/>
+            <div class="help-block with-errors red-txt"></div>
+          </div>
         </div>
       </div>
       <!--phase2a sp1-->
 
-      <div class="col-md-12 p-none">
-        <div class="gray-xs-f mb-xs">
-          Descriptive study name
-          <small>(150 characters max)</small>
-          <span
-              class="requiredStar"> *
-          </span>
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" name="fullName"
-                 value="${fn:escapeXml(studyBo.fullName)}" maxlength="150" required data-error="Please fill out this field" />
-          <div class="help-block with-errors red-txt"></div>
-        </div>
-      </div>
+     
 
       
       <div class="col-md-12 p-none">
+      
+     <div class="col-md-6 pl-none">
+        
+          <div class="gray-xs-f mb-xs">
+            Select app
+            <span
+                class="requiredStar"> *
+            </span>
+            <span>
+              <span
+                  data-toggle="tooltip" data-placement="top"
+                  title="Select an app that this study must appear in. The study can be mapped to only 1 app.  Note that gateway type apps have multiple studies within them whereas standalone type apps have a single study in them."
+                  class="filled-tooltip"></span>
+            </span>
+          </div>
+          <div class="form-group" id="appName">
+           <c:choose>
+            <c:when test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || 
+                      studyBo.status == 'Deactivated' || permission == 'view' || empty appsList)}">
+            <input type="text" custAttType="cust" autofocus="autofocus"
+                   class="form-control aq-inp " name="" id=""
+                   maxlength="15" value="${appName}" disabled/>
+            
+           </c:when>
+          
+           <c:otherwise>
+           
+            <select class="selectpicker" required data-error="Please fill out this field"> 
+                <c:if test="${not empty appPermission && not appPermission}">
+               <option value="${appName}" class="hidden" selected>${appName}</option></c:if>
+               <option value="" class="hidden">Select app</option>
+                 <c:if test="${empty appsList}">
+                     <option value="" id="">No app records found
+                     </option>
+                      </c:if>
+                <c:forEach items="${appsList}" var="app"> 
+                  <optgroup label="${app.customAppId} | <c:if test="${app.type == 'GT'}">Gateway</c:if><c:if test="${app.type == 'SD'}">Standalone</c:if>">
+                    <option value="${app.name} " ${studyBo.appId eq app.customAppId ? 'selected' : ''}> ${app.name} </option> 
+                  </optgroup>
+               </c:forEach>
+                 
+           </select>
+          
+         </c:otherwise>
+         </c:choose>
+        <div class="help-block with-errors red-txt"></div>
+         </div>
+        </div>
+        
+       <div class="col-md-6 pr-none">
+        
+          <div class="gray-xs-f mb-xs"> App ID </div>
+          <div class="form-group">
+            <input type="text" custAttType="cust" autofocus="autofocus"
+                   class="form-control aq-inp appIdCls" name="appId" id="appId"
+                   maxlength="15" value="${studyBo.appId}" disabled/>
+           
+            <div class="help-block with-errors red-txt"></div>
+          </div>
+        </div>
+     
+      </div>
+      
+      
+       <div class="col-md-12 p-none">
+      
         <div class="col-md-6 pl-none">
+        
+          <div class="gray-xs-f mb-xs"> App type </div>
+          <div class="form-group">
+         <input type="text" custAttType="cust" autofocus="autofocus"
+                   class="form-control aq-inp " name="" id="appType"
+                   maxlength="15" value="<c:if test="${appType eq 'GT'}">Gateway </c:if><c:if test="${appType eq 'SD'}">Standalone </c:if>"
+                   required data-error="Please fill out this field"  placeholder="App Type" disabled/>
+            <div class="help-block with-errors red-txt"></div>
+          </div>
+        </div>
+        
+         <div class="col-md-6 pl-none hidden">
           <div class="gray-xs-f mb-xs">
             Study type
             <span class="requiredStar"> *</span>
@@ -181,7 +275,7 @@ margin-top:16px !important;
             <span class="radio radio-info radio-inline p-45"><input
                 type="radio" id="inlineRadio5"
                 class="rejoin_radio studyTypeClass" name="type" value="GT"
-              ${studyBo.type eq 'GT'?'checked':""} required data-error="Please fill out this field" 
+              ${studyBo.type eq 'GT'?'checked':""} required data-error="Please fill out this field"
             <c:if
                 test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}">
                 disabled </c:if>>
@@ -192,7 +286,7 @@ margin-top:16px !important;
                                                     class="rejoin_radio studyTypeClass"
                                                     name="type"
                                                     value="SD" ${studyBo.type eq 'SD'?'checked':""}
-                                                    required data-error="Please fill out this field" 
+                                                    required data-error="Please fill out this field"
             <c:if
                 test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || studyBo.status == 'Deactivated')}">
                                                     disabled </c:if>>
@@ -201,23 +295,10 @@ margin-top:16px !important;
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
-        <div class="col-md-6 pr-none">
-          <div class="gray-xs-f mb-xs">
-            Support email (for participants)
-            <small>(100
-              characters max)
-            </small>
-            <span class="requiredStar"> *</span>
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="inboxEmailAddress"
-                   value="${studyBo.inboxEmailAddress}" required data-error="Please fill out this field"  maxlength="100"
-                   pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
-                   autocomplete="off" data-pattern-error="Email address is invalid"/>
-            <div class="help-block with-errors red-txt"></div>
-          </div>
-        </div>
-      </div>
+        </div> 
+     
+      
+      
 		<div class="col-md-12 p-none mb-xxlg">
           <div class="col-md-6 pr-none thumbImageDIv" style="margin-left:-13px">
           <div class="gray-xs-f mb-sm">
@@ -225,8 +306,7 @@ margin-top:16px !important;
             <span class="filled-tooltip"
                     data-toggle="tooltip" data-placement="top"
                     data-html="true"
-                    title="
-                    <p class='text-left'>Image requirements: The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to override it</p>
+                    title=" <p class='text-left'>Image requirements: The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to override it</p>
 					<p class='text-left'>The image must be of type .JPG or .PNG. The minimum image size required is 225 x 225. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></p>
             </span>
       </div>
@@ -432,17 +512,17 @@ margin-top:16px !important;
 
                       }
                       if ($('#customStudyName').val().length > 50) {
-                          $('#customStudyName')
-                              .parent()
-                              .addClass(
-                                'has-error has-danger')
-                              .find(".help-block")
-                              .empty()
-                              .append(
-                                 $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                                   "Study name cannot exceed 50 characters"));
-                        return false;
-                        }
+                        $('#customStudyName')
+                            .parent()
+                            .addClass(
+                              'has-error has-danger')
+                            .find(".help-block")
+                            .empty()
+                            .append(
+                               $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+                                 "Study name cannot exceed 50 characters"));
+                      return false;
+                      }
 
                       var type = $(
                           "input[name='type']:checked")
@@ -809,39 +889,39 @@ margin-top:16px !important;
 
   // Displaying images from file upload
   function readURL(input) {
+	
     if (input.files && input.files[0]) {
-    	const allowedExtensions =  ['jpg','png','jpeg'];
-     	  const { name:fileName } = input.files[0];
-     	  const fileExtension = fileName.split(".").pop().toLowerCase();
-     	  if(allowedExtensions.includes(fileExtension)){      	
-    	var reader = new FileReader();
-
-      reader.onload = function (e) {
-    	  var image = new Image();
-    	    image.src = e.target.result;
-    	    image.onload = function() {
-    	        // access image size here 
-    	        if(this.width >=225 && this.height>=225 ){
-    	        	 $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
-         	                66);
-        	       }
-    	    };
-      };
-
-      reader.readAsDataURL(input.files[0]);
-     	 }else{
-      		  $("#uploadImg")
-             .parent()
-             .find(".help-block")
-             .empty()
-             .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                 "Invalid image size or format"));
-         	  $(".thumb.alternate img")
-             .attr("src",
-                 "/studybuilder/images/dummy-img.jpg");
-         	  $('#uploadImg, #thumbnailImageId').val('');
-         	  $('#removeUrl').css("visibility", "hidden");
-      	  }
+      const allowedExtensions =  ['jpg','png','jpeg'];
+   	  const { name:fileName } = input.files[0];
+   	  const fileExtension = fileName.split(".").pop().toLowerCase();
+   	  if(allowedExtensions.includes(fileExtension)){  
+	      var reader = new FileReader();
+	
+	      reader.onload = function (e) {
+	    	  var image = new Image();
+	    	    image.src = e.target.result;
+	    	    image.onload = function() {
+	    	        // access image size here 
+	    	        if(this.width >=225 && this.height>=225 ){
+	    	        	 $('.thumb.alternate img').attr('src', e.target.result).width(66).height(
+	         	                66);
+	        	       }
+	    	    };
+	      };
+	      reader.readAsDataURL(input.files[0]);
+   	  }else{
+   		  $("#uploadImg")
+          .parent()
+          .find(".help-block")
+          .empty()
+          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Invalid image size or format"));
+      	  $(".thumb.alternate img")
+          .attr("src",
+              "/studybuilder/images/dummy-img.jpg");
+      	  $('#uploadImg, #thumbnailImageId').val('');
+      	  $('#removeUrl').css("visibility", "hidden");
+   	  }
     }
   }
 
@@ -854,7 +934,7 @@ margin-top:16px !important;
             var file, img;
             if ((file = this.files[0])) {
               img = new Image();
-              img.onload = function () {
+              img.onload = function () {  
                 var ht = this.height;
                 var wds = this.width;
                 if (ht >= 225 && wds >= 225) {
@@ -1006,9 +1086,9 @@ margin-top:16px !important;
   function validateAppId(item, callback) {
     var appId = $("#appId").val();
     var studyType = $('input[name=type]:checked').val();
-    var thisAttr = $("#appId");
+    var thisAttr = $("#appName");
     var customStudyId = $("#customStudyId").val();
-    var dbCustomStudyId = '${studyBo.customStudyId}';
+    var dbcustomStudyId = '${studyBo.customStudyId}';
     if (appId != null && appId != '' && typeof appId != 'undefined') {
       $
           .ajax({
@@ -1019,7 +1099,7 @@ margin-top:16px !important;
               customStudyId: customStudyId,
               appId: appId,
               studyType: studyType,
-              dbCustomStudyId: dbCustomStudyId,
+              dbcustomStudyId: dbcustomStudyId,
               "${_csrf.parameterName}": "${_csrf.token}",
             },
             success: function getResponse(data) {
@@ -1054,22 +1134,38 @@ margin-top:16px !important;
       callback(false);
     }
   }
+  
+    var sucMsg = '${sucMsg}';
+    if (sucMsg.length > 0) {
+      showSucMsg(sucMsg);
+    }
 
-  var sucMsg = '${sucMsg}';
-  if (sucMsg.length > 0) {
-    showSucMsg(sucMsg);
-  }
-
-function showSucMsg(message) {
-  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
-  $('#alertMsg').show('5000');
-  if('${param.buttonText}' == 'completed'){
+  function showSucMsg(message) {
+    $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+    $('#alertMsg').show('5000');
+    if('${param.buttonText}' == 'completed'){
 	    window.setTimeout(function(){
 	        window.location.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
 	
 	    }, 5000);
-  }else{
-  	setTimeout(hideDisplayMessage, 5000);
+    }else{
+    	setTimeout(hideDisplayMessage, 5000);
+    }
   }
-}
+  
+
+  $( ".selectpicker" ).change(function() {
+    var optgroupArray=$('option:selected', this).closest('optgroup').attr('label'); 
+	var optgroupArray= optgroupArray.split("|");
+	$('#appId').val($.trim(optgroupArray[0]));
+    $('#appType').val($.trim(optgroupArray[1]));
+    if($('#appType').val() == "Standalone"){
+	    $("#inlineRadio6").prop("checked", true);
+	    $('.thumbImageDIv').hide();
+    }else{
+	    $("#inlineRadio5").prop("checked", true);
+	    $('.thumbImageDIv').show();
+    }
+    validateAppId('', function (val) {});
+});
 </script>

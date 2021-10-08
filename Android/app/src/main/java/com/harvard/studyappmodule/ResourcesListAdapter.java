@@ -28,9 +28,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import com.harvard.AppConfig;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
+import com.harvard.usermodule.TermsPrivacyPolicyActivity;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import io.realm.Realm;
 import io.realm.RealmList;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,13 +95,31 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
         @Override
         public int compare(final Resource o1, final Resource o2) {
           if (o1.getTitle().contains(context.getResources().getString(R.string.leave_study))
-                  && !o2.getTitle()
-                  .contains(context.getResources().getString(R.string.leave_study))) {
+              && !o2.getTitle()
+              .contains(context.getResources().getString(R.string.leave_study))) {
             return 1;
           } else if (!o1.getTitle()
-                  .contains(context.getResources().getString(R.string.leave_study))
-                  && o2.getTitle()
-                  .contains(context.getResources().getString(R.string.leave_study))) {
+              .contains(context.getResources().getString(R.string.leave_study))
+              && o2.getTitle()
+              .contains(context.getResources().getString(R.string.leave_study))) {
+            return -1;
+          } else if (o1.getTitle().contains(context.getResources().getString(R.string.resourcePolicy))
+              && !o2.getTitle()
+              .contains(context.getResources().getString(R.string.resourcePolicy))) {
+            return 1;
+          } else if (!o1.getTitle()
+              .contains(context.getResources().getString(R.string.resourcePolicy))
+              && o2.getTitle()
+              .contains(context.getResources().getString(R.string.resourcePolicy))) {
+            return -1;
+          } else if (o1.getTitle().contains(context.getResources().getString(R.string.resourceTerms))
+              && !o2.getTitle()
+              .contains(context.getResources().getString(R.string.resourceTerms))) {
+            return 1;
+          } else if (!o1.getTitle()
+              .contains(context.getResources().getString(R.string.resourceTerms))
+              && o2.getTitle()
+              .contains(context.getResources().getString(R.string.resourceTerms))) {
             return -1;
           }
           return 0;
@@ -111,12 +132,16 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
               && AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_standalone))) {
         holder.resourcesDesc.setVisibility(View.VISIBLE);
         holder.resourcesDesc.setText(context.getString(R.string.delete_account_msg));
+      } else {
+        holder.resourcesDesc.setVisibility(View.INVISIBLE);
       }
 
       holder.container.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+              Realm realm = AppController.getRealmobj(context);
               if (items.get(i).getType() != null) {
                 Intent intent = new Intent(context, ResourcesWebViewActivity.class);
                 intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
@@ -148,6 +173,32 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                   intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
                   intent.putExtra("title", ((SurveyActivity) context).getTitle1());
                   (context).startActivity(intent);
+                } catch (Exception e) {
+                  Logger.log(e);
+                }
+              } else if (items
+                  .get(i)
+                  .getTitle()
+                  .equalsIgnoreCase(view.getResources().getString(R.string.resourceTerms))) {
+                try {
+                  Intent termsIntent =
+                      new Intent(context, TermsPrivacyPolicyActivity.class);
+                  termsIntent.putExtra("title", context.getResources().getString(R.string.resourceTerms));
+                  termsIntent.putExtra("url", dbServiceSubscriber.getApps(realm).getTermsUrl());
+                  context.startActivity(termsIntent);
+                } catch (Exception e) {
+                  Logger.log(e);
+                }
+              } else if (items
+                  .get(i)
+                  .getTitle()
+                  .equalsIgnoreCase(view.getResources().getString(R.string.resourcePolicy))) {
+                try {
+                  Intent termsIntent =
+                      new Intent(context, TermsPrivacyPolicyActivity.class);
+                  termsIntent.putExtra("title", context.getResources().getString(R.string.resourcePolicy));
+                  termsIntent.putExtra("url", dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
+                  context.startActivity(termsIntent);
                 } catch (Exception e) {
                   Logger.log(e);
                 }
@@ -190,6 +241,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 AlertDialog diag = builder.create();
                 diag.show();
               }
+              dbServiceSubscriber.closeRealmObj(realm);
             }
           });
     } catch (Exception e) {

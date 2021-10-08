@@ -25,10 +25,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.studyappmodule.studymodel.StudyResource;
 import com.harvard.utils.AppController;
 import com.harvard.webservicemodule.apihelper.ApiCall;
+import io.realm.Realm;
 import io.realm.RealmList;
 
 public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncRequestComplete {
@@ -37,7 +39,8 @@ public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncReq
   private Context context;
   private RealmList<Resource> resourceArrayList;
   private static final int RESOURCE_REQUEST_CODE = 213;
-
+  DbServiceSubscriber dbServiceSubscriber;
+  Realm realm;
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -50,14 +53,31 @@ public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncReq
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_resources, container, false);
     initializeXmlId(view);
-    // currently hide this and create temp block then pass to adapter
-    // temp block(later u can remove)
+
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(getContext());
+
+    resourceArrayList = new RealmList<>();
     Resource r = new Resource();
     r.setTitle(context.getResources().getString(R.string.app_glossary));
     r.setType("pdf");
     r.setContent("");
-    resourceArrayList = new RealmList<>();
     resourceArrayList.add(r);
+
+    r = new Resource();
+    r.setTitle(context.getResources().getString(R.string.resourceTerms));
+    r.setType("url");
+    r.setContent(dbServiceSubscriber.getApps(realm).getTermsUrl());
+    resourceArrayList.add(r);
+
+    r = new Resource();
+    r.setTitle(context.getResources().getString(R.string.resourcePolicy));
+    r.setType("url");
+    r.setContent(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
+    resourceArrayList.add(r);
+
+    dbServiceSubscriber.closeRealmObj(realm);
+
     setResourceAdapter();
     /// till here/////
     return view;

@@ -26,8 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import io.realm.Realm;
 
 public class GatewayPagerAdapter extends PagerAdapter {
 
@@ -134,10 +136,12 @@ public class GatewayPagerAdapter extends PagerAdapter {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (!context.getString(R.string.website).equalsIgnoreCase("")) {
+            DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+            Realm realm = AppController.getRealmobj(context);
+            if (!dbServiceSubscriber.getApps(realm).getAppWebsite().equalsIgnoreCase("")) {
               Intent browserIntent =
                   new Intent(
-                      Intent.ACTION_VIEW, Uri.parse("" + context.getString(R.string.website)));
+                      Intent.ACTION_VIEW, Uri.parse(dbServiceSubscriber.getApps(realm).getAppWebsite()));
               context.startActivity(browserIntent);
             }
           }
