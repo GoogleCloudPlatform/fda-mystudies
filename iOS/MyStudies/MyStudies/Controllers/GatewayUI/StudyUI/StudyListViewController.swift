@@ -63,7 +63,9 @@ class StudyListViewController: UIViewController {
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    self.addProgressIndicator()
+    if !isComingFromFilterScreen {
+      self.addProgressIndicator()
+    }
   }
 
   override func viewDidAppear(_ animated: Bool) {
