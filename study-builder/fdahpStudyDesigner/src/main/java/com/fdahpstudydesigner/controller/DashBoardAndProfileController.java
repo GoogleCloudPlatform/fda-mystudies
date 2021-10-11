@@ -26,12 +26,14 @@ package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
 
+import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.AppService;
 import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.service.StudyService;
@@ -69,6 +71,8 @@ public class DashBoardAndProfileController {
   @Autowired private UsersService usersService;
 
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
+
+  @Autowired private AppService appService;
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -195,6 +199,7 @@ public class DashBoardAndProfileController {
     ModelAndView mav = new ModelAndView();
     UserBO userBO = null;
     List<StudyListBean> studyAndPermissionList = null;
+    List<AppListBean> appBos = null;
     RoleBO roleBO = null;
     String sucMsg = "";
     String errMsg = "";
@@ -218,6 +223,7 @@ public class DashBoardAndProfileController {
           userBO = usersService.getUserDetails(userSession.getUserId());
           if (null != userBO) {
             studyAndPermissionList = studyService.getStudyListByUserId(userBO.getUserId());
+            appBos = appService.getAppList(userBO.getUserId());
             roleBO = usersService.getUserRole(userBO.getRoleId());
             if (null != roleBO) {
               userBO.setRoleName(roleBO.getRoleName());
@@ -226,6 +232,7 @@ public class DashBoardAndProfileController {
           }
         }
         map.addAttribute("studyAndPermissionList", studyAndPermissionList);
+        map.addAttribute("appAndPermissionList", appBos);
         map.addAttribute("userBO", userBO);
         mav = new ModelAndView("myAccount", map);
       }
