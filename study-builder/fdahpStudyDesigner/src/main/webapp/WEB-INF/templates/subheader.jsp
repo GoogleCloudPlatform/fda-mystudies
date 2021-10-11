@@ -5,7 +5,7 @@
 
 
 <style>
-.modal-title {
+ .modal-title {
     text-align: initial !important;
 }
 
@@ -68,6 +68,10 @@ color: #95a2ab;
 
 .checkbox input[type="checkbox"] {
     opacity: 1;
+}
+
+.deactivate_toggle{
+	margin-right: 0px !important;
 }
 
 </style>
@@ -195,6 +199,11 @@ color: #95a2ab;
       $('#addEditStudyForm').submit();
     });
 
+    <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES') && fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
+    $(".deactivate_switch").addClass('deactivate_toggle')
+    </c:if>
+    
+    
 //cancel or back click
     $('.backOrCancelBtn').on('click', function () {
       $('#backOrCancelForm').submit();
