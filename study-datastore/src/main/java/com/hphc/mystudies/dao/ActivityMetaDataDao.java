@@ -142,11 +142,14 @@ public class ActivityMetaDataDao {
 
         activeTaskDtoList =
             session
-                .getNamedQuery("getActiveTaskDetailsByStudyId")
-                .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
+                .getNamedQuery("getActiveTaskDetailsByCustomStudyId")
+                .setString(
+                    StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
+                    studyVersionDto.getCustomStudyId())
                 .setInteger(StudyMetaDataEnum.QF_LIVE.value(), 1)
                 .setInteger(StudyMetaDataEnum.QF_ACTIVE.value(), 0)
                 .list();
+
         if ((null != activeTaskDtoList) && !activeTaskDtoList.isEmpty()) {
           for (ActiveTaskDto activeTaskDto : activeTaskDtoList) {
             boolean isSupporting = true;
