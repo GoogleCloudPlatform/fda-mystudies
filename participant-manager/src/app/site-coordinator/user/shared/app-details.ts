@@ -1,5 +1,6 @@
 import {Permission} from 'src/app/shared/permission-enums';
 import {Status} from 'src/app/shared/enums';
+
 export interface Site {
   siteId: string;
   locationId: string;

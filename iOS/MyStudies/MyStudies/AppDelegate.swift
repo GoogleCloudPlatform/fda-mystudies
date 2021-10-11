@@ -214,6 +214,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     self.isAppLaunched = true
     IQKeyboardManager.shared.enable = true
     self.customizeNavigationBar()
+      
+    //Fixes navigation bar tint issue in iOS 15.0
+    if #available(iOS 15, *) {
+      let appearance = UINavigationBarAppearance()
+      let navigationBar = UINavigationBar()
+      
+      appearance.configureWithOpaqueBackground()
+      appearance.backgroundColor = .white
+      navigationBar.standardAppearance = appearance
+      UINavigationBar.appearance().standardAppearance.backgroundColor = .white
+      UINavigationBar.appearance().standardAppearance.shadowColor = .white
+      UINavigationBar.appearance().scrollEdgeAppearance = appearance
+      UINavigationBar.appearance().standardAppearance = appearance
+    }
     
     // Use Firebase library to configure APIs
     FirebaseApp.configure()
@@ -936,10 +950,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         (navigationController.viewControllers.last as? FDASlideMenuViewController)!
 
       if !Utilities.isStandaloneApp() {
+        self.addAndRemoveProgress(add: false)
         let leftController = (slideMenuController.leftViewController as? LeftMenuViewController)!
         leftController.changeViewController(.reachOutSignIn)
         leftController.createLeftmenuItems()
-        self.addAndRemoveProgress(add: false)
+        
       } else {
         UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
         navigationController.popToRootViewController(animated: true)

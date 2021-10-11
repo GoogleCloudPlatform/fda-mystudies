@@ -12,19 +12,21 @@ margin-top:16px !important;
 }
 
 .bootstrap-select.btn-group .dropdown-menu {
-    min-width: 100%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    background: #fff !important;
-    left: 0%;
-   height: 300px;
-    overflow-x: scroll;
+    padding: 7px 15px;
+    background:  #fff !important;
+    color: #fff;
+    border-radius: 5px;
 }
 
 .bootstrap-select.btn-group .dropdown-menu li a.opt {
     position: relative;
     padding-left: 22px;
+}
+li.divider {
+    margin: 1px !important;
+}
+li.dropdown-header {
+    padding-bottom: 0px !important;
 }
 </style>
 <!-- ============================================================== -->
@@ -212,6 +214,10 @@ margin-top:16px !important;
                 <c:if test="${not empty appPermission && not appPermission}">
                <option value="${appName}" class="hidden" selected>${appName}</option></c:if>
                <option value="" class="hidden">Select app</option>
+                 <c:if test="${empty appsList}">
+                     <option value="" id="">No app records found
+                     </option>
+                      </c:if>
                 <c:forEach items="${appsList}" var="app"> 
                   <optgroup label="${app.customAppId} | <c:if test="${app.type == 'GT'}">Gateway</c:if><c:if test="${app.type == 'SD'}">Standalone</c:if>">
                     <option value="${app.name} " ${studyBo.appId eq app.customAppId ? 'selected' : ''}> ${app.name} </option> 
