@@ -87,8 +87,16 @@ class SignInViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     // unhide navigationbar
+    self.view.isUserInteractionEnabled = true
+    self.webKitView.isUserInteractionEnabled = true
+      
     self.navigationController?.setNavigationBarHidden(false, animated: true)
     self.webKitView.navigationDelegate = self
+    self.webKitView.scrollView.isScrollEnabled = true
+    
+    let delegate = UIApplication.shared.delegate as? AppDelegate
+    delegate?.window?.removeProgressIndicatorFromWindow()
+      
     setupProgressView()
     setupEstimatedProgressObserver()
     if viewLoadFrom != .signUp {
