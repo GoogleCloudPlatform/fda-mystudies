@@ -9,6 +9,7 @@
 /*
 
 Name: 			layout.css
+Written by: 	BTC - Madhu D V
 Version: 		1.0
 
 */
@@ -433,10 +434,10 @@ table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dat
 }
 
 .col-lc{
-    width: 20.666667%;
+    width: 21.666667%;
 }
 .col-rc{
-   width: 79.333333%;
+   width: 78.333333%;
 }
 
 .lg-space-img img{
@@ -473,10 +474,10 @@ table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dat
 }
 
 .col-lc{
-    width: 18.666667%;
+    width: 21.666667%;
 }
 .col-rc{
-   width: 81.333333%;
+   width: 78.333333%;
 }
 
 .txtchoice_section1,.txtchoice_section2{
@@ -519,10 +520,10 @@ table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dat
 }
 
 .col-lc{
-    width: 16.66666667%;
+    width: 18.66666667%;
 }
 .col-rc{
-   width: 83.33333333%; 
+   width: 81.33333333%; 
 }
 
 .studylist-txtoverflow{
@@ -586,3 +587,8 @@ table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc,table.dat
 		height:460px;
 	}
 } */
+
+.visibility_hidden
+{
+visibility: hidden;
+}
