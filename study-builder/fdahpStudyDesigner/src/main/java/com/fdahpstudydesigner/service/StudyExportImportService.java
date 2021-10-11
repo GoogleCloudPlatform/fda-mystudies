@@ -1587,7 +1587,7 @@ public class StudyExportImportService {
         if (values[i] instanceof String || values[i] instanceof Timestamp) {
           sqlQuery =
               sqlQuery.replace(
-                  "<" + column + ">", "'" + values[i].toString().replace("'", "") + "'");
+                  "<" + column + ">", "'" + values[i].toString().replace("'", "\\'") + "'");
         } else {
           sqlQuery = sqlQuery.replace("<" + column + ">", "" + values[i] + "");
         }
