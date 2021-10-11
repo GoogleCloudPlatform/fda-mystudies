@@ -162,13 +162,11 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionBack(_ sender: UIBarButtonItem) {
-
     if webView.canGoBack {
       webView.goBack()
     } else if webView.backForwardList.backList.count == 0 {
-      if self.resource?.file?.mimeType != .pdf,
-        let htmlString = self.requestLink
-      {
+      if self.resource?.file?.mimeType != .pdf, self.resource?.file?.mimeType != .txt,
+         let htmlString = self.requestLink {
         webView.loadHTMLString(WebViewController.headerString + htmlString, baseURL: nil)
       }
     }
