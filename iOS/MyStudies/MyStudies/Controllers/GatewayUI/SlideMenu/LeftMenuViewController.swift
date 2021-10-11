@@ -345,6 +345,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     )
 
     self.tableView.reloadData()
+    UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
 
   }
 
