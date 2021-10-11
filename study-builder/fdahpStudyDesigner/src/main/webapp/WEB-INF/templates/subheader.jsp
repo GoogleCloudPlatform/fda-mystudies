@@ -70,6 +70,11 @@ color: #95a2ab;
     opacity: 1;
 }
 
+
+.deactivate_toggle{
+	margin-right: 0px !important;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
@@ -133,7 +138,8 @@ color: #95a2ab;
     
      
      
-      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
+      
         <div class="dis-line pull-right ml-md mt-xs">
           <div class="form-group mb-none">
           <p class="black-lg-f ml-lg deactivated_lable">
@@ -145,9 +151,11 @@ color: #95a2ab;
                     <span class="switch-label deactivate_switch-label" data-on="Off" data-off="On"></span>
                     <span class="switch-handle deactivate_switch-handle"></span>
                   </label>
+            <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
             <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create study
             </button>
               <button type="button" class="btn btn-primary blue-btn importStudy"  onclick="importStudy();"> Import </button>
+             </c:if>
           </div>
         </div>
       </c:if>
@@ -169,6 +177,11 @@ color: #95a2ab;
     $('.addEditStudy').on('click', function () {
       $('#addEditStudyForm').submit();
     });
+    
+    <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES') && fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
+    $(".deactivate_switch").addClass('deactivate_toggle')
+    </c:if>
+    
 
 //cancel or back click
     $('.backOrCancelBtn').on('click', function () {
