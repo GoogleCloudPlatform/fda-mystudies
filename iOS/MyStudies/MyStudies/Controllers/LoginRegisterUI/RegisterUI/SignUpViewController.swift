@@ -64,6 +64,9 @@ class SignUpViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    self.navigationController?.navigationBar.backgroundColor = .white
+    navigationController?.navigationBar.barTintColor = .white
+    UINavigationBar.appearance().backgroundColor = .white
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -96,6 +99,9 @@ class SignUpViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    self.navigationController?.navigationBar.backgroundColor = .white
+    navigationController?.navigationBar.barTintColor = .white
+    UINavigationBar.appearance().backgroundColor = .white
 
     if termsPageOpened {
       termsPageOpened = false
@@ -106,7 +112,7 @@ class SignUpViewController: UIViewController {
       let valPassword = self.user?.password ?? ""
       let valEmail = self.user?.emailId ?? ""
       User.resetCurrentUser()
-      self.user = User.currentUser      
+      self.user = User.currentUser
       self.user.password = valPassword
       self.user.emailId = valEmail
 
@@ -188,6 +194,29 @@ class SignUpViewController: UIViewController {
       return false
     }
     return true
+  }
+  
+  func validateEmailField() {
+    if self.user.emailId == "" {
+    } else if !(Utilities.isValidEmail(testStr: self.user.emailId!)) {
+      self.showAlertMessages(textMessage: kMessageValidEmail)
+    }
+  }
+  
+  func validatePasswordField() {
+    if self.user.password == "" {
+    } else if Utilities.isPasswordValid(text: (self.user.password)!) == false {
+      self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+    } else if (self.user.password)! == user.emailId {
+      self.showAlertMessages(textMessage: kMessagePasswordMatchingToOtherFeilds)
+    }
+  }
+  
+  func validateConfirmPasswordField() {
+    if confirmPassword == "" {
+    } else if self.user.password ?? "" != "" && self.user.password != confirmPassword {
+      self.showAlertMessages(textMessage: kMessageValidatePasswords)
+    }
   }
 
   /// Used to show the alert using Utility.
@@ -450,6 +479,7 @@ extension SignUpViewController: UITextFieldDelegate {
     case .emailId:
       self.user.emailId = textField.text!
       textField.isSecureTextEntry = false
+      validateEmailField()
 
     case .password:
       if let password = textField.text {
@@ -459,11 +489,13 @@ extension SignUpViewController: UITextFieldDelegate {
           self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
         }
         self.user.password = password
+        validatePasswordField()
       }
       textField.isSecureTextEntry = true
     case .confirmPassword:
       confirmPassword = textField.text!
       textField.isSecureTextEntry = true
+      validateConfirmPasswordField()
     }
   }
 }

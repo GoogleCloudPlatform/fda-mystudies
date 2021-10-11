@@ -88,3 +88,12 @@ class OverviewSection {
     }
   }
 }
+
+// For App Update Flags
+enum Upgrade: Int {
+  case requiresUpgrade = -1
+  case fromSplash = 0
+  case onceDisplayed = 1
+  case optionalShown = 2
+  case pendingUpdate = 2000
+}

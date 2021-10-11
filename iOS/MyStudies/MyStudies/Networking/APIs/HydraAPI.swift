@@ -35,6 +35,9 @@ struct HydraAPI {
       "state": String.randomString(length: 21),
       "appName": Utilities.appName(),
       "app": "//\(Bundle.main.bundleIdentifier ?? "")/mystudies",
+      "fromEmail": UserManageApps.appDetails?.fromEmail ?? "",
+      "contactEmail": UserManageApps.appDetails?.contactUsEmail ?? "",
+      "supportEmail": UserManageApps.appDetails?.supportEmail ?? "",
     ]
     return
       try? AuthRouter

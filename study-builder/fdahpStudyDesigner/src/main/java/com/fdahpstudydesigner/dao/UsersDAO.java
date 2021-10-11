@@ -36,7 +36,12 @@ public interface UsersDAO {
       String userId, int userStatus, String loginUser, SessionObject userSession);
 
   public UserIdAccessLevelInfo addOrUpdateUserDetails(
-      UserBO userBO, String permissions, String selectedStudies, String permissionValues);
+      UserBO userBO,
+      String permissions,
+      String selectedStudies,
+      String permissionValues,
+      String selectedApps,
+      String permissionValuesForApp);
 
   public String enforcePasswordChange(String userId, String email);
 

@@ -119,7 +119,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   }
 
   private void getResourceListWebservice() {
-    AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
+    AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     HashMap<String, String> header = new HashMap<>();
     studyId = ((SurveyActivity) context).getStudyId();
     header.put("studyId", studyId);
@@ -130,7 +130,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             "get",
             url,
             RESOURCE_REQUEST_CODE,
-            getActivity(),
+            context,
             StudyResource.class,
             null,
             header,
@@ -144,7 +144,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   }
 
   private void callGetStudyInfoWebservice() {
-    AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
+    AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     HashMap<String, String> header = new HashMap<>();
     String url = Urls.STUDY_INFO + "?studyId=" + studyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
@@ -153,7 +153,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             "get",
             url,
             STUDY_INFO,
-            getActivity(),
+            context,
             StudyHome.class,
             null,
             header,
@@ -199,12 +199,12 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   }
 
   private void setTextForView() {
-    title.setText(getResources().getString(R.string.resources));
+    title.setText(context.getResources().getString(R.string.resources));
   }
 
   private void setFont() {
     try {
-      title.setTypeface(AppController.getTypeface(getActivity(), "bold"));
+      title.setTypeface(AppController.getTypeface(context, "bold"));
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -621,7 +621,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     studyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     studyRecyclerView.setNestedScrollingEnabled(false);
     ResourcesListAdapter resourcesListAdapter =
-        new ResourcesListAdapter(getActivity(), resources, this);
+        new ResourcesListAdapter(context, resources, this);
     studyRecyclerView.setAdapter(resourcesListAdapter);
   }
 
@@ -652,15 +652,15 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         Realm realm = AppController.getRealmobj(context);
         HashMap<String, String> header = new HashMap<>();
         header.put(
-            getString(R.string.clientToken),
-            SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
+            context.getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(context, context.getString(R.string.clientToken), ""));
         header.put(
             "Authorization",
             "Bearer "
-                + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+                + SharedPreferenceHelper.readPreference(context, context.getString(R.string.auth), ""));
         header.put(
             "userId",
-            SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
+            SharedPreferenceHelper.readPreference(context, context.getString(R.string.userid), ""));
         Studies studies =
             realm
                 .where(Studies.class)
@@ -715,7 +715,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             && !response.equalsIgnoreCase("")) {
           response = response;
         } else {
-          response = getString(R.string.unknown_error);
+          response = context.getString(R.string.unknown_error);
         }
       }
       return response;
@@ -808,7 +808,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         }
       } else {
         metadataProcess();
-        Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
       }
     }
   }
@@ -835,9 +835,13 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     ArrayList<Resource> tempResourceArrayList = new ArrayList<>();
     tempResourceArrayList.addAll(resourceArrayList);
     resourceArrayList.clear();
-    labelArray.add(getResources().getString(R.string.about_study));
-    labelArray.add(getResources().getString(R.string.consent_pdf));
-    labelArray.add(getResources().getString(R.string.leave_study));
+    labelArray.add(context.getResources().getString(R.string.about_study));
+    labelArray.add(context.getResources().getString(R.string.consent_pdf));
+    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_standalone))) {
+      labelArray.add(context.getResources().getString(R.string.resourceTerms));
+      labelArray.add(context.getResources().getString(R.string.resourcePolicy));
+    }
+    labelArray.add(context.getResources().getString(R.string.leave_study));
 
     for (int i = 0; i < labelArray.size(); i++) {
       Resource r = new Resource();
@@ -860,13 +864,13 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       if (responseCode == RESOURCE_REQUEST_CODE) {
         try {
           if (dbServiceSubscriber.getStudyResource(studyId, realm) == null) {
-            Toast.makeText(getActivity(), errormsg, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, errormsg, Toast.LENGTH_LONG).show();
           } else if (dbServiceSubscriber.getStudyResource(studyId, realm).getResources() == null) {
-            Toast.makeText(getActivity(), errormsg, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, errormsg, Toast.LENGTH_LONG).show();
           } else {
             resourceArrayList = dbServiceSubscriber.getStudyResource(studyId, realm).getResources();
             if (resourceArrayList == null || resourceArrayList.size() == 0) {
-              Toast.makeText(getActivity(), errormsg, Toast.LENGTH_LONG).show();
+              Toast.makeText(context, errormsg, Toast.LENGTH_LONG).show();
             } else {
               calculatedResources(resourceArrayList);
             }
@@ -924,7 +928,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   }
 
   public void responseServerWithdrawFromStudy() {
-    AppController.getHelperProgressDialog().showProgress(getActivity(), "", "", false);
+    AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     dbServiceSubscriber.deleteActivityRunsFromDbByStudyID(
         context, ((SurveyActivity) context).getStudyId());
     dbServiceSubscriber.deleteResponseFromDb(((SurveyActivity) context).getStudyId(), realm);
@@ -979,11 +983,11 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(context, getResources().getString(R.string.auth), ""));
+                .readPreference(context, context.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, getResources().getString(R.string.userid), ""));
+            .readPreference(context, context.getResources().getString(R.string.userid), ""));
     DeleteAccountEvent deleteAccountEvent = new DeleteAccountEvent();
     Gson gson = new Gson();
     DeleteAccountData deleteAccountData = new DeleteAccountData();

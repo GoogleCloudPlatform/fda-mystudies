@@ -25,6 +25,7 @@ class DBUser: Object {
   @objc dynamic var firstName: String = ""
   @objc dynamic var lastName: String = ""
   @objc dynamic var emailId: String = ""
+  @objc dynamic var verificationTime: String = ""
 
   @objc dynamic var userId: String = ""
   @objc dynamic var verified: Bool = false

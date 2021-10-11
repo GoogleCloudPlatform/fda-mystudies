@@ -115,7 +115,9 @@ public enum MessageCode {
       HttpStatus.OK, "MSG_0044", "Password help has been sent to your registered email"),
 
   INVITATION_DELETED_SUCCESSFULLY(
-      HttpStatus.OK, "MSG_0045", "The invitation for this admin user has been deleted");
+      HttpStatus.OK, "MSG_0045", "The invitation for this admin user has been deleted"),
+
+  GET_APP_SUCCESS(HttpStatus.OK, "MSG_0046", "App fetched successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

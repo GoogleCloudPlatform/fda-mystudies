@@ -45,6 +45,7 @@ class DBHandler: NSObject {
       dbUser = DBUser()
       dbUser?.userType = (user.userType?.rawValue)!
       dbUser?.emailId = user.emailId!
+      dbUser?.verificationTime = user.verificationTime ?? ""
       dbUser?.userId = user.userId
       dbUser?.verified = user.verified
 
@@ -57,6 +58,7 @@ class DBHandler: NSObject {
         try realm.write {
           dbUser?.userType = (user.userType?.rawValue)!
           dbUser?.emailId = user.emailId!
+          dbUser?.verificationTime = user.verificationTime ?? ""
           dbUser?.authToken = user.authToken
           dbUser?.verified = user.verified
           dbUser?.refreshToken = user.refreshToken
@@ -81,6 +83,7 @@ class DBHandler: NSObject {
       currentUser.verified = dbUser?.verified ?? false
       currentUser.userId = dbUser?.userId
       currentUser.emailId = dbUser?.emailId
+      currentUser.verificationTime = dbUser?.verificationTime
       currentUser.userType = (dbUser?.userType).map { UserType(rawValue: $0) }!
 
       let settings = Settings()
@@ -104,10 +107,16 @@ class DBHandler: NSObject {
 
     try? realm.write {
       let user = User.currentUser
+      dbUser?.userType = (user.userType?.rawValue)!
+      dbUser?.emailId = user.emailId!
+      dbUser?.verificationTime = user.verificationTime ?? ""
+      dbUser?.authToken = user.authToken
+      dbUser?.verified = user.verified
+      dbUser?.refreshToken = user.refreshToken
+      
       dbUser?.passcodeEnabled = (user.settings?.passcode)!
       dbUser?.localNotificationEnabled = (user.settings?.localNotifications)!
       dbUser?.remoteNotificationEnabled = (user.settings?.remoteNotifications)!
-
     }
   }
 
@@ -486,6 +495,7 @@ class DBHandler: NSObject {
 
     StudyUpdates.studyActivitiesUpdated = (dbStudy?.updateActivities)!
     StudyUpdates.studyConsentUpdated = (dbStudy?.updateConsent)!
+    StudyUpdates.studyVersion = (dbStudy?.version)!
     StudyUpdates.studyEnrollAgain = (dbStudy?.updateStudyEnrollAgain)!
     StudyUpdates.studyResourcesUpdated = (dbStudy?.updateResources)!
     StudyUpdates.studyInfoUpdated = (dbStudy?.updateInfo)!
@@ -1536,17 +1546,24 @@ class DBHandler: NSObject {
     date: Date
   ) {
 
+    let studyId = Study.currentStudy?.studyId ?? ""
     let realm = DBHandler.getRealmObject()!
-    let dbStatisticsList = realm.objects(DBStatistics.self).filter(
-      "activityId == %@ && dataSourceKey == %@",
+    
+    var dbStatisticsList: Results<DBStatistics>
+    var dbChartsList: Results<DBCharts>
+    
+    dbStatisticsList = realm.objects(DBStatistics.self).filter(
+      "activityId == %@ && dataSourceKey == %@ && studyId == %@",
       activityId,
-      key
+      key,
+      studyId
     )
 
-    let dbChartsList = realm.objects(DBCharts.self).filter(
-      "activityId == %@ && dataSourceKey == %@",
+    dbChartsList = realm.objects(DBCharts.self).filter(
+      "activityId == %@ && dataSourceKey == %@ && studyId == %@",
       activityId,
-      key
+      key,
+      studyId
     )
 
     let dbStatistics = dbStatisticsList.last

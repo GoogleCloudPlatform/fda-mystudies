@@ -379,7 +379,6 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
           UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
         }
-        HomeViewController.setRootView()
       } else {
         self.slideMenuController()?.leftViewController?.navigationController?
           .popToRootViewController(animated: false)
@@ -632,6 +631,8 @@ extension ProfileViewController: UITableViewDataSource {
       case .emailId:
         keyBoardType = .emailAddress
         isSecuredEntry = false
+        cell.textFieldValue?.isHidden = false
+        cell.buttonChangePassword?.isHidden = true
 
       case .confirmPassword:  //  ChangePasscode
 

@@ -48,4 +48,8 @@ public interface NotificationService {
       String customStudyId);
 
   public List<String> getGatwayAppList();
+
+  public List<String> getGatwayAppList(String userId);
+
+  public List<NotificationBO> getViewNotificationList(String userId);
 }

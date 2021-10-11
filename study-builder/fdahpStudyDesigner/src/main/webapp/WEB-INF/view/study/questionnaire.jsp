@@ -886,6 +886,9 @@
                           class="hide addBtnDis addbtn mr-sm align-span-center"
                           onclick='addTime();'>+
                     </span>
+                        <span
+                          class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                          onclick='removeTime(this);'></span>
                   </div>
                 </c:if>
                 <c:if
@@ -1894,10 +1897,12 @@
   var multiTimeVal = true;
   var table1;
   var customAnchorCount = 0;
+  var actionType = "${actionType}";
   var scheduletype = "${questionnaireBo.scheduleType}";
   if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined') {
     scheduletype = $('input[name="scheduleType"]:checked').val();
   }
+  
   $(document).ready(function () {
 	$('.studyClass').addClass("active");
     $("#dailyxdaysId").change(function () {
@@ -1924,6 +1929,11 @@
     
     $('input:radio[value="' + frequencyVal + '"]').prop('checked', true); 
     $('input:radio[value="' + scheduletypeVal + '"]').prop('checked', true); 
+    
+    if(actionType == 'view'){
+ 		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+ 		  $('.remBtnDis').removeClass('cursor-display').addClass('cursor-none');
+   }
     
     $(".scheduleQusClass").click(function () {
       if ($("#schedule2").prop("checked")) {

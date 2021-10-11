@@ -142,10 +142,8 @@ public class ActivityMetaDataDao {
 
         activeTaskDtoList =
             session
-                .getNamedQuery("getActiveTaskDetailsByCustomStudyId")
-                .setString(
-                    StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(),
-                    studyVersionDto.getCustomStudyId())
+                .getNamedQuery("getActiveTaskDetailsByStudyId")
+                .setString(StudyMetaDataEnum.QF_STUDY_ID.value(), studyDto.getId())
                 .setInteger(StudyMetaDataEnum.QF_LIVE.value(), 1)
                 .setInteger(StudyMetaDataEnum.QF_ACTIVE.value(), 0)
                 .list();
@@ -1163,11 +1161,7 @@ public class ActivityMetaDataDao {
               .createQuery(
                   "from ActiveTaskCustomFrequenciesDto ATCFDTO"
                       + " where ATCFDTO.activeTaskId=:activeTaskId"
-                      + " ORDER BY"
-                      + " case ATCFDTO.xDaysSign when '1' then ATCFDTO.timePeriodFromDays END DESC,"
-                      + " case ATCFDTO.xDaysSign when '1' then ATCFDTO.frequencyStartTime END ASC,"
-                      + " case ATCFDTO.xDaysSign when '0' then ATCFDTO.timePeriodFromDays END ASC,"
-                      + " case ATCFDTO.xDaysSign when '0' then ATCFDTO.frequencyStartTime END ASC")
+                      + " ORDER BY ATCFDTO.frequencyStartDate ASC, ATCFDTO.frequencyStartTime")
               .setString("activeTaskId", activeTask.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
@@ -3001,13 +2995,15 @@ public class ActivityMetaDataDao {
           }
 
           activityBean.setStartTime(
-              StudyMetaDataUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
-                  StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+              StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeStart())
+                  ? ""
+                  : StudyMetaDataUtil.getFormattedDateTimeZone(
+                      startDateTime,
+                      StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
+                      StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 
           activityBean.setEndTime(
-              StringUtils.isEmpty(endDateTime)
+              StringUtils.isEmpty(activeTaskDto.getActiveTaskLifetimeEnd())
                   ? ""
                   : StudyMetaDataUtil.getFormattedDateTimeZone(
                       endDateTime,

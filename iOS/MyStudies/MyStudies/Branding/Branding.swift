@@ -58,7 +58,7 @@ enum Branding {
   }
 
   static var websiteLink: String {
-    return brandConfig[JSONKey.websiteLink] as? String ?? ""
+    return UserManageApps.appDetails?.appWebsite ?? brandConfig[JSONKey.websiteLink] as? String ?? ""
   }
 
   static var websiteButtonTitle: String {
@@ -66,11 +66,11 @@ enum Branding {
   }
 
   static var termsAndConditionURL: String {
-    return brandConfig[JSONKey.termsAndConditionURL] as? String ?? ""
+    return UserManageApps.appDetails?.termsUrl ?? brandConfig[JSONKey.termsAndConditionURL] as? String ?? ""
   }
 
   static var privacyPolicyURL: String {
-    return brandConfig[JSONKey.privacyPolicyURL] as? String ?? ""
+    return UserManageApps.appDetails?.privacyPolicyUrl ?? brandConfig[JSONKey.privacyPolicyURL] as? String ?? ""
   }
 
   static var validatedTitle: String {

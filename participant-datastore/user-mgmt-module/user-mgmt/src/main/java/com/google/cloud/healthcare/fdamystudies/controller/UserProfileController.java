@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.RandomAlphanumericGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -35,10 +36,10 @@ import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -210,11 +211,13 @@ public class UserProfileController {
       }
       if (participantDetails != null) {
         if (UserStatus.PENDING_EMAIL_CONFIRMATION.getValue() == participantDetails.getStatus()) {
-          String code = MyStudiesUserRegUtil.generateRandomAlphanumeric(VERIFICATION_CODE_LENGTH);
+          String code =
+              RandomAlphanumericGenerator.generateRandomAlphanumeric(VERIFICATION_CODE_LENGTH);
           participantDetails.setEmailCode(code);
           participantDetails.setCodeExpireDate(
               Timestamp.valueOf(LocalDateTime.now().plusHours(expireTime)));
-          participantDetails.setVerificationDate(Timestamp.from(Instant.now()));
+          participantDetails.setVerificationDate(
+              UserManagementUtil.getCurrentDate() + " " + UserManagementUtil.getCurrentTime());
           UserDetailsEntity updParticipantDetails =
               userManagementProfService.saveParticipant(participantDetails);
           if (updParticipantDetails != null) {

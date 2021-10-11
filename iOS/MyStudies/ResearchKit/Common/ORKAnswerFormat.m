@@ -2416,10 +2416,14 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
 - (BOOL)isTextRegularExpressionValidWithString:(NSString *)text {
     BOOL isValid = YES;
     if (self.validationRegularExpression) {
-        NSUInteger regularExpressionMatches = [_validationRegularExpression numberOfMatchesInString:text
-                                                                                            options:(NSMatchingOptions)0
-                                                                                              range:NSMakeRange(0, [text length])];
-        isValid = (regularExpressionMatches != 0);
+        NSString *someRegexp = self.validationRegularExpression.pattern;
+        NSPredicate *myTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", someRegexp];
+
+        if ([myTest evaluateWithObject: text]) {
+            return YES;
+        } else {
+            return NO;
+        }
     }
     return isValid;
 }

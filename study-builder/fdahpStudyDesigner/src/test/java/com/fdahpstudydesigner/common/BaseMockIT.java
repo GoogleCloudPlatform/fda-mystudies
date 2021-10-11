@@ -291,7 +291,9 @@ public class BaseMockIT {
     Map<String, String> map = reader.readValue(objectMapper.writeValueAsString(formModel));
     for (Map.Entry<String, String> entry : map.entrySet()) {
       String value = String.valueOf(entry.getValue());
-      if (StringUtils.isNotEmpty(value) && !StringUtils.equals(value, "null")) {
+      if (StringUtils.isNotEmpty(value)
+          && !StringUtils.equals(value, "null")
+          && !StringUtils.equals(value, "{}")) {
         requestBuilder.param(entry.getKey(), value);
       }
     }

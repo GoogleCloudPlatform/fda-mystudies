@@ -33,6 +33,7 @@ enum RegistrationMethods: String {
   case versionInfo
   case feedback
   case contactUs
+  case apps
 
   var description: String {
     switch self {
@@ -58,7 +59,7 @@ enum RegistrationMethods: String {
     switch self {
 
     case .confirmRegistration, .userProfile,
-      .userPreferences, .versionInfo:
+         .userPreferences, .versionInfo, .apps:
       // GET Methods
       return Method(
         methodName: self.apiPath,
