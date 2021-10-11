@@ -155,8 +155,8 @@ color: #95a2ab;
     </div>
     
      
-     
-      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
+      
         <div class="dis-line pull-right ml-md mt-xs">
           <div class="form-group mb-none">
           <p class="black-lg-f ml-lg deactivated_lable">
@@ -168,9 +168,11 @@ color: #95a2ab;
                     <span class="switch-label deactivate_switch-label" data-on="Off" data-off="On"></span>
                     <span class="switch-handle deactivate_switch-handle"></span>
                   </label>
+            <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}">
             <button type="button" class="btn btn-primary blue-btn addEditStudy"> Create study
             </button>
               <button type="button" class="btn btn-primary blue-btn importStudy"  onclick="importStudy();"> Import </button>
+             </c:if>
           </div>
         </div>
       </c:if>
