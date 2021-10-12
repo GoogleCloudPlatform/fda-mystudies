@@ -133,6 +133,7 @@
       </div>
     </div>
   </div>
+  <c:if test="${userBO.gciUser eq false}">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
     <div class="white-bg box-space">
       <div class="row" id="hideChangePwd">
@@ -224,6 +225,7 @@
       </div>
     </div>
   </div>
+  </c:if>
 </form:form>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
   <div class="white-bg box-space">
