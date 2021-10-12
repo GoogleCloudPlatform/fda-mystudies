@@ -86,6 +86,9 @@ public class UsersController {
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciEnabled = configMap.get("gciEnabled");
+
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
       HttpServletRequest request, HttpServletResponse response, String userId, String userStatus)
@@ -125,6 +128,8 @@ public class UsersController {
     String actionPage = "";
     List<Integer> permissions = null;
     String usrId = null;
+    List<UserBO> userList = null;
+    List<GciAdminList> gciAdminList = new ArrayList();
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
         String userId =
@@ -150,6 +155,37 @@ public class UsersController {
             }
           } else {
             actionPage = FdahpStudyDesignerConstants.ADD_PAGE;
+            if (Boolean.parseBoolean(gciEnabled)) {
+              userList = usersService.getUserList();
+
+              List<GciAdminList> users = new ArrayList();
+              Map<String, GciAdminList> userMap = new HashMap<>();
+              for (UserBO user : userList) {
+                GciAdminList sbUser = new GciAdminList();
+                sbUser.setEmailId(user.getUserEmail());
+                users.add(sbUser);
+                userMap.put(user.getUserEmail(), sbUser);
+              }
+
+              // Start listing users from the beginning, 1000 at a time.
+              ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
+
+              for (ExportedUserRecord user : page.iterateAll()) {
+                GciAdminList admin = new GciAdminList();
+                if (!user.isDisabled()) {
+                  admin.setEmailId(user.getEmail());
+                  admin.setUid(user.getUid());
+                  gciAdminList.add(admin);
+                }
+              }
+              List adminList = new ArrayList();
+              for (GciAdminList a1 : gciAdminList) {
+                if (!userMap.containsKey(a1.getEmailId())) {
+                  adminList.add(a1.getEmailId());
+                }
+              }
+              map.addAttribute("adminList", adminList);
+            }
           }
           roleBOList = usersService.getUserRoleList();
           studyBOList = studyService.getAllStudyList();
@@ -414,7 +450,6 @@ public class UsersController {
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     List<UserBO> userList = null;
-    List<GciAdminList> gciAdminList = new ArrayList();
     String sucMsg = "";
     String errMsg = "";
     String ownUser = "";
@@ -434,36 +469,6 @@ public class UsersController {
         ownUser = (String) request.getSession().getAttribute("ownUser");
         userList = usersService.getUserList();
         roleList = usersService.getUserRoleList();
-
-        List<GciAdminList> users = new ArrayList();
-        Map<String, GciAdminList> userMap = new HashMap<>();
-        for (UserBO user : userList) {
-          GciAdminList sbUser = new GciAdminList();
-          sbUser.setEmailId(user.getUserEmail());
-          users.add(sbUser);
-          userMap.put(user.getUserEmail(), sbUser);
-        }
-
-        // Start listing users from the beginning, 1000 at a time.
-        ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
-
-        for (ExportedUserRecord user : page.iterateAll()) {
-          GciAdminList admin = new GciAdminList();
-          /*System.out.println("User: " + user.getUid());*/
-          if (!user.isDisabled()) {
-            admin.setEmailId(user.getEmail());
-            admin.setUid(user.getUid());
-            gciAdminList.add(admin);
-          }
-        }
-        List<GciAdminList> adminList = new ArrayList();
-        for (GciAdminList a1 : gciAdminList) {
-          if (!userMap.containsKey(a1.getEmailId())) {
-            adminList.add(a1);
-          }
-        }
-
-        map.addAttribute("adminList", adminList);
         map.addAttribute("roleList", roleList);
         map.addAttribute("userList", userList);
         map.addAttribute("ownUser", ownUser);

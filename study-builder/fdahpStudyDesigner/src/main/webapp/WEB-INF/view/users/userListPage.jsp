@@ -4,10 +4,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import = "java.util.ResourceBundle" %>
-<% ResourceBundle resource = ResourceBundle.getBundle("application");
-			String gciEnabled=resource.getString("gciEnabled");
-%>
 
 <style>
     #user_list tr td {
@@ -59,19 +55,6 @@
           </c:if>
         </div>
       </div>
-     <c:if test="${testvar eq true}">
-       <div class="dis-line pull-right"
-           style="margin-top: 10px; height: auto;">
-        <div class="mb-none mt-xs">
-          <select class="selectpicker btn-md" id="filterEmail">
-            <option value="" selected>Invite admins</option>
-            <c:forEach items="${adminList}" var="admin">
-              <option class="viewAdminClass" value="${admin.emailId}" id="email">${admin.emailId}</option>
-            </c:forEach>
-          </select>
-        </div>
-      </div>
-      </c:if>
       
       
       <div class="dis-line pull-right mr-md"
@@ -183,12 +166,6 @@
     $('#users').addClass('active');
 	
     $('[data-toggle="tooltip"]').tooltip();
-    $('#filterEmail').on('change', function () {
-        var email = $(this).find("option:selected").val();
-    	$('#emailId').val(email);
-        $('#checkRefreshFlag').val('Y');
-        $('#addOrEditUserForm').submit();
-      });
 
     <c:if test="${ownUser eq '1'}">
     bootbox.alert({

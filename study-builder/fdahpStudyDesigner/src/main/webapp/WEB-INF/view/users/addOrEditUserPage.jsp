@@ -4,6 +4,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page import = "java.util.ResourceBundle" %>
+<% ResourceBundle resource = ResourceBundle.getBundle("application");
+			String gciEnabled=resource.getString("gciEnabled");
+%>
 
 <style>
 .disabled {
@@ -172,6 +176,8 @@
               </c:if>
               <span class="requiredStar"> *</span>
             </div>
+            <c:set var="gciEnabled" value="<%=gciEnabled %>"/>
+            <c:if test="${gciEnabled eq false }">
             <div class="form-group">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" 
@@ -187,7 +193,32 @@
                          test="${not empty emailId}">disabled value="${emailId}"</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
+            </c:if>
+            <c:if test="${gciEnabled eq true }">
+		       <div class="form-group">
+		         <input type="text" class="form-control" id="emailId" list="mine"
+                     name="userEmail" 
+                     oldVal="${userBO.userEmail}" 
+                     pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
+                     required
+                     <c:if
+                         test="${not empty userBO}">value="${userBO.userEmail}"</c:if> 
+                     <c:if
+                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> 
+                         <c:if
+                         test="${not empty emailId}">disabled value="${emailId}"</c:if> />
+                         <datalist id="mine">
+							  <c:forEach items="${adminList}" var="adminList">
+                        <option value="${adminList}">${adminList}</option>
+                      </c:forEach>
+							</datalist>
+                         <div class="help-block with-errors red-txt"></div>
+		       </div>
+		       </c:if>
           </div>
+          
+          
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
@@ -673,6 +704,11 @@
         var csrfToken = $('#csrfDet').attr('csrfToken');
         $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if (email !== '') {
+        	const adminList = '${adminList}' 
+                if(!adminList.includes(email) && adminList != null && <%=gciEnabled %>){
+                	bootbox.confirm("Are you sure you wish to add this non-gci user?",
+                            function (result) {
+                              if (result) {
           $("body").addClass("loading");
           $.ajax({
             url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
@@ -697,9 +733,40 @@
                 $('#emailId').parent().find(".help-block").empty();
                 $('#emailId').parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists"));
-              }
-            }
+	              }
+	            }
+	          });
+	        }
           });
+   		}else {
+           	$("body").addClass("loading");
+               $.ajax({
+                 url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
+                 type: "POST",
+                 datatype: "json",
+                 global: false,
+                 data: {
+                   email: email,
+                 },
+                 success: function getResponse(data) {
+                   var message = data.message;
+                   if ('SUCCESS' !== message) {
+                     $('#emailId').validator('validate');
+                     $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
+                     $('#emailId').parent().find(".help-block").empty();
+                     saveUser();
+                   } else {
+                     $("body").removeClass("loading");
+                     isFromValid($('.addUpdate').parents('form'));
+                     $('#emailId').val('');
+                     $('#emailId').parent().addClass("has-danger").addClass("has-error");
+                     $('#emailId').parent().find(".help-block").empty();
+                     $('#emailId').parent().find(".help-block").append(
+                     	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists"));
+                   }
+                 }
+               });
+           }
         }
       } else {
         $('#emailId').validator('validate');
