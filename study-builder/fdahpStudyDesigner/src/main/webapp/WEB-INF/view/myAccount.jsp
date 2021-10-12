@@ -225,6 +225,7 @@
     </div>
   </div>
 </form:form>
+ <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
   <div class="white-bg box-space">
 
@@ -318,6 +319,7 @@
     </div>
   </div>
 </div>
+</c:if>
 <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
        csrfToken="${_csrf.token}"/>
 
