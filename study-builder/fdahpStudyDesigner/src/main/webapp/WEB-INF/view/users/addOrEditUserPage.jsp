@@ -122,7 +122,7 @@
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
       <c:if
-          test="${actionPage eq 'EDIT_PAGE' && (userBO.gciUser eq false || not empty userBO.userPassword) && not userBO.emailChanged}">
+          test="${actionPage eq 'EDIT_PAGE' && (userBO.gciUser eq true || not empty userBO.userPassword) && not userBO.emailChanged}">
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"
