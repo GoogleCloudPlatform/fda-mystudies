@@ -1,6 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page import = "java.util.ResourceBundle" %>
+<% ResourceBundle resource = ResourceBundle.getBundle("application");
+			String gciApiKey=resource.getString("gciApiKey");
+			String gciAuthDomain=resource.getString("gciAuthDomain");
+%>
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="en">
   <head>
@@ -220,8 +225,8 @@
       $(document).ready(function (e) {
 
       var config = {
-   	    apiKey: "AIzaSyB0Dlx5-qXxVXsNOu2MGx5v7Ry1F0PyYOg",
-   	    authDomain: "clean-mountain-326213.firebaseapp.com",
+    		  apiKey: "<%=gciApiKey %>",
+    	   	  authDomain: "<%=gciAuthDomain %>",
    	  };
    	  firebase.initializeApp(config);
   	    
