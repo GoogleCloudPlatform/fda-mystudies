@@ -57,8 +57,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -129,7 +131,11 @@ public class UsersController {
     List<Integer> permissions = null;
     String usrId = null;
     List<UserBO> userList = null;
-    List<GciAdminList> gciAdminList = new ArrayList();
+    List<GciAdminList> gciAdminList = new ArrayList<GciAdminList>();
+    Set<String> sbUserList = new HashSet<>();
+    Set<String> gciUserList = new HashSet<>();
+    List<String> adminList = new ArrayList<String>();
+
     try {
       if (FdahpStudyDesignerUtil.isSession(request)) {
         String userId =
@@ -145,48 +151,70 @@ public class UsersController {
                 ? ""
                 : request.getParameter("emailId");
         if (!"".equalsIgnoreCase(checkRefreshFlag)) {
+
           if (!"".equals(userId)) {
-            usrId = userId;
+            userBO = usersService.getUserDetails(userId);
+          }
+          if (Boolean.parseBoolean(gciEnabled)) {
+            userList = usersService.getUserList();
+
+            List<GciAdminList> users = new ArrayList<GciAdminList>();
+            Map<String, GciAdminList> userMap = new HashMap<>();
+            for (UserBO user : userList) {
+              GciAdminList sbUser = new GciAdminList();
+
+              //  if (user.isGciUser()) {
+              sbUserList.add(user.getUserEmail());
+              //   }
+
+              sbUser.setEmailId(user.getUserEmail());
+              users.add(sbUser);
+              userMap.put(user.getUserEmail(), sbUser);
+            }
+
+            // Start listing users from the beginning, 1000 at a time.
+            ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
+
+            for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
+
+              gciUserList.add(exportedUserRecord.getEmail());
+              GciAdminList admin = new GciAdminList();
+              if (!exportedUserRecord.isDisabled()) {
+                admin.setEmailId(exportedUserRecord.getEmail());
+                admin.setUid(exportedUserRecord.getUid());
+                gciAdminList.add(admin);
+              }
+            }
+
+            for (GciAdminList a1 : gciAdminList) {
+              if (!userMap.containsKey(a1.getEmailId())) {
+                adminList.add(a1.getEmailId());
+              }
+            }
+
+            sbUserList.removeAll(gciUserList);
+            if (!sbUserList.isEmpty()) {
+              for (String userEmails : sbUserList) {
+                if (null != userBO && userEmails.equalsIgnoreCase(userBO.getUserEmail())) {
+                  map.addAttribute("userDeleted", "Y");
+                }
+              }
+            }
+          }
+
+          if (!"".equals(userId)) {
             actionPage = FdahpStudyDesignerConstants.EDIT_PAGE;
-            userBO = usersService.getUserDetails(usrId);
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
             }
           } else {
             actionPage = FdahpStudyDesignerConstants.ADD_PAGE;
-            if (Boolean.parseBoolean(gciEnabled)) {
-              userList = usersService.getUserList();
-
-              List<GciAdminList> users = new ArrayList();
-              Map<String, GciAdminList> userMap = new HashMap<>();
-              for (UserBO user : userList) {
-                GciAdminList sbUser = new GciAdminList();
-                sbUser.setEmailId(user.getUserEmail());
-                users.add(sbUser);
-                userMap.put(user.getUserEmail(), sbUser);
-              }
-
-              // Start listing users from the beginning, 1000 at a time.
-              ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
-
-              for (ExportedUserRecord user : page.iterateAll()) {
-                GciAdminList admin = new GciAdminList();
-                if (!user.isDisabled()) {
-                  admin.setEmailId(user.getEmail());
-                  admin.setUid(user.getUid());
-                  gciAdminList.add(admin);
-                }
-              }
-              List adminList = new ArrayList();
-              for (GciAdminList a1 : gciAdminList) {
-                if (!userMap.containsKey(a1.getEmailId())) {
-                  adminList.add(a1.getEmailId());
-                }
-              }
+            if (!adminList.isEmpty()) {
               map.addAttribute("adminList", adminList);
             }
           }
+
           roleBOList = usersService.getUserRoleList();
           studyBOList = studyService.getAllStudyList();
           map.addAttribute("actionPage", actionPage);
@@ -198,6 +226,7 @@ public class UsersController {
           if (StringUtils.isNotEmpty(emailId)) {
             map.addAttribute("emailId", emailId);
           }
+
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");

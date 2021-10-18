@@ -292,9 +292,9 @@
         $('#signOut').on('click', function () {
             firebase.auth().signOut()
         	   .then(function() {
-        	      alert('1Signout Succesfull')
+        	      console.log('Signout Success')
         	   }, function(error) {
-        		  alert('1Signout Failed' + error)
+        		  console.log('Signout Failed' + error)
         	   });
          });
         

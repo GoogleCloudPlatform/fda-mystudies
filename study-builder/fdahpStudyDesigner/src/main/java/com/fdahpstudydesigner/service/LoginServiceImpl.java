@@ -59,8 +59,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -179,6 +181,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
               UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
               logger.info("Successfully updated user data: ", userRecordUpdated.getEmail());
+              userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword("password"));
               userBO.setGciUser(true);
             } else {
               userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
@@ -248,6 +251,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     logger.entry("begin addOrUpdateOrgUser()");
     UserBO userBO2 = null;
     List<UserBO> userList = null;
+    Set<String> sbUserList = new HashSet<>();
+    Set<String> gciUserList = new HashSet<>();
 
     try {
       // Get study builder user list
@@ -255,16 +260,39 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
       ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
       for (UserBO user : userList) {
+
         userBO2 = loginDAO.getValidUserByEmail(user.getUserEmail());
+
+        if (null != userBO2 && userBO2.isGciUser()) {
+          sbUserList.add(userBO2.getUserEmail());
+        }
+
         for (ExportedUserRecord gciUser : page.iterateAll()) {
+
+          gciUserList.add(gciUser.getEmail());
+
+          // Disable Study Builder user if that user is disabled in Google Identity Platform
           if (null != userBO2
               && userBO2.isGciUser()
-              && gciUser.getEmail().equals(userBO2.getUserEmail())) {
+              && gciUser.getEmail().equalsIgnoreCase(userBO2.getUserEmail())) {
             if (gciUser.isDisabled()) {
               userBO2.setEnabled(false);
             } else {
               userBO2.setEnabled(true);
             }
+            loginDAO.updateUser(userBO2);
+          }
+        }
+      }
+
+      // Disable Study Builder users if that user is deleted in Google Identity Platform
+      sbUserList.removeAll(gciUserList);
+      if (!sbUserList.isEmpty()) {
+        for (String userEmails : sbUserList) {
+          userBO2 = loginDAO.getValidUserByEmail(userEmails);
+          if (userBO2.isEnabled()) {
+            userBO2.setEnabled(false);
+            userBO2.setGciUser(false);
             loginDAO.updateUser(userBO2);
           }
         }

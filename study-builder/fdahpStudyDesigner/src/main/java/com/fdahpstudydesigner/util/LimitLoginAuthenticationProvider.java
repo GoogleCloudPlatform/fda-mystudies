@@ -46,7 +46,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -113,10 +112,18 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       if (userBO.isGciUser()) {
 
         // if reach here, means login success, else an exception will be thrown
-        Authentication auth =
+        //        Authentication auth =
+        //            new UsernamePasswordAuthenticationToken(
+        //                authentication.getPrincipal(), "password", new
+        // ArrayList<GrantedAuthority>());
+        //        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        UsernamePasswordAuthenticationToken token =
             new UsernamePasswordAuthenticationToken(
-                authentication.getPrincipal(), null, new ArrayList<GrantedAuthority>());
-        SecurityContextHolder.getContext().setAuthentication(auth);
+                authentication.getPrincipal(), "password", new ArrayList<GrantedAuthority>());
+
+        // if reach here, means login success, else an exception will be thrown
+        Authentication auth = super.authenticate(token);
 
         // reset the user_attempts
         loginDAO.resetFailAttempts(authentication.getName().toLowerCase());

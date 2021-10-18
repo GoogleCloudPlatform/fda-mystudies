@@ -266,13 +266,20 @@
                 <c:if
                     test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
                   <span class="ml-xs">&nbsp; <label
-                      class="switch bg-transparent mt-xs"> <input
-                      type="checkbox" class="switch-input"
-                      value="${userBO.enabled}" id="change${userBO.userId}"
+                      class="switch bg-transparent mt-xs"
+                      data-toggle="tooltip"  data-placement="top" 
+                      <c:if test="${userDeleted eq 'Y'}">title="This GCI user might be deleted,
+                        to enable this kindly add this user in identity platform"
+		              </c:if>> <input
+                      type="checkbox" class="switch-input"  
+                      value="${userBO.enabled}" id="change${userBO.userId}" 
+                      
+		            	
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
-                          test="${(userBO.gciUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged}">disabled</c:if>
+                          test="${(userBO.gciUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged || userDeleted eq 'Y'}">disabled</c:if>
                       onclick="activateOrDeactivateUser('${userBO.userId}');">
+                      
                     <span class="switch-label bg-transparent" data-on="On"
                           data-off="Off"></span>
                     <span class="switch-handle"></span>
