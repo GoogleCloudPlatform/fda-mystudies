@@ -7901,17 +7901,17 @@ public class StudyDAOImpl implements StudyDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
-      if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
-        String searchQuery =
-            " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
-        query = session.createQuery(searchQuery);
-        query.setString("studyId", studyId);
-      } else {
+      //   if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
+      String searchQuery =
+          " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
+      query = session.createQuery(searchQuery);
+      query.setString("studyId", studyId);
+      /*  } else {
         String searchQuery =
             " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId ORDER BY CBO.version desc ";
         query = session.createQuery(searchQuery);
         query.setString("customStudyId", customStudyId);
-      }
+      }*/
       consentBoList = query.list();
       transaction.commit();
     } catch (Exception e) {
