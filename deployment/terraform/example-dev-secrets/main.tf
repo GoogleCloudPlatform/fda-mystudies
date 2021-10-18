@@ -151,22 +151,6 @@ resource "google_secret_manager_secret" "manual_mystudies_from_email_address" {
 }
 
 
-resource "google_secret_manager_secret" "manual_mystudies_contact_email_address" {
-  provider = google-beta
-
-  secret_id = "manual-mystudies-contact-email-address"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-central1"
-      }
-    }
-  }
-}
-
-
 resource "google_secret_manager_secret" "manual_mystudies_from_email_domain" {
   provider = google-beta
 
