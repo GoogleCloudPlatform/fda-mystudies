@@ -222,7 +222,7 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
         newVersion = apps.getVersion().getAndroid().getLatestVersion();
         force = Boolean.parseBoolean(apps.getVersion().getAndroid().getForceUpdate());
         if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
-          // Do nothing
+          forgotSignin();
         } else {
           if (!force) {
             forgotSignin();
