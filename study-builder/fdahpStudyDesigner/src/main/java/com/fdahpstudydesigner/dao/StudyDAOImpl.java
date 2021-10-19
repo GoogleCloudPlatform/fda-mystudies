@@ -8024,13 +8024,12 @@ public class StudyDAOImpl implements StudyDAO {
       if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
         String searchQuery =
             " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
-        query = session.createQuery(searchQuery);
-        query.setString("studyId", studyId);
+        query = session.createQuery(searchQuery).setString("studyId", studyId);
       } else {
         String searchQuery =
-            " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId ORDER BY CBO.version desc ";
-        query = session.createQuery(searchQuery);
-        query.setString("customStudyId", customStudyId);
+            " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId AND CBO.version IN "
+                + " (SELECT MAX(version) FROM ConsentBo WHERE customStudyId=:customStudyId) ";
+        query = session.createQuery(searchQuery).setString("customStudyId", customStudyId);
       }
       consentBoList = query.list();
       transaction.commit();
