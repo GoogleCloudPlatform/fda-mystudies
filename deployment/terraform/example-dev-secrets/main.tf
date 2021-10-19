@@ -166,7 +166,7 @@ resource "google_secret_manager_secret" "manual_mystudies_contact_email_address"
   }
 }
 
-    
+
 resource "google_secret_manager_secret" "manual_mystudies_from_email_domain" {
   provider = google-beta
 
