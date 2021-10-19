@@ -238,9 +238,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     templateArgs.put("securitytoken", verificationCode);
     templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
     templateArgs.put("appName", user.getAppName());
+
+    String fromEmail =
+        (optApp.get().getFromEmailId() != null)
+            ? optApp.get().getFromEmailId()
+            : appConfig.getFromEmail();
     EmailRequest emailRequest =
         new EmailRequest(
-            optApp.get().getFromEmailId(),
+            fromEmail,
             new String[] {userDetails.getEmail()},
             null,
             null,
