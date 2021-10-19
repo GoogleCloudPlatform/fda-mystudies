@@ -163,9 +163,8 @@ public class UsersController {
             for (UserBO user : userList) {
               GciAdminList sbUser = new GciAdminList();
 
-              //  if (user.isGciUser()) {
+              // Study builder user email list
               sbUserList.add(user.getUserEmail());
-              //   }
 
               sbUser.setEmailId(user.getUserEmail());
               users.add(sbUser);
@@ -176,7 +175,7 @@ public class UsersController {
             ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
 
             for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
-
+              // Google identity platform user email list
               gciUserList.add(exportedUserRecord.getEmail());
               GciAdminList admin = new GciAdminList();
               if (!exportedUserRecord.isDisabled()) {
@@ -192,6 +191,7 @@ public class UsersController {
               }
             }
 
+            // Deleted users list from google identity platform
             sbUserList.removeAll(gciUserList);
             if (!sbUserList.isEmpty()) {
               for (String userEmails : sbUserList) {

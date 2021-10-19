@@ -92,6 +92,9 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Autowired private UsersDAO usersDAO;
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciUserTempPassword = configMap.get("gciUserTempPassword");
+
   @Override
   public String authAndAddPassword(
       String securityToken, String password, UserBO userBO2, SessionObject sesObj) {
@@ -181,7 +184,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
               UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
               logger.info("Successfully updated user data: ", userRecordUpdated.getEmail());
-              userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword("password"));
+              userBO.setUserPassword(
+                  FdahpStudyDesignerUtil.getEncryptedPassword(gciUserTempPassword));
               userBO.setGciUser(true);
             } else {
               userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));

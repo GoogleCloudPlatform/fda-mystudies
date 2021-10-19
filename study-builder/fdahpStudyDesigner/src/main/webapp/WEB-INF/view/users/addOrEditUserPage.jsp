@@ -268,8 +268,7 @@
                   <span class="ml-xs">&nbsp; <label
                       class="switch bg-transparent mt-xs"
                       data-toggle="tooltip"  data-placement="top" 
-                      <c:if test="${userDeleted eq 'Y'}">title="This GCI user might be deleted,
-                        to enable this kindly add this user in identity platform"
+                      <c:if test="${userDeleted eq 'Y'}">title="This user may be deleted from the organization directory or user whitelist for the Study Builder. Please contact your IT admin to have them added back and try again."
 		              </c:if>> <input
                       type="checkbox" class="switch-input"  
                       value="${userBO.enabled}" id="change${userBO.userId}" 

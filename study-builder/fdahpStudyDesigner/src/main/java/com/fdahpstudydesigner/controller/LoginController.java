@@ -70,6 +70,9 @@ public class LoginController {
 
   private LoginServiceImpl loginService;
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciEnabled = configMap.get("gciEnabled");
+
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
     logger.entry("begin addPassword()");
@@ -267,7 +270,10 @@ public class LoginController {
     ModelMap map = new ModelMap();
     MasterDataBO masterDataBO = null;
 
-    loginService.addOrUpdateOrgUser();
+    if (Boolean.parseBoolean(gciEnabled)) {
+      loginService.addOrUpdateOrgUser();
+    }
+
     if (null != request.getSession().getAttribute("sucMsg")) {
       sucMsg = (String) request.getSession().getAttribute("sucMsg");
       map.addAttribute("sucMsg", sucMsg);

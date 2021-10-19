@@ -60,6 +60,9 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 
   Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciUserTempPassword = configMap.get("gciUserTempPassword");
+
   @Override
   public Authentication authenticate(Authentication authentication) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -111,16 +114,11 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 
       if (userBO.isGciUser()) {
 
-        // if reach here, means login success, else an exception will be thrown
-        //        Authentication auth =
-        //            new UsernamePasswordAuthenticationToken(
-        //                authentication.getPrincipal(), "password", new
-        // ArrayList<GrantedAuthority>());
-        //        SecurityContextHolder.getContext().setAuthentication(auth);
-
         UsernamePasswordAuthenticationToken token =
             new UsernamePasswordAuthenticationToken(
-                authentication.getPrincipal(), "password", new ArrayList<GrantedAuthority>());
+                authentication.getPrincipal(),
+                gciUserTempPassword,
+                new ArrayList<GrantedAuthority>());
 
         // if reach here, means login success, else an exception will be thrown
         Authentication auth = super.authenticate(token);
