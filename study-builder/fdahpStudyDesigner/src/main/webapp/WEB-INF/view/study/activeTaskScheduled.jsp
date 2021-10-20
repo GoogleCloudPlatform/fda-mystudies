@@ -1085,10 +1085,13 @@
                    count='0' placeholder="X"
                    name="activeTaskCustomScheduleBo[0].timePeriodFromDays"
                    value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
-                   maxlength="3" required data-error="Please fill out this field" pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number"/>
+                   maxlength="3" data-error="Please fill out this field" pattern="[0-9]+"
+                   data-pattern-error="Please enter valid number" required/>
             <span
                 class="help-block with-errors red-txt"></span>
+                            <span
+                class='help-block-timer with-errors red-txt' style='display:none'></span>
+                
           </span>
           <span class="mb-sm" style='padding-right: 25px !important;'>
             <span
@@ -1103,8 +1106,8 @@
 					 value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
 					 placeholder="Start time" required/>
             <span
-                class='help-block-timer with-errors red-txt' style='display:none'></span>
-            <span class='help-block with-errors red-txt'></span>
+                class='help-block with-errors red-txt' ></span>
+            <span class='help-block-timer with-errors red-txt' style='display:none'></span>
           </span>
 
           <span
@@ -1203,6 +1206,8 @@
                      data-pattern-error="Please enter valid number" data-type='xancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
+                   <span
+                class='help-block-timer with-errors red-txt' style='display:none'></span>
             </span>
             <span class="mb-sm" style='padding-right: 25px !important;'>
               <span
@@ -1217,8 +1222,8 @@
                   value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                   placeholder="Start time" required data-error="Please fill out this field"/>
             <span
-                class='help-block-timer with-errors red-txt' style='display:none'></span>
-            <span class='help-block with-errors red-txt'></span>
+                class='help-block with-errors red-txt' ></span>
+            <span class='help-block-timer with-errors red-txt' style='display:none'></span>
           </span>
 
           <span
@@ -3813,7 +3818,8 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate xancorText'"
         + "count='" + customAnchorCount + "' placeholder='X' name='activeTaskCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block-timer with-errors red-txt'></span>"
+        + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
 		+ "<span class='mb-sm pr-xl'><span class='pr-sm light-txt opacity06'> days </span>" 
         
@@ -3821,7 +3827,7 @@
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
-        + "<span class='help-block-timer with-errors red-txt' style='display:none'></span>"
+        + "<span class='help-block-timer with-errors red-txt'></span>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         
