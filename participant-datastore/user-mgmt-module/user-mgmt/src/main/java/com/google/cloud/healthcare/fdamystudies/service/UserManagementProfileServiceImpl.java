@@ -349,18 +349,17 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
           com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
     }
 
+    String fromEmail =
+        (optApp.get().getFromEmailId() != null)
+            ? optApp.get().getFromEmailId()
+            : appConfig.getFromEmail();
+
     templateArgs.put("appName", appName);
     templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
-            optApp.get().getFromEmailId(),
-            new String[] {emailId},
-            null,
-            null,
-            subject,
-            content,
-            templateArgs);
+            fromEmail, new String[] {emailId}, null, null, subject, content, templateArgs);
     logger.exit("resendConfirmationthroughEmail() - Ends");
     return emailService.sendMimeMail(emailRequest);
   }

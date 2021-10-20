@@ -51,6 +51,9 @@ public class ApplicationPropertyConfiguration {
   @Value("${contactus.mail.subject}")
   private String contactusMailSubject;
 
+  @Value("${mail.from-email}")
+  private String fromEmail;
+
   // Feedback & Contactus mail content ends
 
   @Value("${auth.server.deleteStatusUrl}")
