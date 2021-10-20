@@ -495,9 +495,7 @@
       var element = $(this).find('option:selected').text();
       setStudySettingByRole(element);
     });
-
-   
-
+    
     var countCall = 0;
     $(window).on('load', function () {
       countCall = 1;
@@ -711,8 +709,13 @@
         $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if (email !== '') {
         	const adminList = '${adminList}' 
+        	    var element = $("#roleId option:selected").text();
                 if(!adminList.includes(email) && adminList != null && <%=gciEnabled %>){
-                	bootbox.confirm("Are you sure you wish to add this non-gci user?",
+                if(element == "Superadmin")
+                	 var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
+               else
+            	     var msg = "You are inviting a person who is not listed in the organizational directory to be a Study Builder admin. Are you sure you wish to proceed?";
+                	bootbox.confirm(msg,
                             function (result) {
                               if (result) {
           $("body").addClass("loading");
