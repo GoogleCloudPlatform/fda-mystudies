@@ -37,7 +37,11 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
     -    Set `APP_TYPE` to either “gateway” or “standalone”
     -    Update `STUDY_ID` key with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
-1. Enable push notifications by creating [push notification certificates](https://help.apple.com/developer-account/#/dev82a71386a) in encrypted `.p12` format (for more information, visit [Establishing a Certificate-Based Connection to APNs](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_certificate-based_connection_to_apns))
+1. Configure Firebase Cloud Messaging (FCM) for push notifications
+    -   Go to the [Firebase console](https://console.firebase.google.com/) and select the project you configured for Cloud Firestore during [Response datastore](../response-datastore) deployment.
+    -   [Register your app](https://firebase.google.com/docs/cloud-messaging/ios/client#register-app) with Firebase and download the `GoogleService-Info.plist`. Move this config file into the root of your Xcode project.
+    -   Upload your APNs authentication key to Firebase.
+    -   Add [Firebase SDKs](https://firebase.google.com/docs/cloud-messaging/ios/client#add-sdks) and [Initialize Firebase](https://firebase.google.com/docs/cloud-messaging/ios/client#initialize_firebase_in_your_app) in your app.
 1. Configure your [`Participant datastore`](/participant-datastore/) instance to interface with your mobile application (skip this step if following the semi-automated [deployment guide](/deployment/README.md) - you will complete an automated version of this task when you return to that guide)
     -    Make a copy of the [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) and update the values to match your iOS configuration
     -   Optionally, configure the Android fields to match your Android configuration (not necessary if you are not configuring an Android application, or if you have already completed this step during Android configuration)
