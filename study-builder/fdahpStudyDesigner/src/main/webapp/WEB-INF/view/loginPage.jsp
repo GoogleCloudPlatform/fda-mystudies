@@ -5,6 +5,7 @@
 <% ResourceBundle resource = ResourceBundle.getBundle("application");
 			String gciApiKey=resource.getString("gciApiKey");
 			String gciAuthDomain=resource.getString("gciAuthDomain");
+			String gciEnabled=resource.getString("gciEnabled");
 %>
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="en">
@@ -104,6 +105,7 @@
           <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
                      method="post"
                      autocomplete="off">
+            <input type="hidden" id="gci" value="<%=gciEnabled %>" name="gci"/>
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <div class="login pt-lg">
@@ -223,12 +225,14 @@
     <script>
       var isChanged = true;
       $(document).ready(function (e) {
-
+   		var gciEnabled = <%=gciEnabled %>;
+   	 if(gciEnabled == true){
       var config = {
     		  apiKey: "<%=gciApiKey %>",
     	   	  authDomain: "<%=gciAuthDomain %>",
    	  };
    	  firebase.initializeApp(config);
+      }
   	    
         // Internet Explorer 6-11
         var isIE = false || !!document.documentMode;

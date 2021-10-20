@@ -804,7 +804,8 @@ $(document)
                           'csrfToken');
                       var isGCIUser = false;
                       var fdaLink = $('#fdaLink').val();
-                      
+                      var gciEnabled = $('#gci').val();
+                      if(gciEnabled == 'true'){
                        $
                             .ajax({
                               url: "/studybuilder/isGCIUser.do?"
@@ -822,11 +823,7 @@ $(document)
                                 if ('SUCCESS' == message) {         
                                   isGCIUser = true;
 			                     }
-				                 },
-                            });
-
-                      $(document).ajaxStop(function() { 
-				   	  		if(isGCIUser) {
+			                     if(isGCIUser) {
 				   	   			  firebase.auth().onAuthStateChanged(function(user) {
 							   	    if (user) {
 							   	   // alert("success  " + email);
@@ -871,9 +868,17 @@ $(document)
 				   	  		} else {
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
+				                 },
+                            });
+                            } else {
+				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
+				   	  		}
+
+                      /*$(document).ajaxStop(function() { */
+				   	  		
 				   	  	
                           
-	                       });
+	                       /*});*/
 	                    }
 	                  }); 
         });

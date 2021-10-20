@@ -71,6 +71,9 @@ public class UsersServiceImpl implements UsersService {
 
   @Autowired private EmailNotification emailNotification;
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciEnabled = configMap.get("gciEnabled");
+
   @Override
   public String activateOrDeactivateUser(
       String userId,
@@ -89,7 +92,7 @@ public class UsersServiceImpl implements UsersService {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
       userBo = usersDAO.getUserDetails(userId);
-      if (userBo.isGciUser()) {
+      if (Boolean.parseBoolean(gciEnabled) && userBo.isGciUser()) {
         UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userBo.getUserEmail());
         UpdateRequest userRequest =
             userStatus == 1

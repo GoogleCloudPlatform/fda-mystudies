@@ -6,6 +6,7 @@
 <% ResourceBundle resource = ResourceBundle.getBundle("application");
 			String gciApiKey=resource.getString("gciApiKey");
 			String gciAuthDomain=resource.getString("gciAuthDomain");
+			String gciEnabled=resource.getString("gciEnabled");
 %>
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="">
@@ -282,12 +283,14 @@
           document.studyListForm.action = "/studybuilder/adminDashboard/viewUserDetails.do";
           document.studyListForm.submit();
         });
-        
+        var gciEnabled = <%=gciEnabled %>;
+      	 if(gciEnabled == true){
         var config = {
 	   	  apiKey: "<%=gciApiKey %>",
 	   	  authDomain: "<%=gciAuthDomain %>",
 	   	};
 	   	firebase.initializeApp(config);
+      	}
         	  
         $('#signOut').on('click', function () {
             firebase.auth().signOut()
