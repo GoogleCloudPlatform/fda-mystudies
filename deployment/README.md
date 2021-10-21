@@ -455,9 +455,14 @@ The deployment process takes the following approach:
 1. You can use the `Apps` section in the Study Builder to create and manage multiple mobile apps running off a single deployment of the platform.
 1. Start by creating a new app record by filling out the required fields.
 1. Once an app record is created, studies can be mapped to it in the Studies section. 
-1. To start testing an app, fill out additional required app configurations in the Study Builder, and `publish` the app to propagate the app’s properties to other platform components that need them. Confirm your app is visible in the Participant manager interface. If you are testing out a new version of an app which already exists in the app stores, ensure you retain current app version information in the Developer Configurations section for as long as you are testing the app.
-1. Once the app is tested and ready to go to the app stores, update or finalize these app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. If you are pushing out a new version of an existing app to the app stores, and wish to enforce an app update, make sure you set the `Force upgrade` field to `No` initially, until your app is approved and available to end users in the app stores, and update it to `Yes` only after that and publish the app again.
-1. Once the app is live, also mark the app as `distributed` to prevent inadvertent changes to key configurations that drive your live app.
+1. To start testing an app, fill out additional required app properties and configurations in the Study Builder, and publish the app to propagate the app’s properties to other platform components that need them, using the `Publish App` action. If you are testing out a new version of an app that already exists, ensure you have retained current app version information in the Developer Configurations section at this point - do not replace it with new version information. 
+1. Confirm your app is visible in the Participant Manager interface and test out your app.
+1. Once the app is tested and ready to go to the app stores, update or finalize the app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. At this point, ensure that the app version information in the Developer Configurations section still retains the current version information and that the `Force upgrade` field is set to `No`, even if you are pushing out a new version of an existing app to the app stores.
+1. Upload the app to the app stores for review and approval.
+1. Once the app is approved in both the app stores and live, revisit the Study Builder and update the app version information in the Developer Configurations section to the latest app version information. Also, at this point, if you wish to enforce an app update, update the `Force upgrade` field to `Yes`. Use the `Publish App` action again for these changes to take effect. 
+1. These steps will ensure that app users get prompted to update their apps to the new version when they open the existing apps on their device.
+1. Also, once your app is live, mark the app as `distributed` in the Study Builder to prevent inadvertent changes to key configurations that drive your live app.
+
 1. Barring these few key configurations, most other app properties can be updated after the app is live. 
 1. Note: Any from email addresses that you configure in the app’s properties must be an [alias](https://support.google.com/mail/answer/22370) of the `manual-mystudies-email-address` that is configured in the Secret Manager as part of the platform deployment process. If an alias is not available, please use the same email here. [This Github issue](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/4104) has additional detail on the alias requirements.
 
@@ -609,12 +614,14 @@ When upgrading a prior release to 2.0.8 or greater, you will need to perform the
 1. Take the latest code and generate the mobile app build following the latest iOS and Android app build and deployment instructions given in the repo. Ensure you use the same App ID as before.
 1. Sign in to the Study Builder and create an app record that has the exact same App ID that you have been using for your app. Ensure that you choose the correct app settings as well as applicable to your live app (gateway or standalone type of app, platform(s) that need to be supported etc.)
 1. Cross-check if all the studies that belong to the app, are mapped to this app in their respective study creation sections.
-1. In the newly created app record, fill out all the required app properties and configurations corresponding to the test mode of the app and publish the app. Ensure you have entered the currently existing app’s version information in the Developer Configurations section. 
-1. Test out your newly generated app with these configurations. 
-1. After the new version of the app is tested and ready to go to the app stores, revisit the Study Builder, and update all the required app properties and developer configurations to correspond to the app store version of the app that will go live, and publish the app again. Ensure you have chosen No for the `Force upgrade?` fields at this point. 
-1. Now upload the new build of the mobile app to the app stores as the next version of the existing app. 
-1. Once your app is approved by the app stores and is live, revisit the Study Builder and set `Force upgrade?` to Yes and publish the app. This will ensure that all app users get prompted to update their apps to the new version when they open the existing apps on their phone.
-1. As a last step, mark your app as `distributed` in the Study Builder.
+1. In the newly created app record, fill out all the required app properties and configurations as applicable to a test version of the app and publish the app, using the `Publish App` action.  At this point, ensure you have retained current app version information in the Developer Configurations section - do not replace it with new version information. 
+1. Confirm your app is still visible in the Participant Manager interface. Test out your newly generated app with the published configurations. 
+1. Once the app is tested and ready to go to the app stores, update or finalize these app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. At this point, ensure that the app version information in the Developer Configurations section still retains the current version information and that the `Force upgrade` field is set to `No`.
+1. Upload the app to the app stores for review and approval.
+1. Once the app is approved in both the app stores and live, revisit the Study Builder and update the app version information in the Developer Configurations section to the latest app version information. Also, at this point, if you wish to enforce an app update, update the `Force upgrade` field to `Yes`. Use the `Publish App` action again for these changes to take effect. 
+1. These steps will ensure that app users get prompted to update their apps to the new version when they open the existing apps on their device.
+1. As a last step, once your app is live, mark the app as `distributed` in the Study Builder to prevent inadvertent changes to key configurations that drive your live app.
+
 
 #### Changes to iOS push notifications in 2.0.8 or greater
 
@@ -671,6 +678,7 @@ These secrets can be deleted from your deployment with the following steps. Howe
           [...]
         }
         ```
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
 
 
 ***
