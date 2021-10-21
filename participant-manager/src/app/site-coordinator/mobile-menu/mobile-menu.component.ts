@@ -52,7 +52,7 @@ export class MobileMenuComponent implements OnInit {
   mobileOnKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       this.keyDown.emit(this.mobileFilterQuery);
-      this.showSearchOnClick = false;
+      this.showSearchOnClick = true;
     }
   }
   showSearchBarOnClick(): void {
