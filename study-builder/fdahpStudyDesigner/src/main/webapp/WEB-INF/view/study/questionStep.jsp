@@ -5895,7 +5895,7 @@
             "    <div class='form-group'>" +
             "      <input type='text' class='form-control TextscaleRequired'  data-error='Please fill out this field' name='questionResponseSubTypeList["
             + scaleCount + "].text' id='displayTextSclText" + scaleCount
-            + "'+  maxlength='15' required>" +
+            + "'+  maxlength='100' required>" +
             "      <div class='help-block with-errors red-txt'></div>" +
             "   </div>" +
             "</div>" +
