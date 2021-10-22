@@ -111,6 +111,7 @@
         <div>
           <input type="hidden" id="csrfDet"
                  csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}"/>
+                  <input type="hidden" id="gciUser" value="${gciUser}" name="gciUser"/>
           <div class=" col-xs-12" id="alignCenter">
             <!--lg-register-center  -->
             <form:form id="signUpForm" data-toggle="validator" role="form"
@@ -161,6 +162,8 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
+               
+                <c:if test="${empty gciUser}">
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
@@ -183,6 +186,7 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
+                </c:if>
                 <div class="col-xs-12">
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input

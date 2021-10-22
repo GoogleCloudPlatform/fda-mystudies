@@ -126,7 +126,8 @@
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"
-                    id="enforcePasswordId">Enforce password change
+                    id="enforcePasswordId" <c:if test="${userBO.gciUser eq true}">disabled</c:if>>Enforce password change
+                    
             </button>
           </div>
         </c:if>

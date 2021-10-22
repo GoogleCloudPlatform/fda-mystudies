@@ -443,6 +443,10 @@ public class LoginController {
       map.addAttribute("isInactiveUser", isInactiveUser);
       map.addAttribute("masterDataBO", masterDataBO);
       if ((userBO != null) && (StringUtils.isEmpty(userBO.getUserPassword()))) {
+        boolean gciUser = loginService.isGciUser(userBO.getUserEmail());
+        if (gciUser) {
+          map.addAttribute("gciUser", "gciUser");
+        }
         map.addAttribute("userBO", userBO);
         map.addAttribute("orgName", configMap.get("orgName"));
         mv = new ModelAndView("signUpPage", map);

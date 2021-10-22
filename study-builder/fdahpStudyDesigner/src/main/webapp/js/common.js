@@ -451,6 +451,8 @@ $(document)
                     if (isValidLoginForm) {
                       $("#signUpForm").validator(
                           'destroy');
+                           var gciUser = $('#gciUser').val();
+                          if(gciUser == ''){
                       $('#password')
                           .val(
                               $('#password')
@@ -498,6 +500,10 @@ $(document)
                               '-webkit-text-security',
                               'disc')
                           .val(passwordLength);
+                          } else{
+	                      $('#password').removeAttr('required');
+	                      $('#cfnPassword').removeAttr('required');
+						}
                       $('#signUpForm').submit();
                     }
 
