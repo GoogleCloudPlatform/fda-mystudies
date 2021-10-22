@@ -18,6 +18,9 @@
     padding-left: 20px !important;
 }
 
+span.sprites_icon.mr-lg.viewStudiesClass {
+    cursor: pointer;
+}
 
 </style>
 
