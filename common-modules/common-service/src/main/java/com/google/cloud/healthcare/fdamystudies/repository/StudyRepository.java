@@ -93,7 +93,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
       value =
           "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, si.status AS studyStatus, "
               + "ai.id AS appId,ai.app_name AS appName,ai.custom_app_id AS customAppId, "
-              + "st.target_enrollment AS targetEnrollment, stp.edit AS edit "
+              + "ai.app_status AS appStatus, st.target_enrollment AS targetEnrollment, stp.edit AS edit "
               + "FROM app_info ai, study_info si, sites st,sites_permissions stp "
               + "WHERE ai.id=si.app_info_id AND st.study_id=si.id AND si.id=:studyId AND stp.study_id=si.id AND stp.ur_admin_user_id=:userId ",
       nativeQuery = true)
@@ -103,7 +103,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
       value =
           "SELECT DISTINCT si.id AS studyId, si.name AS studyName, si.custom_id AS customStudyId,si.type AS studyType, si.status AS studyStatus, "
               + "ai.id AS appId,ai.app_name AS appName,ai.custom_app_id AS customAppId, "
-              + "st.target_enrollment AS targetEnrollment "
+              + "ai.app_status AS appStatus,st.target_enrollment AS targetEnrollment "
               + "FROM app_info ai, study_info si, sites st "
               + "WHERE ai.id=si.app_info_id AND st.study_id=si.id AND si.id=:studyId ",
       nativeQuery = true)

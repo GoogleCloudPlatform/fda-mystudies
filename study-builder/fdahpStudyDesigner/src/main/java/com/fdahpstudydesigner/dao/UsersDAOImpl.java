@@ -1,6 +1,5 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,6 +24,8 @@
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
+import com.fdahpstudydesigner.bo.AppPermissionBO;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
@@ -118,7 +119,12 @@ public class UsersDAOImpl implements UsersDAO {
   @SuppressWarnings("unchecked")
   @Override
   public UserIdAccessLevelInfo addOrUpdateUserDetails(
-      UserBO userBO, String permissions, String selectedStudies, String permissionValues) {
+      UserBO userBO,
+      String permissions,
+      String selectedStudies,
+      String permissionValues,
+      String selectedApps,
+      String permissionValuesForApp) {
     logger.entry("begin addOrUpdateUserDetails()");
     Session session = null;
     String userId = null;
@@ -128,7 +134,9 @@ public class UsersDAOImpl implements UsersDAO {
     Set<UserPermissions> permissionSet = null;
     StudyPermissionBO studyPermissionBO = null;
     String[] selectedStudy = null;
+    String[] selectedApp = null;
     String[] permissionValue = null;
+    String[] permissionValueForApp = null;
     boolean updateFlag = false;
     UserIdAccessLevelInfo userIdAccessLevelInfo = null;
 
@@ -177,12 +185,24 @@ public class UsersDAOImpl implements UsersDAO {
         query.executeUpdate();
       }
 
-      if (!"".equals(selectedStudies)
-          && !"".equals(permissionValues)
+      if (updateFlag && "".equals(selectedApps)) {
+        query =
+            session
+                .createSQLQuery(" delete from app_permission where user_id =:userId ")
+                .setParameter("userId", userId);
+        query.executeUpdate();
+      }
+
+      if ((StringUtils.isNotEmpty(selectedStudies) || StringUtils.isNotEmpty(selectedApps))
+          && (StringUtils.isNotEmpty(permissionValues)
+              || StringUtils.isNotEmpty(permissionValuesForApp))
           && userBO2.getRoleId().equals("2")) {
         selectedStudy = selectedStudies.split(",");
         permissionValue = permissionValues.split(",");
+        permissionValueForApp = permissionValuesForApp.split(",");
+        selectedApp = selectedApps.split(",");
         List<String> selectedStudiesList = Arrays.asList(selectedStudies.split(","));
+        List<String> selectedAppsList = Arrays.asList(selectedApps.split(","));
         if (updateFlag) {
           query =
               session
@@ -191,53 +211,34 @@ public class UsersDAOImpl implements UsersDAO {
                   .setParameterList("selectedStudies", selectedStudiesList)
                   .setParameter("userId", userId);
           query.executeUpdate();
-        }
-        for (int i = 0; i < selectedStudy.length; i++) {
+
           query =
               session
-                  .createQuery(
-                      " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
-                          + " AND UBO.userId=:userId")
-                  .setParameter("userId", userId)
-                  .setParameter("studyId", selectedStudy[i]);
-          studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
-          if (null != studyPermissionBO) {
-            studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
-            session.update(studyPermissionBO);
-          } else {
-            studyPermissionBO = new StudyPermissionBO();
-            studyPermissionBO.setStudyId(selectedStudy[i]);
-            studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
-            studyPermissionBO.setUserId(userId);
-            session.save(studyPermissionBO);
+                  .createSQLQuery(
+                      " delete from app_permission where app_id not in (:selectedApps) and user_id =:userId")
+                  .setParameterList("selectedApps", selectedAppsList)
+                  .setParameter("userId", userId);
+          query.executeUpdate();
+        }
+        if (StringUtils.isNotEmpty(selectedStudies)) {
+          for (int i = 0; i < selectedStudy.length; i++) {
+            studyPermissionBO =
+                addStudyLevelPermissionsToStudyAdmin(
+                    session, userId, selectedStudy, permissionValue, i);
+          }
+        }
+
+        if (StringUtils.isNotEmpty(selectedApps)) {
+          for (int i = 0; i < selectedApp.length; i++) {
+            addAppLevelPermissionsToStudyAdmin(
+                session, userId, selectedApp, permissionValueForApp, i);
           }
         }
 
       } else if (userBO2.getRoleId().equals("1")) {
-        query = session.createQuery(" FROM StudyBo SBO WHERE SBO.version = 0");
-        List<StudyBo> studyBOList = query.list();
-        if (CollectionUtils.isNotEmpty(studyBOList)) {
-          for (int i = 0; i < studyBOList.size(); i++) {
-            query =
-                session
-                    .createQuery(
-                        " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
-                            + " AND UBO.userId=:userId")
-                    .setParameter("userId", userId)
-                    .setParameter("studyId", studyBOList.get(i).getId());
-            studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
-            if (null != studyPermissionBO) {
-              studyPermissionBO.setViewPermission(true);
-              session.update(studyPermissionBO);
-            } else {
-              studyPermissionBO = new StudyPermissionBO();
-              studyPermissionBO.setStudyId(studyBOList.get(i).getId());
-              studyPermissionBO.setViewPermission(true);
-              studyPermissionBO.setUserId(userId);
-              session.save(studyPermissionBO);
-            }
-          }
-        }
+        addStudyPermissionsToSuperAdmin(session, userId);
+
+        addAppPermissionsToSuperAdmin(session, userId);
       }
       transaction.commit();
       msg = FdahpStudyDesignerConstants.SUCCESS;
@@ -253,6 +254,111 @@ public class UsersDAOImpl implements UsersDAO {
     if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
       return userIdAccessLevelInfo;
     } else return null;
+  }
+
+  private void addAppPermissionsToSuperAdmin(Session session, String userId) {
+    Query query = null;
+    AppPermissionBO appPermissionBO = null;
+    query =
+        session.createQuery(" FROM AppsBo ABO WHERE ABO.version = 0 AND ABO.appStatus='Active' ");
+    List<AppsBo> appBOList = query.list();
+    if (CollectionUtils.isNotEmpty(appBOList)) {
+      for (int i = 0; i < appBOList.size(); i++) {
+        query =
+            session
+                .createQuery(
+                    " FROM AppPermissionBO ABO where ABO.appId=:appId AND ABO.userId=:userId")
+                .setParameter("userId", userId)
+                .setParameter("appId", appBOList.get(i).getId());
+        appPermissionBO = (AppPermissionBO) query.uniqueResult();
+        if (null != appPermissionBO) {
+          appPermissionBO.setViewPermission(true);
+          session.update(appPermissionBO);
+        } else {
+          appPermissionBO = new AppPermissionBO();
+          appPermissionBO.setAppId(appBOList.get(i).getId());
+          appPermissionBO.setViewPermission(true);
+          appPermissionBO.setUserId(userId);
+          session.save(appPermissionBO);
+        }
+      }
+    }
+  }
+
+  private void addStudyPermissionsToSuperAdmin(Session session, String userId) {
+    Query query;
+    StudyPermissionBO studyPermissionBO;
+    query = session.createQuery(" FROM StudyBo SBO WHERE SBO.version = 0");
+    List<StudyBo> studyBOList = query.list();
+    if (CollectionUtils.isNotEmpty(studyBOList)) {
+      for (int i = 0; i < studyBOList.size(); i++) {
+        query =
+            session
+                .createQuery(
+                    " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
+                        + " AND UBO.userId=:userId")
+                .setParameter("userId", userId)
+                .setParameter("studyId", studyBOList.get(i).getId());
+        studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
+        if (null != studyPermissionBO) {
+          studyPermissionBO.setViewPermission(true);
+          session.update(studyPermissionBO);
+        } else {
+          studyPermissionBO = new StudyPermissionBO();
+          studyPermissionBO.setStudyId(studyBOList.get(i).getId());
+          studyPermissionBO.setViewPermission(true);
+          studyPermissionBO.setUserId(userId);
+          session.save(studyPermissionBO);
+        }
+      }
+    }
+  }
+
+  private void addAppLevelPermissionsToStudyAdmin(
+      Session session, String userId, String[] selectedApp, String[] permissionValue, int i) {
+    Query query;
+    AppPermissionBO appPermissionBO;
+    query =
+        session
+            .createQuery(" FROM AppPermissionBO ABO where ABO.appId=:appId AND ABO.userId=:userId")
+            .setParameter("userId", userId)
+            .setParameter("appId", selectedApp[i]);
+    appPermissionBO = (AppPermissionBO) query.uniqueResult();
+    if (null != appPermissionBO) {
+      appPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
+      session.update(appPermissionBO);
+    } else {
+      appPermissionBO = new AppPermissionBO();
+      appPermissionBO.setAppId(selectedApp[i]);
+      appPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
+      appPermissionBO.setUserId(userId);
+      session.save(appPermissionBO);
+    }
+  }
+
+  private StudyPermissionBO addStudyLevelPermissionsToStudyAdmin(
+      Session session, String userId, String[] selectedStudy, String[] permissionValue, int i) {
+    Query query;
+    StudyPermissionBO studyPermissionBO;
+    query =
+        session
+            .createQuery(
+                " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
+                    + " AND UBO.userId=:userId")
+            .setParameter("userId", userId)
+            .setParameter("studyId", selectedStudy[i]);
+    studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
+    if (null != studyPermissionBO) {
+      studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
+      session.update(studyPermissionBO);
+    } else {
+      studyPermissionBO = new StudyPermissionBO();
+      studyPermissionBO.setStudyId(selectedStudy[i]);
+      studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
+      studyPermissionBO.setUserId(userId);
+      session.save(studyPermissionBO);
+    }
+    return studyPermissionBO;
   }
 
   @Override

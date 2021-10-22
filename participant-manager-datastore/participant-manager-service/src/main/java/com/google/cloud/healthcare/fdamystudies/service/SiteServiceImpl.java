@@ -61,6 +61,7 @@ import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.RandomAlphanumericGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -118,7 +119,6 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -129,6 +129,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -176,6 +177,8 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
 
   @Autowired private ParticipantManagerUtil participantManagerUtil;
+
+  @Autowired ResourceLoader resourceLoader;
 
   @Override
   @Transactional
@@ -859,7 +862,7 @@ public class SiteServiceImpl implements SiteService {
         continue;
       }
 
-      String token = RandomStringUtils.randomAlphanumeric(8);
+      String token = RandomAlphanumericGenerator.generateRandomAlphanumeric(8);
       participantRegistrySiteEntity.setEnrollmentToken(token);
       participantRegistrySiteEntity.setInvitationDate(new Timestamp(Instant.now().toEpochMilli()));
 
@@ -1297,7 +1300,6 @@ public class SiteServiceImpl implements SiteService {
       site.setInvited(invitedCount);
       site.setEnrolled(enrolledCount);
     }
-
     if (site.getInvited() != null && site.getEnrolled() != null) {
       if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
         Double percentage =
@@ -1485,16 +1487,49 @@ public class SiteServiceImpl implements SiteService {
       templateArgs.put("App Name", optStudy.get().getApp().getAppName());
       templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
       templateArgs.put("contact email address", optStudy.get().getContactEmail());
+
+      if (optStudy.get().getApp().getPlayStoreUrl() != null) {
+        templateArgs.put("PLAY_STORE_LINK", optStudy.get().getApp().getPlayStoreUrl());
+      }
+      if (optStudy.get().getApp().getAppStoreUrl() != null) {
+        templateArgs.put("APP_STORE_LINK", optStudy.get().getApp().getAppStoreUrl());
+      }
+
+      String fromEmail =
+          (participantRegistrySiteEntity.getStudy().getApp().getFromEmailId() != null)
+              ? participantRegistrySiteEntity.getStudy().getApp().getFromEmailId()
+              : appPropertyConfig.getFromEmail();
+
       EmailRequest emailRequest =
           new EmailRequest(
-              appPropertyConfig.getFromEmail(),
+              fromEmail,
               new String[] {participantRegistrySiteEntity.getEmail()},
               null,
               null,
               appPropertyConfig.getParticipantInviteSubject(),
               appPropertyConfig.getParticipantInviteBody(),
               templateArgs);
-      EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
+
+      Map<String, String> inlineImages = new HashMap<>();
+
+      try {
+        inlineImages.put(
+            "image_play_store",
+            resourceLoader
+                .getResource("classpath:Logos/Play_Store_Logo.png")
+                .getFile()
+                .getAbsolutePath());
+
+        inlineImages.put(
+            "image_app_store",
+            resourceLoader
+                .getResource("classpath:Logos/App_Store_Logo.png")
+                .getFile()
+                .getAbsolutePath());
+
+      } catch (IOException e) {
+        logger.error("sendInvitationEmail() failed with an exception.", e);
+      }
 
       SiteEntity site = participantRegistrySiteEntity.getSite();
       Map<String, String> map =
@@ -1507,6 +1542,7 @@ public class SiteServiceImpl implements SiteService {
       auditRequest.setParticipantId(participantRegistrySiteEntity.getId());
       auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
 
+      EmailResponse emailResponse = emailService.sendMimeMailWithImages(emailRequest, inlineImages);
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
           .getMessage()
           .equals(emailResponse.getMessage())) {

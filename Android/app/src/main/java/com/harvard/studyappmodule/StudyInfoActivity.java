@@ -56,8 +56,10 @@ import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.VerificationStepActivity;
 import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
@@ -231,7 +233,12 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                       .setExitAnimations(
                           StudyInfoActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
                       .build();
-              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+              Apps apps = dbServiceSubscriber.getApps(realm);
+              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+                  .replace("$FromEmail", apps.getFromEmail())
+                  .replace("$SupportEmail", apps.getSupportEmail())
+                  .replace("$AppName", apps.getAppName())
+                  .replace("$ContactEmail", apps.getContactUsEmail())));
               startActivity(customTabsIntent.intent);
             } else {
               new CallConsentMetaData(true).execute();

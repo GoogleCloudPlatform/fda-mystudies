@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.RandomAlphanumericGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
@@ -40,7 +41,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -102,8 +103,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     AppOrgInfoBean appOrgInfoBean =
         commonDao.getUserAppDetailsByAllApi(user.getUserId(), user.getAppId());
 
+    Optional<AppEntity> optAppDetails = appRepository.findByAppId(appOrgInfoBean.getAppInfoId());
+    if (optAppDetails.isPresent()) {
+      AppEntity appEntity = optAppDetails.get();
+      if (UserStatus.DEACTIVATED.getDescription().equals(appEntity.getAppStatus())) {
+        throw new ErrorCodeException(ErrorCode.APP_INACTIVE);
+      }
+    }
     // find user by email and appId
-
     Optional<UserDetailsEntity> optUserDetails =
         userDetailsRepository.findByEmailAndAppId(user.getEmailId(), appOrgInfoBean.getAppInfoId());
 
@@ -118,8 +125,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         throw new ErrorCodeException(ErrorCode.PENDING_CONFIRMATION);
       }
 
-      EmailResponse emailResponse =
-          generateAndSaveVerificationCode(existingUserDetails, user.getAppName());
+      EmailResponse emailResponse = generateAndSaveVerificationCode(existingUserDetails, user);
 
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
           .getMessage()
@@ -151,7 +157,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     auditRequest.setUserId(userDetails.getUserId());
 
     // generate save and email the verification code
-    EmailResponse emailResponse = generateAndSaveVerificationCode(userDetails, user.getAppName());
+    EmailResponse emailResponse = generateAndSaveVerificationCode(userDetails, user);
 
     // verification code is empty if send email is failed
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
@@ -179,10 +185,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   }
 
   private EmailResponse generateAndSaveVerificationCode(
-      UserDetailsEntity userDetails, String appName) {
+      UserDetailsEntity userDetails, UserRegistrationForm user) {
     String verificationCode =
-        MyStudiesUserRegUtil.generateRandomAlphanumeric(VERIFICATION_CODE_LENGTH);
-    EmailResponse emailResponse = sendConfirmationEmail(userDetails, verificationCode, appName);
+        RandomAlphanumericGenerator.generateRandomAlphanumeric(VERIFICATION_CODE_LENGTH);
+    EmailResponse emailResponse = sendConfirmationEmail(userDetails, verificationCode, user);
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       userDetails.setEmailCode(verificationCode);
       userDetails.setCodeExpireDate(Timestamp.valueOf(LocalDateTime.now().plusHours(expireTime)));
@@ -194,7 +200,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private UserDetailsEntity fromUserRegistrationForm(UserRegistrationForm user) {
     UserDetailsEntity userDetails = new UserDetailsEntity();
     userDetails.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
-    userDetails.setVerificationDate(new Timestamp(System.currentTimeMillis()));
+    userDetails.setVerificationDate(
+        UserManagementUtil.getCurrentDate() + " " + UserManagementUtil.getCurrentTime());
     userDetails.setUserId(user.getUserId());
     userDetails.setEmail(user.getEmailId());
     userDetails.setUsePassCode(user.isUsePassCode());
@@ -225,15 +232,20 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   }
 
   private EmailResponse sendConfirmationEmail(
-      UserDetailsEntity userDetails, String verificationCode, String appName) {
+      UserDetailsEntity userDetails, String verificationCode, UserRegistrationForm user) {
+    Optional<AppEntity> optApp = appRepository.findByAppId(user.getAppId());
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", verificationCode);
-    templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
-    templateArgs.put("appName", appName);
+    templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
+    templateArgs.put("appName", user.getAppName());
+
+    String fromEmail =
+        (optApp.get().getFromEmailId() != null)
+            ? optApp.get().getFromEmailId()
+            : appConfig.getFromEmail();
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
+            fromEmail,
             new String[] {userDetails.getEmail()},
             null,
             null,

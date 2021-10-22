@@ -17,6 +17,8 @@
 package com.harvard.storagemodule;
 
 import android.content.Context;
+
+import com.harvard.AppConfig;
 import com.harvard.notificationmodule.PendingIntents;
 import com.harvard.notificationmodule.model.NotificationDb;
 import com.harvard.offlinemodule.model.OfflineData;
@@ -44,6 +46,7 @@ import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.studymodel.StudyResource;
 import com.harvard.studyappmodule.studymodel.StudyUpdate;
 import com.harvard.studyappmodule.studymodel.StudyUpdateListdata;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.ActivityData;
 import com.harvard.usermodule.webservicemodel.ActivityRunPreference;
@@ -1041,9 +1044,17 @@ public class DbServiceSubscriber {
   public void deleteDb(Context context) {
     try {
       realm = AppController.getRealmobj(context);
+      Apps apps = getApps(realm);
+      Apps tempApps = null;
       realm.beginTransaction();
+      if (apps != null) {
+        tempApps = realm.copyFromRealm(apps);
+      }
       realm.deleteAll();
       realm.commitTransaction();
+      if (tempApps != null) {
+        saveApps(context, tempApps);
+      }
       closeRealmObj(realm);
     } catch (Exception e) {
       Logger.log(e);
@@ -1449,6 +1460,18 @@ public class DbServiceSubscriber {
     realm.copyToRealmOrUpdate(userProfileData);
     realm.commitTransaction();
     closeRealmObj(realm);
+  }
+
+  public void saveApps(Context context, Apps apps) {
+    realm = AppController.getRealmobj(context);
+    realm.beginTransaction();
+    realm.copyToRealmOrUpdate(apps);
+    realm.commitTransaction();
+    closeRealmObj(realm);
+  }
+
+  public Apps getApps(Realm realm) {
+    return realm.where(Apps.class).equalTo("appId", AppConfig.APP_ID_VALUE).findFirst();
   }
 
   public void deleteUserProfileDataDuplicateRow(Context context) {

@@ -256,7 +256,6 @@ The deployment process takes the following approach:
          gsutil cp \
            ${GIT_ROOT}/study-builder/sqlscript/* \
            ${GIT_ROOT}/response-datastore/sqlscript/mystudies_response_server_db_script.sql \
-           ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
            ${GIT_ROOT}/participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
            ${GIT_ROOT}/auth-server/sqlscript/mystudies_oauth_server_hydra_db_script.sql \
            ${GIT_ROOT}/hydra/sqlscript/create_hydra_db_script.sql \
@@ -340,7 +339,7 @@ The deployment process takes the following approach:
     `manual-mystudies-email-address` | The login of the email account you want MyStudies to use to send system-generated emails | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-email-address" --data-file=-`
     `manual-mystudies-email-password` | The password for that email account | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-email-password" --data-file=-`
     `manual-mystudies-contact-email-address` | The email address that the in-app contact and feedback forms will send messages to | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-contact-email-address" --data-file=-`
-    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (for example, `no-reply@example.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
+    `manual-mystudies-from-email-address` | The return email address that is shown is system-generated messages (for example, `no-reply@example.com`) This email should be an alias of `manual-mystudies-email-address`. Alternaitvely, provide the same email as `manual-mystudies-email-address` here as well | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-address" --data-file=-`
     `manual-mystudies-from-email-domain` | The domain of the above email address (just the value after “@”) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-from-email-domain" --data-file=-`
     `manual-mystudies-smtp-hostname` | The hostname for your email account’s SMTP server (for example, `smtp.gmail.com`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mystudies-smtp-hostname" --data-file=-`
     `manual-mystudies-smtp-use-ip-allowlist` | Typically ‘false’; if ‘true’, the platform will not authenticate to the email server and will rely on the allowlist configured in the SMTP service | Set this value to `true` or `false` now (you can update it later) | `echo -n "false" \| gcloud secrets versions add "manual-mystudies-smtp-use-ip-allowlist" --data-file=-`
@@ -348,14 +347,8 @@ The deployment process takes the following approach:
     `manual-org-name` | The name of your organization that is displayed to users, for example ‘Sincerely, the `manual-org-name` support team’ | Set this value now | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-org-name" --data-file=-`
     `manual-terms-url` | URL for a terms and conditions page that the applications will link to (for example, `https://example.com/terms`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-terms-url" --data-file=-`
     `manual-privacy-url` | URL for a privacy policy page that the applications will link to (for example, `https://example.com/privacy`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-privacy-url" --data-file=-`
-    `manual-mobile-app-appid` | The value of the `App ID` (15 characters max) that you will configure on the Settings page of the [Study builder](/study-builder/) user interface when you create your first study (you will also use this same value when configuring your mobile applications for deployment) | Set now if you know what value you will use when you create your first study - otherwise enter a placeholder and update once you have created a study in the [Study builder](/study-builder) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-mobile-app-appid" --data-file=-`
-    `manual-android-bundle-id` | The value of [`applicationId`](https://developer.android.com/studio/build/application-id) that you will configure in [`Android/app/build.gradle`](/Android/app/build.gradle) during [Android configuration](/Android/), for example `{PREFIX}_{ENV}.{DOMAIN}` (note that some characters are not permitted) | If you know what value you will use during [Android](/Android/) deployment you can set this now, otherwise enter a placeholder and update later (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-bundle-id" --data-file=-`
     `manual-fcm-api-url` | [URL](https://firebase.google.com/docs/reference/fcm/rest) of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fcm-api-url" --data-file=-`
-    `manual-android-server-key` | The Firebase Cloud Messaging [server key](https://firebase.google.com/docs/cloud-messaging/auth-server#authorize-legacy-protocol-send-requests) that you will obtain during [Android configuration](/Android/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-server-key" --data-file=-`
     `manual-android-deeplink-url` | The sign-in screen is run on the Hydra-based auth server. This URL is a deep link that helps redirect users to the native mobile app after they sign in. (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
-    `manual-ios-bundle-id` | The value you will obtain from Xcode (Project target > General tab > Identity section > Bundle identifier) during [iOS configuration](/iOS/) - for a production application, the bundle ID needs to be verified with Apple and is usually a reverse domain name that you own; it is a unique app identifier and application capabilities are mapped to this value ([details](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-bundle-id" --data-file=-`
-    `manual-ios-certificate` | The value of the Base64 converted `.p12` file that you will obtain during [iOS configuration](/iOS/) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate" --data-file=-`
-    `manual-ios-certificate-password` | The value of the password for the `.p12` certificate (necessary if your certificate is encrypted - otherwise leave empty) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-certificate-password" --data-file=-`
     `manual-ios-deeplink-url` | The sign-in screen is run on the Hydra-based auth server. This URL is a deep link that helps redirect users to the native mobile app after they sign in. (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
      > Note: When updating secrets after this initial deployment, you must refresh your Kubernetes cluster and restart the relevant pods to ensure the updated secrets are propagated to your applications (you do not need to do this now - only when making updates later), for example you can update your Kubernetes state with:
      ```bash
@@ -451,32 +444,27 @@ The deployment process takes the following approach:
 
 1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/studybuilder/` (the trailing slash is necessary) and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
 1. Change your password, then create any additional administrative accounts that you might need
-1. Create a new study with the `App ID` that you set in the `manual-mobile-app-appid` secret, or choose a new `App ID` that you will update `manual-mobile-app-appid` with
-1. Publish your study to propagate your study values to the other platform components
+1. Create a new app record in the Apps section. Read more about creating and managing apps in the next section. 
+1. Create a new study in the Studies section and associate it with the app you want it to appear in. 
+1. Publish your study to propagate your study values to the other platform components.
 1. Navigate your browser to `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-manager/` (the trailing slash is necessary), then use the account credentials that you created with the `create_participant_manager_superadmin.sh` script to log into the [`Participant manager`](/participant-manager/) user interface (if the `Participant Manager` application fails to load, confirm you are using `https` - this deployment requires `https` to be fully operational)
 1. You will be asked to change your password; afterwards you can create any additional administrative accounts that you might need
 1. Confirm your new study is visible in the `Participant manager` interface
 
-### Prepare your mobile applications
+### Manage apps in the Study Builder 
+1. You can use the `Apps` section in the Study Builder to create and manage multiple mobile apps running off a single deployment of the platform.
+1. Start by creating a new app record by filling out the required fields.
+1. Once an app record is created, studies can be mapped to it in the Studies section. 
+1. To start testing an app, fill out additional required app properties and configurations in the Study Builder, and publish the app to propagate the app’s properties to other platform components that need them, using the `Publish App` action. If you are testing out a new version of an app that already exists, ensure you have retained current app version information in the Developer Configurations section at this point - do not replace it with new version information. 
+1. Confirm your app is visible in the Participant Manager interface and test out your app.
+1. Once the app is tested and ready to go to the app stores, update or finalize the app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. At this point, ensure that the app version information in the Developer Configurations section still retains the current version information and that the `Force upgrade` field is set to `No`, even if you are pushing out a new version of an existing app to the app stores.
+1. Upload the app to the app stores for review and approval.
+1. Once the app is approved in both the app stores and live, revisit the Study Builder and update the app version information in the Developer Configurations section to the latest app version information. Also, at this point, if you wish to enforce an app update, update the `Force upgrade` field to `Yes`. Use the `Publish App` action again for these changes to take effect. 
+1. These steps will ensure that app users get prompted to update their apps to the new version when they open the existing apps on their device.
+1. Also, once your app is live, mark the app as `distributed` in the Study Builder to prevent inadvertent changes to key configurations that drive your live app.
 
-1. Follow the instructions in either or both [`Android`](/Android/) and [`iOS`](/iOS/) deployment guides (if you haven’t created a study yet, you can configure the mobile applications with the `APP_ID` you plan on using when you create your first study in the [`Study builder`](/study-builder/))
-1. Open Secret Manager in your `{PREFIX}-{ENV}-secrets` project and update the secrets you previously configured with placeholder values (you can skip this step if you already configured your secrets with the appropriate values - if you do update secret values, make sure to refresh your Kubernetes cluster and applications as described above)
-    - `manual-mobile-app-appid` is the value of the `App ID` (15 characters max) that you configured, or will configure, on the Settings page of the [`Study builder`](/study-builder/)
-    - `manual-android-bundle-id` is the value of [`applicationId`](https://developer.android.com/studio/build/application-id) that you configured in [`Android/app/build.gradle`](/Android/app/build.gradle), for example `{PREFIX}_{ENV}.{DOMAIN}` (note that some characters are not permitted)
-    - `manual-fcm-api-url` is the URL of your [Firebase Cloud Messaging API](https://firebase.google.com/docs/reference/fcm/rest)
-    - `manual-android-server-key` is your Firebase Cloud Messaging [server key](https://firebase.google.com/docs/cloud-messaging/auth-server#authorize-legacy-protocol-send-requests)
-    - `manual-android-deeplink-url` is the URL to redirect to after Android login (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`)
-    - `manual-ios-bundle-id` is the value you obtained from Xcode (in production use-cases, this  bundle ID needs to be [verified with Apple](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids))
-    - `manual-ios-certificate` is the value of the Base64 converted `.p12` file
-    - `manual-ios-certificate-password` is the value of the password for the `.p12` certificate 
-    - `manual-ios-deeplink-url` is the URL to redirect to after iOS login
-1. Initialize your `Participant datastore` database to work with your mobile applications
-    - Once a study with the `App ID` corresponding to the `manual-mobile-app-appid` secret is created and published using the [`Study builder`](/study-builder) user interface, a corresponding 
-app record will appear in the [`Participant manager`](/participant-manager/) user interface (if you created a study before all of your platform components were operational, you can reinitialize this process by using the `Study builder` user interface to pause and resume the study) 
-    - Once the `App ID` appears in `Participant manager`, run the [`deployment/scripts/copy_app_info_to_sql.sh`](/deployment/scripts/copy_app_info_to_sql.sh) script to update the remaining databases, for example:
-         ```bash
-         $GIT_ROOT/deployment/scripts/copy_app_info_to_sql.sh $PREFIX $ENV
-         ```
+1. Barring these few key configurations, most other app properties can be updated after the app is live. 
+1. Note: Any from email addresses that you configure in the app’s properties must be an [alias](https://support.google.com/mail/answer/22370) of the `manual-mystudies-email-address` that is configured in the Secret Manager as part of the platform deployment process. If an alias is not available, please use the same email here. [This Github issue](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/4104) has additional detail on the alias requirements.
 
 ### Clean up
 
@@ -614,6 +602,84 @@ To add the bucket to the shared secrets, create a new working branch and make th
     kubectl apply \
       -f $GIT_ROOT/study-builder/tf-deployment.yaml
     ```
+
+### Managing apps (2.0.8 upgrade)
+
+Release 2.0.8 added functionality to support managing mobile apps in the deployment with the Study Builder interface. This requires that apps that are running in existing deployments must be updated (and new versions published to the app stores) if the deployment is being upgraded to 2.0.8 or greater. 
+
+#### Required steps when upgrading to 2.0.8 or greater
+
+When upgrading a prior release to 2.0.8 or greater, you will need to perform the following steps to continue to support existing apps.
+
+1. Take the latest code and generate the mobile app build following the latest iOS and Android app build and deployment instructions given in the repo. Ensure you use the same App ID as before.
+1. Sign in to the Study Builder and create an app record that has the exact same App ID that you have been using for your app. Ensure that you choose the correct app settings as well as applicable to your live app (gateway or standalone type of app, platform(s) that need to be supported etc.)
+1. Cross-check if all the studies that belong to the app, are mapped to this app in their respective study creation sections.
+1. In the newly created app record, fill out all the required app properties and configurations as applicable to a test version of the app and publish the app, using the `Publish App` action.  At this point, ensure you have retained current app version information in the Developer Configurations section - do not replace it with new version information. 
+1. Confirm your app is still visible in the Participant Manager interface. Test out your newly generated app with the published configurations. 
+1. Once the app is tested and ready to go to the app stores, update or finalize these app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. At this point, ensure that the app version information in the Developer Configurations section still retains the current version information and that the `Force upgrade` field is set to `No`.
+1. Upload the app to the app stores for review and approval.
+1. Once the app is approved in both the app stores and live, revisit the Study Builder and update the app version information in the Developer Configurations section to the latest app version information. Also, at this point, if you wish to enforce an app update, update the `Force upgrade` field to `Yes`. Use the `Publish App` action again for these changes to take effect. 
+1. These steps will ensure that app users get prompted to update their apps to the new version when they open the existing apps on their device.
+1. As a last step, once your app is live, mark the app as `distributed` in the Study Builder to prevent inadvertent changes to key configurations that drive your live app.
+
+
+#### Changes to iOS push notifications in 2.0.8 or greater
+
+This release uses Firebase Cloud Messaging (FCM) for push notifications for the iOS app. Follow the step `Configure Firebase Cloud Messaging (FCM) for push notifications` in the [iOS Configuration Instructions](/iOS/README.md#configuration-instructions) to set up FCM for iOS. Note that the server key generated here is to be entered into the developer configurations section of the app in the Study builder. 
+
+#### Changes to secrets when upgrading to 2.0.8 or greater
+
+The following secrets which were in earlier versions are no longer being used as of 2.0.8:
+-   `manual-android-bundle-id`
+-   `manual-android-server-key`
+-   `manual-ios-bundle-id`
+-   `manual-ios-certificate`
+-   `manual-ios-certificate-password`
+-   `manual-mobile-app-appid`
+
+These secrets can be deleted from your deployment with the following steps. However, make sure you have a record of them handy before deleting, as these need to be updated in the Study Builder interface when [managing the apps](#manage-apps-in-the-study-builder)
+
+1. Update your repository with the latest changes from release 2.0.8 or greater, create a new working branch and make the following changes:
+1. In the `deployment/terraform/kubernetes/main.tf` file, find the section `# Data sources from Secret Manager` and remove the following lines:
+    - `manual-android-bundle-id`
+    - `manual-android-server-key`
+    - `manual-ios-bundle-id`
+    - `manual-ios-certificate`
+    - `manual-ios-certificate-password`
+    - `manual-mobile-app-appid`
+1. In the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, remove the following resources:
+    -   ```
+        resource "google_secret_manager_secret" "manual_mobile_app_appid" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_android_bundle_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_android_server_key" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_bundle_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_certificate" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_certificate_password" {
+          [...]
+        }
+        ```
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>

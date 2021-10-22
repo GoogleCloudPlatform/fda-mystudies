@@ -24,8 +24,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import io.realm.Realm;
 
 public class TermsPrivacyPolicyActivity extends AppCompatActivity {
   private RelativeLayout backBtn;
@@ -61,18 +63,27 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
       } else {
         title.setText(getIntent().getStringExtra("title"));
       }
+      AppController.getHelperProgressDialog().showProgress(TermsPrivacyPolicyActivity.this, "", "", false);
       webView.getSettings().setLoadsImagesAutomatically(true);
       webView.getSettings().setJavaScriptEnabled(true);
-      webView.setWebViewClient(new WebViewClient());
       webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+      webView.setWebViewClient(new WebViewClient() {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+          AppController.getHelperProgressDialog().dismissDialog();
+        }
+      });
       if (getIntent().getStringExtra("url") == null) {
+        DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+        Realm realm = AppController.getRealmobj(TermsPrivacyPolicyActivity.this);
         if (getIntent().getData().getPath().equalsIgnoreCase("/mystudies/privacyPolicy")) {
-          webView.loadUrl(getString(R.string.privacyurl));
+          webView.loadUrl(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
         }
 
         if (getIntent().getData().getPath().equalsIgnoreCase("/mystudies/terms")) {
-          webView.loadUrl(getString(R.string.termsurl));
+          webView.loadUrl(dbServiceSubscriber.getApps(realm).getTermsUrl());
         }
+        dbServiceSubscriber.closeRealmObj(realm);
       } else {
         webView.loadUrl(getIntent().getStringExtra("url"));
       }

@@ -26,13 +26,16 @@ import android.widget.Toast;
 import com.harvard.AppConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.event.ForgotPasswordEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.ForgotPasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 
 public class ForgotPasswordActivity extends AppCompatActivity
@@ -141,6 +144,13 @@ public class ForgotPasswordActivity extends AppCompatActivity
     headers.put("correlationId", FdaApplication.getRandomString());
     headers.put("appId", AppConfig.APP_ID_VALUE);
     headers.put("mobilePlatform", "ANDROID");
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(ForgotPasswordActivity.this);
+    Apps apps = dbServiceSubscriber.getApps(realm);
+    headers.put("contactEmail", apps.getContactUsEmail());
+    headers.put("supportEmail", apps.getSupportEmail());
+    headers.put("fromEmail", apps.getFromEmail());
+    dbServiceSubscriber.closeRealmObj(realm);
 
     HashMap<String, String> params = new HashMap<>();
     params.put("email", email.getText().toString());

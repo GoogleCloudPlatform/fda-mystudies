@@ -15,10 +15,6 @@
 
         <intercept-url pattern="/adminStudies/**"
                        access="hasAnyRole('ROLE_MANAGE_STUDIES','ROLE_CREATE_MANAGE_STUDIES','ROLE_SUPERADMIN')"/>
-        <intercept-url pattern="/adminNotificationView/**"
-                       access="hasAnyRole('ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW','ROLE_SUPERADMIN')"/>
-        <intercept-url pattern="/adminNotificationEdit/**"
-                       access="hasAnyRole('ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT','ROLE_SUPERADMIN')"/>
         <intercept-url pattern="/adminUsersView/**"
                        access="hasAnyRole('ROLE_MANAGE_USERS_VIEW','ROLE_SUPERADMIN')"/>
         <intercept-url pattern="/adminUsersEdit/**"

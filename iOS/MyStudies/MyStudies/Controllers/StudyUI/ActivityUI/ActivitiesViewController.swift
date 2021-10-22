@@ -97,6 +97,9 @@ class ActivitiesViewController: UIViewController {
     if (Study.currentStudy?.studyId) != nil {
       if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
         NotificationHandler.instance.activityId = ""
+        if StudyUpdates.studyVersion != nil {
+          Study.currentStudy?.newVersion = StudyUpdates.studyVersion
+        }
         presentUpdatedConsent()
       }
     }
@@ -137,6 +140,7 @@ class ActivitiesViewController: UIViewController {
       self.tableView?.isHidden = false
       self.labelNoNetworkAvailable?.isHidden = true
     }
+    checkBlockerScreen()
 
   }
 
@@ -1064,6 +1068,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
           self.refreshControl?.endRefreshing()
         }
       } else {
+        Study.currentStudy?.newVersion = StudyUpdates.studyVersion
         self.handleStudyUpdatesResponse()
       }
 

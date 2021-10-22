@@ -26,6 +26,7 @@ package com.fdahpstudydesigner.bo;
 
 import com.fdahpstudydesigner.bean.StudyListBean;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -57,6 +58,12 @@ import org.springframework.web.multipart.MultipartFile;
       name = "getStudyDraftVersion",
       query = " From StudyBo SBO WHERE SBO.live IN (0,2) AND customStudyId=:customStudyId"),
   @NamedQuery(name = "getStudy", query = " From StudyBo SBO WHERE SBO.id=:id"),
+  @NamedQuery(
+      name = "StudyBo.getStudyBycustomAppId",
+      query = " From StudyBo SBO WHERE appId=:customAppId and status<>:status and version=0"),
+  @NamedQuery(
+      name = "StudyBo.getStudyCountBycustomAppId",
+      query = " From StudyBo SBO WHERE appId=:customAppId and version=0")
 })
 public class StudyBo implements Serializable {
 
@@ -210,6 +217,9 @@ public class StudyBo implements Serializable {
   private Integer isCloudStorageMoved;
 
   @Transient private byte[] exportSqlByte;
+
+  @Column(name = "export_time")
+  private Timestamp exportTime;
 
   public String getExportSignedUrl() {
     return exportSignedUrl;
@@ -585,5 +595,13 @@ public class StudyBo implements Serializable {
 
   public void setExportSqlByte(byte[] exportSqlByte) {
     this.exportSqlByte = exportSqlByte;
+  }
+
+  public Timestamp getExportTime() {
+    return exportTime;
+  }
+
+  public void setExportTime(Timestamp exportTime) {
+    this.exportTime = exportTime;
   }
 }

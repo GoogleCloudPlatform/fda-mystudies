@@ -32,6 +32,7 @@ export class ParticipantDetailsComponent
   studyTypes = StudyType;
   permission = Permission;
   studyStatus = Status;
+  appStatus = Status;
   enrollmentStatus = EnrollmentStatus;
   constructor(
     private readonly locationLibrary: Location,

@@ -137,7 +137,7 @@ template "project_secrets" {
         },
         {
           secret_id = "manual-mystudies-contact-email-address"
-        },
+        },        
         {
           secret_id = "manual-mystudies-from-email-domain"
         },
@@ -161,29 +161,6 @@ template "project_secrets" {
         },
         {
           secret_id = "manual-fcm-api-url"
-        },
-        # AppId for the mobile app. This needs to be in the app_info table in participant database.
-        {
-          secret_id = "manual-mobile-app-appid"
-        },
-        # bundleID used for the Android App.
-        {
-          secret_id = "manual-android-bundle-id"
-        },
-        # Found under settings > cloud messaging in the android app defined in your firebase project.
-        {
-          secret_id = "manual-android-server-key"
-        },
-        # bundleID used to build and distribute the iOS App.
-        {
-          secret_id = "manual-ios-bundle-id"
-        },
-        # certificate and password generated for APNs.
-        {
-          secret_id = "manual-ios-certificate"
-        },
-        {
-          secret_id = "manual-ios-certificate-password"
         },
         {
           secret_id = "manual-ios-deeplink-url"
@@ -1019,12 +996,6 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-terms-url",
       "manual-privacy-url",
       "manual-fcm-api-url",
-      "manual-mobile-app-appid",
-      "manual-android-bundle-id",
-      "manual-android-server-key",
-      "manual-ios-bundle-id",
-      "manual-ios-certificate",
-      "manual-ios-certificate-password",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
       "auto-auth-server-encryptor-password",

@@ -9,6 +9,7 @@
 /*
 
 Name: 			style.css
+Written by: 	BTC - Madhu D V
 Version: 		1.0
 
 */
@@ -383,6 +384,11 @@ input[type=file]:focus, input[type=checkbox]:focus, input[type=radio]:focus, .ch
 }
 
 .study-selected-item {
+  padding: 10px 0px;
+  border-bottom: 1px solid #cfd4d7;
+}
+
+.app-selected-item{
   padding: 10px 0px;
   border-bottom: 1px solid #cfd4d7;
 }
@@ -1195,7 +1201,12 @@ input[type=radio]:disabled + label::after {
 .changeView div.dropdown-menu ul.dropdown-menu {
   max-height: 0px !important;
   overflow-y: auto !important;
+  overflow-x: hidden !important;
   min-height: 110px !important;
+}
+
+.changeView div.dropdown-menu {
+  width: 100% !important;
 }
 
 .dis-ellipsis {
@@ -2727,4 +2738,16 @@ width:100% !important;
     max-width: 400px !important;
 }
 
+.checkbox input[type="checkbox"] {
+    margin-top: 1px !important;
+    margin-left: -18px !important;
+}
+
+.bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+    margin-right: 0px !important;
+}
+
+.changeView div.dropdown-menu ul.dropdown-menu > li > a {
+    padding: 8px 0px 8px 20px !important;
+}
     

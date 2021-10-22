@@ -34,7 +34,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="firstName" value="${fn:escapeXml(userBO.firstName)}"
                      oldVal="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required data-error="Please fill out this field"  readonly/>
+                     maxlength="50" required data-error="Please fill out this field" readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -183,7 +183,7 @@
                          maxlength="64" data-minlength="8"
                          tabindex="2" name="password" data-error="Password is invalid"
                          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                         required data-error="Please fill out this field" autocomplete="off"/>
+                         required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                   <span class="arrowLeftSugg"></span>
                 </div>
@@ -200,9 +200,9 @@
               <div class="col-md-6 p-none">
                 <div class="form-group">
                   <input type="password" class="input-field wow_input emptyField" maxlength="64"
-                         data-minlength="8" data-match-error="Passwords do not match"
+                         data-minlength="8" data-match-error="Passwords do not match" data-error="Please fill out this field"
                          id="conpassword" data-match="#password"
-                         tabindex="3" required data-error="Please fill out this field" autocomplete="off"/>
+                         tabindex="3" required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
 
                 </div>
@@ -225,6 +225,7 @@
     </div>
   </div>
 </form:form>
+ <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
   <div class="white-bg box-space">
 
@@ -245,20 +246,41 @@
       </div>
       </c:if>
 
-	 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT') or
-              fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
-      <div class="edit-user-list-widget mb-xs">
-        <span>Notifications</span>
-        <span class="gray-xs-f pull-right">
-          <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
-          <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View and edit</c:if>
-        </span>
+      <!-- Assigned Permissions List-->
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
+      <div class="edit-user-list-widget">
+        <span>Apps</span>
+        <span class="gray-xs-f pull-right">Yes</span>
+        <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
+          <div class="mt-lg pl-md">
+            <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_APPS')}">
+              <div class="pb-md bor-dashed">
+                <span class="dot">Create new apps</span>
+              </div>
+            </c:if>
+            <div class="pl-sm pt-md">
+              <span
+                  class="gray-xs-f text-weight-bold">List of assigned apps with permissions
+              </span>
+            </div>
+            <c:forEach items="${appAndPermissionList}" var="appAndPermission">
+              <div class="pt-sm pb-sm pl-sm b-bor-dark">
+                <span class="dot"
+                      id="${appAndPermission.customAppId}">${appAndPermission.name}&nbsp;(${appAndPermission.customAppId})
+                </span>
+                <span class="gray-xs-f pull-right">
+                  <c:if
+                      test="${not appAndPermission.viewPermission}">View only</c:if>
+                  <c:if
+                      test="${appAndPermission.viewPermission}">View and edit</c:if>
+                </span>
+              </div>
+            </c:forEach>
+          </div>
+        </c:if>
       </div>
       </c:if>
-
-
+      
       <!-- Assigned Permissions List-->
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
       <div class="edit-user-list-widget">
@@ -293,9 +315,11 @@
         </c:if>
       </div>
       </c:if>
+       
     </div>
   </div>
 </div>
+</c:if>
 <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
        csrfToken="${_csrf.token}"/>
 

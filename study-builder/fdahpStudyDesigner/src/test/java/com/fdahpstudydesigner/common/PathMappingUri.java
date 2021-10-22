@@ -80,7 +80,21 @@ public enum PathMappingUri {
 
   STUDY_LIST("/adminStudies/studyList.do"),
 
-  VIEW_BASIC_INFO("/adminStudies/viewBasicInfo.do");
+  VIEW_BASIC_INFO("/adminStudies/viewBasicInfo.do"),
+
+  VIEW_APP_LIST("/adminApps/appList.do"),
+
+  SAVE_OR_UPDATE_APP_INFO("/adminApps/saveOrUpdateAppInfo.do"),
+
+  SAVE_OR_UPDATE_APP_SETTING("/adminApps/saveOrUpdateAppSettingAndAdmins.do"),
+
+  SAVE_OR_UPDATE_APP_PROPERTIES("/adminApps/saveOrUpdateAppProperties.do"),
+
+  SAVE_OR_UPDATE_DEVELOPER_CONFIG("/adminApps/saveOrUpdateAppDeveloperConfig.do"),
+
+  UPDATE_APP_ACTION("/adminApps/updateAppAction.do"),
+
+  VIEW_APP_RECORD("/adminApps/viewAppsInfo.do");
 
   private final String path;
 

@@ -75,6 +75,8 @@ public class ParticipantDetail {
 
   private Integer siteStatus;
 
+  private String appStatus;
+
   private List<AppStudyDetails> enrolledStudies = new ArrayList<>();
 
   private List<Enrollment> enrollments = new ArrayList<>();

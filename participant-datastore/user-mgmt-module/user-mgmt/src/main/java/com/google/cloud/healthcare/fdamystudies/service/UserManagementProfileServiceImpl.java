@@ -84,11 +84,16 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     logger.entry("Begin getParticipantInfoDetails()");
     UserDetailsEntity userDetails = null;
     UserProfileRespBean userProfileRespBean = null;
+    String verificationDate = null;
 
     userDetails = userProfileManagementDao.getParticipantInfoDetails(userId);
     if (userDetails != null) {
       userProfileRespBean = new UserProfileRespBean();
       userProfileRespBean.getProfile().setEmailId(userDetails.getEmail());
+      verificationDate = userDetails.getVerificationDate();
+      userProfileRespBean
+          .getProfile()
+          .setVerificationTime(StringUtils.defaultIfEmpty(verificationDate, ""));
       userProfileRespBean
           .getSettings()
           .setRemoteNotifications(userDetails.getRemoteNotificationFlag());
@@ -219,7 +224,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     listOfUserDetails.forEach(
         userDetails -> {
           try {
-            userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId());
+            userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId(), false);
             userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
           } catch (ErrorCodeException e) {
             if (e.getErrorCode() == ErrorCode.USER_NOT_FOUND) {
@@ -297,7 +302,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userDetailsEntity.setStatus(UserStatus.DEACTIVATE_PENDING.getValue());
       userDetailsRepository.saveAndFlush(userDetailsEntity);
 
-      userManagementUtil.deleteUserInfoInAuthServer(userId);
+      userManagementUtil.deleteUserInfoInAuthServer(userId, false);
 
       // change the status from DEACTIVATE_PENDING to DEACTIVATED
       userProfileManagementDao.deactivateUserAccount(userId);
@@ -338,20 +343,23 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       subject = appPropertiesDetails.getRegEmailSub();
     }
 
+    Optional<AppEntity> optApp = appRepository.findByAppId(applicationId);
+    if (!optApp.isPresent()) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
+    }
+
+    String fromEmail =
+        (optApp.get().getFromEmailId() != null)
+            ? optApp.get().getFromEmailId()
+            : appConfig.getFromEmail();
+
     templateArgs.put("appName", appName);
-    // TODO(#496): replace with actual study's org name.
-    templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
-            new String[] {emailId},
-            null,
-            null,
-            subject,
-            content,
-            templateArgs);
+            fromEmail, new String[] {emailId}, null, null, subject, content, templateArgs);
     logger.exit("resendConfirmationthroughEmail() - Ends");
     return emailService.sendMimeMail(emailRequest);
   }

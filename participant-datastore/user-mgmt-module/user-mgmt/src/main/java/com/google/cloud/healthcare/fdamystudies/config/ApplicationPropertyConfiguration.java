@@ -45,27 +45,16 @@ public class ApplicationPropertyConfiguration {
   @Value("${feedback.mail.subject}")
   private String feedbackMailSubject;
 
-  @Value("${feedback.email}")
-  private String feedbackToEmail;
-
   @Value("${contactus.mail.content}")
   private String contactusMailBody;
 
   @Value("${contactus.mail.subject}")
   private String contactusMailSubject;
 
-  @Value("${contactus.email}")
-  private String contactusToEmail;
-  // Feedback & Contactus mail content ends
-
-  @Value("${org.name}")
-  private String orgName;
-
-  @Value("${mail.contact-email}")
-  private String contactEmail;
-
   @Value("${mail.from-email}")
   private String fromEmail;
+
+  // Feedback & Contactus mail content ends
 
   @Value("${auth.server.deleteStatusUrl}")
   private String authServerDeleteStatusUrl;

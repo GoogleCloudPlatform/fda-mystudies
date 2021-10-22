@@ -880,7 +880,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             && !existingQuestionResponseSubTypeList.isEmpty()) {
           for (QuestionResponseSubTypeBo questionResponseSubTypeBo :
               existingQuestionResponseSubTypeList) {
-            if (questionResponseSubTypeBo.getDestinationStepId() == null) {
+            if (StringUtils.isEmpty(questionResponseSubTypeBo.getDestinationStepId())) {
               sequenceSubTypeList.add(null);
             } else if ((questionResponseSubTypeBo.getDestinationStepId() != null)
                 && questionResponseSubTypeBo.getDestinationStepId().equals("0")) {
@@ -4257,6 +4257,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               notificationBO = new NotificationBO();
               notificationBO.setStudyId(questionnaireBo.getStudyId());
               notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+              String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+              notificationBO.setPlatform(platform);
               if (StringUtils.isNotEmpty(studyBo.getAppId())) {
                 notificationBO.setAppId(studyBo.getAppId());
               }
@@ -5328,17 +5330,25 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   }
 
   @Override
-  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId) {
+  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(
+      String studyId, String customStudyId, String copyVersion) {
     logger.info("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - Starts");
     Session session = null;
     List<QuestionnaireBo> questionnaires = null;
     String searchQuery = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if (StringUtils.isNotEmpty(studyId)) {
+      if (StringUtils.isNotEmpty(studyId)
+          && copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
         query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
-        questionnaires = query.list();
+      } else {
+        searchQuery =
+            "From QuestionnaireBo QB where QB.customStudyId=:customStudyId and QB.active=1 AND live=1"
+                + " order by QB.sequenceNumber asc";
+        query = session.createQuery(searchQuery).setString("customStudyId", customStudyId);
       }
+
+      questionnaires = query.list();
     } catch (Exception e) {
       logger.error("StudyQuestionnaireDAOImpl - getStudyQuestionnairesByStudyId() - ERROR ", e);
     } finally {
@@ -5601,6 +5611,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         String searchQuery = null;
         newQuestionnaireBo = SerializationUtils.clone(questionnaireBo);
         newQuestionnaireBo.setId(null);
+        newQuestionnaireBo.setCustomStudyId(null);
+        newQuestionnaireBo.setLive(0);
         newQuestionnaireBo.setStudyId(studyId);
         newQuestionnaireBo.setCreatedBy(sessionObject.getUserId());
         newQuestionnaireBo.setModifiedBy(null);

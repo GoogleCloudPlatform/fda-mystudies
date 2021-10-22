@@ -26,6 +26,10 @@
 <link
   href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css"
   rel="stylesheet" />
+<link 
+  rel="icon"
+  type="image/x-icon"
+  th:href="@{/images/favicon_pm.png}"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
 
@@ -147,9 +151,6 @@
         <li th:if="${!mobileApp}"><a th:href="${about_link}">About</a></li>
         <li th:if="${!mobileApp}"><a th:href="${terms_link}">Terms
             of service</a></li>
-        <li th:if="${mobileApp}"><a th:href="${terms_link}">Terms</a></li>
-        <li th:if="${mobileApp}"><a
-          th:href="${privacy_policy_link}">Privacy Policy</a></li>
       </ul>
     </div>
   </footer>

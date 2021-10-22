@@ -188,6 +188,18 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                 .setParameter("studyId", studyId);
         query.executeUpdate();
 
+        queryString =
+            "Update StudyBo set "
+                + "hasStudyDraft = 1"
+                + " , modifiedBy = :userId"
+                + " , modifiedOn = now() where id = :studyId";
+
+        session
+            .createQuery(queryString)
+            .setParameter("userId", sesObj.getUserId())
+            .setParameter("studyId", studyId)
+            .executeUpdate();
+
         message = FdahpStudyDesignerConstants.SUCCESS;
         auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
 
@@ -747,6 +759,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
             notificationBO = new NotificationBO();
             notificationBO.setStudyId(activeTaskBo.getStudyId());
             notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+            String platform = FdahpStudyDesignerUtil.getStudyPlatform(studyBo);
+            notificationBO.setPlatform(platform);
             if (StringUtils.isNotEmpty(studyBo.getAppId())) {
               notificationBO.setAppId(studyBo.getAppId());
             }
@@ -1126,18 +1140,25 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
   }
 
   @Override
-  public List<ActiveTaskBo> getStudyActiveTaskByStudyId(String studyId) {
+  public List<ActiveTaskBo> getStudyActiveTaskByStudyId(
+      String studyId, String customStudyId, String version) {
     logger.info("StudyActiveTasksDAOImpl - getStudyActiveTaskByStudyId() - Starts");
     Session session = null;
     List<ActiveTaskBo> activeTaskBos = null;
     String searchQuery = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      if (StringUtils.isNotEmpty(studyId)) {
+      if (StringUtils.isNotEmpty(studyId)
+          && version.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
         searchQuery = "SELECT ATB FROM ActiveTaskBo ATB where ATB.studyId =:studyId";
         query = session.createQuery(searchQuery).setParameter("studyId", studyId);
-        activeTaskBos = query.list();
+      } else {
+        searchQuery =
+            "SELECT ATB FROM ActiveTaskBo ATB where ATB.customStudyId =:customStudyId AND ATB.live=1";
+        query = session.createQuery(searchQuery).setParameter("customStudyId", customStudyId);
       }
+
+      activeTaskBos = query.list();
     } catch (Exception e) {
       logger.error("StudyActiveTasksDAOImpl - getStudyActiveTaskByStudyId() - ERROR ", e);
     } finally {

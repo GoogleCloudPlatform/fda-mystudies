@@ -22,9 +22,13 @@ import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +46,8 @@ public class UserSupportServiceImpl implements UserSupportService {
 
   @Autowired private EmailService emailService;
 
+  @Autowired private AppRepository appRepository;
+
   @Override
   @Transactional()
   public EmailResponse feedback(
@@ -49,15 +55,25 @@ public class UserSupportServiceImpl implements UserSupportService {
     logger.entry("Begin feedback()");
     String feedbackSubject = appConfig.getFeedbackMailSubject() + feedbackRequest.getSubject();
     String feedbackBody = appConfig.getFeedbackMailBody();
+
+    Optional<AppEntity> optApp = appRepository.findByAppId(feedbackRequest.getAppId());
+    if (!optApp.isPresent()) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
+    }
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("body", feedbackRequest.getBody());
-    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("orgName", optApp.get().getOrganizationName());
     templateArgs.put("appName", feedbackRequest.getAppName());
+    String fromEmail =
+        (optApp.get().getFromEmailId() != null)
+            ? optApp.get().getFromEmailId()
+            : appConfig.getFromEmail();
 
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
-            new String[] {appConfig.getFeedbackToEmail()},
+            fromEmail,
+            new String[] {optApp.get().getFeedBackToEmail()},
             null,
             null,
             feedbackSubject,
@@ -67,7 +83,7 @@ public class UserSupportServiceImpl implements UserSupportService {
 
     Map<String, String> map =
         Collections.singletonMap(
-            "feedback_destination_email_address", appConfig.getFeedbackToEmail());
+            "feedback_destination_email_address", optApp.get().getFeedBackToEmail());
 
     AuditLogEvent auditEvent =
         MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())
@@ -87,18 +103,26 @@ public class UserSupportServiceImpl implements UserSupportService {
     logger.entry("Begin contactUsDetails()");
     String contactUsSubject = appConfig.getContactusMailSubject() + contactUsRequest.getSubject();
     String contactUsContent = appConfig.getContactusMailBody();
+    Optional<AppEntity> optApp = appRepository.findByAppId(contactUsRequest.getAppId());
+    if (!optApp.isPresent()) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
+    }
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("firstName", contactUsRequest.getFirstName());
     templateArgs.put("email", contactUsRequest.getEmail());
     templateArgs.put("subject", contactUsRequest.getSubject());
     templateArgs.put("body", contactUsRequest.getBody());
-    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("orgName", optApp.get().getOrganizationName());
     templateArgs.put("appName", contactUsRequest.getAppName());
-
+    String fromEmail =
+        (optApp.get().getFromEmailId() != null)
+            ? optApp.get().getFromEmailId()
+            : appConfig.getFromEmail();
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
-            new String[] {appConfig.getContactusToEmail()},
+            fromEmail,
+            new String[] {optApp.get().getContactUsToEmail()},
             null,
             null,
             contactUsSubject,
@@ -108,7 +132,7 @@ public class UserSupportServiceImpl implements UserSupportService {
 
     Map<String, String> map =
         Collections.singletonMap(
-            "contactus_destination_email_address", appConfig.getContactusToEmail());
+            "contactus_destination_email_address", optApp.get().getContactUsToEmail());
 
     AuditLogEvent auditEvent =
         MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())

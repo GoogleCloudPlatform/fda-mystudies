@@ -9,7 +9,7 @@
 /*
 
 Name: 			theme.css
-Written by: 	BTC - Maari Vanaraj
+Written by: 	BTC - Madhu D V
 Version: 		1.0
 
 */
@@ -27,6 +27,8 @@ body {
 	margin: 0;	
 	padding: 0px !important;
 	overflow-x: hidden;
+	min-height: 100vh !important;
+    height: 100% !important;
 }
 
 a:hover{

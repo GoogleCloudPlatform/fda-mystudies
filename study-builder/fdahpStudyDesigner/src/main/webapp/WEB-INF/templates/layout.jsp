@@ -115,7 +115,8 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
       <div class="md-container white-bg ">
         <div class="row" id="rowId">
-          <tiles:insertAttribute name="menu"/>
+          <tiles:insertAttribute name="menu" ignore="true" />
+          <tiles:insertAttribute name="appsMenu" ignore="true" />
           <tiles:insertAttribute name="body"/>
         </div>
       </div>
@@ -191,7 +192,6 @@
       var serverDate = function () {
         return new Date(mytime.getFullYear(), mytime.getMonth(), mytime.getDate());
       }
-      
       
       var serverTime = function () {
     	  var hours = serverDateTime().getHours();

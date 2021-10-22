@@ -392,7 +392,6 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void resendConfirmationBadRequest() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-    headers.add("appName", "AppName_BTCDEV001");
 
     // without email
     mockMvc
@@ -430,7 +429,6 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Test
   public void resendConfirmationSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-    headers.add("appName", "AppName_BTCDEV001");
 
     mockMvc
         .perform(
@@ -444,15 +442,14 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     List<UserDetailsEntity> listOfUserDetails =
         userDetailsRepository.findByEmail(Constants.VALID_EMAIL);
+    Optional<AppEntity> optApp = appRepository.findByAppId(Constants.APP_ID_VALUE);
     String subject = appConfig.getConfirmationMailSubject();
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", listOfUserDetails.get(0).getEmailCode());
-    templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    templateArgs.put("contactEmail", Constants.CONTACT_US_EMAIL);
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);
-
-    verifyMimeMessage(Constants.VALID_EMAIL, appConfig.getFromEmail(), subject, body);
+    verifyMimeMessage(Constants.VALID_EMAIL, optApp.get().getFromEmailId(), subject, body);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);

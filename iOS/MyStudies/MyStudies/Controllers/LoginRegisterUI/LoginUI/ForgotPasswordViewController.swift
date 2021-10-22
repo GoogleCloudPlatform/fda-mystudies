@@ -55,6 +55,7 @@ class ForgotPasswordViewController: UIViewController {
     self.view?.addGestureRecognizer(gestureRecognizwe)
 
     self.addBackBarButton()
+    textFieldEmail?.delegate = self
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -201,6 +202,12 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
       return false
     } else {
       return true
+    }
+  }
+  
+  func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+    if textField.text ?? "" != "" && !(Utilities.isValidEmail(testStr: textField.text ?? "")) {
+      self.showAlertMessages(textMessage: kMessageValidEmail)
     }
   }
 }

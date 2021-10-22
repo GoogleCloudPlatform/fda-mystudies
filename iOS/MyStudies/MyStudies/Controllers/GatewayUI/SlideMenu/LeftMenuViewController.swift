@@ -345,6 +345,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     )
 
     self.tableView.reloadData()
+    UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
 
   }
 
@@ -508,7 +509,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
     self.navigationController?.popToRootViewController(animated: true)
-    HomeViewController.setRootView()
+    if !Utilities.isStandaloneApp() {
+      HomeViewController.setRootView()
+    }
   }
 
 }

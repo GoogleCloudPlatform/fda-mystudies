@@ -961,12 +961,24 @@
                                     <outlet property="delegate" destination="zmZ-Ff-dEh" id="gbU-PF-VgK"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No records found." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hVm-PI-G3m">
+                                <rect key="frame" x="20" y="16" width="374" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="I9M-rr-x3E"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="ebc-jX-8mI" firstAttribute="leading" secondItem="wt8-bq-RGh" secondAttribute="leading" id="3KX-ln-RSA"/>
                             <constraint firstItem="yLT-4v-XjN" firstAttribute="top" secondItem="ebc-jX-8mI" secondAttribute="bottom" id="7uz-yG-Vf6"/>
+                            <constraint firstItem="hVm-PI-G3m" firstAttribute="top" secondItem="PBW-5g-3tz" secondAttribute="bottom" constant="16" id="DuL-6F-7Uw"/>
+                            <constraint firstItem="hVm-PI-G3m" firstAttribute="leading" secondItem="wt8-bq-RGh" secondAttribute="leadingMargin" id="FmM-77-lQb"/>
                             <constraint firstAttribute="trailing" secondItem="ebc-jX-8mI" secondAttribute="trailing" id="GrJ-Wq-dTR"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="hVm-PI-G3m" secondAttribute="trailing" id="HQU-w9-pAN"/>
                             <constraint firstItem="ebc-jX-8mI" firstAttribute="top" secondItem="PBW-5g-3tz" secondAttribute="bottom" constant="1" id="YRs-yx-Zdb"/>
                             <constraint firstItem="yLT-4v-XjN" firstAttribute="top" secondItem="3mj-c9-Ss6" secondAttribute="bottom" id="acN-z3-yLM"/>
                             <constraint firstAttribute="trailing" secondItem="3mj-c9-Ss6" secondAttribute="trailing" id="boi-gE-1Kp"/>
@@ -976,6 +988,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Dz9-gG-h38"/>
                     <connections>
+                        <outlet property="labelNoRecord" destination="hVm-PI-G3m" id="2fj-tX-fWb"/>
                         <outlet property="tableView" destination="ebc-jX-8mI" id="ywE-3b-m3s"/>
                     </connections>
                 </viewController>
@@ -1317,14 +1330,17 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="62"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="confirm Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XTf-xa-igQ">
-                                                    <rect key="frame" x="35" y="15.5" width="146" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="confirm Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XTf-xa-igQ">
+                                                    <rect key="frame" x="22" y="12" width="146" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="KVL-4V-DwU"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="enter email" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9O9-Ao-Ceo">
-                                                    <rect key="frame" x="202" y="8" width="182" height="40"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="enter email" textAlignment="right" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="9O9-Ao-Ceo">
+                                                    <rect key="frame" x="170" y="12" width="218" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="40" id="Nkj-E6-rs8"/>
                                                     </constraints>
@@ -1336,7 +1352,7 @@
                                                     </connections>
                                                 </textField>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H2D-Wi-E81">
-                                                    <rect key="frame" x="32" y="57" width="352" height="1"/>
+                                                    <rect key="frame" x="24" y="57" width="366" height="1"/>
                                                     <color key="backgroundColor" red="0.84705882349999995" green="0.89019607840000003" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="8Xz-8Z-gMa"/>
@@ -1344,14 +1360,14 @@
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="XTf-xa-igQ" secondAttribute="bottom" constant="14.5" id="6Jk-Uh-9EM"/>
-                                                <constraint firstItem="XTf-xa-igQ" firstAttribute="leading" secondItem="0Tk-EB-p8c" secondAttribute="leadingMargin" constant="15" id="DfY-Wh-4SH"/>
-                                                <constraint firstItem="H2D-Wi-E81" firstAttribute="leading" secondItem="0Tk-EB-p8c" secondAttribute="leadingMargin" constant="12" id="Hkf-UT-7H7"/>
-                                                <constraint firstItem="9O9-Ao-Ceo" firstAttribute="leading" secondItem="XTf-xa-igQ" secondAttribute="trailing" constant="21" id="LEN-0J-35A"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="H2D-Wi-E81" secondAttribute="trailing" constant="10" id="f34-2I-qlO"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="9O9-Ao-Ceo" secondAttribute="trailing" constant="10" id="iFk-vD-KPb"/>
+                                                <constraint firstItem="XTf-xa-igQ" firstAttribute="leading" secondItem="0Tk-EB-p8c" secondAttribute="leadingMargin" constant="2" id="DfY-Wh-4SH"/>
+                                                <constraint firstItem="H2D-Wi-E81" firstAttribute="leading" secondItem="0Tk-EB-p8c" secondAttribute="leadingMargin" constant="4" id="Hkf-UT-7H7"/>
+                                                <constraint firstItem="9O9-Ao-Ceo" firstAttribute="leading" secondItem="XTf-xa-igQ" secondAttribute="trailing" constant="2" id="LEN-0J-35A"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="H2D-Wi-E81" secondAttribute="trailing" constant="4" id="f34-2I-qlO"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="9O9-Ao-Ceo" secondAttribute="trailing" constant="6" id="iFk-vD-KPb"/>
+                                                <constraint firstItem="H2D-Wi-E81" firstAttribute="top" secondItem="XTf-xa-igQ" secondAttribute="bottom" constant="5" id="oZl-71-CyS"/>
+                                                <constraint firstItem="9O9-Ao-Ceo" firstAttribute="centerY" secondItem="XTf-xa-igQ" secondAttribute="centerY" id="pnq-Nc-KKd"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="H2D-Wi-E81" secondAttribute="bottom" constant="-7" id="rcR-bH-N6p"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="9O9-Ao-Ceo" secondAttribute="bottom" constant="3" id="tqC-BF-4eu"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

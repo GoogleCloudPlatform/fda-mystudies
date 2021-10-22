@@ -43,7 +43,7 @@
                         <constraint firstAttribute="height" constant="42" id="pqQ-ej-CjN"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
-                    <state key="normal" title="UPDATE">
+                    <state key="normal" title="Ok">
                         <color key="titleColor" red="0.0" green="0.48627450980392156" blue="0.72941176470588232" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
                     <userDefinedRuntimeAttributes>
@@ -60,24 +60,78 @@
                         <action selector="buttonUpgradeAction" destination="iN0-l3-epB" eventType="touchUpInside" id="3jq-CB-L8P"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NJA-Vp-hOI">
+                    <rect key="frame" x="16" y="575" width="161.5" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="42" id="x3x-4P-AmV"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                    <state key="normal" title="Yes">
+                        <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="buttonYesAction" destination="iN0-l3-epB" eventType="touchUpInside" id="vHq-UA-dfz"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QuU-36-bV4">
+                    <rect key="frame" x="197.5" y="575" width="161.5" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="42" id="rnn-Jz-zU2"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                    <state key="normal" title="Skip">
+                        <color key="titleColor" red="0.0" green="0.48627450979999998" blue="0.72941176470000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.clipsToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <action selector="buttonSkipAction" destination="iN0-l3-epB" eventType="touchUpInside" id="3Ae-4t-oQC"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="0.97295884683098588" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="xNA-bz-Y9i" firstAttribute="top" secondItem="vMV-QM-Mcp" secondAttribute="bottom" constant="60" id="0dP-yC-TDy"/>
+                <constraint firstAttribute="bottom" secondItem="QuU-36-bV4" secondAttribute="bottom" constant="50" id="19G-QS-8yJ"/>
                 <constraint firstItem="AaU-Or-nbT" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="3Pp-hC-yZ4"/>
                 <constraint firstItem="xNA-bz-Y9i" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="PAA-1S-dPq"/>
                 <constraint firstItem="vMV-QM-Mcp" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="110/667" id="QKt-bO-weM"/>
+                <constraint firstAttribute="trailing" secondItem="QuU-36-bV4" secondAttribute="trailing" constant="16" id="TN8-CS-A37"/>
+                <constraint firstItem="NJA-Vp-hOI" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="Z5h-6h-fD6"/>
+                <constraint firstAttribute="bottom" secondItem="NJA-Vp-hOI" secondAttribute="bottom" constant="50" id="ZFk-MC-fKP"/>
                 <constraint firstItem="sEi-f6-3pt" firstAttribute="top" secondItem="xNA-bz-Y9i" secondAttribute="bottom" constant="15" id="ch5-Mk-mab"/>
                 <constraint firstAttribute="trailing" secondItem="sEi-f6-3pt" secondAttribute="trailing" constant="16" id="fK1-wR-g9W"/>
                 <constraint firstItem="AaU-Or-nbT" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="150/375" id="glV-3k-72X"/>
+                <constraint firstItem="QuU-36-bV4" firstAttribute="leading" secondItem="NJA-Vp-hOI" secondAttribute="trailing" constant="20" id="idp-v6-qn2"/>
                 <constraint firstItem="sEi-f6-3pt" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="lhs-43-qft"/>
                 <constraint firstItem="vMV-QM-Mcp" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="osJ-70-bqe"/>
                 <constraint firstItem="vMV-QM-Mcp" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" multiplier="0.394303" id="ovu-bs-00Y"/>
+                <constraint firstItem="QuU-36-bV4" firstAttribute="width" secondItem="NJA-Vp-hOI" secondAttribute="width" id="s0k-3H-cZB"/>
                 <constraint firstAttribute="bottom" secondItem="AaU-Or-nbT" secondAttribute="bottom" constant="100" id="wZD-Nj-K73"/>
             </constraints>
             <connections>
                 <outlet property="appIconView" destination="vMV-QM-Mcp" id="Zhj-3E-jjU"/>
+                <outlet property="buttonSkip" destination="QuU-36-bV4" id="Nky-fW-Zul"/>
                 <outlet property="buttonUpgrade" destination="AaU-Or-nbT" id="oaC-4O-vYu"/>
+                <outlet property="buttonYes" destination="NJA-Vp-hOI" id="Yjr-Nu-9S3"/>
                 <outlet property="labelMessage" destination="sEi-f6-3pt" id="7yz-lh-pKR"/>
                 <outlet property="labelVersionNumber" destination="xNA-bz-Y9i" id="Tmo-1f-wgY"/>
             </connections>

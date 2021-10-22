@@ -70,7 +70,24 @@
                 </div>
                 <div class="pr-xlg">
                   <div class="banner__label mob_textpre">
-                    {{ studyDetails.participantRegistryDetail.customAppId }}
+                    {{ studyDetails.participantRegistryDetail.customAppId }} -
+                    <!-- appStatus -->
+                    <span
+                      class="mob_textpre"
+                      [ngClass]="{
+                        active_text:
+                          studyDetails.participantRegistryDetail.appStatus ===
+                          appStatus.Active,
+                        paused_text:
+                          studyDetails.participantRegistryDetail.appStatus ===
+                          appStatus.Paused,
+                        deactivated_text:
+                          studyDetails.participantRegistryDetail.appStatus ===
+                          appStatus.Deactivated
+                      }"
+                    >
+                      {{ studyDetails.participantRegistryDetail.appStatus }}
+                    </span>
                   </div>
                   <div class="banner__text mob_textpre">
                     {{ studyDetails.participantRegistryDetail.appName }}

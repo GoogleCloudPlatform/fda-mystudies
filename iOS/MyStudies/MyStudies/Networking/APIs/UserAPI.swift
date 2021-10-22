@@ -19,10 +19,19 @@ struct UserAPI {
 
     let params: JSONDictionary = [
       "email": email,
+      "contactEmail": UserManageApps.appDetails?.contactUsEmail ?? "",
+      "supportEmail": UserManageApps.appDetails?.supportEmail ?? "",
+      "fromEmail": UserManageApps.appDetails?.fromEmail ?? "",
       "appId": AppConfiguration.appID,
     ]
-
-    APIService.instance.requestForData(with: AuthRouter.forgotPassword(params: params)) { (_, status, error) in
+    
+    let headers: [String: String] = [
+      "contactEmail": UserManageApps.appDetails?.contactUsEmail ?? "",
+      "supportEmail": UserManageApps.appDetails?.supportEmail ?? "",
+      "fromEmail": UserManageApps.appDetails?.fromEmail ?? ""
+    ]
+    
+    APIService.instance.requestForData(with: AuthRouter.forgotPassword(params: params, headers: headers)) { (_, status, error) in
       completion(status, error)
     }
   }

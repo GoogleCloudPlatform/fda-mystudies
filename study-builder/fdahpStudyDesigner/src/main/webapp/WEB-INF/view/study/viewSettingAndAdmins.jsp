@@ -24,8 +24,9 @@
     <input type="hidden" id="userIds" name="userIds">
     <input type="hidden" id="permissions" name="permissions">
     <input type="hidden" id="projectLead" name="projectLead">
-     <input type="hidden" id="modifiedBy" name="modifiedBy"  value="${studyBo.modifiedBy}">
+    <input type="hidden" id="modifiedBy" name="modifiedBy"  value="${studyBo.modifiedBy}">
     
+	
     <!-- Start top tab section-->
     <div class="right-content-head">
       <div class="text-right">
@@ -72,7 +73,7 @@
               name="platform" value="I"
               <c:if test="${fn:contains(studyBo.platform,'I')}">checked</c:if>
               <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active'}">disabled</c:if>
+                  test="${(not empty appBo && appBo.appPlatform eq 'A') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active')}">disabled</c:if>
               data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox1"> iOS </label>
           </span>
@@ -81,7 +82,7 @@
               name="platform" value="A"
               <c:if test="${fn:contains(studyBo.platform,'A')}">checked</c:if>
               <c:if
-                  test="${not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active'}">disabled</c:if>
+                  test="${(not empty appBo && appBo.appPlatform eq 'I') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active')}">disabled</c:if>
               data-error="Please check these box if you want to proceed"
               > <label for="inlineCheckbox2"> Android </label>
           </span>
@@ -104,13 +105,13 @@
 						type="radio" id="inlineRadio1" value="Yes" 
 						name="enrollingParticipants"
 						<c:if test="${studyBo.enrollingParticipants eq 'Yes' || studyBo.status eq 'Pre-launch'}">checked</c:if>
-						 required data-error="Please fill out this field" > <label
+						 required data-error="Please fill out this field"> <label
 						for="inlineRadio1">Yes</label> </span> <span class="radio radio-inline"><input
 						type="radio" id="inlineRadio2" value="No"
 						name="enrollingParticipants"
 						${studyBo.status eq 'Pre-launch' ?'disabled':''}
 						<c:if test="${ studyBo.enrollingParticipants eq 'No' }">checked</c:if>
-						 required data-error="Please fill out this field" >
+						 required data-error="Please fill out this field">
 						<label for="inlineRadio2">No</label> </span>
 					<div class="help-block with-errors red-txt"></div>
 				</div>
@@ -137,7 +138,7 @@
               type="radio" id="inlineRadio11" value="Yes"
               name="enrollmentdateAsAnchordate"
               <c:if test="${studyBo.enrollmentdateAsAnchordate}">checked</c:if>
-              required data-error="Please fill out this field" > <label for="inlineRadio11">Yes</label>
+              required data-error="Please fill out this field"> <label for="inlineRadio11">Yes</label>
           </span>
           <span class="radio radio-inline"><input type="radio"
                                                   id="inlineRadio22" value="No"
@@ -145,7 +146,7 @@
             ${isAnchorForEnrollmentLive?'disabled':''}
                                                   <c:if
                                                       test="${studyBo.enrollmentdateAsAnchordate eq false}">checked</c:if>
-                                                  required data-error="Please fill out this field" > <label
+                                                  required data-error="Please fill out this field"> <label
               for="inlineRadio22">No</label>
           </span>
           <div class="help-block with-errors red-txt"></div>
@@ -181,9 +182,9 @@
             <ul class="no-disc">
               <li><strong>1. Platform support: </strong><br/>
                 <ul class="no-disc">
-                  <li>Note that once the study is launched, platform support
-                    cannot be revoked. However, adding support for a platform not
-                    previously selected will still be possible.
+                  <li>The platform(s) allowed for selection here are based on the platform(s) supported by the parent app. If the parent app supports only Android for example, you can only select Android here.
+                  </li>
+                  <li>Note that once the study is launched, platform support settings for the study cannot be revoked. However, adding support for a platform not previously selected will still be possible.
                   </li>
                 </ul>
               </li>
@@ -191,10 +192,9 @@
               <li><strong>2. Feature support on iOS and Android:</strong><br/>
 
                 <ul class="no-disc">
-                  <li>Given below is a list of features currently NOT
-					available for Android as compared to iOS. Please note the same
-                    in your creation of study content:
+                  <li>Given below is a list of features currently available only for iOS. These features are enabled for configuration in the Study Builder only if the study is set up as an iOS-only study in this section.
                   </li>
+                  </br>
                   <li>i. Active tasks: Tower of hanoi, Spatial span memory
                   </li>
                 </ul>
@@ -210,6 +210,14 @@
 <script>
   $(document).ready(function () {
 	$('.studyClass').addClass("active");
+	<c:if test="${studyBo.status eq 'Pre-launch'}">
+	if($('#inlineCheckbox1').is(':disabled')){
+  	  $('#inlineCheckbox1').attr('checked', false);
+     }
+    if($('#inlineCheckbox2').is(':disabled')){
+  	  $('#inlineCheckbox2').attr('checked', false);
+     }
+    </c:if>
     <c:if test="${empty permission && fn:contains(permissions,5)}">
    
     $('[data-toggle="tooltip"]').tooltip();
@@ -224,7 +232,6 @@
       $('[name=case]:checked').each(function () {
         count++;
       });
-      
     });
     </c:if>
     table = $('#studyAdminsTable').DataTable({
@@ -242,7 +249,7 @@
     });
     $(".menuNav li.active").removeClass('active');
     $(".menuNav li.second").addClass('active');
-  
+   
     <c:if test="${(not empty permission) || (sessionObject.role eq 'Org-level Admin')}">
     $('#settingfoFormId input,textarea,select').prop('disabled', true);
     $('#settingfoFormId').find('.elaborateClass').addClass('linkDis');
@@ -252,11 +259,12 @@
     </c:if>
     $("#completedId").on('click', function (e) {
       if ($('.checkbox input:checked').length == 0) {
-    	    $("input").attr("required", true);
+  	    $("input").attr("required", true);
+  	  	$("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
       }
-      
       var rowCount = 0;
       if (isFromValid("#settingfoFormId")) {
+  
         rowCount = $('.leadCls').length;
         if (rowCount != 0) {
           if ($("#studyAdminsTable .leadCls:checked").length > 0) {
@@ -272,8 +280,20 @@
           $('#completedId').prop('disabled', true);
           platformTypeValidation('completed');
         }
+      }else{
+    	  
+    	  <c:if
+          test="${(not empty appBo && appBo.appPlatform eq 'A') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'I') || studyBo.status eq 'Active')}">
+          $('#inlineCheckbox1').prop('disabled', true);
+          </c:if>
+     
+      	  <c:if
+          test="${(not empty appBo && appBo.appPlatform eq 'I') || (not empty studyBo.liveStudyBo && fn:contains(studyBo.liveStudyBo.platform,'A') || studyBo.status eq 'Active')}">
+          $('#inlineCheckbox2').prop('disabled', true);
+          </c:if>
       }
     });
+    
     $("#saveId").click(function () {
       platformTypeValidation('save');
     });
@@ -283,7 +303,7 @@
       $('#myModal').modal('show');
     });
   });
-  
+ 
   
   function platformTypeValidation(buttonText) {
     var platformNames = '';
@@ -309,15 +329,15 @@
           "${_csrf.parameterName}": "${_csrf.token}",
         },
         success: function platformValid(data, status) {
-      	  var message = data.message;
-          var errorMessage = data.errorMessage;
+        	 var message = data.message;
+             var errorMessage = data.errorMessage;
             
           $("body").removeClass("loading");
           if (message == "SUCCESS") {
             $('#completedId').removeAttr('disabled');
             bootbox.alert(errorMessage);
           } else {
-              submitButton(buttonText);
+            submitButton(buttonText);
           }
         },
         error: function status(data, status) {
@@ -340,9 +360,9 @@
       $("#buttonText").val('save');
       $("#settingfoFormId").submit();
     } else {
-        var enrollmentdateAsAnchordate = $('input[name=enrollmentdateAsAnchordate]:checked').val();
+    	var enrollmentdateAsAnchordate = $('input[name=enrollmentdateAsAnchordate]:checked').val();
         showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate);
-      }
+    }
   }
   function admins() {
     var userIds = "";
@@ -392,52 +412,50 @@
   }
   </c:if>
   function showWarningForAnchor(isAnchorForEnrollmentDraft, enrollmentdateAsAnchordate) {
-	    if (isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate == 'No') {
-	      var text = 'You have chosen not to use enrollment date as an anchor date. You will need to revise the schedules of activities or resources, if any, that were set based on the enrollment date as anchor date.';
-	      bootbox.confirm({
-	        closeButton: false,
-	        message: text,
-	        buttons: {
-	          'cancel': {
-	            label: 'Cancel',
-	          },
-	          'confirm': {
-	            label: 'OK',
-	          },
-	        },
-	        callback: function (valid) {
-	          if (valid) {
-	            console.log(1);
-	            $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-	            $("#buttonText").val('completed');
-	            $("#settingfoFormId").submit();
-	          } else {
-	            console.log(2);
-	            $('#completedId').removeAttr('disabled');
-	          }
-	        }
-	      });
-	    } else {
-	      $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
-	      $("#buttonText").val('completed');
-	      $("#settingfoFormId").submit();
-	    }
-	  }
-
+    if (isAnchorForEnrollmentDraft == 'true' && enrollmentdateAsAnchordate == 'No') {
+      var text = 'You have chosen not to use enrollment date as an anchor date. You will need to revise the schedules of activities or resources, if any, that were set based on the enrollment date as anchor date.';
+      bootbox.confirm({
+        closeButton: false,
+        message: text,
+        buttons: {
+          'cancel': {
+            label: 'Cancel',
+          },
+          'confirm': {
+            label: 'OK',
+          },
+        },
+        callback: function (valid) {
+          if (valid) {
+            console.log(1);
+            $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
+            $("#buttonText").val('completed');
+            $("#settingfoFormId").submit();
+          } else {
+            console.log(2);
+            $('#completedId').removeAttr('disabled');
+          }
+        }
+      });
+    } else {
+      $("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
+      $("#buttonText").val('completed');
+      $("#settingfoFormId").submit();
+    }
+  }
   var sucMsg = '${sucMsg}';
   if (sucMsg.length > 0) {
     showSucMsg(sucMsg);
   }
-
-  function showSucMsg(message) {
-	 $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
-	 $('#alertMsg').show('5000');
-	 if('${param.buttonText}' == 'completed'){
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
 		    window.setTimeout(function(){
 		        window.location.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
 		    }, 5000);
 	  }else{
 	  	setTimeout(hideDisplayMessage, 5000);
 	  }
-   }
+	}
 </script>

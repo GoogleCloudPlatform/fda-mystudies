@@ -28,6 +28,7 @@ let kDeviceToken = "deviceToken"
 let kUserFirstName = "firstName"
 let kUserLastName = "lastName"
 let kUserEmailId = "emailId"
+let kVerificationTime = "verificationTime"
 let kUserSettings = "settings"
 let kUserId = "userId"
 let kLocale = "locale"
@@ -186,6 +187,20 @@ class UserServices: NSObject {
     let method = RegistrationMethods.userProfile.method
     self.sendRequestWith(method: method, params: nil, headers: headerParams)
   }
+  
+  /// Creates a request to get `User` profile information
+  /// - Parameter delegate: Class object to receive response
+  func getUserManageApps(_ delegate: NMWebServiceDelegate) {
+    
+    self.delegate = delegate
+    let headerParams = ["appId": AppConfiguration.appID]
+    let params =
+      [
+        "appId": AppConfiguration.appID
+      ] as [String: Any]
+    let method = RegistrationMethods.apps.method
+    self.sendRequestWith(method: method, params: params, headers: headerParams)
+  }
 
   /// Creates a request to update `User` profile
   /// - Parameter delegate: Class object to receive response
@@ -281,6 +296,7 @@ class UserServices: NSObject {
       kFeedbackBody: ContactUsFields.message,
       kFeedbackSubject: ContactUsFields.subject,
       kContactusEmail: ContactUsFields.email,
+      "supportEmail": UserManageApps.appDetails?.supportEmail ?? "",
       kContactusFirstname: ContactUsFields.firstName,
     ]
     let headers = [
@@ -357,13 +373,13 @@ class UserServices: NSObject {
     userSettings.setSettings(dict: settings as NSDictionary)
     user.settings = userSettings
 
-    DBHandler.saveUserSettingsToDatabase()
-
     // profile
     let profile = (response[kUserProfile] as? [String: Any])!
     user.emailId = profile[kUserEmailId] as? String
+    user.verificationTime = profile[kVerificationTime] as? String ?? ""
     user.firstName = profile[kUserFirstName] as? String
     user.lastName = profile[kUserLastName] as? String
+    DBHandler.saveUserSettingsToDatabase()
   }
 
   /// Handles `User` preference response
@@ -414,6 +430,30 @@ class UserServices: NSObject {
     StudyFilterHandler.instance.previousAppliedFilters = []
     StudyFilterHandler.instance.searchText = ""
   }
+  
+  func handelManageApps(response: [String: Any]) {
+    UserManageApps.appDetails = UserManageApps()
+    
+    let appName = response["appName"] as? String ?? ""
+    let code = response["code"] as? String ?? ""
+    let contactUsEmail = response["contactUsEmail"] as? String ?? ""
+    let supportEmail = response["supportEmail"] as? String ?? ""
+    let fromEmail = response["fromEmail"] as? String ?? ""
+    let appWebsite = response["appWebsite"] as? String ?? ""
+    let privacyPolicyUrl = response["privacyPolicyUrl"] as? String ?? ""
+    let termsUrl = response["termsUrl"] as? String ?? ""
+    
+    var latestVersion = ""
+    var isForceUpdate = ""
+    
+    if let versionDict = response["version"] as? JSONDictionary, let iosDict = versionDict["ios"] as? JSONDictionary {
+      latestVersion = iosDict["latestVersion"] as? String ?? ""
+      isForceUpdate = iosDict["forceUpdate"] as? String ?? ""
+    }
+    
+    UserManageApps.appDetails?.initWith(appName, contactUsEmail, supportEmail, fromEmail,
+                                        appWebsite, privacyPolicyUrl, termsUrl, [latestVersion, isForceUpdate, code])
+  }
 
   /// Sends Request
   /// - Parameters:
@@ -463,6 +503,9 @@ extension UserServices: NMWebServiceDelegate {
 
     case RegistrationMethods.deactivate.description as String:
       self.handleDeActivateAccountResponse(response: (response as? [String: Any])!)
+      
+    case RegistrationMethods.apps.description as String:
+      self.handelManageApps(response: (response as? [String: Any])!)
 
     default: break
     }

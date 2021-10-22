@@ -16,6 +16,9 @@
 
 package com.harvard.utils.realm;
 
+import com.harvard.utils.version.Android;
+import com.harvard.utils.version.VersionModel;
+
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
 import io.realm.FieldAttribute;
@@ -67,6 +70,41 @@ public class RealmMigrationHelper implements RealmMigration {
                   obj.set("enrollAgain", false);
                 }
               });
+
+      oldVersion++;
+    } else if (oldVersion == 1) {
+      // Added verificationTime field
+      RealmObjectSchema profile = schema.get("Profile");
+      profile
+          .addField("verificationTime", String.class)
+          .transform(
+              new RealmObjectSchema.Function() {
+                @Override
+                public void apply(DynamicRealmObject obj) {
+                  obj.set("verificationTime", "");
+                }
+              });
+
+      // Added Apps
+      schema.create("Android")
+          .addField("latestVersion", String.class)
+          .addField("forceUpdate", String.class);
+
+      schema.create("VersionModel")
+          .addField("android", Android.class);
+
+      schema.create("Apps")
+          .addField("message", String.class)
+          .addField("appName", String.class)
+          .addField("appId", String.class)
+          .addField("fromEmail", String.class)
+          .addField("contactUsEmail", String.class)
+          .addField("supportEmail", String.class)
+          .addField("status", int.class)
+          .addField("code", String.class)
+          .addField("termsUrl", String.class)
+          .addField("appWebsite", String.class)
+          .addField("version", VersionModel.class);
 
       oldVersion++;
     }

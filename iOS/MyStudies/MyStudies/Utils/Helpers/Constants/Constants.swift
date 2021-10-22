@@ -89,6 +89,14 @@ let kResetAfterVerificationMessage = "Your account has been verified, please try
 // MARK: - Logout
 let kOnLogoutMessage = "You have been signed out of the app."
 
+// MARK: - Forceupgrade
+let kMandatoryForceUMessage = "Please upgrade the app to continue."
+let kOpionalForceUMessage = "A new version of this app is available. Do you want to update it now?"
+let kFromSplashScreen = "FromSplashScreen"
+let kFromBackground = "FromBackground"
+let kIsShowUpdateAppVersion = "isShowAppVersionUpdate"
+let kIsStudylistGeneral = "isStudylistGeneral"
+
 // MARK: - SignUp Constants
 let kSignUpTitleText = "Sign up"
 let kAgreeToTermsAndConditionsText = "I agree to the Terms and Privacy Policy"

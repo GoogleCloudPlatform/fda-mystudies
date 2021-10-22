@@ -131,6 +131,19 @@ public class NotificationBO implements Serializable {
   @Column(name = "sequence_number")
   private Integer sequenceNumber;
 
+  @Column(name = "platform")
+  private String platform;
+
+  @Transient private boolean appPermission;
+
+  public String getPlatform() {
+    return platform;
+  }
+
+  public void setPlatform(String platform) {
+    this.platform = platform;
+  }
+
   public String getActionPage() {
     return actionPage;
   }
@@ -345,5 +358,13 @@ public class NotificationBO implements Serializable {
 
   public void setSequenceNumber(Integer sequenceNumber) {
     this.sequenceNumber = sequenceNumber;
+  }
+
+  public boolean isAppPermission() {
+    return appPermission;
+  }
+
+  public void setAppPermission(boolean appPermission) {
+    this.appPermission = appPermission;
   }
 }
