@@ -144,12 +144,15 @@
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
                     <input type="text"
-                           class="input-field wow_input validateUserEmail"
+                           class="input-field wow_input validateUserEmail
+                            <c:if test="${not empty gciUser}">
+	                      cursor-none-without-event
+	                     </c:if>"
                            name="userEmail" placeholder="Email Address"
                            value="${userBO.userEmail}" oldVal="${userBO.userEmail}"
                            pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                            data-pattern-error="Email address is invalid" data-error="Please fill out this field"  maxlength="100"
-                           required readonly="readonly" autocomplete="off"/>
+                           required readonly="readonly" autocomplete="off"<c:if test="${not empty gciUser}">disabled</c:if>/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
