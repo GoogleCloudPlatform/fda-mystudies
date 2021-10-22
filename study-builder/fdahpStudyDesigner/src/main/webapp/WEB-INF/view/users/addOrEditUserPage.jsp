@@ -539,6 +539,14 @@
      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
    }
+   $(".selectpicker").selectpicker('deselectAll');
+   var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+   var count = $(".study-selected-item").length;
+   if (count == tot_items) {
+ 	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+     	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+   }
     </c:if> 
 
     <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
@@ -798,7 +806,8 @@
           $(this).remove();
         }
       });
-
+	if ($('#inlineCheckbox4').prop("checked") == true) {
+    
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -823,6 +832,10 @@
 
         $('.study-selected').append(existingStudyDiv);
       });
+       } else if ($('#inlineCheckbox4').prop("checked") == false) {
+          $(this).val('');
+          
+        }
       
 
       $(".selectpicker").selectpicker('deselectAll');
@@ -848,7 +861,7 @@
           $(this).remove();
         }
       });
-
+	if ($('#inlineCheckboxApp').prop("checked") == true) {
       $('#multipleApps :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -873,6 +886,11 @@
 
         $('.app-selected').append(existingAppDiv);
       });
+      } else if ($('#inlineCheckboxApp').prop("checked") == false) {
+          $(this).val('');
+          
+        }
+      
      
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
