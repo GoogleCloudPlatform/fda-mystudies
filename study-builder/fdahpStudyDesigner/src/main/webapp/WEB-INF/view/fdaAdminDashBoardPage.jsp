@@ -51,14 +51,14 @@
      <style>
    
 .arrow {
-  width: 13px;
-  height: 13px;
+  width: 0px !important;
+  height: 0px !important;
   display: inline-block;
   position: relative;
   bottom: -8px;
   left: 0px;
   transition: 0.4s ease;
-  margin-top: 8px;
+  margin-top: 7px ;
   text-align: left;
   transform: rotate(45deg);
   float: right;
@@ -78,6 +78,7 @@
   top: -3px;
   left: 3px;
 }
+
    </style>
   </head>
   <body class="loading background__img" onload="noBack();" onpageshow="if (event.persisted) noBack();"
@@ -98,7 +99,7 @@
           <div  class="dropdown ml-lg userLi">
               <a class="dropdown-toggle blue-link text-uppercase" data-toggle="dropdown" style="color:#fff;"
                  href="javascript:void(0)"> <span class="pr-xs">${sessionObject.firstName}  ${sessionObject.lastName}</span>
-                <span class="arrow"></span>
+                <span class="arrow"  ></span>
               </a>
               <ul class="dropdown-menu pb-none pt-none profileBox">
                 <li class="linkProf">
@@ -124,7 +125,7 @@
         <!--container-->
         <div class="landing__content">
           <div class="manage-content-parent">
-          <div class="lg-space-center" style="margin-top: 20px !important;margin-bottom: 30px !important;">
+          <div class="lg-space-center" style="margin-top: 20px ;margin-bottom: 30px ;">
               <div class="lg-space-txt">
                 Study Builder
               </div>
