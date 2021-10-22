@@ -50,7 +50,7 @@ export class ForgotPasswordComponent extends UnsubscribeOnDestroyAdapter {
           //   this.router.navigateByUrl("/login"));
           // }, 5000);
           setTimeout(() => {
-            console.log("this function works.")
+            console.log("this function works")
             void this.router.navigate(["/login"]);
           }, 5000);
         }),
