@@ -45,9 +45,13 @@ export class ForgotPasswordComponent extends UnsubscribeOnDestroyAdapter {
           } else {
             this.toastr.success('sucess');
           }
+          // setTimeout(() => {
+          //   void this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+          //   this.router.navigateByUrl("/login"));
+          // }, 5000);
           setTimeout(() => {
-            void this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
-            this.router.navigateByUrl("/login"));
+            console.log("this function works")
+            void this.router.navigate(["/login"]);
           }, 5000);
         }),
     );
