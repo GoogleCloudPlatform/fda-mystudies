@@ -444,11 +444,27 @@ The deployment process takes the following approach:
 
 1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/studybuilder/` (the trailing slash is necessary) and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
 1. Change your password, then create any additional administrative accounts that you might need
-1. Create a new study with the `App ID` that you set in the `manual-mobile-app-appid` secret, or choose a new `App ID` that you will update `manual-mobile-app-appid` with
-1. Publish your study to propagate your study values to the other platform components
+1. Create a new app record in the Apps section. Read more about creating and managing apps in the next section. 
+1. Create a new study in the Studies section and associate it with the app you want it to appear in. 
+1. Publish your study to propagate your study values to the other platform components.
 1. Navigate your browser to `participants.{PREFIX}-{ENV}.{DOMAIN}/participant-manager/` (the trailing slash is necessary), then use the account credentials that you created with the `create_participant_manager_superadmin.sh` script to log into the [`Participant manager`](/participant-manager/) user interface (if the `Participant Manager` application fails to load, confirm you are using `https` - this deployment requires `https` to be fully operational)
 1. You will be asked to change your password; afterwards you can create any additional administrative accounts that you might need
 1. Confirm your new study is visible in the `Participant manager` interface
+
+### Manage apps in the Study Builder 
+1. You can use the `Apps` section in the Study Builder to create and manage multiple mobile apps running off a single deployment of the platform.
+1. Start by creating a new app record by filling out the required fields.
+1. Once an app record is created, studies can be mapped to it in the Studies section. 
+1. To start testing an app, fill out additional required app properties and configurations in the Study Builder, and publish the app to propagate the app’s properties to other platform components that need them, using the `Publish App` action. If you are testing out a new version of an app that already exists, ensure you have retained current app version information in the Developer Configurations section at this point - do not replace it with new version information. 
+1. Confirm your app is visible in the Participant Manager interface and test out your app.
+1. Once the app is tested and ready to go to the app stores, update or finalize the app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. At this point, ensure that the app version information in the Developer Configurations section still retains the current version information and that the `Force upgrade` field is set to `No`, even if you are pushing out a new version of an existing app to the app stores.
+1. Upload the app to the app stores for review and approval.
+1. Once the app is approved in both the app stores and live, revisit the Study Builder and update the app version information in the Developer Configurations section to the latest app version information. Also, at this point, if you wish to enforce an app update, update the `Force upgrade` field to `Yes`. Use the `Publish App` action again for these changes to take effect. 
+1. These steps will ensure that app users get prompted to update their apps to the new version when they open the existing apps on their device.
+1. Also, once your app is live, mark the app as `distributed` in the Study Builder to prevent inadvertent changes to key configurations that drive your live app.
+
+1. Barring these few key configurations, most other app properties can be updated after the app is live. 
+1. Note: Any from email addresses that you configure in the app’s properties must be an [alias](https://support.google.com/mail/answer/22370) of the `manual-mystudies-email-address` that is configured in the Secret Manager as part of the platform deployment process. If an alias is not available, please use the same email here. [This Github issue](https://github.com/GoogleCloudPlatform/fda-mystudies/issues/4104) has additional detail on the alias requirements.
 
 ### Clean up
 
@@ -586,6 +602,84 @@ To add the bucket to the shared secrets, create a new working branch and make th
     kubectl apply \
       -f $GIT_ROOT/study-builder/tf-deployment.yaml
     ```
+
+### Managing apps (2.0.8 upgrade)
+
+Release 2.0.8 added functionality to support managing mobile apps in the deployment with the Study Builder interface. This requires that apps that are running in existing deployments must be updated (and new versions published to the app stores) if the deployment is being upgraded to 2.0.8 or greater. 
+
+#### Required steps when upgrading to 2.0.8 or greater
+
+When upgrading a prior release to 2.0.8 or greater, you will need to perform the following steps to continue to support existing apps.
+
+1. Take the latest code and generate the mobile app build following the latest iOS and Android app build and deployment instructions given in the repo. Ensure you use the same App ID as before.
+1. Sign in to the Study Builder and create an app record that has the exact same App ID that you have been using for your app. Ensure that you choose the correct app settings as well as applicable to your live app (gateway or standalone type of app, platform(s) that need to be supported etc.)
+1. Cross-check if all the studies that belong to the app, are mapped to this app in their respective study creation sections.
+1. In the newly created app record, fill out all the required app properties and configurations as applicable to a test version of the app and publish the app, using the `Publish App` action.  At this point, ensure you have retained current app version information in the Developer Configurations section - do not replace it with new version information. 
+1. Confirm your app is still visible in the Participant Manager interface. Test out your newly generated app with the published configurations. 
+1. Once the app is tested and ready to go to the app stores, update or finalize these app properties to correspond to the app store version of the app that will go live, and publish the latest values, again using the `Publish App` action. At this point, ensure that the app version information in the Developer Configurations section still retains the current version information and that the `Force upgrade` field is set to `No`.
+1. Upload the app to the app stores for review and approval.
+1. Once the app is approved in both the app stores and live, revisit the Study Builder and update the app version information in the Developer Configurations section to the latest app version information. Also, at this point, if you wish to enforce an app update, update the `Force upgrade` field to `Yes`. Use the `Publish App` action again for these changes to take effect. 
+1. These steps will ensure that app users get prompted to update their apps to the new version when they open the existing apps on their device.
+1. As a last step, once your app is live, mark the app as `distributed` in the Study Builder to prevent inadvertent changes to key configurations that drive your live app.
+
+
+#### Changes to iOS push notifications in 2.0.8 or greater
+
+This release uses Firebase Cloud Messaging (FCM) for push notifications for the iOS app. Follow the step `Configure Firebase Cloud Messaging (FCM) for push notifications` in the [iOS Configuration Instructions](/iOS/README.md#configuration-instructions) to set up FCM for iOS. Note that the server key generated here is to be entered into the developer configurations section of the app in the Study builder. 
+
+#### Changes to secrets when upgrading to 2.0.8 or greater
+
+The following secrets which were in earlier versions are no longer being used as of 2.0.8:
+-   `manual-android-bundle-id`
+-   `manual-android-server-key`
+-   `manual-ios-bundle-id`
+-   `manual-ios-certificate`
+-   `manual-ios-certificate-password`
+-   `manual-mobile-app-appid`
+
+These secrets can be deleted from your deployment with the following steps. However, make sure you have a record of them handy before deleting, as these need to be updated in the Study Builder interface when [managing the apps](#manage-apps-in-the-study-builder)
+
+1. Update your repository with the latest changes from release 2.0.8 or greater, create a new working branch and make the following changes:
+1. In the `deployment/terraform/kubernetes/main.tf` file, find the section `# Data sources from Secret Manager` and remove the following lines:
+    - `manual-android-bundle-id`
+    - `manual-android-server-key`
+    - `manual-ios-bundle-id`
+    - `manual-ios-certificate`
+    - `manual-ios-certificate-password`
+    - `manual-mobile-app-appid`
+1. In the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, remove the following resources:
+    -   ```
+        resource "google_secret_manager_secret" "manual_mobile_app_appid" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_android_bundle_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_android_server_key" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_bundle_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_certificate" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ios_certificate_password" {
+          [...]
+        }
+        ```
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
