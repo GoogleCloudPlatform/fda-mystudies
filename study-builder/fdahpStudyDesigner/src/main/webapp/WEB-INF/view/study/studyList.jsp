@@ -258,7 +258,7 @@ padding-left: 7px;
 
         "lengthChange": false,
         language: {
-          "zeroRecords": "No studies found.",
+          "zeroRecords": "No studies found",
         },
         "searching": true,
         "pageLength": 10,

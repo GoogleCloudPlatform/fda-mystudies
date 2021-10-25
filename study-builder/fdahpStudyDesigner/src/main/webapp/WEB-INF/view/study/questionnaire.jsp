@@ -1574,22 +1574,24 @@
                            maxlength="3" required pattern="[0-9]+" data-error="Please fill out this field"
                            data-pattern-error="Please enter valid number"/>
                     <span
-                        class="help-block with-errors red-txt"></span>
+                        class='help-block with-errors red-txt'></span>
+                        <span
+                        class='help-block-timer with-errors red-txt' style='display:none'></span>
                   </span>
                   <span class="mb-sm pr-md">
                     <span
                         class="pr-sm light-txt opacity06"> days
                      </span>                        
                       <span                     
-                    class="form-group  dis-inline vertical-align-middle pr-md"
+                    class="form-group dis-inline vertical-align-middle pr-md"
                       style="margin-bottom: -13px;width: 170px;"><input id="manualStartTime0"
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
                                                           value="${questionnaireCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                                                           placeholder="Start time" required/>
                     <span
-                        class='help-block-timer with-errors red-txt'></span>
-                    <span class='help-block with-errors red-txt'></span>
+                        class='help-block with-errors red-txt'></span>
+                    <span class='help-block-timer with-errors red-txt' style='display:none'></span>
                   </span>                       
 
                         <span class="light-txt opacity06">
@@ -1708,8 +1710,7 @@
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartTime"
                         value="${questionnaireCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                         placeholder="Start time" required data-error="Please fill out this field"/>
-                      <span
-                          class='help-block-timer with-errors red-txt'></span>
+                      
                       <span class='help-block with-errors red-txt'></span>
                     </span>
                          <span
@@ -2878,17 +2879,20 @@
 		$('.manually-anchor-option').each(function(customAnchorCount) {
 			if ($('#xdays' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
 		  	  $('#xdays' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
-	     	  $('#xdays' + customAnchorCount).parent().find(".help-block").empty().append(
+	     	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").empty().append(
 	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	     	       "Please fill out this field"));
+	     	 $('#xdays0').parent().find(".help-block-timer").show();
+	    	 $('#xdays0').parent().find(".help-block").hide();
 	    	}
 			
 			if ($('#manualStartTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
 		  	  $('#manualStartTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
-	     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").empty().append(
+	     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
 	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	     	       "Please fill out this field"));
-	     	 $('#manualStartTime0').parent().find(".help-block-timer").hide();
+	     	 $('#manualStartTime0').parent().find(".help-block-timer").show();
+	     	 $('#manualStartTime0').parent().find(".help-block").hide();
 	    	}
 			
 			if ($('#manualEndTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
@@ -4820,15 +4824,16 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
         + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block-timer with-errors red-txt'></span>"
+        +"<span class='help-block with-errors red-txt'></span>"
         + "</span>"
 		+ "<span class='mb-sm pr-md'><span class='pr-sm light-txt opacity06'> days </span>"
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px;width: 170px;'>"
        	+ "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
        	+ "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
-      	+ "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field'/>"
-       	+ "<span class='help-block-timer help-block with-errors red-txt'></span>"
+      	+ "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field'/><span class='help-block-timer with-errors red-txt'></span>"
+       	+ "<span class='help-block with-errors red-txt'></span>"
       	+ "</span>"
        
       	+"<span class='light-txt opacity06'>"
