@@ -485,6 +485,7 @@ public class UsersDAOImpl implements UsersDAO {
           userBO.setCreatedBy(null != obj[9] ? String.valueOf(obj[9]) : "");
           boolean isGciUser = ((null != obj[10] ? (char) obj[10] : 'N') == 'Y') ? true : false;
           userBO.setGciUser(isGciUser);
+          userBO.setDisableGciUser("N");
           userList.add(userBO);
         }
       }
@@ -564,5 +565,27 @@ public class UsersDAOImpl implements UsersDAO {
     }
     logger.exit("getUserRoleList() - Ends");
     return roleBOList;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<UserBO> getGciUserList() {
+    logger.entry("begin getGciUserList()");
+    List<UserBO> userBOList = null;
+    Query query = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      query = session.createQuery(" FROM UserBO UBO where UBO.gciUser='Y'");
+      userBOList = query.list();
+    } catch (Exception e) {
+      logger.error("UsersDAOImpl - getGciUserList() - ERROR", e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    logger.exit("getGciUserList() - Ends");
+    return userBOList;
   }
 }

@@ -270,10 +270,6 @@ public class LoginController {
     ModelMap map = new ModelMap();
     MasterDataBO masterDataBO = null;
 
-    if (Boolean.parseBoolean(gciEnabled)) {
-      loginService.addOrUpdateOrgUser();
-    }
-
     if (null != request.getSession().getAttribute("sucMsg")) {
       sucMsg = (String) request.getSession().getAttribute("sucMsg");
       map.addAttribute("sucMsg", sucMsg);

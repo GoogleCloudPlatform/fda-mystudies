@@ -57,4 +57,6 @@ public interface UsersDAO {
   public RoleBO getUserRole(String roleId);
 
   public List<RoleBO> getUserRoleList();
+
+  public List<UserBO> getGciUserList();
 }

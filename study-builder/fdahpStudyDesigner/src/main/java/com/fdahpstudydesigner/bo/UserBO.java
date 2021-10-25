@@ -148,6 +148,8 @@ public class UserBO implements Serializable {
   @Column(name = "access_level")
   private String accessLevel;
 
+  @Transient private String disableGciUser;
+
   public String getCreatedBy() {
     return createdBy;
   }
@@ -370,5 +372,13 @@ public class UserBO implements Serializable {
 
   public void setAccessLevel(String accessLevel) {
     this.accessLevel = accessLevel;
+  }
+
+  public String getDisableGciUser() {
+    return disableGciUser;
+  }
+
+  public void setDisableGciUser(String disableGciUser) {
+    this.disableGciUser = disableGciUser;
   }
 }

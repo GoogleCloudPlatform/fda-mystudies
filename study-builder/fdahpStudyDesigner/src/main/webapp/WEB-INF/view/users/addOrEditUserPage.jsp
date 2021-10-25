@@ -122,12 +122,10 @@
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
       <c:if
-          test="${actionPage eq 'EDIT_PAGE' && (userBO.gciUser eq true || not empty userBO.userPassword) && not userBO.emailChanged}">
+          test="${actionPage eq 'EDIT_PAGE' && (userBO.gciUser eq false && not empty userBO.userPassword) && not userBO.emailChanged}">
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
-            <button type="button" class="btn btn-default gray-btn"
-                    id="enforcePasswordId" <c:if test="${userBO.gciUser eq true}">disabled</c:if>>Enforce password change
-                    
+            <button type="button" class="btn btn-default gray-btn"id="enforcePasswordId">Enforce password change
             </button>
           </div>
         </c:if>
@@ -181,36 +179,27 @@
             <c:if test="${gciEnabled eq false }">
             <div class="form-group">
               <input type="text" class="form-control" id="emailId"
-                     name="userEmail" 
+                     name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                      data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
                      required
-                     <c:if
-                         test="${not empty userBO}">value="${userBO.userEmail}"</c:if> 
-                     <c:if
-                         test="${actionPage eq 'VIEW_PAGE' || (userBO.gciUser eq false && empty userBO.userPassword && not empty userBO)}">disabled</c:if> 
-                         <c:if
-                         test="${not empty emailId}">disabled value="${emailId}"</c:if> />
+                      <c:if
+                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.gciUser eq true}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
             </c:if>
             <c:if test="${gciEnabled eq true }">
 		       <div class="form-group">
 		         <input type="text" class="form-control" id="emailId" list="mine"
-                     name="userEmail" 
+                     name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                      data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
                      required
-                     <c:if
-                         test="${not empty userBO}">value="${userBO.userEmail}"</c:if> 
-                     <c:if
-                         test="${actionPage eq 'VIEW_PAGE' || empty userBO.userPassword && not empty userBO}">disabled</c:if> 
-                         <c:if
-                         test="${not empty emailId}">disabled value="${emailId}"</c:if> />
+                     <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.gciUser eq true}">disabled</c:if>/>
                          <datalist id="mine">
-							  <c:forEach items="${adminList}" var="adminList">
+					   <c:forEach items="${adminList}" var="adminList">
                         <option value="${adminList}">${adminList}</option>
                       </c:forEach>
 							</datalist>
@@ -269,7 +258,7 @@
                   <span class="ml-xs">&nbsp; <label
                       class="switch bg-transparent mt-xs"
                       data-toggle="tooltip"  data-placement="top" 
-                      <c:if test="${userDeleted eq 'Y'}">title="This user may be deleted from the organization directory or user whitelist for the Study Builder. Please contact your IT admin to have them added back and try again."
+                      <c:if test="${not empty gciDisableUser && gciDisableUser eq 'Y'}">title="This user may be deleted from the organization directory or user whitelist for the Study Builder. Please contact your IT admin to have them added back and try again."
 		              </c:if>> <input
                       type="checkbox" class="switch-input"  
                       value="${userBO.enabled}" id="change${userBO.userId}" 
@@ -277,7 +266,7 @@
 		            	
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
-                          test="${(userBO.gciUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged || userDeleted eq 'Y'}">disabled</c:if>
+                          test="${(userBO.gciUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged || (not empty gciDisableUser && gciDisableUser eq 'Y')}">disabled</c:if>
                       onclick="activateOrDeactivateUser('${userBO.userId}');">
                       
                     <span class="switch-label bg-transparent" data-on="On"
