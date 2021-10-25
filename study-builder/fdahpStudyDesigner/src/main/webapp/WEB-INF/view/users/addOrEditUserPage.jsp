@@ -534,20 +534,19 @@
    $(".selectpicker").selectpicker('deselectAll');
    var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
    var count = $(".app-selected-item").length;
+   var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+   var selected_study = $(".study-selected-item").length;
    if (count == tot_items) {
  	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
-   }
-   $(".selectpicker").selectpicker('deselectAll');
-   var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
-   var count = $(".study-selected-item").length;
-   if (count == tot_items) {
+   } 
+   if (selected_study == tot_study) {
  	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
      $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
    }
-    </c:if> 
+   </c:if> 
 
     <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
     if($('#roleId').find('option:selected').text() == 'Superadmin' ){
