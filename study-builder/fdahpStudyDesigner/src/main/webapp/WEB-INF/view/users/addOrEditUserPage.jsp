@@ -33,6 +33,24 @@
   padding: 10px 0px !important;
   border-bottom: 1px solid #cfd4d7 !important;
 }
+
+.bootstrap-select.btn-group .dropdown-menu {
+	min-height: 100%  !important;
+}
+
+.bootstrap-select.btn-group .dropdown-menu.inner
+{
+	min-height: 100% important;
+    height: 100%;
+}
+
+.changeView div.dropdown-menu ul.dropdown-menu {
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 100% !important;
+    height: 100% !important;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">

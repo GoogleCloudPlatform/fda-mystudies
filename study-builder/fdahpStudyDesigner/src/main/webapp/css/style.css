@@ -1205,7 +1205,7 @@ input[type=radio]:disabled + label::after {
   max-height: 0px !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
-  min-height: 110px !important;
+  min-height: 100% !important;
 }
 
 .changeView div.dropdown-menu {
