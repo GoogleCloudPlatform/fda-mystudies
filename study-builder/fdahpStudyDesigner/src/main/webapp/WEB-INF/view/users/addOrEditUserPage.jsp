@@ -773,9 +773,10 @@
     $('#inlineCheckbox6').on('click', function () {
         if ($(this).prop("checked") == true) {
           $(this).val(1);
-        } else if ($(this).prop("checked") == false) {
+           } else if ($(this).prop("checked") == false) {
           $(this).val('');
         }
+          
       });
     
     // Adding selected study items
@@ -815,7 +816,7 @@
         $('.study-selected').append(existingStudyDiv);
       });
             } else if ($('#inlineCheckbox4').prop("checked") == false) {
-      		$(this).val('');
+      			$(this).val('');
       		}
       
 
@@ -869,7 +870,7 @@
         $('.app-selected').append(existingAppDiv);
       });
            } else if ($('#inlineCheckboxApp').prop("checked") == false) {
-      		$(this).val('');
+      			$(this).val('');
       		}
       
       
