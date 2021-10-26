@@ -112,7 +112,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
         logger.error("LimitLoginAuthenticationProvider - authenticate - ERROR", e);
       }
 
-      if (userBO.isGciUser()) {
+      if (null != userBO && userBO.isGciUser()) {
 
         UsernamePasswordAuthenticationToken token =
             new UsernamePasswordAuthenticationToken(

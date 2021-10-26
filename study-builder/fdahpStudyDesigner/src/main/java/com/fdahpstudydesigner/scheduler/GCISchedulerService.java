@@ -89,9 +89,9 @@ public class GCISchedulerService {
           gciEmail.add(exportedUserRecord.getEmail());
         }
 
-        List<String> deletedGciUser = ListUtils.removeAll(userEmail, gciEmail);
+        List<String> deletedGciUsers = ListUtils.removeAll(userEmail, gciEmail);
         List<String> disableUsers = new ArrayList<>();
-        disableUsers.addAll(deletedGciUser);
+        disableUsers.addAll(deletedGciUsers);
         disableUsers.addAll(gciDisabledEmail);
 
         for (UserBO user : gciUserList) {

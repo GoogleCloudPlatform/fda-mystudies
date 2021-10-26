@@ -617,7 +617,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 message = propMap.get("user.not.found.msg");
               }
               if ("".equals(type) && userdetails.isGciUser()) {
-                message = "Please contact IT admin as this is a GCI user to reset the password";
+                message = propMap.get("gci.user.msg");
               }
             }
           }
