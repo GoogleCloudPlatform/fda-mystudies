@@ -1453,7 +1453,7 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       query =
           session.createQuery(
-              " FROM StudyBo SBO WHERE SBO.version = 0 AND SBO.status <> :deActivateStatus");
+              " FROM StudyBo SBO  WHERE SBO.version = 0 AND SBO.status <> :deActivateStatus GROUP BY  SBO.name,SBO.customStudyId");
       query.setParameter("deActivateStatus", FdahpStudyDesignerConstants.STUDY_DEACTIVATED);
       studyBOList = query.list();
     } catch (Exception e) {
