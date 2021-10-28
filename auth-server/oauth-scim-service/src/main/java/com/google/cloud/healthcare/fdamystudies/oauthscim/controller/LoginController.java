@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValidator.validateRequiredParams;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APPLICATION_JSON;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_NAME_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_VERSION_COOKIE;
@@ -21,6 +22,9 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_DESCRIPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GCI_API_KEY;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GCI_AUTH_DOMAIN;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GCI_ENABLED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_VIEW_NAME;
@@ -28,6 +32,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SERVER_CONTEXT_PATH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
@@ -53,10 +58,13 @@ import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.beans.LoginRequest;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
+import com.google.firebase.FirebaseApp;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Optional;
@@ -64,6 +72,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +87,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -86,6 +96,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class LoginController {
 
   private static final String MOBILE_APP = "mobileApp";
+
+  static {
+    // Initializing the Firebase SDK using default credentials
+    FirebaseApp.initializeApp();
+  }
 
   private XLogger logger = XLoggerFactory.getXLogger(LoginController.class.getName());
 
@@ -98,6 +113,8 @@ public class LoginController {
   @Autowired private CookieHelper cookieHelper;
 
   @Autowired private AuthScimAuditHelper auditHelper;
+
+  @Autowired private AppPropertyConfig appConfig;
 
   @GetMapping(value = "/login")
   public String login(
@@ -119,6 +136,12 @@ public class LoginController {
     // show or skip login page
     MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
     paramMap.add(LOGIN_CHALLENGE, loginChallenge);
+
+    model.addAttribute(GCI_ENABLED, appConfig.isGciEnabled());
+    model.addAttribute(GCI_API_KEY, appConfig.getGciApiKey());
+    model.addAttribute(GCI_AUTH_DOMAIN, appConfig.getGciAuthDomain());
+    model.addAttribute(SERVER_CONTEXT_PATH, appConfig.getServerContextPath());
+
     ResponseEntity<JsonNode> loginResponse = oauthService.requestLogin(paramMap);
     if (loginResponse.getStatusCode().is2xxSuccessful()) {
       JsonNode responseBody = loginResponse.getBody();
@@ -188,7 +211,19 @@ public class LoginController {
     user.setAppId(appId);
     user.setAppName(appName);
 
-    AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
+    PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
+    if (platformComponent == null) {
+      logger.warn(
+          String.format(
+              "'%s' is invalid source value. Allowed values: MOBILE APPS or PARTICIPANT MANAGER",
+              auditRequest.getSource()));
+    }
+
+    AuthenticationResponse authenticationResponse =
+        (PlatformComponent.PARTICIPANT_MANAGER.equals(platformComponent)
+                && userService.isGCIUser(loginRequest.getEmail()))
+            ? userService.authenticateGCIUser(user, auditRequest)
+            : userService.authenticate(user, auditRequest);
 
     if (UserAccountStatus.PENDING_CONFIRMATION.getStatus()
         == authenticationResponse.getAccountStatus()) {
@@ -209,6 +244,27 @@ public class LoginController {
       return LOGIN_VIEW_NAME;
     }
     return redirectToConsentPage(loginChallenge, authenticationResponse.getUserId(), response);
+  }
+
+  @RequestMapping("/isGCIUser")
+  public void isGCIUser(HttpServletResponse response, String email) {
+    logger.entry("begin isGCIUser()");
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
+    Boolean gciUser = false;
+    try {
+      if (StringUtils.isNotEmpty(email)) {
+        gciUser = userService.isGCIUser(email);
+      }
+      jsonobject.put("message", gciUser);
+      response.setContentType(APPLICATION_JSON);
+      out = response.getWriter();
+      out.print(jsonobject);
+    } catch (Exception e) {
+      response.setContentType(APPLICATION_JSON);
+      logger.error("LoginController - isGCIUser() - ERROR " + e);
+    }
+    logger.exit("isGCIUser() - Ends ");
   }
 
   private String redirectToLoginOrConsentPage(
@@ -352,6 +408,10 @@ public class LoginController {
           PRIVACY_POLICY_LINK,
           redirectConfig.getPrivacyPolicyUrl(mobilePlatform, deeplinkUrlCookie));
       modelView.addObject(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
+      modelView.addObject(GCI_ENABLED, appConfig.isGciEnabled());
+      modelView.addObject(GCI_API_KEY, appConfig.getGciApiKey());
+      modelView.addObject(GCI_AUTH_DOMAIN, appConfig.getGciAuthDomain());
+      modelView.addObject(SERVER_CONTEXT_PATH, appConfig.getServerContextPath());
 
       PlatformComponent platformComponent = PlatformComponent.fromValue(source);
       modelView.addObject(MOBILE_APP, platformComponent.equals(PlatformComponent.MOBILE_APPS));

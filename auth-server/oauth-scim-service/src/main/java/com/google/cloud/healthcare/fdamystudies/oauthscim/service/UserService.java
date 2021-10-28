@@ -39,8 +39,13 @@ public interface UserService {
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException;
 
+  public Boolean isGCIUser(String email);
+
   public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
+
+  public AuthenticationResponse authenticateGCIUser(
+      UserRequest user, AuditLogEventRequest auditRequest) throws JsonProcessingException;
 
   public void resetTempRegId(String userId);
 

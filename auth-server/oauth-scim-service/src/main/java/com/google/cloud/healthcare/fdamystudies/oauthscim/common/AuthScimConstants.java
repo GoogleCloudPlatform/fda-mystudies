@@ -103,6 +103,16 @@ public final class AuthScimConstants {
 
   public static final String LOGIN_VIEW_NAME = "login";
 
+  public static final String GCI_ENABLED = "gciEnabled";
+
+  public static final String GCI_API_KEY = "gciApiKey";
+
+  public static final String GCI_AUTH_DOMAIN = "gciAuthDomain";
+
+  public static final String SERVER_CONTEXT_PATH = "serverContextPath";
+
+  public static final String APPLICATION_JSON = "application/json";
+
   public static final String ACCOUNT_STATUS = "accountStatus";
 
   public static final String GRANT_SCOPE = "grant_scope";
