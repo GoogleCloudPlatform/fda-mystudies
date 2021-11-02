@@ -440,6 +440,10 @@ The deployment process takes the following approach:
            $PREFIX $ENV <YOUR_DESIRED_LOGIN_EMAIL> <YOUR_DESIRED_PASSWORD>
          ```
 
+### Configure Logging & Monitoring (optional)
+
+There are optional logging, monitoring, alerts, and notifications that can be configured for a deployment. See [`/documentation/monitoring.md`](/documentation/monitoring.md) for guidance on configuring this as well as recommended alert thresholds.
+
 ### Configure your first study
 
 1. Navigate your browser to `studies.{PREFIX}-{ENV}.{DOMAIN}/studybuilder/` (the trailing slash is necessary) and use the account credentials that you created with the `create_study_builder_superadmin.sh` script to log into the [`Study builder`](/study-builder/) user interface
