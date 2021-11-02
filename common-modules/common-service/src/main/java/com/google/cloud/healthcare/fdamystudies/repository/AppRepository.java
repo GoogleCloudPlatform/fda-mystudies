@@ -94,7 +94,7 @@ public interface AppRepository extends JpaRepository<AppEntity, String> {
               + "FROM study_permissions st "
               + "WHERE st.ur_admin_user_id = :userId)) rstAlias "
               + "WHERE app_name LIKE %:searchTerm% OR custom_app_id LIKE %:searchTerm% "
-              + "GROUP BY created_time,app_info_id,custom_app_id,app_name "
+              + "GROUP BY created_time,app_info_id,custom_app_id,app_name,app_status "
               + "ORDER BY created_time DESC LIMIT :limit OFFSET :offset",
       nativeQuery = true)
   public List<AppStudyInfo> findAppsByUserId(

@@ -169,7 +169,7 @@
 							 <div class="col-md-6 pl-none mt-lg">
                                 <div class="gray-xs-f mb-xs">'From' email for outgoing app emails 
                                 <small>(100 characters max)</small>
-                                <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a 'sender' email for automated emails that go out to app users."></span></div>
+                                <span class="requiredStar"> *</span><span class="ml-xs sprites_v3 filled-tooltip"  data-toggle="tooltip" title="Enter a 'sender' email for automated emails that go out to app users. This email must be an alias of the primary sender email that is configured in the Secret Manager as part of the platform deployment process. Contact your IT admin for this information. If an alias is not possible to obtain, use the same email here."></span></div>
                                 <div class="form-group mb-none">
                                     <input type="text" class="form-control" value="${appBo.fromEmailAddress}" name="fromEmailAddress" 
                                     required data-error="Please fill out this field" maxlength="100"
