@@ -23,7 +23,14 @@
     border-radius: 5px;
     cursor: pointer;
 }
-
+button#deleteUser {
+    background: #cf0036 !important;
+    border-color: #cf0036 !important;
+    color: #fff;
+    padding: 4px 8px;
+    text-align: center;
+    margin-left: 9px;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -465,6 +472,11 @@
           <c:if test="${actionPage eq 'EDIT_PAGE'}">
             <div class="dis-line form-group mb-none">
               <button type="button" class="btn btn-primary blue-btn addUpdate">Update</button>
+            </div>
+            </c:if>
+          <c:if test="${actionPage eq 'EDIT_PAGE' &&  not userBO.enabled}">  
+            <div class="dis-line">
+              <button type="button" class="btn btn-primary red-btn deleteUser" id = "deleteUser" onclick="validateAdminStatus(this);">Delete admin</button>
             </div>
           </c:if>
         </div>
@@ -1193,6 +1205,47 @@
 	    setTimeout(hideDisplayMessage, 10000);
 	  }
   
+  function validateAdminStatus(obj) {
+	    var buttonText = obj.id;
+	    var messageText = "";
+	    if (buttonText) {
+	      if (buttonText == 'deleteUser') {
+	        	 messageText = "Are you sure you want to delete this admin?";
+	        	 bootbox.confirm({
+	                 closeButton: false,
+	                 message: messageText,
+	                 buttons: {
+	                   'cancel': {
+	                     label: 'Cancel',
+	                   },
+	                   'confirm': {
+	                     label: 'OK',
+	                   },
+	                 },
+	                 callback: function (result) {
+	                   if (result) {
+	                	   deleteUserAdmin();
+	                   }
+	                 }
+	               });}}}
+  
+function deleteUserAdmin(){
+	     var form = document.createElement('form');
+	      form.method = 'post';
+	      var input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = 'userId';
+	      input.value = '${userBO.userId}';
+	      form.appendChild(input);
+	      input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = '${_csrf.parameterName}';
+	      input.value = '${_csrf.token}';
+	      form.appendChild(input);
+	     form.action = '/studybuilder/adminUsersView/deleteUser.do';
+	     document.body.appendChild(form);
+	     form.submit();
+	  }
   function addUser(){
 	  var selectedStudies = "";
 	    var permissionValues = "";

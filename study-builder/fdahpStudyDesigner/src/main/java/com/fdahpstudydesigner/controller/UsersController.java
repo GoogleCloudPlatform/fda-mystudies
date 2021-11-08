@@ -596,4 +596,40 @@ public class UsersController {
     logger.exit("viewUserDetails() - Ends");
     return mav;
   }
+
+  @RequestMapping(value = "/adminUsersView/deleteUser.do")
+  public ModelAndView deleteByUserId(HttpServletRequest request) {
+    logger.entry("begin deleteAdminDetails()");
+    ModelAndView mav = new ModelAndView();
+    String msg = "";
+    UserBO userBo = null;
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    try {
+      HttpSession session = request.getSession();
+      SessionObject userSession =
+          (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      if (null != userSession) {
+        String userId =
+            FdahpStudyDesignerUtil.isEmpty(request.getParameter("userId"))
+                ? ""
+                : request.getParameter("userId");
+        if (StringUtils.isNotEmpty(userId)) {
+          msg = usersService.deleteByUserId(userId);
+        }
+      }
+      if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
+
+        request
+            .getSession()
+            .setAttribute(
+                FdahpStudyDesignerConstants.SUC_MSG, propMap.get("delete.user.success.message"));
+      }
+    } catch (Exception e) {
+      logger.error("UsersController - deleteByUserId() - ERROR", e);
+    }
+    logger.exit("deleteByUserId() - Ends");
+
+    return new ModelAndView("redirect:getUserList.do");
+  }
 }

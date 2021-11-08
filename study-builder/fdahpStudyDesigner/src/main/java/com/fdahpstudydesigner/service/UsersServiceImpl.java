@@ -343,4 +343,17 @@ public class UsersServiceImpl implements UsersService {
     logger.exit("getUserRoleList() - Ends");
     return roleBOList;
   }
+
+  @Override
+  public String deleteByUserId(String userId) {
+    logger.entry("begin deleteUserByUserId()");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = usersDAO.deleteByUserId(userId);
+    } catch (Exception e) {
+      logger.error("UsersServiceImpl - deleteUserByUserId() - ERROR", e);
+    }
+    logger.exit("deleteUserByUserId() - Ends");
+    return message;
+  }
 }
