@@ -118,7 +118,7 @@
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
-                <button type="button" id="loginBtnId" class="btn lg-btn">Sign in</button>
+                <button type="button" id="loginBtnId" class="btn lg-btn">Sign up</button>
               </div>
               <div class="pb-md pt-xs">
                 <a id="forgot_pwd"
