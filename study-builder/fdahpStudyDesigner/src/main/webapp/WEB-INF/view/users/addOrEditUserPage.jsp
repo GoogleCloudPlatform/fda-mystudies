@@ -830,7 +830,8 @@ button#deleteUser {
     
     // Adding selected study items
     $(".study-addbtn").click(function () {
-
+    	var noSelected = $('#multiple :selected').length;
+  if(noSelected != 0 ){
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
 
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
@@ -839,7 +840,6 @@ button#deleteUser {
         }
       });
 	if ($('#inlineCheckbox4').prop("checked") == true) {
-    
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -868,17 +868,19 @@ button#deleteUser {
           $(this).val('');
           
         }
-      
-
+	var show_elements_count = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(".study-selected-item").length;
-      if (count == tot_items) {
-    	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
-        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
-      }
-
+   
+      if (count == tot_items || show_elements_count == 0) {
+       	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+           $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+         }
+     
+    }
+     
     });
     
     
