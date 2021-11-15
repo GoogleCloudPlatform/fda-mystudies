@@ -426,7 +426,10 @@ padding-left: 7px;
 			  var total = $('input[name="options[]"]:checked').length;
 			  if(total == 0){
 				  $(".dropdown-text").html('Filter by apps');
-			  }else{
+			  }else if(a.length == a.filter(":checked").length){
+				  $(".dropdown-text").html('All apps');
+			   }
+			  else{
 				  $(".dropdown-text").html(total + ' app(s)');
 			  }
 			  
