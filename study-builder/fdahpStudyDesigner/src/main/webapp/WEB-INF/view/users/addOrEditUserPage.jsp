@@ -785,9 +785,10 @@ button#deleteUser {
     $('#inlineCheckbox6').on('click', function () {
         if ($(this).prop("checked") == true) {
           $(this).val(1);
-        } else if ($(this).prop("checked") == false) {
+           } else if ($(this).prop("checked") == false) {
           $(this).val('');
         }
+          
       });
     
     // Adding selected study items
@@ -800,6 +801,7 @@ button#deleteUser {
           $(this).remove();
         }
       });
+      	if ($('#inlineCheckbox4').prop("checked") == true) {
 
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
@@ -825,6 +827,9 @@ button#deleteUser {
 
         $('.study-selected').append(existingStudyDiv);
       });
+            } else if ($('#inlineCheckbox4').prop("checked") == false) {
+      			$(this).val('');
+      		}
       
 
       $(".selectpicker").selectpicker('deselectAll');
@@ -850,7 +855,8 @@ button#deleteUser {
           $(this).remove();
         }
       });
-
+	 if ($('#inlineCheckboxApp').prop("checked") == true) {
+		
       $('#multipleApps :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -875,6 +881,11 @@ button#deleteUser {
 
         $('.app-selected').append(existingAppDiv);
       });
+           } else if ($('#inlineCheckboxApp').prop("checked") == false) {
+      			$(this).val('');
+      		}
+      
+      
      
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
