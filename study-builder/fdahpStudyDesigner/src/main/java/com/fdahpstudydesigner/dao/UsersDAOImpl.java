@@ -669,4 +669,40 @@ public class UsersDAOImpl implements UsersDAO {
     logger.exit("getUserRoleList() - Ends");
     return roleBOList;
   }
+
+  @Override
+  public String deleteByUserId(String userId) {
+    logger.entry("begin deleteByUserId()");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    Query query = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      query =
+          session
+              .createSQLQuery(" delete from user_permission_mapping where user_id =:userId ")
+              .setParameter("userId", userId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(" delete from study_permission where user_id =:userId ")
+              .setParameter("userId", userId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(" delete from users where user_id =:userId ")
+              .setParameter("userId", userId);
+      query.executeUpdate();
+
+      message = FdahpStudyDesignerConstants.SUCCESS;
+    } catch (Exception e) {
+      logger.error("UsersDAOImpl - deleteByUserId() - ERROR", e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    logger.exit("deleteByUserId() - Ends");
+    return message;
+  }
 }
