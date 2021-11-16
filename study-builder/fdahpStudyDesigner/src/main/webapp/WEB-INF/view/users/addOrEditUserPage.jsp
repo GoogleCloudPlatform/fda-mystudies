@@ -23,7 +23,14 @@
     border-radius: 5px;
     cursor: pointer;
 }
-
+button#deleteUser {
+    background: #cf0036 !important;
+    border-color: #cf0036 !important;
+    color: #fff;
+    padding: 4px 8px;
+    text-align: center;
+    margin-left: 9px;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -466,6 +473,11 @@
             <div class="dis-line form-group mb-none">
               <button type="button" class="btn btn-primary blue-btn addUpdate">Update</button>
             </div>
+            </c:if>
+          <c:if test="${actionPage eq 'EDIT_PAGE' &&  not userBO.enabled}">  
+            <div class="dis-line">
+              <button type="button" class="btn btn-primary red-btn deleteUser" id = "deleteUser" onclick="validateAdminStatus(this);">Delete admin</button>
+            </div>
           </c:if>
         </div>
       </div>
@@ -773,9 +785,10 @@
     $('#inlineCheckbox6').on('click', function () {
         if ($(this).prop("checked") == true) {
           $(this).val(1);
-        } else if ($(this).prop("checked") == false) {
+           } else if ($(this).prop("checked") == false) {
           $(this).val('');
         }
+          
       });
     
     // Adding selected study items
@@ -788,6 +801,7 @@
           $(this).remove();
         }
       });
+      	if ($('#inlineCheckbox4').prop("checked") == true) {
 
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
@@ -813,6 +827,9 @@
 
         $('.study-selected').append(existingStudyDiv);
       });
+            } else if ($('#inlineCheckbox4').prop("checked") == false) {
+      			$(this).val('');
+      		}
       
 
       $(".selectpicker").selectpicker('deselectAll');
@@ -838,7 +855,8 @@
           $(this).remove();
         }
       });
-
+	 if ($('#inlineCheckboxApp').prop("checked") == true) {
+		
       $('#multipleApps :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -863,6 +881,11 @@
 
         $('.app-selected').append(existingAppDiv);
       });
+           } else if ($('#inlineCheckboxApp').prop("checked") == false) {
+      			$(this).val('');
+      		}
+      
+      
      
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
@@ -1193,6 +1216,47 @@
 	    setTimeout(hideDisplayMessage, 10000);
 	  }
   
+  function validateAdminStatus(obj) {
+	    var buttonText = obj.id;
+	    var messageText = "";
+	    if (buttonText) {
+	      if (buttonText == 'deleteUser') {
+	        	 messageText = "Are you sure you want to delete this admin?";
+	        	 bootbox.confirm({
+	                 closeButton: false,
+	                 message: messageText,
+	                 buttons: {
+	                   'cancel': {
+	                     label: 'Cancel',
+	                   },
+	                   'confirm': {
+	                     label: 'OK',
+	                   },
+	                 },
+	                 callback: function (result) {
+	                   if (result) {
+	                	   deleteUserAdmin();
+	                   }
+	                 }
+	               });}}}
+  
+function deleteUserAdmin(){
+	     var form = document.createElement('form');
+	      form.method = 'post';
+	      var input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = 'userId';
+	      input.value = '${userBO.userId}';
+	      form.appendChild(input);
+	      input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = '${_csrf.parameterName}';
+	      input.value = '${_csrf.token}';
+	      form.appendChild(input);
+	     form.action = '/studybuilder/adminUsersView/deleteUser.do';
+	     document.body.appendChild(form);
+	     form.submit();
+	  }
   function addUser(){
 	  var selectedStudies = "";
 	    var permissionValues = "";
