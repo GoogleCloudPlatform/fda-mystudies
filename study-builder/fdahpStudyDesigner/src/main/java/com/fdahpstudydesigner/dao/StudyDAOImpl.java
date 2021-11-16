@@ -8426,7 +8426,7 @@ public class StudyDAOImpl implements StudyDAO {
       query =
           session
               .createSQLQuery(
-                  "delete from comprehension_test_response r where r.comprehension_test_question_id in(select id from comprehension_test_question c where c.study_id in (SELECT id FROM studies WHERE id=:studyId))")
+                  "delete from comprehension_test_response  where comprehension_test_question_id in(select id from comprehension_test_question  where study_id in (SELECT id FROM studies WHERE id=:studyId))")
               .setParameter("studyId", studyId);
       query.executeUpdate();
       query =
@@ -8437,7 +8437,7 @@ public class StudyDAOImpl implements StudyDAO {
       query =
           session
               .createSQLQuery(
-                  "delete  from eligibility_test e where e.eligibility_id in(select id from eligibility where study_id in (SELECT id FROM studies WHERE id=:studyId))")
+                  "delete  from eligibility_test  where eligibility_id in(select id from eligibility where study_id in (SELECT id FROM studies WHERE id=:studyId))")
               .setParameter("studyId", studyId);
       query.executeUpdate();
       query =
