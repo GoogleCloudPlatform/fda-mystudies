@@ -127,16 +127,13 @@ padding-left: 7px;
 						<c:when test="${not empty study.status && (study.status eq 'Deactivated')}">
 							  cursor-none
 						</c:when>
-						<c:when test="${empty study.customStudyId}">
-						      cursor-none
-						</c:when>
 						<c:when test="${not fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}"> 
 						      cursor-none
 						</c:when>
 			  </c:choose>"
              
-                   data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
-                  title="Copy-into-new" onclick='copyStudy("${study.id}" , "${study.liveStudyId}" ,
+                   permission="view" data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
+                  title="${(not empty study.customStudyId)?'Copy-into-new':'Please complete the Study Information section to enable this action'}" onclick='copyStudy("${study.id}" , "${study.liveStudyId}" ,
                    ${(not empty study.liveStudyId)?((study.flag)? true : false): false});'>
                     </span>
            <c:if test="${not empty study.liveStudyId}">
