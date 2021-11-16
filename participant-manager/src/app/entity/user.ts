@@ -4,6 +4,8 @@ import {Status} from '../shared/enums';
 import {ApiResponse} from './api.response.model';
 
 export interface User extends ApiResponse {
+  gciUser: boolean;
+
   id: string;
 
   email?: string;
