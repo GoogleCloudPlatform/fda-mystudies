@@ -266,4 +266,6 @@ public interface StudyDAO {
 
   public List<ConsentInfoBo> getConsentInfoList(
       String studyId, String customStudyId, String copyVersion);
+
+  public String deleteById(String studyId);
 }
