@@ -145,6 +145,19 @@ padding-left: 7px;
                     permission="view" data-toggle="tooltip" data-placement="top"
                     title="View last published version"></span>
             </c:if>
+              <c:if test="${empty study.liveStudyId}">
+             <span class="sprites_icon delete  
+             <c:choose>
+						<c:when test="${not study.viewPermission}">
+							  cursor-none
+						</c:when>
+						</c:choose>"
+              isLive="No"
+                   delstudyId="${study.id}"
+                    permission="view" data-toggle="tooltip" data-placement="top"
+                    title="Delete" onclick='validateStudy("${study.id}");'></span>  
+                 
+             </c:if>
           </td>
         </tr>
       </c:forEach>
@@ -305,7 +318,45 @@ padding-left: 7px;
     document.body.appendChild(form);
     form.submit();
   });
+  
+  //delete prelaunch study
+  function validateStudy(studyId) {
+   bootbox.confirm({
+     message: "Are you sure you want to delete this Pre-launch study?",
+     buttons: {
+       confirm: {
+         label: 'Yes',
+       },
+       cancel: {
+         label: 'No',
+       }
+     },
+     callback: function (result) {
+   	  if (result) {
+   		  deleteStudy(studyId);
+         }
+       }
+     });}
+ 
+  function deleteStudy(studyId){
+	      var studyId = studyId;
+	     var form = document.createElement('form');
+	      form.method = 'post';
+	      var input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = 'studyId';
+	      input.value = studyId;
+	      form.appendChild(input);
 
+	      input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = '${_csrf.parameterName}';
+	      input.value = '${_csrf.token}';
+	      form.appendChild(input);
+	     form.action = '/studybuilder/adminStudies/deleteStudy.do';
+	     document.body.appendChild(form);
+	     form.submit();
+	  }
   //datatable icon toggle
   $(".table thead tr th").click(function () {
     $(this).children().removeAttr('class')
