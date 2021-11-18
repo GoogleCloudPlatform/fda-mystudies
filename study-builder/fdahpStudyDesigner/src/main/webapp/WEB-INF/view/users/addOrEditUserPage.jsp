@@ -868,12 +868,18 @@ button#deleteUser {
           $(this).val('');
           
         }
-	var show_elements_count = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
+	if ($(".changeView").find('.dropdown-menu').is(":hidden")){
+	    $('.dropdown-toggle').dropdown('toggle');
+	    var show_elements_count1 = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
+	  }
+  else var show_elements_count2 = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
+
+	//var show_elements_count = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(".study-selected-item").length;
    
-      if (count == tot_items || show_elements_count == 0) {
+      if (show_elements_count1 == 0 || show_elements_count2 == 0) {
        	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
            $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
            	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
