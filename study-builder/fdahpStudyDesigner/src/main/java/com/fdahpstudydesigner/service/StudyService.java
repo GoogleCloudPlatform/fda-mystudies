@@ -210,4 +210,6 @@ public interface StudyService {
       String copyVersion,
       SessionObject sessionObject,
       AuditLogEventRequest auditRequest);
+
+  public String deleteById(String studyId);
 }

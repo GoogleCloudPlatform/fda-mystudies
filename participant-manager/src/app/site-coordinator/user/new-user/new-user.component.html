@@ -94,7 +94,7 @@
       </div>
       <div class="row">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
-          <div class="form-group">
+          <div class="form-group" *ngIf = "!gciEnabled">
             <label for="emailId">Email</label>
             <input
               type="email"
@@ -106,6 +106,7 @@
               name="emailText"
               #emailText="ngModel"
               required
+              
             />
             <div
               *ngIf="
@@ -125,6 +126,43 @@
                 Enter a valid email
               </span>
             </div>
+          </div>
+          <div class="form-group" *ngIf = "gciEnabled">
+            <div class="form-item">
+              <label for="emailId">Email</label>
+                <div class="select-option select-wrap select select-fancy select-fancy-noimage">
+                  
+                  <select
+                  class="form-item__element form-item__element--select width__100 background__trans cursor__pointer"
+                  id="emailId1"
+                  placeholder="Select email"
+                  [(ngModel)]="user.email"
+                  pattern="[a-zA-Z0-9\+\.\_\%\-\+]{1,256}\@[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+"
+                  name="emailselect"
+                  #emailselect="ngModel"
+                  required
+                  
+                  >
+                  <option value="Select Email" disabled selected>Select Email</option>
+                  <option value="harishasan@gmail.com" >harishasan@gmail.com</option>
+                  <option value="shanthla@gmail.com" >shanthla@gmail.com</option>
+                  <option value="monica@gmail.com" >monica@gmail.com</option>
+                </select>
+              </div>
+              <div
+                *ngIf="
+                  emailselect.invalid && (emailselect.dirty || emailselect.touched)
+                "
+              >
+                <span
+                  class="help-block with-errors error__msg"
+                  *ngIf="emailselect.errors?.required"
+                >
+                  Select an email
+                </span>
+              </div>
+            </div>
+            
           </div>
         </div>
         <div class="col-xs-12 col-md-6 p-none flex__justify__space-between">

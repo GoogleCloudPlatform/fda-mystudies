@@ -5519,4 +5519,40 @@ public class StudyController {
     logger.info("StudyController - replicateStudy() - Ends");
     return new ModelAndView("redirect:/adminStudies/studyList.do");
   }
+
+  @RequestMapping(value = "/adminStudies/deleteStudy.do")
+  public ModelAndView deleteById(HttpServletRequest request) {
+    logger.entry("begin studydeleteById()");
+    ModelAndView mav = new ModelAndView();
+    String msg = "";
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    try {
+      HttpSession session = request.getSession();
+      SessionObject userSession =
+          (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+
+      String studyId =
+          FdahpStudyDesignerUtil.isEmpty(request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
+                  == true
+              ? ""
+              : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
+      if (StringUtils.isNotEmpty(studyId)) {
+        msg = studyService.deleteById(studyId);
+      }
+
+      if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
+
+        request
+            .getSession()
+            .setAttribute(
+                FdahpStudyDesignerConstants.SUC_MSG, propMap.get("delete.study.success.message"));
+      }
+    } catch (Exception e) {
+      logger.error("StudyController - deleteById() - ERROR", e);
+    }
+    logger.exit("deleteById() - Ends");
+
+    return new ModelAndView("redirect:/adminStudies/studyList.do");
+  }
 }

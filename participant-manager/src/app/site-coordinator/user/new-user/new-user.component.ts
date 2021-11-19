@@ -29,6 +29,7 @@ export class AddNewUserComponent
   selectedApps: App[] = [];
   user = {} as User;
   permission = Permission;
+  gciEnabled = true;
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
     '=1': '1 site',
@@ -163,7 +164,13 @@ export class AddNewUserComponent
     ) {
       this.disableButton = true;
       if (this.user.superAdmin) {
-        this.user.apps = [];
+        if(this.user.gciUser){
+          this.toastr.error(
+            'This super-admin is not a gci user',
+          );
+        }else{
+          this.user.apps = [];
+        }
       } else {
         this.user.superAdmin = false;
         this.user.apps = this.selectedApps;
