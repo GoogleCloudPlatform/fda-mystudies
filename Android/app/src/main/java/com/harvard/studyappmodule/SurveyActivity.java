@@ -469,14 +469,7 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   public void setVersion(TextView version) {
-    try {
-      PackageInfo info =
-          getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
-      version.append("" + info.versionName);
-    } catch (PackageManager.NameNotFoundException e) {
-      Logger.log(e);
-      version.setText("");
-    }
+    version.append(BuildConfig.VERSION_NAME +" ("+BuildConfig.VERSION_CODE+")");
   }
 
   private void bindEvents() {
