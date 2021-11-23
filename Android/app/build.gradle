@@ -94,6 +94,7 @@ dependencies {
     implementation 'com.uphyca:stetho_realm:2.1.0'
 
     implementation 'com.github.LucasFsc:Html2Pdf:0.2-beta'
+    implementation 'com.github.naveenr-btc:RangeSeekBar:3.0.2'
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

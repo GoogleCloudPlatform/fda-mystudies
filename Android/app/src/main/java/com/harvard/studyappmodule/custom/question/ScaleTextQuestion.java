@@ -16,16 +16,20 @@
 package com.harvard.studyappmodule.custom.question;
 
 import android.content.res.Resources;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.utils.Logger;
+import com.jaygoo.widget.OnRangeChangedListener;
+import com.jaygoo.widget.RangeSeekBar;
+import com.jaygoo.widget.SeekBar;
+import com.jaygoo.widget.VerticalRangeSeekBar;
+
 import java.util.ArrayList;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
@@ -38,10 +42,11 @@ public class ScaleTextQuestion implements StepBody {
   private ScaleTextAnswerFormat format;
   private TextView mcurrentvalue;
   private String currentSelected;
-  private SeekBar seekBar;
+  private RangeSeekBar seekBar;
   private int value;
   private ChoiceTextExclusive[] choiceTextExclusives;
   private ArrayList<String> valuelist;
+  private ArrayList<String> textlist;
 
   public ScaleTextQuestion(Step step, StepResult result) {
     this.step = (QuestionStepCustom) step;
@@ -49,8 +54,10 @@ public class ScaleTextQuestion implements StepBody {
     this.format = (ScaleTextAnswerFormat) this.step.getAnswerFormat1();
     choiceTextExclusives = format.getChoiceTextExclusive();
     valuelist = new ArrayList<>();
+    textlist = new ArrayList<>();
     for (ChoiceTextExclusive choiceTextExclusive : choiceTextExclusives) {
       valuelist.add("" + choiceTextExclusive.getValue());
+      textlist.add(choiceTextExclusive.getText());
     }
     String resultValue = this.result.getResult();
     if (resultValue != null) {
@@ -95,49 +102,19 @@ public class ScaleTextQuestion implements StepBody {
     final int max = choiceTextExclusives.length;
     int min = 1;
 
+    CharSequence[] tickValues = textlist.toArray(new CharSequence[textlist.size()]);
+
     View seekbarlayout;
     if (!format.isVertical()) {
       seekbarlayout = inflater.inflate(R.layout.seekbar_horizontal_layout, parent, false);
-      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
-      seekBar.setMax((max - min));
+      seekBar = (RangeSeekBar) seekbarlayout.findViewById(R.id.seekbar);
     } else {
       seekbarlayout = inflater.inflate(R.layout.seekbar_text_vertical_layout, parent, false);
-      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
-      LinearLayout scalevsaluelayout = (LinearLayout) seekbarlayout.findViewById(R.id.scaleValue);
-      scalevsaluelayout.setWeightSum(choiceTextExclusives.length);
-
-      for (int i = choiceTextExclusives.length - 1; i >= 0; i--) {
-        LinearLayout linearLayout1 = new LinearLayout(inflater.getContext());
-        LinearLayout.LayoutParams params =
-            new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1);
-        params.gravity = Gravity.CENTER;
-
-        TextView textView = new TextView(inflater.getContext());
-        LinearLayout.LayoutParams txtparams =
-            new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        if (i == choiceTextExclusives.length - 1) {
-          txtparams.gravity = Gravity.TOP;
-          textView.setGravity(Gravity.TOP);
-        } else if (i == 0) {
-          txtparams.gravity = Gravity.BOTTOM;
-          textView.setGravity(Gravity.BOTTOM);
-        } else {
-          txtparams.gravity = Gravity.CENTER;
-          textView.setGravity(Gravity.CENTER);
-          params.setMargins(0,30,0,30);
-        }
-        textView.setLayoutParams(txtparams);
-        textView.setText(choiceTextExclusives[i].getText());
-        linearLayout1.setLayoutParams(params);
-        linearLayout1.addView(textView);
-
-        scalevsaluelayout.addView(linearLayout1);
-      }
-
-      seekBar.setMax((max - min));
+      seekBar = (VerticalRangeSeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar.setTickMarkTextArray(tickValues);
     }
+    seekBar.setRange(0, choiceTextExclusives.length - 1);
+    seekBar.setSteps(choiceTextExclusives.length - 1);
     mcurrentvalue = (TextView) seekbarlayout.findViewById(R.id.currentvalue);
 
     TextView mintitle = (TextView) seekbarlayout.findViewById(R.id.mintitle);
@@ -152,25 +129,28 @@ public class ScaleTextQuestion implements StepBody {
 
     mcurrentvalue.setText(String.valueOf(choiceTextExclusives[0].getText()));
 
-    seekBar.setOnSeekBarChangeListener(
-        new SeekBar.OnSeekBarChangeListener() {
-          @Override
-          public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-            setvaluetotxt();
-          }
+    seekBar.setOnRangeChangedListener(new OnRangeChangedListener() {
+      @Override
+      public void onRangeChanged(RangeSeekBar rangeSeekBar, float v, float v1, boolean b) {
+        setvaluetotxt(v);
+      }
 
-          @Override
-          public void onStartTrackingTouch(SeekBar seekBar) {}
+      @Override
+      public void onStartTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
 
-          @Override
-          public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+      }
 
+      @Override
+      public void onStopTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+      }
+    });
+
+    int defaultval;
     if (currentSelected != null) {
-      int selected = valuelist.indexOf("" + currentSelected);
-      seekBar.setProgress(selected);
+      defaultval = valuelist.indexOf("" + currentSelected);
+      seekBar.setProgress(defaultval);
     } else {
-      int defaultval;
       if (format.getDefaultval() != null && !format.getDefaultval().equalsIgnoreCase("")) {
         try {
           defaultval = Integer.parseInt(format.getDefaultval());
@@ -184,17 +164,14 @@ public class ScaleTextQuestion implements StepBody {
 
       seekBar.setProgress(((defaultval - min)));
     }
-    if (format.isVertical()) {
-      setvaluetotxt();
-    }
 
     linearLayout.removeAllViewsInLayout();
     linearLayout.addView(seekbarlayout);
     return linearLayout;
   }
 
-  private void setvaluetotxt() {
-    value = (seekBar.getProgress());
+  private void setvaluetotxt(float rangeSeekBar) {
+    value = (int)(rangeSeekBar);
     mcurrentvalue.setText(String.valueOf(choiceTextExclusives[value].getText()));
   }
 
