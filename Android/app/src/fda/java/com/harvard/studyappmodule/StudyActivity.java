@@ -1017,8 +1017,7 @@ public class StudyActivity extends AppCompatActivity
     if (responseCode == LOGOUT_REPSONSE_CODE) {
       Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT)
           .show();
-      SharedPreferences settings = SharedPreferenceHelper.getPreferences(StudyActivity.this);
-      settings.edit().clear().apply();
+      SharedPreferenceHelper.deletePreferences(this);
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
       if (pass != null) {

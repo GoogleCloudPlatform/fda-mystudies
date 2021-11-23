@@ -18,6 +18,9 @@ package com.harvard.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class SharedPreferenceHelper {
 
   private static final String PREF_NAME = "AppCredentials";
@@ -64,5 +67,22 @@ public class SharedPreferenceHelper {
    */
   private static SharedPreferences.Editor getEditor(Context context) {
     return getPreferences(context).edit();
+  }
+
+  public static void deletePreferences(Context context) {
+    ArrayList<String> excludeKey = AppController.getExcludePreferenceList();
+    SharedPreferences sharedPreferences = getPreferences(context);
+    Map<String, ?> mapPref = sharedPreferences.getAll();
+    if (!excludeKey.isEmpty()) {
+      for (int i = 0; i < excludeKey.size(); i++) {
+        if (mapPref.containsKey(excludeKey.get(i))) {
+          mapPref.remove(excludeKey.get(i));
+        }
+      }
+    }
+
+    for (Map.Entry<String, ?> prefToRemove : mapPref.entrySet()) {
+      sharedPreferences.edit().remove(prefToRemove.getKey()).apply();
+    }
   }
 }

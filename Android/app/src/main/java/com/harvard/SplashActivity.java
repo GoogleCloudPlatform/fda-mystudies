@@ -16,6 +16,7 @@
 package com.harvard;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,6 +49,7 @@ import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import io.realm.Realm;
@@ -66,31 +68,36 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
 
-    RealmEncryptionHelper realmEncryptionHelper = RealmEncryptionHelper.getInstance();
-    byte[] key = realmEncryptionHelper.getEncryptKey();
-    String s = bytesToHex(key);
-    Log.e("realm key", "" + s);
-
-    // sync registration
-    SyncAdapterManager.init(this);
-    AppController.keystoreInitilize(SplashActivity.this);
-    getAppsInfo();
-
-    AppController.getHelperSharedPreference()
-        .writePreference(SplashActivity.this, getString(R.string.json_object_filter), "");
+    new checkAndMigrate(this).execute();
   }
 
 
-  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+  private class checkAndMigrate extends AsyncTask<String, Void, String> {
+    Context context;
 
-  public static String bytesToHex(byte[] bytes) {
-    char[] hexChars = new char[bytes.length * 2];
-    for (int j = 0; j < bytes.length; j++) {
-      int v = bytes[j] & 0xFF;
-      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
-      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    public checkAndMigrate(Context context) {
+      this.context = context;
     }
-    return new String(hexChars);
+
+    @Override
+    protected String doInBackground(String... params) {
+      AppController.checkIfAppNameChangeAndMigrate(context);
+      return "";
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+      // sync registration
+      SyncAdapterManager.init(context);
+      AppController.keystoreInitilize(SplashActivity.this);
+      getAppsInfo();
+
+      AppController.getHelperSharedPreference()
+          .writePreference(SplashActivity.this, getString(R.string.json_object_filter), "");
+    }
+
+    @Override
+    protected void onPreExecute() {}
   }
 
   private void getAppsInfo() {
@@ -195,9 +202,7 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
                     startActivity(intent);
                   }
                 } else {
-                  SharedPreferences settings =
-                      SharedPreferenceHelper.getPreferences(SplashActivity.this);
-                  settings.edit().clear().apply();
+                  SharedPreferenceHelper.deletePreferences(SplashActivity.this);
                   // delete passcode from keystore
                   String pass = AppController.refreshKeys("passcode");
                   if (pass != null) {
