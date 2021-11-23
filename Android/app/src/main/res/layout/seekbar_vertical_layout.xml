@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:nestedScrollingEnabled="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:nestedScrollingEnabled="true">
 
     <RelativeLayout
         android:id="@+id/seeklayout"
@@ -39,13 +40,29 @@
 
         </LinearLayout>
 
-        <com.harvard.utils.VerticalSeekBar
+
+        <com.jaygoo.widget.VerticalRangeSeekBar
             android:id="@+id/seekbar"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/maxlayout"
             android:layout_height="300dp"
-            android:layout_below="@id/maxlayout"
-            android:layout_centerHorizontal="true"
-            android:thumb="@drawable/thumb_image"/>
+            app:rsb_gravity="center"
+            app:rsb_tick_mark_orientation="vertical"
+            app:rsb_indicator_show_mode="alwaysHide"
+            app:rsb_mode="single"
+            app:rsb_progress_color="@color/colorAccent"
+            app:rsb_step_color="@color/colorAccent"
+            app:rsb_step_height="10dp"
+            app:rsb_step_width="2dp"
+            app:rsb_thumb_drawable="@drawable/thumb_image"
+            app:rsb_thumb_height="40dp"
+            app:rsb_thumb_width="40dp"
+            app:rsb_tick_mark_layout_gravity="bottom"
+            app:rsb_tick_mark_mode="number"
+            app:rsb_tick_mark_text_size="12sp"
+            app:rsb_tick_mark_text_color="@color/black_shade"
+            app:rsb_tick_mark_text_margin="-20dp"
+            />
 
         <LinearLayout
             android:id="@+id/minlayout"
