@@ -27,10 +27,14 @@ package com.fdahpstudydesigner.dao;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import java.io.PrintWriter;
+import javax.servlet.http.HttpServletResponse;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,31 +100,39 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
   }
 
   @Override
-  public String isGCIUser(String email) {
-    logger.entry("begin isGCIUser()");
-    String message = FdahpStudyDesignerConstants.FAILURE;
+  public void getGCIUserData(HttpServletResponse response, String email) {
+    logger.entry("begin DashBoardAndProfileDAOImpl- getGCIUserData()");
+    Boolean gciUser = false;
     Session session = null;
-    String queryString = null;
     Query query = null;
-    UserBO user = null;
+    UserBO userBO = null;
+    PrintWriter out = null;
+    JSONObject jsonobject = new JSONObject();
+    ObjectMapper mapper = new ObjectMapper();
+    String userPhoneNumber = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      queryString =
-          "FROM UserBO UBO where lower(UBO.userEmail) = :email and UBO.gciUser = 'Y' and enabled = '1'";
-      query = session.createQuery(queryString).setParameter("email", email);
-      user = (UserBO) query.uniqueResult();
-      if (null != user) {
-        message = FdahpStudyDesignerConstants.SUCCESS;
+      query = session.getNamedQuery("getUserByEmail").setString("email", email);
+      userBO = (UserBO) query.uniqueResult();
+
+      if (null != userBO) {
+        gciUser = userBO.isGciUser();
+        userPhoneNumber = userBO.getPhoneNumber();
       }
+
+      jsonobject.put("gciUser", gciUser);
+      jsonobject.put("userPhoneNumber", userPhoneNumber);
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      out = response.getWriter();
+      out.print(jsonobject);
     } catch (Exception e) {
-      logger.error("DashBoardAndProfileDAOImpl - isGCIUser() - ERROR " + e);
+      logger.error("DashBoardAndProfileDAOImpl - getGCIUserData() - ERROR " + e);
     } finally {
       if (null != session) {
         session.close();
       }
     }
-    logger.exit("isGCIUser() - Ends");
-    return message;
+    logger.exit("DashBoardAndProfileDAOImpl - getGCIUserData() - Ends");
   }
 
   @Autowired

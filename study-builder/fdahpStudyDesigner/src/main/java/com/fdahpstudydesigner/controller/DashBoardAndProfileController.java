@@ -53,6 +53,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -139,25 +140,18 @@ public class DashBoardAndProfileController {
     logger.exit("isEmailValid() - Ends ");
   }
 
-  @RequestMapping("/isGCIUser.do")
-  public void isGCIUser(HttpServletResponse response, String email) {
-    logger.entry("begin isGCIUser()");
-    JSONObject jsonobject = new JSONObject();
-    PrintWriter out = null;
-    String message = FdahpStudyDesignerConstants.FAILURE;
+  @RequestMapping(value = "/getGCIUserData.do", method = RequestMethod.POST)
+  public void getGCIUserData(HttpServletResponse response, String email) {
+    logger.entry("begin DashBoardAndProfileController - getGCIUserData()");
     try {
       if (FdahpStudyDesignerUtil.isNotEmpty(email)) {
-        message = dashBoardAndProfileService.isGCIUser(email);
+        dashBoardAndProfileService.getGCIUserData(response, email);
       }
-      jsonobject.put("message", message);
-      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
-      out = response.getWriter();
-      out.print(jsonobject);
     } catch (Exception e) {
       response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
-      logger.error("DashBoardAndProfileController - isGCIUser() - ERROR " + e);
+      logger.error("DashBoardAndProfileController - getGCIUserData() - ERROR " + e);
     }
-    logger.exit("isGCIUser() - Ends ");
+    logger.exit("DashBoardAndProfileController - isGCIUser() - Ends ");
   }
 
   @RequestMapping("/adminDashboard/updateUserDetails.do")

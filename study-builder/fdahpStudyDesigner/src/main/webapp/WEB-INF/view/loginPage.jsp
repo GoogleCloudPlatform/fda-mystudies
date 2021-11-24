@@ -6,6 +6,8 @@
 			String gciApiKey=resource.getString("gciApiKey");
 			String gciAuthDomain=resource.getString("gciAuthDomain");
 			String gciEnabled=resource.getString("gciEnabled");
+			String mfaEnabled=resource.getString("mfaEnabled");
+			String reCaptchaEnabled=resource.getString("reCaptchaEnabled");
 %>
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="en">
@@ -70,7 +72,8 @@
     <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
-       
+    <script async src="https://www.google.com/recaptcha/api.js"></script>
+    
     <style>
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
@@ -106,8 +109,11 @@
                      method="post"
                      autocomplete="off">
             <input type="hidden" id="gci" value="<%=gciEnabled %>" name="gci"/>
+            <input type="hidden" id="mfaEnabled" value="<%=mfaEnabled %>" name="mfaEnabled"/>
+            <input type="hidden" id="reCaptchaEnabled" value="<%=reCaptchaEnabled %>" name="reCaptchaEnabled"/>
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
+            <div id="recaptcha-container"></div>
             <div class="login pt-lg">
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
@@ -226,12 +232,12 @@
       var isChanged = true;
       $(document).ready(function (e) {
    		var gciEnabled = <%=gciEnabled %>;
-   	 if(gciEnabled == true){
-      var config = {
+   	  if(gciEnabled == true){
+        var config = {
     		  apiKey: "<%=gciApiKey %>",
     	   	  authDomain: "<%=gciAuthDomain %>",
-   	  };
-   	  firebase.initializeApp(config);
+   	    };
+   	    firebase.initializeApp(config);
       }
   	    
         // Internet Explorer 6-11

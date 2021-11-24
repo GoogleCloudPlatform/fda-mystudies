@@ -26,6 +26,7 @@ package com.fdahpstudydesigner.service;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
+import javax.servlet.http.HttpServletResponse;
 
 public interface DashBoardAndProfileService {
 
@@ -33,7 +34,7 @@ public interface DashBoardAndProfileService {
 
   public String isEmailValid(String email);
 
-  public String isGCIUser(String email);
+  public void getGCIUserData(HttpServletResponse response, String email);
 
   public String updateProfileDetails(UserBO userBO, String userId, SessionObject userSession);
 }
