@@ -2,6 +2,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
+<%@ page import = "java.util.ResourceBundle" %>
+<% ResourceBundle resource = ResourceBundle.getBundle("application");
+			String gciApiKey=resource.getString("gciApiKey");
+			String gciAuthDomain=resource.getString("gciAuthDomain");
+			String gciEnabled=resource.getString("gciEnabled");
+%>
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="">
   <head>
@@ -48,6 +54,7 @@
 
     <!-- Head Libs -->
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
      <style>
    
 .arrow {
@@ -108,7 +115,7 @@
                   </a>
                   <hr align="left" width="100%">
                   <a href="/studybuilder/sessionOut.do"
-                     class="blue-link text-weight-normal text-uppercase">
+                     class="blue-link text-weight-normal text-uppercase" id="signOut">
                     <span>sign Out</span>
                     <span
                         class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span>
@@ -234,7 +241,6 @@
     <script src="/studybuilder/vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
     <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/studybuilder/js/jquery.mask.min.js"></script>
-
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
 
     <!-- Theme Custom JS-->
@@ -296,6 +302,24 @@
           document.studyListForm.action = "/studybuilder/adminDashboard/viewUserDetails.do";
           document.studyListForm.submit();
         });
+        var gciEnabled = <%=gciEnabled %>;
+      	 if(gciEnabled == true){
+        var config = {
+	   	  apiKey: "<%=gciApiKey %>",
+	   	  authDomain: "<%=gciAuthDomain %>",
+	   	};
+	   	firebase.initializeApp(config);
+      	}
+        	  
+        $('#signOut').on('click', function () {
+            firebase.auth().signOut()
+        	   .then(function() {
+        	      console.log('Signout Success')
+        	   }, function(error) {
+        		  console.log('Signout Failed' + error)
+        	   });
+         });
+        
         if ('${sessionScope.sessionObject}' != '') {
           setTimeout(function () {
             window.location.href = '/studybuilder/errorRedirect.do?error=timeOut';

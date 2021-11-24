@@ -113,8 +113,10 @@ public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorA
         } else if (!ajax && !uri.contains(sessionOutUrl)) {
           // Checking for password Expired Date Time from current
           // Session
+          UserBO user = usersService.getUserDetails(session.getUserId());
           passwordExpiredDateTime = session.getPasswordExpiryDateTime();
           if (StringUtils.isNotBlank(passwordExpiredDateTime)
+              && !user.isGciUser()
               && FdahpStudyDesignerUtil.addDaysToDate(
                       new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
                           .parse(passwordExpiredDateTime),
@@ -129,7 +131,6 @@ public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorA
                 "FdahpStudyDesignerPreHandlerInterceptor -preHandle(): force change password");
           }
           // Checking for force logout for current user
-          UserBO user = usersService.getUserDetails(session.getUserId());
           if (null != user) {
             if (user.isForceLogout()) {
               response.sendRedirect(sessionOutUrl + "?msg=" + timeoutMsg);

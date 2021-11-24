@@ -1,6 +1,5 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,48 +21,26 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.fdahpstudydesigner.dao;
+package com.fdahpstudydesigner.bean;
 
-import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
-import com.fdahpstudydesigner.bo.RoleBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.util.SessionObject;
-import java.util.List;
+public class GciAdminList {
 
-public interface UsersDAO {
+  String emailId;
+  String uid;
 
-  public String activateOrDeactivateUser(
-      String userId, int userStatus, String loginUser, SessionObject userSession);
+  public String getEmailId() {
+    return emailId;
+  }
 
-  public UserIdAccessLevelInfo addOrUpdateUserDetails(
-      UserBO userBO,
-      String permissions,
-      String selectedStudies,
-      String permissionValues,
-      String selectedApps,
-      String permissionValuesForApp);
+  public void setEmailId(String emailId) {
+    this.emailId = emailId;
+  }
 
-  public String enforcePasswordChange(String userId, String email);
+  public String getUid() {
+    return uid;
+  }
 
-  public List<String> getActiveUserEmailIds();
-
-  public List<Integer> getPermissionsByUserId(String userId);
-
-  public List<String> getSuperAdminList();
-
-  public UserBO getSuperAdminNameByEmailId(String emailId);
-
-  public UserBO getUserDetails(String userId);
-
-  public List<UserBO> getUserList();
-
-  public String getUserPermissionByUserId(String sessionUserId);
-
-  public RoleBO getUserRole(String roleId);
-
-  public List<RoleBO> getUserRoleList();
-
-  public String deleteByUserId(String userId);
-
-  public List<UserBO> getGciUserList();
+  public void setUid(String uid) {
+    this.uid = uid;
+  }
 }

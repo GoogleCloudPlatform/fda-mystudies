@@ -27,6 +27,7 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SESSION_EXPIRY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -68,6 +69,9 @@ public class LoginController {
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   private LoginServiceImpl loginService;
+
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciEnabled = configMap.get("gciEnabled");
 
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
@@ -176,6 +180,14 @@ public class LoginController {
               : "";
       message = loginService.changePassword(userId, newPassword, oldPassword, sesObj);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
+
+        // GCI user password update
+        //        UpdateRequest updateRequest =
+        //            new UpdateRequest(userId).setEmailVerified(true).setPassword(newPassword);
+        //
+        //        UserRecord userRecord = FirebaseAuth.getInstance().updateUser(updateRequest);
+        //        System.out.println("Successfully updated user: " + userRecord.getUid());
+
         sesObj.setPasswordExpiryDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
         mv =
             new ModelAndView(
@@ -257,6 +269,7 @@ public class LoginController {
     String errMsg;
     ModelMap map = new ModelMap();
     MasterDataBO masterDataBO = null;
+
     if (null != request.getSession().getAttribute("sucMsg")) {
       sucMsg = (String) request.getSession().getAttribute("sucMsg");
       map.addAttribute("sucMsg", sucMsg);
@@ -426,6 +439,10 @@ public class LoginController {
       map.addAttribute("isInactiveUser", isInactiveUser);
       map.addAttribute("masterDataBO", masterDataBO);
       if ((userBO != null) && (StringUtils.isEmpty(userBO.getUserPassword()))) {
+        boolean gciUser = loginService.isGciUser(userBO.getUserEmail());
+        if (gciUser) {
+          map.addAttribute("gciUser", "gciUser");
+        }
         map.addAttribute("userBO", userBO);
         map.addAttribute("orgName", configMap.get("orgName"));
         mv = new ModelAndView("signUpPage", map);
