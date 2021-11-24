@@ -44,6 +44,7 @@ public class AppConstants {
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String STUDY_ID_PARAM = "studyId";
   public static final String ACTIVITY_ID_KEY = "activityId";
+  public static final String ACTIVITY_RUN_ID_KEY = "activityRunId";
   public static final String ACTIVITY_VERSION_PARAM = "activityVersion";
   public static final String ERROR_STR = "Error";
   public static final String OPTIONS_METHOD = "OPTIONS";
@@ -55,7 +56,7 @@ public class AppConstants {
   public static final String PARTICIPANT_METADATA_KEY = "Participants";
   public static final String ACTIVITIES_COLLECTION_NAME = "Activities";
   public static final String SUCCESS_MSG = "SUCCESS";
-  public static final String COMPLETED = "Completed";
+  public static final String COMPLETED = "completed";
   public static final String WITHDRAWAL_STATUS_KEY = "withdrawalStatus";
   public static final int FS_BATCH_COMMIT_LIMIT = 500;
 

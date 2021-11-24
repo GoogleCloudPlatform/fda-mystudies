@@ -793,7 +793,8 @@ button#deleteUser {
     
     // Adding selected study items
     $(".study-addbtn").click(function () {
-
+    	var noSelected = $('#multiple :selected').length;
+  if(noSelected != 0 ){
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
 
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
@@ -801,8 +802,7 @@ button#deleteUser {
           $(this).remove();
         }
       });
-      	if ($('#inlineCheckbox4').prop("checked") == true) {
-
+	    if ($('#inlineCheckbox4').prop("checked") == true) {
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -827,20 +827,29 @@ button#deleteUser {
 
         $('.study-selected').append(existingStudyDiv);
       });
-            } else if ($('#inlineCheckbox4').prop("checked") == false) {
-      			$(this).val('');
-      		}
-      
+       } else if ($('#inlineCheckbox4').prop("checked") == false) {
+          $(this).val('');
+          
+        }
+	if ($(".changeView").find('.dropdown-menu').is(":hidden")){
+	    $('.dropdown-toggle').dropdown('toggle');
+	    var show_elements_count1 = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
+	  }
+  else var show_elements_count2 = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
 
+	//var show_elements_count = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(".study-selected-item").length;
-      if (count == tot_items) {
-    	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
-        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
-      }
-
+   
+      if (show_elements_count1 == 0 || show_elements_count2 == 0) {
+       	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+           $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+         }
+     
+    }
+     
     });
     
     
