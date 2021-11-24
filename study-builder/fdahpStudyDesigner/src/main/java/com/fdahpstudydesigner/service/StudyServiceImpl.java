@@ -1775,4 +1775,16 @@ public class StudyServiceImpl implements StudyService {
     logger.info("StudyServiceImpl - getConsentList() - Ends");
     return consentBoList;
   }
+
+  public String deleteById(String studyId) {
+    logger.entry("begin studydeleteById()");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = studyDAO.deleteById(studyId);
+    } catch (Exception e) {
+      logger.error("StudyServiceImpl - deleteStudyById() - ERROR", e);
+    }
+    logger.exit("deleteStudyByUserId() - Ends");
+    return message;
+  }
 }
