@@ -92,6 +92,27 @@ spec:
               value: "http://response-datastore-np:50000/response-datastore"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/auth-server"
+            # GOOGLE IDENTITY PLATFORM
+            - name: GCI_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gci_enabled
+            - name: GCI_AUTH_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gci_auth_domain
+            - name: GCI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gci_api_key
+            - name: GCI_TEMP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gci_temp_password
             # MISC
             - name: GCP_BUCKET_NAME
               valueFrom:
