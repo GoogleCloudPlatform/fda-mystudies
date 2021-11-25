@@ -4,6 +4,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page import = "java.util.ResourceBundle" %>
+<% ResourceBundle resource = ResourceBundle.getBundle("application");
+			String gciEnabled=resource.getString("gciEnabled");
+%>
 
 <style>
 .disabled {
@@ -86,7 +90,7 @@ button#deleteUser {
       <div class="dis-line pull-right">
         <div class="form-group mb-none">
           <c:if
-              test="${not empty userBO.userPassword && userBO.enabled && not userBO.emailChanged}">
+              test="${(userBO.gciUser eq true || not empty userBO.userPassword) && userBO.enabled && not userBO.emailChanged}">
             <div class="dis-inline mt-sm">
               <span class="stat">
                 <span class="black-sm-f">Account status:
@@ -98,7 +102,7 @@ button#deleteUser {
             </div>
           </c:if>
           <c:if
-              test="${not empty userBO.userPassword &&  not userBO.enabled}">
+              test="${(userBO.gciUser eq true || not empty userBO.userPassword) &&  not userBO.enabled}">
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -107,7 +111,7 @@ button#deleteUser {
               </span>
             </div>
           </c:if>
-          <c:if test="${empty userBO.userPassword}">
+          <c:if test="${userBO.gciUser eq false && empty userBO.userPassword}">
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -165,11 +169,10 @@ button#deleteUser {
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
       <c:if
-          test="${actionPage eq 'EDIT_PAGE' && not empty userBO.userPassword && not userBO.emailChanged}">
+          test="${actionPage eq 'EDIT_PAGE' && (userBO.gciUser eq false && not empty userBO.userPassword) && not userBO.emailChanged}">
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
-            <button type="button" class="btn btn-default gray-btn"
-                    id="enforcePasswordId">Enforce password change
+            <button type="button" class="btn btn-default gray-btn"id="enforcePasswordId">Enforce password change
             </button>
           </div>
         </c:if>
@@ -219,18 +222,40 @@ button#deleteUser {
               </c:if>
               <span class="requiredStar"> *</span>
             </div>
+            <c:set var="gciEnabled" value="<%=gciEnabled %>"/>
+            <c:if test="${gciEnabled eq false }">
             <div class="form-group">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" value="${userBO.userEmail}"
-                     oldVal="${userBO.userEmail}"
+                     oldVal="${userBO.userEmail}" 
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                      data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
                      required
-                     <c:if
-                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> />
+                      <c:if
+                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.gciUser eq true}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
+            </c:if>
+            <c:if test="${gciEnabled eq true }">
+		       <div class="form-group">
+		         <input type="text" class="form-control" id="emailId" list="mine"
+                     name="userEmail" value="${userBO.userEmail}"
+                     oldVal="${userBO.userEmail}" 
+                     pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
+                     data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
+                     required
+                     <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.gciUser eq true}">disabled</c:if>/>
+                         <datalist id="mine">
+					   <c:forEach items="${adminList}" var="adminList">
+                        <option value="${adminList}">${adminList}</option>
+                      </c:forEach>
+							</datalist>
+                         <div class="help-block with-errors red-txt"></div>
+		       </div>
+		       </c:if>
           </div>
+          
+          
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
@@ -278,13 +303,19 @@ button#deleteUser {
                 <c:if
                     test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
                   <span class="ml-xs">&nbsp; <label
-                      class="switch bg-transparent mt-xs"> <input
-                      type="checkbox" class="switch-input"
-                      value="${userBO.enabled}" id="change${userBO.userId}"
+                      class="switch bg-transparent mt-xs"
+                      data-toggle="tooltip"  data-placement="top" 
+                      <c:if test="${not empty gciDisableUser && gciDisableUser eq 'Y'}">title="This user may be deleted from the organization directory or user whitelist for the Study Builder. Please contact your IT admin to have them added back and try again."
+		              </c:if>> <input
+                      type="checkbox" class="switch-input"  
+                      value="${userBO.enabled}" id="change${userBO.userId}" 
+                      
+		            	
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
-                          test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged}">disabled</c:if>
+                          test="${(userBO.gciUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged || (not empty gciDisableUser && gciDisableUser eq 'Y')}">disabled</c:if>
                       onclick="activateOrDeactivateUser('${userBO.userId}');">
+                      
                     <span class="switch-label bg-transparent" data-on="On"
                           data-off="Off"></span>
                     <span class="switch-handle"></span>
@@ -596,7 +627,6 @@ button#deleteUser {
       setStudySettingByRole(element);
     });
 
-   
     var countCall = 0;
     $(window).on('load', function () {
       countCall = 1;
@@ -977,6 +1007,16 @@ button#deleteUser {
         var csrfToken = $('#csrfDet').attr('csrfToken');
         $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if (email !== '') {
+        	const adminList = '${adminList}' 
+        	    var element = $("#roleId option:selected").text();
+                if(!adminList.includes(email) && adminList != null && <%=gciEnabled %>){
+                if(element == "Superadmin")
+                	 var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
+               else
+            	     var msg = "You are inviting a person who is not listed in the organizational directory to be a Study Builder admin. Are you sure you wish to proceed?";
+                	bootbox.confirm(msg,
+                            function (result) {
+                              if (result) {
           $("body").addClass("loading");
           $.ajax({
             url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
@@ -1001,9 +1041,40 @@ button#deleteUser {
                 $('#emailId').parent().find(".help-block").empty();
                 $('#emailId').parent().find(".help-block").append(
                 	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists"));
-              }
-            }
+	              }
+	            }
+	          });
+	        }
           });
+   		}else {
+           	$("body").addClass("loading");
+               $.ajax({
+                 url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
+                 type: "POST",
+                 datatype: "json",
+                 global: false,
+                 data: {
+                   email: email,
+                 },
+                 success: function getResponse(data) {
+                   var message = data.message;
+                   if ('SUCCESS' !== message) {
+                     $('#emailId').validator('validate');
+                     $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
+                     $('#emailId').parent().find(".help-block").empty();
+                     saveUser();
+                   } else {
+                     $("body").removeClass("loading");
+                     isFromValid($('.addUpdate').parents('form'));
+                     $('#emailId').val('');
+                     $('#emailId').parent().addClass("has-danger").addClass("has-error");
+                     $('#emailId').parent().find(".help-block").empty();
+                     $('#emailId').parent().find(".help-block").append(
+                     	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(email + " already exists"));
+                   }
+                 }
+               });
+           }
         }
       } else {
         $('#emailId').validator('validate');

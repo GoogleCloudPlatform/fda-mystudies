@@ -68,7 +68,7 @@
                   </a>
                   <hr align="left" width="100%">
                   <a href="/studybuilder/sessionOut.do"
-                     class="blue-link text-weight-normal text-uppercase">
+                     class="blue-link text-weight-normal text-uppercase" id="signOut">
                     <span>sign Out</span>
                     <span
                         class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span>
@@ -139,6 +139,15 @@
       });
     
 
+    $('#signOut').on('click', function () {
+       firebase.auth().signOut()
+   	   .then(function() {
+   	      alert('Signout Succesfull');
+   	   }, function(error) {
+   		  alert('Signout Failed'  + error)  ;
+   	   });
+    });
+    
   });
 
   function formSubmit() {

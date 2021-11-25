@@ -20,6 +20,8 @@
 
 	<bean id="myAppScheduleJobsToMoveFromCloudStorage"
           class="com.fdahpstudydesigner.scheduler.MoveCloudStorageSchedulerService"/>
+     <bean id="myAppScheduleJobsForGCI"
+          class="com.fdahpstudydesigner.scheduler.GCISchedulerService"/>     
     <bean id="restTemplate"
           class="org.springframework.web.client.RestTemplate">
       <property name="interceptors">
