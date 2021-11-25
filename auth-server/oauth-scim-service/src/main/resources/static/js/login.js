@@ -14,8 +14,8 @@ $(document).ready(function () {
 
   if(gciEnabled) {
   	var config = {
-      apiKey: "AIzaSyB0Dlx5-qXxVXsNOu2MGx5v7Ry1F0PyYOg",
-      authDomain: "clean-mountain-326213.firebaseapp.com",
+      apiKey: gciApiKey,
+      authDomain: gciAuthDomain,
   	};
   	firebase.initializeApp(config);
   
