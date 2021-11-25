@@ -55,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -141,6 +142,20 @@ public class DashBoardAndProfileController {
       logger.error("DashBoardAndProfileController - isEmailValid() - ERROR " + e);
     }
     logger.exit("isEmailValid() - Ends ");
+  }
+
+  @RequestMapping(value = "/getGCIUserData.do", method = RequestMethod.POST)
+  public void getGCIUserData(HttpServletResponse response, String email) {
+    logger.entry("begin DashBoardAndProfileController - getGCIUserData()");
+    try {
+      if (FdahpStudyDesignerUtil.isNotEmpty(email)) {
+        dashBoardAndProfileService.getGCIUserData(response, email);
+      }
+    } catch (Exception e) {
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      logger.error("DashBoardAndProfileController - getGCIUserData() - ERROR " + e);
+    }
+    logger.exit("DashBoardAndProfileController - isGCIUser() - Ends ");
   }
 
   @RequestMapping("/adminDashboard/updateUserDetails.do")
