@@ -42,12 +42,13 @@ export class ForgotPasswordComponent extends UnsubscribeOnDestroyAdapter {
         .subscribe((successResponse: ApiResponse) => {
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
+           
           } else {
-            this.toastr.success('sucess');
+            this.toastr.success('success');
           }
           setTimeout(() => {
-            void this.router.navigate(['/login']);
-          }, 10000);
+            void this.router.navigate(["/login"]);
+          }, 5000);
         }),
     );
   }

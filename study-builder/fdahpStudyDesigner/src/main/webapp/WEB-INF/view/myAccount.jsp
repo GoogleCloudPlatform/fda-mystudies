@@ -225,6 +225,7 @@
     </div>
   </div>
 </form:form>
+ <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
   <div class="white-bg box-space">
 
@@ -245,6 +246,41 @@
       </div>
       </c:if>
 
+      
+      <!-- Assigned Permissions List-->
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
+      <div class="edit-user-list-widget">
+        <span>Apps</span>
+        <span class="gray-xs-f pull-right">Yes</span>
+        <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
+          <div class="mt-lg pl-md">
+            <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_APPS')}">
+              <div class="pb-md bor-dashed">
+                <span class="dot">Create new apps</span>
+              </div>
+            </c:if>
+            <div class="pl-sm pt-md">
+              <span
+                  class="gray-xs-f text-weight-bold">List of assigned apps with permissions
+              </span>
+            </div>
+            <c:forEach items="${appAndPermissionList}" var="appAndPermission">
+              <div class="pt-sm pb-sm pl-sm b-bor-dark">
+                <span class="dot"
+                      id="${appAndPermission.customAppId}">${appAndPermission.name}&nbsp;(${appAndPermission.customAppId})
+                </span>
+                <span class="gray-xs-f pull-right">
+                  <c:if
+                      test="${not appAndPermission.viewPermission}">View only</c:if>
+                  <c:if
+                      test="${appAndPermission.viewPermission}">View and edit</c:if>
+                </span>
+              </div>
+            </c:forEach>
+          </div>
+        </c:if>
+      </div>
+      </c:if>
       <!-- Assigned Permissions List-->
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
       <div class="edit-user-list-widget">
@@ -279,9 +315,11 @@
         </c:if>
       </div>
       </c:if>
+
     </div>
   </div>
 </div>
+</c:if>
 <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
        csrfToken="${_csrf.token}"/>
 
@@ -291,6 +329,8 @@
     addPasswordPopup();
     $("#myAccount").addClass("active");
 
+    console.log("${(sessionObject.userPermissions)}");
+    
     var button = $('#ed-update');
     $('input').each(function () {
       $(this).data('val', $(this).val());

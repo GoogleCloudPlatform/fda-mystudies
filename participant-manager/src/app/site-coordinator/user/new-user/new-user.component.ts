@@ -3,6 +3,7 @@ import {
   ElementRef,
   OnInit,
   QueryList,
+  TemplateRef,
   ViewChildren,
 } from '@angular/core';
 import {UserService} from '../shared/user.service';
@@ -15,6 +16,8 @@ import {getMessage} from 'src/app/shared/success.codes.enum';
 import {Permission} from 'src/app/shared/permission-enums';
 import {AppsService} from '../../apps/shared/apps.service';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
+
 
 @Component({
   selector: 'user-new',
@@ -38,6 +41,8 @@ export class AddNewUserComponent
   @ViewChildren('permissionCheckBox')
   selectedPermission: QueryList<ElementRef> = new QueryList();
   constructor(
+    private readonly modalService: BsModalService,
+    public modalRef: BsModalRef,
     private readonly router: Router,
     private readonly userService: UserService,
     private readonly appsService: AppsService,
@@ -45,9 +50,17 @@ export class AddNewUserComponent
   ) {
     super();
   }
+  emailDisplay:any=[]
 
   ngOnInit(): void {
     this.getAllApps();
+    this.userService.getEmailDetails().subscribe((result)=>
+    {
+      console.log(result);
+      this.emailDisplay=result;
+    })
+    
+    
   }
 
   getAllApps(): void {
@@ -187,6 +200,7 @@ export class AddNewUserComponent
       );
       return;
     }
+    this.modalRef.hide();
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.manageLocationsSelected;
@@ -199,4 +213,8 @@ export class AddNewUserComponent
       this.user.manageLocations = null;
     }
   }
+  openModal( template: TemplateRef<any>): void {
+    this.modalRef = this.modalService.show( template);
+  }
+
 }

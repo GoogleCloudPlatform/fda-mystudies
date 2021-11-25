@@ -33,6 +33,32 @@
   padding: 10px 0px !important;
   border-bottom: 1px solid #cfd4d7 !important;
 }
+
+.bootstrap-select.btn-group .dropdown-menu {
+	min-height: 100%  !important;
+}
+
+.bootstrap-select.btn-group .dropdown-menu.inner
+{
+	min-height: 100% important;
+    height: 100%;
+}
+
+.changeView div.dropdown-menu ul.dropdown-menu {
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 100% !important;
+    height: 100% !important;
+}
+button#deleteUser {
+    background: #cf0036 !important;
+    border-color: #cf0036 !important;
+    color: #fff;
+    padding: 4px 8px;
+    text-align: center;
+    margin-left: 9px;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -476,6 +502,13 @@
             <div class="dis-line form-group mb-none">
               <button type="button" class="btn btn-primary blue-btn addUpdate">Update</button>
             </div>
+            
+          </c:if>
+          <c:if test="${actionPage eq 'EDIT_PAGE' &&  not userBO.enabled}">  
+            <div class="dis-line">
+              <button type="button" class="btn btn-primary red-btn deleteUser" id = "deleteUser" onclick="validateAdminStatus(this);">Delete admin</button>
+            </div>
+            
           </c:if>
         </div>
       </div>
@@ -534,12 +567,19 @@
    $(".selectpicker").selectpicker('deselectAll');
    var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
    var count = $(".app-selected-item").length;
+   var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+   var selected_study = $(".study-selected-item").length;
    if (count == tot_items) {
  	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+   } 
+   if (selected_study == tot_study) {
+ 	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+     	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
    }
-    </c:if> 
+   </c:if> 
 
     <c:if test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
     if($('#roleId').find('option:selected').text() == 'Superadmin' ){
@@ -790,7 +830,8 @@
     
     // Adding selected study items
     $(".study-addbtn").click(function () {
-
+    	var noSelected = $('#multiple :selected').length;
+  if(noSelected != 0 ){
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
 
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
@@ -798,7 +839,7 @@
           $(this).remove();
         }
       });
-
+	if ($('#inlineCheckbox4').prop("checked") == true) {
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -823,17 +864,29 @@
 
         $('.study-selected').append(existingStudyDiv);
       });
-      
+       } else if ($('#inlineCheckbox4').prop("checked") == false) {
+          $(this).val('');
+          
+        }
+	if ($(".changeView").find('.dropdown-menu').is(":hidden")){
+	    $('.dropdown-toggle').dropdown('toggle');
+	    var show_elements_count1 = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
+	  }
+  else var show_elements_count2 = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
 
+	//var show_elements_count = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(".study-selected-item").length;
-      if (count == tot_items) {
-    	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
-        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
-      }
-
+   
+      if (show_elements_count1 == 0 || show_elements_count2 == 0) {
+       	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+           $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+         }
+     
+    }
+     
     });
     
     
@@ -848,7 +901,7 @@
           $(this).remove();
         }
       });
-
+	if ($('#inlineCheckboxApp').prop("checked") == true) {
       $('#multipleApps :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -873,6 +926,11 @@
 
         $('.app-selected').append(existingAppDiv);
       });
+      } else if ($('#inlineCheckboxApp').prop("checked") == false) {
+          $(this).val('');
+          
+        }
+      
      
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
@@ -1202,7 +1260,50 @@
 	    $('#alertMsg').show('10000');
 	    setTimeout(hideDisplayMessage, 10000);
 	  }
+  //funtion for validateAdminStatus for deleting
+  function validateAdminStatus(obj) {
+	    var buttonText = obj.id;
+	    var messageText = "";
+	    if (buttonText) {
+	      if (buttonText == 'deleteUser') {
+	        	 messageText = "Are you sure you want to delete this admin?";
+	        	 bootbox.confirm({
+	                 closeButton: false,
+	                 message: messageText,
+	                 buttons: {
+	                   'cancel': {
+	                     label: 'Cancel',
+	                   },
+	                   'confirm': {
+	                     label: 'OK',
+	                   },
+	                 },
+	                 callback: function (result) {
+	                   if (result) {
+	                	   deleteUserAdmin();
+	                   }
+	                 }
+	               });}}}
   
+  function deleteUserAdmin(){
+	     var form = document.createElement('form');
+	      form.method = 'post';
+	      var input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = 'userId';
+	      input.value = '${userBO.userId}';
+	      form.appendChild(input);
+
+	      input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = '${_csrf.parameterName}';
+	      input.value = '${_csrf.token}';
+	      form.appendChild(input);
+	     form.action = '/studybuilder/adminUsersView/deleteUser.do';
+	     document.body.appendChild(form);
+	     form.submit();
+	  }
+	      //--------------
   function addUser(){
 	  var selectedStudies = "";
 	    var permissionValues = "";

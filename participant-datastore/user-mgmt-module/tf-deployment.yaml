@@ -54,6 +54,26 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_password
+            - name: FROM_EMAIL_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_address
+            - name: FROM_EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_password
+            - name: MAIL_FROM_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: from_email_address
+            - name: MAIL_CONTACT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: contact_email_address
             - name: SMTP_HOSTNAME
               valueFrom:
                 secretKeyRef:

@@ -5331,7 +5331,7 @@ public class StudyDAOImpl implements StudyDAO {
                       && !existingQuestionResponseSubTypeList.isEmpty()) {
                     for (QuestionResponseSubTypeBo questionResponseSubTypeBo :
                         existingQuestionResponseSubTypeList) {
-                      if (questionResponseSubTypeBo.getDestinationStepId() == null) {
+                      if (StringUtils.isEmpty(questionResponseSubTypeBo.getDestinationStepId())) {
                         sequenceSubTypeList.add(null);
                       } else if ((questionResponseSubTypeBo.getDestinationStepId() != null)
                           && questionResponseSubTypeBo
@@ -7904,13 +7904,12 @@ public class StudyDAOImpl implements StudyDAO {
       if (copyVersion.equals(FdahpStudyDesignerConstants.WORKING_VERSION)) {
         String searchQuery =
             " FROM ConsentBo CBO WHERE CBO.studyId=:studyId ORDER BY CBO.version desc ";
-        query = session.createQuery(searchQuery);
-        query.setString("studyId", studyId);
+        query = session.createQuery(searchQuery).setString("studyId", studyId);
       } else {
         String searchQuery =
-            " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId ORDER BY CBO.version desc ";
-        query = session.createQuery(searchQuery);
-        query.setString("customStudyId", customStudyId);
+            " FROM ConsentBo CBO WHERE CBO.customStudyId=:customStudyId AND CBO.version IN "
+                + " (SELECT MAX(version) FROM ConsentBo WHERE customStudyId=:customStudyId) ";
+        query = session.createQuery(searchQuery).setString("customStudyId", customStudyId);
       }
       consentBoList = query.list();
       transaction.commit();
@@ -8354,5 +8353,119 @@ public class StudyDAOImpl implements StudyDAO {
     }
     logger.exit("getConsentInfoList() - Ends");
     return consentInfoList;
+  }
+
+  public String deleteById(String studyId) {
+    logger.entry("begin studydeleteById()");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    Query query = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      query =
+          session
+              .createSQLQuery(" delete FROM study_page WHERE study_id=:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(" DELETE  from study_permission WHERE study_id=:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(" DELETE  FROM consent WHERE study_id=:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(
+                  " delete FROM active_task_custom_frequencies WHERE active_task_id IN(SELECT id FROM active_task WHERE study_id in (SELECT id FROM studies WHERE id=:studyId))")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(
+                  " delete FROM active_task_attrtibutes_values WHERE active_task_id IN(SELECT id FROM active_task WHERE study_id in (SELECT id FROM studies WHERE id=:studyId) )")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      //  active_task_frequencies
+      query =
+          session
+              .createSQLQuery(
+                  " delete  FROM active_task_frequencies WHERE active_task_id IN (SELECT id FROM active_task WHERE study_id in (SELECT id FROM studies WHERE id=:studyId))")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(" delete FROM active_task WHERE study_id=:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(
+                  "delete FROM questionnaires_frequencies WHERE questionnaires_id IN (SELECT id FROM questionnaires WHERE study_id in (SELECT id FROM studies WHERE id=:studyId))")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(
+                  " DELETE  FROM questionnaires_steps WHERE questionnaires_id IN (SELECT id FROM questionnaires WHERE study_id in (SELECT id FROM studies WHERE id=:studyId))")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(" delete from questionnaires WHERE study_id=:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery("DELETE FROM consent_info WHERE study_id=:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(
+                  "delete from comprehension_test_response  where comprehension_test_question_id in(select id from comprehension_test_question  where study_id in (SELECT id FROM studies WHERE id=:studyId))")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery("delete from comprehension_test_question WHERE study_id=:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(
+                  "delete  from eligibility_test  where eligibility_id in(select id from eligibility where study_id in (SELECT id FROM studies WHERE id=:studyId))")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery("delete from eligibility  WHERE study_id =:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+
+      query =
+          session
+              .createSQLQuery(
+                  "delete FROM resources WHERE study_id in (SELECT id FROM studies WHERE id=:studyId)")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery("delete from studies  WHERE id =:studyId")
+              .setParameter("studyId", studyId);
+      query.executeUpdate();
+      message = FdahpStudyDesignerConstants.SUCCESS;
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - deleteStudyById() - ERROR", e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    logger.exit("deleteStudyById() - Ends");
+    return message;
   }
 }

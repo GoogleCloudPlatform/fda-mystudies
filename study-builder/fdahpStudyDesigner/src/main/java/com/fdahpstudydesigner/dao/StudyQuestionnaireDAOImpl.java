@@ -863,7 +863,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             && !existingQuestionResponseSubTypeList.isEmpty()) {
           for (QuestionResponseSubTypeBo questionResponseSubTypeBo :
               existingQuestionResponseSubTypeList) {
-            if (questionResponseSubTypeBo.getDestinationStepId() == null) {
+            if (StringUtils.isEmpty(questionResponseSubTypeBo.getDestinationStepId())) {
               sequenceSubTypeList.add(null);
             } else if ((questionResponseSubTypeBo.getDestinationStepId() != null)
                 && questionResponseSubTypeBo.getDestinationStepId().equals("0")) {
@@ -5323,8 +5323,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         query = session.getNamedQuery("getQuestionariesByStudyId").setString("studyId", studyId);
       } else {
         searchQuery =
-            "From QuestionnaireBo QB where QB.customStudyId=:customStudyId and QB.active=1 AND QB.version IN "
-                + "(SELECT MAX(version) FROM QuestionnaireBo WHERE customStudyId=:customStudyId) order by QB.sequenceNumber asc";
+            "From QuestionnaireBo QB where QB.customStudyId=:customStudyId and QB.active=1 AND QB.live=1"
+                + " order by QB.sequenceNumber asc";
         query = session.createQuery(searchQuery).setString("customStudyId", customStudyId);
       }
 

@@ -1495,9 +1495,14 @@ public class SiteServiceImpl implements SiteService {
         templateArgs.put("APP_STORE_LINK", optStudy.get().getApp().getAppStoreUrl());
       }
 
+      String fromEmail =
+          (participantRegistrySiteEntity.getStudy().getApp().getFromEmailId() != null)
+              ? participantRegistrySiteEntity.getStudy().getApp().getFromEmailId()
+              : appPropertyConfig.getFromEmail();
+
       EmailRequest emailRequest =
           new EmailRequest(
-              appPropertyConfig.getFromEmail(),
+              fromEmail,
               new String[] {participantRegistrySiteEntity.getEmail()},
               null,
               null,
