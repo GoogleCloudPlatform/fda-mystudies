@@ -60,6 +60,9 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 
   Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciUserTempPassword = configMap.get("gciUserTempPassword");
+
   @Override
   public Authentication authenticate(Authentication authentication) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -109,27 +112,55 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
         logger.error("LimitLoginAuthenticationProvider - authenticate - ERROR", e);
       }
 
-      UsernamePasswordAuthenticationToken token =
-          new UsernamePasswordAuthenticationToken(
-              authentication.getPrincipal(),
-              authentication.getCredentials(),
-              new ArrayList<GrantedAuthority>());
+      if (null != userBO && userBO.isGciUser()) {
 
-      // if reach here, means login success, else an exception will be thrown
-      Authentication auth = super.authenticate(token);
-      // reset the user_attempts
-      loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
+        UsernamePasswordAuthenticationToken token =
+            new UsernamePasswordAuthenticationToken(
+                authentication.getPrincipal(),
+                gciUserTempPassword,
+                new ArrayList<GrantedAuthority>());
 
-      if (userBO != null) {
-        userBO.setUserLastLoginDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
-        loginDAO.updateUser(userBO);
-        auditRequest.setUserId(userBO.getUserId().toString());
-        auditRequest.setUserAccessLevel(userBO.getAccessLevel());
+        // if reach here, means login success, else an exception will be thrown
+        Authentication auth = super.authenticate(token);
+
+        // reset the user_attempts
+        loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
+
+        if (userBO != null) {
+          userBO.setUserLastLoginDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+          loginDAO.updateUser(userBO);
+          auditRequest.setUserId(userBO.getUserId().toString());
+          auditRequest.setUserAccessLevel(userBO.getAccessLevel());
+        }
+        auditRequest.setSource(SIGNIN_SUCCEEDED.getSource().getValue());
+        auditRequest.setDestination(SIGNIN_SUCCEEDED.getDestination().getValue());
+        auditLogEventHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
+        return auth;
+
+      } else {
+        UsernamePasswordAuthenticationToken token =
+            new UsernamePasswordAuthenticationToken(
+                authentication.getPrincipal(),
+                authentication.getCredentials(),
+                new ArrayList<GrantedAuthority>());
+
+        // if reach here, means login success, else an exception will be thrown
+        Authentication auth = super.authenticate(token);
+
+        // reset the user_attempts
+        loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
+
+        if (userBO != null) {
+          userBO.setUserLastLoginDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+          loginDAO.updateUser(userBO);
+          auditRequest.setUserId(userBO.getUserId().toString());
+          auditRequest.setUserAccessLevel(userBO.getAccessLevel());
+        }
+        auditRequest.setSource(SIGNIN_SUCCEEDED.getSource().getValue());
+        auditRequest.setDestination(SIGNIN_SUCCEEDED.getDestination().getValue());
+        auditLogEventHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
+        return auth;
       }
-      auditRequest.setSource(SIGNIN_SUCCEEDED.getSource().getValue());
-      auditRequest.setDestination(SIGNIN_SUCCEEDED.getDestination().getValue());
-      auditLogEventHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
-      return auth;
 
     } catch (BadCredentialsException e) {
       // invalid login, update to user_attempts

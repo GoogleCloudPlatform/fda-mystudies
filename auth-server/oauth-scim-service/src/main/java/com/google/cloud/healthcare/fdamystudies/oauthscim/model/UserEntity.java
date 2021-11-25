@@ -25,6 +25,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 @Setter
 @Getter
@@ -71,4 +72,8 @@ public class UserEntity {
   /** Refer UserAccountStatus enum for values. */
   @Column(name = "status", nullable = false)
   private Integer status;
+
+  @Column(name = "gci_user", nullable = false)
+  @Type(type = "yes_no")
+  private boolean gciUser = false;
 }

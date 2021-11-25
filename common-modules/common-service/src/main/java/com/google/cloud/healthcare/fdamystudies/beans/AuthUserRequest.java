@@ -26,4 +26,6 @@ public class AuthUserRequest {
   private String password;
 
   private Integer status;
+
+  private Boolean gciUser;
 }
