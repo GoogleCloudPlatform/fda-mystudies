@@ -22,10 +22,13 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppPermissionDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.GCIAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SitePermissionDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyPermissionDetails;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.User;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppPermissionRequest;
@@ -43,6 +46,8 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
@@ -64,6 +69,12 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionReposi
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAccountEmailSchedulerTaskRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
+import com.google.firebase.auth.ExportedUserRecord;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.ListUsersPage;
+import com.google.firebase.auth.UserRecord;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -77,6 +88,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -84,6 +96,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -121,6 +134,10 @@ public class ManageUserServiceImpl implements ManageUserService {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private OAuthService oauthService;
+
+  @Autowired private AppPropertyConfig appPropertyConfig;
+
+  @Autowired private ParticipantManagerUtil participantManagerUtil;
 
   @Override
   @Transactional
@@ -598,6 +615,9 @@ public class ManageUserServiceImpl implements ManageUserService {
         optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     User user = UserMapper.prepareUserInfo(adminDetails);
+    user.setGciUser(adminDetails.isGciUser());
+    user.setDeletedOrDisabledInGci(
+        isGciDeletedOrDisabled(adminDetails.isGciUser(), adminDetails.getEmail()));
     if (adminDetails.isSuperAdmin()) {
       logger.exit(String.format("superadmin=%b, status=%s", user.isSuperAdmin(), user.getStatus()));
       return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
@@ -707,6 +727,22 @@ public class ManageUserServiceImpl implements ManageUserService {
             "total apps=%d, superadmin=%b, status=%s",
             user.getApps().size(), user.isSuperAdmin(), user.getStatus()));
     return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
+  }
+
+  private boolean isGciDeletedOrDisabled(boolean gciUser, String email) {
+    boolean gciDisabledOrDeleted = false;
+    if (gciUser) {
+      try {
+        UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
+        if (userRecord.isDisabled()) {
+          gciDisabledOrDeleted = true;
+        }
+      } catch (FirebaseAuthException e) {
+        gciDisabledOrDeleted = true;
+        e.printStackTrace();
+      }
+    }
+    return gciDisabledOrDeleted;
   }
 
   private void sortUserStudyDetailsSitesByLocationName(UserStudyDetails userStudyDetails) {
@@ -969,5 +1005,114 @@ public class ManageUserServiceImpl implements ManageUserService {
               templateArgs);
     }
     return emailService.sendMimeMail(emailRequest);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public GCIAdminDetailsResponse getGCIAdminDetails(String signedInUserId) {
+    logger.entry("getGCIAdminDetails()");
+    List<String> gciEmails = new ArrayList<>();
+    Optional<UserRegAdminEntity> optUserRegAdminEntity =
+        userAdminRepository.findById(signedInUserId);
+    if (!(optUserRegAdminEntity.isPresent() && optUserRegAdminEntity.get().isSuperAdmin())) {
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
+    }
+    if (appPropertyConfig.isGciEnabled()) {
+      List<UserRegAdminEntity> users = userAdminRepository.findAll();
+      List<String> usersEmail =
+          users.stream().map(UserRegAdminEntity::getEmail).collect(Collectors.toList());
+
+      List<String> gciEmail = participantManagerUtil.getGCIUsers();
+
+      gciEmails =
+          gciEmail.stream().filter(e -> !usersEmail.contains(e)).collect(Collectors.toList());
+    }
+
+    return new GCIAdminDetailsResponse(MessageCode.GET_GCI_USERS_SUCCESS, gciEmails);
+  }
+
+  @Override
+  public void updateGciUsers() {
+    logger.entry("updateGciUsers()");
+    List<String> gciDisbledUsers = new ArrayList<>();
+    List<String> gciUsers = new ArrayList<>();
+    List<UserRegAdminEntity> users = userAdminRepository.findAll();
+    if (CollectionUtils.isNotEmpty(users)) {
+      List<String> gciEmails =
+          users
+              .stream()
+              .filter(
+                  user -> user.isGciUser() && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
+              .map(UserRegAdminEntity::getEmail)
+              .collect(Collectors.toList());
+      if (appPropertyConfig.isGciEnabled()) {
+        getGciUser(gciDisbledUsers, gciUsers);
+        List<String> deletedGciUsers = ListUtils.removeAll(gciEmails, gciUsers);
+        List<String> deactivateUsers = new ArrayList<>();
+        deactivateUsers.addAll(deletedGciUsers);
+        List<String> gciDisabledEmails =
+            users
+                .stream()
+                .filter(
+                    user ->
+                        gciDisbledUsers.contains(user.getEmail())
+                            && user.isGciUser()
+                            && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
+                .map(UserRegAdminEntity::getEmail)
+                .collect(Collectors.toList());
+        deactivateUsers.addAll(gciDisabledEmails);
+        if (!deactivateUsers.isEmpty()) {
+          updateGciAuthUserAccountStatus(deactivateUsers);
+          userAdminRepository.updateDisableGciUserToDeactivate(
+              UserStatus.DEACTIVATED.getValue(), deactivateUsers);
+        }
+      } else {
+        if (CollectionUtils.isNotEmpty(gciEmails)) {
+          updateGciAuthUserAccountStatus(gciEmails);
+          userAdminRepository.updateDisableGciUserToDeactivate(
+              UserStatus.DEACTIVATED.getValue(), gciEmails);
+        }
+      }
+    }
+  }
+
+  private void getGciUser(List<String> gciDisbledUsers, List<String> gciUsers) {
+    ListUsersPage page;
+    try {
+      page = FirebaseAuth.getInstance().listUsers(null);
+      while (page != null) {
+        for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
+          if (exportedUserRecord.isDisabled()) {
+            gciDisbledUsers.add(exportedUserRecord.getEmail());
+          }
+          gciUsers.add(exportedUserRecord.getEmail());
+        }
+        page = page.getNextPage();
+      }
+    } catch (FirebaseAuthException e1) {
+      logger.error("Failed with Firebase Exception");
+      e1.printStackTrace();
+    }
+  }
+
+  private void updateGciAuthUserAccountStatus(List<String> gciEmails) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
+    List<String> authUserIds = userAdminRepository.findByUsersEmail(gciEmails);
+    for (String authUserId : authUserIds) {
+      if (authUserId != null) {
+        UpdateEmailStatusRequest emailStatusRequest = new UpdateEmailStatusRequest();
+        emailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
+        HttpEntity<UpdateEmailStatusRequest> request =
+            new HttpEntity<>(emailStatusRequest, headers);
+        restTemplate.exchange(
+            appPropertyConfig.getAuthServerUpdateStatusUrl(),
+            HttpMethod.PUT,
+            request,
+            UpdateEmailStatusResponse.class,
+            authUserId);
+      }
+    }
   }
 }
