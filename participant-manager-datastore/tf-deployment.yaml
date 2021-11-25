@@ -114,6 +114,12 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
+            # GOOGLE IDENTITY PLATFORM
+            - name: GCI_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gci_enabled
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
 
