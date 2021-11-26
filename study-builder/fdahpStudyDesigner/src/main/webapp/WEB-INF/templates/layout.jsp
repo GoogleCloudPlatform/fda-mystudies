@@ -90,6 +90,8 @@
     <script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <script type="text/javascript" src="/studybuilder/vendor/dompurify/purify.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
+        
     <script>
       $(window).on('keydown keypress mousedown', function (event) {
         event = (event || window.event);

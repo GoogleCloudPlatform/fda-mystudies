@@ -93,21 +93,26 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
-          <div class="form-group" *ngIf = "!gciEnabled">
+        <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6" >
+          <div class="form-group">
             <label for="emailId">Email</label>
             <input
               type="email"
+              list="emailId"
               class="form-control"
-              id="emailId"
+              
               placeholder="Enter email"
               [(ngModel)]="user.email"
               pattern="[a-zA-Z0-9\+\.\_\%\-\+]{1,256}\@[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+"
               name="emailText"
               #emailText="ngModel"
               required
-              
             />
+            <datalist id="emailId" >
+              
+              <option *ngFor="let e of emailDisplay" >{{e.email}}</option>
+              
+            </datalist>
             <div
               *ngIf="
                 emailText.invalid && (emailText.dirty || emailText.touched)
@@ -126,43 +131,6 @@
                 Enter a valid email
               </span>
             </div>
-          </div>
-          <div class="form-group" *ngIf = "gciEnabled">
-            <div class="form-item">
-              <label for="emailId">Email</label>
-                <div class="select-option select-wrap select select-fancy select-fancy-noimage">
-                  
-                  <select
-                  class="form-item__element form-item__element--select width__100 background__trans cursor__pointer"
-                  id="emailId1"
-                  placeholder="Select email"
-                  [(ngModel)]="user.email"
-                  pattern="[a-zA-Z0-9\+\.\_\%\-\+]{1,256}\@[a-zA-Z0-9][a-zA-Z0-9\-]{0,64}(\.[a-zA-Z0-9][a-zA-Z0-9\-]{0,25})+"
-                  name="emailselect"
-                  #emailselect="ngModel"
-                  required
-                  
-                  >
-                  <option value="Select Email" disabled selected>Select Email</option>
-                  <option value="harishasan@gmail.com" >harishasan@gmail.com</option>
-                  <option value="shanthla@gmail.com" >shanthla@gmail.com</option>
-                  <option value="monica@gmail.com" >monica@gmail.com</option>
-                </select>
-              </div>
-              <div
-                *ngIf="
-                  emailselect.invalid && (emailselect.dirty || emailselect.touched)
-                "
-              >
-                <span
-                  class="help-block with-errors error__msg"
-                  *ngIf="emailselect.errors?.required"
-                >
-                  Select an email
-                </span>
-              </div>
-            </div>
-            
           </div>
         </div>
         <div class="col-xs-12 col-md-6 p-none flex__justify__space-between">
@@ -549,11 +517,14 @@ Superadmins can manage users of the Participant Manager and in addition, can man
     </div>
     <section class="btn__container">
       <button
-        [disabled]="!addUserForm.form.valid || disableButton"
-        type="submit"
+    
+      [disabled]="!addUserForm.form.valid || disableButton"
+        type="button"
         name="add"
         class="btn bt__add bt__add__auto mr-sm mb-2 mt-2"
+        (click)="openModal(template)"
       >
+      
         Add admin user and invite
       </button>
       <button
@@ -563,6 +534,30 @@ Superadmins can manage users of the Participant Manager and in addition, can man
       >
         Cancel
       </button>
+      <!-- Modal -->
+      <ng-template #template>
+        <div class="modal-header">
+          <button type="button" class="close pull-right" aria-label="Close"  (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+               Are you sure to add non gci user ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn bt__cancel mobile_mt-2"  (click)="modalRef.hide()" >cancel</button>
+          <button type="submit" name="add"  class="btn bt__add mr-sm"  (click)="add()" >confirm</button>
+        </div>
+       
+      
+      </ng-template>
+
     </section>
+    
+
+
+ 
   </form>
 </section>
+
+

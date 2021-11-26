@@ -113,10 +113,13 @@
           </div>
         </div>
       </section>
+
+      <div  *ngIf="!gciUser">
       <div
         class="col-xs-6 col-md-6 p-1 p-lg-0 cursor__pointer passCriteria"
         data-toggle="tooltip"
         title="{{ passCriteria }}"
+    
       >
         <a class="subheader__title float-right">
           <span>
@@ -131,10 +134,10 @@
         </a>
       </div>
       <h2 class="subheader__title mb-sm">Create password</h2>
-
+    </div>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
-        <div class="row">
-          <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+        <div class="row" *ngIf="!gciUser">
+          <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6" >
             <div class="form-group">
               <label for="password">Password</label>
               <input
@@ -207,10 +210,13 @@
                   Your password must be at least 8 characters long and contain
                   lower case, upper case, numeric and special characters.
                 </span> -->
+                
                 <span
                   class="help-block with-errors error__msg text-left"
                   *ngIf="f.password.errors?.required"
+                  
                 >
+              
                   Enter a password
                 </span>
               </div>
@@ -218,7 +224,8 @@
           </div>
           <div class="col-xs-12 col-md-6 p-none">
             <div class="form-group">
-              <label for="confirmPassword" class="txt_style_unset">
+
+              <label for="confirmPassword" class="txt_style_unset" >
                 Confirm password
               </label>
               <input
@@ -238,6 +245,7 @@
                 <span
                   class="help-block with-errors error__msg"
                   *ngIf="f.confirmPassword.errors?.required"
+                 
                 >
                   Please confirm password
                 </span>
@@ -251,6 +259,7 @@
             </div>
           </div>
         </div>
+        
       </section>
       <section class="btn__container flex__justify__space-between mb-xlg">
         <div>
@@ -272,6 +281,7 @@
             Cancel
           </button>
         </div>
+        
       </section>
     </form>
   </section>

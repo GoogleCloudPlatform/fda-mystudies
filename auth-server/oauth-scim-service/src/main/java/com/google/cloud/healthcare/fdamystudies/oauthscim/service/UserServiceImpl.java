@@ -397,6 +397,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public Boolean isGCIUser(String email) {
+    return repository.isGCIUser(email);
+  }
+
+  @Override
   @Transactional(noRollbackFor = ErrorCodeException.class)
   public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
@@ -446,6 +451,34 @@ public class UserServiceImpl implements UserService {
 
     // increment login attempts
     return updateInvalidLoginAttempts(userEntity, userInfo, auditRequest, user);
+  }
+
+  @Override
+  @Transactional(noRollbackFor = ErrorCodeException.class)
+  public AuthenticationResponse authenticateGCIUser(
+      UserRequest user, AuditLogEventRequest auditRequest) throws JsonProcessingException {
+    logger.entry("begin authenticate(user)");
+    Optional<UserEntity> optUserEntity =
+        repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
+
+    if (!optUserEntity.isPresent()) {
+      auditHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    UserEntity userEntity = optUserEntity.get();
+
+    UserAccountStatus accountStatus = UserAccountStatus.valueOf(userEntity.getStatus());
+    if (accountStatus.equals(UserAccountStatus.DEACTIVATED)) {
+      throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
+    }
+
+    AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+    authenticationResponse.setUserId(userEntity.getUserId());
+    authenticationResponse.setAccountStatus(userEntity.getStatus());
+    authenticationResponse.setHttpStatusCode(HttpStatus.OK.value());
+
+    return authenticationResponse;
   }
 
   private EmailResponse sendAccountLockedEmail(

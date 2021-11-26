@@ -114,6 +114,22 @@ spec:
                 secretKeyRef:
                   name: auth-server-secrets
                   key: encryptor_password
+            # GOOGLE IDENTITY PLATFORM
+            - name: GCI_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gci_enabled
+            - name: GCI_AUTH_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gci_auth_domain
+            - name: GCI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gci_api_key
             # MISC
             - name: LOG_PATH
               valueFrom:

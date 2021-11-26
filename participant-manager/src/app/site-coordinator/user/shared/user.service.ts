@@ -11,13 +11,19 @@ import {ManageUsers} from './manage-user';
   providedIn: 'root',
 })
 export class UserService {
+  
   constructor(private readonly http: HttpClient) {}
+  demoUrl="http://localhost:3000/user"
 
   add(user: User): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(
       `${environment.participantManagerDatastoreUrl}/users`,
       user,
     );
+  }
+  getEmailDetails():Observable<any>
+  {
+    return this.http.get(this.demoUrl)
   }
 
   update(user: User, adminId: string): Observable<ApiResponse> {
@@ -84,4 +90,5 @@ export class UserService {
       },
     );
   }
+  
 }

@@ -29,7 +29,6 @@ public class SetUpAccountRequest {
   private String email;
 
   @ToString.Exclude
-  @NotBlank
   @Size(
       min = 8,
       max = 64,
