@@ -732,14 +732,11 @@ $(document)
 				        reject();
 				    }
 				  
-			           alert("success recaptchaVerifier ", response);
-			           debugger
 			            // window.recaptchaVerifier.execute();
 			           	var provider = new firebase.auth.PhoneAuthProvider();
 						return provider.verifyPhoneNumber(userPhoneNumber, recaptchaVerifier)
 						    .then(function(verificationId) {
 						     $('#recaptcha-container').hide();
-						    debugger
 						      var verificationCode = window.prompt('Please enter the verification ' +
 						          'code that was sent to your mobile device.');
 						      // Ask user for the verification code.
@@ -818,8 +815,6 @@ $(document)
 					            return false;
 				           } else {
 				           
-					          debugger
-				                alert("error1 " + error)
 				   	           $('#password')
 					                .val('');
 					            $(
@@ -855,15 +850,13 @@ $(document)
 			        'expired-callback': function() {
 			           alert("expired-callback");
 			        }
-			     });
+			     }).verify();
 			
 			     recaptchaVerifier.render().then(function(widgetId) {
 			        window.recaptchaWidgetId = widgetId;
 			     });
 			  }, 1000);
   
-		
-
 			  
 			}
   
@@ -988,8 +981,8 @@ $(document)
 							   	  firebase.auth().signInWithEmailAndPassword(email, password)
 							   	  .then(function(firebaseUser) {
 							   	   viewDashBoard(fdaLink, email, password, passwordLength);
-							   	  // $('#recaptcha-container').show();
-							   	  //	 	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
+							   	 //  $('#recaptcha-container').show();
+							   	  	// 	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
 								   })
 								   .catch(function(error) {
 							   	  
