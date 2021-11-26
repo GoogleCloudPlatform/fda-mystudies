@@ -88,7 +88,7 @@ public class UserBO implements Serializable {
 
   @Column(name = "gci_user")
   @Type(type = "yes_no")
-  private boolean gciUser = false;
+  private Boolean gciUser = false;
 
   @Column(name = "last_name")
   private String lastName;
@@ -254,7 +254,7 @@ public class UserBO implements Serializable {
     return forceLogout;
   }
 
-  public boolean isGciUser() {
+  public Boolean isGciUser() {
     return gciUser;
   }
 
@@ -294,7 +294,7 @@ public class UserBO implements Serializable {
     this.forceLogout = forceLogout;
   }
 
-  public void setGciUser(boolean gciUser) {
+  public void setGciUser(Boolean gciUser) {
     this.gciUser = gciUser;
   }
 

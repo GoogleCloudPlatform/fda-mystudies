@@ -186,6 +186,7 @@ public class UsersControllerTest extends BaseMockIT {
     UserBO userBo = new UserBO();
     userBo.setRoleId("1");
     userBo.setUserEmail("superunittest@grr.la");
+    userBo.setGciUser(false);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())
