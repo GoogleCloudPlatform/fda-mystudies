@@ -447,10 +447,11 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                   + " and ATB.live=1 order by id";
           query = session.createQuery(searchQuery).setParameter("studyId", studyId);
         } else {
-          query =
-              session
-                  .getNamedQuery("ActiveTaskBo.getActiveTasksByByStudyId")
-                  .setString("studyId", studyId);
+          // search active task which does not have short_title is not null
+          String searchQuery =
+              "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL ";
+          query = session.createQuery(searchQuery).setParameter("studyId", studyId);
+          // end here deletion
         }
 
         activeTasks = query.list();
