@@ -136,8 +136,9 @@
       var typeOfActiveTask = $(this).val();
       var activeTaskInfoId = $(this).attr('taskId');
       $('.changeContent').empty();
-      $(document).find('#saveId,#doneId').unbind();
-      loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType);
+      /*  $(document).find('#saveId,#doneId').unbind();
+      debugger;*/ 
+      loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType); 
       $('.actBut').show();
       $('.scheduleTaskClass').prop('disabled', false);
       $('.scheduleTaskClass').removeClass('linkDis');
@@ -154,7 +155,7 @@
             typeOfActiveTask: typeOfActiveTask,
             activeTaskInfoId: activeTaskInfoId,
             actionType: actionType
-          },
+          }/* ,
           function () {
             $(this).parents('form').attr('action',
                 '/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
@@ -168,7 +169,7 @@
             actionPageView();
             var currentPage = '${currentPage}';
             $('#currentPageId').val(currentPage);
-          });
+          } */);
 
     }
 
