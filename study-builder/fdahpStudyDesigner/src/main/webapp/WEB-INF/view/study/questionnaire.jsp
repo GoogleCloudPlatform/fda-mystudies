@@ -1571,14 +1571,15 @@
                            count='0' placeholder="X"
                            name="questionnaireCustomScheduleBo[0].timePeriodFromDays"
                            value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                           maxlength="3" required pattern="[0-9]+" data-error="Please fill out this field"
-                           data-pattern-error="Please enter valid number"/>
+                           maxlength="3" pattern="[0-9]+" data-error="Please fill out this field"
+                           data-pattern-error="Please enter valid number" required/>
                     <span
                         class='help-block with-errors red-txt'></span>
-                        <span
-                        class='help-block-timer with-errors red-txt' style='display:none'></span>
+                         <span
+                          class="help-block-timer with-errors red-txt" style="display:none;"></span>
+                       
                   </span>
-                  <span class="mb-sm pr-md">
+                  <span class="mb-sm" style='padding-right: 25px !important;'>
                     <span
                         class="pr-sm light-txt opacity06"> days
                      </span>                        
@@ -1591,7 +1592,10 @@
                                                           placeholder="Start time" required/>
                     <span
                         class='help-block with-errors red-txt'></span>
-                    <span class='help-block-timer with-errors red-txt' style='display:none'></span>
+                         <span
+                          class="help-block-timer with-errors red-txt" style="display:none;" ></span>
+                        
+                    
                   </span>                       
 
                         <span class="light-txt opacity06">
@@ -1674,7 +1678,7 @@
                       </span>
                     </span>
                     <span><select
-                        class="signDropDown selectpicker sign-box ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
+                        class="signDropDown selectpicker sign-box selectXSign ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         count='${customVar.index}' title="Select"
                         name="questionnaireCustomScheduleBo[${customVar.index}].xDaysSign"
                         id="xSign${customVar.index}">
@@ -1692,13 +1696,17 @@
                              class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                              count='${customVar.index}' placeholder="X"
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
-                             value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                             maxlength="3" required pattern="[0-9]+" data-error="Please fill out this field"
-                             data-pattern-error="Please enter valid number"/>
+                             value="${questionnaireCustomScheduleBo.timePeriodFromDays}" onclick='onXdays(item,count);'
+                             maxlength="3" pattern="[0-9]+" data-error="Please fill out this field"
+                             data-pattern-error="Please enter valid number" required/>
                       <span
                           class="help-block with-errors red-txt"></span>
+                          <span
+                          class="help-block-timer with-errors red-txt" style="display:none;"></span>
+                           
                     </span>
-                    <span class="mb-sm pr-md">
+                   <!-- <span class="mb-sm pr-md"> --> 
+                     <span class="mb-sm" style='padding-right: 25px !important;'>
                       <span
                           class="pr-sm light-txt opacity06"> days
                         </span>
@@ -1709,9 +1717,10 @@
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartTime"
                         value="${questionnaireCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
-                        placeholder="Start time" required data-error="Please fill out this field"/>
+                        placeholder="Start time" required/>
                       
                       <span class='help-block with-errors red-txt'></span>
+                       <span class='help-block-timer with-errors red-txt' style="display:none;"></span>
                     </span>
                          <span
                           class="light-txt opacity06">  
@@ -2883,7 +2892,8 @@
 	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	     	       "Please fill out this field"));
 	     	 $('#xdays0').parent().find(".help-block-timer").show();
-	    	 $('#xdays0').parent().find(".help-block").hide();
+	    	$('#xdays0').parent().find(".help-block").hide();
+	    
 	    	}
 			
 			if ($('#manualStartTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
@@ -3090,7 +3100,7 @@
                   $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
               });
         }
-      } else {
+      }  else{
         $("#chooseDate").val('');
         $("#selectTime1").val('');
         if (scheduletype == 'AnchorDate') {
@@ -4963,6 +4973,7 @@
       $('.selectpicker').selectpicker('refresh');
     }
   }
+ 
 
   function ancStartTime(item, count) {
  
