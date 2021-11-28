@@ -48,6 +48,8 @@ public class UserRequest {
 
   @NotNull private boolean superAdmin;
 
+  private boolean gciUser = false;
+
   private List<UserAppPermissionRequest> apps;
 
   private String id;

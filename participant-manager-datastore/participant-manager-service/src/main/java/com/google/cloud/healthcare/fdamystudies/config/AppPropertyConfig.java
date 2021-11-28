@@ -74,4 +74,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${study.builder.cloud.bucket.name}")
   private String studyBuilderCloudBucketName;
+
+  @Value("${gciEnabled}")
+  private boolean gciEnabled;
 }

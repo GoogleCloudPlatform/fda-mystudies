@@ -173,7 +173,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     // Bad request and errors handled in RestResponseErrorHandler class
     UserResponse authRegistrationResponse =
-        registerUserInAuthServer(setUpAccountRequest, auditRequest);
+        registerUserInAuthServer(setUpAccountRequest, auditRequest, optUsers.get().isGciUser());
 
     UserRegAdminEntity userRegAdminUser = optUsers.get();
     userRegAdminUser.setUrAdminAuthId(authRegistrationResponse.getUserId());
@@ -199,7 +199,7 @@ public class UserProfileServiceImpl implements UserProfileService {
   }
 
   private UserResponse registerUserInAuthServer(
-      SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest) {
+      SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest, boolean gciUser) {
     logger.entry("registerUserInAuthServer()");
 
     AuthUserRequest userRequest =
@@ -207,7 +207,8 @@ public class UserProfileServiceImpl implements UserProfileService {
             "Participant Manager",
             setUpAccountRequest.getEmail(),
             setUpAccountRequest.getPassword(),
-            UserAccountStatus.ACTIVE.getStatus());
+            UserAccountStatus.ACTIVE.getStatus(),
+            gciUser);
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());

@@ -86,6 +86,10 @@ public class UserBO implements Serializable {
   @Type(type = "yes_no")
   private boolean forceLogout = false;
 
+  @Column(name = "gci_user")
+  @Type(type = "yes_no")
+  private Boolean gciUser = false;
+
   @Column(name = "last_name")
   private String lastName;
 
@@ -143,6 +147,8 @@ public class UserBO implements Serializable {
 
   @Column(name = "access_level")
   private String accessLevel;
+
+  @Transient private String disableGciUser;
 
   public String getCreatedBy() {
     return createdBy;
@@ -248,6 +254,10 @@ public class UserBO implements Serializable {
     return forceLogout;
   }
 
+  public Boolean isGciUser() {
+    return gciUser;
+  }
+
   public void setAccountNonExpired(boolean accountNonExpired) {
     this.accountNonExpired = accountNonExpired;
   }
@@ -282,6 +292,10 @@ public class UserBO implements Serializable {
 
   public void setForceLogout(boolean forceLogout) {
     this.forceLogout = forceLogout;
+  }
+
+  public void setGciUser(Boolean gciUser) {
+    this.gciUser = gciUser;
   }
 
   public void setLastName(String lastName) {
@@ -358,5 +372,13 @@ public class UserBO implements Serializable {
 
   public void setAccessLevel(String accessLevel) {
     this.accessLevel = accessLevel;
+  }
+
+  public String getDisableGciUser() {
+    return disableGciUser;
+  }
+
+  public void setDisableGciUser(String disableGciUser) {
+    this.disableGciUser = disableGciUser;
   }
 }

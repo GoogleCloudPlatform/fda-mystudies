@@ -32,6 +32,9 @@
       th:href="@{/images/favicon_pm.png}"
     />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
 
 <style type="text/css">
@@ -65,6 +68,10 @@
               <form th:action="@{/login}" method="POST" id="loginForm"
                 novalidate onsubmit="return validateform();"
                 th:object="${loginRequest}">
+                 <input type="hidden" id="gciEnabled" th:value="${gciEnabled}" name="gciEnabled"/>
+                 <input type="hidden" id="gciApiKey" th:value="${gciApiKey}" name="gciApiKey"/>
+                 <input type="hidden" id="gciAuthDomain" th:value="${gciAuthDomain}" name="gciAuthDomain"/>
+                 <input type="hidden" id="serverContextPath" th:value="${serverContextPath}" name="serverContextPath"/>
                 <div
                   class="centered__div centered__div__mobile box__shadow-cmn">
                   <div class="signin__container">

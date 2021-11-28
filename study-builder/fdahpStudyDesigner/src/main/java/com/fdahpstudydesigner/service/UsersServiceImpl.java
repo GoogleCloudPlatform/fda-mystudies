@@ -44,6 +44,9 @@ import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.UpdateRequest;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,6 +71,9 @@ public class UsersServiceImpl implements UsersService {
 
   @Autowired private EmailNotification emailNotification;
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciEnabled = configMap.get("gciEnabled");
+
   @Override
   public String activateOrDeactivateUser(
       String userId,
@@ -86,6 +92,14 @@ public class UsersServiceImpl implements UsersService {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
       userBo = usersDAO.getUserDetails(userId);
+      if (Boolean.parseBoolean(gciEnabled) && userBo.isGciUser()) {
+        UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userBo.getUserEmail());
+        UpdateRequest userRequest =
+            userStatus == 1
+                ? new UpdateRequest(userRecord.getUid()).setDisabled(true)
+                : new UpdateRequest(userRecord.getUid()).setDisabled(false);
+        FirebaseAuth.getInstance().updateUser(userRequest);
+      }
       if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
         StudyBuilderAuditEvent auditLogEvent =
             userStatus == 1 ? USER_RECORD_DEACTIVATED : USER_ACCOUNT_RE_ACTIVATED;
@@ -180,8 +194,17 @@ public class UsersServiceImpl implements UsersService {
         userBO2.setModifiedBy(userBO.getModifiedBy());
         userBO2.setModifiedOn(userBO.getModifiedOn());
         userBO2.setEnabled(userBO.isEnabled());
+        userBO2.setGciUser(userBO.isGciUser());
         if (!userSession.getUserId().equals(userBO.getUserId())) {
           userBO2.setForceLogout(true);
+        }
+        if (userBO2.isGciUser()) {
+          UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userBO.getUserEmail());
+          UpdateRequest userRequest =
+              userBO.isEnabled()
+                  ? new UpdateRequest(userRecord.getUid()).setDisabled(false)
+                  : new UpdateRequest(userRecord.getUid()).setDisabled(true);
+          FirebaseAuth.getInstance().updateUser(userRequest);
         }
       }
       UserIdAccessLevelInfo userIdAccessLevelInfo =

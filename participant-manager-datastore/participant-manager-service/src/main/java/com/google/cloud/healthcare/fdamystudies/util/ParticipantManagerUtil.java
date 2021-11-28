@@ -12,8 +12,14 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import com.google.firebase.auth.ExportedUserRecord;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.ListUsersPage;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -73,5 +79,26 @@ public class ParticipantManagerUtil {
       logger.error("Unable to getImageResources", e);
     }
     return null;
+  }
+
+  public List<String> getGCIUsers() {
+    List<String> gciEmail = new ArrayList<>();
+    ListUsersPage page;
+    try {
+      page = FirebaseAuth.getInstance().listUsers(null);
+      System.out.println(page.getValues());
+      while (page != null) {
+        for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
+          if (!exportedUserRecord.isDisabled()) {
+            gciEmail.add(exportedUserRecord.getEmail());
+          }
+        }
+        page = page.getNextPage();
+      }
+    } catch (FirebaseAuthException e) {
+      logger.error("Failed with Firebase exception");
+      e.printStackTrace();
+    }
+    return gciEmail;
   }
 }

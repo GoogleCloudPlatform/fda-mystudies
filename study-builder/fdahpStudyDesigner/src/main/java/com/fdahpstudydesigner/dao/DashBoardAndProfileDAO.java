@@ -25,12 +25,15 @@ package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
+import javax.servlet.http.HttpServletResponse;
 
 public interface DashBoardAndProfileDAO {
 
   public MasterDataBO getMasterData(String type);
 
   public String isEmailValid(String email);
+
+  public void getGCIUserData(HttpServletResponse response, String email);
 
   public String updateProfileDetails(UserBO userBO, String userId);
 }

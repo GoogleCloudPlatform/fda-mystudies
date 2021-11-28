@@ -29,6 +29,7 @@ export class SetUpAccountComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   user = {} as SetUpUser;
+  gciUser=true;
   setUpCode = '';
   tempRegId = '';
   setupAccountForm: FormGroup;

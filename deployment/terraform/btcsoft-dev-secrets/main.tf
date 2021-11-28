@@ -422,6 +422,66 @@ resource "google_secret_manager_secret" "manual_android_deeplink_url" {
   }
 }
 
+resource "google_secret_manager_secret" "manual_gci_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-gci-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_gci_auth_domain" {
+  provider = google-beta
+
+  secret_id = "manual-gci-auth-domain"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_gci_api_key" {
+  provider = google-beta
+
+  secret_id = "manual-gci-api-key"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_gci_temp_password" {
+  provider = google-beta
+
+  secret_id = "manual-gci-temp-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+
 
 resource "google_secret_manager_secret" "auto_mystudies_sql_default_user_password" {
   provider = google-beta
