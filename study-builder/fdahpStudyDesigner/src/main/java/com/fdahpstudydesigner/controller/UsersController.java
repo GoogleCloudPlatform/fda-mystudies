@@ -540,6 +540,8 @@ public class UsersController {
         map.addAttribute("roleList", roleList);
         map.addAttribute("userList", userList);
         map.addAttribute("ownUser", ownUser);
+        map.addAttribute("gciEnabled", gciEnabled);
+
         mav = new ModelAndView("userListPage", map);
       }
     } catch (Exception e) {
@@ -708,6 +710,7 @@ public class UsersController {
           map.addAttribute("studyBOs", studyBOs);
           map.addAttribute("apps", appList);
           map.addAttribute("appBos", appBos);
+          map.addAttribute("gciEnabled", gciEnabled);
 
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {

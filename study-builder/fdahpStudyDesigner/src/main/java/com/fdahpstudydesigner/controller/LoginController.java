@@ -72,6 +72,8 @@ public class LoginController {
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
   String gciEnabled = configMap.get("gciEnabled");
+  String gciAuthDomain = configMap.get("gciAuthDomain");
+  String gciApiKey = configMap.get("gciApiKey");
 
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
@@ -281,6 +283,9 @@ public class LoginController {
       request.getSession().removeAttribute("errMsg");
     }
     masterDataBO = dashBoardAndProfileService.getMasterData("terms");
+    map.addAttribute("gciEnabled", gciEnabled);
+    map.addAttribute("gciApiKey", gciApiKey);
+    map.addAttribute("gciAuthDomain", gciAuthDomain);
     map.addAttribute("masterDataBO", masterDataBO);
     return new ModelAndView("loginPage", map);
   }

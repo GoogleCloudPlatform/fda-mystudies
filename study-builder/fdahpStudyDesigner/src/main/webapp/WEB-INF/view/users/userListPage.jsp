@@ -4,10 +4,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import = "java.util.ResourceBundle" %>
-<% ResourceBundle resource = ResourceBundle.getBundle("application");
-			String gciEnabled=resource.getString("gciEnabled");
-%>
 
 <style>
     #user_list tr td {
@@ -200,7 +196,7 @@
     });
 
     $('#enforcePasswordId').on('click', function () {
-    	if(<%=gciEnabled %>){
+    	if(${gciEnabled}){
       var msg = "Are you sure you wish to enforce password change for all admins? Note: This will not apply to your own account or to that of any organizational users. Password reset for organizational users can be managed via the GCP admin console.";
     	}else{
     		msg ="Are you sure you wish to enforce password change for all admins? Note: This will not apply to your own account."

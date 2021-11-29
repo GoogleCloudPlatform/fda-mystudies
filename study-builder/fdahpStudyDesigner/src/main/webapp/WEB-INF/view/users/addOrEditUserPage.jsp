@@ -5,9 +5,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page import = "java.util.ResourceBundle" %>
-<% ResourceBundle resource = ResourceBundle.getBundle("application");
-			String gciEnabled=resource.getString("gciEnabled");
-%>
 
 <style>
 .disabled {
@@ -222,7 +219,7 @@ button#deleteUser {
               </c:if>
               <span class="requiredStar"> *</span>
             </div>
-            <c:set var="gciEnabled" value="<%=gciEnabled %>"/>
+            <c:set var="gciEnabled" value="${gciEnabled}"/>
             <c:if test="${gciEnabled eq false }">
             <div class="form-group">
               <input type="text" class="form-control" id="emailId"
@@ -1009,7 +1006,7 @@ button#deleteUser {
         if (email !== '') {
         	const adminList = '${adminList}' 
         	    var element = $("#roleId option:selected").text();
-                if(!adminList.includes(email) && adminList != null && <%=gciEnabled %>){
+                if(!adminList.includes(email) && adminList != null && ${gciEnabled}){
                 if(element == "Superadmin")
                 	 var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
                else
