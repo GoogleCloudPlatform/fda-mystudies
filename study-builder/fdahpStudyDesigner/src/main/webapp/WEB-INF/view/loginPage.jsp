@@ -6,8 +6,6 @@
 			String gciApiKey=resource.getString("gciApiKey");
 			String gciAuthDomain=resource.getString("gciAuthDomain");
 			String gciEnabled=resource.getString("gciEnabled");
-			String mfaEnabled=resource.getString("mfaEnabled");
-			String reCaptchaEnabled=resource.getString("reCaptchaEnabled");
 %>
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="en">
@@ -109,8 +107,6 @@
                      method="post"
                      autocomplete="off">
             <input type="hidden" id="gci" value="<%=gciEnabled %>" name="gci"/>
-            <input type="hidden" id="mfaEnabled" value="<%=mfaEnabled %>" name="mfaEnabled"/>
-            <input type="hidden" id="reCaptchaEnabled" value="<%=reCaptchaEnabled %>" name="reCaptchaEnabled"/>
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <div id="recaptcha-container"></div>
