@@ -754,7 +754,6 @@ $(document)
 							
 							
 				          }).catch(function (error) {
-				          alert("error " + error);
 				           $('#recaptcha-container').hide();
 				          
 				           if (error.code == 'auth/invalid-verification-code') {
@@ -848,7 +847,7 @@ $(document)
 			            
 			        JSON.stringify(response); },
 			        'expired-callback': function() {
-			           alert("expired-callback");
+			           console.log("expired-callback");
 			        }
 			     }).verify();
 			
