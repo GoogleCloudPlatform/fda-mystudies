@@ -52,7 +52,7 @@
         </executions>
         <configuration>
           <excludes>
-            <exclude>**/*min.js</exclude>
+            <exclude>**/*.js</exclude>
             <exclude>**/*min.css</exclude>
           </excludes>
           <nosuffix>true</nosuffix>

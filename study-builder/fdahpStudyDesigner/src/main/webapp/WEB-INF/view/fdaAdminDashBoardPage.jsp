@@ -2,12 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
-<%@ page import = "java.util.ResourceBundle" %>
-<% ResourceBundle resource = ResourceBundle.getBundle("application");
-			String gciApiKey=resource.getString("gciApiKey");
-			String gciAuthDomain=resource.getString("gciAuthDomain");
-			String gciEnabled=resource.getString("gciEnabled");
-%>
+
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="">
   <head>
@@ -302,11 +297,11 @@
           document.studyListForm.action = "/studybuilder/adminDashboard/viewUserDetails.do";
           document.studyListForm.submit();
         });
-        var gciEnabled = <%=gciEnabled %>;
+        var gciEnabled = ${gciEnabled};
       	 if(gciEnabled == true){
         var config = {
-	   	  apiKey: "<%=gciApiKey %>",
-	   	  authDomain: "<%=gciAuthDomain %>",
+	   	  apiKey: "${gciApiKey}",
+	   	  authDomain: "${gciAuthDomain}",
 	   	};
 	   	firebase.initializeApp(config);
       	}

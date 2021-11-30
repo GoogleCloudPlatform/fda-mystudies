@@ -1,14 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ page import = "java.util.ResourceBundle" %>
-<% ResourceBundle resource = ResourceBundle.getBundle("application");
-			String gciApiKey=resource.getString("gciApiKey");
-			String gciAuthDomain=resource.getString("gciAuthDomain");
-			String gciEnabled=resource.getString("gciEnabled");
-			String mfaEnabled=resource.getString("mfaEnabled");
-			String reCaptchaEnabled=resource.getString("reCaptchaEnabled");
-%>
+
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="en">
   <head>
@@ -108,9 +101,7 @@
           <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
                      method="post"
                      autocomplete="off">
-            <input type="hidden" id="gci" value="<%=gciEnabled %>" name="gci"/>
-            <input type="hidden" id="mfaEnabled" value="<%=mfaEnabled %>" name="mfaEnabled"/>
-            <input type="hidden" id="reCaptchaEnabled" value="<%=reCaptchaEnabled %>" name="reCaptchaEnabled"/>
+            <input type="hidden" id="gci" value="${gciEnabled}" name="gci"/>
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <div id="recaptcha-container"></div>
@@ -231,11 +222,11 @@
     <script>
       var isChanged = true;
       $(document).ready(function (e) {
-   		var gciEnabled = <%=gciEnabled %>;
+   	  var gciEnabled = ${gciEnabled};
    	  if(gciEnabled == true){
         var config = {
-    		  apiKey: "<%=gciApiKey %>",
-    	   	  authDomain: "<%=gciAuthDomain %>",
+    		  apiKey: "${gciApiKey}",
+    	   	  authDomain: "${gciAuthDomain}",
    	    };
    	    firebase.initializeApp(config);
       }

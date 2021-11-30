@@ -75,6 +75,11 @@ public class DashBoardAndProfileController {
 
   @Autowired private AppService appService;
 
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciEnabled = configMap.get("gciEnabled");
+  String gciAuthDomain = configMap.get("gciAuthDomain");
+  String gciApiKey = configMap.get("gciApiKey");
+
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
     logger.entry("begin changePassword()");
@@ -114,8 +119,12 @@ public class DashBoardAndProfileController {
   public ModelAndView getAdminDashboard() {
     logger.entry("begin getAdminDashboard");
     ModelAndView mav = new ModelAndView();
+    ModelMap map = new ModelMap();
     try {
-      mav = new ModelAndView("fdaAdminDashBoardPage");
+      map.addAttribute("gciEnabled", gciEnabled);
+      map.addAttribute("gciApiKey", gciApiKey);
+      map.addAttribute("gciAuthDomain", gciAuthDomain);
+      mav = new ModelAndView("fdaAdminDashBoardPage", map);
     } catch (Exception e) {
       logger.error("DashBoardAndProfileController - getAdminDashboard - ERROR", e);
     }
