@@ -9,21 +9,20 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter
 @Setter
-public class UserProfileResponse extends BaseResponse {
-  private String firstName;
-  private String lastName;
-  private String email;
-  private String userId;
-  private Integer manageLocations;
-  private boolean superAdmin;
-  private boolean gciUser;
+@Getter
+@ToString
+public class GCIAdminDetailsResponse extends BaseResponse {
 
-  public UserProfileResponse(MessageCode messageCode) {
+  private List<String> email;
+
+  public GCIAdminDetailsResponse(MessageCode messageCode, List<String> email) {
     super(messageCode);
+    this.email = email;
   }
 }

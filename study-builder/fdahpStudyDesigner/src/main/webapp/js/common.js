@@ -451,6 +451,8 @@ $(document)
                     if (isValidLoginForm) {
                       $("#signUpForm").validator(
                           'destroy');
+                           var gciUser = $('#gciUser').val();
+                          if(gciUser == ''){
                       $('#password')
                           .val(
                               $('#password')
@@ -498,6 +500,10 @@ $(document)
                               '-webkit-text-security',
                               'disc')
                           .val(passwordLength);
+                          } else{
+	                      $('#password').removeAttr('required');
+	                      $('#cfnPassword').removeAttr('required');
+						}
                       $('#signUpForm').submit();
                     }
 
@@ -712,6 +718,206 @@ $(document)
                     }
                   });
 
+			function multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber) {
+
+			this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+			 setTimeout(function() {
+			     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+			        'size': 'normal',
+			        'callback': function(response) {
+			        
+			         if (!response) {
+				        console.log('Coud not get recaptcha response'); 
+				        //return;
+				        reject();
+				    }
+				  
+			            // window.recaptchaVerifier.execute();
+			           	var provider = new firebase.auth.PhoneAuthProvider();
+						return provider.verifyPhoneNumber(userPhoneNumber, recaptchaVerifier)
+						    .then(function(verificationId) {
+						     $('#recaptcha-container').hide();
+						      var verificationCode = window.prompt('Please enter the verification ' +
+						          'code that was sent to your mobile device.');
+						      // Ask user for the verification code.
+						      
+						      //verificationCode
+								var cred = firebase.auth.PhoneAuthProvider.credential(verificationId,
+						          verificationCode);
+						         // sign in the user with the credential
+						         return firebase.auth().signInWithCredential(cred)
+								 .then((cred) => {
+								  $('#recaptcha-container').hide();
+								    //alert('creds user logged in ', cred.user);
+								     viewDashBoard(fdaLink, email, password, passwordLength);
+								  });
+							
+							
+				          }).catch(function (error) {
+				           $('#recaptcha-container').hide();
+				          
+				           if (error.code == 'auth/invalid-verification-code') {
+				           
+					            $('#password')
+					                .val('');
+					            $(
+					                ".askSignInCls")
+					                .addClass(
+					                    'hide');
+					            $("#errMsg")
+					                .text(
+					                    "The SMS verification code used to create the phone auth credential is invalid."
+										+ "Please login again and use the correct verification code sent to your registered phone number.");
+					            $("#errMsg")
+					                .show(
+					                    "fast");
+					            setTimeout(
+					                hideDisplayMessage,
+					                5000);
+					            $('#password')
+					                .attr(
+					                    "type",
+					                    "password");
+					            $('#email')
+					                .val(
+					                    email);
+					            $("body")
+					                .removeClass(
+					                    "loading");
+					            return false;
+				           } else if(error.code == 'auth/argument-error') {
+				              $('#password')
+					                .val('');
+					            $(
+					                ".askSignInCls")
+					                .addClass(
+					                    'hide');
+					            $("#errMsg")
+					                .text(
+					                    "");
+					            $("#errMsg")
+					                .show(
+					                    "fast");
+					            setTimeout(
+					                hideDisplayMessage,
+					                1000);
+					            $('#password')
+					                .attr(
+					                    "type",
+					                    "password");
+					            $('#email')
+					                .val(
+					                    email);
+					            $("body")
+					                .removeClass(
+					                    "loading");
+					            return false;
+				           } else {
+				           
+				   	           $('#password')
+					                .val('');
+					            $(
+					                ".askSignInCls")
+					                .addClass(
+					                    'hide');
+					            $("#errMsg")
+					                .text(
+					                    error.message);
+					            $("#errMsg")
+					                .show(
+					                    "fast");
+					            setTimeout(
+					                hideDisplayMessage,
+					                5000);
+					            $('#password')
+					                .attr(
+					                    "type",
+					                    "password");
+					            $('#email')
+					                .val(
+					                    email);
+					            $("body")
+					                .removeClass(
+					                    "loading");
+					            return false;
+				            
+				            }
+			
+			            });
+			            
+			        JSON.stringify(response); },
+			        'expired-callback': function() {
+			           console.log("expired-callback");
+			        }
+			     }).verify();
+			
+			     recaptchaVerifier.render().then(function(widgetId) {
+			        window.recaptchaWidgetId = widgetId;
+			     });
+			  }, 1000);
+  
+			  
+			}
+  
+			function viewDashBoard(fdaLink, email, password, passwordLength) {
+
+		         $.ajax({
+                    url: fdaLink,
+                    type: "POST",
+                    datatype: "json",
+                    data: {
+                      username: email,
+                      password: password,
+                    },
+                    success: function (data) {
+                      var jsonobject = data;
+                      var message = jsonobject.message;
+                      if (message == "SUCCESS") {
+                        $('#email')
+                            .val('');
+                        $('#password')
+                            .val(passwordLength);
+                        $('#landingId')
+                            .submit();
+                        var a = document
+                            .createElement('a');
+                        a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
+                        document.body
+                            .appendChild(
+                                a)
+                            .click();
+                      } else {
+                        $('#password')
+                            .val('');
+                        $(
+                            ".askSignInCls")
+                            .addClass(
+                                'hide');
+                        $("#errMsg")
+                            .text(
+                                message);
+                        $("#errMsg")
+                            .show(
+                                "fast");
+                        setTimeout(
+                            hideDisplayMessage,
+                            5000);
+                        $('#password')
+                            .attr(
+                                "type",
+                                "password");
+                        $('#email')
+                            .val(
+                                email);
+                        $("body")
+                            .removeClass(
+                                "loading");
+                      }
+                    },
+                    global: false
+                  })
+				}
+
           $('#loginBtnId')
               .click(
                   function () {
@@ -722,7 +928,7 @@ $(document)
                       isValidLoginForm = true;
                     }
                     if (isValidLoginForm) {
-                      var username = $('#email').val();
+                      var email = $('#email').val();
                       $('#email').val('');
                       var password = $('#password').val();
                       var passwordLength = "";
@@ -737,64 +943,112 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc');
+                       $("body").addClass("loading");
+                      var csrfDetcsrfParamName = $(
+                          '#csrfDet').attr(
+                          'csrfParamName');
+                      var csrfToken = $('#csrfDet').attr(
+                          'csrfToken');
+                      var isGCIUser = false;
                       var fdaLink = $('#fdaLink').val();
-                      $("body").addClass("loading");
-                      $
-                          .ajax({
-                            url: fdaLink,
-                            type: "POST",
-                            datatype: "json",
-                            data: {
-                              username: username,
-                              password: password,
-                            },
-                            success: function (data) {
-                              var jsonobject = data;
-                              var message = jsonobject.message;
-                              if (message == "SUCCESS") {
-                                $('#email')
-                                    .val('');
-                                $('#password')
-                                    .val(passwordLength);
-                                $('#landingId')
-                                    .submit();
-                                var a = document
-                                    .createElement('a');
-                                a.href = "/studybuilder/adminDashboard/viewDashBoard.do?action=landing";
-                                document.body
-                                    .appendChild(
-                                        a)
-                                    .click();
-                              } else {
-                                $('#password')
-                                    .val('');
-                                $(
-                                    ".askSignInCls")
-                                    .addClass(
-                                        'hide');
-                                $("#errMsg")
-                                    .text(
-                                        message);
-                                $("#errMsg")
-                                    .show(
-                                        "fast");
-                                setTimeout(
-                                    hideDisplayMessage,
-                                    5000);
-                                $('#password')
-                                    .attr(
-                                        "type",
-                                        "password");
-                                $('#email')
-                                    .val(
-                                        username);
-                                $("body")
-                                    .removeClass(
-                                        "loading");
-                              }
-                            },
-                            global: false
-                          })
-                    }
-                  });
+                      var gciEnabled = $('#gci').val();
+                      if(gciEnabled == 'true'){
+                       		$.ajax({
+                              url: "/studybuilder/getGCIUserData.do?"
+                                  + csrfDetcsrfParamName
+                                  + "="
+                                  + csrfToken,
+                              type: "POST",
+                              datatype: "json",
+                              data: {
+                                email: email,
+                              },
+                              success: function getResponse(
+                                  data) {
+                                var isGCIUser = data.gciUser;
+                                var userPhoneNumber = data.userPhoneNumber;
+			                     if(isGCIUser) {
+				   	   			  firebase.auth().onAuthStateChanged(function(user) {
+							   	    if (user) {
+							   	//    alert("success  " + email);
+							   	    } else {
+							   	 //   alert("No user signed in " + email);
+							   	    }
+							   	  });
+						
+							   	  firebase.auth().signInWithEmailAndPassword(email, password)
+							   	  .then(function(firebaseUser) {
+							   	   viewDashBoard(fdaLink, email, password, passwordLength);
+							   	 //  $('#recaptcha-container').show();
+							   	  	// 	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
+								   })
+								   .catch(function(error) {
+							   	  
+							   	   if(error.code == 'auth/argument-error') {
+						              $('#password')
+							                .val('');
+							            $(
+							                ".askSignInCls")
+							                .addClass(
+							                    'hide');
+							            $("#errMsg")
+							                .text(
+							                    "");
+							            $("#errMsg")
+							                .show(
+							                    "fast");
+							            setTimeout(
+							                hideDisplayMessage,
+							                1000);
+							            $('#password')
+							                .attr(
+							                    "type",
+							                    "password");
+							            $('#email')
+							                .val(
+							                    email);
+							            $("body")
+							                .removeClass(
+							                    "loading");
+							            return false;
+						           } else {
+						   	           $('#password')
+				                            .val('');
+				                        $(
+				                            ".askSignInCls")
+				                            .addClass(
+				                                'hide');
+				                        $("#errMsg")
+				                            .text(
+				                                error.message);
+				                        $("#errMsg")
+				                            .show(
+				                                "fast");
+				                        setTimeout(
+				                            hideDisplayMessage,
+				                            5000);
+				                        $('#password')
+				                            .attr(
+				                                "type",
+				                                "password");
+				                        $('#email')
+				                            .val(
+				                                email);
+				                        $("body")
+				                            .removeClass(
+				                                "loading");
+				                        return false;
+				                     }  
+			                       });
+				   	  		} else {
+				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
+				   	  		}
+				                 },
+                            });
+                            } else {
+				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
+				   	  		}
+				   	  		
+	                    }
+	                  }); 
         });

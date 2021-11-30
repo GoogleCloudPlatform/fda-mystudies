@@ -55,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -73,6 +74,11 @@ public class DashBoardAndProfileController {
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
   @Autowired private AppService appService;
+
+  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String gciEnabled = configMap.get("gciEnabled");
+  String gciAuthDomain = configMap.get("gciAuthDomain");
+  String gciApiKey = configMap.get("gciApiKey");
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -113,8 +119,12 @@ public class DashBoardAndProfileController {
   public ModelAndView getAdminDashboard() {
     logger.entry("begin getAdminDashboard");
     ModelAndView mav = new ModelAndView();
+    ModelMap map = new ModelMap();
     try {
-      mav = new ModelAndView("fdaAdminDashBoardPage");
+      map.addAttribute("gciEnabled", gciEnabled);
+      map.addAttribute("gciApiKey", gciApiKey);
+      map.addAttribute("gciAuthDomain", gciAuthDomain);
+      mav = new ModelAndView("fdaAdminDashBoardPage", map);
     } catch (Exception e) {
       logger.error("DashBoardAndProfileController - getAdminDashboard - ERROR", e);
     }
@@ -141,6 +151,20 @@ public class DashBoardAndProfileController {
       logger.error("DashBoardAndProfileController - isEmailValid() - ERROR " + e);
     }
     logger.exit("isEmailValid() - Ends ");
+  }
+
+  @RequestMapping(value = "/getGCIUserData.do", method = RequestMethod.POST)
+  public void getGCIUserData(HttpServletResponse response, String email) {
+    logger.entry("begin DashBoardAndProfileController - getGCIUserData()");
+    try {
+      if (FdahpStudyDesignerUtil.isNotEmpty(email)) {
+        dashBoardAndProfileService.getGCIUserData(response, email);
+      }
+    } catch (Exception e) {
+      response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
+      logger.error("DashBoardAndProfileController - getGCIUserData() - ERROR " + e);
+    }
+    logger.exit("DashBoardAndProfileController - isGCIUser() - Ends ");
   }
 
   @RequestMapping("/adminDashboard/updateUserDetails.do")

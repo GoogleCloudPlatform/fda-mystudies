@@ -52,7 +52,7 @@
         </executions>
         <configuration>
           <excludes>
-            <exclude>**/*min.js</exclude>
+            <exclude>**/*.js</exclude>
             <exclude>**/*min.css</exclude>
           </excludes>
           <nosuffix>true</nosuffix>
@@ -91,6 +91,11 @@
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-logging</artifactId>
     </dependency>
+    <dependency>
+	  <groupId>com.google.firebase</groupId>
+	  <artifactId>firebase-admin</artifactId>
+	  <version>6.11.0</version>
+	</dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpcore</artifactId>
@@ -409,9 +414,9 @@
       <version>2.1.2</version>
     </dependency>
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4</version>
+	  <groupId>com.sun.mail</groupId>
+	  <artifactId>javax.mail</artifactId>
+	  <version>1.6.2</version>
     </dependency>
     <dependency>
       <groupId>org.ajaxtags</groupId>

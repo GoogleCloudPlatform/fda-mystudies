@@ -69,6 +69,18 @@ public class AppPropertyConfig implements Serializable {
   @Value("${cookie.secure:true}")
   private boolean secureCookie;
 
+  @Value("${gciEnabled:false}")
+  private boolean gciEnabled;
+
+  @Value("${gciApiKey}")
+  private String gciApiKey;
+
+  @Value("${gciAuthDomain}")
+  private String gciAuthDomain;
+
+  @Value("${server.servlet.context-path}")
+  private String serverContextPath;
+
   @Value("${tempregid.expiry.minutes:30}")
   private int tempRegIdExpiryMinutes;
 }

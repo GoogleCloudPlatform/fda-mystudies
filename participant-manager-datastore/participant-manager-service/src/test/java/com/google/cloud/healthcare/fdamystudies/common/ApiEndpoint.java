@@ -89,7 +89,9 @@ public enum ApiEndpoint {
   GET_USERS("http://localhost:8080/participant-manager-datastore/users"),
 
   SEND_INVITATION_EMAIL(
-      "http://localhost:8080/participant-manager-datastore/users/{userId}/invite");
+      "http://localhost:8080/participant-manager-datastore/users/{userId}/invite"),
+
+  GET_GCI_USERS("http://localhost:8080/participant-manager-datastore/users/gciAdmins");
 
   private String url;
 

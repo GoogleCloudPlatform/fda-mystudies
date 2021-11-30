@@ -46,6 +46,10 @@ export class UserListComponent implements OnInit {
         return manageUser;
       }),
     );
+    // if(gciUser && deletedOrDisabledInGci ==true)
+    // {
+    //   [disabled]= disableButton" 
+    // }
   }
 
   search(query: string): void {

@@ -30,6 +30,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
   public Optional<UserEntity> findByTempRegId(String tempRegId);
 
+  @Query(
+      "select new java.lang.Boolean(count(*) > 0) from UserEntity u where u.gciUser = 'Y' and u.email =:email")
+  Boolean isGCIUser(@Param("email") String email);
+
   @Transactional
   @Modifying
   @Query("update UserEntity u set u.tempRegId=null where u.userId=:userId")

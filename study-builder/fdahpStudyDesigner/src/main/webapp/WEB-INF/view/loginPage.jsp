@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html class="overflow-hidden" lang="en">
   <head>
@@ -63,6 +64,8 @@
     <script src="/studybuilder/vendor/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/studybuilder/vendor/select2/bootstrap-select.min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
+    <script async src="https://www.google.com/recaptcha/api.js"></script>
     
     <style>
 		.hover_text_white { color:#fff !important;}
@@ -98,8 +101,10 @@
           <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
                      method="post"
                      autocomplete="off">
+            <input type="hidden" id="gci" value="${gciEnabled}" name="gci"/>
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
+            <div id="recaptcha-container"></div>
             <div class="login pt-lg">
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
@@ -217,6 +222,15 @@
     <script>
       var isChanged = true;
       $(document).ready(function (e) {
+   	  var gciEnabled = ${gciEnabled};
+   	  if(gciEnabled == true){
+        var config = {
+    		  apiKey: "${gciApiKey}",
+    	   	  authDomain: "${gciAuthDomain}",
+   	    };
+   	    firebase.initializeApp(config);
+      }
+  	    
         // Internet Explorer 6-11
         var isIE = false || !!document.documentMode;
 

@@ -8,6 +8,7 @@
 
 package com.fdahpstudydesigner.util;
 
+import com.google.firebase.FirebaseApp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,6 +26,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 public class ApplicationInitializer implements WebApplicationInitializer {
 
   private static XLogger logger = XLoggerFactory.getXLogger(ApplicationInitializer.class.getName());
+
+  static {
+    // Initializing the Firebase SDK using default credentials
+    FirebaseApp.initializeApp();
+  }
 
   @Override
   public void onStartup(ServletContext servletContext) throws ServletException {
