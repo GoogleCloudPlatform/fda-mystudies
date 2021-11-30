@@ -218,17 +218,20 @@
 	$('.manually-anchor-option').each(function(customAnchorCount) {
 		if ($('#xdays' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
 	  	  $('#xdays' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
-     	  $('#xdays' + customAnchorCount).parent().find(".help-block").empty().append(
+     	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").empty().append(
      	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
      	       "Please fill out this field"));
+     	 $('#xdays0').parent().find(".help-block-timer").show();
+    	 $('#xdays0').parent().find(".help-block").hide();
     	}
 		
 		if ($('#manualStartTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
 	  	  $('#manualStartTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
-     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").empty().append(
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
      	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
      	       "Please fill out this field"));
-     	 $('#manualStartTime0').parent().find(".help-block-timer").hide();
+     	 $('#manualStartTime0').parent().find(".help-block-timer").show();
+    	 $('#manualStartTime0').parent().find(".help-block").hide();
     	}
 		
 		if ($('#manualEndTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
