@@ -715,8 +715,20 @@ public class FdahpStudyDesignerUtil {
           String[] exceptChar = exceptCharacters.split("\\|");
           StringBuilder except = new StringBuilder();
           for (String element : exceptChar) {
-            except.append("^(?!.*" + element.trim().replace(" ", "") + ")");
+            String escapeSplChar = "";
+            for (int i = 0; i < element.length(); i++) {
+              if (!Character.isDigit(element.charAt(i))
+                  && !Character.isLetter(element.charAt(i))
+                  && !Character.isWhitespace(element.charAt(i))) {
+                escapeSplChar = escapeSplChar + "\\" + element.charAt(i);
+
+              } else {
+                escapeSplChar = escapeSplChar + "" + element.charAt(i);
+              }
+            }
+            except.append("^(?!.*" + escapeSplChar.trim().replace(" ", "") + ")");
           }
+
           regEx = except + regEx + "]+";
         } else {
           regEx += "]+";
@@ -724,7 +736,24 @@ public class FdahpStudyDesignerUtil {
       } else {
         if (validCharacters.equalsIgnoreCase(FdahpStudyDesignerConstants.ALLCHARACTERS)) {
           if ((exceptCharacters != null) && StringUtils.isNotEmpty(exceptCharacters)) {
-            regEx += "^(?:" + exceptCharacters.trim().replace(" ", "") + ")$";
+            String[] exceptChar = exceptCharacters.split("\\|");
+            StringBuilder except = new StringBuilder();
+            for (String element : exceptChar) {
+              String escapeSplChar = "";
+              for (int i = 0; i < element.length(); i++) {
+                if (!Character.isDigit(element.charAt(i))
+                    && !Character.isLetter(element.charAt(i))
+                    && !Character.isWhitespace(element.charAt(i))) {
+                  escapeSplChar = escapeSplChar + "\\" + element.charAt(i);
+
+                } else {
+                  escapeSplChar = escapeSplChar + "" + element.charAt(i);
+                }
+              }
+              except.append("^(?:" + escapeSplChar.trim().replace(" ", "") + ")$");
+            }
+            regEx = except + regEx;
+
           } else {
             regEx += "[.]";
           }
