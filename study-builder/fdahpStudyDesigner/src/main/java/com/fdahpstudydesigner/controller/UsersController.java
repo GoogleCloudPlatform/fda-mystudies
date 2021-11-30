@@ -238,6 +238,7 @@ public class UsersController {
           map.addAttribute("studyBOs", studyBOs);
           map.addAttribute("apps", appList);
           map.addAttribute("appBos", appBos);
+          map.addAttribute("gciEnabled", gciEnabled);
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");

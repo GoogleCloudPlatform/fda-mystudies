@@ -953,8 +953,7 @@ $(document)
                       var fdaLink = $('#fdaLink').val();
                       var gciEnabled = $('#gci').val();
                       if(gciEnabled == 'true'){
-                       $
-                            .ajax({
+                       		$.ajax({
                               url: "/studybuilder/getGCIUserData.do?"
                                   + csrfDetcsrfParamName
                                   + "="
@@ -1049,12 +1048,7 @@ $(document)
                             } else {
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
-
-                      /*$(document).ajaxStop(function() { */
 				   	  		
-				   	  	
-                          
-	                       /*});*/
 	                    }
 	                  }); 
         });
