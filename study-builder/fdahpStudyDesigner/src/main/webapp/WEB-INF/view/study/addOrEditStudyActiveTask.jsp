@@ -155,10 +155,10 @@
             typeOfActiveTask: typeOfActiveTask,
             activeTaskInfoId: activeTaskInfoId,
             actionType: actionType
-          }/* ,
+          } ,
           function () {
-            $(this).parents('form').attr('action',
-                '/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
+           /*  $(this).parents('form').attr('action',
+                '/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}'); */
             resetValidation($(this).parents('form'));
             var dt = new Date();
             $('#inputClockId').datetimepicker({
@@ -169,7 +169,7 @@
             actionPageView();
             var currentPage = '${currentPage}';
             $('#currentPageId').val(currentPage);
-          } */);
+          } );
 
     }
 
