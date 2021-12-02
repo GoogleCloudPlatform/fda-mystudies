@@ -54,8 +54,7 @@ export class UpdateUserComponent
     super();
   }
 
-  gciUser=true;
-  deletedOrDisabledInGci=true;
+  
   ngOnInit(): void {
     this.subs.add(
       this.route.params.subscribe((params) => {

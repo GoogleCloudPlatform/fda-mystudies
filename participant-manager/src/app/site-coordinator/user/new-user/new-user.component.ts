@@ -50,15 +50,11 @@ export class AddNewUserComponent
   ) {
     super();
   }
-  emailDisplay:any=[]
+
 
   ngOnInit(): void {
     this.getAllApps();
-    this.userService.getEmailDetails().subscribe((result)=>
-    {
-      console.log(result);
-      this.emailDisplay=result;
-    })
+   
     
     
   }
@@ -200,7 +196,7 @@ export class AddNewUserComponent
       );
       return;
     }
-    this.modalRef.hide();
+    
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.manageLocationsSelected;
@@ -213,8 +209,6 @@ export class AddNewUserComponent
       this.user.manageLocations = null;
     }
   }
-  openModal( template: TemplateRef<any>): void {
-    this.modalRef = this.modalService.show( template);
-  }
+ 
 
 }

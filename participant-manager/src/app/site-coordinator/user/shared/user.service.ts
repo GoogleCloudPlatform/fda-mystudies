@@ -13,7 +13,7 @@ import {ManageUsers} from './manage-user';
 export class UserService {
   
   constructor(private readonly http: HttpClient) {}
-  demoUrl="http://localhost:3000/user"
+
 
   add(user: User): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(
@@ -21,10 +21,7 @@ export class UserService {
       user,
     );
   }
-  getEmailDetails():Observable<any>
-  {
-    return this.http.get(this.demoUrl)
-  }
+  
 
   update(user: User, adminId: string): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
