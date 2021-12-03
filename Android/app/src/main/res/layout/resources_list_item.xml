@@ -20,13 +20,13 @@
             android:orientation="vertical"
             android:paddingRight="20dp">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/resourcesTitle"
                 style="@style/TextType2"
                 android:text=""
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/resourcesDesc"
                 style="@style/TextType4"
                 android:visibility="visible"
@@ -34,7 +34,7 @@
                 android:textColor="@color/colorPrimaryBlack" />
         </LinearLayout>
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/dayTimeDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

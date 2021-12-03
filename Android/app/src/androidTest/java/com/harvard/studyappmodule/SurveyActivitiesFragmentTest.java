@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.usermodule.webservicemodel.Studies;
@@ -50,7 +50,7 @@ public class SurveyActivitiesFragmentTest {
 
   @Before
   public void setUp() {
-    realm = AppController.getRealmobj(InstrumentationRegistry.getTargetContext());
+    realm = AppController.getRealmobj(InstrumentationRegistry.getInstrumentation().getTargetContext());
     dbServiceSubscriber = new DbServiceSubscriber();
   }
 
@@ -106,7 +106,6 @@ public class SurveyActivitiesFragmentTest {
     studies.setStatus(TEST_STATUS);
     studies.setSiteId(TEST_SITE_ID);
     studies.setEnrolledDate(TEST_ENROLLMENTDATE);
-    studies.setBookmarked(TEST_BOOKMARKED);
     studies.setParticipantId(TEST_PARTICIPANT_ID);
     studies.setCompletion(TEST_COMPLETION);
     studies.setAdherence(TEST_ADHERENCE);
