@@ -27,11 +27,11 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Html;
 import android.util.Base64;
 import android.view.View;
@@ -46,15 +46,14 @@ import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
-import java.io.BufferedInputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
+
 import javax.crypto.CipherInputStream;
 
 import io.realm.Realm;

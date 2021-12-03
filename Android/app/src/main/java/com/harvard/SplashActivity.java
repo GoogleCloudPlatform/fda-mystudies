@@ -15,7 +15,6 @@
 
 package com.harvard;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +23,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
@@ -38,7 +38,6 @@ import com.harvard.usermodule.NewPasscodeSetupActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.RegisterUserEvent;
 import com.harvard.usermodule.model.Apps;
-import com.harvard.usermodule.webservicemodel.RegistrationData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -47,6 +46,7 @@ import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+
 import java.util.HashMap;
 
 public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {

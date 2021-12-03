@@ -18,12 +18,12 @@
             android:paddingRight="20dp"
             android:paddingTop="18dp">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/email_label"
                 style="@style/signUpTextField"
                 android:text="@string/email"/>
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edittxt_email"
                 style="@style/signUpEditText"
                 android:layout_alignParentRight="true"
@@ -33,7 +33,7 @@
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/custom_cursor_drawable"/>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/hrline2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -53,12 +53,12 @@
             android:paddingRight="20dp"
             android:paddingTop="18dp">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/password_label"
                 style="@style/signUpTextField"
                 android:text="@string/password"/>
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/edittxt_password"
                 style="@style/signUpEditText"
                 android:layout_alignBaseline="@+id/password_label"
@@ -72,7 +72,7 @@
                 android:singleLine="true"
                 android:textCursorDrawable="@drawable/custom_cursor_drawable"/>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/hrline3"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -81,7 +81,7 @@
                 android:background="@color/colorSecondaryBg"/>
         </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/forgot_password"
             style="@style/TextType2"
             android:layout_below="@id/rel_password"
@@ -95,7 +95,7 @@
             android:layout_below="@+id/forgot_password"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/agree_terms"
                 style="@style/TextType4"
                 android:layout_above="@+id/signInButton"
@@ -105,7 +105,7 @@
                 android:text=""
                 android:textColor="@color/colorSecondary"/>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/signInButton"
                 style="@style/TextType2"
                 android:layout_above="@+id/newUsrSignUp"
@@ -117,7 +117,7 @@
                 android:text="@string/sign_in_btn"
                 android:textColor="@color/colorPrimary"/>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/newUsrSignUp"
                 style="@style/TextType2"
                 android:layout_above="@+id/margin"
