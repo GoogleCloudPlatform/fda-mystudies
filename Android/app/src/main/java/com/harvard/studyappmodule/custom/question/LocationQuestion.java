@@ -191,10 +191,6 @@ public class LocationQuestion
                                     .addOnConnectionFailedListener(LocationQuestion.this)
                                     .build();
 
-                            LocationManager service =
-                                (LocationManager)
-                                    context.getSystemService(Context.LOCATION_SERVICE);
-                            service.addGpsStatusListener(LocationQuestion.this);
                             try {
                               googleApiClient.connect();
                             } catch (Exception e) {
