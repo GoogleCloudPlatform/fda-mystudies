@@ -67,6 +67,15 @@ export class UserService {
       `${environment.participantManagerDatastoreUrl}/users/${adminId}/`,
     );
   }
+  
+  getGciUsers():Observable<any>
+  {
+    return this.http.get<any>(
+      `${environment.participantManagerDatastoreUrl}/users/gciAdmins`,
+    );
+  }
+
+
   getUsers(
     offset: number,
     limit: number,

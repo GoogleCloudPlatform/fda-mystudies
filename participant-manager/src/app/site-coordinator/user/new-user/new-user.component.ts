@@ -10,7 +10,7 @@ import {UserService} from '../shared/user.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {AppDetails, App, Study, Site} from '../shared/app-details';
-import {User} from 'src/app/entity/user';
+import {gciUser, User} from 'src/app/entity/user';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {Permission} from 'src/app/shared/permission-enums';
@@ -31,6 +31,8 @@ export class AddNewUserComponent
   appDetailsBackup = {} as AppDetails;
   selectedApps: App[] = [];
   user = {} as User;
+
+  
   permission = Permission;
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
@@ -50,15 +52,24 @@ export class AddNewUserComponent
   ) {
     super();
   }
-
+  userEmail:any=[]
 
   ngOnInit(): void {
     this.getAllApps();
-   
     
+    this.getGciUsersDetails();
     
   }
 
+  getGciUsersDetails():void 
+  {
+    this.userService.getGciUsers().subscribe((data)=>
+    {
+     
+      this.userEmail=data.email
+    }
+    )
+  }
   getAllApps(): void {
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
@@ -73,7 +84,7 @@ export class AddNewUserComponent
   deleteAppFromList(appId: string): void {
     this.selectedApps = this.selectedApps.filter((obj) => obj.id !== appId);
   }
-
+ 
   appCheckBoxChange(app: App): void {
     if (app.selected) {
       app.permission = this.permission.View;
@@ -196,6 +207,7 @@ export class AddNewUserComponent
       );
       return;
     }
+    this.modalRef.hide();
     
   }
   removeExtraAttributesFromApiRequest(): void {
@@ -209,6 +221,9 @@ export class AddNewUserComponent
       this.user.manageLocations = null;
     }
   }
- 
+  openModal( template: TemplateRef<any>): void {
+    this.modalRef = this.modalService.show( template);
+  }
+
 
 }

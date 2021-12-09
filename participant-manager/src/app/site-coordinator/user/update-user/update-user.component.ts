@@ -36,6 +36,10 @@ export class UpdateUserComponent
   permission = Permission;
   adminId = '';
   userStatus = Status;
+  gciUser=true;
+  deletedOrDisabledInGci=true;
+  
+ 
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
     '=1': '1 site',
@@ -87,6 +91,7 @@ export class UpdateUserComponent
           this.getAllApps();
         }),
     );
+    
   }
   add(event: unknown | App): void {
     this.selectedApps.push(event as App);
@@ -295,4 +300,5 @@ export class UpdateUserComponent
       this.user.manageLocations = null;
     }
   }
+  
 }
