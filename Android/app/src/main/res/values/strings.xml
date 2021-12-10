@@ -541,5 +541,9 @@
 
     <string name="rsb_invalid_answer_time_none">Please choose a time.</string>
     <string name="rsb_invalid_answer_date_time_none">Please choose a date and time.</string>
+    <string name="eligibility_sucess_message">Eligible</string>
+    <string name="eligibility_failure_message">Not eligible</string>
+    <string name="eligiblity_confirmation_message">Eligibility confirmation</string>
+    <string name="forgot_passcode_message">Forgot passcode</string>
 
 </resources>

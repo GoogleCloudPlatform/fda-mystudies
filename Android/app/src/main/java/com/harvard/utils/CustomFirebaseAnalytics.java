@@ -12,46 +12,47 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.eligibilitymodule;
+package com.harvard.utils;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.harvard.R;
-import com.harvard.utils.CustomFirebaseAnalytics;
 
-public class ComprehensionSuccessActivity extends AppCompatActivity {
+public class CustomFirebaseAnalytics {
 
-  private CustomFirebaseAnalytics analyticsInstance;
+    private static volatile CustomFirebaseAnalytics instance;
+    private static FirebaseAnalytics firebaseAnalytics;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_comprehension_success);
+    public static CustomFirebaseAnalytics getInstance(Context context) {
+        if (instance == null) {
+            synchronized (CustomFirebaseAnalytics.class) {
+                if (instance == null){
+                    instance = new CustomFirebaseAnalytics();
+                }
+            }
+        }
+        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+        return instance;
+    }
 
-    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
-    TextView continueButton = findViewById(R.id.continueButton);
-    continueButton.setOnClickListener(
-        new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-            Bundle eventProperties = new Bundle();
-            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getString(R.string.eligibility_sucess_message));
-            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
-                    eventProperties);
+    public static class Param {
 
-            Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
-            finish();
-          }
-        });
-  }
+        public static final String BUTTON_CLICK_REASON = "button_click_reason";
 
-  @Override
-  public void onBackPressed() {}
+        protected Param() {
+        }
+    }
+
+    public static class Event {
+
+        public static final String ADD_BUTTON_CLICK = "add_button_click";
+
+        protected Event() {
+        }
+    }
+
+    public void logEvent(String eventName, Bundle eventProperties) {
+        firebaseAnalytics.logEvent(eventName, eventProperties);
+    }
 }

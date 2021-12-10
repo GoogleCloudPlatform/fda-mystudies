@@ -37,6 +37,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.RegisterUserEvent;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
@@ -61,6 +62,7 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
   private static final int RESULT_CODE_UPGRADE = 102;
   private String newVersion;
   private boolean force = false;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
     setContentView(R.layout.activity_passcode_setup);
     getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     dbServiceSubscriber = new DbServiceSubscriber();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setTextForView();
     setFont();
@@ -120,6 +123,12 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.forgot_passcode_message));
+            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    eventProperties);
+
             getAppsInfo();
           }
         });

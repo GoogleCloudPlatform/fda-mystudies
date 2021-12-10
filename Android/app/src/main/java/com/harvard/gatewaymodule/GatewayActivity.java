@@ -44,6 +44,7 @@ import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.SignupActivity;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -68,11 +69,13 @@ public class GatewayActivity extends AppCompatActivity {
   private String latestVersion;
   private boolean force = false;
   AlertDialog.Builder alertDialogBuilder;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_gateway);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setFont();
     bindEvents();
@@ -165,6 +168,12 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.new_user));
+            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    eventProperties);
+
             Intent intent = new Intent(GatewayActivity.this, SignupActivity.class);
             startActivity(intent);
           }
@@ -174,6 +183,12 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.sign_in_btn));
+            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    eventProperties);
+
             loadLogin();
           }
         });
@@ -182,6 +197,12 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.get_started));
+            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    eventProperties);
+
             GetStartedEvent getStartedEvent = new GetStartedEvent();
             getStartedEvent.setCommingFrom(COMMING_FROM);
             onEvent(getStartedEvent);

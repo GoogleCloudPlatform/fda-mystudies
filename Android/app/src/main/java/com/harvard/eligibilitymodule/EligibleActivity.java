@@ -39,6 +39,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -60,6 +61,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
   private DbServiceSubscriber dbServiceSubscriber;
   private static final int UPDATE_USER_PREFERENCE_RESPONSE_CODE = 200;
   private Realm realm;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +70,18 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
 
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     TextView button = (TextView) findViewById(R.id.continueButton);
     button.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.eligiblity_confirmation_message));
+            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    eventProperties);
+
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
                     getIntent().getStringExtra("studyId"), realm);
