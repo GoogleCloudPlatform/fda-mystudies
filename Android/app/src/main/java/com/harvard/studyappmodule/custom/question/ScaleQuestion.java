@@ -185,7 +185,7 @@ public class ScaleQuestion implements StepBody {
   }
 
   private void setvaluetotxt() {
-    value = min + (((int)seekBar.getLeftSeekBar().getProgress()) * stepSection);
+    value = min + (((int) seekBar.getLeftSeekBar().getProgress()) * stepSection);
     mcurrentvalue.setText(String.valueOf((int) value));
   }
 
