@@ -469,7 +469,7 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   public void setVersion(TextView version) {
-    version.append(BuildConfig.VERSION_NAME +" ("+BuildConfig.VERSION_CODE+")");
+    version.append(BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
   }
 
   private void bindEvents() {
