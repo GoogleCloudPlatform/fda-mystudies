@@ -207,9 +207,9 @@
                         </a>
                         associated with using this portal
                       </span>
+                      <div class="help-block with-errors red-txt"></div>
                     </label>
                     </span>
-                    <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
                 <div class="clearfix"></div>
