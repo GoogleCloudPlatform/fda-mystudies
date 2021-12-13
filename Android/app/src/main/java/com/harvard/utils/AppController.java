@@ -292,8 +292,8 @@ public class AppController {
 
   public static void checkIfAppNameChangeAndMigrate(Context context) {
     if (!context.getString(R.string.app_name).equalsIgnoreCase(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)))) {
-      byte[] key = getkey(context, SharedPreferenceHelper.readPreference(context,"appname",context.getString(R.string.app_name)));
-      config=
+      byte[] key = getkey(context, SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
+      config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
               .schemaVersion(1)
@@ -301,9 +301,9 @@ public class AppController {
               .build();
       Realm realm = Realm.getInstance(config);
       RealmEncryptionHelper.getInstance().deleteEntry(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
-      byte[] NewKey = getkey(context, context.getString(R.string.app_name));
-      String s = bytesToHex(NewKey);
-      realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), NewKey);
+      byte[] newKey = getkey(context, context.getString(R.string.app_name));
+      String s = bytesToHex(newKey);
+      realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), newKey);
       config = null;
       realm.close();
       File file = new File(context.getFilesDir(), "default.realm");
@@ -1011,7 +1011,7 @@ public class AppController {
     }
   }
 
-  public static void clearAllAppData(Context context){
+  public static void clearAllAppData(Context context) {
     SharedPreferenceHelper.deletePreferences(context);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
@@ -1137,8 +1137,9 @@ public class AppController {
     if (dir.exists()) {
       File from = new File(dir, oldName);
       File to = new File(dir, newName);
-      if (from.exists())
+      if (from.exists()) {
         from.renameTo(to);
+      }
     }
   }
 

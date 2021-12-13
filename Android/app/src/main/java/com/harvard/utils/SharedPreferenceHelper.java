@@ -17,7 +17,6 @@ package com.harvard.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import java.util.ArrayList;
 import java.util.Map;
 
