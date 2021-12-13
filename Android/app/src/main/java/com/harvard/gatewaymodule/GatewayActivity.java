@@ -24,11 +24,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.View;
 import android.widget.RelativeLayout;
