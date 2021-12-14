@@ -66,9 +66,21 @@ export class AddNewUserComponent
     this.userService.getGciUsers().subscribe((data)=>
     {
      
+      
       this.userEmail=data.email
+    
+      
     }
     )
+  }
+  gciUserStatus():void
+  {
+   
+    {
+      this.user.gciUser=true;
+      
+    }
+    
   }
   getAllApps(): void {
     this.subs.add(
@@ -222,8 +234,27 @@ export class AddNewUserComponent
     }
   }
   openModal( template: TemplateRef<any>): void {
-    this.modalRef = this.modalService.show( template);
-  }
 
+  let gciUser=false;
+  
+  let userEmail = this.userEmail;
+  userEmail.forEach((element: any) => {
+  
+    if(this.user.email === element){
+       gciUser=true;
+       
+      this.gciUserStatus();
+       this.add();
+    }
+  });
+  
+  if(!gciUser)
+   {
+    this.modalRef = this.modalService.show( template);
+   }
+
+
+  }
+ 
 
 }

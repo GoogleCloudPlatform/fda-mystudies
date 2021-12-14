@@ -63,4 +63,5 @@ export interface SetUpUser {
 }
 export interface gciUser {
   gciUser: boolean;
+  
 }

@@ -42,15 +42,26 @@ export class ForgotPasswordComponent extends UnsubscribeOnDestroyAdapter {
         .subscribe((successResponse: ApiResponse) => {
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
+           
           } else {
+            // this.toastr.error('Your account seems to managed via the IT admin console.  Please contact your IT admin for assistance in resetting your password');
             this.toastr.success('sucess');
           }
+          
           setTimeout(() => {
             void this.router.navigate(['/login']);
             
             console.log("working")
           }, 5000);
+          
+
+          // (errorResponse: ApiResponse) => {
+          //   if (getMessage(errorResponse.code)) {
+          //     this.toastr.error(getMessage(errorResponse.code));
+          //   }
+          // }
         }),
+        
     );
   }
 }

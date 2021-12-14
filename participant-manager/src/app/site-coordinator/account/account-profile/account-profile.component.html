@@ -116,8 +116,8 @@
           </button>
         </div>
       </div>
-      <span>
-        <a [routerLink]="['change-password']" class="font12 change__password">
+      <span *ngIf="!user.gciUser">
+        <a  [routerLink]="['change-password']" class="font12 change__password">
           <span class="under-below">Change password?</span>
         </a>
       </span>

@@ -128,6 +128,7 @@ const errorMessages = {
   EC_0087:
     'This is a default location name in use by the system already. Please enter a different location name.',
   /* eslint-enable @typescript-eslint/naming-convention */
+  EC_0088:"Your account seems to managed via the IT admin console.  Please contact your IT admin for assistance in resetting your password."
 };
 export type ErrorCode = keyof typeof errorMessages;
 
