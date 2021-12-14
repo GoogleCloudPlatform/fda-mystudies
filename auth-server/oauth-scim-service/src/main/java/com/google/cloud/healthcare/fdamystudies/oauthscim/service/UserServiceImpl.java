@@ -225,6 +225,10 @@ public class UserServiceImpl implements UserService {
       }
     }
 
+    if (userEntity.isGciUser() && appConfig.isGciEnabled()) {
+      throw new ErrorCodeException(ErrorCode.GCI_USER_ERROR);
+    }
+
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse =
         sendPasswordResetEmail(
