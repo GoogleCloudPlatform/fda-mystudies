@@ -102,7 +102,7 @@ public class UserRegAdminEntity implements Serializable {
 
   @Column(name = "gci_user")
   @Type(type = "yes_no")
-  private boolean gciUser = false;
+  private Boolean gciUser = false;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "urAdminUser")
   private List<AppPermissionEntity> appPermissions = new ArrayList<>();
