@@ -148,7 +148,7 @@
               />
               <label class="mt-xs custom_text_transform" for="role">
                 Assign superadmin role
-                <span
+                <span 
                   class="tool"
                   data-tip="A superadmin has application-wide permissions.
 Superadmins can manage users of the Participant Manager and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only. "
@@ -548,11 +548,12 @@ Superadmins can manage users of the Participant Manager and in addition, can man
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
+ 
+  <div class="modal-body" *ngIf="!user.superAdmin==true">
+    You are inviting a person who is not listed in the organizational directory to be a Participant Manager admin. Are you sure you wish to proceed?
+  </div>
   <div class="modal-body " *ngIf="user.superAdmin==true">
     You are inviting a person who is not listed in the organizational directory, to be a Participant Manager superadmin. Are you sure you wish to proceed?
-  </div>
-  <div class="modal-body" *ngIf="user.superAdmin==false">
-    You are inviting a person who is not listed in the organizational directory to be a Participant Manager admin. Are you sure you wish to proceed?
   </div>
   <div class="modal-footer">
     <button type="button" class="btn bt__cancel mobile_mt-2"  (click)="modalRef.hide()" >cancel</button>

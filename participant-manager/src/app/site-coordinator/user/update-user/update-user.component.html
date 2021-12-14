@@ -16,7 +16,7 @@
         </span>
       </div>
 
-      <div class="col-xs-12 col-md-6 pl-none text-right pr-none">
+      <div class="col-xs-12 col-md-6 pl-none text-right pr-none ">
         
         <button
           (click)="changeStatus(user.status)"
@@ -32,16 +32,18 @@
           }}
 
         </button>
-        <!-- <span
-                  class="tool" 
-                  data-tip="contact admin for more details"
+        <span style="line-height: 15px;" *ngIf="user.gciUser && user.deletedOrDisabledInGci"
+                  class="tool " 
+
+                  data-tip="This user may be deleted from the organization directory or user whitelist for the Participant Manager. Please contact your IT admin to have them added back and try again."
+                    tabindex="1"
 
                 >
                   <i
                     class="fa fa-info-circle ml-xs info_i"
                     aria-hidden="true"
                   ></i>
-                </span> -->
+                </span>
         <button
           *ngIf="user.status === userStatus.Invited"
           (click)="resendInvitation()"
