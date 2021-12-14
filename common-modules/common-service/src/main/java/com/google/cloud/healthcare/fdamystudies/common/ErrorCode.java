@@ -380,7 +380,13 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This is a default location name in use by the system already. Please enter a different location name."),
 
-  APP_INACTIVE(400, "EC_0089", Constants.BAD_REQUEST, "This app is no longer active.");
+  APP_INACTIVE(400, "EC_0089", Constants.BAD_REQUEST, "This app is no longer active."),
+
+  GCI_USER_ERROR(
+      400,
+      "EC_0088",
+      Constants.BAD_REQUEST,
+      "Your account seems to managed via the IT admin console.  Please contact your IT admin for assistance in resetting your password.");
 
   private final int status;
   private final String code;
