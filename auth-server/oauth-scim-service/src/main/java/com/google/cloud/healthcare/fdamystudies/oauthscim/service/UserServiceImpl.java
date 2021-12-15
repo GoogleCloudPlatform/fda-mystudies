@@ -152,6 +152,8 @@ public class UserServiceImpl implements UserService {
 
         UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
         logger.info("Successfully updated GCI user data: ", userRecordUpdated.getEmail());
+
+        userEntity.setGciUser(true);
       } catch (FirebaseAuthException e) {
         logger.info("UserServiceImpl.createUser firebase error: ", e);
       }
@@ -160,6 +162,7 @@ public class UserServiceImpl implements UserService {
           userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
     }
 
+    userEntity.setGciUser(false);
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
