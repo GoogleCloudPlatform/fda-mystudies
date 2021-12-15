@@ -7,8 +7,8 @@
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
 # Release 2.0.9
-* This release fixes the security vulnerability detected with Log4j recently.  More information on the vulnerability is here (https://logging.apache.org/log4j/2.x/security.html#CVE-2021-45046). 
-* Note: The platform was using a Log4j version which is not impacted by this vulnerability. However, as a safety measure, the platform is now updated with this release, to use the latest Log4j version 2.16.0 provided by Apache to address this vulnerability.
+* This release fixes the security vulnerability detected with Log4j recently. More information on the vulnerability is here (https://logging.apache.org/log4j/2.x/security.html#CVE-2021-45046). 
+* Note: The platform was using a log4j version and logging framework which is not impacted by this vulnerability. However, as a safety measure, the platform is updated with release v2.0.9, to use the latest Log4j version 2.16.0 that was provided by Apache to address this issue.
 
 # Release 2.0.8
 * Note: This release requires users to update to new versions of the mobile apps from the app stores.
