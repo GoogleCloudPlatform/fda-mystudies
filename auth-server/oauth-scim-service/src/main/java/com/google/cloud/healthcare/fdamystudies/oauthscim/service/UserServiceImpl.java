@@ -160,9 +160,9 @@ public class UserServiceImpl implements UserService {
     } else {
       setPasswordAndPasswordHistoryFields(
           userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+      userEntity.setGciUser(false);
     }
 
-    userEntity.setGciUser(false);
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
