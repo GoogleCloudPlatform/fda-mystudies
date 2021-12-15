@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService {
 
         userEntity.setGciUser(true);
       } catch (FirebaseAuthException e) {
-        logger.info("UserServiceImpl.createUser firebase error: ", e);
+        logger.error("UserServiceImpl.createUser firebase error: ", e);
       }
     } else {
       setPasswordAndPasswordHistoryFields(
