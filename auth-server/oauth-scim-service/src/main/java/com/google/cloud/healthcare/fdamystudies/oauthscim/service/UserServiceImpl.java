@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService {
       }
     }
 
-    if (userEntity.isGciUser() && appConfig.isGciEnabled()) {
+    if (userEntity.getGciUser() && appConfig.isGciEnabled()) {
       throw new ErrorCodeException(ErrorCode.GCI_USER_ERROR);
     }
 
