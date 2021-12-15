@@ -73,6 +73,11 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.service.EmailService;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.UpdateRequest;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -110,6 +115,11 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private TextEncryptor encryptor;
 
+  static {
+    // Initializing the Firebase SDK using default credentials
+    FirebaseApp.initializeApp();
+  }
+
   @Override
   @Transactional
   public UserResponse createUser(UserRequest userRequest) {
@@ -126,8 +136,29 @@ public class UserServiceImpl implements UserService {
     // save user account details
     UserEntity userEntity = UserMapper.fromUserRequest(userRequest);
     ObjectNode userInfo = getObjectNode();
-    setPasswordAndPasswordHistoryFields(
-        userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+
+    if (userRequest.getGciUser() && appConfig.isGciEnabled()) {
+      UserRecord userRecord;
+      try {
+        userRecord = FirebaseAuth.getInstance().getUserByEmail(userRequest.getEmail());
+
+        // See the UserRecord reference doc for the contents of userRecord.
+        logger.info("Successfully fetched GCI user data: ", userRecord.getEmail());
+        // GCI user password update
+        UpdateRequest updateRequest =
+            new UpdateRequest(userRecord.getUid())
+                .setEmailVerified(true)
+                .setPassword(userRequest.getPassword());
+
+        UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
+        logger.info("Successfully updated GCI user data: ", userRecordUpdated.getEmail());
+      } catch (FirebaseAuthException e) {
+        logger.info("UserServiceImpl.createUser firebase error: ", e);
+      }
+    } else {
+      setPasswordAndPasswordHistoryFields(
+          userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    }
 
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
