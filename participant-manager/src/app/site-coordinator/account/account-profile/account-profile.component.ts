@@ -22,6 +22,7 @@ export class AccountProfileComponent
   profileForm: FormGroup;
   user = {} as Profile;
   gciUser=true;
+  
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -59,6 +60,7 @@ export class AccountProfileComponent
   getProfileDetails(): void {
     this.accountService.fetchUserProfile().subscribe((data) => {
       this.profileForm.patchValue(data);
+      this.user=data
       console.log(data)
     });
   }
