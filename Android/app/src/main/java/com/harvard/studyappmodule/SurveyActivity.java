@@ -631,8 +631,7 @@ public class SurveyActivity extends AppCompatActivity
     if (responseCode == LOGOUT_REPSONSECODE) {
       Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT)
           .show();
-      SharedPreferences settings = SharedPreferenceHelper.getPreferences(SurveyActivity.this);
-      settings.edit().clear().apply();
+      SharedPreferenceHelper.deletePreferences(this);
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
       if (pass != null) {

@@ -480,8 +480,7 @@ public class ProfileFragment extends Fragment
         NotificationModuleSubscriber notificationModuleSubscriber =
             new NotificationModuleSubscriber(dbServiceSubscriber, realm);
         notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
-        SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-        settings.edit().clear().apply();
+        SharedPreferenceHelper.deletePreferences(context);
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
         AppController.deleteKey("passcode_" + pass);
@@ -500,8 +499,7 @@ public class ProfileFragment extends Fragment
         Toast.makeText(
                 context, getResources().getString(R.string.account_deletion), Toast.LENGTH_SHORT)
             .show();
-        SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-        settings.edit().clear().apply();
+        SharedPreferenceHelper.deletePreferences(context);
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
         if (pass != null) {
