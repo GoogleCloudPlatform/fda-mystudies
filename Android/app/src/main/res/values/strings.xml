@@ -539,4 +539,7 @@
     <string name="resourceTerms">Terms</string>
     <string name="resourcePolicy">Privacy policy</string>
 
+    <string name="rsb_invalid_answer_time_none">Please choose a time.</string>
+    <string name="rsb_invalid_answer_date_time_none">Please choose a date and time.</string>
+
 </resources>

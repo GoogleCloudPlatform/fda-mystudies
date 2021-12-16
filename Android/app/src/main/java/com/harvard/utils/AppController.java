@@ -26,16 +26,21 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.security.KeyPairGeneratorSpec;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
@@ -149,8 +154,7 @@ public class AppController {
   }
 
   public static void getHelperSessionExpired(Context context, String msg) {
-    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(context);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {
@@ -254,19 +258,60 @@ public class AppController {
     return retTypeface;
   }
 
-  public static Realm getRealmobj(Context context) {
+  public static Realm getRealmobj(final Context context) {
     if (config == null) {
-      RealmEncryptionHelper realmEncryptionHelper =
-          RealmEncryptionHelper.initHelper(context, context.getString(R.string.app_name));
-      byte[] key = realmEncryptionHelper.getEncryptKey();
+      byte[] key = getkey(context, context.getString(R.string.app_name));
       config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
-              .schemaVersion(2)
+              .schemaVersion(1)
               .migration(new RealmMigrationHelper())
               .build();
     }
-    return Realm.getInstance(config);
+    try {
+      return Realm.getInstance(config);
+    } catch (Exception e) {
+      Logger.log(e);
+      new Handler(Looper.getMainLooper()).post(new Runnable() {
+        @Override
+        public void run() {
+          Toast.makeText(context.getApplicationContext(), "Critical error occurred, Please clear data and sign in again", Toast.LENGTH_SHORT).show();
+        }
+      });
+      return null;
+    }
+  }
+
+  private static byte[] getkey(Context context, String keyName) {
+    RealmEncryptionHelper realmEncryptionHelper = RealmEncryptionHelper.initHelper(context, keyName);
+    byte[] key = realmEncryptionHelper.getEncryptKey();
+    String s = bytesToHex(key);
+//    Log.e("realm key for " + keyName, "" + s);
+    return key;
+  }
+
+  public static void checkIfAppNameChangeAndMigrate(Context context) {
+    if (!context.getString(R.string.app_name).equalsIgnoreCase(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)))) {
+      byte[] key = getkey(context, SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
+      config =
+          new RealmConfiguration.Builder()
+              .encryptionKey(key)
+              .schemaVersion(1)
+              .migration(new RealmMigrationHelper())
+              .build();
+      Realm realm = Realm.getInstance(config);
+      RealmEncryptionHelper.getInstance().deleteEntry(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
+      byte[] newKey = getkey(context, context.getString(R.string.app_name));
+      String s = bytesToHex(newKey);
+      realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), newKey);
+      config = null;
+      realm.close();
+      File file = new File(context.getFilesDir(), "default.realm");
+      file.delete();
+      renameFile(context, "temp.realm", "default.realm");
+    }
+    getkey(context, context.getString(R.string.app_name)); // To initialize the realm once before starting the app
+    SharedPreferenceHelper.writePreference(context, "appname", context.getString(R.string.app_name));
   }
 
   public static void clearDBfile() {
@@ -881,8 +926,7 @@ public class AppController {
   }
 
   public static void forceSignout(Context context) {
-    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(context);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {
@@ -926,8 +970,7 @@ public class AppController {
   }
 
   public static void signout(Context context) {
-    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(context);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {
@@ -966,6 +1009,34 @@ public class AppController {
       context.startActivity(mainIntent);
       ((Activity) context).finish();
     }
+  }
+
+  public static void clearAllAppData(Context context) {
+    SharedPreferenceHelper.deletePreferences(context);
+    // delete passcode from keystore
+    String pass = AppController.refreshKeys("passcode");
+    if (pass != null) {
+      AppController.deleteKey("passcode_" + pass);
+    }
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = getRealmobj(context);
+    dbServiceSubscriber.deleteDb(context);
+    try {
+      NotificationModuleSubscriber notificationModuleSubscriber =
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+      notificationModuleSubscriber.cancleActivityLocalNotification(context);
+      notificationModuleSubscriber.cancleResourcesLocalNotification(context);
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    NotificationModuleSubscriber notificationModuleSubscriber =
+        new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+    notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
+    dbServiceSubscriber.closeRealmObj(realm);
+
+    // clear notifications from notification tray
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+    notificationManager.cancelAll();
   }
 
   public static String getHashedValue(String valueToHash) {
@@ -1046,5 +1117,35 @@ public class AppController {
       }
     }
     return false;
+  }
+
+  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
+  public static String bytesToHex(byte[] bytes) {
+    char[] hexChars = new char[bytes.length * 2];
+    for (int j = 0; j < bytes.length; j++) {
+      int v = bytes[j] & 0xFF;
+      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    }
+    return new String(hexChars);
+  }
+
+
+  public static void renameFile(Context context, String oldName, String newName) {
+    File dir = context.getFilesDir();
+    if (dir.exists()) {
+      File from = new File(dir, oldName);
+      File to = new File(dir, newName);
+      if (from.exists()) {
+        from.renameTo(to);
+      }
+    }
+  }
+
+  public static ArrayList<String> getExcludePreferenceList() {
+    ArrayList<String> excludedList = new ArrayList<>();
+    excludedList.add("appname");
+    return excludedList;
   }
 }
