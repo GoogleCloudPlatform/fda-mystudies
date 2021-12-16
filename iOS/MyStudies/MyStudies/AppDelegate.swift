@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   var blockerScreen: AppUpdateBlocker?
   var passcodeParentControllerWhileSetup: UIViewController?
-
+  
   /// to be used in case of ineligible
   var consentToken: String? = ""
 
@@ -128,7 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Handler for TimeZone changes, updates time zone in the local database
   func calculateTimeZoneChange() {
-
+    
     let timeZoneCurrent = TimeZone.current
     let differenceFromCurrent = timeZoneCurrent.secondsFromGMT()
 
@@ -241,6 +241,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     UserServices().getUserManageApps(self)
     
     UIApplication.shared.applicationIconBadgeNumber = 0
+    
+    UserDefaults.standard.removeObject(forKey: "applict")
 
     let ud1 = UserDefaults.standard
 

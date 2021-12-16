@@ -39,7 +39,9 @@ class SplashViewController: UIViewController {
     ud.set(true, forKey: kFromSplashScreen)
     ud.set(Upgrade.fromSplash.rawValue, forKey: kFromBackground)
     ud.set(false, forKey: kIsShowUpdateAppVersion)
+    ud.removeObject(forKey: "isAlertShown")
     ud.synchronize()
+    
   }
 
   override func viewWillAppear(_ animated: Bool) {

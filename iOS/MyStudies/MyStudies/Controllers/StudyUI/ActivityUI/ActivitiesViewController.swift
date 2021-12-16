@@ -115,6 +115,11 @@ class ActivitiesViewController: UIViewController {
     tableView?.addSubview(refreshControl!)
 
     setupStandaloneNotifications()
+    
+    UserDefaults.standard.removeObject(forKey: "isAlertShown")
+    UserDefaults.standard.synchronize()
+
+        
   }
 
   override func viewWillAppear(_ animated: Bool) {

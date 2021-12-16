@@ -355,13 +355,11 @@ class Utilities: NSObject {
 
   // MARK: Alert handlers
 
-  class func showAlertWithTitleAndMessage(title: String, message: String, on vc: UIViewController) {
-
+  class func showAlertWithTitleAndMessage(title: String, message: String, on vc: UIViewController, cancelAction: @escaping AlertAction) {
     let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
+    let okAction = UIAlertAction(title: "Ok", style: .default, handler: { (_) in cancelAction() })
     alertVC.addAction(okAction)
     vc.present(alertVC, animated: true, completion: nil)
-
   }
 
   class func randomString(length: Int) -> String {
