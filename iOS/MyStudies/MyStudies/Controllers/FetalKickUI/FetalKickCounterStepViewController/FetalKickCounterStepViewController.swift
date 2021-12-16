@@ -264,7 +264,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
           if self.timerValue! > self.totalTime! {
             self.setResults()
-            UserDefaults.standard.setValue(false, forKey: "isAlertShown")
+            UserDefaults.standard.setValue(true, forKey: "isAlertShown")
             self.showAlertOnCompletion()
 
           } else {
