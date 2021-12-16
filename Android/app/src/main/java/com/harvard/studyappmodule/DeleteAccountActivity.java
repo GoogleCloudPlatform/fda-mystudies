@@ -159,9 +159,7 @@ public class DeleteAccountActivity extends AppCompatActivity
                 getResources().getString(R.string.account_deletion),
                 Toast.LENGTH_SHORT)
             .show();
-        SharedPreferences settings =
-            SharedPreferenceHelper.getPreferences(DeleteAccountActivity.this);
-        settings.edit().clear().apply();
+        SharedPreferenceHelper.deletePreferences(this);
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
         if (pass != null) {

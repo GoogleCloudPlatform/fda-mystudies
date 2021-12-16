@@ -169,7 +169,13 @@ public class CustomDateQuestionBody implements StepBody {
   @Override
   public BodyAnswer getBodyAnswerState() {
     if (!hasChosenDate) {
-      return new BodyAnswer(false, R.string.rsb_invalid_answer_date_none);
+      if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.Date) {
+        return new BodyAnswer(false, R.string.rsb_invalid_answer_date_none);
+      } else if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.TimeOfDay) {
+        return new BodyAnswer(false, R.string.rsb_invalid_answer_time_none);
+      } else {
+        return new BodyAnswer(false, R.string.rsb_invalid_answer_date_time_none);
+      }
     }
 
     return format.validateAnswer(calendar.getTime());

@@ -89,20 +89,6 @@ public class FdaApplication extends Application {
 
   private void dbInitialize() {
     Realm.init(this);
-    RealmEncryptionHelper realmEncryptionHelper =
-        RealmEncryptionHelper.initHelper(this, getString(R.string.app_name));
-    byte[] key = realmEncryptionHelper.getEncryptKey();
-
-    // Remove for release builds
-    Stetho.initialize(
-        Stetho.newInitializerBuilder(this)
-            .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-            .enableWebKitInspector(
-                RealmInspectorModulesProvider.builder(this)
-                    .withLimit(10000)
-                    .withDefaultEncryptionKey(key)
-                    .build())
-            .build());
   }
 
   private void startEventProcessing() {

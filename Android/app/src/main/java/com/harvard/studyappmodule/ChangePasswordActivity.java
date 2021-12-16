@@ -320,9 +320,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     if (from != null && from.equalsIgnoreCase("ProfileFragment")) {
       finish();
     } else {
-      SharedPreferences settings =
-          SharedPreferenceHelper.getPreferences(ChangePasswordActivity.this);
-      settings.edit().clear().apply();
+      SharedPreferenceHelper.deletePreferences(this);
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
       if (pass != null) {
