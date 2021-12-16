@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/currentvalue"
@@ -11,14 +12,25 @@
         android:layout_margin="5dp"
         android:textSize="15sp"/>
 
-    <android.support.v7.widget.AppCompatSeekBar
+    <com.jaygoo.widget.RangeSeekBar
         android:id="@+id/seekbar"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/currentvalue"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:paddingBottom="2dp"
+        app:rsb_gravity="bottom"
+        app:rsb_indicator_show_mode="alwaysHide"
+        app:rsb_mode="single"
+        app:rsb_progress_color="@color/colorAccent"
+        app:rsb_step_color="@color/colorAccent"
+        app:rsb_step_height="10dp"
+        app:rsb_step_width="2dp"
+        app:rsb_thumb_drawable="@drawable/thumb_image"
+        app:rsb_thumb_height="40dp"
+        app:rsb_thumb_width="40dp"
+        app:rsb_tick_mark_gravity="center"
+        app:rsb_tick_mark_layout_gravity="bottom"
+        app:rsb_tick_mark_mode="other"
+        app:rsb_tick_mark_text_color="@color/black_shade" />
 
     <LinearLayout
         android:id="@+id/seeklayout"
