@@ -45,9 +45,9 @@ export class ForgotPasswordComponent extends UnsubscribeOnDestroyAdapter {
           } else {
             this.toastr.success('sucess');
           }
+           this.authService.initSessionStorage();
           setTimeout(() => {
             this.authService.beginLoginConsentFlow();
-            // void this.router.navigate(['/login']);
           }, 5000);
         }),
     );
