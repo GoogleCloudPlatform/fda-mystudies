@@ -190,6 +190,14 @@
       </div>
     </div>
 
+	<div id="js-exampleDiv" hidden>
+	  <form class="js-exampleForm">
+	    <div class="col-sm-12">
+	      <input placeholder="Example placeholder 1" id="ex1" />
+	    </div>
+	  </form>
+	</div>
+	
     <div class="modal fade" id="privacyModal" role="dialog">
       <div class="modal-dialog modal-lg">
         <!-- Modal content-->

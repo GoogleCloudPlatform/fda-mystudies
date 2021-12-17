@@ -713,141 +713,141 @@ $(document)
                   });
 
 			function multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber) {
-
-			this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+			
+			 this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+			 
 			 setTimeout(function() {
-			     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-			        'size': 'normal',
-			        'callback': function(response) {
-			        
-			         if (!response) {
-				        console.log('Coud not get recaptcha response'); 
-				        //return;
-				        reject();
-				    }
-				  
-			            // window.recaptchaVerifier.execute();
-			           	var provider = new firebase.auth.PhoneAuthProvider();
-						return provider.verifyPhoneNumber(userPhoneNumber, recaptchaVerifier)
-						    .then(function(verificationId) {
-						     $('#recaptcha-container').hide();
-						      var verificationCode = window.prompt('Please enter the verification ' +
-						          'code that was sent to your mobile device.');
-						      // Ask user for the verification code.
-						      
-						      //verificationCode
-								var cred = firebase.auth.PhoneAuthProvider.credential(verificationId,
-						          verificationCode);
-						         // sign in the user with the credential
-						         return firebase.auth().signInWithCredential(cred)
-								 .then((cred) => {
-								  $('#recaptcha-container').hide();
-								    //alert('creds user logged in ', cred.user);
-								     viewDashBoard(fdaLink, email, password, passwordLength);
-								  });
-							
-							
-				          }).catch(function (error) {
-				           $('#recaptcha-container').hide();
-				          
-				           if (error.code == 'auth/invalid-verification-code') {
-				           
-					            $('#password')
-					                .val('');
-					            $(
-					                ".askSignInCls")
-					                .addClass(
-					                    'hide');
-					            $("#errMsg")
-					                .text(
-					                    "The SMS verification code used to create the phone auth credential is invalid."
-										+ "Please login again and use the correct verification code sent to your registered phone number.");
-					            $("#errMsg")
-					                .show(
-					                    "fast");
-					            setTimeout(
-					                hideDisplayMessage,
-					                5000);
-					            $('#password')
-					                .attr(
-					                    "type",
-					                    "password");
-					            $('#email')
-					                .val(
-					                    email);
-					            $("body")
-					                .removeClass(
-					                    "loading");
-					            return false;
-				           } else if(error.code == 'auth/argument-error') {
-				              $('#password')
-					                .val('');
-					            $(
-					                ".askSignInCls")
-					                .addClass(
-					                    'hide');
-					            $("#errMsg")
-					                .text(
-					                    "");
-					            $("#errMsg")
-					                .show(
-					                    "fast");
-					            setTimeout(
-					                hideDisplayMessage,
-					                1000);
-					            $('#password')
-					                .attr(
-					                    "type",
-					                    "password");
-					            $('#email')
-					                .val(
-					                    email);
-					            $("body")
-					                .removeClass(
-					                    "loading");
-					            return false;
-				           } else {
-				           
-				   	           $('#password')
-					                .val('');
-					            $(
-					                ".askSignInCls")
-					                .addClass(
-					                    'hide');
-					            $("#errMsg")
-					                .text(
-					                    error.message);
-					            $("#errMsg")
-					                .show(
-					                    "fast");
-					            setTimeout(
-					                hideDisplayMessage,
-					                5000);
-					            $('#password')
-					                .attr(
-					                    "type",
-					                    "password");
-					            $('#email')
-					                .val(
-					                    email);
-					            $("body")
-					                .removeClass(
-					                    "loading");
-					            return false;
-				            
-				            }
-			
-			            });
+	           	var provider = new firebase.auth.PhoneAuthProvider();
+				return provider.verifyPhoneNumber('+917204926544', recaptchaVerifier)
+				    .then(function(verificationId) {
+				     $('#recaptcha-container').hide();
+				     // Ask user for the verification code.
+				     
+				     var form = $('<form>Please enter the verification code that was sent to your mobile device.<input name="verificationCode"/></form>');
+
+				    bootbox.confirm({
+				      closeButton: false,
+				      message: form,
+				      buttons: {
+				        'cancel': {
+				          label: 'Cancel',
+				        },
+				        'confirm': {
+				          label: 'OK',
+				        },
+				      },
+				      callback: function (result) {
+				        if (result) {
+				          alert(result);
+      
+         			 var verificationCode = form.find('input[name=verificationCode]').val();
+				      //verificationCode
+						var cred = firebase.auth.PhoneAuthProvider.credential(verificationId,
+				          verificationCode);
+				         // sign in the user with the credential
+				         return firebase.auth().signInWithCredential(cred)
+						 .then((cred) => {
+						  $('#recaptcha-container').hide();
+						    //alert('creds user logged in ', cred.user);
+						     viewDashBoard(fdaLink, email, password, passwordLength);
+						  });
+					
+				          }
+				        }
+				      })			
+						
+			          }).catch(function (error) {
+			           $('#recaptcha-container').hide();
+			          
+			           if (error.code == 'auth/invalid-verification-code') {
+			           
+				            $('#password')
+				                .val('');
+				            $(
+				                ".askSignInCls")
+				                .addClass(
+				                    'hide');
+				            $("#errMsg")
+				                .text(
+				                    "The SMS verification code used to create the phone auth credential is invalid."
+									+ "Please login again and use the correct verification code sent to your registered phone number.");
+				            $("#errMsg")
+				                .show(
+				                    "fast");
+				            setTimeout(
+				                hideDisplayMessage,
+				                5000);
+				            $('#password')
+				                .attr(
+				                    "type",
+				                    "password");
+				            $('#email')
+				                .val(
+				                    email);
+				            $("body")
+				                .removeClass(
+				                    "loading");
+				            return false;
+			           } else if(error.code == 'auth/argument-error') {
+			              $('#password')
+				                .val('');
+				            $(
+				                ".askSignInCls")
+				                .addClass(
+				                    'hide');
+				            $("#errMsg")
+				                .text(
+				                    "");
+				            $("#errMsg")
+				                .show(
+				                    "fast");
+				            setTimeout(
+				                hideDisplayMessage,
+				                1000);
+				            $('#password')
+				                .attr(
+				                    "type",
+				                    "password");
+				            $('#email')
+				                .val(
+				                    email);
+				            $("body")
+				                .removeClass(
+				                    "loading");
+				            return false;
+			           } else {
+			           
+			   	           $('#password')
+				                .val('');
+				            $(
+				                ".askSignInCls")
+				                .addClass(
+				                    'hide');
+				            $("#errMsg")
+				                .text(
+				                    error.message);
+				            $("#errMsg")
+				                .show(
+				                    "fast");
+				            setTimeout(
+				                hideDisplayMessage,
+				                5000);
+				            $('#password')
+				                .attr(
+				                    "type",
+				                    "password");
+				            $('#email')
+				                .val(
+				                    email);
+				            $("body")
+				                .removeClass(
+				                    "loading");
+				            return false;
 			            
-			        JSON.stringify(response); },
-			        'expired-callback': function() {
-			           console.log("expired-callback");
-			        }
-			     }).verify();
-			
-			     recaptchaVerifier.render().then(function(widgetId) {
-			        window.recaptchaWidgetId = widgetId;
-			     });
+			            }
+		
+		            });
+
 			  }, 1000);
   
 			  
@@ -972,9 +972,9 @@ $(document)
 						
 							   	  firebase.auth().signInWithEmailAndPassword(email, password)
 							   	  .then(function(firebaseUser) {
-							   	   viewDashBoard(fdaLink, email, password, passwordLength);
-							   	 //  $('#recaptcha-container').show();
-							   	  	// 	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
+							   	//   viewDashBoard(fdaLink, email, password, passwordLength);
+							   	   $('#recaptcha-container').show();
+							   	   	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
 								   })
 								   .catch(function(error) {
 							   	  
