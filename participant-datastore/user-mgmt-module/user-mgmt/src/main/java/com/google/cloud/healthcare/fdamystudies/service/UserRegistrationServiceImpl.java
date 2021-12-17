@@ -222,6 +222,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     userRequest.setPassword(user.getPassword());
     userRequest.setAppId(user.getAppId());
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userRequest.setGciUser(false);
 
     HttpEntity<UserRequest> requestEntity = new HttpEntity<>(userRequest, headers);
 

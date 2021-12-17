@@ -65,7 +65,6 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
-import com.google.firebase.FirebaseApp;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -98,11 +97,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class LoginController {
 
   private static final String MOBILE_APP = "mobileApp";
-
-  static {
-    // Initializing the Firebase SDK using default credentials
-    FirebaseApp.initializeApp();
-  }
 
   private XLogger logger = XLoggerFactory.getXLogger(LoginController.class.getName());
 

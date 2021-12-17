@@ -100,6 +100,7 @@ export class UpdateUserComponent
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
         this.appDetails = data;
+        
         this.appDetailsBackup = JSON.parse(
           JSON.stringify(this.appDetails),
         ) as AppDetails;
@@ -300,5 +301,5 @@ export class UpdateUserComponent
       this.user.manageLocations = null;
     }
   }
-  
+ 
 }

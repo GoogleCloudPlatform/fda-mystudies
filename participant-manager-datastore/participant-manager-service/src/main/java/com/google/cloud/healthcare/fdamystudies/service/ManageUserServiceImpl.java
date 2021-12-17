@@ -615,9 +615,8 @@ public class ManageUserServiceImpl implements ManageUserService {
         optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     User user = UserMapper.prepareUserInfo(adminDetails);
-    user.setGciUser(adminDetails.isGciUser());
     user.setDeletedOrDisabledInGci(
-        isGciDeletedOrDisabled(adminDetails.isGciUser(), adminDetails.getEmail()));
+        isGciDeletedOrDisabled(adminDetails.getGciUser(), adminDetails.getEmail()));
     if (adminDetails.isSuperAdmin()) {
       logger.exit(String.format("superadmin=%b, status=%s", user.isSuperAdmin(), user.getStatus()));
       return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
@@ -1042,7 +1041,8 @@ public class ManageUserServiceImpl implements ManageUserService {
           users
               .stream()
               .filter(
-                  user -> user.isGciUser() && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
+                  user ->
+                      user.getGciUser() && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
               .map(UserRegAdminEntity::getEmail)
               .collect(Collectors.toList());
       if (appPropertyConfig.isGciEnabled()) {
@@ -1056,7 +1056,7 @@ public class ManageUserServiceImpl implements ManageUserService {
                 .filter(
                     user ->
                         gciDisbledUsers.contains(user.getEmail())
-                            && user.isGciUser()
+                            && user.getGciUser()
                             && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
                 .map(UserRegAdminEntity::getEmail)
                 .collect(Collectors.toList());

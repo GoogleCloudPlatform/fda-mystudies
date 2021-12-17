@@ -10,6 +10,8 @@ export interface Profile {
   status: 200;
   message: string;
   code: string;
+  gciUser:boolean;
+  
 }
 export interface UpdateProfile {
   firstName: string;
