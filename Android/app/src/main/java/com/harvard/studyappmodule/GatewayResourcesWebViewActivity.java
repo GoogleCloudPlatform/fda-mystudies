@@ -34,11 +34,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.PdfViewerView;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -51,7 +51,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   private RelativeLayout backBtn;
   private WebView webView;
   private RelativeLayout shareBtn;
-  private PDFView pdfView;
+  private PdfViewerView pdfView;
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private String intentTitle;
   private String intentType;
@@ -181,7 +181,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
     title = (AppCompatTextView) findViewById(R.id.title);
     webView = (WebView) findViewById(R.id.webView);
     shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
-    pdfView = (PDFView) findViewById(R.id.pdfView);
+    pdfView = (PdfViewerView) findViewById(R.id.pdfViewer);
   }
 
   private void setFont() {
@@ -243,16 +243,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
 
   private void displayPdfView(String filePath) {
     pdfView.setVisibility(View.VISIBLE);
-    try {
-      pdfView
-          .fromFile(new File(filePath))
-          .defaultPage(0)
-          .enableAnnotationRendering(true)
-          .scrollHandle(new DefaultScrollHandle(GatewayResourcesWebViewActivity.this))
-          .load();
-    } catch (Exception e) {
-      Logger.log(e);
-    }
+    pdfView.setPdf(new File(filePath));
   }
 
   public File getAssetsPdfPath() {

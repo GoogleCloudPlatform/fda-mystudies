@@ -32,19 +32,22 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
+
+import android.os.StrictMode;
 import android.text.Html;
 import android.util.Base64;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
+
+import com.harvard.BuildConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.PdfViewerView;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 
 import java.io.File;
@@ -63,7 +66,6 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   private RelativeLayout backBtn;
   private WebView webView;
   private RelativeLayout shareBtn;
-  private PDFView pdfView;
   private String CreateFilePath;
   private String fileName;
   private static final int PERMISSION_REQUEST_CODE = 1000;
@@ -77,9 +79,11 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   String resourceId;
   Resource resource;
+  PdfViewerView pdfViewer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
 
@@ -217,7 +221,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     titleTv = (AppCompatTextView) findViewById(R.id.title);
     webView = (WebView) findViewById(R.id.webView);
     shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
-    pdfView = (PDFView) findViewById(R.id.pdfView);
+    pdfViewer = (PdfViewerView) findViewById(R.id.pdfViewer);
   }
 
   private void setTextForView() {
@@ -343,6 +347,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
           Logger.log(e1);
         }
       }
+      AppController.generateEncryptedConsentPdf(filePath, fileName);
       return null;
     }
 
@@ -355,7 +360,6 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         // downlaod success mean file exist else check offline file
         File file = new File(filePath + fileName + ".pdf");
         if (file.exists()) {
-          AppController.generateEncryptedConsentPdf(filePath, fileName);
           displayPdfView(filePath + fileName + ".pdf");
         } else {
           // offline functionality
@@ -413,16 +417,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   }
 
   private void displayPdfView(String filePath) {
-    pdfView.setVisibility(View.VISIBLE);
-    try {
-      pdfView
-          .fromFile(new File(filePath))
-          .defaultPage(0)
-          .enableAnnotationRendering(true)
-          .scrollHandle(new DefaultScrollHandle(ResourcesWebViewActivity.this))
-          .load();
-    } catch (Exception e) {
-      Logger.log(e);
-    }
+    pdfViewer.setVisibility(View.VISIBLE);
+    pdfViewer.setPdf(new File(filePath));
   }
 }
