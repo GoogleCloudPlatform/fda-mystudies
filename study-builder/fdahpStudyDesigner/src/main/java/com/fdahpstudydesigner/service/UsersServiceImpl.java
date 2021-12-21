@@ -194,7 +194,6 @@ public class UsersServiceImpl implements UsersService {
         userBO2.setModifiedBy(userBO.getModifiedBy());
         userBO2.setModifiedOn(userBO.getModifiedOn());
         userBO2.setEnabled(userBO.isEnabled());
-        userBO2.setGciUser(userBO.isGciUser());
         if (!userSession.getUserId().equals(userBO.getUserId())) {
           userBO2.setForceLogout(true);
         }

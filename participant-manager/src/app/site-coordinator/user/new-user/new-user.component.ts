@@ -10,7 +10,7 @@ import {UserService} from '../shared/user.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {AppDetails, App, Study, Site} from '../shared/app-details';
-import {User} from 'src/app/entity/user';
+import {gciUser, User} from 'src/app/entity/user';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {Permission} from 'src/app/shared/permission-enums';
@@ -31,6 +31,8 @@ export class AddNewUserComponent
   appDetailsBackup = {} as AppDetails;
   selectedApps: App[] = [];
   user = {} as User;
+
+  
   permission = Permission;
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
@@ -50,19 +52,36 @@ export class AddNewUserComponent
   ) {
     super();
   }
-  emailDisplay:any=[]
+  userEmail:any=[]
 
   ngOnInit(): void {
     this.getAllApps();
-    this.userService.getEmailDetails().subscribe((result)=>
-    {
-      console.log(result);
-      this.emailDisplay=result;
-    })
     
+    this.getGciUsersDetails();
     
   }
 
+  getGciUsersDetails():void 
+  {
+    this.userService.getGciUsers().subscribe((data)=>
+    {
+     
+      
+      this.userEmail=data.email
+    
+      
+    }
+    )
+  }
+  gciUserStatus():void
+  {
+   
+    {
+      this.user.gciUser=true;
+      
+    }
+    
+  }
   getAllApps(): void {
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
@@ -77,7 +96,7 @@ export class AddNewUserComponent
   deleteAppFromList(appId: string): void {
     this.selectedApps = this.selectedApps.filter((obj) => obj.id !== appId);
   }
-
+ 
   appCheckBoxChange(app: App): void {
     if (app.selected) {
       app.permission = this.permission.View;
@@ -201,6 +220,7 @@ export class AddNewUserComponent
       return;
     }
     this.modalRef.hide();
+    
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.manageLocationsSelected;
@@ -214,7 +234,27 @@ export class AddNewUserComponent
     }
   }
   openModal( template: TemplateRef<any>): void {
+
+  let gciUser=false;
+  
+  let userEmail = this.userEmail;
+  userEmail.forEach((element: any) => {
+  
+    if(this.user.email === element){
+       gciUser=true;
+       
+      this.gciUserStatus();
+       this.add();
+    }
+  });
+  
+  if(!gciUser)
+   {
     this.modalRef = this.modalService.show( template);
+   }
+
+
   }
+ 
 
 }

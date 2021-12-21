@@ -173,7 +173,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     // Bad request and errors handled in RestResponseErrorHandler class
     UserResponse authRegistrationResponse =
-        registerUserInAuthServer(setUpAccountRequest, auditRequest, optUsers.get().isGciUser());
+        registerUserInAuthServer(setUpAccountRequest, auditRequest, optUsers.get().getGciUser());
 
     UserRegAdminEntity userRegAdminUser = optUsers.get();
     userRegAdminUser.setUrAdminAuthId(authRegistrationResponse.getUserId());

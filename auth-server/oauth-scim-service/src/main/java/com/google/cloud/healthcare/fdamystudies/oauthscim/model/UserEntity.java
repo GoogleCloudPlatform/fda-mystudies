@@ -75,5 +75,5 @@ public class UserEntity {
 
   @Column(name = "gci_user", nullable = false)
   @Type(type = "yes_no")
-  private boolean gciUser = false;
+  private Boolean gciUser = false;
 }
