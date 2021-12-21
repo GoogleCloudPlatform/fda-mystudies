@@ -32,6 +32,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -255,17 +256,8 @@ public class AppController {
   }
 
   public static Realm getRealmobj(final Context context) {
-    if (config == null) {
-      byte[] key = getkey(context, context.getString(R.string.app_name));
-      config =
-          new RealmConfiguration.Builder()
-              .encryptionKey(key)
-              .schemaVersion(1)
-              .migration(new RealmMigrationHelper())
-              .build();
-    }
     try {
-      return Realm.getInstance(config);
+      return Realm.getDefaultInstance();
     } catch (Exception e) {
       Logger.log(e);
       new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -289,7 +281,7 @@ public class AppController {
   public static void checkIfAppNameChangeAndMigrate(Context context) {
     if (!context.getString(R.string.app_name).equalsIgnoreCase(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)))) {
       byte[] key = getkey(context, SharedPreferenceHelper.readPreference(context,"appname",context.getString(R.string.app_name)));
-      config=
+      RealmConfiguration config=
           new RealmConfiguration.Builder()
               .encryptionKey(key)
               .schemaVersion(1)
@@ -298,15 +290,20 @@ public class AppController {
       Realm realm = Realm.getInstance(config);
       RealmEncryptionHelper.getInstance().deleteEntry(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
       byte[] NewKey = getkey(context, context.getString(R.string.app_name));
-      String s = bytesToHex(NewKey);
       realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), NewKey);
-      config = null;
       realm.close();
       File file = new File(context.getFilesDir(), "default.realm");
       file.delete();
       renameFile(context, "temp.realm", "default.realm");
     }
-    getkey(context, context.getString(R.string.app_name)); // To initialize the realm once before starting the app
+    byte[] key = AppController.getkey(context, context.getString(R.string.app_name));
+    RealmConfiguration config =
+        new RealmConfiguration.Builder()
+            .encryptionKey(key)
+            .schemaVersion(1)
+            .migration(new RealmMigrationHelper())
+            .build();
+    Realm.setDefaultConfiguration(config);
     SharedPreferenceHelper.writePreference(context, "appname", context.getString(R.string.app_name));
   }
 

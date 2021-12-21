@@ -40,12 +40,16 @@ import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
+import com.harvard.utils.realm.RealmMigrationHelper;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 
 import java.util.HashMap;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 
@@ -61,6 +65,7 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
 
+    AppController.keystoreInitilize(SplashActivity.this);
     new checkAndMigrate(this).execute();
   }
 
@@ -82,7 +87,6 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
     protected void onPostExecute(String result) {
       // sync registration
       SyncAdapterManager.init(context);
-      AppController.keystoreInitilize(SplashActivity.this);
       getAppsInfo();
 
       AppController.getHelperSharedPreference()
