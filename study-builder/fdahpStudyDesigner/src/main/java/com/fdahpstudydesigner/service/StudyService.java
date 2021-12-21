@@ -211,5 +211,5 @@ public interface StudyService {
       SessionObject sessionObject,
       AuditLogEventRequest auditRequest);
 
-  public String deleteById(String studyId);
+  public String deleteById(String studyId,AuditLogEventRequest auditRequest);
 }

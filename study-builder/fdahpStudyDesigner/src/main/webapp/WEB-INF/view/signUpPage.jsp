@@ -215,9 +215,9 @@
                     class="mb-lg form-group text-center col-md-4 col-lg-4 boxcenter">
                   <button type="button" class="btn lg-btn" id="signPasswordBut">Submit</button>
                 </div>
-                </div>
+          
               </c:if>
-              </form:form>
+           
               <c:if test="${not isValidToken}">
                 <p class="passwordExp text-center">
                   <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
@@ -229,7 +229,7 @@
               <input type="hidden" name="securityToken" value="${securityToken}"/>
               <input type="password" name="password" id="hidePass"
                      style="display: none;"/>
-            
+               </form:form>
           </div>
           <!--container-->
           <jsp:include page="../templates/copyright.jsp">
