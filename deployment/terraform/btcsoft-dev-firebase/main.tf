@@ -85,6 +85,12 @@ module "project_iam_members" {
     "roles/pubsub.subscriber" = [
       "serviceAccount:triggers-pubsub-handler-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com",
     ],
+    "roles/healthcare.fhirResourceEditor" = [
+      "serviceAccount:response-datastore-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com",
+    ],
+    "roles/healthcare.fhirStoreAdmin" = [
+      "serviceAccount:response-datastore-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com",
+    ],
   }
 }
 
