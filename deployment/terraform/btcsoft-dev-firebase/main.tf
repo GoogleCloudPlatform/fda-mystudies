@@ -63,6 +63,7 @@ module "project" {
   skip_gcloud_download    = true
   activate_apis = [
     "firebase.googleapis.com",
+    "healthcare.googleapis.com",
   ]
 }
 
