@@ -8,9 +8,9 @@
     padding: 22px 30px;
     .select-wrap{
       position: relative;
+      border: 1px solid #ddd;
+      border-radius: 4px;
       select{
-        border: 1px solid #ddd;
-        border-radius: 4px;
         padding: 5px 12px;
       }
     }
