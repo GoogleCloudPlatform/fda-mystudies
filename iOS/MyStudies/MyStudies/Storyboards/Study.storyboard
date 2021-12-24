@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cD3-IQ-4Md">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cD3-IQ-4Md">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -62,7 +62,7 @@
                                 </connections>
                             </button>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="1" translatesAutoresizingMaskIntoConstraints="NO" id="spx-SF-bV8">
-                                <rect key="frame" x="127.33333333333331" y="484" width="120.66666666666669" height="37"/>
+                                <rect key="frame" x="145.33333333333334" y="484" width="84.666666666666657" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="37" id="aSs-tP-fty"/>
                                 </constraints>
@@ -531,7 +531,7 @@
                                 <inset key="separatorInset" minX="24" minY="0.0" maxX="24" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ResourcesCell" rowHeight="105" id="ya3-jM-TXA" customClass="ResourcesTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.666666030883789" width="390" height="105"/>
+                                        <rect key="frame" x="0.0" y="24.333333969116211" width="390" height="105"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ya3-jM-TXA" id="TiY-86-u9p">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="105"/>
@@ -1274,7 +1274,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="lineChart" rowHeight="260" id="efL-BG-Ieh" customClass="LineChartCell" customModule="FDA_MyStudies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.666666030883789" width="390" height="260"/>
+                                        <rect key="frame" x="0.0" y="24.333333969116211" width="390" height="260"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="efL-BG-Ieh" id="w0g-yn-hEC">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="260"/>
@@ -1432,7 +1432,7 @@
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivitiesCell" rowHeight="108" id="al1-wO-fEL" customClass="ActivitiesTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="44.666666030883789" width="390" height="108"/>
+                                        <rect key="frame" x="0.0" y="24.333333969116211" width="390" height="108"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="al1-wO-fEL" id="Yc6-Fr-m7h">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="108"/>
@@ -1539,7 +1539,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ActivitiesCellScheduled" rowHeight="126" id="gvh-TE-MpO" customClass="ActivitiesTableViewCell" customModule="FDA_MyStudies" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="152.66666603088379" width="390" height="126"/>
+                                        <rect key="frame" x="0.0" y="132.33333396911621" width="390" height="126"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gvh-TE-MpO" id="IB6-5t-b9K">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="126"/>
@@ -1678,7 +1678,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="noData" rowHeight="44" id="XNQ-3p-wgg">
-                                        <rect key="frame" x="0.0" y="278.66666603088379" width="390" height="44"/>
+                                        <rect key="frame" x="0.0" y="258.33333396911621" width="390" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XNQ-3p-wgg" id="wYY-8s-Trk">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="44"/>

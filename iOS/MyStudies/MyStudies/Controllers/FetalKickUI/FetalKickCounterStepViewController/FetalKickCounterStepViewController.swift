@@ -415,9 +415,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       errorAlertActionTitle: NSLocalizedString(kTitleCancel, comment: ""),
       errorAlertActionTitle2: NSLocalizedString(kProceedTitle, comment: ""),
       viewControllerUsed: self,
-      action1: {
-//        UserDefaults.standard.setValue(true, forKey: "isAlertDismissed")
-      },
+      action1: {},
       action2: {
         UserDefaults.standard.removeObject(forKey: "isAlertShown")
         UserDefaults.standard.synchronize()
@@ -683,16 +681,16 @@ extension FetalKickCounterStepViewController: UITextFieldDelegate {
 
       } else {
         
-        if Int(finalString)! >= self.maxKicksAllowed! {
-
-          let finalValue = (Int((counterTextField?.text)!))
-          self.editCounterButton?.isUserInteractionEnabled = true
-          counterTextField?.isHidden = false
-          seperatorLineView?.isHidden = false
-          counterTextField?.becomeFirstResponder()
-          counterTextField?.text = "\(finalValue ?? 0)"
-
-        }
+//        if Int(finalString)! >= self.maxKicksAllowed! {
+//
+//          let finalValue = (Int((counterTextField?.text)!))
+//          self.editCounterButton?.isUserInteractionEnabled = true
+//          counterTextField?.isHidden = false
+//          seperatorLineView?.isHidden = false
+//          counterTextField?.becomeFirstResponder()
+//          counterTextField?.text = "\(finalValue ?? 0)"
+//
+//        }
 
         self.showAlertForGreaterValues()
 

@@ -1022,6 +1022,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     let requestName = requestName as String
+    print("StartRequest11 :: \(requestName)")
+    
     if requestName != EnrollmentMethods.updateStudyState.method.methodName
       && requestName != ResponseMethods.updateActivityState.method.methodName
       && requestName != WCPMethods.studyDashboard.method.methodName
@@ -1037,6 +1039,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
+    print("FinishRequest22 :: \(requestName)")
+    
     if requestName as String == ResponseMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
     } else if requestName as String == WCPMethods.activityList.method.methodName {
@@ -1091,6 +1095,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
+    print("FailedRequestName33 :: \(requestName)")
 
     self.removeProgressIndicator()
 
@@ -1110,9 +1115,9 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       return
     }
     let requestName = requestName as String
-
+    
     switch requestName {
-
+  
     case ResponseMethods.activityState.method.methodName:
       if error.code != kNoNetworkErrorCode {
         self.loadActivitiesFromDatabase()

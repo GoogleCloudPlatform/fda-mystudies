@@ -422,9 +422,10 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     requestName: NSString?,
     error: NSError?
   ) {
-
-    print("Response33 :: \(requestName)")
-    print("Response44 :: \(error)")
+    
+    print("Response11 :: \(response!)")
+    print("RequestName22 :: \(requestName!)")
+    print("Error33 :: \(error)")
 
     if error != nil {
       if shouldRetryRequest && maxRequestRetryCount > 0 {
@@ -454,7 +455,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
             try JSONSerialization.jsonObject(with: data!, options: [])
             as? NSDictionary
           
-          print("Response11 :: \(responseDict)")
+          print("ResponseDict11 :: \(responseDict)")
         } catch let error {
           Logger.sharedInstance.error("Serialization error: \(requestName ?? "")", error.localizedDescription)
           responseDict = [:]
@@ -479,8 +480,8 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
               options: .allowFragments
             )
             as? [String: Any]
-          print("Response22 :: \(responseDict)")
-
+          
+          print("ResponseDict22 :: \(responseDict)")
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)
           } else {
