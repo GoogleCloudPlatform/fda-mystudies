@@ -10,8 +10,8 @@ package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_MARKED_COMPLETE;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_OTHER_ACTIVITIES_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.FREQUENCY_TYPE_ONE_TIME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.StudyBo;
@@ -81,7 +82,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:viewStudyActiveTasks.do"));
 
-    verifyAuditEventCall(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE);
+    verifyAuditEventCall(STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE);
   }
 
   @Test
@@ -224,7 +225,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
       }
     }
 
-    verifyAuditEventCall(STUDY_ACTIVE_TASK_SAVED_OR_UPDATED);
+    verifyAuditEventCall(STUDY_OTHER_ACTIVITIES_SAVED_OR_UPDATED);
   }
 
   @Test
