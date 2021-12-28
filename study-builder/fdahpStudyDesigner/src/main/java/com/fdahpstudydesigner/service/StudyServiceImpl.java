@@ -1772,11 +1772,11 @@ public class StudyServiceImpl implements StudyService {
     }
   }
 
-  public String deleteById(String studyId) {
+  public String deleteById(String studyId,AuditLogEventRequest auditRequest) {
     logger.entry("begin studydeleteById()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
-      message = studyDAO.deleteById(studyId);
+      message = studyDAO.deleteById(studyId,auditRequest);
     } catch (Exception e) {
       logger.error("StudyServiceImpl - deleteStudyById() - ERROR", e);
     }
