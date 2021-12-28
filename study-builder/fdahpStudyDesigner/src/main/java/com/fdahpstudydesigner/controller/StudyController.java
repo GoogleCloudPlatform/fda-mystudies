@@ -5534,10 +5534,11 @@ public class StudyController {
 
       String studyId =
           FdahpStudyDesignerUtil.isEmpty(request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
+                  == true
               ? ""
               : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
       if (StringUtils.isNotEmpty(studyId)) {
-        msg = studyService.deleteById(studyId,auditRequest);
+        msg = studyService.deleteById(studyId);
       }
 
       if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
@@ -5546,7 +5547,6 @@ public class StudyController {
             .getSession()
             .setAttribute(
                 FdahpStudyDesignerConstants.SUC_MSG, propMap.get("delete.study.success.message"));
-        auditLogEventHelper.logEvent(StudyBuilderAuditEvent.STUDY_DELETED, auditRequest);
       }
     } catch (Exception e) {
       logger.error("StudyController - deleteById() - ERROR", e);

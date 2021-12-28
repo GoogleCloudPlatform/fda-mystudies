@@ -32,7 +32,6 @@
               #firstName="ngModel"
               required
               pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
-             
             />
             <div
               class="validation-error"
@@ -519,9 +518,8 @@ Superadmins can manage users of the Participant Manager and in addition, can man
     </div>
     <section class="btn__container">
       <button
-       
+    
       [disabled]="!addUserForm.form.valid || disableButton"
-      
         type="button"
         name="add"
         class="btn bt__add bt__add__auto mr-sm mb-2 mt-2"
@@ -532,7 +530,6 @@ Superadmins can manage users of the Participant Manager and in addition, can man
         Add admin user and invite
       </button>
       <button
-
         type="button"
         class="btn bt__cancel"
         routerLink="/coordinator/users"
@@ -546,7 +543,11 @@ Superadmins can manage users of the Participant Manager and in addition, can man
   </form>
 </section>
 <ng-template  #template>
-  
+  <div class="modal-header">
+    <button type="button" class="close pull-right" aria-label="Close"  (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
  
   <div class="modal-body" *ngIf="!user.superAdmin==true">
     You are inviting a person who is not listed in the organizational directory to be a Participant Manager admin. Are you sure you wish to proceed?
@@ -555,9 +556,8 @@ Superadmins can manage users of the Participant Manager and in addition, can man
     You are inviting a person who is not listed in the organizational directory, to be a Participant Manager superadmin. Are you sure you wish to proceed?
   </div>
   <div class="modal-footer">
-   
-    <button type="submit" name="add"  class="btn bt__add mr-sm"  (click)="add()" >Confirm</button>
-    <button type="button" class="btn bt__cancel mobile_mt-8"  (click)="modalRef.hide()" >Cancel</button>
+    <button type="button" class="btn bt__cancel mobile_mt-2"  (click)="modalRef.hide()" >cancel</button>
+    <button type="submit" name="add"  class="btn bt__add mr-sm"  (click)="add()" >confirm</button>
   </div>
  </ng-template>
 

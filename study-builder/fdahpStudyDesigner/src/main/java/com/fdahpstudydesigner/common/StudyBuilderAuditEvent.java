@@ -578,14 +578,7 @@ public enum StudyBuilderAuditEvent {
       STUDY_DATASTORE,
       null,
       "App record deactivated. App record status: '${app_record_status}'",
-      "APP_RECORD_VIEWED"),
-
-  STUDY_DELETED	(
-		      STUDY_BUILDER,
-		      STUDY_DATASTORE,
-		      null,	
-		      "Study deleted before Publishing",
-		      "STUDY_DELETED");
+      "APP_RECORD_VIEWED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

@@ -8363,20 +8363,12 @@ public class StudyDAOImpl implements StudyDAO {
     return consentInfoList;
   }
 
-  @Override
-  public String deleteById(String studyId, AuditLogEventRequest auditRequest) {
+  public String deleteById(String studyId) {
     logger.entry("begin studydeleteById()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Query query = null;
     Session session = null;
     try {
-      StudyBo studyBo = getStudy(studyId);
-      if (studyBo != null && studyBo.getCustomStudyId() != null) {
-        auditRequest.setStudyId(studyBo.getCustomStudyId());
-        if (studyBo.getAppId() != null) {
-          auditRequest.setAppId(studyBo.getAppId());
-        }
-      }
       session = hibernateTemplate.getSessionFactory().openSession();
       query =
           session

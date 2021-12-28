@@ -18,17 +18,12 @@
       *ngIf="location$ | async as manageLocations"
       class="row border__bottom__c4d1e6"
     >
-    
       <div class="col-xs-12 col-md-12 p-none">
         <div class="form-group location-group">
           <div class="form-item">
             <label>Location</label>
-            
             <div class="select-wrap select select-fancy select-fancy-noimage">
-              
               <select
-              
-                
                 class="form-item__element form-item__element--select width__100 background__trans cursor__pointer"
                 [(ngModel)]="site.locationId"
                 required
@@ -36,18 +31,15 @@
                 #location="ngModel"
                 placeholder="Enter app ID or name"
               >
-           
-             <option value="" disabled="disabled" selected="selected" style="display:none">Select location</option>
+                <option value="" disabled selected>Select location</option>
                 <option
-                  
                   class="cursor__pointer"
                   *ngFor="let location of manageLocations.locations"
                   value="{{ location.locationId }}"
                 >
-                {{location.name }}
+                  {{ location.name }}
                 </option>
               </select>
-              
             </div>
           </div>
           <div

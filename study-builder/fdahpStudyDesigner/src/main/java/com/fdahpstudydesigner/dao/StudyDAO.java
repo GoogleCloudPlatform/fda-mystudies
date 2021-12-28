@@ -21,7 +21,6 @@
 
 package com.fdahpstudydesigner.dao;
 
-import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyIdBean;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bean.StudyPageBean;
@@ -268,5 +267,5 @@ public interface StudyDAO {
   public List<ConsentInfoBo> getConsentInfoList(
       String studyId, String customStudyId, String copyVersion);
 
-  public String deleteById(String studyId,AuditLogEventRequest auditRequest);
+  public String deleteById(String studyId);
 }

@@ -94,7 +94,6 @@ module "project" {
     "compute.googleapis.com",
     "container.googleapis.com",
     "dns.googleapis.com",
-    "cloudidentity.googleapis.com",
   ]
 }
 resource "google_binary_authorization_policy" "policy" {
