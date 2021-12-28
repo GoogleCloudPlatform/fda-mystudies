@@ -107,8 +107,8 @@ public enum StudyBuilderAuditEvent {
       "Password change enforced for user (user id - ${edited_user_id}).",
       "PASSWORD_CHANGE_ENFORCED_FOR_USER"),
 
-  STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE(
-      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE"),
+  STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE"),
 
   STUDY_ACTIVE_TASK_MARKED_COMPLETE(
       STUDY_BUILDER,
@@ -117,12 +117,12 @@ public enum StudyBuilderAuditEvent {
       "Active task marked completed (activity ID - ${activetask_id}).",
       "STUDY_ACTIVE_TASK_MARKED_COMPLETE"),
 
-  STUDY_OTHER_ACTIVITIES_SAVED_OR_UPDATED(
+  STUDY_ACTIVE_TASK_SAVED_OR_UPDATED(
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
       "Active task saved/updated (activity ID - ${activetask_id}).",
-      "STUDY_OTHER_ACTIVITIES_SAVED_OR_UPDATED"),
+      "STUDY_ACTIVE_TASK_SAVED_OR_UPDATED"),
 
   STUDY_ACTIVE_TASK_DELETED(
       STUDY_BUILDER,

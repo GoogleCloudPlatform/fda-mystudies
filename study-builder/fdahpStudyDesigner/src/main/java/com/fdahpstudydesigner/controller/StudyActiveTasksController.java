@@ -25,11 +25,10 @@
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_ACTIVE_TASK_CREATED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_OTHER_ACTIVITIES_SAVED_OR_UPDATED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ADD;
-
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
@@ -131,8 +130,7 @@ public class StudyActiveTasksController {
           StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
-          auditLogEventHelper.logEvent(
-              STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE, auditRequest);
+          auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
           map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           request
               .getSession()
@@ -532,7 +530,7 @@ public class StudyActiveTasksController {
               StudyBuilderAuditEvent event =
                   ADD.equalsIgnoreCase(activeTaskBo.getActionPage())
                       ? STUDY_NEW_ACTIVE_TASK_CREATED
-                      : STUDY_OTHER_ACTIVITIES_SAVED_OR_UPDATED;
+                      : STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
               auditLogEventHelper.logEvent(event, auditRequest, values);
               request
                   .getSession()
