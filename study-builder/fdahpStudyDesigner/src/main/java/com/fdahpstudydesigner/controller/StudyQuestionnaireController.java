@@ -8,8 +8,8 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_QUESTIONNAIRE_CREATED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_MARKED_COMPLETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
@@ -2098,7 +2098,7 @@ public class StudyQuestionnaireController {
                 auditRequest.setStudyVersion(studyBo.getVersion().toString());
                 auditRequest.setAppId(studyBo.getAppId());
                 auditLogEventHelper.logEvent(
-                    STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE, auditRequest);
+                    STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
               }
             }
             map.addAttribute("_S", sessionStudyCount);

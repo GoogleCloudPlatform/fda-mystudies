@@ -8,14 +8,13 @@
 
 package com.fdahpstudydesigner.controller;
 
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_IN_FORM_DELETED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.bo.QuestionnaireBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
@@ -96,7 +95,7 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewStudyQuestionnaires.do"));
 
-    verifyAuditEventCall(STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE);
+    verifyAuditEventCall(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE);
   }
 
   @Test
@@ -124,6 +123,6 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewStudyQuestionnaires.do"));
 
-    verifyAuditEventCall(STUDY_OTHER_ACTIVITIES_SECTION_MARKED_COMPLETE);
+    verifyAuditEventCall(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE);
   }
 }
