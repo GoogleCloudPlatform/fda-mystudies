@@ -327,7 +327,7 @@ padding-left: 7px;
   //  debugger;
    // var delstudyID=studyId;
     bootbox.confirm({
-      message: "Are you sure you want to delete this Pre-launch study?",
+      message: "Are you sure you wish to delete this study?",
       buttons: {
         confirm: {
           label: 'Yes',
