@@ -6,17 +6,17 @@
   }
   .modal__body .form-group.location-group {
     padding: 22px 30px;
-    .select-wrap{
+    .select-wrap {
       position: relative;
       border: 1px solid #ddd;
       border-radius: 4px;
-      select{
+      select {
         padding: 5px 12px;
       }
     }
     .form-item label,
-    .validation-error{
-      padding:0 0;
+    .validation-error {
+      padding: 0 0;
     }
   }
   .modal__body .form-control {
