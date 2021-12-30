@@ -17,7 +17,6 @@
                 <div class="pr-xlg flex__justify__space-between flex__text">
                   <div class="banner__label mr-xs">
                     {{ appDetails.customId }}
-                    <<<<<<< HEAD
                     <span class="banner__text">
                       {{ appDetails.name }}
                       -
@@ -35,7 +34,6 @@
                         }}
                       </span>
                     </span>
-                    =======
                     <span class="banner__text">
                       {{ appDetails.name }}
                       -
@@ -65,7 +63,7 @@
     <section class="max__w__1280 m-none site__participant">
       <div class="cards1 m-none">
         <table
-          class="table table-striped custom__table"
+          class="table table-striped custom__table custom-table-css"
           [mfData]="
             appDetails.participants
               | paginate
