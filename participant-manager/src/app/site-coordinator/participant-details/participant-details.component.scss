@@ -114,9 +114,9 @@ table tbody.custom__tbody_2 tr td:nth-child(5) {
     outline: 0px solid slategrey;
   }
 }
-table.custom-table-css>:not(:first-child){
-  border-top: 0px ;
+table.custom-table-css > :not(:first-child) {
+  border-top: 0px;
 }
-.table.custom-table-css>:not(caption)>*>* {
- box-shadow: none; 
+.table.custom-table-css > :not(caption) > * > * {
+  box-shadow: none;
 }
