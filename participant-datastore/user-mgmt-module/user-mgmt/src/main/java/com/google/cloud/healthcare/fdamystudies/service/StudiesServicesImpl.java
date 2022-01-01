@@ -343,6 +343,8 @@ public class StudiesServicesImpl implements StudiesServices {
       FcmPushNotificationResponse fcmNotificationResponse =
           new FcmPushNotificationResponse(
               responseJson, conn.getResponseCode(), conn.getResponseMessage());
+      logger.info("Request of Notification" + dataInfo.toString());
+      logger.info("Request json of complete Notification" + json.toString());
       logger.trace(
           String.format(
               "FCM Notification Response status=%d, response=%s",

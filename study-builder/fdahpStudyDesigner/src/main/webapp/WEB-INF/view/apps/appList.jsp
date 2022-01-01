@@ -89,7 +89,7 @@ span.sprites_icon.mr-lg.viewStudiesClass {
                     <c:choose>
                         <c:when test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN') && app.studiesCount gt 0}">viewStudiesClass</c:when>
                         <c:when test="${not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN') && (not empty app.studyPermissionCount && app.studyPermissionCount gt 0)}">viewStudiesClass</c:when> 
-                    </c:choose>" data-toggle="tooltip" data-placement="top" title="${app.studiesCount} associated studies" appId="${app.customAppId}">
+                    </c:choose>" data-toggle="tooltip" data-placement="top" title="${app.studiesCount} associated study(ies)" appId="${app.customAppId}">
                     <img class="<c:if test="${app.studiesCount eq 0 || (not empty app.studyPermissionCount && app.studyPermissionCount eq 0) || app.appStatus eq 'Draft'}">
 								cursor-none
 						</c:if>" src="../images/icons/file-list-line.svg" >
