@@ -98,6 +98,11 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: gci_enabled
+            - name: MFA_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: mfa_enabled
             - name: GCI_AUTH_DOMAIN
               valueFrom:
                 secretKeyRef:

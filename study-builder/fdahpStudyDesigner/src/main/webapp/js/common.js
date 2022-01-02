@@ -718,7 +718,7 @@ $(document)
 			 
 			 setTimeout(function() {
 	           	var provider = new firebase.auth.PhoneAuthProvider();
-				return provider.verifyPhoneNumber('+917204926544', recaptchaVerifier)
+				return provider.verifyPhoneNumber(userPhoneNumber, recaptchaVerifier)
 				    .then(function(verificationId) {
 				     $('#recaptcha-container').hide();
 				     // Ask user for the verification code.
@@ -738,19 +738,44 @@ $(document)
 				      },
 				      callback: function (result) {
 				        if (result) {
-				          alert(result);
-      
-         			 var verificationCode = form.find('input[name=verificationCode]').val();
-				      //verificationCode
-						var cred = firebase.auth.PhoneAuthProvider.credential(verificationId,
+         			 	  var verificationCode = form.find('input[name=verificationCode]').val();
+				      	  //verificationCode
+						  var cred = firebase.auth.PhoneAuthProvider.credential(verificationId,
 				          verificationCode);
-				         // sign in the user with the credential
-				         return firebase.auth().signInWithCredential(cred)
-						 .then((cred) => {
-						  $('#recaptcha-container').hide();
-						    //alert('creds user logged in ', cred.user);
+				          // sign in the user with the credential
+				          return firebase.auth().signInWithCredential(cred)
+						  .then((cred) => {
+						    $('#recaptcha-container').hide();
 						     viewDashBoard(fdaLink, email, password, passwordLength);
-						  });
+						  })
+ 						  .catch(function(error) {
+			   	            $('#password')
+	                            .val('');
+	                        $(
+	                            ".askSignInCls")
+	                            .addClass(
+	                                'hide');
+	                        $("#errMsg")
+	                            .text(
+	                                error.message);
+	                        $("#errMsg")
+	                            .show(
+	                                "fast");
+	                        setTimeout(
+	                            hideDisplayMessage,
+	                            5000);
+	                        $('#password')
+	                            .attr(
+	                                "type",
+	                                "password");
+	                        $('#email')
+	                            .val(
+	                                email);
+	                        $("body")
+	                            .removeClass(
+	                                "loading");
+	                        return false;
+                       });
 					
 				          }
 				        }
@@ -923,7 +948,6 @@ $(document)
                     }
                     if (isValidLoginForm) {
                       var email = $('#email').val();
-                      $('#email').val('');
                       var password = $('#password').val();
                       var passwordLength = "";
                       var i;
@@ -946,6 +970,7 @@ $(document)
                       var isGCIUser = false;
                       var fdaLink = $('#fdaLink').val();
                       var gciEnabled = $('#gci').val();
+                      var mfaEnabled = $('#mfa').val();
                       if(gciEnabled == 'true'){
                        		$.ajax({
                               url: "/studybuilder/getGCIUserData.do?"
@@ -972,12 +997,15 @@ $(document)
 						
 							   	  firebase.auth().signInWithEmailAndPassword(email, password)
 							   	  .then(function(firebaseUser) {
-							   	//   viewDashBoard(fdaLink, email, password, passwordLength);
-							   	   $('#recaptcha-container').show();
-							   	   	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
+							   	  debugger
+								   	  if(mfaEnabled == 'true'){
+								   	    $('#recaptcha-container').show();
+								   	   	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
+								   	  } else {
+								   	    viewDashBoard(fdaLink, email, password, passwordLength); 
+								   	  }
 								   })
 								   .catch(function(error) {
-							   	  
 							   	   if(error.code == 'auth/argument-error') {
 						              $('#password')
 							                .val('');
@@ -994,6 +1022,33 @@ $(document)
 							            setTimeout(
 							                hideDisplayMessage,
 							                1000);
+							            $('#password')
+							                .attr(
+							                    "type",
+							                    "password");
+							            $('#email')
+							                .val(
+							                    email);
+							            $("body")
+							                .removeClass(
+							                    "loading");
+							            return false;
+						           } else if (error.code == 'auth/wrong-password') {
+						           		$('#password')
+							                .val('');
+							            $(
+							                ".askSignInCls")
+							                .addClass(
+							                    'hide');
+							            $("#errMsg")
+							                .text(
+							                    "Access to this account has been temporarily disabled due to many failed login attempts. Please contact your IT admin to immediately restore it by resetting your password or you can try again later.");
+							            $("#errMsg")
+							                .show(
+							                    "fast");
+							            setTimeout(
+							                hideDisplayMessage,
+							                8000);
 							            $('#password')
 							                .attr(
 							                    "type",

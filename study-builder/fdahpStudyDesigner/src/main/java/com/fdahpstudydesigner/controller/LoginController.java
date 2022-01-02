@@ -72,6 +72,7 @@ public class LoginController {
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
   String gciEnabled = configMap.get("gciEnabled");
+  String mfaEnabled = configMap.get("mfaEnabled");
   String gciAuthDomain = configMap.get("gciAuthDomain");
   String gciApiKey = configMap.get("gciApiKey");
 
@@ -284,6 +285,7 @@ public class LoginController {
     }
     masterDataBO = dashBoardAndProfileService.getMasterData("terms");
     map.addAttribute("gciEnabled", gciEnabled);
+    map.addAttribute("mfaEnabled", mfaEnabled);
     map.addAttribute("gciApiKey", gciApiKey);
     map.addAttribute("gciAuthDomain", gciAuthDomain);
     map.addAttribute("masterDataBO", masterDataBO);

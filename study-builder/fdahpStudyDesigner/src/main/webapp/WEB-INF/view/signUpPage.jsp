@@ -158,10 +158,10 @@
                 </div>
                 <div class="col-xs-6">
                   <div class="mb-lg form-group">
-                    <input type="text" class="input-field wow_input phoneMask"
+                    <input type="text" class="input-field wow_input"
                            id="" name="phoneNumber" placeholder="Phone"
-                           value="${userBO.phoneNumber}" data-minlength="12"
-                           maxlength="12" autocomplete="off"/>
+                           value="${userBO.phoneNumber}" data-minlength="13"
+                           maxlength="14" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>

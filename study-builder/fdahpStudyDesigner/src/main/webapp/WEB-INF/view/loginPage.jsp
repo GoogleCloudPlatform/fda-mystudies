@@ -102,10 +102,12 @@
                      method="post"
                      autocomplete="off">
             <input type="hidden" id="gci" value="${gciEnabled}" name="gci"/>
+            <input type="hidden" id="mfa" value="${mfaEnabled}" name="mfa"/>
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
-            <div id="recaptcha-container"></div>
+           
             <div class="login pt-lg">
+             <div id="recaptcha-container" class="mb-lg form-group"></div>
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
                        data-pattern-error="Email address is invalid"

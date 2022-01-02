@@ -437,6 +437,21 @@ resource "google_secret_manager_secret" "manual_gci_enabled" {
   }
 }
 
+resource "google_secret_manager_secret" "manual_mfa_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-mfa-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+
 resource "google_secret_manager_secret" "manual_gci_auth_domain" {
   provider = google-beta
 

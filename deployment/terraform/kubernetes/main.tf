@@ -106,6 +106,7 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
       "manual-gci-enabled",
+	  "manual-mfa-enabled",
       "manual-gci-auth-domain",
       "manual-gci-api-key",
       "manual-gci-temp-password",
@@ -147,6 +148,7 @@ resource "kubernetes_secret" "shared_secrets" {
     privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
     fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
     gci_enabled                       = data.google_secret_manager_secret_version.secrets["manual-gci-enabled"].secret_data
+	mfa_enabled                       = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled"].secret_data
     gci_auth_domain                   = data.google_secret_manager_secret_version.secrets["manual-gci-auth-domain"].secret_data
     gci_api_key                       = data.google_secret_manager_secret_version.secrets["manual-gci-api-key"].secret_data
     gci_temp_password                 = data.google_secret_manager_secret_version.secrets["manual-gci-temp-password"].secret_data

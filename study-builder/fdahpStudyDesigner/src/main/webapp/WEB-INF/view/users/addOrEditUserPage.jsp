@@ -256,29 +256,15 @@ button#deleteUser {
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-              Phone (+XXX - XXXXXXXXXX) 
+               Phone (+XXX - XXXXXXXXXX) 
               <c:if test="${gciEnabled  eq true }"><span class="requiredStar"> *</span></c:if>
             </div>
-              
-              <div class="col-md-6 pl-none">
-              + </div>
-
-             <div class="col-md-6 pl-none">
-	            <input id="areaNo" name="areaNo" type="tel"  <c:if test="${gciEnabled  eq true }">required</c:if>
-	            class="form-control"  placeholder="Area code" pattern="[0-9]{3}"
-	            aria-label="Area code" />
-	            <div class="help-block with-errors red-txt"></div>
-              </div>
-               
-              <div class="col-md-6 pr-none pl-none">
-	              <input type="text" class="form-control" 
-                    <c:if test="${gciEnabled  eq true }">required</c:if>
+            <div class="form-group">
+              <input type="text" class="form-control"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     data-minlength="10" maxlength="10" 
+                     data-minlength="13" maxlength="14" 
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
-                 <div class="help-block with-errors red-txt"></div>
-               </div>
-              
+              <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
         </div>
@@ -1437,4 +1423,3 @@ button#deleteUser {
 	    }
   }
 </script>
-
