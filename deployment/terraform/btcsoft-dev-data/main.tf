@@ -100,7 +100,7 @@ module "mystudies" {
   project_id        = module.project.project_id
   region            = "us-east1"
   zone              = "b"
-  availability_type = "REGIONAL"
+  availability_type = "ZONAL"
   database_version  = "MYSQL_5_7"
   vpc_network       = "projects/btcsoft-dev-networks/global/networks/btcsoft-dev-network"
   user_password     = data.google_secret_manager_secret_version.db_secrets["auto-mystudies-sql-default-user-password"].secret_data
