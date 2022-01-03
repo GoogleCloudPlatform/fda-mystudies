@@ -103,6 +103,7 @@ public class UsersController {
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
   String gciEnabled = configMap.get("gciEnabled");
+  String mfaEnabled = configMap.get("mfaEnabled");
 
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
@@ -239,6 +240,7 @@ public class UsersController {
           map.addAttribute("apps", appList);
           map.addAttribute("appBos", appBos);
           map.addAttribute("gciEnabled", gciEnabled);
+          map.addAttribute("mfaEnabled", mfaEnabled);
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
           mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -712,6 +714,7 @@ public class UsersController {
           map.addAttribute("apps", appList);
           map.addAttribute("appBos", appBos);
           map.addAttribute("gciEnabled", gciEnabled);
+          map.addAttribute("mfaEnabled", mfaEnabled);
 
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {

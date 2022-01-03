@@ -220,6 +220,7 @@ button#deleteUser {
               <span class="requiredStar"> *</span>
             </div>
             <c:set var="gciEnabled" value="${gciEnabled}"/>
+            <c:set var="mfaEnabled" value="${mfaEnabled}"/>
             <c:if test="${gciEnabled eq false }">
             <div class="form-group">
               <input type="text" class="form-control" id="emailId"
@@ -257,13 +258,14 @@ button#deleteUser {
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
                Phone (+XXX - XXXXXXXXXX) 
-              <c:if test="${gciEnabled  eq true }"><span class="requiredStar"> *</span></c:if>
+              <c:if test="${mfaEnabled  eq true}"><span class="requiredStar"> *</span></c:if>
             </div>
             <div class="form-group">
               <input type="text" class="form-control"
                      name="phoneNumber" value="${userBO.phoneNumber}"
                      data-minlength="13" maxlength="14" 
-                     <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
+                     <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> 
+                     <c:if test="${mfaEnabled eq true}">required</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
