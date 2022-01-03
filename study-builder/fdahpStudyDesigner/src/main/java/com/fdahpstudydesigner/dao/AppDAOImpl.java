@@ -328,7 +328,7 @@ public class AppDAOImpl implements AppDAO {
         appId = (String) session.save(appBo);
 
         AppPermissionBO appPermissionBO = new AppPermissionBO();
-        appPermissionBO.setUserId(appBo.getUserId());
+        appPermissionBO.setUserId(userId);
         appPermissionBO.setAppId(appId);
         appPermissionBO.setViewPermission(true);
         session.save(appPermissionBO);
