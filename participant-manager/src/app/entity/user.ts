@@ -16,7 +16,7 @@ export interface User extends ApiResponse {
 
   lastName?: string;
 
-  phoneNumber: string;
+  phoneNum: string;
 
   emailChanged: number;
 

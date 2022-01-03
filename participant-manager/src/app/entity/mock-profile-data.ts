@@ -26,7 +26,7 @@ export const expectedUserResposnse = {
   manageUsers: 1,
   newPassword: '',
   password: '',
-  phoneNumber: '0806550988',
+  phoneNum: '0806550988',
   urAdminAuthId: 'b45bc4f67fd77ebb-34234f12a5bee975231',
 } as User;
 
