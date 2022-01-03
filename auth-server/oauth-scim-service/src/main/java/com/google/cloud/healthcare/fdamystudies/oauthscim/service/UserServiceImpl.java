@@ -15,6 +15,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjec
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCKED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCK_EMAIL_TIMESTAMP;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APPLICATION_JSON;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_ATTEMPTS;
@@ -78,6 +79,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.UpdateRequest;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -85,7 +87,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,6 +158,7 @@ public class UserServiceImpl implements UserService {
         logger.info("Successfully updated GCI user data: ", userRecordUpdated.getEmail());
 
         userEntity.setGciUser(true);
+        userEntity.setPhoneNumber(userRequest.getPhoneNumber());
       } catch (FirebaseAuthException e) {
         logger.error("UserServiceImpl.createUser firebase error: ", e);
       }
@@ -435,8 +440,36 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Boolean isGCIUser(String email) {
-    return repository.isGCIUser(email);
+  public Boolean isGCIUser(HttpServletResponse response, String email) {
+    logger.entry("begin isGCIUser(response,email)");
+    JSONObject jsonobject = new JSONObject();
+    PrintWriter out = null;
+    Boolean gciUser = false;
+
+    try {
+
+      Optional<UserEntity> optUserEntity = repository.findByEmail(email);
+
+      if (!optUserEntity.isPresent()) {
+        throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+      }
+
+      UserEntity userEntity = optUserEntity.get();
+
+      jsonobject.put("isGciUser", userEntity.getGciUser().toString());
+      jsonobject.put("phoneNumber", userEntity.getPhoneNumber().toString());
+      gciUser = userEntity.getGciUser();
+
+      response.setContentType(APPLICATION_JSON);
+      out = response.getWriter();
+      out.print(jsonobject);
+
+    } catch (Exception e) {
+      logger.error("error isGCIUser(response,email)" + e);
+    }
+
+    logger.exit("exit isGCIUser(response,email)");
+    return gciUser;
   }
 
   @Override

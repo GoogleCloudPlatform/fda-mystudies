@@ -21,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 
 public interface UserService {
 
@@ -43,7 +44,7 @@ public interface UserService {
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException;
 
-  public Boolean isGCIUser(String email);
+  public Boolean isGCIUser(HttpServletResponse response, String email);
 
   public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;

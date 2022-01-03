@@ -32,23 +32,25 @@ $(document).ready(function () {
 
 function validateLoginForm() {
 
-    var email = $(document.getElementById("email")).val();
-   	var password = $(document.getElementById("password")).val();
+	var email = $(document.getElementById("email")).val();
+	var password = $(document.getElementById("password")).val();
 	var errorDiv = document.getElementById("password_error");
 	var serverContextPath = $('#serverContextPath').val(); 
-
-    $.ajax({
-        url: serverContextPath + "/isGCIUser",
-        type: "POST",
-        dataType: 'json',
+	var mfaEnabled = $('#mfaEnabled').val();
+	  
+	$.ajax({
+	    url: serverContextPath + "/isGCIUser",
+	    type: "POST",
+	    dataType: 'json',
 	    data: {
 	          email: email
 	        },
-        success: function getResponse(data) {
-	        var isGCIUser = data.message;
-
+	    success: function getResponse(data) {
+	        var isGCIUser = data.isGciUser;
+	        var phoneNumber = data.phoneNumber;
+	
 	        if(isGCIUser) {
-
+	
 			  firebase.auth().onAuthStateChanged(function(user) {
 		   	    if (user) {
 		   	    console.log("success  " + email);
@@ -59,15 +61,27 @@ function validateLoginForm() {
 		   	  
 		   	  firebase.auth().signInWithEmailAndPassword(email, password)
 		   	  	.then(function(firebaseUser) {
-
-	        	errorDiv.innerHTML = '';
-			    errorDiv.style.display = "none";
-	        	$("#loginForm").unbind();
- 				$("#loginForm").submit();
+	   	  		  if(mfaEnabled == 'true'){
+			   	    $('#recaptcha-container').show();
+			   	   	multiFactorAuth(email, password, phoneNumber);
+			   	  } else {
+		        	errorDiv.innerHTML = '';
+				    errorDiv.style.display = "none";
+		        	$("#loginForm").unbind();
+	 				$("#loginForm").submit();
+			   	  }
+								   	  
 		      	}).catch(function(error) {
-		      	errorDiv.innerHTML = error;
-		      	errorDiv.style.display = "block";
-		        return false;
+		      	
+		      	if (error.code == 'auth/wrong-password') {
+		      	  errorDiv.innerHTML = "Access to this account has been temporarily disabled due to many failed login attempts. Please contact your IT admin to immediately restore it by resetting your password or you can try again later.";
+			      errorDiv.style.display = "block";
+			      return false;
+		      	} else {
+			      errorDiv.innerHTML = error;
+			      errorDiv.style.display = "block";
+			      return false;
+		        }
 		      });
 			} else {
 			  errorDiv.innerHTML = '';
@@ -75,16 +89,90 @@ function validateLoginForm() {
 			  $("#loginForm").unbind();
 	  	      $("#loginForm").submit();
 	  		}
-
-        },
-        error: function (e) {
-            console.log("ERROR : ", e);
-        }
-    });
+	
+	    },
+	    error: function (e) {
+	        console.log("ERROR : ", e);
+	    }
+	});
 
 }
 
 
+function multiFactorAuth(email, password, phoneNumber) {
+			
+  var errorDiv = document.getElementById("password_error");
+  this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+
+  window.setTimeout(function() {
+   	var provider = new firebase.auth.PhoneAuthProvider();
+	return provider.verifyPhoneNumber(phoneNumber, recaptchaVerifier)
+	    .then(function(verificationId) {
+	     $('#recaptcha-container').hide();
+	     // Ask user for the verification code.
+	     var form = $('<form>Please enter the verification code that was sent to your mobile device.<input name="verificationCode"/></form>');
+
+	    bootbox.confirm({
+	      closeButton: false,
+	      message: form,
+	      buttons: {
+	        'cancel': {
+	          label: 'Cancel',
+	        },
+	        'confirm': {
+	          label: 'OK',
+	        },
+	      },
+	      callback: function (result) {
+	        if (result) {
+		 	  var verificationCode = form.find('input[name=verificationCode]').val();
+	      	  //verificationCode
+			  var cred = firebase.auth.PhoneAuthProvider.credential(verificationId,
+	          verificationCode);
+	          // sign in the user with the credential
+	          return firebase.auth().signInWithCredential(cred)
+			  .then((cred) => {
+			    $('#recaptcha-container').hide();
+	        	errorDiv.innerHTML = '';
+			    errorDiv.style.display = "none";
+	        	$("#loginForm").unbind();
+ 				$("#loginForm").submit();
+			  })
+			  .catch(function(error) {
+   	          errorDiv.innerHTML = error;
+  			  errorDiv.style.display = "block";
+    		  return false;
+           });
+		
+	          }
+	        }
+	      })			
+			
+          }).catch(function (error) {
+           $('#recaptcha-container').hide();
+           recaptchaVerifier.reset();
+           if (error.code == 'auth/invalid-verification-code') {
+	          errorDiv.innerHTML = "The SMS verification code used to create the phone auth credential is invalid."
+						+ "Please login again and use the correct verification code sent to your registered phone number.";
+  			  errorDiv.style.display = "block";
+    		  return false;
+           } else if(error.code == 'auth/argument-error') {
+	          errorDiv.innerHTML = error;
+  			  errorDiv.style.display = "block";
+    		  return false;
+           } else {
+              errorDiv.innerHTML = error;
+  			  errorDiv.style.display = "block";
+    		  return false;
+           }
+        });
+
+  }, 3000);
+  
+}
+  
+  
+  
 var fieldErrors = {
   "email": {
 	"required": "Enter an email",

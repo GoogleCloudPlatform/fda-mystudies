@@ -72,6 +72,9 @@ public class AppPropertyConfig implements Serializable {
   @Value("${gciEnabled:false}")
   private boolean gciEnabled;
 
+  @Value("${mfaEnabled:false}")
+  private boolean mfaEnabled;
+
   @Value("${gciApiKey}")
   private String gciApiKey;
 

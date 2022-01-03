@@ -105,6 +105,8 @@ public final class AuthScimConstants {
 
   public static final String GCI_ENABLED = "gciEnabled";
 
+  public static final String MFA_ENABLED = "mfaEnabled";
+
   public static final String GCI_API_KEY = "gciApiKey";
 
   public static final String GCI_AUTH_DOMAIN = "gciAuthDomain";

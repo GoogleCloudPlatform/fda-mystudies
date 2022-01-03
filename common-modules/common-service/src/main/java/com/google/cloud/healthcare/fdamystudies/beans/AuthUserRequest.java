@@ -28,4 +28,6 @@ public class AuthUserRequest {
   private Integer status;
 
   private Boolean gciUser;
+
+  private String phoneNumber;
 }

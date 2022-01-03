@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.model;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.ID_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -76,4 +77,8 @@ public class UserEntity {
   @Column(name = "gci_user", nullable = false)
   @Type(type = "yes_no")
   private Boolean gciUser = false;
+
+  @ToString.Exclude
+  @Column(name = "phone_number", length = XS_LENGTH)
+  private String phoneNumber;
 }

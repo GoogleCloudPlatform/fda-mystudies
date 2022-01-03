@@ -29,6 +29,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_VIEW_NAME;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MFA_ENABLED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
@@ -65,7 +66,6 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Optional;
@@ -73,7 +73,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +133,7 @@ public class LoginController {
     paramMap.add(LOGIN_CHALLENGE, loginChallenge);
 
     model.addAttribute(GCI_ENABLED, appConfig.isGciEnabled());
+    model.addAttribute(MFA_ENABLED, appConfig.isMfaEnabled());
     model.addAttribute(GCI_API_KEY, appConfig.getGciApiKey());
     model.addAttribute(GCI_AUTH_DOMAIN, appConfig.getGciAuthDomain());
     model.addAttribute(SERVER_CONTEXT_PATH, appConfig.getServerContextPath());
@@ -224,7 +224,7 @@ public class LoginController {
 
     AuthenticationResponse authenticationResponse =
         (PlatformComponent.PARTICIPANT_MANAGER.equals(platformComponent)
-                && userService.isGCIUser(loginRequest.getEmail()))
+                && userService.isGCIUser(response, loginRequest.getEmail()))
             ? userService.authenticateGCIUser(user, auditRequest)
             : userService.authenticate(user, auditRequest);
 
@@ -252,17 +252,12 @@ public class LoginController {
   @RequestMapping("/isGCIUser")
   public void isGCIUser(HttpServletResponse response, String email) {
     logger.entry("begin isGCIUser()");
-    JSONObject jsonobject = new JSONObject();
-    PrintWriter out = null;
     Boolean gciUser = false;
     try {
       if (StringUtils.isNotEmpty(email)) {
-        gciUser = userService.isGCIUser(email);
+        gciUser = userService.isGCIUser(response, email);
       }
-      jsonobject.put("message", gciUser);
-      response.setContentType(APPLICATION_JSON);
-      out = response.getWriter();
-      out.print(jsonobject);
+
     } catch (Exception e) {
       response.setContentType(APPLICATION_JSON);
       logger.error("LoginController - isGCIUser() - ERROR " + e);
@@ -414,6 +409,7 @@ public class LoginController {
           redirectConfig.getPrivacyPolicyUrl(mobilePlatform, deeplinkUrlCookie));
       modelView.addObject(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
       modelView.addObject(GCI_ENABLED, appConfig.isGciEnabled());
+      modelView.addObject(MFA_ENABLED, appConfig.isMfaEnabled());
       modelView.addObject(GCI_API_KEY, appConfig.getGciApiKey());
       modelView.addObject(GCI_AUTH_DOMAIN, appConfig.getGciAuthDomain());
       modelView.addObject(SERVER_CONTEXT_PATH, appConfig.getServerContextPath());

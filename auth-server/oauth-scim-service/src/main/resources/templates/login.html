@@ -20,7 +20,7 @@
   href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap">
 <!-- Bootstrap core CSS -->
 <link
-  href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"
   rel="stylesheet" />
 <!-- Custom styles for this template -->
 <link
@@ -33,6 +33,10 @@
     />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
 
@@ -68,6 +72,7 @@
                 novalidate onsubmit="return validateform();"
                 th:object="${loginRequest}">
                  <input type="hidden" id="gciEnabled" th:value="${gciEnabled}" name="gciEnabled"/>
+                 <input type="hidden" id="mfaEnabled" th:value="${mfaEnabled}" name="mfaEnabled"/>
                  <input type="hidden" id="gciApiKey" th:value="${gciApiKey}" name="gciApiKey"/>
                  <input type="hidden" id="gciAuthDomain" th:value="${gciAuthDomain}" name="gciAuthDomain"/>
                  <input type="hidden" id="serverContextPath" th:value="${serverContextPath}" name="serverContextPath"/>
@@ -135,6 +140,7 @@
                           </span>
                         </div>
                       </div>
+                      <div id="recaptcha-container""></div>
                       <div class="clearfix"></div>
                     </div>
                   </div>

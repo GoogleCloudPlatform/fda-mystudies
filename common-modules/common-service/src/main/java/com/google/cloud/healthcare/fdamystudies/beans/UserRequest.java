@@ -60,4 +60,9 @@ public class UserRequest {
   @Column(name = "gci_user", nullable = false)
   @Type(type = "yes_no")
   private Boolean gciUser = false;
+
+  @ToString.Exclude
+  @NotBlank
+  @Size(min = 13, max = 14)
+  private String phoneNumber;
 }
