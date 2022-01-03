@@ -107,7 +107,6 @@
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
            
             <div class="login pt-lg">
-             <div id="recaptcha-container" class="mb-lg form-group"></div>
               <div class="mb-lg form-group">
                 <input type="text" class="input-field wow_input" id="email" name="username"
                        data-pattern-error="Email address is invalid"
@@ -133,6 +132,7 @@
                    href="javascript:void(0)">Forgot password?
                 </a>
               </div>
+               <div id="recaptcha-container" class="mb-lg form-group"></div>
             </div>
             <input type="password" name="password" id="hidePass" style="display: none;"/>
           </form:form>
