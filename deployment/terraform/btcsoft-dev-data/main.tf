@@ -144,6 +144,17 @@ module "btcsoft_dev_mystudies_consent_documents" {
   project_id = module.project.project_id
   location   = "us-east1"
 
+  lifecycle_rules = [
+    {
+      action = {
+        type = "Delete"
+      }
+      condition = {
+        age        = 15
+        with_state = "ANY"
+      }
+    }
+  ]
   iam_members = [
     {
       member = "serviceAccount:consent-datastore-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
@@ -164,6 +175,17 @@ module "btcsoft_dev_mystudies_study_resources" {
   project_id = module.project.project_id
   location   = "us-east1"
 
+  lifecycle_rules = [
+    {
+      action = {
+        type = "Delete"
+      }
+      condition = {
+        age        = 15
+        with_state = "ANY"
+      }
+    }
+  ]
   iam_members = [
     {
       member = "serviceAccount:study-builder-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
@@ -188,6 +210,17 @@ module "btcsoft_dev_mystudies_sql_import" {
   project_id = module.project.project_id
   location   = "us-east1"
 
+  lifecycle_rules = [
+    {
+      action = {
+        type = "Delete"
+      }
+      condition = {
+        age        = 1
+        with_state = "ANY"
+      }
+    }
+  ]
   iam_members = [
     {
       member = "serviceAccount:${module.mystudies.instance_service_account_email_address}"
