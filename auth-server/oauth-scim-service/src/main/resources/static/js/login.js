@@ -49,7 +49,7 @@ function validateLoginForm() {
 	        var isGCIUser = data.isGciUser;
 	        var phoneNumber = data.phoneNumber;
 	
-	        if(isGCIUser) {
+	        if(isGCIUser == 'true') {
 	
 			  firebase.auth().onAuthStateChanged(function(user) {
 		   	    if (user) {
