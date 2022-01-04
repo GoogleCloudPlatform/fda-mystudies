@@ -62,7 +62,6 @@ public class UserRequest {
   private Boolean gciUser = false;
 
   @ToString.Exclude
-  @NotBlank
   @Size(min = 13, max = 14)
   private String phoneNumber;
 }

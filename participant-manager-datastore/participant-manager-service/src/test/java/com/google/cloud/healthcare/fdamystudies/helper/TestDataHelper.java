@@ -152,6 +152,7 @@ public class TestDataHelper {
     userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
     userRegAdminEntity.setStatus(UserStatus.ACTIVE.getValue());
     userRegAdminEntity.setSuperAdmin(false);
+    userRegAdminEntity.setPhoneNumber("+919999999999");
     userRegAdminEntity.setUrAdminAuthId("TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQh");
     return userRegAdminEntity;
   }
@@ -169,6 +170,7 @@ public class TestDataHelper {
     userRegAdminEntity.setLocationPermission(Permission.EDIT.value());
     userRegAdminEntity.setStatus(UserStatus.ACTIVE.getValue());
     userRegAdminEntity.setSuperAdmin(true);
+    userRegAdminEntity.setPhoneNumber("+919999999999");
     return userRegAdminEntity;
   }
 
