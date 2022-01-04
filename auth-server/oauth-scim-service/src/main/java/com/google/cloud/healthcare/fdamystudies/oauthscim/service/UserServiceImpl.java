@@ -448,7 +448,8 @@ public class UserServiceImpl implements UserService {
 
     try {
 
-      Optional<UserEntity> optUserEntity = repository.findByEmail(email);
+      Optional<UserEntity> optUserEntity =
+          repository.findByAppIdAndEmail("Participant Manager", email);
 
       if (!optUserEntity.isPresent()) {
         throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);

@@ -23,9 +23,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
   public Optional<UserEntity> findByAppIdAndEmail(String appId, String email);
 
-  @Query("SELECT u FROM UserEntity u where u.email=:email")
-  public Optional<UserEntity> findByEmail(@Param("email") String email);
-
   @Transactional
   public long deleteByUserId(String userId);
 
