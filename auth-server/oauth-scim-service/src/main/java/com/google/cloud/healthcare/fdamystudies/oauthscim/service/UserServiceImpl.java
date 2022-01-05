@@ -79,6 +79,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.UpdateRequest;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -89,6 +90,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -440,21 +442,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Boolean isGCIUser(HttpServletResponse response, String email) {
+  public Boolean isGCIUser(HttpServletResponse response, String email)
+      throws IOException, JSONException {
     logger.entry("begin isGCIUser(response,email)");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     Boolean gciUser = false;
 
-    try {
+    Optional<UserEntity> optUserEntity =
+        repository.findByAppIdAndEmail("Participant Manager", email);
 
-      Optional<UserEntity> optUserEntity =
-          repository.findByAppIdAndEmail("Participant Manager", email);
-
-      if (!optUserEntity.isPresent()) {
-        throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
-      }
-
+    if (optUserEntity.isPresent()) {
       UserEntity userEntity = optUserEntity.get();
 
       jsonobject.put(
@@ -468,14 +466,11 @@ public class UserServiceImpl implements UserService {
               ? userEntity.getPhoneNumber().toString()
               : "");
       gciUser = userEntity.getGciUser();
-
-      response.setContentType(APPLICATION_JSON);
-      out = response.getWriter();
-      out.print(jsonobject);
-
-    } catch (Exception e) {
-      logger.error("error isGCIUser(response,email)" + e);
     }
+
+    response.setContentType(APPLICATION_JSON);
+    out = response.getWriter();
+    out.print(jsonobject);
 
     logger.exit("exit isGCIUser(response,email)");
     return gciUser;
