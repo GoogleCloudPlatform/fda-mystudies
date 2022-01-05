@@ -4667,14 +4667,16 @@ public class StudyController {
         } else if (StringUtils.isEmpty(studyBo.getCustomStudyId())
             && StringUtils.isNotEmpty(studyBo.getDestinationCustomStudyId())) {
 
-          String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
-          String customId = "";
-          if (copyCustomIdArray[1].contains("COPY")) {
-            customId = copyCustomIdArray[0];
-            studyBo.setDestinationCustomStudyId(customId);
-          } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
-            customId = copyCustomIdArray[0];
-            studyBo.setDestinationCustomStudyId(customId + "@Export");
+          if (studyBo.getDestinationCustomStudyId().contains("@")) {
+            String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
+            String customId = "";
+            if (copyCustomIdArray[1].contains("COPY")) {
+              customId = copyCustomIdArray[0];
+              studyBo.setDestinationCustomStudyId(customId);
+            } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
+              customId = copyCustomIdArray[0];
+              studyBo.setDestinationCustomStudyId(customId + "@Export");
+            }
           }
 
           map.addAttribute(
@@ -5537,7 +5539,7 @@ public class StudyController {
               ? ""
               : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
       if (StringUtils.isNotEmpty(studyId)) {
-        msg = studyService.deleteById(studyId,auditRequest);
+        msg = studyService.deleteById(studyId, auditRequest);
       }
 
       if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
