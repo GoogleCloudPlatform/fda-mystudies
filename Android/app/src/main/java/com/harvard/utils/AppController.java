@@ -255,25 +255,29 @@ public class AppController {
   }
 
   public static Realm getRealmobj(final Context context) {
+    Realm realm;
     try {
-      return Realm.getDefaultInstance();
+      realm = Realm.getDefaultInstance();
     } catch (Exception e) {
+      byte[] key = AppController.getkey(context, context.getString(R.string.app_name));
+      RealmConfiguration config =
+          new RealmConfiguration.Builder()
+              .encryptionKey(key)
+              .schemaVersion(1)
+              .migration(new RealmMigrationHelper())
+              .build();
+      Realm.setDefaultConfiguration(config);
+      realm = Realm.getDefaultInstance();
       Logger.log(e);
-      new Handler(Looper.getMainLooper()).post(new Runnable() {
-        @Override
-        public void run() {
-          Toast.makeText(context.getApplicationContext(), "Critical error occurred, Please clear data and sign in again", Toast.LENGTH_SHORT).show();
-        }
-      });
-      return null;
     }
+    return realm;
   }
 
   private static byte[] getkey(Context context, String keyName) {
     RealmEncryptionHelper realmEncryptionHelper = RealmEncryptionHelper.initHelper(context, keyName);
     byte[] key = realmEncryptionHelper.getEncryptKey();
     String s = bytesToHex(key);
-//    Log.e("realm key for " + keyName, "" + s);
+    Log.wtf("realm key for " + keyName, "" + s);
     return key;
   }
 
