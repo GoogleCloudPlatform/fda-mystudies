@@ -137,7 +137,32 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: study_export_import_bucket_name 
+                  key: study_export_import_bucket_name
+            - name: PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: project_id
+            - name: REGION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: region_id
+            - name: CONSENT_DATASET_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: consent_dataset_id
+            - name: CONSENTSTORE_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: consentStore_id
+            - name: CONSENT_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: consent_enabled
           ports:
           - containerPort: 8080
           readinessProbe:
