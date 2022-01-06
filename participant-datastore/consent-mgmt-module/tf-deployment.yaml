@@ -89,7 +89,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: consentStore_id
+                  key: consent_store_id
             - name: CONSENT_ENABLED
               valueFrom:
                 secretKeyRef:

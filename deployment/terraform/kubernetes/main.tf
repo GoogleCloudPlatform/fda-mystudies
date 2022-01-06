@@ -164,7 +164,7 @@ resource "kubernetes_secret" "shared_secrets" {
 	project_id                        = data.google_secret_manager_secret_version.secrets["manual-project-id"].secret_data
 	region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
 	consent_dataset_id                = data.google_secret_manager_secret_version.secrets["manual-consent-dataset-id"].secret_data
-	consentStore_id                   = data.google_secret_manager_secret_version.secrets["manual-manual-consent-store-id"].secret_data
+	consent_store_id                  = data.google_secret_manager_secret_version.secrets["manual-manual-consent-store-id"].secret_data
 	consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
 	fhir_dataset_id                   = data.google_secret_manager_secret_version.secrets["manual-fhir-dataset-id"].secret_data
 	did_dataset_id                    = data.google_secret_manager_secret_version.secrets["manual-did-dataset-id"].secret_data
