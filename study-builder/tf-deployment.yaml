@@ -163,6 +163,11 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: consent_enabled
+            - name: CONSENT_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: consent_bucket_name
           ports:
           - containerPort: 8080
           readinessProbe:
