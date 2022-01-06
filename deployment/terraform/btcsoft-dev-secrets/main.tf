@@ -437,6 +437,133 @@ resource "google_secret_manager_secret" "manual_gci_enabled" {
   }
 }
 
+resource "google_secret_manager_secret" "manual_project_id" {
+  provider = google-beta
+
+  secret_id = "manual-project-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_region_id" {
+  provider = google-beta
+
+  secret_id = "manual-region-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_consent_dataset_id" {
+  provider = google-beta
+
+  secret_id = "manual-consent-dataset-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_consent_store_id" {
+  provider = google-beta
+
+  secret_id = "manual-consent-store-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_consent_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-consent-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_fhir_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-fhir-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_did_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-did-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_fhir_dataset_id" {
+  provider = google-beta
+
+  secret_id = "manual-fhir-dataset-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_did_dataset_id" {
+  provider = google-beta
+
+  secret_id = "manual-did-dataset-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
 resource "google_secret_manager_secret" "manual_mfa_enabled" {
   provider = google-beta
 
