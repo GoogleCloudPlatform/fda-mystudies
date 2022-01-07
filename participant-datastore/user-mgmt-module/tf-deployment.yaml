@@ -146,7 +146,7 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: consent_dataset_id
-            - name: CONSENT_STORE_ID
+            - name: CONSENTSTORE_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
