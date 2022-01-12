@@ -2754,3 +2754,7 @@ width:100% !important;
 .changeView div.dropdown-menu ul.dropdown-menu > li > a {
     padding: 8px 0px 8px 20px !important;
 }
+.note-icon-menu-check:before {
+    content: "\ea21";
+    visibility: hidden !important;
+}
