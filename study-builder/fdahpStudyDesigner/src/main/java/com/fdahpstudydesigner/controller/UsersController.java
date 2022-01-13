@@ -188,7 +188,8 @@ public class UsersController {
               // Google identity platform user email list
               gciUserList.add(exportedUserRecord.getEmail());
               GciAdminList admin = new GciAdminList();
-              if (!exportedUserRecord.isDisabled()) {
+              if (!exportedUserRecord.isDisabled()
+                  & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
                 admin.setEmailId(exportedUserRecord.getEmail());
                 admin.setUid(exportedUserRecord.getUid());
                 gciAdminList.add(admin);
@@ -566,7 +567,8 @@ public class UsersController {
       // Start listing users from the beginning, 1000 at a time.
       ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
       for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
-        if (exportedUserRecord.isDisabled()) {
+        if (exportedUserRecord.isDisabled()
+            & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
           gciDisabledEmail.add(exportedUserRecord.getEmail());
         }
         gciEmail.add(exportedUserRecord.getEmail());

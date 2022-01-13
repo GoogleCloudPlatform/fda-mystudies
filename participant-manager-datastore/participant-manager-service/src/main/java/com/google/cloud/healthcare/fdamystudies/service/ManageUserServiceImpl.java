@@ -1082,7 +1082,8 @@ public class ManageUserServiceImpl implements ManageUserService {
       page = FirebaseAuth.getInstance().listUsers(null);
       while (page != null) {
         for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
-          if (exportedUserRecord.isDisabled()) {
+          if (exportedUserRecord.isDisabled()
+              & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
             gciDisbledUsers.add(exportedUserRecord.getEmail());
           }
           gciUsers.add(exportedUserRecord.getEmail());

@@ -86,10 +86,10 @@ public class ParticipantManagerUtil {
     ListUsersPage page;
     try {
       page = FirebaseAuth.getInstance().listUsers(null);
-      System.out.println(page.getValues());
       while (page != null) {
         for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
-          if (!exportedUserRecord.isDisabled()) {
+          if (!exportedUserRecord.isDisabled()
+              & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
             gciEmail.add(exportedUserRecord.getEmail());
           }
         }

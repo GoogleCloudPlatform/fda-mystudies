@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -83,7 +84,8 @@ public class GCISchedulerService {
         // Start listing users from the beginning, 1000 at a time.
         ListUsersPage page = FirebaseAuth.getInstance().listUsers(null);
         for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
-          if (exportedUserRecord.isDisabled()) {
+          if (exportedUserRecord.isDisabled()
+              & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
             gciDisabledEmail.add(exportedUserRecord.getEmail());
           }
           gciEmail.add(exportedUserRecord.getEmail());
