@@ -466,6 +466,11 @@ public class UserServiceImpl implements UserService {
               ? userEntity.getPhoneNumber().toString()
               : "");
       gciUser = userEntity.getGciUser();
+
+    } else {
+
+      jsonobject.put("isGciUser", "false");
+      jsonobject.put("phoneNumber", "");
     }
 
     response.setContentType(APPLICATION_JSON);
