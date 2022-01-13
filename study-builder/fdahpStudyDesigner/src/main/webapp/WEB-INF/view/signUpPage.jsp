@@ -111,7 +111,8 @@
         <div>
           <input type="hidden" id="csrfDet"
                  csrfParamName="${_csrf.parameterName}" csrfToken="${_csrf.token}"/>
-                  <input type="hidden" id="gciUser" value="${gciUser}" name="gciUser"/>
+          <c:set var="mfaEnabled" value="${mfaEnabled}"/>
+          <input type="hidden" id="gciUser" value="${gciUser}" name="gciUser"/>
           <div class=" col-xs-12" id="alignCenter">
             <!--lg-register-center  -->
             <form:form id="signUpForm" data-toggle="validator" role="form"
@@ -161,7 +162,8 @@
                     <input type="text" class="input-field wow_input"
                            id="" name="phoneNumber" placeholder="Phone"
                            value="${userBO.phoneNumber}" data-minlength="13"
-                           maxlength="14" autocomplete="off"/>
+                           maxlength="14"  pattern="[+][0-9]{12}"
+                           <c:if test="${mfaEnabled eq true}">required</c:if> autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>

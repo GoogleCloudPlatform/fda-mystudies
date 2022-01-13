@@ -450,6 +450,7 @@ public class LoginController {
         if (gciUser) {
           map.addAttribute("gciUser", "gciUser");
         }
+        map.addAttribute("mfaEnabled", mfaEnabled);
         map.addAttribute("userBO", userBO);
         map.addAttribute("orgName", configMap.get("orgName"));
         mv = new ModelAndView("signUpPage", map);
