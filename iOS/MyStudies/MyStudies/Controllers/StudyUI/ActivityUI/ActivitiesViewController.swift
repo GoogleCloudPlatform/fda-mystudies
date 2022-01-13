@@ -1226,8 +1226,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         let study = Study.currentStudy
         let activity = Study.currentActivity
         
-        if activity?.type != .activeTask {
-          
+        if activity?.type != .activeTask {          
           // Update RestortionData for Activity in DB
           DBHandler.updateActivityRestortionDataFor(
             activity: activity!,
