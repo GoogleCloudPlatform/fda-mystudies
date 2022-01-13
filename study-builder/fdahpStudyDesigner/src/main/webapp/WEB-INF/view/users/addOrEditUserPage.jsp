@@ -263,7 +263,7 @@ button#deleteUser {
             <div class="form-group">
               <input type="text" class="form-control"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     data-minlength="13" maxlength="14" pattern="[+][0-9]{12}"
+                     data-minlength="13" maxlength="14" pattern="[+][0-9]{12,13}"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> 
                      <c:if test="${mfaEnabled eq true}">required</c:if> />
               <div class="help-block with-errors red-txt"></div>

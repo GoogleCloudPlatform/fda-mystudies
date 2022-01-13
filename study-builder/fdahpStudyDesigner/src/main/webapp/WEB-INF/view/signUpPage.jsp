@@ -162,7 +162,7 @@
                     <input type="text" class="input-field wow_input"
                            id="" name="phoneNumber" placeholder="Phone"
                            value="${userBO.phoneNumber}" data-minlength="13"
-                           maxlength="14"  pattern="[+][0-9]{12}"
+                           maxlength="14"  pattern="[+][0-9]{12,13}"
                            <c:if test="${mfaEnabled eq true}">required</c:if> autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
