@@ -187,7 +187,7 @@ button#deleteUser {
             </div>
             <div class="form-group">
               <input autofocus="autofocus" type="text" class="form-control"
-                     name="firstName" value="${fn:escapeXml(userBO.firstName)}"
+                     id="firstName" name="firstName" value="${fn:escapeXml(userBO.firstName)}"
                      maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -200,7 +200,7 @@ button#deleteUser {
               <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control" name="lastName"
+              <input type="text" class="form-control" id="lastName" name="lastName"
                      value="${fn:escapeXml(userBO.lastName)}" maxlength="50" required data-error="Please fill out this field"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -261,7 +261,7 @@ button#deleteUser {
               <c:if test="${mfaEnabled  eq true}"><span class="requiredStar"> *</span></c:if>
             </div>
             <div class="form-group">
-              <input type="text" class="form-control"
+              <input type="text" class="form-control" id="phoneNumber"
                      name="phoneNumber" value="${userBO.phoneNumber}"
                      data-minlength="13" maxlength="14" pattern="[+][0-9]{12,13}"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> 
@@ -998,15 +998,22 @@ button#deleteUser {
 
     $('.addUpdate').on('click', function () {
       var email = $('#emailId').val();
+      var roleId = $('#roleId').val();
+      var lastName = $('#lastName').val();
+      var firstName = $('#firstName').val();
+      var phoneNumber = $('#phoneNumber').val();
+      
       var oldEmail = $('#emailId').attr('oldVal');
       var isEmail;
       var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
       isEmail = regEX.test(email);
+      
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
         $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
-        if (email !== '') {
+        if ('' !== email && '' !== roleId  && null !== roleId && '' !== lastName  && 
+        		'' !== firstName && '' !== phoneNumber ) {
         	const adminList = '${adminList}' 
         	    var element = $("#roleId option:selected").text();
                 if(!adminList.includes(email) && adminList != null && ${gciEnabled}){
