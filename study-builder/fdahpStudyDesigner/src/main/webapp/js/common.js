@@ -745,6 +745,7 @@ $(document)
 				          // sign in the user with the credential
 				          return firebase.auth().signInWithCredential(cred)
 						  .then((cred) => {
+						    $("body").addClass("loading");
 						    $('#recaptcha-container').hide();
 						     viewDashBoard(fdaLink, email, password, passwordLength);
 						  })
@@ -961,7 +962,6 @@ $(document)
                           .css(
                               '-webkit-text-security',
                               'disc');
-                       $("body").addClass("loading");
                       var csrfDetcsrfParamName = $(
                           '#csrfDet').attr(
                           'csrfParamName');
@@ -997,11 +997,11 @@ $(document)
 						
 							   	  firebase.auth().signInWithEmailAndPassword(email, password)
 							   	  .then(function(firebaseUser) {
-							   	  debugger
 								   	  if(mfaEnabled == 'true'){
 								   	    $('#recaptcha-container').show();
 								   	   	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
 								   	  } else {
+								   	    $("body").addClass("loading");
 								   	    viewDashBoard(fdaLink, email, password, passwordLength); 
 								   	  }
 								   })
@@ -1090,11 +1090,13 @@ $(document)
 				                     }  
 			                       });
 				   	  		} else {
+				   	  		   $("body").addClass("loading");
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
 				                 },
                             });
                             } else {
+                               $("body").addClass("loading");
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
 				   	  		
