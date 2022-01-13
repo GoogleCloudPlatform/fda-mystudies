@@ -1033,7 +1033,7 @@ $(document)
 							                .removeClass(
 							                    "loading");
 							            return false;
-						           } else if (error.code == 'auth/wrong-password') {
+						           } else if (error.code == 'auth/too-many-requests') {
 						           		$('#password')
 							                .val('');
 							            $(
