@@ -1222,6 +1222,20 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         ActivityBuilder.currentActivityBuilder.activity?.restortionData =
           taskViewController
           .restorationData
+        
+        let study = Study.currentStudy
+        let activity = Study.currentActivity
+        
+        if activity?.type != .activeTask {
+          
+          // Update RestortionData for Activity in DB
+          DBHandler.updateActivityRestortionDataFor(
+            activity: activity!,
+            studyId: (study?.studyId)!,
+            restortionData: taskViewController.restorationData!
+          )
+          activity?.currentRun.restortionData = taskViewController.restorationData!
+        }
       }
       self.checkForActivitiesUpdates()
 
