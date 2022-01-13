@@ -1879,7 +1879,7 @@ public class StudyDAOImpl implements StudyDAO {
       if (StringUtils.isNotEmpty(studyId)) {
         query =
             session.createQuery(
-                "from StudyPageBo where studyId=:studyId order by createdOn, sequenceNumber");
+                "from StudyPageBo where studyId=:studyId order by createdOn, CASE WHEN sequenceNumber IS NULL THEN 1 ELSE 0 END, sequenceNumber");
         query.setString("studyId", studyId);
         studyPageBo = query.list();
       }
@@ -7325,7 +7325,6 @@ public class StudyDAOImpl implements StudyDAO {
       session.save(studySequenceBo);
 
       List<StudyPageBo> studyPageList = getOverviewStudyPagesById(oldStudyId, studyBo.getUserId());
-
       if (CollectionUtils.isNotEmpty(studyPageList)) {
         for (StudyPageBo studyPageBo : studyPageList) {
           studyPageBo.setPageId(null);
