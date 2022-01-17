@@ -449,7 +449,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         } else {
           // search active task which does not have short_title is not null
           String searchQuery =
-              "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL ";
+              "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL and active=1  ";
           query = session.createQuery(searchQuery).setParameter("studyId", studyId);
           // end here deletion
         }

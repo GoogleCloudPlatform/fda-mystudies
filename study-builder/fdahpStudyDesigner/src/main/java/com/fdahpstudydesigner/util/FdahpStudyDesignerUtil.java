@@ -1233,6 +1233,7 @@ public class FdahpStudyDesignerUtil {
             bf = new BufferedReader(new InputStreamReader(zip.getInputStream(entry)));
             obj = new Object[] {entry.getName(), bf};
           } else if (FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("jpg")
+              || FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("jpeg")
               || FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("png")) {
             byte[] imageArray = getImage(zip.getInputStream(entry));
             CustomMultipartFile customMultipartFile =
