@@ -16,6 +16,8 @@ def main_pods
   pod 'ReachabilitySwift'
   pod 'Alamofire'
   pod 'Firebase/Messaging'
+  pod 'GoogleAnalytics'
+  pod 'Firebase/Analytics'
 end
 
 target 'MyStudies' do

@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 let kVerifyViewControllerSegue = "VerifyViewControllerSegue"
 let kVerficationMessageFromForgotPassword =
@@ -99,12 +100,21 @@ class ForgotPasswordViewController: UIViewController {
   /// To check all the validations
   /// before making a logout webservice call.
   @IBAction func submitButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "ForgotPassword Submit"
+    ])
     self.dismissKeyboard()
     if textFieldEmail?.text == "" {
       self.showAlertMessages(textMessage: kMessageEmailBlank)
+      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+        buttonClickReasonKey: "Enter email alert"
+      ])
 
     } else if !(Utilities.isValidEmail(testStr: (textFieldEmail?.text)!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+        buttonClickReasonKey: "Valid email alert"
+      ])
     } else if let email = textFieldEmail?.text {
       requestPassword(with: email)
     }
@@ -142,6 +152,9 @@ class ForgotPasswordViewController: UIViewController {
           buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
           viewControllerUsed: self
         ) {
+          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+            buttonClickReasonKey: "ForgotPassword Ok Alert"
+          ])
           _ = self.navigationController?.popViewController(animated: true)
         }
       } else if let error = error {
@@ -176,6 +189,9 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
       title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
       message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
     )
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Resend email alert"
+    ])
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
@@ -208,6 +224,9 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
   func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
     if textField.text ?? "" != "" && !(Utilities.isValidEmail(testStr: textField.text ?? "")) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+        buttonClickReasonKey: "Valid email alert"
+      ])
     }
   }
 }

@@ -142,7 +142,7 @@
 }
 
 - (void)setCancelButtonItem:(UIBarButtonItem *)cancelButtonItem {
-    [super setCancelButtonItem:cancelButtonItem];
+     [super setCancelButtonItem:cancelButtonItem];
     _imageCaptureView.cancelButtonItem = cancelButtonItem;
 }
 

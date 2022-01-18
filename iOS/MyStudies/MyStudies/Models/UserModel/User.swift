@@ -17,6 +17,7 @@
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 import Foundation
+import FirebaseAnalytics
 
 enum UserType: Int {
   case anonymousUser = 0

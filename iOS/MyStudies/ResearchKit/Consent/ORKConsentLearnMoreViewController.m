@@ -68,7 +68,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+  NSDictionary *userDict = @{@"ORKActions":@"ORKLearnMore"};
+   [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+
     self.view.backgroundColor = ORKColor(ORKBackgroundColorKey);
   
     WKWebViewConfiguration *webViewConfiguration = [WKWebViewConfiguration new];
@@ -118,6 +120,8 @@
 }
 
 - (IBAction)done:(id)sender {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKLearnMoreDone"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 

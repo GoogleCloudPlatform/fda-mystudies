@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 let kDeleteButtonTag = 11220
 let kRetainButtonTag = 11221
@@ -60,6 +61,9 @@ class ConfirmationOptionalTableViewCell: UITableViewCell {
 
   /// When user press on Delete data or Retail Data button
   @IBAction func deleteOrRetainDataButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "ConfirmationOptional Detele/Retain"
+    ])
 
     var deleteData = false
     if sender.tag == kDeleteButtonTag {

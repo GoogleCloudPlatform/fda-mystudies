@@ -18,6 +18,7 @@
 
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 class InEligibilityStep: ORKStep {
 
@@ -51,17 +52,28 @@ class InEligibilityStepViewController: ORKStepViewController {
   }
 
   override func goForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
     super.goForward()
   }
 
   // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification3(notification:)),
+                                           name: Notification.Name("GoForward"), object: nil)
     buttonDone?.layer.borderColor = kUicolorForButtonBackground
   }
 
+  @objc func methodOfReceivedNotification3(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Menu Clicked"
+    ])
+  }
   // MARK: - Actions
   @IBAction func buttonActionDone(sender: UIButton?) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "InEligibility Done"
+    ])
     self.goForward()
     self.taskViewController?.dismiss(animated: true, completion: nil)
   }

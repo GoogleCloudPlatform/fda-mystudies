@@ -17,6 +17,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 class JailbrokeBlocker: UIView {
 
@@ -51,6 +52,9 @@ class JailbrokeBlocker: UIView {
   // MARK: - Action
 
   @IBAction func buttonUpgradeAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "JailBroke Upgrade"
+    ])
 
     guard
       let url = URL(

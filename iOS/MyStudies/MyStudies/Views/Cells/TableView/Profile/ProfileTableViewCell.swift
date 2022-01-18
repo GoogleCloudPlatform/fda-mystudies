@@ -17,6 +17,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 let kLabelText = "LabelName"
 let kToggleValue = "ToggleValue"
@@ -36,7 +37,7 @@ class ProfileTableViewCell: UITableViewCell {
   @IBOutlet var switchToggle: UISwitch?
 
   @IBAction func switchValueChanged(sender: UISwitch) {
-
+    
   }
 
   /// Used to populate UI
@@ -56,10 +57,8 @@ class ProfileTableViewCell: UITableViewCell {
     case .usePasscode:
       if Utilities.isValidValue(someObject: user.settings?.passcode as AnyObject?) {
         self.switchToggle?.isOn = (user.settings?.passcode)!
-
       } else {
         self.switchToggle?.isOn = false
-
       }
     case .useTouchId:
       if Utilities.isValidValue(someObject: user.settings?.touchId as AnyObject?) {

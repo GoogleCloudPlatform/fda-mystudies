@@ -20,6 +20,7 @@
 import Foundation
 import IQKeyboardManagerSwift
 import UIKit
+import FirebaseAnalytics
 
 struct FeedbackDetail {
 
@@ -65,20 +66,33 @@ class FeedBackViewController: UIViewController {
   /// If all the validations satisfy send user feedback request
   /// - Parameter sender: Instance of submit UIButton.
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Feedback Submit"
+    ])
+    
     self.view.endEditing(true)
 
     if FeedbackDetail.subject.isEmpty && FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+        buttonClickReasonKey: "Fill all fields alert"
+      ])
     } else if FeedbackDetail.subject.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString("Please enter the message", comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+        buttonClickReasonKey: "Enter message alert"
+      ])
     } else if FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString("Please provide your feedback", comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+        buttonClickReasonKey: "Provide feedback alert"
+      ])
     } else {
       UserServices().sendUserFeedback(delegate: self)
     }

@@ -20,6 +20,7 @@
 import Foundation
 import SlideMenuControllerSwift
 import UIKit
+import FirebaseAnalytics
 
 class HomeViewController: UIViewController {
 
@@ -129,6 +130,11 @@ class HomeViewController: UIViewController {
 
   /// Calls menu view.
   @IBAction func getStartedButtonClicked(_ sender: UIButton) {
+
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Get Started"
+    ])
+    
     self.createMenuView()
   }
 
@@ -161,6 +167,10 @@ class HomeViewController: UIViewController {
   /// To initialize WebViewController using
   /// Main storyboard.
   @IBAction func linkButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Open Website"
+    ])
+    
     guard let websiteLink = URL(string: Branding.websiteLink) else { return }
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =
@@ -169,6 +179,7 @@ class HomeViewController: UIViewController {
       ) as! UINavigationController
     let webView = webViewController.viewControllers[0] as! WebViewController
     webView.requestLink = websiteLink.absoluteString
+    
     self.navigationController?.present(webViewController, animated: true, completion: nil)
   }
 
@@ -187,7 +198,6 @@ class HomeViewController: UIViewController {
   /// To navigate back to Signin.
   /// - Parameter segue: The segue which is connected to 1 controller to another.
   @IBAction func unwindForSignIn(_ segue: UIStoryboardSegue) {
-
     DispatchQueue.main.asyncAfter(deadline: .now()) {
       self.buttonSignin.sendActions(for: .touchUpInside)
     }

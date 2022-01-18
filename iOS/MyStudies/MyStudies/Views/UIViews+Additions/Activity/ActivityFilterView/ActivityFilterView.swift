@@ -17,6 +17,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import FirebaseAnalytics
 
 // MARK: - ActivitySchedules Class
 
@@ -76,6 +77,9 @@ class ActivityFilterView: UIView, UITableViewDelegate, UITableViewDataSource {
 
   // MARK: - Button Action
   @IBAction func buttonCancelClicked(_: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Activity Filter Cancel"
+    ])
     self.removeFromSuperview()
   }
 

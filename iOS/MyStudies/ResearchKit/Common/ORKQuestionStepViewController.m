@@ -516,7 +516,7 @@ typedef NS_ENUM(NSInteger, ORKQuestionSection) {
 }
 
 - (void)setCancelButtonItem:(UIBarButtonItem *)cancelButtonItem {
-    [super setCancelButtonItem:cancelButtonItem];
+     [super setCancelButtonItem:cancelButtonItem];
     _navigationFooterView.cancelButtonItem = cancelButtonItem;
 }
 

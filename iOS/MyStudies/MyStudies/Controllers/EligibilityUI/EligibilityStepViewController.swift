@@ -20,6 +20,7 @@
 import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 let kTitleOK = "OK"
 
@@ -78,6 +79,7 @@ class EligibilityStepViewController: ORKStepViewController {
   }
 
   override func goForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
     super.goForward()
   }
 
@@ -160,6 +162,9 @@ class EligibilityStepViewController: ORKStepViewController {
 
   // MARK: - Action
   @IBAction func buttonActionSubmit(sender: UIButton?) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "EligibilityStep Submit"
+    ])
 
     self.view.endEditing(true)
     let token = tokenTextField.text
@@ -230,7 +235,7 @@ extension EligibilityStepViewController: NMWebServiceDelegate {
     } else {
       self.taskResult.enrollmentToken = ""
     }
-
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
     self.goForward()
   }
 

@@ -21,6 +21,7 @@ import Foundation
 import MessageUI
 import UIKit
 import WebKit
+import FirebaseAnalytics
 
 class WebViewController: UIViewController {
 
@@ -103,12 +104,21 @@ class WebViewController: UIViewController {
   /// Dismiss ViewController
   @IBAction func cancelButtonClicked(_ sender: Any) {
     self.dismiss(animated: true, completion: nil)
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Cancel Website/Consent/Terms/PrivacyPolicy"
+    ])
   }
 
   @IBAction func buttonActionShare(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Share Document"
+    ])
     self.shareDocument { [weak self] (status) in
       if !status {
         self?.view.makeToast(kResourceShareError)
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "Unable to ShareResourceAlert Ok"
+        ])
       }
     }
   }

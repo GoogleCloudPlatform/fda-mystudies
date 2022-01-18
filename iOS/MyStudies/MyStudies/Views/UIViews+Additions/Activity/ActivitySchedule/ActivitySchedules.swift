@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 // MARK: - ActivitySchedules Class
 class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
@@ -82,6 +83,9 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
 
   // MARK: - Button Action
   @IBAction func buttonCancelClicked(_: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "ActivitySchedules Cancel"
+    ])
     self.removeFromSuperview()
   }
 

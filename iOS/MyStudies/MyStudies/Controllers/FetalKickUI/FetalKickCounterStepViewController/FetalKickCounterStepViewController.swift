@@ -21,6 +21,7 @@ import ActionSheetPicker_3_0
 import Foundation
 import IQKeyboardManagerSwift
 import ResearchKit
+import FirebaseAnalytics
 
 let kFetalKickCounterStepDefaultIdentifier = "defaultIdentifier"
 let kTapToRecordKick = "TAP TO RECORD A KICK"
@@ -226,6 +227,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   }
 
   override func goForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
     super.goForward()
   }
 
@@ -341,6 +343,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       message: message,
       on: self,
       cancelAction: {
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "FetalKick Greater value cancel alert"
+        ])
         UserDefaults.standard.setValue(true, forKey: "isGreaterAlertDismissed")
       })
   }
@@ -415,8 +420,15 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       errorAlertActionTitle: NSLocalizedString(kTitleCancel, comment: ""),
       errorAlertActionTitle2: NSLocalizedString(kProceedTitle, comment: ""),
       viewControllerUsed: self,
-      action1: {},
+      action1: {
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "OnCompletion Cancel Alert"
+        ])
+      },
       action2: {
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "OnCompletion GoFoward Alert"
+        ])
         UserDefaults.standard.removeObject(forKey: "isAlertShown")
         UserDefaults.standard.synchronize()
         self.goForward()
@@ -427,6 +439,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   // MARK: Button Actions
 
   @IBAction func editCounterButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "FetalKickCounter EditCounter"
+    ])
     counterTextField?.isUserInteractionEnabled = true
     counterTextField?.isHidden = false
     seperatorLineView?.isHidden = false
@@ -434,6 +449,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   }
 
   @IBAction func startButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "FetalKickCounter Start"
+    ])
 
     if Int((self.counterTextField?.text)!)! == 0 {
 
@@ -496,6 +514,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   }
 
   @IBAction func submitButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "FetalKickCounterStep Submit"
+    ])
 
     self.taskResult.duration = self.timerValue!
     self.taskResult.totalKickCount = self.kickCounter == nil ? 0 : self.kickCounter!
@@ -503,6 +524,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   }
 
   @IBAction func editTimerButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "FetalKickCounterStep EditTimer"
+    ])
 
     let timerArray = self.getTimerArray()
     let defaultTime = self.getIndexes()
@@ -546,7 +570,11 @@ class FetalKickCounterStepViewController: ORKStepViewController {
           Utilities.showAlertWithTitleAndMessage(
             title: kMessage,
             message: "Please select a valid time(Max " + value + ")",
-            on: self, cancelAction: {}
+            on: self, cancelAction: {
+              Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+                buttonClickReasonKey: "EditTimer Cancel Alert"
+              ])
+            }
           )
 
         } else {

@@ -13,15 +13,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       codeCoverageEnabled = "YES"
       onlyGenerateCoverageForSpecifiedTargets = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6E7D2D551E433E8700763D4C"
-            BuildableName = "FDA MyStudies.app"
-            BlueprintName = "HPHC"
-            ReferencedContainer = "container:HPHC.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <CodeCoverageTargets>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -74,6 +65,12 @@
             ReferencedContainer = "container:MyStudies.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-FIRAnalyticsDebugEnabled"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"

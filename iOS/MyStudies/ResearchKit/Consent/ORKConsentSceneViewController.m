@@ -238,6 +238,7 @@ static NSString *localizedLearnMoreForType(ORKConsentSectionType sectionType) {
 }
 
 - (void)setLearnMoreButtonTitle:(NSString *)learnMoreButtonTitle {
+  
     _learnMoreButtonTitle = learnMoreButtonTitle;
     
     UIBarButtonItem *item = _sceneView.headerView.learnMoreButtonItem;

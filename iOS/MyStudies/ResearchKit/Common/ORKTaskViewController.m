@@ -1293,7 +1293,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     if (supportSaving && saveable) {
         [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_OPTION_SAVE", nil)
                                                   style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction *action) {
+                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKActions":@"ORKSaveForLater"};
+          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                         [self finishWithReason:ORKTaskViewControllerFinishReasonSaved error:nil];
                                                     });
@@ -1306,47 +1307,58 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
                                               style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction *action) {
                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                  NSDictionary *userDict = @{@"ORKActions":@"ORKEndTask"};
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
                                                     [self finishWithReason:ORKTaskViewControllerFinishReasonDiscarded error:nil];
                                                 });
                                             }]];
     
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil)
                                               style:UIAlertActionStyleCancel
-                                            handler:nil]];
+                                            handler:^(UIAlertAction *action) {
+                                                dispatch_async(dispatch_get_main_queue(), ^{NSDictionary *userDict = @{@"ORKActions":@"ORKCancelAlert"};
+                                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+                                                [self finishWithReason:ORKTaskViewControllerFinishReasonDiscarded error:nil];
+                                            });
+                                        }]];
     
     [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (IBAction)cancelAction:(UIBarButtonItem *)sender {
-    // Should we also include visualConsentStep here? Others?
-    BOOL isCurrentInstructionStep = [self.currentStepViewController.step isKindOfClass:[ORKInstructionStep class]];
-    
-    // [self result] would not include any results beyond current step.
-    // Use _managedResults to get the completed result set.
-    NSArray *results = _managedResults.allValues;
-    BOOL saveable = NO;
-    for (ORKStepResult *result in results) {
-        if ([result isSaveable]) {
-            saveable = YES;
-            break;
-        }
+  NSDictionary* userInfo = @{@"ORKActions": @("ORKCancel")};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userInfo];
+  // Should we also include visualConsentStep here? Others?
+  BOOL isCurrentInstructionStep = [self.currentStepViewController.step isKindOfClass:[ORKInstructionStep class]];
+  
+  // [self result] would not include any results beyond current step.
+  // Use _managedResults to get the completed result set.
+  NSArray *results = _managedResults.allValues;
+  BOOL saveable = NO;
+  for (ORKStepResult *result in results) {
+    if ([result isSaveable]) {
+      saveable = YES;
+      break;
     }
-    
-    BOOL isStandaloneReviewStep = NO;
-    if ([self.currentStepViewController.step isKindOfClass:[ORKReviewStep class]]) {
-        ORKReviewStep *reviewStep = (ORKReviewStep *)self.currentStepViewController.step;
-        isStandaloneReviewStep = reviewStep.isStandalone;
-    }
-    
-    if (self.discardable || (isCurrentInstructionStep && saveable == NO) || isStandaloneReviewStep || self.currentStepViewController.readOnlyMode) {
-        [self finishWithReason:ORKTaskViewControllerFinishReasonDiscarded error:nil];
-    } else {
-        [self presentCancelOptions:saveable sender:sender];
-    }
+  }
+  
+  BOOL isStandaloneReviewStep = NO;
+  if ([self.currentStepViewController.step isKindOfClass:[ORKReviewStep class]]) {
+    ORKReviewStep *reviewStep = (ORKReviewStep *)self.currentStepViewController.step;
+    isStandaloneReviewStep = reviewStep.isStandalone;
+  }
+  
+  if (self.discardable || (isCurrentInstructionStep && saveable == NO) || isStandaloneReviewStep || self.currentStepViewController.readOnlyMode) {
+    [self finishWithReason:ORKTaskViewControllerFinishReasonDiscarded error:nil];
+  } else {
+    [self presentCancelOptions:saveable sender:sender];
+  }
 }
 
 - (IBAction)learnMoreAction:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(taskViewController:learnMoreForStep:)]) {
+      NSDictionary* userInfo = @{@"ORKActions": @("ORKLearnMore")};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userInfo];
         [self.delegate taskViewController:self learnMoreForStep:self.currentStepViewController];
     }
 }

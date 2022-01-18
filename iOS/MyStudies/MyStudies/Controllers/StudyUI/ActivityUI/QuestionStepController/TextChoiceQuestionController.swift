@@ -19,6 +19,7 @@
 
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 /// A value type whose instances will have Other Choice configuration in TextChoiceQuestionStep .
 struct OtherChoice {
@@ -337,6 +338,9 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
       
   @IBAction func filterAction(_: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "TextChoice Filter"
+    ])
     super.goBackward()
   }
 
@@ -659,6 +663,8 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
 
   override func skipForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
     self.answers = []
     self.selectedChoices = []
     self.isOtherCellSelected = false
@@ -666,7 +672,6 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
 
   override func goForward() {
-
     if self.otherChoice.otherChoiceText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
       self.isOtherCellSelected,
       self.otherChoice.isMandatory
@@ -693,12 +698,17 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
       updateNextOrContinueBtnState()
     } else {
+      NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
       super.goForward()
     }
 
   }
 
   @objc func didTapOnDoneOrNextBtn(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "TextChoice Done/Next"
+    ])
     // Next or done button pressed.
   }
 

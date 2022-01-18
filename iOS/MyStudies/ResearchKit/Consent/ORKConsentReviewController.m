@@ -189,6 +189,8 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (IBAction)cancel {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKReviewDisAgree"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
     if (self.delegate && [self.delegate respondsToSelector:@selector(consentReviewControllerDidCancel:)]) {
         [self.delegate consentReviewControllerDidCancel:self];
     }
@@ -201,12 +203,20 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (IBAction)ack {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKReviewAgree"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:ORKLocalizedString(@"CONSENT_REVIEW_ALERT_TITLE", nil)
                                                                    message:self.localizedReasonForConsent
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
-    [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil) style:UIAlertActionStyleDefault handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+      NSDictionary* userInfo = @{@"ORKActions": @("ORKReviewCancel")};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userInfo];
+    }]];
+  
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_AGREE", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+      NSDictionary* userInfo = @{@"ORKActions": @("ORKReviewAgreeAlert")};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userInfo];
         // Have to dispatch, so following transition animation works
         dispatch_async(dispatch_get_main_queue(), ^{
             [self doAck];

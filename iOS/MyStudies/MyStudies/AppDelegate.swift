@@ -23,6 +23,12 @@ import RealmSwift
 import UIKit
 import UserNotifications
 import Firebase
+import GoogleAnalytics
+import FirebaseAnalytics
+
+enum EnumORKActions: String {
+  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask, ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree, ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign
+}
 
 @UIApplicationMain
 
@@ -199,11 +205,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   }
 
   // MARK: - App Delegates methods
-
+  
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(self.receivedORKAction(_:)),
+                                           name: Notification.Name("ORKActions"), object: nil)
     
     // Check if Database needs migration
     self.checkForRealmMigration()
@@ -232,7 +241,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     // Use Firebase library to configure APIs
     FirebaseApp.configure()
     Messaging.messaging().delegate = self
-
+    
     UIView.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor =
       kUIColorForSubmitButtonBackground
 
@@ -272,7 +281,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     }
     return true
   }
-
+  
+  @objc func receivedORKAction(_ notification: Notification) {
+    let value = notification.userInfo
+    print(value as Any)
+    if let action = value?["ORKActions"] as? String {
+      Analytics.logEvent(analyticsButtonClickEventName, parameters: [buttonClickReasonKey: action])
+//      switch EnumORKActions(rawValue: action) {
+//      case .ORKCancel:
+//        Analytics.logEvent(analyticsButtonClickEventName, parameters: [buttonClickReasonKey: action])
+//      default:
+//        break
+//      }
+    }
+  }
+  
   func applicationWillResignActive(_ application: UIApplication) {
     // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 

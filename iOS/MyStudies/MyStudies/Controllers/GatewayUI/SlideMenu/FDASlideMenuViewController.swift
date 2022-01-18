@@ -18,6 +18,7 @@
 
 import SlideMenuControllerSwift
 import UIKit
+import FirebaseAnalytics
 
 let kStudyListViewControllerIdentifier = "StudyListViewController"
 let kStudyHomeViewControllerIdentifier = "StudyHomeNavigationController"

@@ -83,7 +83,7 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (void)setupContinueButton {
-    if (!_continueButton) {
+   if (!_continueButton) {
         _continueButton = [[ORKContinueButton alloc] initWithTitle:@"" isDoneButton:NO];
     }
     _continueButton.alpha = 0;
@@ -394,6 +394,10 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (void)skipButtonAction:(id)sender {
+  
+  NSDictionary *userDict = @{@"ORKActions":@"ORKSkip"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+  
     [self skipAction:sender];
 
     // Disable button for 0.5s
@@ -411,6 +415,9 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (void)continueButtonAction:(id)sender {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKProceed"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+
     if (_useNextForSkip && _skipButtonItem && !_continueButtonItem) {
         [self skipAction:sender];
     } else {

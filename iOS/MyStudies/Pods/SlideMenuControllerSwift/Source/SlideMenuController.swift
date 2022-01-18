@@ -360,7 +360,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @objc func handleLeftPanGesture(_ panGesture: UIPanGestureRecognizer) {
-        
+      
         if !isTagetViewController() {
             return
         }
@@ -644,6 +644,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     
     
     open override func toggleLeft() {
+      NotificationCenter.default.post(name: Notification.Name("Menu Clicked"), object: nil)
         if isLeftOpen() {
             closeLeft()
             setCloseWindowLevel()

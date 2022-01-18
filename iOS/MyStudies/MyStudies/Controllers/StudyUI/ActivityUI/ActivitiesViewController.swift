@@ -21,6 +21,7 @@ import Foundation
 import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 let kActivities = "activities"
 
@@ -82,6 +83,9 @@ class ActivitiesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Activities"
+    ])
 
     addObservers()
     selectedFilter = ActivityFilterType.all
@@ -780,10 +784,16 @@ class ActivitiesViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Activities Home"
+    ])
     self.performSegue(withIdentifier: kActivityUnwindToStudyListIdentifier, sender: self)
   }
 
   @IBAction func filterButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Activities Filter"
+    ])
     let frame = self.view.frame
     if self.selectedFilter == nil {
       self.selectedFilter = ActivityFilterType.all
@@ -1109,6 +1119,10 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
+          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+            buttonClickReasonKey: "Activity Error Ok Alert"
+          ])
+
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
@@ -1523,8 +1537,12 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           && activityId == Study.currentActivity?.actvityId
           && (stepViewController is ORKInstructionStepViewController)
         {
-
+          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+            buttonClickReasonKey: "GoForward"
+          ])
           DispatchQueue.main.asyncAfter(deadline: .now()) {
+//            NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
             stepViewController.goForward()
           }
         }

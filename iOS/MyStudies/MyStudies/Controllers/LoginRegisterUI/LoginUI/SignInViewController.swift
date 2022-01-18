@@ -22,6 +22,7 @@ import IQKeyboardManagerSwift
 import SlideMenuControllerSwift
 import UIKit
 import WebKit
+import FirebaseAnalytics
 
 let kVerifyMessageFromSignIn =
   """
@@ -82,6 +83,10 @@ class SignInViewController: UIViewController {
       self.load()
       self.initializeTermsAndPolicy()
     }
+    
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Sign In"
+    ])
   }
 
   override func viewWillAppear(_ animated: Bool) {

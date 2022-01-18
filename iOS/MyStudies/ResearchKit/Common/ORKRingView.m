@@ -29,6 +29,7 @@
  */
 
 @import UIKit;
+
 #import "ORKRingView.h"
 
 static const double VALUE_MIN = 0.0;

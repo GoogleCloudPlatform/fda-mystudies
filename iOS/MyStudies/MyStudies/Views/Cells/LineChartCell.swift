@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 class GraphChartTableViewCell: UITableViewCell {
   @IBOutlet weak var graphView: ORKGraphChartView!
@@ -242,6 +243,9 @@ class LineChartCell: GraphChartTableViewCell {
 
   // MARK: - Actions
   @IBAction func buttonForwardAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "LineChart Forward"
+    ])
 
     let timeRange = currentChart.dataSourceTimeRange!
     let chartTimeRange = ChartTimeRange(rawValue: timeRange)!

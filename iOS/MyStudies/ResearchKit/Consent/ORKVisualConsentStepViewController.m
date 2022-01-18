@@ -366,6 +366,8 @@
 }
 
 - (void)showNextViewController {
+//  NSDictionary *userDict = @{@"ORKActions":@"ORKDone"};
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
     CGRect animationViewFrame = _animationView.frame;
     animationViewFrame.origin = [ORKDynamicCast(_animationView, ORKAnimationPlaceholderView) defaultFrameOrigin];
     _animationView.frame = animationViewFrame;

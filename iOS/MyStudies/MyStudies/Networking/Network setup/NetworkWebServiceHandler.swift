@@ -306,6 +306,8 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     if httpHeaders != nil && (httpHeaders?.count)! > 0 {
       request.allHTTPHeaderFields = httpHeaders as? [String: String]
     }
+    print("1response---\(requestName)---\(params)---\(httpHeaders)")
+
     self.fireRequest(request, requestName: requestName)
   }
 
@@ -351,6 +353,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       if httpHeaders != nil {
         request.allHTTPHeaderFields = httpHeaders! as? [String: String]
       }
+      print("2response---\(requestName)---\(params)---\(httpHeaders)")
       self.fireRequest(request, requestName: requestName)
 
     } catch let error {
@@ -469,6 +472,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
             requestName: requestName,
             response: responseDict ?? [:]
           )
+          print("4Response :: \(responseDict)")
         }
       } else {
 
@@ -484,10 +488,17 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           print("ResponseDict22 :: \(responseDict)")
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)
+            print("ResponseDict22 :: \(error)")
+            print("ResponseDict22 :: \(error1)")
+
           } else {
             error1 = error ?? NSError(domain: "", code: statusCode, userInfo: [:])
+            print("ResponseDict22 :: \(error)")
+            print("ResponseDict22 :: \(error1)")
+
           }
         } else {
+
           error1 = NSError(
             domain: NSURLErrorDomain,
             code: statusCode,

@@ -575,6 +575,8 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 }
 
 - (void)continueAction {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKNext"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
     ORKSpatialSpanMemoryStep *step = [self spatialSpanStep];
     if (_gamesCounter < step.maximumTests && _consecutiveGamesFailed < step.maximumConsecutiveFailures) {
         // Generate a new game
@@ -605,7 +607,8 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 #pragma mark ORKSpatialSpanStepStateFailed
 
 - (void)tryAgainAction {
-    // Restart with a new, shorter game
+  NSDictionary *userDict = @{@"ORKActions":@"ORKTryAgain"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];    // Restart with a new, shorter game
     [self transitionToState:ORKSpatialSpanStepStateRestart];
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
 }

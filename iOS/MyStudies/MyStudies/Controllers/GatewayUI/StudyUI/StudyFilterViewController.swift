@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 // Used to do filter based on Apply and Cancel actions
 protocol StudyFilterDelegates: class {
@@ -95,6 +96,9 @@ class StudyFilterViewController: UIViewController {
 
   /// Navigate to Studylist screen on Apply button clicked.
   @IBAction func applyButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Filter Apply"
+    ])
 
     for filterOptions in StudyFilterHandler.instance.filterOptions {
 
@@ -131,6 +135,9 @@ class StudyFilterViewController: UIViewController {
 
   /// Navigate to Studylist screen on Cancel button clicked.
   @IBAction func cancelButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Filter Cancel"
+    ])
     self.delegate?.didCancelFilter(true)
     self.dismiss(animated: true, completion: nil)
   }

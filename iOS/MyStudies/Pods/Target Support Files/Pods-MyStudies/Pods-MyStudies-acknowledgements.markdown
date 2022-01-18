@@ -273,6 +273,10 @@ Permission is granted to anyone to use this software for any purpose,including c
    limitations under the License.
 
 
+## FirebaseAnalytics
+
+Copyright 2021 Google
+
 ## FirebaseCore
 
 
@@ -1096,6 +1100,14 @@ Permission is granted to anyone to use this software for any purpose,including c
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+## GoogleAnalytics
+
+Copyright 2021 Google
+
+## GoogleAppMeasurement
+
+Copyright 2021 Google
 
 ## GoogleDataTransport
 

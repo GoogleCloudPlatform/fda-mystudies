@@ -165,7 +165,7 @@
 }
 
 - (void)setContinueButtonItem:(UIBarButtonItem *)continueButtonItem {
-    [super setContinueButtonItem:continueButtonItem];
+     [super setContinueButtonItem:continueButtonItem];
     _navigationFooterView.continueButtonItem = continueButtonItem;
 }
 
@@ -175,7 +175,7 @@
 }
 
 - (void)setCancelButtonItem:(UIBarButtonItem *)cancelButtonItem {
-    [super setCancelButtonItem:cancelButtonItem];
+     [super setCancelButtonItem:cancelButtonItem];
     _navigationFooterView.cancelButtonItem = cancelButtonItem;
 }
 

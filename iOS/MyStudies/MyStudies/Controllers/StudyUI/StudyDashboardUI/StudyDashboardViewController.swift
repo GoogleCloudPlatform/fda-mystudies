@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 let kMessageForSharingDashboard =
   "This action will create a shareable image file of the dashboard currently seen in this section. Proceed?"
@@ -71,6 +72,9 @@ class StudyDashboardViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "StudyDashboard"
+    ])
     // load plist info
     let plistPath = Bundle.main.path(
       forResource: "StudyDashboard",
@@ -203,6 +207,9 @@ class StudyDashboardViewController: UIViewController {
 
   /// Home button clicked.
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "StudyDashboard Home"
+    ])
     let button = sender as! UIButton
     if button.tag == 200 {
       self.slideMenuController()?.openLeft()
@@ -213,7 +220,9 @@ class StudyDashboardViewController: UIViewController {
 
   /// Share to others button clicked.
   @IBAction func shareButtonAction(_ sender: AnyObject) {
-
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "StudyDashboard Share"
+    ])
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
       NSLocalizedString(kTitleMessage, comment: ""),
       errorMessage: NSLocalizedString(kMessageForSharingDashboard, comment: ""),
@@ -221,9 +230,17 @@ class StudyDashboardViewController: UIViewController {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: self,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "StudyDashboard Ok Alert"
+        ])
+
         self.shareScreenShotByMail()
       },
       action2: {
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "StudyDashboard Cancel Alert"
+        ])
+
         // Handle cancel action
       }
     )
@@ -457,6 +474,8 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
 
       // Checking if Signature is consented after Review Step
       if consentSignatureResult?.didTapOnViewPdf == false {
+        NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
         // Directly moving to completion step by skipping Intermediate PDF viewer screen
         stepViewController.goForward()
       }
