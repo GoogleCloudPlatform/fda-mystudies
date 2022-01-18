@@ -443,7 +443,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
               if (activeTaskBo
                   .getFrequency()
                   .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_ONE_TIME)) {
-                if (!activeTaskBo.getActiveTaskFrequenciesBo().getIsStudyLifeTime()) {
+                if (!activeTaskBo.getActiveTaskFrequenciesBo().getIsLaunchStudy()) {
                   if (StringUtils.isNotBlank(activeTaskBo.getActiveTaskLifetimeStart())
                       && !("NA").equalsIgnoreCase(activeTaskBo.getActiveTaskLifetimeStart())) {
                     addActiveTaskeBo.setActiveTaskLifetimeStart(
@@ -454,7 +454,9 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
                   } else {
                     addActiveTaskeBo.setActiveTaskLifetimeStart(null);
                   }
+                }
 
+                if (!activeTaskBo.getActiveTaskFrequenciesBo().getIsStudyLifeTime()) {
                   if (StringUtils.isNotBlank(activeTaskBo.getActiveTaskLifetimeEnd())
                       && !("NA").equalsIgnoreCase(activeTaskBo.getActiveTaskLifetimeEnd())) {
                     addActiveTaskeBo.setActiveTaskLifetimeEnd(

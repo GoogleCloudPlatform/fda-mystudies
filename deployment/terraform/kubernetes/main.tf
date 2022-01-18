@@ -110,15 +110,15 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-gci-auth-domain",
       "manual-gci-api-key",
       "manual-gci-temp-password",
-	  "manual-project-id",
-	  "manual-region-id",
-	  "manual-consent-dataset-id",
-	  "manual-consent-store-id",
-	  "manual-consent-enabled",
-	  "manual-fhir-enabled",
-	  "manual-did-enabled",
-	  "manual-fhir-dataset-id",
-	  "manual-did-dataset-id",
+      "manual-project-id",
+      "manual-region-id",
+      "manual-consent-dataset-id",
+      "manual-consent-store-id",
+      "manual-consent-enabled",
+      "manual-fhir-enabled",
+      "manual-did-enabled",
+      "manual-fhir-dataset-id",
+      "manual-did-dataset-id",
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -161,15 +161,15 @@ resource "kubernetes_secret" "shared_secrets" {
     gci_auth_domain                   = data.google_secret_manager_secret_version.secrets["manual-gci-auth-domain"].secret_data
     gci_api_key                       = data.google_secret_manager_secret_version.secrets["manual-gci-api-key"].secret_data
     gci_temp_password                 = data.google_secret_manager_secret_version.secrets["manual-gci-temp-password"].secret_data
-	project_id                        = data.google_secret_manager_secret_version.secrets["manual-project-id"].secret_data
-	region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
-	consent_dataset_id                = data.google_secret_manager_secret_version.secrets["manual-consent-dataset-id"].secret_data
-	consent_store_id                  = data.google_secret_manager_secret_version.secrets["manual-consent-store-id"].secret_data
-	consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
-	fhir_dataset_id                   = data.google_secret_manager_secret_version.secrets["manual-fhir-dataset-id"].secret_data
-	did_dataset_id                    = data.google_secret_manager_secret_version.secrets["manual-did-dataset-id"].secret_data
-	did_enabled                       = data.google_secret_manager_secret_version.secrets["manual-did-enabled"].secret_data
-	fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
+    project_id                        = data.google_secret_manager_secret_version.secrets["manual-project-id"].secret_data
+    region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
+    consent_dataset_id                = data.google_secret_manager_secret_version.secrets["manual-consent-dataset-id"].secret_data
+    consent_store_id                  = data.google_secret_manager_secret_version.secrets["manual-consent-store-id"].secret_data
+    consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
+    fhir_dataset_id                   = data.google_secret_manager_secret_version.secrets["manual-fhir-dataset-id"].secret_data
+    did_dataset_id                    = data.google_secret_manager_secret_version.secrets["manual-did-dataset-id"].secret_data
+    did_enabled                       = data.google_secret_manager_secret_version.secrets["manual-did-enabled"].secret_data
+    fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
   }
 }
 
