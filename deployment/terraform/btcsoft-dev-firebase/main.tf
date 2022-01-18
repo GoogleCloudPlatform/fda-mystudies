@@ -151,7 +151,7 @@ module "btcsoft_dev_mystudies_firestore_raw_data" {
   ]
 }
 
-  
+
 resource "google_healthcare_fhir_store" "default" {
   name    = "1402"
   dataset = google_healthcare_dataset.dataset.id
@@ -189,7 +189,7 @@ module "fhir-notifications" {
 
 }
 resource "google_pubsub_topic" "topic" {
-  name     = "fhir-notifications"
+  name = "fhir-notifications"
 }
 
 resource "google_healthcare_dataset" "dataset" {
@@ -198,8 +198,8 @@ resource "google_healthcare_dataset" "dataset" {
 }
 
 resource "google_bigquery_dataset" "bq_dataset" {
-  dataset_id    = "MyStudies"
-  description   = "This is a test description"
-  location      = "us-central1"
+  dataset_id                 = "MyStudies"
+  description                = "This is a test description"
+  location                   = "us-central1"
   delete_contents_on_destroy = true
 }
