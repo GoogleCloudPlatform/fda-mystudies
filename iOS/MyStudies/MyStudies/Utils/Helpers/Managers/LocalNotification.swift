@@ -344,8 +344,9 @@ class LocalNotification: NSObject {
           ]
 
           if let message = notification.message,
-            let startDate = notification.startDate
+            var startDate = notification.startDate
           {
+            startDate.updateWithOffset()
             // Reschedule top 50 Local Notifications.
             LocalNotification.scheduleNotificationOn(
               date: startDate,
