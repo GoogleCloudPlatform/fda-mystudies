@@ -1868,7 +1868,7 @@ public class StudyDAOImpl implements StudyDAO {
       if (StringUtils.isNotEmpty(studyId)) {
         query =
             session.createQuery(
-                "from StudyPageBo where studyId=:studyId order by createdOn, sequenceNumber");
+                "from StudyPageBo where studyId=:studyId order by createdOn, CASE WHEN sequenceNumber IS NULL THEN 1 ELSE 0 END, sequenceNumber");
         query.setString("studyId", studyId);
         studyPageBo = query.list();
       }
@@ -4344,33 +4344,47 @@ public class StudyDAOImpl implements StudyDAO {
           if (StringUtils.isNotEmpty(dbStudyBo.getDestinationCustomStudyId())
               && StringUtils.isEmpty(dbStudyBo.getCustomStudyId())) {
 
-            String[] copyCustomIdArray = dbStudyBo.getDestinationCustomStudyId().split("@");
-            String customId = "";
-            if (copyCustomIdArray[1].contains("COPY")) {
-              customId = copyCustomIdArray[0];
-              int isLive =
-                  copyCustomIdArray[1].contains(FdahpStudyDesignerConstants.PUBLISHED_VERSION)
-                      ? 1
-                      : 0;
+            if (dbStudyBo.getDestinationCustomStudyId().contains("@")) {
+              String[] copyCustomIdArray = dbStudyBo.getDestinationCustomStudyId().split("@");
+              String customId = "";
+              if (copyCustomIdArray[1].contains("COPY")) {
+                customId = copyCustomIdArray[0];
+                int isLive =
+                    copyCustomIdArray[1].contains(FdahpStudyDesignerConstants.PUBLISHED_VERSION)
+                        ? 1
+                        : 0;
+                StudyBo study =
+                    (StudyBo)
+                        session
+                            .createQuery(
+                                "From StudyBo SBO WHERE SBO.live=:isLive AND customStudyId=:customStudyId")
+                            .setString("customStudyId", customId)
+                            .setInteger("isLive", isLive)
+                            .uniqueResult();
+                if (study != null) {
+                  moveOrCopyCloudStorage(session, study, false, false, studyBo.getCustomStudyId());
+                }
+              } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
+                moveOrCopyCloudStorageForExportStudy(
+                    session,
+                    dbStudyBo,
+                    false,
+                    false,
+                    studyBo.getCustomStudyId(),
+                    dbStudyBo.getDestinationCustomStudyId());
+              }
+            } else {
               StudyBo study =
                   (StudyBo)
                       session
                           .createQuery(
                               "From StudyBo SBO WHERE SBO.live=:isLive AND customStudyId=:customStudyId")
-                          .setString("customStudyId", customId)
-                          .setInteger("isLive", isLive)
+                          .setString("customStudyId", dbStudyBo.getDestinationCustomStudyId())
+                          .setInteger("isLive", 0)
                           .uniqueResult();
               if (study != null) {
                 moveOrCopyCloudStorage(session, study, false, false, studyBo.getCustomStudyId());
               }
-            } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
-              moveOrCopyCloudStorageForExportStudy(
-                  session,
-                  dbStudyBo,
-                  false,
-                  false,
-                  studyBo.getCustomStudyId(),
-                  dbStudyBo.getDestinationCustomStudyId());
             }
 
           } else if (!dbStudyBo.getCustomStudyId().equals(studyBo.getCustomStudyId())) {
