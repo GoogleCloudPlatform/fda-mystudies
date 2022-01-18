@@ -60,6 +60,7 @@ export interface SetUpUser {
   firstName: string;
   lastName: string;
   password: string;
+  phoneNum: string;
 }
 export interface gciUser {
   gciUser: boolean;

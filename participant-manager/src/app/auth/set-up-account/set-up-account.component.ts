@@ -69,6 +69,11 @@ export class SetUpAccountComponent
           // eslint-disable-next-line @typescript-eslint/unbound-method
           [Validators.required],
         ],
+        phoneNum: [
+          '',
+          // eslint-disable-next-line @typescript-eslint/unbound-method
+          [Validators.required],
+        ],
         password: [
           '',
           // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -83,7 +88,7 @@ export class SetUpAccountComponent
       {
         validator: [
           mustMatch('password', 'confirmPassword'),
-          newPasswordValidator('firstName', 'lastName', 'password'),
+          newPasswordValidator('firstName', 'lastName', 'password' , 'phoneNum'),
         ],
       },
     );
@@ -125,6 +130,8 @@ special characters.`;
       lastName: String(this.setupAccountForm.controls['lastName'].value),
       email: String(this.setupAccountForm.controls['email'].value),
       password: String(this.setupAccountForm.controls['password'].value),
+      phoneNum: String(this.setupAccountForm.controls['phoneNum'].value),
+
     };
     this.subs.add(
       this.setUpAccountService

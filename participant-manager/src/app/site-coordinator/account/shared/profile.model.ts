@@ -3,6 +3,7 @@ import {Permission} from 'src/app/shared/permission-enums';
 export interface Profile {
   firstName: string;
   lastName: string;
+  phoneNum: string;
   email: string;
   userId: string;
   manageLocations: Permission | null;
@@ -16,6 +17,7 @@ export interface Profile {
 export interface UpdateProfile {
   firstName: string;
   lastName: string;
+  phoneNum: string;
 }
 
 export interface ChangePassword {

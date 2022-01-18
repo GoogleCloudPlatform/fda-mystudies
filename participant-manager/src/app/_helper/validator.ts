@@ -84,12 +84,12 @@ export function newPasswordValidator(
   firstname: string,
   lastname: string,
   password: string,
+  phoneNum: string,
 ) {
   return (formGroup: FormGroup) => {
     const control = formGroup.controls[password];
     const firstName = formGroup.controls[firstname];
     const lastName = formGroup.controls[lastname];
-
     if (control.value == '') {
       control.setErrors({Valuerequired: true});
     } else if (

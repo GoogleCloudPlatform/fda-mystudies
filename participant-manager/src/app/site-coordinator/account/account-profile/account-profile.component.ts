@@ -46,6 +46,11 @@ export class AccountProfileComponent
         // eslint-disable-next-line @typescript-eslint/unbound-method
         [Validators.required],
       ],
+      phoneNum: [
+        '',
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        [Validators.required],
+      ],
     });
   }
 
@@ -70,6 +75,7 @@ export class AccountProfileComponent
     const profileToBeUpdated: UpdateProfile = {
       firstName: String(this.profileForm.controls['firstName'].value),
       lastName: String(this.profileForm.controls['lastName'].value),
+      phoneNum: String(this.profileForm.controls['phoneNum'].value),
     };
 
     this.accountService.updateUserProfile(profileToBeUpdated).subscribe(
@@ -80,6 +86,9 @@ export class AccountProfileComponent
         );
         this.user.lastName = String(
           this.profileForm.controls['lastName'].value,
+        );
+        this.user.phoneNum = String(
+          this.profileForm.controls['phoneNum'].value,
         );
         sessionStorage.setItem('user', JSON.stringify(this.user));
         this.userState.setCurrentUserName(
