@@ -164,7 +164,7 @@ module "btcsoft_dev_mystudies_consent_documents" {
       member = "serviceAccount:participant-manager-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
-	{
+    {
       member = "serviceAccount:study-builder-gke-sa@btcsoft-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
