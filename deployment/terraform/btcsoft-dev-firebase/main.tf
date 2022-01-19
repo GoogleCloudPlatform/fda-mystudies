@@ -191,17 +191,19 @@ module "fhir-notifications" {
 
 
 resource "google_bigquery_dataset" "bq_dataset" {
-  dataset_id                 = "MyStudies"
+  dataset_id                 = "MyStudiesDemo"
   project                    = module.project.project_id
   description                = "This is a test description"
   location                   = "us-central1"
   delete_contents_on_destroy = true
 }
 resource "google_pubsub_topic" "topic" {
-  name = "fhir-notifications"
+  name		 = "fhir-notifications"
+  project    = module.project.project_id
 }
 
 resource "google_healthcare_dataset" "dataset" {
   name     = "FHIR-Response"
+  project  = module.project.project_id
   location = "us-central1"
 }
