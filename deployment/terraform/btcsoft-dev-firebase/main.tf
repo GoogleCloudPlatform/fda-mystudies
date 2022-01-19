@@ -198,8 +198,8 @@ resource "google_bigquery_dataset" "bq_dataset" {
   delete_contents_on_destroy = true
 }
 resource "google_pubsub_topic" "topic" {
-  name		 = "fhir-notifications"
-  project    = module.project.project_id
+  name    = "fhir-notifications"
+  project = module.project.project_id
 }
 
 resource "google_healthcare_dataset" "dataset" {
