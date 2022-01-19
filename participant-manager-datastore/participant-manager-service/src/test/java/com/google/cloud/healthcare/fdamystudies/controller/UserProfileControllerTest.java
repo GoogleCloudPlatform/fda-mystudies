@@ -383,7 +383,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     SetUpAccountRequest request = setUpAccountRequest();
     userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
     request.setPassword("AuthServerError@b0ston");
-    request.setPhoneNumber("+919999999999");
+    request.setPhoneNum("+919999999999");
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call the API and expect APPLICATION_ERROR error

@@ -146,7 +146,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
     adminUser.setFirstName(userProfileRequest.getFirstName());
     adminUser.setLastName(userProfileRequest.getLastName());
-    adminUser.setPhoneNumber(userProfileRequest.getPhoneNumber());
+    adminUser.setPhoneNumber(userProfileRequest.getPhoneNum());
     userRegAdminRepository.saveAndFlush(adminUser);
 
     auditRequest.setUserId(userProfileRequest.getUserId());
@@ -180,7 +180,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     userRegAdminUser.setUrAdminAuthId(authRegistrationResponse.getUserId());
     userRegAdminUser.setFirstName(setUpAccountRequest.getFirstName());
     userRegAdminUser.setLastName(setUpAccountRequest.getLastName());
-    userRegAdminUser.setPhoneNumber(setUpAccountRequest.getPhoneNumber());
+    userRegAdminUser.setPhoneNumber(setUpAccountRequest.getPhoneNum());
     userRegAdminUser.setStatus(UserStatus.ACTIVE.getValue());
     userRegAdminUser.setSecurityCode(null);
     userRegAdminUser.setSecurityCodeExpireDate(null);
@@ -211,7 +211,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             setUpAccountRequest.getPassword(),
             UserAccountStatus.ACTIVE.getStatus(),
             gciUser,
-            setUpAccountRequest.getPhoneNumber());
+            setUpAccountRequest.getPhoneNum());
 
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
