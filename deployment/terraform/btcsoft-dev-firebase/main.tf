@@ -192,7 +192,7 @@ module "fhir-notifications" {
 
 resource "google_bigquery_dataset" "bq_dataset" {
   dataset_id                 = "MyStudies"
-  project = module.project.project_id
+  project                    = module.project.project_id
   description                = "This is a test description"
   location                   = "us-central1"
   delete_contents_on_destroy = true
