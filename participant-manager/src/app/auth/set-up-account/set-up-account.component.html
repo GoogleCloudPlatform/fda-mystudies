@@ -118,29 +118,26 @@
                 <input
                   type="text"
                   maxlength="14"
-                  minlength="13"
-                  [(ngModel)]="user.phoneNum"
-                  name="phoneNum"
-                  #phoneNum="ngModel"
-                  required
-                  pattern="^[\+]?[(]?[0-9]{2,3}[)]?[-\s\.]?[0-9]{4,6}[-\s\.]?[0-9]{4,6}$"
+                  minlength="12"
                   class="form-control"
                   id="phoneNum"
                   placeholder="Enter phone number"
+                  formControlName="phoneNum"
+                  pattern="[+][0-9]{11,13}"
                 />
     
                 <div
-                  *ngIf="phoneNum.invalid && (phoneNum.dirty || phoneNum.touched)"
+                  *ngIf="f.phoneNum.invalid && (f.phoneNum.dirty || f.phoneNum.touched)"
                 >
                   <span
                     class="help-block with-errors error__msg"
-                    *ngIf="phoneNum.errors?.required"
+                    *ngIf="f.phoneNum.errors?.required"
                   >
                     Enter phone number
                   </span>
                   <span
                     class="help-block with-errors error__msg"
-                    *ngIf="phoneNum.errors?.pattern"
+                    *ngIf="f.phoneNum.errors?.pattern"
                   >
                     Please use characters from the following set only: 0-9
                     ()+-

@@ -205,12 +205,12 @@ Superadmins can manage users of the Participant Manager and in addition, can man
             <input
               type="text"
               maxlength="14"
-              minlength="13"
+              minlength="12"
               [(ngModel)]="user.phoneNum"
               name="phoneNum"
               #phoneNum="ngModel"
               required
-              pattern="^[\+]?[(]?[0-9]{2,3}[)]?[-\s\.]?[0-9]{4,6}[-\s\.]?[0-9]{4,6}$"
+              pattern="[+][0-9]{11,13}"
               class="form-control"
               id="phoneNum"
               placeholder="Enter phone number"
