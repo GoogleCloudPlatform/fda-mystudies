@@ -12,8 +12,8 @@
     pointer-events: none;
   }
 
-  .tooltip {
-    width: 200px;
+ .tooltip {
+    width: 230px !important;
   }
   
   .display__flex__ {
