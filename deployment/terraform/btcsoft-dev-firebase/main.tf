@@ -188,16 +188,16 @@ module "fhir-notifications" {
   ]
 
 }
-resource "google_pubsub_topic" "topic" {
+resource "google_pubsub_topic" "fhir-notifications" {
   name = "fhir-notifications"
 }
 
-resource "google_healthcare_dataset" "dataset" {
+resource "google_healthcare_dataset" "FHIR-Response" {
   name     = "FHIR-Response"
   location = "us-central1"
 }
 
-resource "google_bigquery_dataset" "bq_dataset" {
+resource "google_bigquery_dataset" "MyStudies" {
   dataset_id                 = "MyStudies"
   description                = "This is a test description"
   location                   = "us-central1"
