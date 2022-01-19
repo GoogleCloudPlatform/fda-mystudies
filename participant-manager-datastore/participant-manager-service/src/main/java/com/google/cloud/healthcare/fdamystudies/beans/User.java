@@ -27,6 +27,8 @@ public class User {
 
   private String lastName;
 
+  private String phoneNum;
+
   private boolean superAdmin;
 
   private Integer manageLocations;

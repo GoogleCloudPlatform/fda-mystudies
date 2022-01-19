@@ -62,6 +62,6 @@ public class UserRequest {
   private Boolean gciUser = false;
 
   @ToString.Exclude
-  @Size(min = 13, max = 14)
+  @Size(min = 12, max = 14)
   private String phoneNumber;
 }

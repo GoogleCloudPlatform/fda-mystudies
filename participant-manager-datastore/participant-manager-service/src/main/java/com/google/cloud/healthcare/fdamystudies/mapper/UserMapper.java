@@ -59,6 +59,7 @@ public final class UserMapper {
         userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
     admin.setLocationPermission(manageLocation);
     admin.setGciUser(userRequest.isGciUser());
+    admin.setPhoneNumber(userRequest.getPhoneNum());
     return admin;
   }
 
@@ -219,6 +220,7 @@ public final class UserMapper {
     user.setManageLocations(admin.getLocationPermission());
     UserStatus userStatus = UserStatus.fromValue(admin.getStatus());
     user.setStatus(userStatus.getDescription());
+    user.setPhoneNum(admin.getPhoneNumber());
     return user;
   }
 
