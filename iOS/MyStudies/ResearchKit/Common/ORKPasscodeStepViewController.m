@@ -350,9 +350,10 @@ static CGFloat const kForgotPasscodeHeight              = 100.0f;
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:ORKLocalizedString(@"PASSCODE_INVALID_ALERT_TITLE", nil)
                                                                    message:text
                                                             preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_OK", nil)
-                                              style:UIAlertActionStyleDefault
-                                            handler:nil]];
+  [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_OK", nil)
+                                                style:UIAlertActionStyleDefault
+                                              handler:^(UIAlertAction * action) {NSDictionary *userDict = @{@"ORKActions":@"ORKPasscodeInvalidAlertOK"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];}]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
@@ -403,6 +404,8 @@ static CGFloat const kForgotPasscodeHeight              = 100.0f;
 }
 
 - (void)cancelButtonAction {
+  NSDictionary* userInfo = @{@"ORKActions": @("ORKPasscodeCancel")};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userInfo];
     if (self.passcodeDelegate &&
         [self.passcodeDelegate respondsToSelector:@selector(passcodeViewControllerDidCancel:)]) {
         [self.passcodeDelegate passcodeViewControllerDidCancel:self];

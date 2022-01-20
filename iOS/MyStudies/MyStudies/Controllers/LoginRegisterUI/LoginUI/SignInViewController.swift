@@ -83,14 +83,14 @@ class SignInViewController: UIViewController {
       self.load()
       self.initializeTermsAndPolicy()
     }
-    
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Sign In"
-    ])
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Sign In"
+    ])
     // unhide navigationbar
     self.view.isUserInteractionEnabled = true
     self.webKitView.isUserInteractionEnabled = true

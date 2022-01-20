@@ -554,7 +554,8 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
     
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil)
                                               style:UIAlertActionStyleDefault
-                                            handler:nil]];
+                                            handler:^(UIAlertAction * action) {NSDictionary *userDict = @{@"ORKActions":@"ORKCancelAlert"};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];}]];
     
     _presentingAlert = YES;
     [self presentViewController:alert animated:YES completion:^{

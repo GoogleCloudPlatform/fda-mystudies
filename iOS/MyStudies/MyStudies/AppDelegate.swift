@@ -27,7 +27,7 @@ import GoogleAnalytics
 import FirebaseAnalytics
 
 enum EnumORKActions: String {
-  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask, ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree, ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign
+  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask, ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree, ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign, ORKPasscodeCancel, ORKPasscodeInvalidAlertOK
 }
 
 @UIApplicationMain
@@ -1798,6 +1798,9 @@ extension AppDelegate: ORKPasscodeDelegate {
   }
 
   func passcodeViewControllerForgotPasscodeTapped(_ viewController: UIViewController) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Forgot Passcode?ActionClicked"
+    ])
 
     var topVC = UIApplication.shared.keyWindow?.rootViewController
 
@@ -1812,6 +1815,9 @@ extension AppDelegate: ORKPasscodeDelegate {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: topVC!,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "ForgotPasscodeAlert OK"
+        ])
         self.window?.addProgressIndicatorOnWindowFromTop()
 
         viewController.dismiss(
@@ -1834,7 +1840,11 @@ extension AppDelegate: ORKPasscodeDelegate {
           }
         )
       },
-      action2: {}
+      action2: {
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "ForgotPasscodeAlert Cancel"
+        ])
+      }
     )
   }
 }
