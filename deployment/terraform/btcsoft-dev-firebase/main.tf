@@ -173,17 +173,17 @@ resource "google_healthcare_fhir_store" "default" {
   }
 }
 
-module "fhir-notifications" {
+module "fhir-notifications-dev" {
   source  = "terraform-google-modules/pubsub/google"
   version = "~> 1.4.0"
 
-  topic      = "fhir-notifications"
+  topic      = "fhir-notifications-dev"
   project_id = module.project.project_id
 
   pull_subscriptions = [
     {
       ack_deadline_seconds = 10
-      name                 = "fhir-notifications"
+      name                 = "fhir-notifications-dev"
     },
   ]
 
@@ -191,19 +191,19 @@ module "fhir-notifications" {
 
 
 resource "google_bigquery_dataset" "bq_dataset" {
-  dataset_id                 = "MyStudiesDemo"
+  dataset_id                 = "MyStudies-dev"
   project                    = module.project.project_id
   description                = "This is a test description"
   location                   = "us-central1"
   delete_contents_on_destroy = true
 }
 resource "google_pubsub_topic" "topic" {
-  name    = "fhir-notifications"
+  name    = "fhir-notifications-dev"
   project = module.project.project_id
 }
 
 resource "google_healthcare_dataset" "dataset" {
-  name     = "FHIR-Response"
+  name     = "FHIR-Response-dev1"
   project  = module.project.project_id
   location = "us-central1"
 }
