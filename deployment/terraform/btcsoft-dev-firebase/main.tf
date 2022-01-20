@@ -173,25 +173,11 @@ resource "google_healthcare_fhir_store" "default" {
   }
 }
 
-module "fhir-notifications-dev" {
-  source  = "terraform-google-modules/pubsub/google"
-  version = "~> 1.4.0"
 
-  topic      = "fhir-notifications-dev"
-  project_id = module.project.project_id
-
-  pull_subscriptions = [
-    {
-      ack_deadline_seconds = 10
-      name                 = "fhir-notifications-dev"
-    },
-  ]
-
-}
 
 
 resource "google_bigquery_dataset" "bq_dataset" {
-  dataset_id                 = "MyStudies-dev"
+  dataset_id                 = "MyStudiesDev"
   project                    = module.project.project_id
   description                = "This is a test description"
   location                   = "us-central1"
