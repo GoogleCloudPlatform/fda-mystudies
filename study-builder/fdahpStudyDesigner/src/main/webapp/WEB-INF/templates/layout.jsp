@@ -91,7 +91,8 @@
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <script type="text/javascript" src="/studybuilder/vendor/dompurify/purify.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
-        <script type="text/javascript" src="/studybuilder/js/summernote-bs4.js"></script>
+     <script type="text/javascript" src="/studybuilder/js/summernote-bs4.js"></script>
+       
         
     <script>
       $(window).on('keydown keypress mousedown', function (event) {
@@ -142,6 +143,7 @@
     <script src="/studybuilder/js/jquery.nicescroll.min.js"></script>
     <script src="/studybuilder/js/bootbox.min.js"></script>
     <script src="/studybuilder/js/common.js"></script>
+    
 
     <script>
       window.history.forward();
