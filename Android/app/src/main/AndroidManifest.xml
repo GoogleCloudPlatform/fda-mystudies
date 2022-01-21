@@ -338,12 +338,14 @@
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-        <service android:name=".AppFirebaseMessagingService">
+        <service android:name=".AppFirebaseMessagingService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".AppFirebaseInstanceIdService">
+        <service android:name=".AppFirebaseInstanceIdService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -377,7 +379,8 @@
             android:syncable="true"
             tools:replace="android:authorities" />
 
-        <service android:name=".offlinemodule.auth.StubAuthenticatorService">
+        <service android:name=".offlinemodule.auth.StubAuthenticatorService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -388,8 +391,7 @@
         </service>
         <service
             android:name=".offlinemodule.auth.SyncAdapterService"
-            android:exported="false"
-            android:process=":sync">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
