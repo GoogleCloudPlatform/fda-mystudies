@@ -10,7 +10,7 @@ android {
             // Update `applicationId` with your Applicaiton ID (see https://developer.android.com/studio/build/application-id)
             // For example, you could set `applicationId` to "<prefix>_<env>.<domain>" or "com.<domain>.<subdomain>"
             applicationId "com.google.FDAMyStudies"
-            versionCode 133
+            versionCode 137
             versionName "1.0"
         }
     }
@@ -88,9 +88,6 @@ dependencies {
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'junit:junit:4.13'
 
-    //please remove these 2 dependencies for release build
-    implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.uphyca:stetho_realm:2.1.0'
 
     implementation 'com.github.LucasFsc:Html2Pdf:0.2-beta'
     implementation 'com.github.naveenr-btc:RangeSeekBar:3.0.2'
