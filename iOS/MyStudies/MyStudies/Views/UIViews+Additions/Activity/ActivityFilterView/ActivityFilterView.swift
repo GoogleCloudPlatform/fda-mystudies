@@ -112,6 +112,9 @@ extension ActivityFilterView {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "ActivityFilterType Selected"
+    ])
     self.selectedIndex = ActivityFilterType.init(rawValue: indexPath.row)!
     self.delegate?.setSelectedFilter(selectedIndex: self.selectedIndex)
     self.tableview?.reloadData()

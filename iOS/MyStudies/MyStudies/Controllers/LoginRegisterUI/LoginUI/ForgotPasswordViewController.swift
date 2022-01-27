@@ -78,6 +78,9 @@ class ForgotPasswordViewController: UIViewController {
 
   /// Dismiss key board when clicked on Background.
   @objc func dismissKeyboard() {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "ForgotPassword KeyboardDone"
+    ])
     self.view.endEditing(true)
   }
 

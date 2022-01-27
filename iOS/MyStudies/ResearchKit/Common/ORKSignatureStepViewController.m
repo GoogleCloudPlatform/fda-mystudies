@@ -377,6 +377,8 @@
 }
 
 - (void)clearAction:(id)sender {
+  NSDictionary* userInfo = @{@"ORKActions": @("ORKClearSign")};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userInfo];
     [_signingView.wrapperView.signatureView clear];
     [self updateButtonStates];
     [self notifyDelegateOnResultChange];

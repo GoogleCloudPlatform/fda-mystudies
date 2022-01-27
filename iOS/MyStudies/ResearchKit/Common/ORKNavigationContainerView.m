@@ -411,6 +411,8 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (void)cancelButtonAction:(id)sender {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKCancel"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
     [self cancelAction:sender];
 }
 

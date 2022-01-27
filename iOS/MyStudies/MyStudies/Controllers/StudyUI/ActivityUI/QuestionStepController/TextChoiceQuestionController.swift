@@ -339,7 +339,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       
   @IBAction func filterAction(_: UIBarButtonItem) {
     Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "TextChoice Filter"
+      buttonClickReasonKey: "TextChoiceQuestion BackButton"
     ])
     super.goBackward()
   }
