@@ -22,8 +22,6 @@
 
 package com.fdahpstudydesigner.dao;
 
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_DELETED;
-
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
@@ -64,6 +62,8 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
+
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_DELETED;
 
 @Repository
 public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
@@ -219,7 +219,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
   @SuppressWarnings("unchecked")
   @Override
-  public ActiveTaskBo getActiveTaskById(String activeTaskId, String customStudyId) {
+  public ActiveTaskBo getActiveTaskById(
+      String activeTaskId, String customStudyId, ActiveTaskBo activeTask) {
     logger.entry("begin getActiveTaskById()");
     ActiveTaskBo activeTaskBo = null;
     Session session = null;
@@ -227,6 +228,9 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       activeTaskBo = (ActiveTaskBo) session.get(ActiveTaskBo.class, activeTaskId);
+      if (activeTaskBo == null) {
+        activeTaskBo = activeTask;
+      }
       if (activeTaskBo != null) {
         query =
             session
@@ -681,6 +685,21 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           && !activeTaskBo.getTaskAttributeValueBos().isEmpty()) {
         taskAttributeValueBos = activeTaskBo.getTaskAttributeValueBos();
       }
+      // condition for duplicate removed
+      if (activeTaskBo != null) {
+        queryString = " From ActiveTaskBo where studyId=:studyId and shortTitle=:shortTitle";
+        ActiveTaskBo activeTask =
+            (ActiveTaskBo)
+                session
+                    .createQuery(queryString)
+                    .setParameter("studyId", activeTaskBo.getStudyId())
+                    .setParameter("shortTitle", activeTaskBo.getShortTitle())
+                    .uniqueResult();
+        if (activeTask != null) {
+          activeTaskBo = activeTask;
+        }
+      }
+      //
       session.saveOrUpdate(activeTaskBo);
       if ((taskAttributeValueBos != null) && !taskAttributeValueBos.isEmpty()) {
         for (ActiveTaskAtrributeValuesBo activeTaskAtrributeValuesBo : taskAttributeValueBos) {
