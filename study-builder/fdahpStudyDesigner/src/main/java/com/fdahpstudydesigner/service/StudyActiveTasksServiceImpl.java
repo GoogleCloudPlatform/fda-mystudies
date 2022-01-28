@@ -59,8 +59,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     String message = null;
     ActiveTaskBo activeTaskBo = null;
     try {
-      activeTaskBo =
-          studyActiveTasksDAO.getActiveTaskById(activeTaskInfoId, customStudyId, activeTaskBo);
+      activeTaskBo = studyActiveTasksDAO.getActiveTaskById(activeTaskInfoId, customStudyId);
       if (activeTaskBo != null) {
         message = studyActiveTasksDAO.deleteActiveTask(activeTaskBo, sesObj, customStudyId);
       }
@@ -75,7 +74,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
   public ActiveTaskBo getActiveTaskById(String ativeTaskId, String customStudyId) {
     ActiveTaskBo activeTask = null;
     try {
-      activeTask = studyActiveTasksDAO.getActiveTaskById(ativeTaskId, customStudyId, activeTask);
+      activeTask = studyActiveTasksDAO.getActiveTaskById(ativeTaskId, customStudyId);
       if (activeTask != null) {
         List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleList =
             studyActiveTasksDAO.getActivetaskCustomFrequencies(activeTask.getId());
@@ -260,8 +259,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
       if (activeTaskBo != null) {
         if (StringUtils.isNotEmpty(activeTaskBo.getId())) {
           updateActiveTaskBo =
-              studyActiveTasksDAO.getActiveTaskById(
-                  activeTaskBo.getId(), customStudyId, activeTaskBo);
+              studyActiveTasksDAO.getActiveTaskById(activeTaskBo.getId(), customStudyId);
           updateActiveTaskBo.setModifiedBy(sessionObject.getUserId());
           updateActiveTaskBo.setModifiedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
           if (updateActiveTaskBo.getIsDuplicate() != null) {
@@ -329,8 +327,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
       if (null != activeTaskBo) {
         if (activeTaskBo.getId() != null) {
           addActiveTaskeBo =
-              studyActiveTasksDAO.getActiveTaskById(
-                  activeTaskBo.getId(), customStudyId, activeTaskBo);
+              studyActiveTasksDAO.getActiveTaskById(activeTaskBo.getId(), customStudyId);
         } else {
           addActiveTaskeBo = new ActiveTaskBo();
         }
