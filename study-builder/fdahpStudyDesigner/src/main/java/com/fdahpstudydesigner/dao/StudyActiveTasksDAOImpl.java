@@ -695,7 +695,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                     .setParameter("studyId", activeTaskBo.getStudyId())
                     .setParameter("shortTitle", activeTaskBo.getShortTitle())
                     .uniqueResult();
-        if (activeTask != null && !activeTaskBo.getId().equals(activeTask.getId())) {
+        if (activeTask != null) {
           activeTaskBo = activeTask;
         }
       }
