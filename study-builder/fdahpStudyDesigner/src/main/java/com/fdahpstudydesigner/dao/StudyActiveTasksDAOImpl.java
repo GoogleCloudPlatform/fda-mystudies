@@ -448,7 +448,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           query = session.createQuery(searchQuery).setParameter("studyId", studyId);
         } else {
           String searchQuery =
-              "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL ";
+              "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL and active=1 ";
           query = session.createQuery(searchQuery).setParameter("studyId", studyId);
         }
 
