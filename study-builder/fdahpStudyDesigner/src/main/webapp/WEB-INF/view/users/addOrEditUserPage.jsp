@@ -262,7 +262,7 @@ button#deleteUser {
             </div>
             <div class="form-group">
               <input type="text" class="form-control" id="phoneNumber"
-                     name="phoneNumber" value="${userBO.phoneNumber}"
+                     name="phoneNumber" value="${userBO.phoneNumber}" data-pattern-error="Phone number is invalid" data-error="Please fill out this field"
                      data-minlength="13" maxlength="14" pattern="[+][0-9]{12,13}"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> 
                      <c:if test="${mfaEnabled eq true}">required</c:if> />
