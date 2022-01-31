@@ -514,13 +514,14 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   }
 
   @IBAction func submitButtonAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "FetalKickCounterStep Submit"
-    ])
 
     self.taskResult.duration = self.timerValue!
     self.taskResult.totalKickCount = self.kickCounter == nil ? 0 : self.kickCounter!
     self.perform(#selector(self.goForward))
+    
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "FetalKickCounterStep Submit"
+    ])
   }
 
   @IBAction func editTimerButtonAction(_ sender: UIButton) {
@@ -539,6 +540,10 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         _,
         _,
         indexes in
+        
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "EditTimer Done Alert"
+        ])
 
         let result: [String] = (indexes as! [String])
         let hours = result.first?.components(
@@ -583,6 +588,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         return
       },
       cancel: { _ in
+        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+          buttonClickReasonKey: "EditTimer Cancel Alert"
+        ])
         return
       },
       origin: sender

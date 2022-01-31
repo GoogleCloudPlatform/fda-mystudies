@@ -360,6 +360,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @objc func handleLeftPanGesture(_ panGesture: UIPanGestureRecognizer) {
+      NotificationCenter.default.post(name: Notification.Name("Menu Clicked"), object: nil)
       
         if !isTagetViewController() {
             return

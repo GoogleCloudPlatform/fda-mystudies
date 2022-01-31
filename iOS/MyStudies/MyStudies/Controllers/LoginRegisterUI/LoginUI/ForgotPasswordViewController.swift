@@ -227,9 +227,6 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
   func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
     if textField.text ?? "" != "" && !(Utilities.isValidEmail(testStr: textField.text ?? "")) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Valid email alert"
-      ])
     }
   }
 }
