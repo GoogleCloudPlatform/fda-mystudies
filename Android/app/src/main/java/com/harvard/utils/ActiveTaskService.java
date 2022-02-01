@@ -22,13 +22,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.offlinemodule.model.OfflineData;
@@ -70,21 +71,25 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
           && intent.getStringExtra("broadcast").equalsIgnoreCase("yes")) {
         startAlarm();
       } else if (intent.getStringExtra("SyncAdapter") != null) {
-        realm = AppController.getRealmobj(this);
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        Notification notification =
-            new NotificationCompat.Builder(this)
-                .setContentTitle(getResources().getString(R.string.app_name))
-                .setTicker("Sync adapter")
-                .setContentText("Syncing offline data")
-                .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_SERVICE)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
-                .setOngoing(true)
-                .build();
+        try {
+          realm = AppController.getRealmobj(this);
+          Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+          Notification notification =
+              new NotificationCompat.Builder(this)
+                  .setContentTitle(getResources().getString(R.string.app_name))
+                  .setTicker("Sync adapter")
+                  .setContentText("Syncing offline data")
+                  .setChannelId(FdaApplication.NOTIFICATION_CHANNEL_ID_SERVICE)
+                  .setSmallIcon(R.mipmap.ic_launcher)
+                  .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
+                  .setOngoing(true)
+                  .build();
 
-        startForeground(102, notification);
-        getPendingData();
+          startForeground(102, notification);
+          getPendingData();
+        } catch (Exception e) {
+          Logger.log(e);
+        }
       } else {
         try {
           sec = 0;

@@ -17,12 +17,10 @@
 package com.harvard.studyappmodule;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,10 +29,7 @@ import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.events.DeleteAccountEvent;
-import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
 import com.harvard.studyappmodule.studymodel.DeleteAccountData;
-import com.harvard.studyappmodule.studymodel.StudyHome;
-import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
@@ -44,7 +39,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.ArrayList;
@@ -164,9 +159,7 @@ public class DeleteAccountActivity extends AppCompatActivity
                 getResources().getString(R.string.account_deletion),
                 Toast.LENGTH_SHORT)
             .show();
-        SharedPreferences settings =
-            SharedPreferenceHelper.getPreferences(DeleteAccountActivity.this);
-        settings.edit().clear().apply();
+        SharedPreferenceHelper.deletePreferences(this);
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
         if (pass != null) {

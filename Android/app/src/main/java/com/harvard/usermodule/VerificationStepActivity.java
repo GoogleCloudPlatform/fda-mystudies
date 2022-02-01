@@ -21,13 +21,13 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.browser.customtabs.CustomTabsIntent;
 import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -145,9 +145,7 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            SharedPreferences settings =
-                SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-            settings.edit().clear().apply();
+            SharedPreferenceHelper.deletePreferences(VerificationStepActivity.this);
             // delete passcode from keystore
             String pass = AppController.refreshKeys("passcode");
             if (pass != null) {
@@ -161,9 +159,7 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            SharedPreferences settings =
-                SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-            settings.edit().clear().apply();
+            SharedPreferenceHelper.deletePreferences(VerificationStepActivity.this);
             // delete passcode from keystore
             String pass = AppController.refreshKeys("passcode");
             if (pass != null) {
@@ -305,9 +301,7 @@ public class VerificationStepActivity extends AppCompatActivity
       if (statusCode.equalsIgnoreCase("401")) {
         Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
         if (from != null && from.equalsIgnoreCase("Activity")) {
-          SharedPreferences settings =
-              SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-          settings.edit().clear().apply();
+          SharedPreferenceHelper.deletePreferences(this);
           // delete passcode from keystore
           String pass = AppController.refreshKeys("passcode");
           if (pass != null) {
@@ -330,9 +324,7 @@ public class VerificationStepActivity extends AppCompatActivity
   @Override
   public void onBackPressed() {
     super.onBackPressed();
-    SharedPreferences settings =
-        SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(this);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {

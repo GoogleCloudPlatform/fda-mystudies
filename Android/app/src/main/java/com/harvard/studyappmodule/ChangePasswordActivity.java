@@ -18,12 +18,11 @@ package com.harvard.studyappmodule;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -321,9 +320,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     if (from != null && from.equalsIgnoreCase("ProfileFragment")) {
       finish();
     } else {
-      SharedPreferences settings =
-          SharedPreferenceHelper.getPreferences(ChangePasswordActivity.this);
-      settings.edit().clear().apply();
+      SharedPreferenceHelper.deletePreferences(this);
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
       if (pass != null) {

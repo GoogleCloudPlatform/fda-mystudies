@@ -933,7 +933,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         if ((existingQuestionResponseTypeList != null)
             && !existingQuestionResponseTypeList.isEmpty()) {
           for (QuestionReponseTypeBo questionResponseTypeBo : existingQuestionResponseTypeList) {
-            if (questionResponseTypeBo.getOtherDestinationStepId() == null) {
+            if (StringUtils.isEmpty(questionResponseTypeBo.getOtherDestinationStepId())) {
               sequenceTypeList.add(null);
             } else if ((questionResponseTypeBo.getOtherDestinationStepId() != null)
                 && questionResponseTypeBo.getOtherDestinationStepId().equals("0")) {
@@ -3495,19 +3495,18 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
             addOrUpdateQuestionnairesStepsBo.setStatus(false);
-
-            query =
-                session
-                    .createSQLQuery(
-                        "update questionnaires q set q.status=0 where q.id=:questionnaireId ")
-                    .setString(
-                        "questionnaireId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
-            query.executeUpdate();
           } else if (questionnairesStepsBo
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
             addOrUpdateQuestionnairesStepsBo.setStatus(true);
           }
+          query =
+              session
+                  .createSQLQuery(
+                      "update questionnaires q set q.status=0 where q.id=:questionnaireId ")
+                  .setString(
+                      "questionnaireId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
+          query.executeUpdate();
         }
         int count = 0;
         // adding the form step to questionnaire for the first time form
@@ -3642,18 +3641,17 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
             questionnairesStepsBo.setStatus(false);
-
-            query =
-                session
-                    .createSQLQuery(
-                        "update questionnaires q set q.status=0 where q.id=:questionnairesId ")
-                    .setString("questionnairesId", questionnairesStepsBo.getQuestionnairesId());
-            query.executeUpdate();
           } else if (instructionsBo
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
             questionnairesStepsBo.setStatus(true);
           }
+          query =
+              session
+                  .createSQLQuery(
+                      "update questionnaires q set q.status=0 where q.id=:questionnairesId ")
+                  .setString("questionnairesId", questionnairesStepsBo.getQuestionnairesId());
+          query.executeUpdate();
         }
         int count = 0;
         if ((instructionsBo.getQuestionnaireId() != null)
@@ -4363,19 +4361,18 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
             addOrUpdateQuestionnairesStepsBo.setStatus(false);
-
-            query =
-                session
-                    .createSQLQuery(
-                        "update questionnaires q set q.status=0 where q.id=:questionnairesId ")
-                    .setString(
-                        "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
-            query.executeUpdate();
           } else if (questionnairesStepsBo
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
             addOrUpdateQuestionnairesStepsBo.setStatus(true);
           }
+          query =
+              session
+                  .createSQLQuery(
+                      "update questionnaires q set q.status=0 where q.id=:questionnairesId ")
+                  .setString(
+                      "questionnairesId", addOrUpdateQuestionnairesStepsBo.getQuestionnairesId());
+          query.executeUpdate();
         }
         int count = 0;
         if (questionnairesStepsBo.getQuestionsBo() != null) {
@@ -5951,7 +5948,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             && !existingQuestionResponseSubTypeList.isEmpty()) {
           for (QuestionResponseSubTypeBo questionResponseSubTypeBo :
               existingQuestionResponseSubTypeList) {
-            if (questionResponseSubTypeBo.getDestinationStepId() == null) {
+            if (StringUtils.isEmpty(questionResponseSubTypeBo.getDestinationStepId())) {
               sequenceSubTypeList.add(null);
             } else if ((questionResponseSubTypeBo.getDestinationStepId() != null)
                 && questionResponseSubTypeBo.getDestinationStepId().equals("0")) {
@@ -6004,7 +6001,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         if ((existingQuestionResponseTypeList != null)
             && !existingQuestionResponseTypeList.isEmpty()) {
           for (QuestionReponseTypeBo questionResponseTypeBo : existingQuestionResponseTypeList) {
-            if (questionResponseTypeBo.getOtherDestinationStepId() == null) {
+            if (StringUtils.isEmpty(questionResponseTypeBo.getOtherDestinationStepId())) {
               sequenceTypeList.add(null);
             } else if ((questionResponseTypeBo.getOtherDestinationStepId() != null)
                 && questionResponseTypeBo.getOtherDestinationStepId().equals("0")) {

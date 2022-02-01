@@ -30,22 +30,22 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
@@ -469,14 +469,7 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   public void setVersion(TextView version) {
-    try {
-      PackageInfo info =
-          getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
-      version.append("" + info.versionName);
-    } catch (PackageManager.NameNotFoundException e) {
-      Logger.log(e);
-      version.setText("");
-    }
+    version.append(BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
   }
 
   private void bindEvents() {
@@ -638,8 +631,7 @@ public class SurveyActivity extends AppCompatActivity
     if (responseCode == LOGOUT_REPSONSECODE) {
       Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT)
           .show();
-      SharedPreferences settings = SharedPreferenceHelper.getPreferences(SurveyActivity.this);
-      settings.edit().clear().apply();
+      SharedPreferenceHelper.deletePreferences(this);
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
       if (pass != null) {
