@@ -425,6 +425,9 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 }
 
 - (void)playbackNextItem {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKPlaybackNextItem"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+
     const NSInteger sequenceLength = _currentGameState.game.sequenceLength;
     if (_playbackIndex >= sequenceLength) {
         [self transitionToState:ORKSpatialSpanStepStateGameplay];
@@ -483,6 +486,9 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 }
 
 - (void)activityTimeout {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKActivityTimeOut"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+
     [self transitionToState:ORKSpatialSpanStepStateTimeout];
 }
 
@@ -669,12 +675,17 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 }
 
 - (void)showCopyright {
+  NSDictionary *userDict = @{@"ORKActions":@"ORKShowCopyRight"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];    // Restart with a new, shorter game
+
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
                                                                    message:ORKLocalizedString(@"MEMORY_GAME_COPYRIGHT_TEXT", nil)
                                                             preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_OK", nil)
                                               style:UIAlertActionStyleDefault
-                                            handler:nil]];
+                                            handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKActions":@"ORKCopyRightOkAlert"};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+    }]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 
