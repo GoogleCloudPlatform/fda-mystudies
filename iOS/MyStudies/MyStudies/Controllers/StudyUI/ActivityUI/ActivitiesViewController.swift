@@ -1222,6 +1222,19 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         ActivityBuilder.currentActivityBuilder.activity?.restortionData =
           taskViewController
           .restorationData
+        
+        let study = Study.currentStudy
+        let activity = Study.currentActivity
+        
+        if activity?.type != .activeTask {          
+          // Update RestortionData for Activity in DB
+          DBHandler.updateActivityRestortionDataFor(
+            activity: activity!,
+            studyId: (study?.studyId)!,
+            restortionData: taskViewController.restorationData!
+          )
+          activity?.currentRun.restortionData = taskViewController.restorationData!
+        }
       }
       self.checkForActivitiesUpdates()
 
@@ -1540,6 +1553,15 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     if let step = step as? QuestionStep,
       step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false
     {
+      let valStep = step
+      if valStep.isOptional {
+        UserDefaults.standard.set("true", forKey: "isOptionalTextChoice")
+        UserDefaults.standard.synchronize()
+      } else {
+        UserDefaults.standard.set("false", forKey: "isOptionalTextChoice")
+        UserDefaults.standard.synchronize()
+      }
+      
       if let result = taskViewController.result.stepResult(forStepIdentifier: step.identifier) {
         self.managedResult[step.identifier] = result
       }
@@ -1561,6 +1583,8 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
       return textChoiceQuestionController
     }
+    UserDefaults.standard.set("", forKey: "isOptionalTextChoice")
+    UserDefaults.standard.synchronize()
 
     if let step = step as? CustomInstructionStep {
       return CustomInstructionStepViewController(step: step)

@@ -117,7 +117,7 @@
                             data-toggle="tooltip" data-placement="top" data-html="true"
                             title=""
                             data-original-title="<p class='text-class'>Image requirements: The default image shown below will be used for the study overview screen (first page) in the mobile app. Upload an alternate image if you wish to override it</p>
-                            <p class='text-class'>The image must be of type .JPG or .PNG. The minimum image size required is 750 x 1334. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger</p>"></span>
+                            <p class='text-class'>The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 750 x 1334. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger</p>"></span>
                     </span>                    
                   </div>              
                   <div class="thumb" style="display: inline-block;width:77px !important">
@@ -246,7 +246,7 @@
                               data-html="true"
                               title="" src="/studybuilder/images/icons/tooltip.png"
                               data-original-title="<p class='text-left'>Image requirements: The default image shown below will be used for the study overview screen <c:if test='${spbSt.first}'>(first page)</c:if><c:if test='${not spbSt.first}'>(second page onwards)</c:if> in the mobile app. Upload an alternate image if you wish to override it</p>
-                              <p class='text-left'>The image must be of type .JPG or .PNG. The minimum image size required is<c:if test='${spbSt.first}'>750 x 1334.</c:if><c:if test='${not spbSt.first}'>750 x 570.</c:if>For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></p></span>
+                              <p class='text-left'>The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is<c:if test='${spbSt.first}'>750 x 1334.</c:if><c:if test='${not spbSt.first}'>750 x 570.</c:if>For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></p></span>
                     </div>
                       <div class="thumb" style="display: inline-block;width:77px !important">
                        <c:choose>
@@ -457,7 +457,8 @@
                 ['fontname',
                   ['fontname']],
                 ['fontsize',
-                  ['fontsize']],]
+                  ['fontsize']],],
+                  fontSizes: ['8', '9', '10', '11', '12', '14','16', '18', '20', '22', '24', '36']
             });
     
     <c:if test="${not empty permission}">
@@ -534,7 +535,7 @@
           "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
           "<div class=panel-body  pt-none>" +
           "<div>" +
-          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='Image requirements: The default image shown below will be used for the study overview screen (second page onwards) in the mobile app. Upload an alternate image if you wish to override it</br></br>The image must be of type .JPG or .PNG. The minimum image size required is 750 x 570. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger'></span></span> </div>"
+          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='Image requirements: The default image shown below will be used for the study overview screen (second page onwards) in the mobile app. Upload an alternate image if you wish to override it</br></br>The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 750 x 570. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger'></span></span> </div>"
           +
           "<div>" +
           "<div class=thumb style='display: inline-block;width:77px !important'><img src='${defaultPageOverviewImageSignedUrl}' class=wid100></div>" +
@@ -644,7 +645,8 @@
               ['fontname',
                 ['fontname']],
               ['fontsize',
-                ['fontsize']],]
+                ['fontsize']],],
+                fontSizes: ['8', '9', '10', '11', '12', '14','16', '18', '20', '22', '24', '36']
           });
   <c:if test="${not empty permission}">
   $('.summernote').summernote('disable');

@@ -6,7 +6,7 @@
     android:animateLayoutChanges="true"
     tool:context="com.harvard.studyappmodule.StudyFragment">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/topView"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -29,13 +29,13 @@
                 android:layout_centerVertical="true"
                 android:padding="5dp">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/backBtnimg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/home_icn_grey" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/menubtnimg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                     android:background="@drawable/menu_icn" />
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/title"
                 style="@style/TextType2"
                 android:layout_centerHorizontal="true"
@@ -59,7 +59,7 @@
                 android:layout_centerVertical="true"
                 android:visibility="visible">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/filterImg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,10 +67,10 @@
                     android:background="@drawable/filter1" />
             </RelativeLayout>
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/hrLine1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -82,18 +82,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/hrLine1">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mSurveyActivitiesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:scrollbars="none" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
 </RelativeLayout>
