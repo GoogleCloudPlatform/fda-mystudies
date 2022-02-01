@@ -27,12 +27,12 @@
                 android:paddingRight="20dp"
                 android:visibility="gone">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/first_name_label"
                     style="@style/profileTextField"
                     android:text="@string/first_name" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_first_name"
                     style="@style/signUpEditText"
                     android:layout_alignBaseline="@+id/first_name_label"
@@ -46,7 +46,7 @@
                     android:maxLines="1"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline2"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -67,12 +67,12 @@
                 android:paddingRight="20dp"
                 android:visibility="gone">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/last_name_label"
                     style="@style/profileTextField"
                     android:text="@string/last_name" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_last_name"
                     style="@style/signUpEditText"
                     android:enabled="false"
@@ -82,7 +82,7 @@
                     android:maxLines="1"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -100,7 +100,7 @@
                 android:paddingTop="18dp"
                 android:paddingRight="20dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/email_label"
                     style="@style/profileTextField"
                     android:text="@string/username" />
@@ -114,7 +114,7 @@
                     android:maxLines="1"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline4"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -132,12 +132,12 @@
                 android:paddingTop="8dp"
                 android:paddingRight="10dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/password_label"
                     style="@style/profileTextField"
                     android:text="@string/password" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/edittxt_password"
                     style="@style/TextType2"
                     android:layout_alignParentRight="true"
@@ -146,7 +146,7 @@
                     android:text="@string/change_password"
                     android:textColor="@color/colorSecondaryStatBar" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline5"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -164,12 +164,12 @@
                 android:paddingTop="8dp"
                 android:paddingRight="10dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/passcode_label"
                     style="@style/profileTextField"
                     android:text="@string/passcode" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/edittxt_passcode"
                     style="@style/TextType2"
                     android:layout_alignParentRight="true"
@@ -178,7 +178,7 @@
                     android:text="@string/change_passcode"
                     android:textColor="@color/colorSecondaryStatBar" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline6"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -216,7 +216,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@id/switch_use_passcode">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/use_passcode_label"
                         style="@style/profileTextField"
                         android:layout_width="wrap_content"
@@ -228,7 +228,7 @@
 
                 </RelativeLayout>
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline7"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -267,7 +267,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@id/switch_touch">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/touch_id_label"
                         style="@style/TextType2"
                         android:layout_width="wrap_content"
@@ -280,7 +280,7 @@
 
                 </RelativeLayout>
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline8"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -318,7 +318,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@id/switch_recv_push_notifctn">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/recv_push_notifctn_label"
                         style="@style/profileTextField"
                         android:layout_alignParentStart="true"
@@ -328,7 +328,7 @@
 
                 </RelativeLayout>
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline9"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -366,7 +366,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@id/switch_recv_stdy_actrem">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/recv_stdy_actrem_label"
                         style="@style/profileTextField"
                         android:layout_alignParentStart="true"
@@ -376,7 +376,7 @@
 
                 </RelativeLayout>
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline11"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -406,7 +406,7 @@
                     android:layout_alignParentRight="true"
                     android:padding="8dp">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/picker_reminder"
                         style="@style/TextType2"
                         android:layout_centerVertical="true"
@@ -423,7 +423,7 @@
                     android:layout_toLeftOf="@id/rel_picker_reminder"
                     android:paddingRight="20dp">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/reminder_label"
                         style="@style/TextType2"
                         android:layout_alignParentStart="true"
@@ -436,7 +436,7 @@
 
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/signOutButton"
                 style="@style/TextType2"
                 android:layout_below="@id/rel_reminder"
@@ -448,7 +448,7 @@
                 android:textColor="@color/colorPrimaryBlack"
                 android:visibility="gone" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/hrline12"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -457,7 +457,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@color/colorSecondaryBg" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/deleteMyAccount"
                 style="@style/TextType2"
                 android:layout_below="@id/hrline12"
@@ -471,7 +471,7 @@
         </RelativeLayout>
     </ScrollView>
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/hrLine1"
         android:layout_width="match_parent"
         android:layout_height="1dp"

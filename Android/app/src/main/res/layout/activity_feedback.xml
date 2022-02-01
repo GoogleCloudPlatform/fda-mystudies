@@ -7,7 +7,7 @@
                 android:background="@android:color/white"
                 android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/submitButton"
         style="@style/TextType2"
         android:layout_alignParentBottom="true"
@@ -18,7 +18,7 @@
         android:text="@string/submit"
         android:textColor="@color/colorPrimary"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/hrline8"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -26,7 +26,7 @@
         android:layout_marginBottom="15dp"
         android:background="@color/colorSecondaryBg"/>
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/topView"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -48,14 +48,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/back_btn1_grey"/>
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/title"
                 style="@style/TextType2"
                 android:layout_centerHorizontal="true"
@@ -64,9 +64,9 @@
                 android:textColor="@color/colorPrimaryBlack"/>
 
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/hrLine1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -82,14 +82,14 @@
         android:paddingTop="18dp">
 
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/feedback_label"
             style="@style/contactUsTextField"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="@string/feedback_text"/>
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/hrLine2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -106,7 +106,7 @@
             android:layout_marginTop="10dp"
             android:paddingRight="20dp">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/subjecttitle"
                 style="@style/contactUsTextField"
                 android:layout_width="wrap_content"
@@ -115,7 +115,7 @@
                 android:text="@string/subject"
                 />
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/subject"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
 
         </RelativeLayout>
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/hrLine3"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -144,7 +144,7 @@
             android:layout_marginTop="10dp"
             android:background="@color/colorSecondaryBg"/>
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/feedbacktitle"
             style="@style/contactUsTextField"
             android:layout_width="wrap_content"
@@ -158,7 +158,7 @@
             />
 
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/edittxt_feedback"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
