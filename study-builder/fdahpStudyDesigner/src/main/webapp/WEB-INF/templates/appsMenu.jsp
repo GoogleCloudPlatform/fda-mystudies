@@ -96,7 +96,7 @@
       <c:if test="${empty permission}">
       $('.cancelBut').prop('disabled', true);
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {

@@ -17,9 +17,9 @@
 button#exportId {
     margin-right: 7px;
 }
-.modal-footer {
-    border-top: none !important;
-}
+/* .modal-footer { */
+/*     border-top: none !important; */
+/* } */
 .modal-header {
     border-bottom: none !important; 
 }
@@ -259,7 +259,7 @@ button#exportId {
             messageText = "You are attempting to deactivate the study. Are you sure you wish to proceed?";
         }
         bootbox.confirm({
-          closeButton: false,
+          closeButton: true,
           message: messageText,
           buttons: {
             'cancel': {

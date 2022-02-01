@@ -4287,7 +4287,7 @@ if(document.getElementById("singleSelect").checked==true){
     $(item).prop('disabled', true);
     <c:if test="${actionTypeForFormStep ne 'view'}">
     bootbox.confirm({
-      closeButton: false,
+      closeButton: true,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {
