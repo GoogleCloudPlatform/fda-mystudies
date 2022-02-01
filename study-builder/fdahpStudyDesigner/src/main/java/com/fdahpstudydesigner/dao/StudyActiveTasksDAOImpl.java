@@ -448,7 +448,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           query = session.createQuery(searchQuery).setParameter("studyId", studyId);
         } else {
           String searchQuery =
-              "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL ";
+              "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL and active=1 ";
           query = session.createQuery(searchQuery).setParameter("studyId", studyId);
         }
 
@@ -679,6 +679,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           && !activeTaskBo.getTaskAttributeValueBos().isEmpty()) {
         taskAttributeValueBos = activeTaskBo.getTaskAttributeValueBos();
       }
+      session.clear();
       session.saveOrUpdate(activeTaskBo);
       if ((taskAttributeValueBos != null) && !taskAttributeValueBos.isEmpty()) {
         for (ActiveTaskAtrributeValuesBo activeTaskAtrributeValuesBo : taskAttributeValueBos) {

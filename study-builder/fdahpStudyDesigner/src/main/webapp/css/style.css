@@ -2755,3 +2755,7 @@ width:100% !important;
     padding: 8px 0px 8px 20px !important;
 }
     
+    .note-icon-menu-check:before {
+    content: "\ea21";
+    visibility: hidden !important;
+}
