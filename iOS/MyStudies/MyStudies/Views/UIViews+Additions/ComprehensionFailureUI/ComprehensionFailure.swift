@@ -53,13 +53,19 @@ class ComprehensionFailure: UIView {
     return view
 
   }
-
+    
+  override func layoutSubviews() {
+    buttonCancel.translatesAutoresizingMaskIntoConstraints = false
+    buttonCancel.topAnchor.constraint(equalTo: self.topAnchor, constant: 40).isActive = true
+    buttonCancel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16).isActive = true
+  }
+ 
   // MARK: - Button Actions
 
   @IBAction func buttonCancelAction() {
+    self.delegate?.didTapOnCancel()
     self.isHidden = true
     self.removeFromSuperview()
-    self.delegate?.didTapOnCancel()
   }
 
   @IBAction func buttonRetryAction() {

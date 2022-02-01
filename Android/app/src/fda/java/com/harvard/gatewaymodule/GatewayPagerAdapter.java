@@ -18,17 +18,18 @@ package com.harvard.gatewaymodule;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.viewpager.widget.PagerAdapter;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+
 import io.realm.Realm;
 
 public class GatewayPagerAdapter extends PagerAdapter {

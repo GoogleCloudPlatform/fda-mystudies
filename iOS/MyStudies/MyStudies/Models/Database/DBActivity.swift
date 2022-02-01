@@ -33,6 +33,8 @@ class DBActivity: Object {
   @objc dynamic var lastModified: Date?
 
   @objc dynamic var startDate: Date?
+  @objc dynamic var startRawDate: String?
+  @objc dynamic var endRawDate: String?
   @objc dynamic var endDate: Date?
   @objc dynamic var branching: Bool = false
   @objc dynamic var randomization: Bool = false
