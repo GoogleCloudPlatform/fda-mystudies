@@ -22,7 +22,7 @@
         android:paddingLeft="18dp"
         android:visibility="gone">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/state"
             style="@style/TextType3"
             android:text="@string/current1"
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/surveyIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,13 +58,13 @@
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/box1">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/whenWasSurvey"
                 style="@style/TextType4"
                 android:text=""
                 android:textColor="@color/colorPrimary" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/run"
                 style="@style/TextType4wMatchParent"
                 android:layout_toRightOf="@+id/whenWasSurvey"
@@ -72,7 +72,7 @@
                 android:text=""
                 android:textColor="@color/colorSecondary" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/surveyTitle"
                 style="@style/TextType2"
                 android:layout_below="@id/whenWasSurvey"
@@ -80,7 +80,7 @@
                 android:text=""
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/time"
                 style="@style/TextType4wMatchParent"
                 android:layout_below="@id/surveyTitle"
@@ -91,7 +91,7 @@
                 android:textColor="@color/colorPrimaryBlack"
                 android:visibility="gone" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/date"
                 style="@style/TextType4wMatchParent"
                 android:layout_below="@id/time"
@@ -101,7 +101,7 @@
                 android:text=""
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/process"
                 style="@style/TextType5"
                 android:layout_alignParentRight="true"
@@ -112,7 +112,7 @@
                 android:textColor="@android:color/white" />
 
         </RelativeLayout>
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/more"
             style="@style/TextType5"
             android:layout_below="@id/box2"
@@ -138,7 +138,7 @@
         android:paddingTop="24dp"
         android:visibility="gone">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             style="@style/TextType2"
             android:text="@string/activities_not_found"
             android:textColor="@color/colorPrimaryBlack" />

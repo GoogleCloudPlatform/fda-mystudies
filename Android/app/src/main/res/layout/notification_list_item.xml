@@ -13,13 +13,13 @@
         android:paddingRight="18dp"
         android:paddingTop="24dp">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/notification_msg"
             style="@style/TextType2"
             android:text=""
             android:textColor="@color/colorPrimaryBlack" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/dayTimeDisplay"
             style="@style/TextType3"
             android:layout_below="@id/notification_msg"

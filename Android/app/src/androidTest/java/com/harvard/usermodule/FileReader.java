@@ -10,7 +10,7 @@ package com.harvard.usermodule;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
