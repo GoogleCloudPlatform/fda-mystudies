@@ -316,6 +316,13 @@ class Utilities: NSObject {
     let finalDate = dateFormatter.date(from: dateString)
     return finalDate
   }
+  
+  class func findDateFromStringWithTimezone(dateString: String) -> Date? {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+    let finalDate = dateFormatter.date(from: dateString)
+    return finalDate
+  }
 
   // Method to get StringFromDate for default dateFormatter
   //     @date:a date  of format "yyyy-MM-dd'T'HH:mm:ssZ"
