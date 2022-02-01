@@ -21,7 +21,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 @SuppressWarnings("DefaultFileTemplate")
-public class VerticalSeekBar extends android.support.v7.widget.AppCompatSeekBar {
+public class VerticalSeekBar extends androidx.appcompat.widget.AppCompatSeekBar {
   private OnSeekBarChangeListener seekBarListener;
 
   public VerticalSeekBar(Context context) {

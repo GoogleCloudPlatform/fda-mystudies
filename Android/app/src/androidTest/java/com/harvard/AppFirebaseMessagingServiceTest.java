@@ -10,7 +10,7 @@ package com.harvard;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 import com.google.firebase.messaging.RemoteMessage;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Study;
@@ -70,9 +70,9 @@ public class AppFirebaseMessagingServiceTest {
 
   @Before
   public void setUp() {
-    realm = AppController.getRealmobj(InstrumentationRegistry.getTargetContext());
+    realm = AppController.getRealmobj(InstrumentationRegistry.getInstrumentation().getTargetContext());
     dbServiceSubscriber = new DbServiceSubscriber();
-    context = InstrumentationRegistry.getTargetContext();
+    context = InstrumentationRegistry.getInstrumentation().getTargetContext();
   }
 
   @Test
@@ -144,7 +144,6 @@ public class AppFirebaseMessagingServiceTest {
 
   private Study getstudy() {
     StudyList studyList = new StudyList();
-    studyList.setBookmarked(STUDYLISTBOOKMARKED);
     studyList.setCategory(STUDYLISTCATEGORY);
     studyList.setLogo(STUDYLISTLOGO);
     studyList.setPdfPath(STUDYLISTPDFPATH);
@@ -166,7 +165,6 @@ public class AppFirebaseMessagingServiceTest {
 
   private StudyData getStudyData() {
     Studies studies = new Studies();
-    studies.setBookmarked(false);
     studies.setSiteId(SITEID);
     studies.setEnrolledDate(ENROLLEDDATE);
     studies.setParticipantId(PARTICIPANTID);

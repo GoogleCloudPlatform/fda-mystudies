@@ -11,8 +11,8 @@ package com.harvard.usermodule;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 import com.google.gson.Gson;
 import com.harvard.usermodule.webservicemodel.ChangePasswordData;
 import com.harvard.usermodule.webservicemodel.LoginData;
@@ -96,7 +96,7 @@ public class AuthServerWebServiceTest {
       e.printStackTrace();
     }
     async = new ApiCallSyncronizer();
-    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
+    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getInstrumentation().getTargetContext());
     apiCall.apiCallPostJson(
         url.toString(),
         new HashMap<String, String>(),
@@ -149,7 +149,7 @@ public class AuthServerWebServiceTest {
     JSONObject params = new JSONObject();
     URL url = mockWebServer.url(studyListUrl.toString()).url();
     async = new ApiCallSyncronizer();
-    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
+    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getInstrumentation().getTargetContext());
     apiCall.apiCallPostJson(
         url.toString(),
         new HashMap<String, String>(),
@@ -210,7 +210,7 @@ public class AuthServerWebServiceTest {
     }
     URL url = mockWebServer.url(studyListUrl.toString()).url();
     async = new ApiCallSyncronizer();
-    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
+    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getInstrumentation().getTargetContext());
     apiCall.apiCallPostJson(
         url.toString(),
         new HashMap<String, String>(),
@@ -268,7 +268,7 @@ public class AuthServerWebServiceTest {
       e.printStackTrace();
     }
     async = new ApiCallSyncronizer();
-    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
+    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getInstrumentation().getTargetContext());
     apiCall.apiCallPutJson(
         url.toString(),
         new HashMap<String, String>(),

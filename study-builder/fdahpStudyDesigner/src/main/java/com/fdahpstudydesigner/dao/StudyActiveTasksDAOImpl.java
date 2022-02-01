@@ -679,6 +679,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           && !activeTaskBo.getTaskAttributeValueBos().isEmpty()) {
         taskAttributeValueBos = activeTaskBo.getTaskAttributeValueBos();
       }
+      session.clear();
       session.saveOrUpdate(activeTaskBo);
       if ((taskAttributeValueBos != null) && !taskAttributeValueBos.isEmpty()) {
         for (ActiveTaskAtrributeValuesBo activeTaskAtrributeValuesBo : taskAttributeValueBos) {

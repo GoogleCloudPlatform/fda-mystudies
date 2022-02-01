@@ -16,9 +16,9 @@
 package com.harvard.usermodule;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
