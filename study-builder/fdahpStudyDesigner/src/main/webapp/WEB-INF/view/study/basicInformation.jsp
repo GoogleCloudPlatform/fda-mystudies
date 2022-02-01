@@ -439,7 +439,8 @@ li.dropdown-header {
                         ['fontname',
                           ['fontname']],
                         ['fontsize',
-                          ['fontsize']],]
+                          ['fontsize']],],
+                          fontSizes: ['8', '9', '10', '11', '12', '14','16', '18', '20', '22', '24', '36']
 
                     });
             <c:if test="${not empty permission}">

@@ -1,6 +1,6 @@
 <div (keydown)="mobileOnKeyDown($event)" id="mobile-menu">
   <div id="mySidenav__menubar" class="flex__justify__space-between">
-    <div>
+    <div class="d-flex">
       <button
         [ngClass]="{display__none: displayHeaderOnResetpassword === false}"
         class="openNav display-inline-block mr-sm btn pl-none"
@@ -8,21 +8,22 @@
       >
         <img src="assets/svgs/menu-icon.svg" />
       </button>
-      <a
-        [routerLink]="
-          displayHeaderOnResetpassword ? '/coordinator/studies/sites' : []
-        "
-        [ngClass]="{cursor__none: displayHeaderOnResetpassword === false}"
-        [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
-        routerLink="/coordinator/studies/sites"
-      >
-        <img
-          class="mr-sm width__auto"
-          src="assets/images/branding/landing-logo.png"
-          alt="main logo"
-        />
-      </a>
+
+      <img
+        class="mr-sm width__auto logo"
+        src="assets/images/branding/landing-logo.png"
+        alt="main logo"
+      />
     </div>
+    <a
+      [routerLink]="
+        displayHeaderOnResetpassword ? '/coordinator/studies/sites' : []
+      "
+      [ngClass]="{cursor__none: displayHeaderOnResetpassword === false}"
+      [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
+      routerLink="/coordinator/studies/sites"
+    ></a>
+
     <div
       *ngIf="showSearchBar"
       class="navbar-nav inner-addon right-addon search-icon"
