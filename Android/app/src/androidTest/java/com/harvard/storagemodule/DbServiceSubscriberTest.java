@@ -11,7 +11,7 @@ package com.harvard.storagemodule;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.activitylistmodel.ActivityListData;
 import com.harvard.studyappmodule.activitylistmodel.AnchorDate;
@@ -56,7 +56,7 @@ public class DbServiceSubscriberTest {
 
   @Before
   public void setUp() {
-    realm = AppController.getRealmobj(InstrumentationRegistry.getTargetContext());
+    realm = AppController.getRealmobj(InstrumentationRegistry.getInstrumentation().getTargetContext());
     dbServiceSubscriber = new DbServiceSubscriber();
   }
 
@@ -155,7 +155,8 @@ public class DbServiceSubscriberTest {
     AnchorRuns anchorRuns = new AnchorRuns();
     anchorRuns.setEndDays(TEST_END_DAYS);
     anchorRuns.setStartDays(TEST_START_DAYS);
-    anchorRuns.setTime(TEST_TIME);
+    anchorRuns.setStartTime(TEST_TIME);
+    anchorRuns.setEndTime(TEST_TIME);
     RealmList<FrequencyRuns> runslist = new RealmList<>();
     runslist.add(frequencyRuns);
     RealmList<AnchorRuns> anchorRunslist = new RealmList<>();

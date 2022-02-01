@@ -11,7 +11,8 @@ package com.harvard.webservicemodule.apihelper;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
+
 import com.harvard.utils.Urls;
 import java.util.HashMap;
 import org.json.JSONException;
