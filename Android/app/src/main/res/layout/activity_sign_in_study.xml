@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     tool:context="com.harvard.studyappmodule.StudySignInActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/topView"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -30,7 +30,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/fda_listen"
                     style="@style/TextType2"
                     android:text="@string/app_name"
@@ -44,7 +44,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/filterImg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:layout_marginRight="25dp"
                 android:layout_toLeftOf="@id/filterBtn">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/resourceImg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -70,10 +70,10 @@
 
 
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/hrLine1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -85,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/hrLine1">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/studyRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -93,7 +93,7 @@
             android:scrollbars="none" />
     </RelativeLayout>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/signInButton"
         style="@style/TextType2"
         android:layout_alignParentBottom="true"

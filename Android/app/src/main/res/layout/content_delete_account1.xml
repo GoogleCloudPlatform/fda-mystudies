@@ -16,14 +16,14 @@
         android:layout_marginTop="15dp"
         android:background="@color/colorSecondaryBg" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/mMedicationSurveyTitle"
         style="@style/TextType2"
         android:layout_below="@id/mHrLine1"
         android:text=""
         android:textColor="@color/colorPrimaryBlack" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/mMedicationSurveyValue"
         style="@style/TextType2"
         android:layout_below="@id/mMedicationSurveyTitle"

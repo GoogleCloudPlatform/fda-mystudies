@@ -10,8 +10,9 @@ package com.harvard.webservicemodule.apihelper;
 
 import static org.junit.Assert.assertNotNull;
 
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
+
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.usermodule.webservicemodel.ForgotPasswordData;
 import com.harvard.utils.Urls;
@@ -38,7 +39,7 @@ public class ApiCallTest {
     studyListUrl.append(Urls.BASE_URL_STUDY_DATASTORE);
     studyListUrl.append(Urls.STUDY_LIST);
     async = new ApiCallSyncronizer();
-    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
+    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getInstrumentation().getTargetContext());
     apiCall.apiCallGet(
         studyListUrl.toString(),
         new HashMap<String, String>(),
@@ -72,7 +73,7 @@ public class ApiCallTest {
     HashMap<String, String> params = new HashMap<>();
     params.put(PARAMS_EMAIL_KEY, PARAMS_EMAIL_VALUE);
     params.put(PARAMS_APPID_KEY, PARAMS_APPID_VALUE);
-    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
+    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getInstrumentation().getTargetContext());
     apiCall.apiCallPostHashmap(
         forgotPasswordUrl.toString(),
         new HashMap<String, String>(),
@@ -109,7 +110,7 @@ public class ApiCallTest {
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
+    ApiCall apiCall = new ApiCall(InstrumentationRegistry.getInstrumentation().getTargetContext());
     apiCall.apiCallPostJson(
         forgotPasswordUrl.toString(),
         new HashMap<String, String>(),

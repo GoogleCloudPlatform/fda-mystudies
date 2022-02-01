@@ -43,8 +43,7 @@
             data-toggle="tooltip"
             title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."></span>
     </div>
-    <div class="add_notify_option">
-      <div class="form-group shortTitleClass">
+      <div class="form-group shortTitleClass col-md-4 p-none">
         <input autofocus="autofocus" type="text" autocomplete="off" custAttType="customValidate"
                class="form-control shortTitleIdCls"
                id="shortTitleId" name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
@@ -54,7 +53,7 @@
         <div id="activityvalidate" class="validateActiveTask with-errors red-txt"></div>
         <div class="help-block with-errors red-txt"></div>
       </div>
-    </div>
+    <div class="clearfix"></div>
   </div>
   <div>
     <div class="gray-xs-f mb-sm">Display name
