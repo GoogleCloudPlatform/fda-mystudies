@@ -224,16 +224,19 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    stepDidChange()
+    self.stepDidChange()
   }
-  
+
   override func viewWillAppear(_ animated: Bool) {
     self.tableView?.tableHeaderView = headerViewForAdditionalText()
   }
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-
+    
+    UserDefaults.standard.set("", forKey: "isOptionalTextChoice")
+    UserDefaults.standard.synchronize()
+    
     if self.answerFormat?.style == .multipleChoice {
       self.tableView?.allowsMultipleSelection = true
     } else {
@@ -291,15 +294,46 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     // Try to get the ref of the continue of the next button
     if let nextBtn = self.view.allSubViewsOf(type: ORKContinueButton.self).last {
       self.continueBtn = nextBtn
+      if self.questionStep?.isOptional ?? false {
+        self.continueBtn?.setTitle("Next", for: .normal)
+      }
       continueBtn?.addTarget(
         self,
         action: #selector(didTapOnDoneOrNextBtn),
         for: .touchUpInside
       )
-    } else {
-      fatalError("Couldn't able to find continue Button")
+    }
+      
+    if super.hasPreviousStep() {
+      if navigationItem.leftBarButtonItem == nil {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 26, height: 26))
+        
+        //  Filter Button
+        let filterButton = addFilterButton()
+        filterButton.clipsToBounds = true
+        view.addSubview(filterButton)
+        filterButton.isExclusiveTouch = true
+        
+        let barButton = UIBarButtonItem(customView: view)
+        navigationItem.leftBarButtonItem = barButton
+      }
     }
   }
+    
+  func addFilterButton() -> UIButton {
+    let filterButton = UIButton(type: .custom)
+    filterButton.setImage(
+      #imageLiteral(resourceName: "leftIconBlue2"),
+      for: UIControl.State.normal
+    )
+    filterButton.addTarget(self, action: #selector(filterAction(_:)), for: .touchUpInside)
+    filterButton.frame = CGRect(x: 0, y: 0, width: 26, height: 26)
+    return filterButton
+  }
+    
+    @IBAction func filterAction(_: UIBarButtonItem) {
+        super.goBackward()
+    }
 
   // MARK: - UI
 
@@ -416,7 +450,6 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
           searchBar.heightAnchor.constraint(equalToConstant: self.searchBarHeight),
         ])
     }
-
   }
 
   // MARK: - Utils
@@ -640,7 +673,7 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
       if self.isOtherCellSelected {
         tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         cell.didSelected = true
-
+          
         if self.otherChoice.isShowOtherField {
           cell.updateOtherView(isShow: true)
         } else {
