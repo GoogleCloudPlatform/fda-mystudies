@@ -134,6 +134,10 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     }
 
     self.labelVersion.text = "V" + "\(Utilities.getAppVersion())"
+    
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Menu Clicked"
+    ])
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -364,8 +368,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
       if isStandalone {
         if Study.currentStudy?.userParticipateState.status == .enrolled {
-//          NotificationCenter.default.post(name: Notification.Name("LeftMenu Home"), object: nil)
-
+          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+            buttonClickReasonKey: "LeftMenu Home"
+          ])
           self.slideMenuController()?.changeMainViewController(
             self.studyTabBarController,
             close: true
