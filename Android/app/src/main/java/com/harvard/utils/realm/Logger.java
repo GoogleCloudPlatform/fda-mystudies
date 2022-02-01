@@ -15,7 +15,7 @@
 
 package com.harvard.utils.realm;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;

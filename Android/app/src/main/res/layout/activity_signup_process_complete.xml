@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/congrats_label"
                 style="@style/TextType1"
                 android:layout_centerHorizontal="true"
@@ -25,7 +25,7 @@
                 android:text="@string/congrats_txt"
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/signup_complete_txt_label"
                 style="@style/TextType2"
                 android:layout_below="@id/congrats_label"
@@ -35,7 +35,7 @@
                 android:text="@string/signup_process_complete"
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/success_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                 android:layout_marginTop="60dp"
                 android:background="@drawable/success_icn1" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/nextButton"
                 style="@style/TextType2"
                 android:layout_below="@id/success_img"
