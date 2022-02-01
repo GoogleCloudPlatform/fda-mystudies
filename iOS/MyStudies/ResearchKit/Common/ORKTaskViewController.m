@@ -1418,9 +1418,11 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 
 - (void)stepViewController:(ORKStepViewController *)stepViewController didFinishWithNavigationDirection:(ORKStepViewControllerNavigationDirection)direction {
     
-    if (!stepViewController.readOnlyMode) {
-        // Add step result object
-        [self setManagedResult:[stepViewController result] forKey:stepViewController.step.identifier];
+    if (stepViewController != nil) {
+        if (!stepViewController.readOnlyMode) {
+            // Add step result object
+            [self setManagedResult:[stepViewController result] forKey:stepViewController.step.identifier];
+        }
     }
     
     // Alert the delegate that the step is finished 

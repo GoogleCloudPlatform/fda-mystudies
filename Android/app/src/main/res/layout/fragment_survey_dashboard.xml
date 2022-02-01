@@ -6,7 +6,7 @@
     android:background="@color/white"
     tool:context="com.harvard.studyappmodule.SurveyDashboardFragment">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/topView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,13 +27,13 @@
                 android:layout_centerVertical="true"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/backBtnimg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/home_icn" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/menubtnimg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                     android:background="@drawable/menu_icn" />
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/mTitle1"
                 style="@style/TextType2"
                 android:layout_centerHorizontal="true"
@@ -62,7 +62,7 @@
                 android:layout_alignParentRight="true">
 
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/shareView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                 android:layout_centerVertical="true"
                 android:visibility="gone">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/mInfoIconImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,9 +86,9 @@
                     android:visibility="visible" />
             </RelativeLayout>
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/hrLine1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -129,14 +129,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.45">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/mStudyStatusLabel"
                             style="@style/TextType3"
                             android:layout_centerHorizontal="true"
                             android:text="@string/study_status"
                             android:textColor="@color/colorSecondary" />
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/mStudyStatus"
                             style="@style/TextType2"
                             android:layout_below="@id/mStudyStatusLabel"
@@ -150,7 +150,7 @@
                         android:layout_weight=".1"
                         android:gravity="center_horizontal">
 
-                        <android.support.v7.widget.AppCompatImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="1dp"
                             android:layout_height="40dp"
                             android:background="@color/colorSecondaryBg" />
@@ -161,14 +161,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.45">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/mParticipationStatusLabel"
                             style="@style/TextType3"
                             android:layout_centerHorizontal="true"
                             android:text="@string/participation_status"
                             android:textColor="@color/colorSecondary" />
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/mParticipationStatus"
                             style="@style/TextType2"
                             android:layout_below="@id/mParticipationStatusLabel"
@@ -218,7 +218,7 @@
                             android:gravity="center_horizontal"
                             android:orientation="vertical">
 
-                            <android.support.v7.widget.AppCompatTextView
+                            <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/mCompletionText1"
                                 style="@style/TextType5"
                                 android:gravity="center_horizontal"
@@ -229,13 +229,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
-                                <android.support.v7.widget.AppCompatTextView
+                                <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/mCompletionValue"
                                     style="@style/TextType1"
                                     android:text="0"
                                     android:textColor="@color/colorPrimary" />
 
-                                <android.support.v7.widget.AppCompatTextView
+                                <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/mCompletionPercentage"
                                     style="@style/TextType4"
                                     android:layout_alignBottom="@id/mCompletionValue"
@@ -245,7 +245,7 @@
                                     android:textColor="@color/colorSecondary" />
                             </RelativeLayout>
 
-                            <android.support.v7.widget.AppCompatTextView
+                            <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/mCompletionText2"
                                 style="@style/TextType5"
                                 android:gravity="center_horizontal"
@@ -277,7 +277,7 @@
                             android:gravity="center_horizontal"
                             android:orientation="vertical">
 
-                            <android.support.v7.widget.AppCompatTextView
+                            <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/mAdherenceText1"
                                 style="@style/TextType5"
                                 android:gravity="center_horizontal"
@@ -288,13 +288,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
-                                <android.support.v7.widget.AppCompatTextView
+                                <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/mAdherenceValue"
                                     style="@style/TextType1"
                                     android:text="0"
                                     android:textColor="@color/colorPrimary" />
 
-                                <android.support.v7.widget.AppCompatTextView
+                                <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/mAdherencePercentage"
                                     style="@style/TextType4"
                                     android:layout_alignBottom="@id/mAdherenceValue"
@@ -304,7 +304,7 @@
                                     android:textColor="@color/colorSecondary" />
                             </RelativeLayout>
 
-                            <android.support.v7.widget.AppCompatTextView
+                            <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/mAdherenceText2"
                                 style="@style/TextType5"
                                 android:gravity="center_horizontal"
@@ -334,7 +334,7 @@
                     android:paddingRight="15dp"
                     android:paddingTop="14dp">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/mStatisticsLabel"
                         style="@style/TextType3"
                         android:layout_centerVertical="true"
@@ -366,7 +366,7 @@
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/mMonthLabel"
                             style="@style/TextType4"
                             android:text="@string/month"
@@ -384,7 +384,7 @@
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/mWeekLabel"
                             style="@style/TextType4"
                             android:text="@string/week"
@@ -402,7 +402,7 @@
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp">
 
-                        <android.support.v7.widget.AppCompatTextView
+                        <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/mDayLabel"
                             style="@style/TextType4"
                             android:text="@string/day"
@@ -430,14 +430,14 @@
                         android:layout_centerVertical="true"
                         android:padding="5dp">
 
-                        <android.support.v7.widget.AppCompatImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/mPreviousArrow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/arrow2_left" />
                     </RelativeLayout>
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/mChangeDateLabel"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
@@ -457,7 +457,7 @@
                         android:layout_centerVertical="true"
                         android:padding="5dp">
 
-                        <android.support.v7.widget.AppCompatImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/mRightArrow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -500,7 +500,7 @@
                     </LinearLayout>
                 </HorizontalScrollView>
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mNoStatsAvailable"
                     style="@style/TextType2"
                     android:layout_centerHorizontal="true"
@@ -523,7 +523,7 @@
                 android:paddingRight="20dp"
                 android:paddingTop="14dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mTrends"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -531,7 +531,7 @@
                     android:text="@string/trends"
                     android:textColor="@color/colorPrimaryBlack" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/mTrendsRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

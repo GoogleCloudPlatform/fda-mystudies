@@ -12,7 +12,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.support.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsIntent;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;

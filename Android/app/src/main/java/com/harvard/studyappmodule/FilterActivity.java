@@ -18,9 +18,9 @@ package com.harvard.studyappmodule;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
