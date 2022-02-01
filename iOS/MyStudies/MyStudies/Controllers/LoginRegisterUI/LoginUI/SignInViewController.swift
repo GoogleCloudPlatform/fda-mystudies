@@ -96,6 +96,8 @@ class SignInViewController: UIViewController {
     
     let delegate = UIApplication.shared.delegate as? AppDelegate
     delegate?.window?.removeProgressIndicatorFromWindow()
+    progressView.removeFromSuperview()
+    removeProgressIndicator()
       
     setupProgressView()
     setupEstimatedProgressObserver()
