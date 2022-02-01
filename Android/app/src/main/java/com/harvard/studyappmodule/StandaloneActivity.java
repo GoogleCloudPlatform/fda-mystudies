@@ -21,7 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;

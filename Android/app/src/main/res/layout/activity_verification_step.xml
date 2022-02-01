@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context="com.harvard.usermodule.VerificationStepActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/topView"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -32,14 +32,14 @@
                 android:layout_centerVertical="true"
                 android:visibility="visible">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/back_btn1_grey" />
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/title"
                 style="@style/TextType2"
                 android:layout_centerHorizontal="true"
@@ -56,7 +56,7 @@
                 android:layout_centerVertical="true">
 
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/cancelTxt"
                     style="@style/TextType3"
                     android:layout_centerVertical="true"
@@ -67,7 +67,7 @@
                     android:textColor="@color/colorSecondary" />
             </RelativeLayout>
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/verification_steps_label"
                 style="@style/TextType1"
                 android:layout_centerHorizontal="true"
@@ -86,7 +86,7 @@
                 android:text="@string/verification_step"
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/verification_email_msg_label"
                 style="@style/TextType2"
                 android:layout_below="@id/verification_steps_label"
@@ -99,7 +99,7 @@
                 android:textColor="@color/colorPrimaryBlack" />
 
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/emailField"
                 style="@style/TextType2wMatchParent"
                 android:layout_below="@id/verification_email_msg_label"
@@ -117,7 +117,7 @@
                 android:visibility="visible" />
 
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/vrLine1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -128,7 +128,7 @@
                 android:visibility="visible" />
 
 
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/verificationCode"
                 style="@style/TextType2wMatchParent"
                 android:layout_below="@id/vrLine1"
@@ -146,7 +146,7 @@
                 android:textColorHint="@color/colorSecondary" />
 
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/hrLine2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -155,7 +155,7 @@
                 android:layout_marginRight="20dp"
                 android:background="@color/colorSecondaryBg" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tap_below_txt_label"
                 style="@style/TextType2"
                 android:layout_below="@id/hrLine2"
@@ -167,7 +167,7 @@
                 android:textColor="@color/colorPrimaryBlack" />
 
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/submitButton"
                 style="@style/TextType2"
                 android:layout_below="@id/tap_below_txt_label"
@@ -179,7 +179,7 @@
                 android:text="@string/continue_txt"
                 android:textColor="@color/colorPrimary" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/resend"
                 style="@style/TextType2"
                 android:layout_below="@id/submitButton"

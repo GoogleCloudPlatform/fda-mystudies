@@ -13,7 +13,7 @@
   }
 
   .tooltip {
-    width: 200px;
+     width: 230px !important;
   }
   
   .display__flex__ {
