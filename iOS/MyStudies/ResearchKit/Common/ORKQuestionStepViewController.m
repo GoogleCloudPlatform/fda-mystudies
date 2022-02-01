@@ -594,7 +594,6 @@ typedef NS_ENUM(NSInteger, ORKQuestionSection) {
         self.continueButtonItem = self.internalContinueButtonItem;
     }
     
-    self.skipButtonItem = self.internalSkipButtonItem;
     if (!self.questionStep.optional && !self.readOnlyMode) {
         self.skipButtonItem = nil;
     }

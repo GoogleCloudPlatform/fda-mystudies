@@ -128,27 +128,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Handler for TimeZone changes, updates time zone in the local database
   func calculateTimeZoneChange() {
-
+    
     let timeZoneCurrent = TimeZone.current
+    let valTimezone = timeZoneCurrent
     let differenceFromCurrent = timeZoneCurrent.secondsFromGMT()
-
+    
     // Saving TimeZone to User Defaults
     let ud = UserDefaults.standard
     let setuptimeDiff = ud.value(forKey: ksetUpTimeIdentifier) as? Int
-
+    
     // Saving time difference
     if setuptimeDiff == nil {
       ud.set(differenceFromCurrent, forKey: ksetUpTimeIdentifier)
       ud.set(0, forKey: "offset")
-
+      
+      let timezoneArray = InitialTimezone.init(playerName: valTimezone)
+      let encodedData = NSKeyedArchiver.archivedData(withRootObject: timezoneArray)
+      ud.set(encodedData, forKey: "oldTimezone")
     } else {
-
       let difference = differenceFromCurrent - setuptimeDiff!
       ud.set(difference, forKey: "offset")
-      if difference == 0 {
-        // Do Nothing
-      } else {
-
+      if difference != 0 {
         Schedule.utcFormatter = nil
         Schedule.currentZoneFormatter = nil
       }
@@ -370,7 +370,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     if self.isAppLaunched! {
       self.isAppLaunched = false
-
       DispatchQueue.main.async {
         // Update Local Notifications
         self.checkForRegisteredNotifications()
@@ -390,13 +389,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
-    let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
-    if User.currentUser.userType == .loggedInUser {
-      User.currentUser.settings?.remoteNotifications = true
-      User.currentUser.settings?.localNotifications = true
-      // Update device Token to Local server
-      UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
-    }
+    ///UnComment the below for APNS approach of Push Notification
+//    let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
+//    if User.currentUser.userType == .loggedInUser {
+//      User.currentUser.settings?.remoteNotifications = true
+//      User.currentUser.settings?.localNotifications = true
+//      // Update device Token to Local server
+//      UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
+//    }
   }
 
   // MARK: - Jailbreak Methods
@@ -967,7 +967,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Checks for `StudyListViewController` and adds right navigation item
   func updateNotification() {
-
+    
     let ud = UserDefaults.standard
     ud.set(true, forKey: kShowNotification)
     ud.synchronize()
