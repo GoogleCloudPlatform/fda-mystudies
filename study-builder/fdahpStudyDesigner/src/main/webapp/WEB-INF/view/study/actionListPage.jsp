@@ -259,7 +259,7 @@ button#exportId {
             messageText = "You are attempting to deactivate the study. Are you sure you wish to proceed?";
         }
         bootbox.confirm({
-          closeButton: true,
+          closeButton: false,
           message: messageText,
           buttons: {
             'cancel': {
