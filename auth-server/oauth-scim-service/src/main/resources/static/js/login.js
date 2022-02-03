@@ -110,7 +110,7 @@ function multiFactorAuth(email, password, phoneNumber) {
 	    .then(function(verificationId) {
 	     $('#recaptcha-container').hide();
 	     // Ask user for the verification code.
-	     var form = $('<form>Please enter the verification code that was sent to your mobile device.<input name="verificationCode"/></form>');
+	     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="float-left mt-lg mb-lg"><input name="verificationCode" autocomplete="off"/></div></form>');
 
 	    bootbox.confirm({
 	      closeButton: false,
