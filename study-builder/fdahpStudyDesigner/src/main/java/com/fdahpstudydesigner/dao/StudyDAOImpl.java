@@ -5406,7 +5406,7 @@ public class StudyDAOImpl implements StudyDAO {
                       && !existingQuestionResponseTypeList.isEmpty()) {
                     for (QuestionReponseTypeBo questionResponseTypeBo :
                         existingQuestionResponseTypeList) {
-                      if (questionResponseTypeBo.getOtherDestinationStepId() == null) {
+                      if (StringUtils.isEmpty(questionResponseTypeBo.getOtherDestinationStepId())) {
                         sequenceTypeList.add(null);
                       } else if ((questionResponseTypeBo.getOtherDestinationStepId() != null)
                           && questionResponseTypeBo
