@@ -916,7 +916,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         if ((existingQuestionResponseTypeList != null)
             && !existingQuestionResponseTypeList.isEmpty()) {
           for (QuestionReponseTypeBo questionResponseTypeBo : existingQuestionResponseTypeList) {
-            if (StringUtils.isEmpty(questionResponseTypeBo.getOtherDestinationStepId())) {
+            if (questionResponseTypeBo.getOtherDestinationStepId() == null) {
               sequenceTypeList.add(null);
             } else if ((questionResponseTypeBo.getOtherDestinationStepId() != null)
                 && questionResponseTypeBo.getOtherDestinationStepId().equals("0")) {
@@ -5986,7 +5986,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         if ((existingQuestionResponseTypeList != null)
             && !existingQuestionResponseTypeList.isEmpty()) {
           for (QuestionReponseTypeBo questionResponseTypeBo : existingQuestionResponseTypeList) {
-            if (StringUtils.isEmpty(questionResponseTypeBo.getOtherDestinationStepId())) {
+            if (questionResponseTypeBo.getOtherDestinationStepId() == null) {
               sequenceTypeList.add(null);
             } else if ((questionResponseTypeBo.getOtherDestinationStepId() != null)
                 && questionResponseTypeBo.getOtherDestinationStepId().equals("0")) {
