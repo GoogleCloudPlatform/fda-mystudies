@@ -301,6 +301,7 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     for (UIScrollView *view in pageViewController.view.subviews) {
         if ([view isKindOfClass:[UIScrollView class]]) {
             view.scrollEnabled = NO;
+          [view setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
         }
     }
     return pageViewController;
@@ -343,9 +344,13 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     
     self.taskRunUUID = taskRunUUID;
     
-    [self.childNavigationController.navigationBar setShadowImage:[UIImage new]];
+  [self.childNavigationController.navigationBar setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
+  [self.navigationController.navigationBar setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
+  [self.navigationBar setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
+  
+  [self.childNavigationController.view setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
     self.hairline = [self findHairlineViewUnder:self.childNavigationController.navigationBar];
-    self.hairline.alpha = 0.0f;
+    self.hairline.alpha = 1.0f;
     self.childNavigationController.toolbar.clipsToBounds = YES;
     
     // Ensure taskRunUUID has non-nil valuetaskRunUUID
@@ -1136,6 +1141,9 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 - (void)observedScrollViewDidScroll:(UIScrollView *)scrollView {
     // alpha's range [0.0, 1.0]
     float alpha = MAX( MIN(scrollView.contentOffset.y / 64.0, 1.0), 0.0);
+  
+//  printf(@"alpha---%f", alpha);
+  printf("alpha---%f", alpha);
     self.hairline.alpha = alpha;
     _pageViewController.tableView.contentOffset = scrollView.contentOffset;
 }

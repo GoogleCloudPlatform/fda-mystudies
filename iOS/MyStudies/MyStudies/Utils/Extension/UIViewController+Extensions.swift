@@ -54,6 +54,23 @@ extension UIViewController {
     self.slideMenuController()?.removeRightGestures()
     self.slideMenuController()?.addLeftGestures()
     self.slideMenuController()?.addRightGestures()
+    setNavigationBarColor()
+  }
+  
+  func setNavigationBarColor() {
+    if #available(iOS 15, *) {
+      let appearance = UINavigationBarAppearance()
+      let navigationBar = UINavigationBar()
+      appearance.configureWithTransparentBackground()
+      appearance.backgroundColor = .white
+      appearance.shadowColor = .lightGray
+      navigationBar.standardAppearance = appearance
+      
+      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+      self.navigationController?.navigationBar.standardAppearance = appearance
+      self.navigationController?.navigationBar.scrollEdgeAppearance?.backgroundColor = .white
+      self.navigationController?.navigationBar.standardAppearance.backgroundColor = .white
+    }
   }
 
   func showAlert(title: String, message: String) {
