@@ -19,6 +19,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import androidx.annotation.IdRes;
 import androidx.core.content.ContextCompat;
+
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import com.harvard.R;
+import com.harvard.utils.CustomFirebaseAnalytics;
+
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.result.StepResult;
@@ -41,6 +45,7 @@ public class SingleChoiceSharingStepBody<T> implements StepBody {
   private ChoiceAnswerFormat format;
   private Choice<T>[] choices;
   private T currentSelected;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public SingleChoiceSharingStepBody(Step step, StepResult result) {
     this.step = (ConsentSharingStepCustom) step;
@@ -69,6 +74,7 @@ public class SingleChoiceSharingStepBody<T> implements StepBody {
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     layoutParams.leftMargin = res.getDimensionPixelSize(R.dimen.rsb_margin_left);
     layoutParams.rightMargin = res.getDimensionPixelSize(R.dimen.rsb_margin_right);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(inflater.getContext());
     view.setLayoutParams(layoutParams);
 
     return view;
@@ -104,6 +110,12 @@ public class SingleChoiceSharingStepBody<T> implements StepBody {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                inflater.getContext().getString(R.string.single_choice_load_more));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(inflater.getContext(), LoadMoreActivity.class);
             intent.putExtra("htmlcontent", "" + step.getLoadmoretxt());
             inflater.getContext().startActivity(intent);

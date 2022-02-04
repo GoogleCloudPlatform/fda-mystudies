@@ -55,10 +55,11 @@ public class NotEligibleActivity extends AppCompatActivity
           @Override
           public void onClick(View v) {
             Bundle eventProperties = new Bundle();
-            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getString(R.string.not_eligible));
-            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
-                    eventProperties);
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.not_eligible));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
 
             finish();
           }

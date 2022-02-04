@@ -77,10 +77,11 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
           @Override
           public void onClick(View v) {
             Bundle eventProperties = new Bundle();
-            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getString(R.string.eligiblity_confirmation_message));
-            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
-                    eventProperties);
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.eligiblity_confirmation_message));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
 
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(

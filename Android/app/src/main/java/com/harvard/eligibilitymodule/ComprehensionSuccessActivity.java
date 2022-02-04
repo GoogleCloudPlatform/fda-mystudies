@@ -40,10 +40,11 @@ public class ComprehensionSuccessActivity extends AppCompatActivity {
           @Override
           public void onClick(View v) {
             Bundle eventProperties = new Bundle();
-            eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getString(R.string.eligibility_sucess_message));
-            analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
-                    eventProperties);
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.eligibility_sucess_message));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
 
             Intent intent = new Intent();
             setResult(RESULT_OK, intent);

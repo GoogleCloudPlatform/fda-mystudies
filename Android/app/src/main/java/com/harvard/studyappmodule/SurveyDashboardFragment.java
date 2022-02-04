@@ -69,6 +69,7 @@ import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -154,6 +155,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   private Studies studies;
   private ArrayList<ResponseInfoActiveTaskModel> arrayList;
   private ArrayList<String> arrayListDup;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   // NOTE: Regarding Day, Week and Month functionality
   //  currently day functionality next, previous are working
@@ -178,6 +180,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     view = inflater.inflate(R.layout.fragment_survey_dashboard, container, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
     initializeXmlId(view);
@@ -397,260 +400,306 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
   private void bindEvents() {
     backBtn.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-                  Intent intent = new Intent(context, StudyActivity.class);
-                  ComponentName cn = intent.getComponent();
-                  Intent mainIntent = Intent.makeRestartActivityTask(cn);
-                  context.startActivity(mainIntent);
-                  ((Activity) context).finish();
-                } else {
-                  ((SurveyActivity) context).openDrawer();
-                }
-              }
-            });
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.survey_dashbord_home));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              Intent intent = new Intent(context, StudyActivity.class);
+              ComponentName cn = intent.getComponent();
+              Intent mainIntent = Intent.makeRestartActivityTask(cn);
+              context.startActivity(mainIntent);
+              ((Activity) context).finish();
+            } else {
+              ((SurveyActivity) context).openDrawer();
+            }
+          }
+        });
 
     shareBtn.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                screenshotWritingPermission(view);
-              }
-            });
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            screenshotWritingPermission(view);
+          }
+        });
 
     dayLayout.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                if (!dateType.equalsIgnoreCase(DAY)) {
-                  nextDateLayout.setVisibility(View.INVISIBLE);
-                  setDay();
-                  addViewStatisticsValuesRefresh();
-                }
-              }
-            });
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_day));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            if (!dateType.equalsIgnoreCase(DAY)) {
+              nextDateLayout.setVisibility(View.INVISIBLE);
+              setDay();
+              addViewStatisticsValuesRefresh();
+            }
+          }
+        });
 
     weekLayout.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                if (!dateType.equalsIgnoreCase(WEEK)) {
-                  nextDateLayout.setVisibility(View.INVISIBLE);
-                  setWeek();
-                  addViewStatisticsValuesRefresh();
-                }
-              }
-            });
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_week));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            if (!dateType.equalsIgnoreCase(WEEK)) {
+              nextDateLayout.setVisibility(View.INVISIBLE);
+              setWeek();
+              addViewStatisticsValuesRefresh();
+            }
+          }
+        });
     monthLayout.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                try {
-                  if (!dateType.equalsIgnoreCase(MONTH)) {
-                    nextDateLayout.setVisibility(View.INVISIBLE);
-                    setMonth();
-                    addViewStatisticsValuesRefresh();
-                  }
-                } catch (Exception e) {
-                  Logger.log(e);
-                }
-              }
-            });
-    previousDateLayout.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                nextDateLayout.setVisibility(View.VISIBLE);
-                if (dateType.equalsIgnoreCase(DAY)) {
-                  try {
-                    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
-                    Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
-                    Date selectedEndDate = simpleDateFormat.parse(toDayVal);
-                    Calendar calendarStart = Calendar.getInstance();
-                    calendarStart.setTime(selectedStartDAte);
-                    calendarStart.add(Calendar.DATE, -1);
-                    Calendar calendarEnd = Calendar.getInstance();
-                    calendarEnd.setTime(selectedEndDate);
-                    calendarEnd.add(Calendar.DATE, -1);
-                    fromDayVal = simpleDateFormat.format(calendarStart.getTime());
-                    toDayVal = simpleDateFormat.format(calendarEnd.getTime());
-                    SimpleDateFormat dateFormatForDashboardCurrentDayOut =
-                            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                    changeDateLabel.setText(
-                            dateFormatForDashboardCurrentDayOut.format(calendarStart.getTime()));
-
-                  } catch (ParseException e) {
-                    Logger.log(e);
-                  }
-                } else if (dateType.equalsIgnoreCase(WEEK)) {
-                  try {
-                    SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
-                    Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
-                    Date selectedEndDate = dateFormatForApi.parse(toDayVal);
-                    Calendar calendarStart = Calendar.getInstance();
-                    calendarStart.setTime(selectedStartDAte);
-                    calendarStart.add(Calendar.DATE, -7);
-                    Calendar calendarEnd = Calendar.getInstance();
-                    calendarEnd.setTime(selectedEndDate);
-                    calendarEnd.add(Calendar.DATE, -7);
-                    fromDayVal = dateFormatForApi.format(calendarStart.getTime());
-                    toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-                    SimpleDateFormat simpleDateFormat =
-                            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                    changeDateLabel.setText(
-                            simpleDateFormat.format(calendarStart.getTime())
-                                    + " - "
-                                    + simpleDateFormat.format(calendarEnd.getTime()));
-                  } catch (ParseException e) {
-                    Logger.log(e);
-                  }
-                } else if (dateType.equalsIgnoreCase(MONTH)) {
-                  try {
-                    SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
-                    Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
-                    Date selectedEndDate = dateFormatForApi.parse(toDayVal);
-                    Calendar calendarStart = Calendar.getInstance();
-                    calendarStart.setTime(selectedStartDAte);
-                    calendarStart.add(Calendar.MONTH, -1);
-                    Calendar calendarEnd = Calendar.getInstance();
-                    calendarEnd.setTime(selectedEndDate);
-                    calendarEnd.add(Calendar.MONTH, -1);
-                    fromDayVal = dateFormatForApi.format(calendarStart.getTime());
-                    toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-                    SimpleDateFormat dateFormatForChartAndStat =
-                            AppController.getDateFormatForChartAndStat();
-                    changeDateLabel.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
-
-                  } catch (ParseException e) {
-                    Logger.log(e);
-                  }
-                }
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_month));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            try {
+              if (!dateType.equalsIgnoreCase(MONTH)) {
+                nextDateLayout.setVisibility(View.INVISIBLE);
+                setMonth();
                 addViewStatisticsValuesRefresh();
               }
-            });
+            } catch (Exception e) {
+              Logger.log(e);
+            }
+          }
+        });
+    previousDateLayout.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_change_date_left));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            nextDateLayout.setVisibility(View.VISIBLE);
+            if (dateType.equalsIgnoreCase(DAY)) {
+              try {
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
+                Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
+                Date selectedEndDate = simpleDateFormat.parse(toDayVal);
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTime(selectedStartDAte);
+                calendarStart.add(Calendar.DATE, -1);
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTime(selectedEndDate);
+                calendarEnd.add(Calendar.DATE, -1);
+                fromDayVal = simpleDateFormat.format(calendarStart.getTime());
+                toDayVal = simpleDateFormat.format(calendarEnd.getTime());
+                SimpleDateFormat dateFormatForDashboardCurrentDayOut =
+                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                changeDateLabel.setText(
+                    dateFormatForDashboardCurrentDayOut.format(calendarStart.getTime()));
+
+              } catch (ParseException e) {
+                Logger.log(e);
+              }
+            } else if (dateType.equalsIgnoreCase(WEEK)) {
+              try {
+                SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
+                Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
+                Date selectedEndDate = dateFormatForApi.parse(toDayVal);
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTime(selectedStartDAte);
+                calendarStart.add(Calendar.DATE, -7);
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTime(selectedEndDate);
+                calendarEnd.add(Calendar.DATE, -7);
+                fromDayVal = dateFormatForApi.format(calendarStart.getTime());
+                toDayVal = dateFormatForApi.format(calendarEnd.getTime());
+                SimpleDateFormat simpleDateFormat =
+                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                changeDateLabel.setText(
+                    simpleDateFormat.format(calendarStart.getTime())
+                        + " - "
+                        + simpleDateFormat.format(calendarEnd.getTime()));
+              } catch (ParseException e) {
+                Logger.log(e);
+              }
+            } else if (dateType.equalsIgnoreCase(MONTH)) {
+              try {
+                SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
+                Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
+                Date selectedEndDate = dateFormatForApi.parse(toDayVal);
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTime(selectedStartDAte);
+                calendarStart.add(Calendar.MONTH, -1);
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTime(selectedEndDate);
+                calendarEnd.add(Calendar.MONTH, -1);
+                fromDayVal = dateFormatForApi.format(calendarStart.getTime());
+                toDayVal = dateFormatForApi.format(calendarEnd.getTime());
+                SimpleDateFormat dateFormatForChartAndStat =
+                    AppController.getDateFormatForChartAndStat();
+                changeDateLabel.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
+
+              } catch (ParseException e) {
+                Logger.log(e);
+              }
+            }
+            addViewStatisticsValuesRefresh();
+          }
+        });
     nextDateLayout.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_change_date_right));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            if (dateType.equalsIgnoreCase(DAY)) {
+              try {
+                SimpleDateFormat simpleDateFormat =
+                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
+                Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
+                Date selectedEndDate = dateFormatForApi.parse(toDayVal);
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTime(selectedStartDAte);
+                calendarStart.add(Calendar.DATE, 1);
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTime(selectedEndDate);
+                calendarEnd.add(Calendar.DATE, 1);
+                if (!calendarStart.getTime().after(new Date())) {
+                  fromDayVal = dateFormatForApi.format(calendarStart.getTime());
+                  toDayVal = dateFormatForApi.format(calendarEnd.getTime());
 
-                if (dateType.equalsIgnoreCase(DAY)) {
-                  try {
-                    SimpleDateFormat simpleDateFormat =
-                            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                    SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
-                    Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
-                    Date selectedEndDate = dateFormatForApi.parse(toDayVal);
-                    Calendar calendarStart = Calendar.getInstance();
-                    calendarStart.setTime(selectedStartDAte);
-                    calendarStart.add(Calendar.DATE, 1);
-                    Calendar calendarEnd = Calendar.getInstance();
-                    calendarEnd.setTime(selectedEndDate);
-                    calendarEnd.add(Calendar.DATE, 1);
-                    if (!calendarStart.getTime().after(new Date())) {
-                      fromDayVal = dateFormatForApi.format(calendarStart.getTime());
-                      toDayVal = dateFormatForApi.format(calendarEnd.getTime());
+                  changeDateLabel.setText(simpleDateFormat.format(calendarStart.getTime()));
+                  addViewStatisticsValuesRefresh();
 
-                      changeDateLabel.setText(simpleDateFormat.format(calendarStart.getTime()));
-                      addViewStatisticsValuesRefresh();
-
-                      calendarStart.add(Calendar.DATE, 1);
-                      if (calendarStart.getTime().after(new Date())) {
-                        nextDateLayout.setVisibility(View.INVISIBLE);
-                      }
-                    }
-                  } catch (ParseException e) {
-                    Logger.log(e);
-                  }
-                } else if (dateType.equalsIgnoreCase(WEEK)) {
-                  try {
-                    SimpleDateFormat simpleDateFormat =
-                            AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                    SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
-                    Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
-                    Date selectedEndDate = dateFormatForApi.parse(toDayVal);
-                    Calendar calendarStart = Calendar.getInstance();
-                    calendarStart.setTime(selectedStartDAte);
-                    calendarStart.add(Calendar.DATE, 7);
-                    Calendar calendarEnd = Calendar.getInstance();
-                    calendarEnd.setTime(selectedEndDate);
-                    calendarEnd.add(Calendar.DATE, 7);
-                    if (!calendarStart.getTime().after(new Date())) {
-                      fromDayVal = dateFormatForApi.format(calendarStart.getTime());
-                      toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-
-                      if (calendarEnd.getTime().after(new Date())) {
-                        changeDateLabel.setText(
-                                simpleDateFormat.format(calendarStart.getTime())
-                                        + " - "
-                                        + simpleDateFormat.format(new Date()));
-                      } else {
-                        changeDateLabel.setText(
-                                simpleDateFormat.format(calendarStart.getTime())
-                                        + " - "
-                                        + simpleDateFormat.format(calendarEnd.getTime()));
-                      }
-                      addViewStatisticsValuesRefresh();
-
-                      calendarStart.add(Calendar.DATE, 7);
-                      if (calendarStart.getTime().after(new Date())) {
-                        nextDateLayout.setVisibility(View.INVISIBLE);
-                      }
-                    }
-                  } catch (ParseException e) {
-                    Logger.log(e);
-                  }
-                } else if (dateType.equalsIgnoreCase(MONTH)) {
-                  try {
-                    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
-                    SimpleDateFormat dateFormatForChartAndStat =
-                            AppController.getDateFormatForChartAndStat();
-                    Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
-                    Date selectedEndDate = simpleDateFormat.parse(toDayVal);
-                    Calendar calendarStart = Calendar.getInstance();
-                    calendarStart.setTime(selectedStartDAte);
-                    calendarStart.add(Calendar.MONTH, 1);
-                    Calendar calendarEnd = Calendar.getInstance();
-                    calendarEnd.setTime(selectedEndDate);
-                    calendarEnd.add(Calendar.MONTH, 1);
-                    if (!calendarStart.getTime().after(new Date())) {
-                      fromDayVal = simpleDateFormat.format(calendarStart.getTime());
-                      toDayVal = simpleDateFormat.format(calendarEnd.getTime());
-
-                      changeDateLabel.setText(
-                              dateFormatForChartAndStat.format(calendarStart.getTime()));
-                      addViewStatisticsValuesRefresh();
-
-                      calendarStart.add(Calendar.MONTH, 1);
-                      if (calendarStart.getTime().after(new Date())) {
-                        nextDateLayout.setVisibility(View.INVISIBLE);
-                      }
-                    }
-                  } catch (ParseException e) {
-                    Logger.log(e);
+                  calendarStart.add(Calendar.DATE, 1);
+                  if (calendarStart.getTime().after(new Date())) {
+                    nextDateLayout.setVisibility(View.INVISIBLE);
                   }
                 }
+              } catch (ParseException e) {
+                Logger.log(e);
               }
-            });
+            } else if (dateType.equalsIgnoreCase(WEEK)) {
+              try {
+                SimpleDateFormat simpleDateFormat =
+                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
+                Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
+                Date selectedEndDate = dateFormatForApi.parse(toDayVal);
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTime(selectedStartDAte);
+                calendarStart.add(Calendar.DATE, 7);
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTime(selectedEndDate);
+                calendarEnd.add(Calendar.DATE, 7);
+                if (!calendarStart.getTime().after(new Date())) {
+                  fromDayVal = dateFormatForApi.format(calendarStart.getTime());
+                  toDayVal = dateFormatForApi.format(calendarEnd.getTime());
+
+                  if (calendarEnd.getTime().after(new Date())) {
+                    changeDateLabel.setText(
+                        simpleDateFormat.format(calendarStart.getTime())
+                            + " - "
+                            + simpleDateFormat.format(new Date()));
+                  } else {
+                    changeDateLabel.setText(
+                        simpleDateFormat.format(calendarStart.getTime())
+                            + " - "
+                            + simpleDateFormat.format(calendarEnd.getTime()));
+                  }
+                  addViewStatisticsValuesRefresh();
+
+                  calendarStart.add(Calendar.DATE, 7);
+                  if (calendarStart.getTime().after(new Date())) {
+                    nextDateLayout.setVisibility(View.INVISIBLE);
+                  }
+                }
+              } catch (ParseException e) {
+                Logger.log(e);
+              }
+            } else if (dateType.equalsIgnoreCase(MONTH)) {
+              try {
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
+                SimpleDateFormat dateFormatForChartAndStat =
+                    AppController.getDateFormatForChartAndStat();
+                Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
+                Date selectedEndDate = simpleDateFormat.parse(toDayVal);
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTime(selectedStartDAte);
+                calendarStart.add(Calendar.MONTH, 1);
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTime(selectedEndDate);
+                calendarEnd.add(Calendar.MONTH, 1);
+                if (!calendarStart.getTime().after(new Date())) {
+                  fromDayVal = simpleDateFormat.format(calendarStart.getTime());
+                  toDayVal = simpleDateFormat.format(calendarEnd.getTime());
+
+                  changeDateLabel.setText(
+                      dateFormatForChartAndStat.format(calendarStart.getTime()));
+                  addViewStatisticsValuesRefresh();
+
+                  calendarStart.add(Calendar.MONTH, 1);
+                  if (calendarStart.getTime().after(new Date())) {
+                    nextDateLayout.setVisibility(View.INVISIBLE);
+                  }
+                }
+              } catch (ParseException e) {
+                Logger.log(e);
+              }
+            }
+          }
+        });
     trendLayout.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                if (dashboardData != null && dashboardData.getDashboard().getCharts().size() > 0) {
-                  Intent intent = new Intent(context, ChartActivity.class);
-                  intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
-                  intent.putExtra("studyName", ((SurveyActivity) context).getTitle1());
-                  startActivity(intent);
-                } else {
-                  Toast.makeText(
-                          context,
-                          context.getResources().getString(R.string.no_charts_display),
-                          Toast.LENGTH_SHORT)
-                          .show();
-                }
-              }
-            });
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.trends));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            if (dashboardData != null && dashboardData.getDashboard().getCharts().size() > 0) {
+              Intent intent = new Intent(context, ChartActivity.class);
+              intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
+              intent.putExtra("studyName", ((SurveyActivity) context).getTitle1());
+              startActivity(intent);
+            } else {
+              Toast.makeText(
+                      context,
+                      context.getResources().getString(R.string.no_charts_display),
+                      Toast.LENGTH_SHORT)
+                  .show();
+            }
+          }
+        });
   }
 
   private void screenshotWritingPermission(View view) {

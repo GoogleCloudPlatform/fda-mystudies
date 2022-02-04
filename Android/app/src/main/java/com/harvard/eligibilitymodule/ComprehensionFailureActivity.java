@@ -64,21 +64,22 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     retrybutton.setOnClickListener(
-            new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                Bundle eventProperties = new Bundle();
-                eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                        getString(R.string.eligibility_failure_message));
-                analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
-                        eventProperties);
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.eligibility_failure_message));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
 
-                eligibilityConsent =
-                        dbServiceSubscriber.getConsentMetadata(
-                                getIntent().getStringExtra("studyId"), realm);
-                startconsent(eligibilityConsent.getConsent());
-              }
-            });
+            eligibilityConsent =
+                dbServiceSubscriber.getConsentMetadata(
+                    getIntent().getStringExtra("studyId"), realm);
+            startconsent(eligibilityConsent.getConsent());
+          }
+        });
   }
 
   @Override

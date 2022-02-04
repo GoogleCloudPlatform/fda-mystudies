@@ -30,6 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.harvard.R;
 import com.harvard.studyappmodule.surveyscheduler.model.ActivityStatus;
+import com.harvard.utils.CustomFirebaseAnalytics;
+
 import java.util.ArrayList;
 
 public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnClickListener {
@@ -43,6 +45,7 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
   private DialogClick dialogClick;
   private String status;
   private ActivityStatus activityStatus;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   CustomActivitiesDailyDialogClass(
           Context context,
@@ -65,6 +68,7 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
     super.onCreate(savedInstanceState);
     requestWindowFeature(Window.FEATURE_NO_TITLE);
     setContentView(R.layout.activity_cutom_activities_daily_dialog);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     // for dialog screen to get full width using this
     getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -97,6 +101,19 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
+                String name = "";
+                if (finalI == 0) {
+                  name = "all";
+                } else if (finalI == 1) {
+                  name = "surveys";
+                } else {
+                  name = "taskes";
+                }
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, name + " selected");
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 dialogClick.clicked(finalI);
                 dismiss();
               }
@@ -108,6 +125,11 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
 
   @Override
   public void onClick(View v) {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        context.getString(R.string.custom_activities_dialog_close));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     dismiss();
   }
 

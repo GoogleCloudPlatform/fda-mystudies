@@ -42,6 +42,7 @@ import com.harvard.studyappmodule.studymodel.ConsentPDF;
 import com.harvard.studyappmodule.studymodel.ConsentPdfData;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -64,6 +65,7 @@ public class PdfDisplayActivity extends AppCompatActivity
   private DbServiceSubscriber db;
   private Realm realm;
   private String title;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,7 @@ public class PdfDisplayActivity extends AppCompatActivity
     setContentView(R.layout.activity_pdfdisplay);
     db = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     pdfView = (PDFView) findViewById(R.id.pdfView);
 
     AppCompatTextView titletxt = (AppCompatTextView) findViewById(R.id.title);
@@ -104,6 +107,12 @@ public class PdfDisplayActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.pdf_display_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -111,6 +120,12 @@ public class PdfDisplayActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.pdf_display_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             // checking the permissions
             if ((ActivityCompat.checkSelfPermission(
                         PdfDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
