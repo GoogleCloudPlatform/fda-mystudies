@@ -1000,7 +1000,7 @@ button#deleteUser {
     });
 
     $('.addUpdate').on('click', function () {
-    	$('#enforcePasswordId').show(); 
+    	var enforce=0;
       var email = $('#emailId').val();
       var roleId = $('#roleId').val();
       var lastName = $('#lastName').val();
@@ -1044,6 +1044,7 @@ button#deleteUser {
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                 $('#emailId').parent().find(".help-block").empty();
                 saveUser();
+                enforce=enforce+1;
               } else {
                 $("body").removeClass("loading");
                 isFromValid($('.addUpdate').parents('form'));
@@ -1074,6 +1075,7 @@ button#deleteUser {
                      $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                      $('#emailId').parent().find(".help-block").empty();
                      saveUser();
+                     enforce=enforce+1;
                    } else {
                      $("body").removeClass("loading");
                      isFromValid($('.addUpdate').parents('form'));
@@ -1092,7 +1094,11 @@ button#deleteUser {
         $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
         $('#emailId').parent().find(".help-block").empty();
         saveUser();
+        enforce=enforce+1;
       }
+     if(enforce==3){
+    	 $('#enforcePasswordId').show();
+    }
     });
 
     
