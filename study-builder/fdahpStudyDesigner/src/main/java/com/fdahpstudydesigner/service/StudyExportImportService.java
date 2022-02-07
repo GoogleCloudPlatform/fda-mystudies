@@ -447,7 +447,8 @@ public class StudyExportImportService {
     addQuestionsResponseSubTypeInsertSql(
         responseList, insertSqlStatements, customIdsMap, questionMap);
 
-    addQuestionsResponseTypeInsertSql(questionResponseTypeBo, insertSqlStatements, customIdsMap);
+    addQuestionsResponseTypeInsertSql(
+        questionResponseTypeBo, insertSqlStatements, customIdsMap, questionMap);
 
     addQuestionnairesStepsListInsertSql(
         questionnairesStepsList, insertSqlStatements, customIdsMap, questionMap);
@@ -660,7 +661,8 @@ public class StudyExportImportService {
   private void addQuestionsResponseTypeInsertSql(
       List<QuestionReponseTypeBo> questionResponseTypeBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      Map<String, String> questionMap)
       throws Exception {
 
     if (CollectionUtils.isEmpty(questionResponseTypeBoList)) {
@@ -695,7 +697,12 @@ public class StudyExportImportService {
               questionResponseTypeBo.getMinValue(),
               questionResponseTypeBo.getMultipleLines(),
               questionResponseTypeBo.getOtherDescription(),
-              questionResponseTypeBo.getOtherDestinationStepId(),
+              StringUtils.isNotEmpty(questionResponseTypeBo.getOtherDestinationStepId())
+                      && questionResponseTypeBo
+                          .getOtherDestinationStepId()
+                          .equals(String.valueOf(0))
+                  ? String.valueOf(0)
+                  : questionMap.get(questionResponseTypeBo.getOtherDestinationStepId()),
               questionResponseTypeBo.getOtherExclusive(),
               questionResponseTypeBo.getOtherIncludeText(),
               questionResponseTypeBo.getOtherParticipantFill(),

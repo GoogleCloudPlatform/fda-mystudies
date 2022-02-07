@@ -136,8 +136,9 @@
       var typeOfActiveTask = $(this).val();
       var activeTaskInfoId = $(this).attr('taskId');
       $('.changeContent').empty();
-        $(document).find('#saveId,#doneId').unbind();
-      debugger;
+    //$(document).find('#saveId,#doneId').unbind();
+      $(document).off('click', '#saveId');
+      $(document).off('click', '#doneId');
       loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType); 
       $('.actBut').show();
       $('.scheduleTaskClass').prop('disabled', false);

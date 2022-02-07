@@ -2772,9 +2772,10 @@ input[type=number]{
  input[type=text] {
             -moz-appearance: textfield !important;
         }
-        
+ 
 .bootbox-font  {
-    color: #2d2926;
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-    }
+ color: #2d2926;
+ font-family: 'Roboto', sans-serif;
+ font-size: 14px;
+}
+

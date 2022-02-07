@@ -117,11 +117,8 @@
               </div>
             </c:if>
             <c:if test="${isInactiveUser}">
-              <p class="passwordExp">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                Your account has been
-                deactivated.
-              </p>
+                <jsp:forward page="errorPage.jsp" />
+
             </c:if>
             <c:if test="${not isInactiveUser && not isValidToken}">
               <jsp:forward page="errorPage.jsp" />
