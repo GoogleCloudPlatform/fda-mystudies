@@ -624,6 +624,9 @@ button#deleteUser {
     
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
+    	 if(element != 'Superadmin' ){
+        	 $('#enforcePasswordId').hide(); 
+        	 }else $('#enforcePasswordId').show(); 
       setStudySettingByRole(element);
     });
 
@@ -997,6 +1000,7 @@ button#deleteUser {
     });
 
     $('.addUpdate').on('click', function () {
+    	$('#enforcePasswordId').show(); 
       var email = $('#emailId').val();
       var roleId = $('#roleId').val();
       var lastName = $('#lastName').val();
