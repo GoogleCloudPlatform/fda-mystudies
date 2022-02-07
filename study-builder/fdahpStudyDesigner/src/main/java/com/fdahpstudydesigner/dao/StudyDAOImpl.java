@@ -3360,7 +3360,7 @@ public class StudyDAOImpl implements StudyDAO {
                 && !existingQuestionResponseSubTypeList.isEmpty()) {
               for (QuestionResponseSubTypeBo questionResponseSubTypeBo :
                   existingQuestionResponseSubTypeList) {
-                if (questionResponseSubTypeBo.getDestinationStepId() == null) {
+                if (StringUtils.isEmpty(questionResponseSubTypeBo.getDestinationStepId())) {
                   sequenceSubTypeList.add(null);
                 } else if ((questionResponseSubTypeBo.getDestinationStepId() != null)
                     && questionResponseSubTypeBo.getDestinationStepId().equals(String.valueOf(0))) {
@@ -5395,7 +5395,7 @@ public class StudyDAOImpl implements StudyDAO {
                       && !existingQuestionResponseTypeList.isEmpty()) {
                     for (QuestionReponseTypeBo questionResponseTypeBo :
                         existingQuestionResponseTypeList) {
-                      if (questionResponseTypeBo.getOtherDestinationStepId() == null) {
+                      if (StringUtils.isEmpty(questionResponseTypeBo.getOtherDestinationStepId())) {
                         sequenceTypeList.add(null);
                       } else if ((questionResponseTypeBo.getOtherDestinationStepId() != null)
                           && questionResponseTypeBo
@@ -8508,12 +8508,19 @@ public class StudyDAOImpl implements StudyDAO {
         .executeUpdate();
   }
 
-  public String deleteById(String studyId) {
+  public String deleteById(String studyId, AuditLogEventRequest auditRequest) {
     logger.entry("begin studydeleteById()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Query query = null;
     Session session = null;
     try {
+      StudyBo studyBo = getStudy(studyId);
+      if (studyBo != null && studyBo.getCustomStudyId() != null) {
+        auditRequest.setStudyId(studyBo.getCustomStudyId());
+        if (studyBo.getAppId() != null) {
+          auditRequest.setAppId(studyBo.getAppId());
+        }
+      }
       session = hibernateTemplate.getSessionFactory().openSession();
       query =
           session

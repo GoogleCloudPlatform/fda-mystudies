@@ -295,18 +295,47 @@ public class AppDAOImpl implements AppDAO {
     StudyBuilderAuditEvent auditLogEvent = null;
     AppSequenceBo appSequenceBo = null;
     String appId = null;
+    String userId = null;
+    List<String> userSuperAdminList = null;
+
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
+      userId = appBo.getUserId();
       if (StringUtils.isEmpty(appBo.getId())) {
         appBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-        appSequenceBo = new AppSequenceBo();
         appBo.setAppStatus("Draft");
         appBo.setCreatedBy(appBo.getUserId());
         appId = (String) session.save(appBo);
 
+        AppPermissionBO appPermissionBO = new AppPermissionBO();
+        appPermissionBO.setUserId(userId);
+        appPermissionBO.setAppId(appId);
+        appPermissionBO.setViewPermission(true);
+        session.save(appPermissionBO);
+
+        // give permission to all super admin Start
+        query =
+            session
+                .createSQLQuery(
+                    "Select upm.user_id from user_permission_mapping upm where upm.permission_id =:superAdminId")
+                .setInteger("superAdminId", FdahpStudyDesignerConstants.ROLE_SUPERADMIN);
+        userSuperAdminList = query.list();
+        if ((userSuperAdminList != null) && !userSuperAdminList.isEmpty()) {
+          for (String superAdminId : userSuperAdminList) {
+            if ((null != userId) && !userId.equals(superAdminId)) {
+              appPermissionBO = new AppPermissionBO();
+              appPermissionBO.setUserId(superAdminId);
+              appPermissionBO.setAppId(appId);
+              appPermissionBO.setViewPermission(true);
+              session.save(appPermissionBO);
+            }
+          }
+        }
+
+        appSequenceBo = new AppSequenceBo();
         appSequenceBo.setAppId(appId);
         session.save(appSequenceBo);
       } else {

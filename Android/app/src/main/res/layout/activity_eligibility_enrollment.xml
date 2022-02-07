@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/topView"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -27,14 +27,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/backeligibility" />
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/title"
                 style="@style/TextType2"
                 android:layout_centerVertical="true"
@@ -51,7 +51,7 @@
                 android:layout_centerVertical="true">
 
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/cancelTxt"
                     style="@style/TextType3"
                     android:layout_centerVertical="true"
@@ -62,10 +62,10 @@
                     android:textColor="@color/white" />
             </RelativeLayout>
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/headerline"
         android:layout_width="match_parent"
         android:layout_height="1dp"

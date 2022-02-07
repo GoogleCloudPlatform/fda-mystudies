@@ -15,7 +15,7 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/logo1" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"
         style="@style/TextType6"
         android:layout_below="@id/image"
@@ -27,7 +27,7 @@
         android:text="sdfdsfdsfsf"
         android:textColor="@android:color/white" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/desc"
         style="@style/TextType2"
         android:layout_below="@id/title"
@@ -39,7 +39,7 @@
         android:text="@string/force_upgrade_text"
         android:textColor="@android:color/white" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/upgrade"
         style="@style/TextType2"
         android:layout_width="wrap_content"
