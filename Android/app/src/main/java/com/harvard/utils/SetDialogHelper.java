@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import androidx.appcompat.app.AlertDialog;
 import com.harvard.R;
 
 public class SetDialogHelper {
@@ -43,7 +42,7 @@ public class SetDialogHelper {
       String title) {
     AlertDialog.Builder alertDialogBuilder =
         new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
-      analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     alertDialogBuilder.setTitle(title);
     alertDialogBuilder
         .setMessage(message)
@@ -76,7 +75,7 @@ public class SetDialogHelper {
    */
   public static void setDialogResultOK(
       final Context context, String message, String positiveButton) {
-      analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     AlertDialog.Builder alertDialogBuilder =
         new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
     alertDialogBuilder.setTitle(
@@ -111,7 +110,7 @@ public class SetDialogHelper {
    */
   public static void setDialogResultOkWithCancel(
       final Context context, String message, String positiveButton, String negativeButton) {
-      analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     AlertDialog.Builder alertDialogBuilder =
         new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
     alertDialogBuilder.setTitle(

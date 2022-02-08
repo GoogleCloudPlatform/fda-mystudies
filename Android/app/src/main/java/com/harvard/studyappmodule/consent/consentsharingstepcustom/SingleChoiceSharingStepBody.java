@@ -28,8 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import androidx.annotation.IdRes;
-import androidx.core.content.ContextCompat;
 import com.harvard.R;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
