@@ -886,7 +886,7 @@ button#deleteUser {
             + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
             + " <input type='radio' class='v" + selVal + " changeView' id='v1" + selVal
             + "' name='radio" + selVal + "' value='0' checked='checked'>"
-            + "<label for='v1" + selVal + "'></label></span>"
+            + "<label for='v1" + selVal + "'style='padding-left:8px;'></label></span>"
             + "<span class='radio radio-inline'>"
             + "<input type='radio' class='v" + selVal + " changeView' id='v2" + selVal
             + "' name='radio" + selVal + "' value='1'>"
@@ -948,7 +948,7 @@ button#deleteUser {
             + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
             + " <input type='radio' class='v3" + selVal + " changeView3' id='v4" + selVal
             + "' name='radio" + selVal + "' value='0' checked='checked'>"
-            + "<label for='v4" + selVal + "'></label></span>"
+            + "<label for='v4" + selVal + "'style='padding-left:8px;'></label></span>"
             + "<span class='radio radio-inline'>"
             + "<input type='radio' class='v3" + selVal + " changeView3' id='v5" + selVal
             + "' name='radio" + selVal + "' value='1'>"
