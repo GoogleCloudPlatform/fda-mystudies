@@ -20,7 +20,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;

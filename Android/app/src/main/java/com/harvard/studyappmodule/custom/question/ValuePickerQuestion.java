@@ -91,7 +91,7 @@ public class ValuePickerQuestion<T> implements StepBody {
     }
   }
 
-  private View initViewDefault(LayoutInflater inflater, ViewGroup parent) {
+  private View initViewDefault(final LayoutInflater inflater, ViewGroup parent) {
     final View body = inflater.inflate(R.layout.valuepicker, parent, false);
 
     textView = body.findViewById(R.id.textview);
@@ -119,7 +119,7 @@ public class ValuePickerQuestion<T> implements StepBody {
     return body;
   }
 
-  private void showDialog(Context context) {
+  private void showDialog(final Context context) {
 
     final Dialog dialog = new Dialog(context);
     dialog.setCancelable(false);

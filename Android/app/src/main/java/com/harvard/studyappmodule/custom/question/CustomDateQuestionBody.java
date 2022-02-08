@@ -22,7 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.view.ContextThemeWrapper;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +30,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.AnswerFormatCustom;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
@@ -52,6 +53,7 @@ public class CustomDateQuestionBody implements StepBody {
   private Calendar calendar;
   private DateFormat dateformatter;
   private CustomFirebaseAnalytics analyticsInstance;
+  Context context;
 
   private boolean hasChosenDate;
 

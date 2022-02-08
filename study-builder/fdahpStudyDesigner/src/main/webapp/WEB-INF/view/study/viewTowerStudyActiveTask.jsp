@@ -39,8 +39,7 @@
           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
           title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."></span>
     </div>
-    <div class="add_notify_option">
-      <div class="form-group shortTitleClass">
+      <div class="form-group shortTitleClass col-md-4 p-none">
         <input autofocus="autofocus" type="text" custAttType="cust"
                class="form-control shortTitleCls" id="shortTitleId" data-error="Please fill out this field" 
                name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
@@ -49,7 +48,7 @@
                maxlength="50" required/>
         <div class="help-block with-errors red-txt"></div>
       </div>
-    </div>
+    <div class="clearfix"></div>
   </div>
   <div>
     <div class="gray-xs-f mb-sm">

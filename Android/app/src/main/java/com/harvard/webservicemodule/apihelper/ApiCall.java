@@ -19,7 +19,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.harvard.BuildConfig;

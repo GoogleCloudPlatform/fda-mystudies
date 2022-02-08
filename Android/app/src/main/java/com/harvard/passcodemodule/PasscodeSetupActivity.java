@@ -15,17 +15,15 @@
 
 package com.harvard.passcodemodule;
 
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -33,8 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.harvard.AppConfig;
 import com.harvard.R;
-import com.harvard.SplashActivity;
-import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.RegisterUserEvent;
@@ -42,7 +38,6 @@ import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
-import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
