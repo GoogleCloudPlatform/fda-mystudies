@@ -15,8 +15,10 @@
 
 package com.harvard.studyappmodule;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,14 +26,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.R;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import java.util.ArrayList;
 
 public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapter.Holder> {
   private final Context context;
   private final ArrayList<String> items = new ArrayList<>();
+  private CustomFirebaseAnalytics analyticsInstance;
 
   ReachoutListAdapter(Context context, ArrayList<String> items) {
     this.context = context;
@@ -43,6 +49,7 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
     View v =
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.reachout_list_item, parent, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     return new Holder(v);
   }
 
@@ -77,7 +84,7 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
   }
 
   @Override
-  public void onBindViewHolder(final Holder holder, final int position) {
+  public void onBindViewHolder(final Holder holder, @SuppressLint("RecyclerView") final int position) {
     final int i = holder.getAdapterPosition();
     try {
       holder.reachoutTitle.setText(items.get(position));
@@ -86,6 +93,12 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.reachout_list));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Toast.makeText(context, "GOTO Resources Details Screen " + i, Toast.LENGTH_LONG)
                   .show();
             }
@@ -97,10 +110,26 @@ public class ReachoutListAdapter extends RecyclerView.Adapter<ReachoutListAdapte
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.reachout_list));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (position == 0) {
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.reachout_list_feedback));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, FeedbackActivity.class);
               context.startActivity(intent);
             } else {
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.reachout_list_contact_us));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, ContactUsActivity.class);
               context.startActivity(intent);
             }

@@ -17,15 +17,19 @@ package com.harvard.studyappmodule;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.RealmList;
 import java.util.ArrayList;
@@ -34,7 +38,7 @@ public class GatewayResourcesListAdapter
     extends RecyclerView.Adapter<GatewayResourcesListAdapter.Holder> {
   private final Context context;
   private final ArrayList<Resource> items = new ArrayList<>();
-
+  private CustomFirebaseAnalytics analyticsInstance;
   GatewayResourcesListAdapter(Context context, RealmList<Resource> items) {
     this.context = context;
     this.items.addAll(items);
@@ -45,6 +49,7 @@ public class GatewayResourcesListAdapter
     View v =
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.resources_list_item, parent, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     return new Holder(v);
   }
 
@@ -87,6 +92,12 @@ public class GatewayResourcesListAdapter
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.gateway_resource_list));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               if (items.get(i).getType() != null && items.get(i).getContent() != null) {
                 Intent intent = new Intent(context, GatewayResourcesWebViewActivity.class);
                 intent.putExtra("title", "" + items.get(i).getTitle().toString());

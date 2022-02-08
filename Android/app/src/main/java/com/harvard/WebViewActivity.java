@@ -22,13 +22,16 @@ import android.text.Html;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
+import com.harvard.utils.CustomFirebaseAnalytics;
 
 public class WebViewActivity extends AppCompatActivity {
 
+  private CustomFirebaseAnalytics analyticsInstance;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_web_view);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     WebView webView = (WebView) findViewById(R.id.webView);
     webView.getSettings().setLoadsImagesAutomatically(true);
     webView.getSettings().setJavaScriptEnabled(true);
@@ -47,6 +50,12 @@ public class WebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.webview_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });

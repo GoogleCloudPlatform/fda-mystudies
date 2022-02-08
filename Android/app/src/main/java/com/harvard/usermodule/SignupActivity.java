@@ -49,6 +49,7 @@ import com.harvard.usermodule.model.TermsAndConditionData;
 import com.harvard.usermodule.webservicemodel.RegistrationData;
 import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
@@ -88,6 +89,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   private RegistrationData registrationData;
   private String userAuth;
   private String userID;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +107,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     termsAndConditionData.setPrivacy(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
     termsAndConditionData.setTerms(dbServiceSubscriber.getApps(realm).getTermsUrl());
     dbServiceSubscriber.closeRealmObj(realm);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
   }
 
   private void initializeXmlId() {
@@ -156,6 +159,12 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void onClick(View widget) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_terms));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (termsAndConditionData != null && !termsAndConditionData.getTerms().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
@@ -190,6 +199,12 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void onClick(View widget) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_privacy_policy));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (termsAndConditionData != null && !termsAndConditionData.getPrivacy().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
@@ -236,6 +251,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.signup_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               AppController.getHelperHideKeyboard(SignupActivity.this);
             } catch (Exception e) {
@@ -249,6 +269,12 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -257,6 +283,12 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (clicked == false) {
               clicked = true;
               password.clearFocus();
@@ -278,6 +310,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.signup_info));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             SetDialogHelper.setNeutralDialog(
                 SignupActivity.this,
                 getResources().getString(R.string.registration_message),

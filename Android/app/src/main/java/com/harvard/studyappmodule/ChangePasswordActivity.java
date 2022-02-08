@@ -36,6 +36,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.ChangePasswordEvent;
 import com.harvard.usermodule.webservicemodel.ChangePasswordData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -66,6 +67,7 @@ public class ChangePasswordActivity extends AppCompatActivity
   private boolean isVerified;
   private String emailId;
   private boolean clicked;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     userId = getIntent().getStringExtra("userid");
     auth = getIntent().getStringExtra("auth");
     isVerified = getIntent().getBooleanExtra("verified", false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     emailId = getIntent().getStringExtra("email");
     try {
       password = getIntent().getStringExtra("password");
@@ -137,6 +140,12 @@ public class ChangePasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.change_password_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             onBackPressed();
           }
         });
@@ -167,6 +176,12 @@ public class ChangePasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.change_password_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (!clicked) {
               newPassword.clearFocus();
               confirmPassword.clearFocus();
@@ -191,7 +206,10 @@ public class ChangePasswordActivity extends AppCompatActivity
                         getResources().getString(R.string.password_new_empty),
                         Toast.LENGTH_SHORT)
                     .show();
-              } else if (!newPassword.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
+              } else if (!newPassword
+                  .getText()
+                  .toString()
+                  .matches(AppController.PASSWORD_PATTERN)) {
                 newPassword.setError(getResources().getString(R.string.password_validation));
               } else if (checkPasswordContainsEmailID(newPassword.getText().toString())) {
                 Toast.makeText(

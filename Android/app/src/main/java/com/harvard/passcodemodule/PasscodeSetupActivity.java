@@ -40,6 +40,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.RegisterUserEvent;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -64,12 +65,14 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
   private static final int RESULT_CODE_UPGRADE = 102;
   private String newVersion;
   private boolean force = false;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_passcode_setup);
     getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     dbServiceSubscriber = new DbServiceSubscriber();
     initializeXmlId();
     setTextForView();
@@ -123,6 +126,12 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.forgot_passcode_message));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             getAppsInfo();
           }
         });
@@ -158,6 +167,12 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
         getResources().getString(R.string.ok),
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.passcode_setup_signout_ok));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             AppController.forceSignout(PasscodeSetupActivity.this);
           }
         });
@@ -166,6 +181,12 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
         getResources().getString(R.string.cancel),
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.passcode_setup_signout_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             dialog.dismiss();
           }
         });
@@ -244,6 +265,12 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
             getResources().getString(R.string.retry),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.passcode_setup_retry));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 getAppsInfo();
               }
             });
@@ -276,6 +303,12 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
               positiveButton,
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   startActivityForResult(
                       new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
                       RESULT_CODE_UPGRADE);
@@ -286,11 +319,17 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   if (force) {
                     Toast.makeText(
-                        PasscodeSetupActivity.this,
-                        "Please update the app to continue using",
-                        Toast.LENGTH_SHORT)
+                            PasscodeSetupActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {
@@ -351,9 +390,16 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
                   "ok",
                   new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                      Bundle eventProperties = new Bundle();
+                      eventProperties.putString(
+                          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          getString(R.string.app_update_next_time_ok));
+                      analyticsInstance.logEvent(
+                          CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                       forgotSignin();
                     }
-                  }).show();
+                  })
+              .show();
         }
       }
     }

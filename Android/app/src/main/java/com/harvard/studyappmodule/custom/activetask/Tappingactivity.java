@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,10 +34,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.CustomSurveyViewTaskActivity;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.utils.ActiveTaskService;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.ikovac.timepickerwithseconds.MyTimePickerDialog;
 import com.ikovac.timepickerwithseconds.TimePicker;
@@ -61,6 +64,7 @@ public class Tappingactivity implements StepBody {
   private int maxTime;
   private RelativeLayout timereditlayout;
   private int finalSecond;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public Tappingactivity(Step step, StepResult result) {
     this.step = (QuestionStepCustom) step;
@@ -73,6 +77,7 @@ public class Tappingactivity implements StepBody {
     View view = inflater.inflate(R.layout.content_fetal_kick_counter, null);
     context = inflater.getContext();
     tapButton = (ImageView) view.findViewById(R.id.tapbutton);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(inflater.getContext());
     editButton = (ImageView) view.findViewById(R.id.editButton);
     final ImageView startTimer = (ImageView) view.findViewById(R.id.startTimer);
     timer = (TextView) view.findViewById(R.id.mTimer);
@@ -114,7 +119,12 @@ public class Tappingactivity implements StepBody {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.start_timer));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             activateservice(maxTime);
             IntentFilter filter = new IntentFilter();
             filter.addAction("com.harvard.ActiveTask");
@@ -136,6 +146,12 @@ public class Tappingactivity implements StepBody {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.tap_time));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             final String[] duration = timer.getText().toString().split(":");
             if (timeup) {
               new MyTimePickerDialog(
@@ -189,6 +205,12 @@ public class Tappingactivity implements StepBody {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    context.getString(R.string.tap_btn));
+            analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             kickcounter.setFocusable(false);
             kickcounter.setFocusableInTouchMode(false);
             kickcounter.setFocusable(true);
@@ -396,6 +418,12 @@ public class Tappingactivity implements StepBody {
             context.getString(R.string.proceed),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    context.getString(R.string.tap_proceed));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 ((CustomSurveyViewTaskActivity) context)
                     .onSaveStep(StepCallbacks.ACTION_NEXT, step, getStepResult(false));
               }
@@ -404,6 +432,12 @@ public class Tappingactivity implements StepBody {
             context.getString(R.string.edit),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    context.getString(R.string.tap_edit));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 dialog.dismiss();
               }
             });

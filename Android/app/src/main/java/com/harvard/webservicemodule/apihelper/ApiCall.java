@@ -18,7 +18,9 @@ package com.harvard.webservicemodule.apihelper;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.harvard.BuildConfig;
@@ -27,6 +29,7 @@ import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityInfoData;
 import com.harvard.usermodule.webservicemodel.TokenData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -52,9 +55,11 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   private Responsemodel responseModel;
   private boolean showAlert;
   private String serverType;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public ApiCall(Context context) {
     this.context = context;
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
   }
 
   /**
@@ -554,6 +559,12 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
               context.getResources().getString(R.string.ok),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.error_message_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                 }
               });

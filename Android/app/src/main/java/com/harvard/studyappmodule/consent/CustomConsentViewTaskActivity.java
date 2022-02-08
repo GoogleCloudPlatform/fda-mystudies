@@ -69,6 +69,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -123,6 +124,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private static final String PDFTITLE = "ViewTaskActivity.pdfTitle";
   private static final String ELIGIBILITY = "ViewTaskActivity.eligibility";
   public static final String TYPE = "ViewTaskActivity.type";
+  private CustomFirebaseAnalytics analyticsInstance;
 
   private StepSwitcherCustom root;
   private static final String FILE_FOLDER = "FDA_PDF";
@@ -184,6 +186,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     super.setResult(RESULT_CANCELED);
     super.setContentView(R.layout.stepswitchercustom);
 
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     Toolbar toolbar = (Toolbar) findViewById(org.researchstack.backbone.R.id.toolbar);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -264,6 +267,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       if (nextStep == null) {
         saveAndFinish();
       } else {
+        Bundle eventProperties = new Bundle();
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            getString(R.string.custom_consent_view_next));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         String checkIdentifier;
         if (consent.getSharing().getTitle().equalsIgnoreCase("")
             && consent.getSharing().getText().equalsIgnoreCase("")
@@ -389,6 +397,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   protected void showPreviousStep() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getString(R.string.custom_consent_view_back));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     previousStep = task.getStepBeforeStep(currentStep, taskResult);
     if (previousStep == null) {
       finish();
@@ -998,6 +1011,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       notifyStepOfBackPress();
       return true;
     } else if (item.getItemId() == R.id.action_settings) {
+      Bundle eventProperties = new Bundle();
+      eventProperties.putString(
+          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+          getString(R.string.custom_consent_view_exit));
+      analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
       finish();
       return true;
     }
@@ -1074,10 +1092,28 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_consent_view_end_task));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     CustomConsentViewTaskActivity.this.finish();
                   }
                 })
-            .setNegativeButton(getResources().getString(R.string.cancel), null)
+            .setNegativeButton(
+                getResources().getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_consent_view_cancel));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  }
+                })
             .create();
     alertDialog.show();
   }
@@ -1093,6 +1129,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_consent_view_ok));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     setResult(12345);
                     finish();
                   }
@@ -1102,6 +1144,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_consent_view_cancel));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     dialog.dismiss();
                   }
                 })

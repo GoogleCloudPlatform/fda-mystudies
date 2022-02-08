@@ -24,12 +24,16 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import com.harvard.R;
+import com.harvard.utils.CustomFirebaseAnalytics;
 
 public class LoadMoreActivity extends AppCompatActivity {
+
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     setContentView(R.layout.activity_load_more);
 
     WebView textView = (WebView) findViewById(R.id.content);
@@ -45,6 +49,12 @@ public class LoadMoreActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.load_more_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });

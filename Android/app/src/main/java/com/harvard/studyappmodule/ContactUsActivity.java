@@ -28,6 +28,7 @@ import com.harvard.R;
 import com.harvard.studyappmodule.events.ContactUsEvent;
 import com.harvard.studyappmodule.studymodel.ReachOut;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -48,11 +49,13 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
   private AppCompatEditText firstName;
   private static final int CONTACT_US = 15;
   private AppCompatTextView submitButton;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_contact_us);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setFont();
     bindEvents();
@@ -102,6 +105,12 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.contact_us_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               InputMethodManager inputMethodManager =
                   (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -116,6 +125,12 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.contact_us_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (firstName.getText().toString().equalsIgnoreCase("")
                 && email.getText().toString().equalsIgnoreCase("")
                 && subject.getText().toString().equalsIgnoreCase("")

@@ -15,8 +15,10 @@
 
 package com.harvard.studyappmodule.custom.question;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
@@ -32,6 +34,7 @@ import com.harvard.studyappmodule.activitybuilder.CustomSurveyViewTaskActivity;
 import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.studyappmodule.custom.StepResultCustom;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -55,6 +58,8 @@ public class FormBodyCustom implements StepBody {
   private int formIncrement = 0;
   private int actionBarHeight = 0;
   private int navigationBarHeight = 0;
+  private CustomFirebaseAnalytics analyticsInstance;
+  private Context context;
 
   public FormBodyCustom(Step step, StepResult result) {
     this.step = (QuestionStep) step;
@@ -133,6 +138,8 @@ public class FormBodyCustom implements StepBody {
     DisplayMetrics displayMetrics = inflater.getContext().getResources().getDisplayMetrics();
     final int height = displayMetrics.heightPixels;
     final LinearLayout body = (LinearLayout) inflater.inflate(R.layout.formbody, parent, false);
+    this.context = inflater.getContext();
+    this.analyticsInstance = CustomFirebaseAnalytics.getInstance(context.getApplicationContext());
     final ObservableScrollView observableScrollView =
         (ObservableScrollView) parent.findViewById(R.id.rsb_content_container_scrollview);
 
@@ -185,6 +192,12 @@ public class FormBodyCustom implements StepBody {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.add_more));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             View firstview = null;
             body.removeView(addmore);
             StepBody stepBody;

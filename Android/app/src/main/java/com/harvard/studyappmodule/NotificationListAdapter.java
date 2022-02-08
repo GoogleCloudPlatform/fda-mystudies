@@ -19,6 +19,7 @@ package com.harvard.studyappmodule;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,12 +27,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Notification;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -41,6 +45,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
   private RealmList<Notification> items;
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   NotificationListAdapter(Context context, RealmList<Notification> notifications, Realm realm) {
     this.context = context;
@@ -54,6 +59,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     View v =
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.notification_list_item, parent, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     return new Holder(v);
   }
 
@@ -104,6 +110,12 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.notification_list));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               if (!AppController.getHelperSharedPreference()
                   .readPreference(context, context.getResources().getString(R.string.userid), "")
                   .equalsIgnoreCase("")) {
