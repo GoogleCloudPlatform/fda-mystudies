@@ -26,7 +26,6 @@ import android.os.Handler;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -44,8 +43,8 @@ import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-
 import java.util.HashMap;
+
 
 public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 
@@ -62,6 +61,7 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
 
+    AppController.keystoreInitilize(SplashActivity.this);
     new checkAndMigrate(this).execute();
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
   }
@@ -84,7 +84,6 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
     protected void onPostExecute(String result) {
       // sync registration
       SyncAdapterManager.init(context);
-      AppController.keystoreInitilize(SplashActivity.this);
       getAppsInfo();
 
       AppController.getHelperSharedPreference()

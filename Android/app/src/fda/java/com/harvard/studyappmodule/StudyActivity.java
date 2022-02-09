@@ -255,7 +255,10 @@ public class StudyActivity extends AppCompatActivity
           .equalsIgnoreCase("")) {
         if (type != null) {
           if (type.equalsIgnoreCase("Gateway")) {
-            if (subType.equalsIgnoreCase("Study")) {
+            if (subType.equalsIgnoreCase("Study")
+                || subType.equalsIgnoreCase("Activity")
+                || subType.equalsIgnoreCase("Announcement")
+                || subType.equalsIgnoreCase("studyEvent")) {
               Study study = dbServiceSubscriber.getStudyListFromDB(realm);
               if (study != null) {
                 RealmList<StudyList> studyListArrayList = study.getStudies();

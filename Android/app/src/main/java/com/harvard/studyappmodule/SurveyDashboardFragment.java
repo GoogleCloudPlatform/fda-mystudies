@@ -1230,6 +1230,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 0)
             .execute();
       } else {
+        AppController.getHelperProgressDialog().dismissDialog();
         addViewStatisticsValues();
       }
     }

@@ -1481,7 +1481,7 @@ public class SurveyActivitiesFragment extends Fragment
             "get",
             url,
             STUDY_INFO,
-            getActivity(),
+            context,
             StudyHome.class,
             null,
             header,

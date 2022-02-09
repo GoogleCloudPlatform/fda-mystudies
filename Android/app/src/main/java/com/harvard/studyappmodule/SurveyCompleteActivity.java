@@ -51,6 +51,10 @@ import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigE
 import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -207,6 +211,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
       dataobj.put("startTime", activityObj.getMetadata().getStartDate());
       dataobj.put("endTime", activityObj.getMetadata().getEndDate());
       dataobj.put("resultType", activityObj.getType());
+      dataobj.put("submittedTime", AppController.getDateFormatForApi().format(Calendar.getInstance().getTime()));
 
       JSONArray resultarray = new JSONArray();
       JsonParser jsonParser = new JsonParser();
