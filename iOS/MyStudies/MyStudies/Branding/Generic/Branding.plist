@@ -7,9 +7,9 @@
 	<key>ProductTitleName</key>
 	<string>App Name</string>
 	<key>StandaloneStudyId</key>
-	<string>Tritera</string>
+	<string>ClosedMob</string>
 	<key>IsStandaloneStudyApp</key>
-	<false/>
+	<true/>
 	<key>JoinStudyButtonTitle</key>
 	<string>Participate</string>
 	<key>ViewConsentButtonTitle</key>
