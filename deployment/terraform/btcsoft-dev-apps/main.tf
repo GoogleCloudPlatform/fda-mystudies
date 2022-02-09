@@ -208,8 +208,13 @@ module "btcsoft_dev_gke_cluster" {
   skip_provisioners       = true
   enable_private_endpoint = false
   release_channel         = "STABLE"
-  image_type              = "COS_CONTAINERD"
-
+  
+  node_config {
+        image_type        = "COS_CONTAINERD"
+        labels            = {
+           "cluster_name" = "btcsoft-dev-gke-cluster"
+           "node_pool"    = "default-node-pool"
+          }
 }
 
 module "project_iam_members" {
