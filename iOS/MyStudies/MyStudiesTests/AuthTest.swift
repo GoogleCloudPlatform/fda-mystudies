@@ -19,9 +19,9 @@ class LoginTest: XCTestCase {
     delegate = UserServicesDelegate()
   }
 
-  override func tearDown() {
-    delegate = nil
-  }
+//  override func tearDown() {
+//    delegate = nil
+//  }
 
   func testGrantCode() {
     guard let url = try? AuthRouter.codeGrant(params: [:], headers: [:]).asURLRequest().url,
