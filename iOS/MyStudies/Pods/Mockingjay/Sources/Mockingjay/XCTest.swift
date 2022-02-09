@@ -10,7 +10,7 @@ import ObjectiveC
 import XCTest
 
 let swizzleTearDown: Void = {
-  let tearDown = class_getInstanceMethod(XCTest.self, #selector(XCTest.tearDown(completion:)))
+    let tearDown = class_getInstanceMethod(XCTest.self, #selector(XCTest.tearDown1))
   let mockingjayTearDown = class_getInstanceMethod(XCTest.self, #selector(XCTest.mockingjayTearDown))
   method_exchangeImplementations(tearDown!, mockingjayTearDown!)
 }()
@@ -60,4 +60,10 @@ extension XCTest {
       MockingjayProtocol.removeAllStubs()
     }
   }
+    
+    @objc func tearDown1() {
+        // Your code goes here
+        self.tearDown()
+    }
+    
 }
