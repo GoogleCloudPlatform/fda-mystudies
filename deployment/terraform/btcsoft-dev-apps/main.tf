@@ -208,7 +208,7 @@ module "btcsoft_dev_gke_cluster" {
   skip_provisioners       = true
   enable_private_endpoint = false
   release_channel         = "STABLE"
-  image_type        = "COS_CONTAINERD"
+  image_type              = "COS_CONTAINERD"
 
 }
 
