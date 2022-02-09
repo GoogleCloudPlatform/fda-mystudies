@@ -406,6 +406,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
       viewControllerUsed: self
     ) {
+      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+        buttonClickReasonKey: "Account Deleted OKAlert"
+      ])
 
       if Utilities.isStandaloneApp() {
 

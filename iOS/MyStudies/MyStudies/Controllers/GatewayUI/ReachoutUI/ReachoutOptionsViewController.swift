@@ -30,12 +30,21 @@ class ReachoutOptionsViewController: UIViewController {
     Analytics.logEvent(analyticsButtonClickEventName, parameters: [
       buttonClickReasonKey: "LeftMenu Reach Out"
     ])
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                           name: Notification.Name("Menu Clicked"), object: nil)
+
     self.navigationItem.title = NSLocalizedString("Reach out", comment: "")
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.setNavigationBarItem()
+  }
+  
+  @objc func methodOfReceivedNotification(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Menu Clicked"
+    ])
   }
 
 }

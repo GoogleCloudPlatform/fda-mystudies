@@ -188,6 +188,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   /// This method will setup the Menu in case of Standalone app.
   final private func setupStandaloneMenu() {
+    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+      buttonClickReasonKey: "Menu Clicked"
+    ])
 
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
     // for standalone

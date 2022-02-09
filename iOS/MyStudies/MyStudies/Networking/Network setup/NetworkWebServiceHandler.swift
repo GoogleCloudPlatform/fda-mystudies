@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import FirebaseAnalytics
 
 enum RequestType: NSInteger {
   case requestTypeJSON
@@ -488,13 +489,16 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           print("ResponseDict22 :: \(responseDict)")
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)
-            print("ResponseDict22 :: \(error)")
-            print("ResponseDict22 :: \(error1)")
+            Analytics.logEvent(analyticsButtonClickEventName, parameters: [
+              buttonClickReasonKey: "Account Existing OKAlert"
+            ])
+            print("ResponseDict23 :: \(error)")
+            print("ResponseDict24 :: \(error1)")
 
           } else {
             error1 = error ?? NSError(domain: "", code: statusCode, userInfo: [:])
-            print("ResponseDict22 :: \(error)")
-            print("ResponseDict22 :: \(error1)")
+            print("ResponseDict25 :: \(error)")
+            print("ResponseDict26 :: \(error1)")
 
           }
         } else {

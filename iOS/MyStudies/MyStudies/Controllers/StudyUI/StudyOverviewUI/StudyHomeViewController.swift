@@ -615,7 +615,7 @@ class StudyHomeViewController: UIViewController {
 
   @IBAction func backButtonAction(_ sender: Any) {
     Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Back Button"
+      buttonClickReasonKey: "Home Button"
     ])
     let button = sender as! UIButton
     if button.tag == 200 {
