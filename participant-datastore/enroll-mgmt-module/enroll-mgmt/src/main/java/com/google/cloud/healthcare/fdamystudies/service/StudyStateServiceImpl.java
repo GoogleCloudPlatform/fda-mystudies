@@ -92,7 +92,7 @@ public class StudyStateServiceImpl implements StudyStateService {
     logger.entry("Begin getParticipantStudiesList()");
 
     List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
-    List<String> participantStudyIds = new ArrayList<>();
+    List<String> participantStudyIdsList = new ArrayList<>();
 
     List<String> customStudyIds =
         studiesBeenList
@@ -108,23 +108,42 @@ public class StudyStateServiceImpl implements StudyStateService {
             .filter(Objects::nonNull)
             .collect(Collectors.toList());
 
-    Optional<StudyEntity> optStudy = studyRepository.findByCustomIds(customStudyIds);
+    List<StudyEntity> listOfStudy = studyRepository.findByCustomIds(customStudyIds);
 
-    if (optStudy.isPresent() && optStudy.get().getType().equals(OPEN_STUDY)) {
-      participantStudyIds =
-          participantStudyRepository.findByStudyIdAndUserDetailId(
-              optStudy.get().getId(), user.getUserId());
-    } else if (CollectionUtils.isEmpty(siteIds) && optStudy.get().getType().equals(CLOSE_STUDY)) {
-      participantStudyIds =
-          participantStudyRepository.findByEmailAndStudyCustomIds(user.getEmail(), customStudyIds);
+    if (CollectionUtils.isNotEmpty(listOfStudy)) {
+      for (StudyEntity studyEntity : listOfStudy) {
+        List<String> participantStudyIds = null;
+        if (studyEntity.getType().equals(OPEN_STUDY)) {
+          participantStudyIds =
+              participantStudyRepository.findByStudyIdAndUserDetailId(
+                  studyEntity.getId(), user.getUserId());
+        } else if (CollectionUtils.isEmpty(siteIds) && studyEntity.getType().equals(CLOSE_STUDY)) {
+          participantStudyIds =
+              participantStudyRepository.findByEmailAndStudyCustomIds(
+                  user.getEmail(), customStudyIds);
+        } else {
+          participantStudyIds =
+              participantStudyRepository.findByEmailAndSiteIds(user.getEmail(), siteIds);
+        }
+
+        if (CollectionUtils.isNotEmpty(participantStudyIds)) {
+          participantStudyIdsList.addAll(participantStudyIds);
+        }
+      }
     } else {
-      participantStudyIds =
+      participantStudyIdsList =
           participantStudyRepository.findByEmailAndSiteIds(user.getEmail(), siteIds);
     }
 
-    if (CollectionUtils.isNotEmpty(participantStudyIds)) {
-      participantStudies = participantStudyRepository.findAllById(participantStudyIds);
+    if (CollectionUtils.isNotEmpty(participantStudyIdsList)) {
+      List<ParticipantStudyEntity> participantStudiesList =
+          participantStudyRepository.findAllById(participantStudyIdsList);
+
+      if (CollectionUtils.isNotEmpty(participantStudiesList)) {
+        participantStudies.addAll(participantStudiesList);
+      }
     }
+
     logger.exit("getParticipantStudiesList() - Ends ");
     return participantStudies;
   }
