@@ -10,7 +10,7 @@ import ObjectiveC
 import XCTest
 
 let swizzleTearDown: Void = {
-    let tearDown = class_getInstanceMethod(XCTest.self, #selector(XCTest.tearDown1))
+    let tearDown = class_getInstanceMethod(XCTest.self, #selector(XCTest.tearDownCleanUp))
   let mockingjayTearDown = class_getInstanceMethod(XCTest.self, #selector(XCTest.mockingjayTearDown))
   method_exchangeImplementations(tearDown!, mockingjayTearDown!)
 }()
@@ -61,7 +61,7 @@ extension XCTest {
     }
   }
     
-    @objc func tearDown1() {
+    @objc func tearDownCleanUp() {
         // Your code goes here
         self.tearDown()
     }
