@@ -211,8 +211,8 @@ module "btcsoft_dev_gke_cluster" {
 
   node_pools = [
     {
-      name                 = "default-node-pool"
-      image_type           = "COS_CONTAINERD"
+      name       = "default-node-pool"
+      image_type = "COS_CONTAINERD"
     },
   ]
 }
