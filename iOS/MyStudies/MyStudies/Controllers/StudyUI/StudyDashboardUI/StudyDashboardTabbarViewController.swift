@@ -24,6 +24,12 @@ class StudyDashboardTabbarViewController: UITabBarController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    self.tabBar.layer.shadowColor = UIColor.lightGray.cgColor
+    self.tabBar.layer.borderWidth = 1.0
+    if #available(iOS 13.0, *) {
+      self.tabBar.layer.borderColor = UIColor.systemGray4.cgColor
+    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
