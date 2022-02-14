@@ -178,7 +178,13 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
       try {
         Calendar localCalendar = Calendar.getInstance();
         Intent intent1 = new Intent(this, AlarmService.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(this, 0, intent1, 0);
+        PendingIntent alarmIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+          alarmIntent =
+              PendingIntent.getBroadcast(this, 0, intent1, 0 | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+          alarmIntent = PendingIntent.getBroadcast(this, 0, intent1, 0);
+        }
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE); // 21600000
         alarmManager.setAlarmClock(
             new AlarmManager.AlarmClockInfo(localCalendar.getTimeInMillis() + 180000, alarmIntent),

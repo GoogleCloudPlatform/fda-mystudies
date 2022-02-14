@@ -120,9 +120,18 @@ public class AlarmReceiver extends BroadcastReceiver {
               .putExtra(TITLE, title)
               .putExtra(MESSAGE, description)
               .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-      contentIntent =
-              PendingIntent.getActivity(
-                      context, notificationId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        contentIntent =
+            PendingIntent.getActivity(
+                context,
+                notificationId,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+      } else {
+        contentIntent =
+            PendingIntent.getActivity(
+                context, notificationId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+      }
     }
 
     int notifyIcon = R.mipmap.ic_launcher;
@@ -280,12 +289,22 @@ public class AlarmReceiver extends BroadcastReceiver {
                     .addCategory("android.intent.category.DEFAULT")
                     .putExtra("pendingIntentId", REQUEST_CODE_24HR_NOTIFICATION);
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context,
-                    REQUEST_CODE_24HR_NOTIFICATION,
-                    notificationIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent broadcast;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              REQUEST_CODE_24HR_NOTIFICATION,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              REQUEST_CODE_24HR_NOTIFICATION,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
               AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
