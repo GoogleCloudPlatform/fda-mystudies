@@ -10,7 +10,7 @@ android {
             // Update `applicationId` with your Applicaiton ID (see https://developer.android.com/studio/build/application-id)
             // For example, you could set `applicationId` to "<prefix>_<env>.<domain>" or "com.<domain>.<subdomain>"
             applicationId "com.google.FDAMyStudies"
-            versionCode 137
+            versionCode 145
             versionName "1.0"
         }
     }
