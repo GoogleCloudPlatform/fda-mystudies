@@ -34,12 +34,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
-import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.PdfViewerView;
 import io.realm.Realm;
 import java.io.File;
 import java.io.FileInputStream;
@@ -200,7 +199,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
     if (sharingFile != null && sharingFile.exists()) {
       LayoutInflater li = LayoutInflater.from(ConsentCompletedActivity.this);
       View promptsView = li.inflate(R.layout.pdfdisplayview, null);
-      PDFView pdfView = (PDFView) promptsView.findViewById(R.id.pdf);
+      PdfViewerView pdfView = (PdfViewerView) promptsView.findViewById(R.id.pdfViewer);
       TextView share = (TextView) promptsView.findViewById(R.id.share);
       AlertDialog.Builder db = new AlertDialog.Builder(ConsentCompletedActivity.this);
       db.setView(promptsView);
@@ -223,13 +222,8 @@ public class ConsentCompletedActivity extends AppCompatActivity {
               startActivity(shareIntent);
             }
           });
-      pdfView.documentFitsView();
-      pdfView.useBestQuality(true);
-      pdfView
-          .fromFile(file)
-          .enableAnnotationRendering(true)
-          .scrollHandle(new DefaultScrollHandle(this))
-          .load();
+      pdfView.setVisibility(View.VISIBLE);
+      pdfView.setPdf(sharingFile);
       db.show();
     } else {
       Toast.makeText(this, R.string.consentPdfNotAvailable, Toast.LENGTH_SHORT).show();

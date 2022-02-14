@@ -53,6 +53,7 @@ class ResourceDetailViewController: UIViewController {
     self.hidesBottomBarWhenPushed = true
     self.addBackBarButton()
     self.title = resource?.title
+    setNavigationBarColor()
   }
 
   override func viewDidAppear(_ animated: Bool) {

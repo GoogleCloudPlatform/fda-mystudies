@@ -47,6 +47,7 @@ class WebViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setNavigationBarColor()
   }
 
   override func viewWillAppear(_ animated: Bool) {

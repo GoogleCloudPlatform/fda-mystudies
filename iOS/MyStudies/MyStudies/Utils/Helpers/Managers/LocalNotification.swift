@@ -119,7 +119,7 @@ class LocalNotification: NSObject {
       if activity.frequencyType == Frequency.oneTime && activity.endDate == nil {
         runsBeforeToday = activity.activityRuns
       } else {
-        runsBeforeToday = activity.activityRuns.filter({ $0.endDate >= date })
+        runsBeforeToday = activity.activityRuns.filter({ $0.endDate ?? Date() >= date })
       }
 
       for run in runsBeforeToday {

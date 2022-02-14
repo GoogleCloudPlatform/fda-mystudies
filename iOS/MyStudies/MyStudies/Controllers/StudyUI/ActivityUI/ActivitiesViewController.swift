@@ -115,11 +115,16 @@ class ActivitiesViewController: UIViewController {
     tableView?.addSubview(refreshControl!)
 
     setupStandaloneNotifications()
+    
+    if #available(iOS 15, *) {
+        UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
+    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    setNavigationBarColor()
 
     if Utilities.isStandaloneApp() {
       self.setNavigationBarItem()
@@ -663,7 +668,7 @@ class ActivitiesViewController: UIViewController {
     self.updateActivityStatusToComplete(alert: alert)
     let activityResponse = self.lastActivityResponse ?? [:]
     lastActivityResponse = [:]
-    let isActivitylifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
+    let isActivitylifeTimeUpdated = DBHandler.updateTargetForActivityAnchorDateDetail(
       studyId: studyID,
       activityId: activityID,
       response: activityResponse
