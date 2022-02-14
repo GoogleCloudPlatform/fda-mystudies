@@ -173,9 +173,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
                   shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                 }
               } else {
-                shareIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(intentContent));
+                shareIntent.setType("text/html");
+                shareIntent.putExtra(
+                    Intent.EXTRA_TEXT,Html.fromHtml(resource.getContent()).toString());
+                shareIntent.putExtra(
+                    Intent.EXTRA_HTML_TEXT, Html.fromHtml(resource.getContent()).toString());
               }
-
               startActivity(shareIntent);
             } catch (Exception e) {
               Logger.log(e);
@@ -224,7 +227,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     webView.getSettings().setJavaScriptEnabled(true);
     webView.getSettings().setDefaultTextEncodingName("utf-8");
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-    String webData = resource.getContent();;
+    String webData = resource.getContent();
     if (Build.VERSION.SDK_INT >= 24) {
       webView.loadDataWithBaseURL(null,
               Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
