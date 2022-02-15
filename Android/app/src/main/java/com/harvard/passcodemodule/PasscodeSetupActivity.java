@@ -129,8 +129,7 @@ public class PasscodeSetupActivity extends AppCompatActivity implements ApiCall.
                 getString(R.string.forgot_passcode_message));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-
-            getAppsInfo();
+            forgotSignin();
           }
         });
 
