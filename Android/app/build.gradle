@@ -87,13 +87,11 @@ dependencies {
     implementation 'com.tom_roush:pdfbox-android:1.8.10.1'
     implementation 'androidx.browser:browser:1.0.0'
     implementation 'junit:junit:4.13'
-
-
     implementation 'com.github.LucasFsc:Html2Pdf:0.2-beta'
     implementation 'com.github.naveenr-btc:RangeSeekBar:3.0.2'
-
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
+    
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
