@@ -382,8 +382,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 
 // Subclass should avoid using this method, which wound overide "_internalBackButtonItem"
 - (void)setBackButtonItem:(UIBarButtonItem *)backButton {
-//  NSDictionary *userDict = @{@"ORKActions":@"ORKBackButton"};
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
     backButton.accessibilityLabel = ORKLocalizedString(@"AX_BUTTON_BACK", nil);
     _backButtonItem = backButton;
     _internalBackButtonItem = backButton;
@@ -474,8 +472,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 #pragma mark - Action Handlers
 
 - (void)goForward {
-//  NSDictionary *userDict = @{@"ORKActions":@"ORKNext"};
-//   [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
     ORKStepViewControllerNavigationDirection direction = self.isBeingReviewed ? ORKStepViewControllerNavigationDirectionReverse : ORKStepViewControllerNavigationDirectionForward;
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     [strongDelegate stepViewController:self didFinishWithNavigationDirection:direction];
@@ -495,16 +491,16 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
                                                                 preferredStyle:UIAlertControllerStyleActionSheet];
         [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CLEAR_ANSWER", nil)
                                                   style:UIAlertActionStyleDestructive
-                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKActions":@"ORKClear Answer"};
-          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKAction":@"ORKClear Answer"};
+          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                         [self skipForward];
                                                     });
                                                 }]];
         [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil)
                                                   style:UIAlertActionStyleCancel
-                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKActions":@"ORKCancelAlert"};
-          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKAction":@"ORKCancelAlert"};
+          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
         }]];
         alert.popoverPresentationController.sourceView = sender;
         alert.popoverPresentationController.sourceRect = sender.bounds;
@@ -555,8 +551,8 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
     
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil)
                                               style:UIAlertActionStyleDefault
-                                            handler:^(UIAlertAction * action) {NSDictionary *userDict = @{@"ORKActions":@"ORKCancelAlert"};
-      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];}]];
+                                            handler:^(UIAlertAction * action) {NSDictionary *userDict = @{@"ORKAction":@"ORKCancelAlert"};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];}]];
     
     _presentingAlert = YES;
     [self presentViewController:alert animated:YES completion:^{

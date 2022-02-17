@@ -1293,8 +1293,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     if (supportSaving && saveable) {
         [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_OPTION_SAVE", nil)
                                                   style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKActions":@"ORKSaveForLater"};
-          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKAction":@"ORKSaveForLater"};
+          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                         [self finishWithReason:ORKTaskViewControllerFinishReasonSaved error:nil];
                                                     });
@@ -1307,8 +1307,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
                                               style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction *action) {
                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                  NSDictionary *userDict = @{@"ORKActions":@"ORKEndTask"};
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+                                                  NSDictionary *userDict = @{@"ORKAction":@"ORKEndTask"};
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
                                                     [self finishWithReason:ORKTaskViewControllerFinishReasonDiscarded error:nil];
                                                 });
                                             }]];
@@ -1316,8 +1316,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil)
                                               style:UIAlertActionStyleCancel
                                             handler:^(UIAlertAction *action) {
-                                                dispatch_async(dispatch_get_main_queue(), ^{NSDictionary *userDict = @{@"ORKActions":@"ORKCancelAlert"};
-                                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+                                                dispatch_async(dispatch_get_main_queue(), ^{NSDictionary *userDict = @{@"ORKAction":@"ORKCancelAlert"};
+                                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
                                                 [self finishWithReason:ORKTaskViewControllerFinishReasonDiscarded error:nil];
                                             });
                                         }]];
@@ -1326,8 +1326,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 }
 
 - (IBAction)cancelAction:(UIBarButtonItem *)sender {
-  NSDictionary* userInfo = @{@"ORKActions": @("ORKCancel")};
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userInfo];
+  NSDictionary* userInfo = @{@"ORKAction": @("ORKCancel")};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userInfo];
   // Should we also include visualConsentStep here? Others?
   BOOL isCurrentInstructionStep = [self.currentStepViewController.step isKindOfClass:[ORKInstructionStep class]];
   
@@ -1357,8 +1357,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 
 - (IBAction)learnMoreAction:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(taskViewController:learnMoreForStep:)]) {
-      NSDictionary* userInfo = @{@"ORKActions": @("ORKLearnMore")};
-      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userInfo];
+      NSDictionary* userInfo = @{@"ORKAction": @("ORKLearnMore")};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userInfo];
         [self.delegate taskViewController:self learnMoreForStep:self.currentStepViewController];
     }
 }

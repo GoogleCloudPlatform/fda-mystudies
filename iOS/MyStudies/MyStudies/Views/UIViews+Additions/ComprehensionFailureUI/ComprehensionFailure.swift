@@ -64,8 +64,8 @@ class ComprehensionFailure: UIView {
   // MARK: - Button Actions
 
   @IBAction func buttonCancelAction() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ComprehensionFailure Cancel"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ComprehensionFailure Cancel"
     ])
     self.delegate?.didTapOnCancel()
     self.isHidden = true
@@ -73,8 +73,8 @@ class ComprehensionFailure: UIView {
   }
 
   @IBAction func buttonRetryAction() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ComprehensionFailure Retry"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ComprehensionFailure Retry"
     ])
     self.delegate?.didTapOnRetry()
     self.isHidden = true

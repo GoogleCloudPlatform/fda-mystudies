@@ -72,8 +72,8 @@ class StudyDashboardViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyDashboard"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard"
     ])
     // load plist info
     let plistPath = Bundle.main.path(
@@ -207,8 +207,8 @@ class StudyDashboardViewController: UIViewController {
 
   /// Home button clicked.
   @IBAction func homeButtonAction(_ sender: AnyObject) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyDashboard Home"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Home"
     ])
     let button = sender as! UIButton
     if button.tag == 200 {
@@ -220,8 +220,8 @@ class StudyDashboardViewController: UIViewController {
 
   /// Share to others button clicked.
   @IBAction func shareButtonAction(_ sender: AnyObject) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyDashboard Share"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Share"
     ])
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
       NSLocalizedString(kTitleMessage, comment: ""),
@@ -230,15 +230,15 @@ class StudyDashboardViewController: UIViewController {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: self,
       action1: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "StudyDashboard Ok Alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "StudyDashboard Ok Alert"
         ])
 
         self.shareScreenShotByMail()
       },
       action2: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "StudyDashboard Cancel Alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "StudyDashboard Cancel Alert"
         ])
 
         // Handle cancel action

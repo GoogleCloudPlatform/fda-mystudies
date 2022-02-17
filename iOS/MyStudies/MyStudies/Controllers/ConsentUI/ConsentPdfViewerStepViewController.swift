@@ -127,15 +127,15 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionNext(sender: UIBarButtonItem?) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ConsentPdfViewerStep Done"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConsentPdfViewerStep Done"
     ])
     self.goForward()
   }
 
   @IBAction func buttonActionEmailPdf(sender: UIBarButtonItem?) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ConsentPdfViewerStep SharePdf"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConsentPdfViewerStep SharePdf"
     ])
     self.sendConsentByMail()
   }
@@ -164,8 +164,8 @@ extension ConsentPdfViewerStepViewController: WKNavigationDelegate {
         title: buttonTitleOK,
         style: .default,
         handler: { (_) in
-          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-            buttonClickReasonKey: "Ok Alert"
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Ok Alert"
           ])
           self.dismiss(animated: true, completion: nil)
 

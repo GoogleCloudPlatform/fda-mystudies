@@ -51,15 +51,15 @@ class ChartsViewController: UIViewController {
 
   // MARK: - Actions
   @IBAction func backButtonAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Back Button"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back Button"
     ])
     self.navigationController?.popViewController(animated: true)
   }
 
   @IBAction func shareButtonAction(_ sender: AnyObject) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Charts Share"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Charts Share"
     ])
 
     if StudyDashboard.instance.charts.count > 0 {
@@ -76,8 +76,8 @@ class ChartsViewController: UIViewController {
         },
 
         action2: {
-          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-            buttonClickReasonKey: "Charts Cancel"
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Charts Cancel"
           ])
           // Handle cancel action.
         }

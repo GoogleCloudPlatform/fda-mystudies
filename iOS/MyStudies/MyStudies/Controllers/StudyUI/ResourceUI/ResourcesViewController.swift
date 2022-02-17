@@ -84,8 +84,8 @@ class ResourcesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Resources"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resources"
     ])
 
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")
@@ -219,8 +219,8 @@ class ResourcesViewController: UIViewController {
   }
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Resource Home"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resource Home"
     ])
     self.navigationController?.navigationBar.isHidden = false
     self.performSegue(withIdentifier: kUnwindToStudyListIdentifier, sender: self)
@@ -352,8 +352,8 @@ class ResourcesViewController: UIViewController {
               viewControllerUsed: self,
               action1: {
                 // Retain Action
-                Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-                  buttonClickReasonKey: "Retain Alert Action"
+                Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                  buttonClickReasonsKey: "Retain Alert Action"
                 ])
                 
                 self.shouldDeleteData = false
@@ -361,8 +361,8 @@ class ResourcesViewController: UIViewController {
                 
               },
               action2: {
-                Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-                  buttonClickReasonKey: "Delete Alert Action"
+                Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                  buttonClickReasonsKey: "Delete Alert Action"
                 ])
                 
                 // Delete action
@@ -396,15 +396,15 @@ class ResourcesViewController: UIViewController {
       errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
       viewControllerUsed: self,
       action1: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "LeaveStudy Alert OK"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeaveStudy Alert OK"
         ])
         self.shouldDeleteData = false
         self.withdrawalFromStudy(deleteResponse: false)
       },
       action2: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "LeaveStudy Alert Cancel"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeaveStudy Alert Cancel"
         ])
       }
     )

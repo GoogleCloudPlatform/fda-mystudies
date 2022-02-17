@@ -243,8 +243,8 @@ class LineChartCell: GraphChartTableViewCell {
 
   // MARK: - Actions
   @IBAction func buttonForwardAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "LineChart Forward"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LineChart Forward"
     ])
 
     let timeRange = currentChart.dataSourceTimeRange!

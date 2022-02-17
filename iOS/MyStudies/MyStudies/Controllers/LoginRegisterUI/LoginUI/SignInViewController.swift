@@ -88,8 +88,8 @@ class SignInViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Sign In"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign In"
     ])
     // unhide navigationbar
     self.view.isUserInteractionEnabled = true

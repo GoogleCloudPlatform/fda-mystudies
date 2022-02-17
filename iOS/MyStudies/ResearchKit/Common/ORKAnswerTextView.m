@@ -91,8 +91,8 @@
 }
 
 - (void)keyboardAccessoryViewDoneButtonPressed {
-  NSDictionary *userDict = @{@"ORKActions":@"ORKKeyboardDone"};
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+  NSDictionary *userDict = @{@"ORKAction":@"ORKKeyboardDone"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [self resignFirstResponder];
 }
 

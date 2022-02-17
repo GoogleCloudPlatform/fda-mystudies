@@ -80,8 +80,8 @@ class VerificationViewController: UIViewController {
   /// Navigate to previous screen.
   @IBAction func buttonActionBack(_ sender: UIButton) {
     
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Back from verification"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back from verification"
     ])
     
     if viewLoadFrom == .login,
@@ -97,16 +97,16 @@ class VerificationViewController: UIViewController {
   /// Used to send the verification mail to registered mail id.
   @IBAction func continueTwoButtonAction(_ sender: UIButton) {
     
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Verify Email"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Verify Email"
     ])
 
     self.view.endEditing(true)
 
     if self.textFieldVerificationCode?.text == "" {
       self.showAlertMessages(textMessage: kMessageVerificationCodeEmpty)
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Valid code ok alert"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid code ok alert"
       ])
     } else {
       UserServices().verifyEmail(
@@ -120,8 +120,8 @@ class VerificationViewController: UIViewController {
   /// Send the verification mail id to registered.
   @IBAction func continueButtonAction(_ sender: Any) {
     
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "VerificationCode Continue"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "VerificationCode Continue"
     ])
     
     if (textFieldVerificationCode?.text?.count)! > 0 {
@@ -132,8 +132,8 @@ class VerificationViewController: UIViewController {
       )
     } else {
       self.showAlertMessages(textMessage: kMessageVerificationCodeEmpty)
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Valid code ok alert"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid code ok alert"
       ])
     }
   }
@@ -141,8 +141,8 @@ class VerificationViewController: UIViewController {
   /// Resend the verification code to registered mail id.
   @IBAction func resendEmailButtonAction(_ sender: UIButton) {
     
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Verification Resend"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Verification Resend"
     ])
 
     var finalEmail: String = User.currentUser.emailId!
@@ -152,8 +152,8 @@ class VerificationViewController: UIViewController {
     }
     if (finalEmail.isEmpty) || !(Utilities.isValidEmail(testStr: finalEmail)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Valid email alert"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid email alert"
       ])
     } else {
       UserServices().resendEmailConfirmation(emailId: finalEmail, delegate: self)
@@ -261,16 +261,16 @@ extension VerificationViewController: NMWebServiceDelegate {
           title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
           message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
         )
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "Resend email alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Resend email alert"
         ])
       } else {
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
           message: NSLocalizedString(kAlertMessageVerifyEmail, comment: "") as NSString
         )
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "Verify email alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Verify email alert"
         ])
       }
     }

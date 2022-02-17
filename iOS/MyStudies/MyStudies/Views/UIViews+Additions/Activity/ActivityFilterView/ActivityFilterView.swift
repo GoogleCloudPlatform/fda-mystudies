@@ -77,8 +77,8 @@ class ActivityFilterView: UIView, UITableViewDelegate, UITableViewDataSource {
 
   // MARK: - Button Action
   @IBAction func buttonCancelClicked(_: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Activity Filter Cancel"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activity Filter Cancel"
     ])
     self.removeFromSuperview()
   }
@@ -112,8 +112,8 @@ extension ActivityFilterView {
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ActivityFilterType Selected"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ActivityFilterType Selected"
     ])
     self.selectedIndex = ActivityFilterType.init(rawValue: indexPath.row)!
     self.delegate?.setSelectedFilter(selectedIndex: self.selectedIndex)

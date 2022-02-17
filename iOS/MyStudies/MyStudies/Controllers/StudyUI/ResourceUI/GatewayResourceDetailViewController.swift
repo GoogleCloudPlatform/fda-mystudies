@@ -151,15 +151,15 @@ class GatewayResourceDetailViewController: UIViewController {
   // MARK: Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "GatewatResourceDetail Cancel"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "GatewatResourceDetail Cancel"
     ])
     self.dismiss(animated: true, completion: nil)
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "App Glosary Share"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "App Glosary Share"
     ])
     self.shareResource()
   }

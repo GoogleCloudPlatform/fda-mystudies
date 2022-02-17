@@ -135,8 +135,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     self.labelVersion.text = "V" + "\(Utilities.getAppVersion())"
     
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Menu Clicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
     ])
   }
 
@@ -188,8 +188,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   /// This method will setup the Menu in case of Standalone app.
   final private func setupStandaloneMenu() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Menu Clicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
     ])
 
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
@@ -371,8 +371,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
       if isStandalone {
         if Study.currentStudy?.userParticipateState.status == .enrolled {
-          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-            buttonClickReasonKey: "LeftMenu Home"
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "LeftMenu Home"
           ])
           self.slideMenuController()?.changeMainViewController(
             self.studyTabBarController,
@@ -439,8 +439,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         close: true
       )
     case .signOut:
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "LeftMenu Sign-Out"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "LeftMenu Sign-Out"
       ])
       buttonActionSignOut()
     }
@@ -454,9 +454,6 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     DBHandler.isDataAvailableToSync { (available) in
       if available {
-//        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-//          buttonClickReasonKey: "SideMenu Sign-Out"
-//        ])
 
         UIUtilities.showAlertMessageWithTwoActionsAndHandler(
           NSLocalizedString(kSignOutText, comment: ""),
@@ -465,22 +462,19 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           errorAlertActionTitle2: NSLocalizedString(kAlertSignOutLaterTitle, comment: ""),
           viewControllerUsed: self,
           action1: {
-            Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-              buttonClickReasonKey: "Sign-Out1"
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Sign-Out1"
             ])
             LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
           },
           action2: {
-            Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-              buttonClickReasonKey: "Sign-Out Cancel1"
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Sign-Out Cancel1"
             ])
             // Cancel Action.
           }
         )
       } else {
-//        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-//          buttonClickReasonKey: "SideMenu Sign-Out"
-//        ])
 
         UIUtilities.showAlertMessageWithTwoActionsAndHandler(
           NSLocalizedString(kSignOutText, comment: ""),
@@ -489,14 +483,14 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
           viewControllerUsed: self,
           action1: {
-            Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-              buttonClickReasonKey: "Sign-Out2"
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Sign-Out2"
             ])
             LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
           },
           action2: {
-            Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-              buttonClickReasonKey: "Sign-Out Cancel2"
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Sign-Out Cancel2"
             ])
             // Cancel Action.
           }

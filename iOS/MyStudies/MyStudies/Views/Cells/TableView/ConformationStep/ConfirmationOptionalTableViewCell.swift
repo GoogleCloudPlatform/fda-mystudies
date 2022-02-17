@@ -61,8 +61,8 @@ class ConfirmationOptionalTableViewCell: UITableViewCell {
 
   /// When user press on Delete data or Retail Data button
   @IBAction func deleteOrRetainDataButtonAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ConfirmationOptional Detele/Retain"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConfirmationOptional Detele/Retain"
     ])
 
     var deleteData = false

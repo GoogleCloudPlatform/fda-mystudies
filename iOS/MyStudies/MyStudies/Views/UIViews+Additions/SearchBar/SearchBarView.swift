@@ -54,8 +54,8 @@ class SearchBarView: UIView {
   }
 
   @IBAction func buttonCancelAction() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Search Cancel"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Search Cancel"
     ])
 
     UIView.animate(

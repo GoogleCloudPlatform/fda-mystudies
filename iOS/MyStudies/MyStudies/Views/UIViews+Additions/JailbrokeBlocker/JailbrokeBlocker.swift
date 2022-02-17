@@ -52,8 +52,8 @@ class JailbrokeBlocker: UIView {
   // MARK: - Action
 
   @IBAction func buttonUpgradeAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "JailBroke Upgrade"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "JailBroke Upgrade"
     ])
 
     guard

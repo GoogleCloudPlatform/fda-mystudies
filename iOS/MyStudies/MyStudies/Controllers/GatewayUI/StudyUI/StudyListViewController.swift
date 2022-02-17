@@ -244,14 +244,14 @@ class StudyListViewController: UIViewController {
   }
   
   @objc func methodOfReceivedNotification(notification: Notification) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Menu Clicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
     ])
   }
   
   @objc func methodOfReceivedNotification1(notification: Notification) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "LeftMenu Home"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Home"
     ])
   }
   // MARK: - Utils
@@ -477,8 +477,8 @@ class StudyListViewController: UIViewController {
 
   /// Navigate to notification screen on button clicked.
   @IBAction func buttonActionNotification(_: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Notification icon clicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Notification icon clicked"
     ])
     navigateToNotifications()
   }
@@ -490,16 +490,16 @@ class StudyListViewController: UIViewController {
 
   /// Navigate to StudyFilter screen on button clicked.
   @IBAction func filterAction(_: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Filter icon clicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Filter icon clicked"
     ])
     isComingFromFilterScreen = true
     performSegue(withIdentifier: filterListSegue, sender: nil)
   }
 
   @IBAction func searchButtonAction(_: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Search icon clicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Search icon clicked"
     ])
 
     searchView = SearchBarView.instanceFromNib(

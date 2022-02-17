@@ -49,8 +49,8 @@ class GatewayResourcesListViewController: UIViewController {
 
   // MARK: - ViewController Lifecycle.
   override func viewDidLoad() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "LeftMenu Resources"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Resources"
     ])
     super.viewDidLoad()
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")

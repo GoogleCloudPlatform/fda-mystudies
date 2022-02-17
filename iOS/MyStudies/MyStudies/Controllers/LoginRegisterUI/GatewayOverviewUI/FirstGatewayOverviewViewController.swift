@@ -68,8 +68,8 @@ class FirstGatewayOverviewViewController: UIViewController {
 
   /// Watch video button clicked.
   @IBAction func watchVideoButtonClicked(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Watch Video"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Watch Video"
     ])
     let urlString = overviewSectionDetail.link!
     if urlString.contains("youtube") {
@@ -97,8 +97,8 @@ class FirstGatewayOverviewViewController: UIViewController {
 
   /// Used to create FDASlideMenuViewController and Gateway storyboard.
   @IBAction func getStartedButtonClicked(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Get Started"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Get Started"
     ])
     self.createMenuView()
   }

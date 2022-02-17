@@ -128,13 +128,10 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
 
   /// Day, Week and Month Button clicked.
   @IBAction func dayWeekMonthButtonAction(_ sender: AnyObject) {
-//    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-//      buttonClickReasonKey: "StudyDashboard DayWeekMonth"
-//    ])
 
     if sender.tag == 11 {
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "StudyDashboard Day"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "StudyDashboard Day"
       ])
 
       // Day clicked
@@ -157,8 +154,8 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       self.updateForwardBtnState()
 
     } else if sender.tag == 12 {
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "StudyDashboard Week"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "StudyDashboard Week"
       ])
 
       // Week clicked
@@ -185,8 +182,8 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       self.updateForwardBtnState()
 
     } else if sender.tag == 13 {
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "StudyDashboard Month"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "StudyDashboard Month"
       ])
 
       // Months clicked
@@ -211,8 +208,8 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
   }
 
   @IBAction func buttonForwardClicked(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyDashboard Ascending"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Ascending"
     ])
 
     let calendar = Calendar.current
@@ -252,8 +249,8 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
   }
 
   @IBAction func buttonBackwardClicked(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyDashboard Descending"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Descending"
     ])
 
     let calendar = Calendar.current

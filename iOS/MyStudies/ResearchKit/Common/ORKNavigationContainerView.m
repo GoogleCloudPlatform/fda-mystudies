@@ -395,8 +395,8 @@ static const CGFloat shadowHeight = 0.75;
 
 - (void)skipButtonAction:(id)sender {
   
-  NSDictionary *userDict = @{@"ORKActions":@"ORKSkip"};
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+  NSDictionary *userDict = @{@"ORKAction":@"ORKSkip"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
   
     [self skipAction:sender];
 
@@ -411,14 +411,14 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (void)cancelButtonAction:(id)sender {
-  NSDictionary *userDict = @{@"ORKActions":@"ORKCancel"};
-  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+  NSDictionary *userDict = @{@"ORKAction":@"ORKCancel"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [self cancelAction:sender];
 }
 
 - (void)continueButtonAction:(id)sender {
-  NSDictionary *userDict = @{@"ORKActions":@"ORKProceed"};
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+  NSDictionary *userDict = @{@"ORKAction":@"ORKProceed"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
 
     if (_useNextForSkip && _skipButtonItem && !_continueButtonItem) {
         [self skipAction:sender];

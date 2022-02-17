@@ -59,8 +59,8 @@ class SignUpCompleteViewController: UIViewController {
 
   /// Next button clicked and navigate the screen to GateWay dashboard.
   @IBAction func nextButtonAction(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Sign-UpComplete Next"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-UpComplete Next"
     ])
 
     // Updating Key & Vector

@@ -156,8 +156,8 @@ class StudyOverviewViewControllerFirst: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func watchVideoButtonAction(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyOverViewFirst watch video"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverViewFirst watch video"
     ])
 
     guard let urlString = overviewSectionDetail.link,
@@ -187,8 +187,8 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyOverViewFirst Join Study"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverViewFirst Join Study"
     ])
 
     if User.currentUser.userType == UserType.anonymousUser {
@@ -200,8 +200,8 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyOverviewFirst visit website"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverviewFirst visit website"
     ])
 
     if overViewWebsiteLink != nil {

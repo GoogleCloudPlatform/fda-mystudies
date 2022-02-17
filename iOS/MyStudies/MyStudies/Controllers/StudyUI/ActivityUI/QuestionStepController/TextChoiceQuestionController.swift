@@ -338,8 +338,8 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
       
   @IBAction func filterAction(_: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "TextChoiceQuestion BackButton"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "TextChoiceQuestion BackButton"
     ])
     super.goBackward()
   }
@@ -706,8 +706,8 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
 
   @objc func didTapOnDoneOrNextBtn(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "TextChoice Done/Next"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "TextChoice Done/Next"
     ])
     // Next or done button pressed.
   }

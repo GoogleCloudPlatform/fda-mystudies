@@ -119,8 +119,8 @@ class StudyOverviewViewControllerSecond: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyOverview JoinStudy"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverview JoinStudy"
     ])
 
     if User.currentUser.userType == UserType.anonymousUser {
@@ -138,8 +138,8 @@ class StudyOverviewViewControllerSecond: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "StudyOverview Website"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverview Website"
     ])
 
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)

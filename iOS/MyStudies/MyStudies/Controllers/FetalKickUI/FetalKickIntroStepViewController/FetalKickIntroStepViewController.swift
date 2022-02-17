@@ -80,8 +80,8 @@ class FetalKickIntroStepViewController: ORKStepViewController {
   // MARK: IBActions
 
   @IBAction func nextButtonAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "FetalKickIntroStep Next"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickIntroStep Next"
     ])
     self.goForward()
   }

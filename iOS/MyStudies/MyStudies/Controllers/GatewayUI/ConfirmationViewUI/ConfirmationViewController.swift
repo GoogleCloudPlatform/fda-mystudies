@@ -190,8 +190,8 @@ class ConfirmationViewController: UIViewController {
 
   /// Delete account button clicked.
   @IBAction func deleteAccountAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Delete Account"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Delete Account"
     ])
 
     var found: Bool = false
@@ -216,8 +216,8 @@ class ConfirmationViewController: UIViewController {
 
   /// Don't Delete button action.
   @IBAction func doNotDeleteAccountAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "DoNot Delete Account"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "DoNot Delete Account"
     ])
     _ = self.navigationController?.popViewController(animated: true)
   }

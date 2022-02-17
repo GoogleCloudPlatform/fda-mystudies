@@ -83,8 +83,8 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
 
   // MARK: - Button Action
   @IBAction func buttonCancelClicked(_: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ActivitySchedules Cancel"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ActivitySchedules Cancel"
     ])
     self.removeFromSuperview()
   }

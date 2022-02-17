@@ -97,8 +97,8 @@ class AppUpdateBlocker: UIView {
   // MARK: - Actions
 
   @IBAction func buttonUpgradeAction() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "AppUpgrade"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "AppUpgrade"
     ])
     guard let appleID = Branding.appleID, !appleID.isEmpty else {
       // Ask user to update from AppStore.
@@ -113,8 +113,8 @@ class AppUpdateBlocker: UIView {
   }
   
   @IBAction func buttonYesAction() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "AppUpgrade Yes"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "AppUpgrade Yes"
     ])
     guard let appleID = Branding.appleID, !appleID.isEmpty else {
       // Ask user to update from AppStore.
@@ -129,8 +129,8 @@ class AppUpdateBlocker: UIView {
   }
   
   @IBAction func buttonSkipAction() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "AppUpgrade Skip"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "AppUpgrade Skip"
     ])
     self.isHidden = true
     self.removeFromSuperview()

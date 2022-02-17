@@ -68,8 +68,8 @@ class SecondGatewayOverviewViewController: UIViewController {
 
   /// To create FDASlideMenuViewController and Gateway storyboard.
   @IBAction func getStartedButtonClicked(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "SecondGateway GetStarted"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "SecondGateway GetStarted"
     ])
     self.createMenuView()
   }

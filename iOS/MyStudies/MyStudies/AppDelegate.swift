@@ -26,8 +26,8 @@ import Firebase
 import GoogleAnalytics
 import FirebaseAnalytics
 
-enum EnumORKActions: String {
-  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask, ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree, ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign, ORKPasscodeCancel, ORKPasscodeInvalidAlertOK, ORKActivityTimeOut, ORKCopyRightOkAlert, ORKShowCopyRight, ORKPlaybackNextItem
+enum EnumORKAction: String {
+  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask, ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree, ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign, ORKPasscodeCancel, ORKPasscodeInvalidAlertOK, ORKActivityTimeOut, ORKCopyRightOkAlert, ORKShowCopyRight, ORKPlaybackNextItem, ORKOK
 }
 
 @UIApplicationMain
@@ -211,9 +211,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     
-    NotificationCenter.default.addObserver(self, selector: #selector(self.receivedORKAction(_:)),
-                                           name: Notification.Name("ORKActions"), object: nil)
-    
     // Check if Database needs migration
     self.checkForRealmMigration()
     blockerScreen?.isHidden = true
@@ -223,6 +220,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     self.isAppLaunched = true
     IQKeyboardManager.shared.enable = true
     self.customizeNavigationBar()
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(self.receivedORKAction(_:)),
+                                           name: Notification.Name("ORKAction"), object: nil)
       
     //Fixes navigation bar tint issue in iOS 15.0
     if #available(iOS 15, *) {
@@ -282,20 +282,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     return true
   }
   
-  @objc func receivedORKAction(_ notification: Notification) {
-    let value = notification.userInfo
-    print(value as Any)
-    if let action = value?["ORKActions"] as? String {
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [buttonClickReasonKey: action])
-//      switch EnumORKActions(rawValue: action) {
-//      case .ORKCancel:
-//        Analytics.logEvent(analyticsButtonClickEventName, parameters: [buttonClickReasonKey: action])
-//      default:
-//        break
-//      }
-    }
-  }
-  
   func applicationWillResignActive(_ application: UIApplication) {
     // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 
@@ -310,6 +296,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     self.appIsResignedButDidNotEnteredBackground = false
     blockerScreen?.isHidden = true
     blockerScreen?.removeFromSuperview()
+  }
+  
+  @objc func receivedORKAction(_ notification: Notification) {
+    let value = notification.userInfo
+    print(value as Any)
+    if let action = value?["ORKAction"] as? String {
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [buttonClickReasonsKey: action])
+    }
   }
 
   func application(
@@ -1798,8 +1792,8 @@ extension AppDelegate: ORKPasscodeDelegate {
   }
 
   func passcodeViewControllerForgotPasscodeTapped(_ viewController: UIViewController) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Forgot Passcode?ActionClicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Forgot Passcode?ActionClicked"
     ])
 
     var topVC = UIApplication.shared.keyWindow?.rootViewController
@@ -1815,8 +1809,8 @@ extension AppDelegate: ORKPasscodeDelegate {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: topVC!,
       action1: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "ForgotPasscodeAlert OK"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "ForgotPasscodeAlert OK"
         ])
         self.window?.addProgressIndicatorOnWindowFromTop()
 
@@ -1841,8 +1835,8 @@ extension AppDelegate: ORKPasscodeDelegate {
         )
       },
       action2: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "ForgotPasscodeAlert Cancel"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "ForgotPasscodeAlert Cancel"
         ])
       }
     )

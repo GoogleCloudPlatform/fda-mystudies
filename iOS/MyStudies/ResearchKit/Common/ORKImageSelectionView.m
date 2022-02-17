@@ -381,8 +381,8 @@ static const CGFloat SpacerHeight = 5.0;
 }
 
 - (IBAction)buttonTapped:(UIButton *)button {
-  NSDictionary *userDict = @{@"ORKActions":@"ORKButtonTapped"};
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+  NSDictionary *userDict = @{@"ORKAction":@"ORKButtonTapped"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     button.selected = !button.selected;
     
     if (button.selected) {

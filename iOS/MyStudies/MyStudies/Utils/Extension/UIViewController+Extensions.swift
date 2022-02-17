@@ -187,9 +187,6 @@ extension UIViewController {
   }
 
   @objc public func popToSpecificController() {
-//    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-//      buttonClickReasonKey: "Home Icon"
-//    ])
 
     var identifier: String? = ""
 
@@ -208,8 +205,8 @@ extension UIViewController {
   }
 
   @objc public func popController() {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Back Button"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back Button"
     ])
     _ = self.navigationController?.popViewController(animated: true)
   }

@@ -64,8 +64,8 @@ class InEligibilityStepViewController: ORKStepViewController {
 
   // MARK: - Actions
   @IBAction func buttonActionDone(sender: UIButton?) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "InEligibility Done"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "InEligibility Done"
     ])
     self.goForward()
     self.taskViewController?.dismiss(animated: true, completion: nil)

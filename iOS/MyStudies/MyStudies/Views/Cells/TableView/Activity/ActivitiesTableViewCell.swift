@@ -632,8 +632,8 @@ class ActivitiesTableViewCell: UITableViewCell {
 
   /// Clicked on  More Schedules.
   @IBAction func buttonMoreSchedulesClicked(_: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Activities More Schedules"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities More Schedules"
     ])
     self.delegate?.activityCell(cell: self, activity: self.currentActivity)
   }

@@ -68,8 +68,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-  NSDictionary *userDict = @{@"ORKActions":@"ORKLearnMore"};
-   [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+  NSDictionary *userDict = @{@"ORKAction":@"ORKLearnMore"};
+   [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
 
     self.view.backgroundColor = ORKColor(ORKBackgroundColorKey);
   
@@ -120,8 +120,8 @@
 }
 
 - (IBAction)done:(id)sender {
-  NSDictionary *userDict = @{@"ORKActions":@"ORKLearnMoreDone"};
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKActions" object: nil userInfo: userDict];
+  NSDictionary *userDict = @{@"ORKAction":@"ORKLearnMoreDone"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 

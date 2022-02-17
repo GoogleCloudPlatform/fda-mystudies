@@ -165,8 +165,8 @@ class StudyHomeViewController: UIViewController {
   }
   
   @objc func methodOfReceivedNotification(notification: Notification) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ORKCancel"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ORKCancel"
     ])
   }
 
@@ -553,8 +553,8 @@ class StudyHomeViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionJoinStudy(_: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Join Study Clicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Join Study Clicked"
     ])
 
     if User.currentUser.userType == .anonymousUser {
@@ -614,8 +614,8 @@ class StudyHomeViewController: UIViewController {
   }
 
   @IBAction func backButtonAction(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Home Button"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Home Button"
     ])
     let button = sender as! UIButton
     if button.tag == 200 {
@@ -629,8 +629,8 @@ class StudyHomeViewController: UIViewController {
   
     if sender.tag == 1188 {
       // Visit Website
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Visit Website Clicked"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Visit Website Clicked"
       ])
 
       navigateToWebView(
@@ -641,8 +641,8 @@ class StudyHomeViewController: UIViewController {
 
     } else {
       // View Consent
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "View Consent"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "View Consent"
       ])
 
       if Study.currentStudy?.studyId != nil {

@@ -91,8 +91,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "LeftMenu MyAccount"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu MyAccount"
     ])
 
     // Load plist info
@@ -132,8 +132,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Change password button clicked.
   @IBAction func buttonActionChangePassCode(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Change Passcode"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Change Passcode"
     ])
 
     let passcodeViewController = ORKPasscodeViewController.passcodeEditingViewController(
@@ -148,8 +148,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   ///  Edit Profile button clicked
   @IBAction func editBarButtonAction(_ sender: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Profile Edit"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Profile Edit"
     ])
 
     if self.isCellEditable! == false {
@@ -171,8 +171,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   ///  Button action for LeadtimeButton, CancelButton & DoneButton.
   @IBAction func buttonActionLeadTime(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Lead Time"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Lead Time"
     ])
 
     let alertView = UIAlertController(
@@ -199,8 +199,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       style: UIAlertAction.Style.default,
       handler: {
         _ in
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "LeadTime Done Alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeadTime Done Alert"
         ])
 
         let calender: Calendar? = Calendar.current
@@ -232,8 +232,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       style: UIAlertAction.Style.default,
       handler: {
         _ in
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "LeadTime Cancel Alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeadTime Cancel Alert"
         ])
 
       }
@@ -247,8 +247,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Signout Button Clicked.
   @IBAction func buttonActionSignOut(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Sign-Out"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-Out"
     ])
 
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
@@ -258,16 +258,16 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: self,
       action1: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "Sign-Out Ok"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Sign-Out Ok"
         ])
         self.isSigningOut = true
         LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
 
       },
       action2: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "Sign-Out Cancel"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Sign-Out Cancel"
         ])
         // Handle cancel action
       }
@@ -277,8 +277,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Delete Account clicked.
   @IBAction func buttonActionDeleteAccount(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Delete Account"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Delete Account"
     ])
 
     if (Gateway.instance.studies?.count)! > 0 {
@@ -322,16 +322,16 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
           errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
           viewControllerUsed: self,
           action1: {
-            Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-              buttonClickReasonKey: "DeleteAccount Ok"
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "DeleteAccount Ok"
             ])
 
             self.sendRequestToDeleteAccount()
 
           },
           action2: {
-            Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-              buttonClickReasonKey: "DeleteAccount Cancel"
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "DeleteAccount Cancel"
             ])
             // Handle cancel action
           }
@@ -406,8 +406,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
       viewControllerUsed: self
     ) {
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Account Deleted OKAlert"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Account Deleted OKAlert"
       ])
 
       if Utilities.isStandaloneApp() {
@@ -488,8 +488,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   }
 
   @objc func toggleValueChanged(_ sender: UISwitch) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ToggleValue Changed"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ToggleValue Changed"
     ])
 
     let toggle = sender
@@ -537,8 +537,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   ///  Button action for Change password button.
   @objc func pushToChangePassword(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Change Password"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Change Password"
     ])
     self.performSegue(withIdentifier: kChangePasswordSegueIdentifier, sender: nil)
   }
@@ -549,20 +549,20 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
     if (user.emailId?.isEmpty)! {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Fill all fields alert"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Fill all fields alert"
       ])
       return false
     } else if user.emailId == "" {
       self.showAlertMessages(textMessage: kMessageEmailBlank)
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Enter email alert"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter email alert"
       ])
       return false
     } else if !(Utilities.isValidEmail(testStr: user.emailId!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
-      Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-        buttonClickReasonKey: "Enter valid email alert"
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter valid email alert"
       ])
       return false
     }

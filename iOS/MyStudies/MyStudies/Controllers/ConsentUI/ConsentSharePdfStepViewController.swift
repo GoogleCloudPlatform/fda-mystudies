@@ -168,16 +168,16 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionNext(sender: UIButton?) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ConsentSharePdf Next"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConsentSharePdf Next"
     ])
     self.taskResult.didTapOnViewPdf = false
     self.goForward()
   }
 
   @IBAction func buttonActionViewPdf(sender: UIButton?) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ConsentSharePdf View/EmailPdf"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConsentSharePdf View/EmailPdf"
     ])
 
     self.addProgressIndicator()

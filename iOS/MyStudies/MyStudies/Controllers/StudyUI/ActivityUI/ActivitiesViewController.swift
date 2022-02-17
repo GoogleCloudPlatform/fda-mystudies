@@ -83,8 +83,8 @@ class ActivitiesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Activities"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities"
     ])
 
     addObservers()
@@ -784,15 +784,15 @@ class ActivitiesViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Activities Home"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities Home"
     ])
     self.performSegue(withIdentifier: kActivityUnwindToStudyListIdentifier, sender: self)
   }
 
   @IBAction func filterButtonAction(_ sender: AnyObject) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Activities Filter"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities Filter"
     ])
     let frame = self.view.frame
     if self.selectedFilter == nil {
@@ -1119,8 +1119,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
-          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-            buttonClickReasonKey: "Activity Error Ok Alert"
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Activity Error Ok Alert"
           ])
 
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
@@ -1537,8 +1537,8 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           && activityId == Study.currentActivity?.actvityId
           && (stepViewController is ORKInstructionStepViewController)
         {
-          Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-            buttonClickReasonKey: "GoForward"
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "GoForward"
           ])
           DispatchQueue.main.asyncAfter(deadline: .now()) {
 //            NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)

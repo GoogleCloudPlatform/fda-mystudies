@@ -151,15 +151,15 @@ class ResourceDetailViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ResourceDetail Cancel"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Cancel"
     ])
     self.dismiss(animated: true, completion: nil)
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ResourceDetail Share"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Share"
     ])
     self.shareResource { [weak self] (status) in
       if !status {
@@ -169,8 +169,8 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionBack(_ sender: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ResourceDetail Back"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Back"
     ])
     if webView.canGoBack {
       webView.goBack()
@@ -183,8 +183,8 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionGoForward(_ sender: UIBarButtonItem) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "ResourceDetail GoForward"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail GoForward"
     ])
     if webView.canGoForward {
       webView.goForward()

@@ -489,8 +489,8 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           print("ResponseDict22 :: \(responseDict)")
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)
-            Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-              buttonClickReasonKey: "Account Existing OKAlert"
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Account Existing OKAlert"
             ])
             print("ResponseDict23 :: \(error)")
             print("ResponseDict24 :: \(error1)")

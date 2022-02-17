@@ -131,8 +131,8 @@ class HomeViewController: UIViewController {
   /// Calls menu view.
   @IBAction func getStartedButtonClicked(_ sender: UIButton) {
 
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Get Started"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Get Started"
     ])
     
     self.createMenuView()
@@ -167,8 +167,8 @@ class HomeViewController: UIViewController {
   /// To initialize WebViewController using
   /// Main storyboard.
   @IBAction func linkButtonAction(_ sender: Any) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Open Website"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Open Website"
     ])
     
     guard let websiteLink = URL(string: Branding.websiteLink) else { return }

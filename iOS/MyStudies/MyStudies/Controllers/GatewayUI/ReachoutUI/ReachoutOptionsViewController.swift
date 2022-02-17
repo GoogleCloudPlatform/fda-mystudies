@@ -27,8 +27,8 @@ class ReachoutOptionsViewController: UIViewController {
   // MARK: - Viewcontroller Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "LeftMenu Reach Out"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Reach Out"
     ])
     NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
                                            name: Notification.Name("Menu Clicked"), object: nil)
@@ -42,8 +42,8 @@ class ReachoutOptionsViewController: UIViewController {
   }
   
   @objc func methodOfReceivedNotification(notification: Notification) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "Menu Clicked"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
     ])
   }
 

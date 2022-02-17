@@ -162,8 +162,8 @@ class EligibilityStepViewController: ORKStepViewController {
 
   // MARK: - Action
   @IBAction func buttonActionSubmit(sender: UIButton?) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "EligibilityStep Submit"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "EligibilityStep Submit"
     ])
 
     self.view.endEditing(true)

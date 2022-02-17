@@ -343,8 +343,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       message: message,
       on: self,
       cancelAction: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "FetalKick Greater value cancel alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "FetalKick Greater value cancel alert"
         ])
         UserDefaults.standard.setValue(true, forKey: "isGreaterAlertDismissed")
       })
@@ -421,13 +421,13 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       errorAlertActionTitle2: NSLocalizedString(kProceedTitle, comment: ""),
       viewControllerUsed: self,
       action1: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "OnCompletion Cancel Alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "OnCompletion Cancel Alert"
         ])
       },
       action2: {
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "OnCompletion GoFoward Alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "OnCompletion GoFoward Alert"
         ])
         UserDefaults.standard.removeObject(forKey: "isAlertShown")
         UserDefaults.standard.synchronize()
@@ -439,8 +439,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   // MARK: Button Actions
 
   @IBAction func editCounterButtonAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "FetalKickCounter EditCounter"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickCounter EditCounter"
     ])
     counterTextField?.isUserInteractionEnabled = true
     counterTextField?.isHidden = false
@@ -449,8 +449,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   }
 
   @IBAction func startButtonAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "FetalKickCounter Start"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickCounter Start"
     ])
 
     if Int((self.counterTextField?.text)!)! == 0 {
@@ -519,14 +519,14 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     self.taskResult.totalKickCount = self.kickCounter == nil ? 0 : self.kickCounter!
     self.perform(#selector(self.goForward))
     
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "FetalKickCounterStep Submit"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickCounterStep Submit"
     ])
   }
 
   @IBAction func editTimerButtonAction(_ sender: UIButton) {
-    Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-      buttonClickReasonKey: "FetalKickCounterStep EditTimer"
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickCounterStep EditTimer"
     ])
 
     let timerArray = self.getTimerArray()
@@ -541,8 +541,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         _,
         indexes in
         
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "EditTimer Done Alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "EditTimer Done Alert"
         ])
 
         let result: [String] = (indexes as! [String])
@@ -576,8 +576,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
             title: kMessage,
             message: "Please select a valid time(Max " + value + ")",
             on: self, cancelAction: {
-              Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-                buttonClickReasonKey: "EditTimer Cancel Alert"
+              Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                buttonClickReasonsKey: "EditTimer Cancel Alert"
               ])
             }
           )
@@ -588,8 +588,8 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         return
       },
       cancel: { _ in
-        Analytics.logEvent(analyticsButtonClickEventName, parameters: [
-          buttonClickReasonKey: "EditTimer Cancel Alert"
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "EditTimer Cancel Alert"
         ])
         return
       },
