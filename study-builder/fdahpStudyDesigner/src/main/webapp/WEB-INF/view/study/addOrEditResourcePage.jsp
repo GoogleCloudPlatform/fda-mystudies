@@ -373,7 +373,7 @@
         if ($('#inlineRadio5').is(':checked')) {
           var text = "You have chosen to use a period of visibility based on an anchor date. Please ensure that the Source Questionnaire providing the anchor date response is scheduled appropriately.";
           bootbox.confirm({
-            closeButton: false,
+            closeButton: true,
             message: text,
             buttons: {
               'cancel': {
@@ -487,7 +487,7 @@
     $('.goToResourceListForm').on('click', function () {
       <c:if test="${actionOn ne 'view'}">
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {

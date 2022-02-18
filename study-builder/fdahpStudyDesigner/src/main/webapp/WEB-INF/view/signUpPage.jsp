@@ -161,8 +161,8 @@
                   <div class="mb-lg form-group">
                     <input type="text" class="input-field wow_input"
                            id="" name="phoneNumber" placeholder="Phone"
-                           value="${userBO.phoneNumber}" data-minlength="13"
-                           maxlength="14"  pattern="[+][0-9]{12,13}"
+                           value="${userBO.phoneNumber}" data-minlength="13" 
+                           maxlength="14"  pattern="[+][0-9]{12,13}" data-pattern-error="Phone number is invalid" required data-error="Please fill out this field" 
                            <c:if test="${mfaEnabled eq true}">required</c:if> autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -174,7 +174,7 @@
                            id="password" maxlength="64" data-minlength="8"
                            placeholder="Password*" required
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                           autocomplete="off" data-error="Password is invalid"/>
+                           autocomplete="off" data-pattern-error="Password is invalid" data-error="Please fill out this field"/>
                     <div class="help-block with-errors red-txt"></div>
                     <span class="arrowLeftSugg"></span>
 
@@ -194,7 +194,7 @@
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required" data-error="Please check this box if you want to proceed."> <label for="inlineCheckbox">
+                        required="required" data-error="Please check this box if you want to proceed"> <label for="inlineCheckbox">
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"

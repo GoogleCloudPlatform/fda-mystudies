@@ -151,31 +151,6 @@ module "btcsoft_dev_mystudies_firestore_raw_data" {
   ]
 }
 
-
-resource "google_healthcare_fhir_store" "default" {
-  name    = "1402"
-  dataset = google_healthcare_dataset.dataset.id
-  version = "R4"
-
-  enable_update_create          = false
-  disable_referential_integrity = false
-  disable_resource_versioning   = false
-  enable_history_import         = false
-
-  stream_configs {
-    resource_types = ["Observation"]
-    bigquery_destination {
-      dataset_uri = "bq://${google_bigquery_dataset.bq_dataset.project}.${google_bigquery_dataset.bq_dataset.dataset_id}"
-      schema_config {
-        recursive_structure_depth = 3
-      }
-    }
-  }
-}
-
-
-
-
 resource "google_bigquery_dataset" "bq_dataset" {
   dataset_id                 = "MyStudiesDev"
   project                    = module.project.project_id

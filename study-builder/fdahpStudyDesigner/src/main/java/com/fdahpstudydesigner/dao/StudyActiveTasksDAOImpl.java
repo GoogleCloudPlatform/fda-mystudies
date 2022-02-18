@@ -22,8 +22,6 @@
 
 package com.fdahpstudydesigner.dao;
 
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_DELETED;
-
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
@@ -64,6 +62,8 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Repository;
+
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_DELETED;
 
 @Repository
 public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
@@ -447,11 +447,10 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                   + " and ATB.live=1 order by id";
           query = session.createQuery(searchQuery).setParameter("studyId", studyId);
         } else {
-          // search active task which does not have short_title is not null
-          String searchQuery =
-              "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL and active=1  ";
-          query = session.createQuery(searchQuery).setParameter("studyId", studyId);
-          // end here deletion
+          query =
+              session
+                  .getNamedQuery("ActiveTaskBo.getActiveTasksByByStudyId")
+                  .setString("studyId", studyId);
         }
 
         activeTasks = query.list();

@@ -262,7 +262,7 @@ button#deleteUser {
             </div>
             <div class="form-group">
               <input type="text" class="form-control" id="phoneNumber"
-                     name="phoneNumber" value="${userBO.phoneNumber}"
+                     name="phoneNumber" value="${userBO.phoneNumber}" data-pattern-error="Phone number is invalid" data-error="Please fill out this field"
                      data-minlength="13" maxlength="14" pattern="[+][0-9]{12,13}"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> 
                      <c:if test="${mfaEnabled eq true}">required</c:if> />
@@ -624,6 +624,9 @@ button#deleteUser {
     
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
+    	 if(element != 'Superadmin' ){
+        	 $('#enforcePasswordId').hide(); 
+        	 }else $('#enforcePasswordId').show(); 
       setStudySettingByRole(element);
     });
 
@@ -883,7 +886,7 @@ button#deleteUser {
             + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
             + " <input type='radio' class='v" + selVal + " changeView' id='v1" + selVal
             + "' name='radio" + selVal + "' value='0' checked='checked'>"
-            + "<label for='v1" + selVal + "'></label></span>"
+            + "<label for='v1" + selVal + "'style='padding-left:8px;'></label></span>"
             + "<span class='radio radio-inline'>"
             + "<input type='radio' class='v" + selVal + " changeView' id='v2" + selVal
             + "' name='radio" + selVal + "' value='1'>"
@@ -945,7 +948,7 @@ button#deleteUser {
             + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
             + " <input type='radio' class='v3" + selVal + " changeView3' id='v4" + selVal
             + "' name='radio" + selVal + "' value='0' checked='checked'>"
-            + "<label for='v4" + selVal + "'></label></span>"
+            + "<label for='v4" + selVal + "'style='padding-left:8px;'></label></span>"
             + "<span class='radio radio-inline'>"
             + "<input type='radio' class='v3" + selVal + " changeView3' id='v5" + selVal
             + "' name='radio" + selVal + "' value='1'>"
@@ -997,6 +1000,7 @@ button#deleteUser {
     });
 
     $('.addUpdate').on('click', function () {
+    	var enforce=0;
       var email = $('#emailId').val();
       var roleId = $('#roleId').val();
       var lastName = $('#lastName').val();
@@ -1040,6 +1044,7 @@ button#deleteUser {
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                 $('#emailId').parent().find(".help-block").empty();
                 saveUser();
+                enforce=enforce+1;
               } else {
                 $("body").removeClass("loading");
                 isFromValid($('.addUpdate').parents('form'));
@@ -1070,6 +1075,7 @@ button#deleteUser {
                      $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                      $('#emailId').parent().find(".help-block").empty();
                      saveUser();
+                     enforce=enforce+1;
                    } else {
                      $("body").removeClass("loading");
                      isFromValid($('.addUpdate').parents('form'));
@@ -1088,7 +1094,11 @@ button#deleteUser {
         $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
         $('#emailId').parent().find(".help-block").empty();
         saveUser();
+        enforce=enforce+1;
       }
+     if(enforce==3){
+    	 $('#enforcePasswordId').show();
+    }
     });
 
     

@@ -171,7 +171,7 @@
                      value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}"/>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">Step type</div>
             <div>Question step</div>
           </div>
@@ -626,7 +626,7 @@
               - NA -
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">Data type</div>
             <div id="rlaResonseDataType"> - NA -</div>
           </div>
@@ -684,7 +684,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
                   <div class="gray-xs-f mb-xs">Maximum value
                     <span class="requiredStar">*</span>
@@ -717,7 +717,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
                   <div class="gray-xs-f mb-xs">Description for maximum value (1 to 50 characters)
                   </div>
@@ -756,7 +756,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
                   <div class="gray-xs-f mb-xs">Number of steps
                     <span class="requiredStar">*</span>
@@ -837,7 +837,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-6 col-lg-6 pl-none">
                   <div class="gray-xs-f mb-xs">Image for maximum value
                     <span
@@ -900,7 +900,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
                   <div class="gray-xs-f mb-xs">Maximum value
                     <span class="requiredStar">*</span>
@@ -977,7 +977,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
                   <div class="gray-xs-f mb-xs">Description for maximum value (1 to 50 characters)
                   </div>
@@ -1036,7 +1036,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-6 col-lg-6 pl-none">
                   <div class="gray-xs-f mb-xs">Image for maximum value
                     <span
@@ -1163,7 +1163,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-4 pl-none">
                 <div class="col-md-6 col-lg-4 p-none">
                   <div class="gray-xs-f mb-xs">Max length
                     <span
@@ -1398,7 +1398,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
                   <div class="gray-xs-f mb-xs">Placeholder text (1 to 30 characters)
                     <span
@@ -1431,7 +1431,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-8 col-lg-8 p-none">
                   <div class="gray-xs-f mb-xs">Maximum value
                     <span
@@ -1526,7 +1526,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-6  pl-none">
+                <div class="col-md-6 pl-none">
                   <div class="col-md-8 col-lg-8 p-none">
                     <div class="gray-xs-f mb-xs">Maximum date
                       <span
@@ -5763,7 +5763,7 @@
       $(item).prop('disabled', true);
       <c:if test="${actionTypeForQuestionPage ne 'view'}">
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {

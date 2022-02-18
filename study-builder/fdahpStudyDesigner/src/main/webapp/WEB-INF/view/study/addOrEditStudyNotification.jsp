@@ -422,7 +422,7 @@
     $('.goToNotificationListForm').on('click', function () {
       <c:if test="${notificationBO.actionPage eq 'edit' || notificationBO.actionPage eq 'addOrCopy' && not notificationBO.notificationSent}">
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {
@@ -447,7 +447,7 @@
       </c:if>
       <c:if test="${notificationBO.actionPage eq 'resend' && notificationBO.notificationSent}">
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {

@@ -204,11 +204,17 @@ module "btcsoft_dev_gke_cluster" {
       display_name = "btcsoft-dev-ip"
     },
   ]
-  istio                   = true
+  istio                   = false
   skip_provisioners       = true
   enable_private_endpoint = false
   release_channel         = "STABLE"
 
+  node_pools = [
+    {
+      name       = "default-node-pool"
+      image_type = "COS_CONTAINERD"
+    },
+  ]
 }
 
 module "project_iam_members" {

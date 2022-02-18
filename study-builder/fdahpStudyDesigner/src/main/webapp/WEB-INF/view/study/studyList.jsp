@@ -14,9 +14,9 @@
 .mr-lg {
     margin-right: 15px !important;
 }
-.modal-footer {
-    border-top: none !important;
-}
+/* .modal-footer { */
+/*     border-top: none !important; */
+/* } */
 .modal-header {
     border-bottom: none !important; 
 }

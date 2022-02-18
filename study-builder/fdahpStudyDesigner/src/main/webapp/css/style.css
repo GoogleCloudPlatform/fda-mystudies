@@ -2758,3 +2758,24 @@ width:100% !important;
     content: "\ea21";
     visibility: hidden !important;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+input[type=number]{
+    -moz-appearance: textfield !important;
+}
+
+ input[type=text] {
+            -moz-appearance: textfield !important;
+        }
+ 
+.bootbox-font  {
+ color: #2d2926;
+ font-family: 'Roboto', sans-serif;
+ font-size: 14px;
+}
+
