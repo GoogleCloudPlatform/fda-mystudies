@@ -4154,8 +4154,12 @@
 
       
   	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
-    	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
+     var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
 
+     if (isNaN(manualStartTime)) {
+        return
+     }
+    	 
    	if ($('#xdays' + parent_id).val() != '') {
   	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
   	  $('#xdays' + parent_id).parent().find(".help-block").empty().css({'display': 'none'});
@@ -4165,9 +4169,7 @@
    	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
    	}
     	   	
-  	if (isNaN(manualStartTime)) {
- 	    return
- 	} 
+  	 
   	
   	 var pxday = $("#xdays" + parent_id).val();
      var pxsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
