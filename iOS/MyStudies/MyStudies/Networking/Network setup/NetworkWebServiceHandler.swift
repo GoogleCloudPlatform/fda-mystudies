@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import FirebaseAnalytics
 
 enum RequestType: NSInteger {
   case requestTypeJSON
@@ -306,6 +307,8 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     if httpHeaders != nil && (httpHeaders?.count)! > 0 {
       request.allHTTPHeaderFields = httpHeaders as? [String: String]
     }
+    print("1response---\(requestName)---\(params)---\(httpHeaders)")
+
     self.fireRequest(request, requestName: requestName)
   }
 
@@ -351,6 +354,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       if httpHeaders != nil {
         request.allHTTPHeaderFields = httpHeaders! as? [String: String]
       }
+      print("2response---\(requestName)---\(params)---\(httpHeaders)")
       self.fireRequest(request, requestName: requestName)
 
     } catch let error {
@@ -422,6 +426,10 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     requestName: NSString?,
     error: NSError?
   ) {
+    
+    print("Response11 :: \(response!)")
+    print("RequestName22 :: \(requestName!)")
+    print("Error33 :: \(error)")
 
     if error != nil {
       if shouldRetryRequest && maxRequestRetryCount > 0 {
@@ -450,6 +458,8 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           responseDict =
             try JSONSerialization.jsonObject(with: data!, options: [])
             as? NSDictionary
+          
+          print("ResponseDict11 :: \(responseDict)")
         } catch let error {
           Logger.sharedInstance.error("Serialization error: \(requestName ?? "")", error.localizedDescription)
           responseDict = [:]
@@ -463,6 +473,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
             requestName: requestName,
             response: responseDict ?? [:]
           )
+          print("4Response :: \(responseDict)")
         }
       } else {
 
@@ -474,12 +485,24 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
               options: .allowFragments
             )
             as? [String: Any]
+          
+          print("ResponseDict22 :: \(responseDict)")
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Account Existing OKAlert"
+            ])
+            print("ResponseDict23 :: \(error)")
+            print("ResponseDict24 :: \(error1)")
+
           } else {
             error1 = error ?? NSError(domain: "", code: statusCode, userInfo: [:])
+            print("ResponseDict25 :: \(error)")
+            print("ResponseDict26 :: \(error1)")
+
           }
         } else {
+
           error1 = NSError(
             domain: NSURLErrorDomain,
             code: statusCode,

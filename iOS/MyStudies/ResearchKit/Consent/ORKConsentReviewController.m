@@ -87,10 +87,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
     self.view.backgroundColor = ORKColor(ORKConsentBackgroundColorKey);
     if (self.navigationController.navigationBar) {
         [self.navigationController.navigationBar setBarTintColor:self.view.backgroundColor];
-      
-      [self.navigationController.navigationBar setBackgroundColor:self.view.backgroundColor];
-      [self.navigationController.view setBackgroundColor:self.view.backgroundColor];
-      
     }
     
     WKWebViewConfiguration *webViewConfiguration = [WKWebViewConfiguration new];
@@ -193,6 +189,8 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (IBAction)cancel {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKReviewDisAgree"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     if (self.delegate && [self.delegate respondsToSelector:@selector(consentReviewControllerDidCancel:)]) {
         [self.delegate consentReviewControllerDidCancel:self];
     }
@@ -205,12 +203,20 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (IBAction)ack {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKReviewAgree"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:ORKLocalizedString(@"CONSENT_REVIEW_ALERT_TITLE", nil)
                                                                    message:self.localizedReasonForConsent
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
-    [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil) style:UIAlertActionStyleDefault handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+      NSDictionary* userInfo = @{@"ORKAction": @("ORKReviewCancel")};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userInfo];
+    }]];
+  
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_AGREE", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+      NSDictionary* userInfo = @{@"ORKAction": @("ORKReviewAgreeAlert")};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userInfo];
         // Have to dispatch, so following transition animation works
         dispatch_async(dispatch_get_main_queue(), ^{
             [self doAck];

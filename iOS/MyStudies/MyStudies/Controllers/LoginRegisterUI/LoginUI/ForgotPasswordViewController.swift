@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 let kVerifyViewControllerSegue = "VerifyViewControllerSegue"
 let kVerficationMessageFromForgotPassword =
@@ -77,6 +78,9 @@ class ForgotPasswordViewController: UIViewController {
 
   /// Dismiss key board when clicked on Background.
   @objc func dismissKeyboard() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ForgotPassword KeyboardDone"
+    ])
     self.view.endEditing(true)
   }
 
@@ -99,12 +103,21 @@ class ForgotPasswordViewController: UIViewController {
   /// To check all the validations
   /// before making a logout webservice call.
   @IBAction func submitButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ForgotPassword Submit"
+    ])
     self.dismissKeyboard()
     if textFieldEmail?.text == "" {
       self.showAlertMessages(textMessage: kMessageEmailBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter email alert"
+      ])
 
     } else if !(Utilities.isValidEmail(testStr: (textFieldEmail?.text)!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid email alert"
+      ])
     } else if let email = textFieldEmail?.text {
       requestPassword(with: email)
     }
@@ -142,6 +155,9 @@ class ForgotPasswordViewController: UIViewController {
           buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
           viewControllerUsed: self
         ) {
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "ForgotPassword Ok Alert"
+          ])
           _ = self.navigationController?.popViewController(animated: true)
         }
       } else if let error = error {
@@ -176,6 +192,9 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
       title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
       message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
     )
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resend email alert"
+    ])
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {

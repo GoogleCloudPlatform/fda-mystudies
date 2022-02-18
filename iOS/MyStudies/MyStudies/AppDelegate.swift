@@ -23,6 +23,11 @@ import RealmSwift
 import UIKit
 import UserNotifications
 import Firebase
+import FirebaseAnalytics
+
+enum EnumORKAction: String {
+  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask, ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree, ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign, ORKPasscodeCancel, ORKPasscodeInvalidAlertOK, ORKActivityTimeOut, ORKCopyRightOkAlert, ORKShowCopyRight, ORKPlaybackNextItem, ORKOK
+}
 
 @UIApplicationMain
 
@@ -60,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   var blockerScreen: AppUpdateBlocker?
   var passcodeParentControllerWhileSetup: UIViewController?
-
+  
   /// to be used in case of ineligible
   var consentToken: String? = ""
 
@@ -130,25 +135,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   func calculateTimeZoneChange() {
     
     let timeZoneCurrent = TimeZone.current
-    let valTimezone = timeZoneCurrent
     let differenceFromCurrent = timeZoneCurrent.secondsFromGMT()
-    
+
     // Saving TimeZone to User Defaults
     let ud = UserDefaults.standard
     let setuptimeDiff = ud.value(forKey: ksetUpTimeIdentifier) as? Int
-    
+
     // Saving time difference
     if setuptimeDiff == nil {
       ud.set(differenceFromCurrent, forKey: ksetUpTimeIdentifier)
       ud.set(0, forKey: "offset")
-      
-      let timezoneArray = InitialTimezone.init(playerName: valTimezone)
-      let encodedData = NSKeyedArchiver.archivedData(withRootObject: timezoneArray)
-      ud.set(encodedData, forKey: "oldTimezone")
+
     } else {
+
       let difference = differenceFromCurrent - setuptimeDiff!
       ud.set(difference, forKey: "offset")
-      if difference != 0 {
+      if difference == 0 {
+        // Do Nothing
+      } else {
+
         Schedule.utcFormatter = nil
         Schedule.currentZoneFormatter = nil
       }
@@ -199,7 +204,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   }
 
   // MARK: - App Delegates methods
-
+  
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -215,10 +220,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     IQKeyboardManager.shared.enable = true
     self.customizeNavigationBar()
     
+    NotificationCenter.default.addObserver(self, selector: #selector(self.receivedORKAction(_:)),
+                                           name: Notification.Name("ORKAction"), object: nil)
+      
+    //Fixes navigation bar tint issue in iOS 15.0
+    if #available(iOS 15, *) {
+      let appearance = UINavigationBarAppearance()
+      let navigationBar = UINavigationBar()
+      
+      appearance.configureWithOpaqueBackground()
+      appearance.backgroundColor = .white
+      navigationBar.standardAppearance = appearance
+      UINavigationBar.appearance().standardAppearance.backgroundColor = .white
+      UINavigationBar.appearance().standardAppearance.shadowColor = .white
+      UINavigationBar.appearance().scrollEdgeAppearance = appearance
+      UINavigationBar.appearance().standardAppearance = appearance
+    }
+    
     // Use Firebase library to configure APIs
     FirebaseApp.configure()
     Messaging.messaging().delegate = self
-
+    
     UIView.appearance(whenContainedInInstancesOf: [ORKTaskViewController.self]).tintColor =
       kUIColorForSubmitButtonBackground
 
@@ -227,6 +249,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     UserServices().getUserManageApps(self)
     
     UIApplication.shared.applicationIconBadgeNumber = 0
+    
+    UserDefaults.standard.removeObject(forKey: "applict")
 
     let ud1 = UserDefaults.standard
 
@@ -256,7 +280,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     }
     return true
   }
-
+  
   func applicationWillResignActive(_ application: UIApplication) {
     // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
 
@@ -271,6 +295,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     self.appIsResignedButDidNotEnteredBackground = false
     blockerScreen?.isHidden = true
     blockerScreen?.removeFromSuperview()
+  }
+  
+  @objc func receivedORKAction(_ notification: Notification) {
+    let value = notification.userInfo
+    print(value as Any)
+    if let action = value?["ORKAction"] as? String {
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [buttonClickReasonsKey: action])
+    }
   }
 
   func application(
@@ -356,6 +388,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     if self.isAppLaunched! {
       self.isAppLaunched = false
+
       DispatchQueue.main.async {
         // Update Local Notifications
         self.checkForRegisteredNotifications()
@@ -375,14 +408,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
-    ///UnComment the below for APNS approach of Push Notification
-//    let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
-//    if User.currentUser.userType == .loggedInUser {
-//      User.currentUser.settings?.remoteNotifications = true
-//      User.currentUser.settings?.localNotifications = true
-//      // Update device Token to Local server
-//      UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
-//    }
+    let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
+    if User.currentUser.userType == .loggedInUser {
+      User.currentUser.settings?.remoteNotifications = true
+      User.currentUser.settings?.localNotifications = true
+      // Update device Token to Local server
+      UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
+    }
   }
 
   // MARK: - Jailbreak Methods
@@ -953,7 +985,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Checks for `StudyListViewController` and adds right navigation item
   func updateNotification() {
-    
+
     let ud = UserDefaults.standard
     ud.set(true, forKey: kShowNotification)
     ud.synchronize()
@@ -1759,6 +1791,9 @@ extension AppDelegate: ORKPasscodeDelegate {
   }
 
   func passcodeViewControllerForgotPasscodeTapped(_ viewController: UIViewController) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Forgot Passcode?ActionClicked"
+    ])
 
     var topVC = UIApplication.shared.keyWindow?.rootViewController
 
@@ -1773,6 +1808,9 @@ extension AppDelegate: ORKPasscodeDelegate {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: topVC!,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "ForgotPasscodeAlert OK"
+        ])
         self.window?.addProgressIndicatorOnWindowFromTop()
 
         viewController.dismiss(
@@ -1795,7 +1833,11 @@ extension AppDelegate: ORKPasscodeDelegate {
           }
         )
       },
-      action2: {}
+      action2: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "ForgotPasscodeAlert Cancel"
+        ])
+      }
     )
   }
 }
