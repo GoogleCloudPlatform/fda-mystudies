@@ -903,7 +903,7 @@
           if ('SUCCESS' == message) {
             callback(true);
             showErrMsg(
-                "The following attributes/properties cannot be used with questions that are added to a 'repeatable' type of form:  anchor date, chart for app dashboard, statistic for app dashboard.");
+                "The following attributes/properties cannot be used with questions that are added to a 'repeatable' type of form: Use response as anchor date, chart for app dashboard, statistic for app dashboard.");
           } else {
             callback(false);
           }
