@@ -56,10 +56,6 @@ void FIRInstallationsItemSetErrorToPointer(NSError *error, NSError **pointer);
 
 + (FBLPromise *)rejectedPromiseWithError:(NSError *)error;
 
-+ (NSError *)installationsErrorWithCode:(FIRInstallationsErrorCode)code
-                          failureReason:(nullable NSString *)failureReason
-                        underlyingError:(nullable NSError *)underlyingError;
-
 @end
 
 NS_ASSUME_NONNULL_END

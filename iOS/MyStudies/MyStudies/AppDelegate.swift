@@ -25,10 +25,6 @@ import UserNotifications
 import Firebase
 import FirebaseAnalytics
 
-enum EnumORKAction: String {
-  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask, ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree, ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign, ORKPasscodeCancel, ORKPasscodeInvalidAlertOK, ORKActivityTimeOut, ORKCopyRightOkAlert, ORKShowCopyRight, ORKPlaybackNextItem, ORKOK
-}
-
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
@@ -1955,4 +1951,11 @@ extension UIWindow {
       )
     }
   }
+}
+
+enum EnumORKAction: String {
+  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask,
+       ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree,
+       ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign, ORKPasscodeCancel,
+       ORKPasscodeInvalidAlertOK, ORKActivityTimeOut, ORKCopyRightOkAlert, ORKShowCopyRight, ORKPlaybackNextItem, ORKOK
 }

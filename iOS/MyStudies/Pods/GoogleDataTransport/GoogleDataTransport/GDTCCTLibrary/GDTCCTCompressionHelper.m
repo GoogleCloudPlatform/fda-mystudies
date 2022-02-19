@@ -28,7 +28,7 @@
   }
 #endif
 
-  enum { kChunkSize = 1024 };
+  const uint kChunkSize = 1024;
 
   const void *bytes = [data bytes];
   NSUInteger length = [data length];

@@ -16,16 +16,17 @@
 
 #import "FirebaseMessaging/Sources/FIRMessagingTopicOperation.h"
 
+#import <FirebaseInstanceID/FIRInstanceID_Private.h>
+
 #import "FirebaseMessaging/Sources/FIRMessagingDefines.h"
 #import "FirebaseMessaging/Sources/FIRMessagingLogger.h"
 #import "FirebaseMessaging/Sources/FIRMessagingUtilities.h"
 #import "FirebaseMessaging/Sources/NSError+FIRMessaging.h"
-#import "FirebaseMessaging/Sources/Token/FIRMessagingTokenManager.h"
 
 static NSString *const kFIRMessagingSubscribeServerHost =
     @"https://iid.googleapis.com/iid/register";
 
-NSString *FIRMessagingSubscriptionsServer(void) {
+NSString *FIRMessagingSubscriptionsServer() {
   static NSString *serverHost = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -47,7 +48,7 @@ NSString *FIRMessagingSubscriptionsServer(void) {
 
 @property(nonatomic, readwrite, copy) NSString *topic;
 @property(nonatomic, readwrite, assign) FIRMessagingTopicAction action;
-@property(nonatomic, readwrite, strong) FIRMessagingTokenManager *tokenManager;
+@property(nonatomic, readwrite, copy) NSString *token;
 @property(nonatomic, readwrite, copy) NSDictionary *options;
 @property(nonatomic, readwrite, copy) FIRMessagingTopicOperationCompletion completion;
 
@@ -71,13 +72,13 @@ NSString *FIRMessagingSubscriptionsServer(void) {
 
 - (instancetype)initWithTopic:(NSString *)topic
                        action:(FIRMessagingTopicAction)action
-                 tokenManager:(FIRMessagingTokenManager *)tokenManager
+                        token:(NSString *)token
                       options:(NSDictionary *)options
                    completion:(FIRMessagingTopicOperationCompletion)completion {
   if (self = [super init]) {
     _topic = topic;
     _action = action;
-    _tokenManager = tokenManager;
+    _token = token;
     _options = options;
     _completion = completion;
 
@@ -89,6 +90,7 @@ NSString *FIRMessagingSubscriptionsServer(void) {
 
 - (void)dealloc {
   _topic = nil;
+  _token = nil;
   _completion = nil;
 }
 
@@ -157,11 +159,15 @@ NSString *FIRMessagingSubscriptionsServer(void) {
   NSURL *url = [NSURL URLWithString:FIRMessagingSubscriptionsServer()];
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
   NSString *appIdentifier = FIRMessagingAppIdentifier();
-  NSString *authString = [NSString
-      stringWithFormat:@"AidLogin %@:%@", _tokenManager.deviceAuthID, _tokenManager.secretToken];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  NSString *deviceAuthID = [FIRInstanceID instanceID].deviceAuthID;
+  NSString *secretToken = [FIRInstanceID instanceID].secretToken;
+  NSString *authString = [NSString stringWithFormat:@"AidLogin %@:%@", deviceAuthID, secretToken];
   [request setValue:authString forHTTPHeaderField:@"Authorization"];
   [request setValue:appIdentifier forHTTPHeaderField:@"app"];
-  [request setValue:_tokenManager.versionInfo forHTTPHeaderField:@"info"];
+  [request setValue:[FIRInstanceID instanceID].versionInfo forHTTPHeaderField:@"info"];
+#pragma clang diagnostic pop
   // Topic can contain special characters (like `%`) so encode the value.
   NSCharacterSet *characterSet = [NSCharacterSet URLQueryAllowedCharacterSet];
   NSString *encodedTopic =
@@ -178,8 +184,8 @@ NSString *FIRMessagingSubscriptionsServer(void) {
   NSMutableString *content = [NSMutableString
       stringWithFormat:@"sender=%@&app=%@&device=%@&"
                        @"app_ver=%@&X-gcm.topic=%@&X-scope=%@",
-                       _tokenManager.defaultFCMToken, appIdentifier, _tokenManager.deviceAuthID,
-                       FIRMessagingCurrentAppVersion(), encodedTopic, encodedTopic];
+                       self.token, appIdentifier, deviceAuthID, FIRMessagingCurrentAppVersion(),
+                       encodedTopic, encodedTopic];
 
   if (self.action == FIRMessagingTopicActionUnsubscribe) {
     [content appendString:@"&delete=true"];

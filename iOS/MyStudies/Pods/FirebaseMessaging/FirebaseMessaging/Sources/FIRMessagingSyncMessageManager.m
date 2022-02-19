@@ -52,6 +52,14 @@ static const uint64_t kMinFreeDiskSpaceInMB = 1;
 }
 
 - (BOOL)didReceiveAPNSSyncMessage:(NSDictionary *)message {
+  return [self didReceiveSyncMessage:message viaAPNS:YES viaMCS:NO];
+}
+
+- (BOOL)didReceiveMCSSyncMessage:(NSDictionary *)message {
+  return [self didReceiveSyncMessage:message viaAPNS:NO viaMCS:YES];
+}
+
+- (BOOL)didReceiveSyncMessage:(NSDictionary *)message viaAPNS:(BOOL)viaAPNS viaMCS:(BOOL)viaMCS {
   NSString *rmqID = message[kFIRMessagingMessageIDKey];
   if (![rmqID length]) {
     FIRMessagingLoggerError(kFIRMessagingMessageCodeSyncMessageManager002,
@@ -70,13 +78,24 @@ static const uint64_t kMinFreeDiskSpaceInMB = 1;
     }
 
     int64_t expirationTime = [[self class] expirationTimeForSyncMessage:message];
-    [self.rmqManager saveSyncMessageWithRmqID:rmqID expirationTime:expirationTime];
+    [self.rmqManager saveSyncMessageWithRmqID:rmqID
+                               expirationTime:expirationTime
+                                 apnsReceived:viaAPNS
+                                  mcsReceived:viaMCS];
     return NO;
   }
 
-  if (!persistentMessage.apnsReceived) {
+  if (viaAPNS && !persistentMessage.apnsReceived) {
     persistentMessage.apnsReceived = YES;
     [self.rmqManager updateSyncMessageViaAPNSWithRmqID:rmqID];
+  } else if (viaMCS && !persistentMessage.mcsReceived) {
+    persistentMessage.mcsReceived = YES;
+    [self.rmqManager updateSyncMessageViaMCSWithRmqID:rmqID];
+  }
+
+  // Received message via both ways we can safely delete it.
+  if (persistentMessage.apnsReceived && persistentMessage.mcsReceived) {
+    [self.rmqManager deleteSyncMessageWithRmqID:rmqID];
   }
 
   // Already received this message either via MCS or APNS.

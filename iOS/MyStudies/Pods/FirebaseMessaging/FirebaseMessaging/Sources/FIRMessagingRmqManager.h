@@ -16,7 +16,27 @@
 
 #import <Foundation/Foundation.h>
 
+@class GtalkDataMessageStanza;
+@class GPBMessage;
+
 @class FIRMessagingPersistentSyncMessage;
+
+/**
+ * Called on each raw message.
+ */
+typedef void (^FIRMessagingRmqMessageHandler)(NSDictionary<NSString *, GPBMessage *> *messages);
+
+/**
+ *  Used to scan through the rmq and perform actions on messages as required.
+ */
+@protocol FIRMessagingRmqScanner <NSObject>
+
+/**
+ *  Scan the RMQ for outgoing messages and process them as required.
+ */
+- (void)scanWithRmqMessageHandler:(FIRMessagingRmqMessageHandler)rmqMessageHandler;
+
+@end
 
 /**
  * This manages the RMQ persistent store.
@@ -30,11 +50,22 @@
  * Also store the lastRMQId that was sent by us so that for a new connection being setup we don't
  * duplicate RMQ Id's for the new messages.
  */
-@interface FIRMessagingRmqManager : NSObject
+@interface FIRMessagingRmqManager : NSObject <FIRMessagingRmqScanner>
+
 // designated initializer
 - (instancetype)initWithDatabaseName:(NSString *)databaseName;
 
 - (void)loadRmqId;
+
+/**
+ *  Save an upstream message to RMQ. If the message send fails for some reason we would not
+ *  lose the message since it would be saved in the RMQ.
+ *
+ *  @param message The upstream message to be saved.
+ *  @param handler   The handler to invoke when the database operation completes with response.
+ *
+ */
+- (void)saveRmqMessage:(GPBMessage *)message withCompletionHandler:(void (^)(BOOL success))handler;
 
 /**
  *  Save Server to device message with the given RMQ-ID.
@@ -43,6 +74,29 @@
  *
  */
 - (void)saveS2dMessageWithRmqId:(NSString *)rmqID;
+
+/**
+ *  A list of all unacked Server to device RMQ IDs.
+ *
+ *  @return A list of unacked Server to Device RMQ ID's. All values are Strings.
+ */
+- (NSArray *)unackedS2dRmqIds;
+
+/**
+ *  Removes the messages with the given rmqIDs from RMQ store.
+ *
+ *  @param rmqIds The lsit of rmqID's to remove from the store.
+ *
+ */
+- (void)removeRmqMessagesWithRmqIds:(NSArray *)rmqIds;
+
+/**
+ *  Removes a list of downstream messages from the RMQ.
+ *
+ *  @param s2dIds The list of messages ACK'ed by the server that we should remove
+ *                from the RMQ store.
+ */
+- (void)removeS2dIds:(NSArray *)s2dIds;
 
 #pragma mark - Sync Messages
 
@@ -56,8 +110,17 @@
 - (FIRMessagingPersistentSyncMessage *)querySyncMessageWithRmqID:(NSString *)rmqID;
 
 /**
+ *  Delete sync message with rmqID.
+ *
+ *  @param rmqID The rmqID of the persisted sync message.
+ *
+ */
+- (void)deleteSyncMessageWithRmqID:(NSString *)rmqID;
+
+/**
  *  Delete the expired sync messages from persisten store. Also deletes messages that have been
  *  delivered both via APNS and MCS.
+ *
  */
 - (void)deleteExpiredOrFinishedSyncMessages;
 
@@ -66,9 +129,14 @@
  *
  *  @param rmqID          The rmqID of the message received.
  *  @param expirationTime The expiration time of the sync message received.
+ *  @param apnsReceived   YES if the message was received via APNS else NO.
+ *  @param mcsReceived    YES if the message was received via MCS else NO.
  *
  */
-- (void)saveSyncMessageWithRmqID:(NSString *)rmqID expirationTime:(int64_t)expirationTime;
+- (void)saveSyncMessageWithRmqID:(NSString *)rmqID
+                  expirationTime:(int64_t)expirationTime
+                    apnsReceived:(BOOL)apnsReceived
+                     mcsReceived:(BOOL)mcsReceived;
 
 /**
  *  Update sync message received via APNS.
@@ -77,6 +145,14 @@
  *
  */
 - (void)updateSyncMessageViaAPNSWithRmqID:(NSString *)rmqID;
+
+/**
+ *  Update sync message received via MCS.
+ *
+ *  @param rmqID The rmqID of the received message.
+ *
+ */
+- (void)updateSyncMessageViaMCSWithRmqID:(NSString *)rmqID;
 
 /**
  * Returns path for database with specified name.

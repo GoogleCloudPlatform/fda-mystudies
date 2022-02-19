@@ -51,8 +51,7 @@ extern NSString *const kServiceInfoFileType;
  * Initializes the options with dictionary. The above strings are the keys of the dictionary.
  * This is the designated initializer.
  */
-- (instancetype)initInternalWithOptionsDictionary:(NSDictionary *)serviceInfoDictionary
-    NS_DESIGNATED_INITIALIZER;
+- (instancetype)initInternalWithOptionsDictionary:(NSDictionary *)serviceInfoDictionary;
 
 /**
  * defaultOptions and defaultOptionsDictionary are exposed in order to be used in FIRApp and

@@ -28,16 +28,14 @@
 #import "FirebaseCore/Sources/FIRBundleUtil.h"
 #import "FirebaseCore/Sources/FIRComponentContainerInternal.h"
 #import "FirebaseCore/Sources/FIRConfigurationInternal.h"
-#import "FirebaseCore/Sources/FIRFirebaseUserAgent.h"
-
+#import "FirebaseCore/Sources/FIRVersion.h"
 #import "FirebaseCore/Sources/Private/FIRAppInternal.h"
 #import "FirebaseCore/Sources/Private/FIRCoreDiagnosticsConnector.h"
 #import "FirebaseCore/Sources/Private/FIRLibrary.h"
 #import "FirebaseCore/Sources/Private/FIRLogger.h"
 #import "FirebaseCore/Sources/Private/FIROptionsInternal.h"
-#import "FirebaseCore/Sources/Public/FirebaseCore/FIRVersion.h"
 
-#import <GoogleUtilities/GULAppEnvironmentUtil.h>
+#import "GoogleUtilities/Environment/Private/GULAppEnvironmentUtil.h"
 
 #import <objc/runtime.h>
 
@@ -73,6 +71,8 @@ NSString *const kFIRGlobalAppDataCollectionEnabledDefaultsKeyFormat =
 NSString *const kFIRGlobalAppDataCollectionEnabledPlistKey =
     @"FirebaseDataCollectionDefaultEnabled";
 
+NSString *const kFIRAppDiagnosticsNotification = @"FIRAppDiagnosticsNotification";
+
 NSString *const kFIRAppDiagnosticsConfigurationTypeKey = @"ConfigType";
 NSString *const kFIRAppDiagnosticsErrorKey = @"Error";
 NSString *const kFIRAppDiagnosticsFIRAppKey = @"FIRApp";
@@ -89,14 +89,6 @@ NSString *const FIRAuthStateDidChangeInternalNotificationTokenKey =
     @"FIRAuthStateDidChangeInternalNotificationTokenKey";
 NSString *const FIRAuthStateDidChangeInternalNotificationUIDKey =
     @"FIRAuthStateDidChangeInternalNotificationUIDKey";
-
-/**
- * Error domain for exceptions and NSError construction.
- */
-NSString *const kFirebaseCoreErrorDomain = @"com.firebase.core";
-
-/** The NSUserDefaults suite name for FirebaseCore, for those storage locations that use it. */
-NSString *const kFirebaseCoreDefaultsSuiteName = @"com.firebase.core";
 
 /**
  * The URL to download plist files.
@@ -124,17 +116,25 @@ static NSMutableArray<Class<FIRLibrary>> *sRegisteredAsConfigurable;
 
 static NSMutableDictionary *sAllApps;
 static FIRApp *sDefaultApp;
+static NSMutableDictionary *sLibraryVersions;
+static dispatch_once_t sFirebaseUserAgentOnceToken;
 
 + (void)configure {
   FIROptions *options = [FIROptions defaultOptions];
   if (!options) {
     [NSException raise:kFirebaseCoreErrorDomain
-                format:@"`FirebaseApp.configure()` could not find "
+                format:@"`[FIRApp configure];` (`FirebaseApp.configure()` in Swift) could not find "
                        @"a valid GoogleService-Info.plist in your project. Please download one "
                        @"from %@.",
                        kPlistURL];
   }
   [FIRApp configureWithOptions:options];
+#if TARGET_OS_OSX || TARGET_OS_TV
+  FIRLogNotice(kFIRLoggerCore, @"I-COR000028",
+               @"tvOS and macOS SDK support is not part of the official Firebase product. "
+               @"Instead they are community supported. Details at "
+               @"https://github.com/firebase/firebase-ios-sdk/blob/master/README.md.");
+#endif
 }
 
 + (void)configureWithOptions:(FIROptions *)options {
@@ -244,11 +244,8 @@ static FIRApp *sDefaultApp;
   }
   FIRLogError(kFIRLoggerCore, @"I-COR000003",
               @"The default Firebase app has not yet been "
-              @"configured. Add `FirebaseApp.configure()` to your "
-              @"application initialization. This can be done in "
-              @"in the App Delegate's application(_:didFinishLaunchingWithOptions:)` "
-              @"(or the `@main` struct's initializer in SwiftUI). "
-              @"Read more: https://goo.gl/ctyzm8.");
+              @"configured. Add `[FIRApp configure];` (`FirebaseApp.configure()` in Swift) to your "
+              @"application initialization. Read more: https://goo.gl/ctyzm8.");
   return nil;
 }
 
@@ -280,7 +277,9 @@ static FIRApp *sDefaultApp;
     sDefaultApp = nil;
     [sAllApps removeAllObjects];
     sAllApps = nil;
-    [[self userAgent] reset];
+    [sLibraryVersions removeAllObjects];
+    sLibraryVersions = nil;
+    sFirebaseUserAgentOnceToken = 0;
   }
 }
 
@@ -346,6 +345,9 @@ static FIRApp *sDefaultApp;
     return NO;
   }
 
+  [self logCoreTelemetryIfEnabled];
+
+#if TARGET_OS_IOS
   // Initialize the Analytics once there is a valid options under default app. Analytics should
   // always initialize first by itself before the other SDKs.
   if ([self.name isEqualToString:kFIRDefaultAppName]) {
@@ -366,6 +368,7 @@ static FIRApp *sDefaultApp;
       }
     }
   }
+#endif
 
   [self subscribeForAppDidBecomeActiveNotifications];
 
@@ -476,7 +479,20 @@ static FIRApp *sDefaultApp;
     NSLocalizedRecoverySuggestionErrorKey :
         @"Check formatting and location of GoogleService-Info.plist."
   };
-  return [NSError errorWithDomain:kFirebaseCoreErrorDomain code:-100 userInfo:errorDict];
+  return [NSError errorWithDomain:kFirebaseCoreErrorDomain
+                             code:FIRErrorCodeInvalidPlistFile
+                         userInfo:errorDict];
+}
+
++ (NSError *)errorForSubspecConfigurationFailureWithDomain:(NSString *)domain
+                                                 errorCode:(FIRErrorCode)code
+                                                   service:(NSString *)service
+                                                    reason:(NSString *)reason {
+  NSString *description =
+      [NSString stringWithFormat:@"Configuration failed for service %@.", service];
+  NSDictionary *errorDict =
+      @{NSLocalizedDescriptionKey : description, NSLocalizedFailureReasonErrorKey : reason};
+  return [NSError errorWithDomain:domain code:code userInfo:errorDict];
 }
 
 + (NSError *)errorForInvalidAppID {
@@ -486,7 +502,9 @@ static FIRApp *sDefaultApp;
         @"Check formatting and location of GoogleService-Info.plist or GoogleAppID set in the "
         @"customized options."
   };
-  return [NSError errorWithDomain:kFirebaseCoreErrorDomain code:-101 userInfo:errorDict];
+  return [NSError errorWithDomain:kFirebaseCoreErrorDomain
+                             code:FIRErrorCodeInvalidAppID
+                         userInfo:errorDict];
 }
 
 + (BOOL)isDefaultAppConfigured {
@@ -502,18 +520,18 @@ static FIRApp *sDefaultApp;
   // add the name/version pair to the dictionary.
   if ([name rangeOfCharacterFromSet:disallowedSet].location == NSNotFound &&
       [version rangeOfCharacterFromSet:disallowedSet].location == NSNotFound) {
-    [[self userAgent] setValue:version forComponent:name];
+    @synchronized(self) {
+      if (!sLibraryVersions) {
+        sLibraryVersions = [[NSMutableDictionary alloc] init];
+      }
+      sLibraryVersions[name] = version;
+    }
   } else {
     FIRLogError(kFIRLoggerCore, @"I-COR000027",
                 @"The library name (%@) or version number (%@) contain invalid characters. "
                 @"Only alphanumeric, dash, underscore and period characters are allowed.",
                 name, version);
   }
-}
-
-+ (void)registerInternalLibrary:(nonnull Class<FIRLibrary>)library
-                       withName:(nonnull NSString *)name {
-  [self registerInternalLibrary:library withName:name withVersion:FIRFirebaseVersion()];
 }
 
 + (void)registerInternalLibrary:(nonnull Class<FIRLibrary>)library
@@ -543,18 +561,73 @@ static FIRApp *sDefaultApp;
   [self registerLibrary:name withVersion:version];
 }
 
-+ (FIRFirebaseUserAgent *)userAgent {
-  static dispatch_once_t onceToken;
-  static FIRFirebaseUserAgent *_userAgent;
-  dispatch_once(&onceToken, ^{
-    _userAgent = [[FIRFirebaseUserAgent alloc] init];
-    [_userAgent setValue:FIRFirebaseVersion() forComponent:@"fire-ios"];
-  });
-  return _userAgent;
++ (NSString *)firebaseUserAgent {
+  @synchronized(self) {
+    dispatch_once(&sFirebaseUserAgentOnceToken, ^{
+      // Report FirebaseCore version for useragent string
+      [FIRApp registerLibrary:@"fire-ios"
+                  withVersion:[NSString stringWithUTF8String:FIRCoreVersionString]];
+
+      NSDictionary<NSString *, id> *info = [[NSBundle mainBundle] infoDictionary];
+      NSString *xcodeVersion = info[@"DTXcodeBuild"];
+      NSString *sdkVersion = info[@"DTSDKBuild"];
+      if (xcodeVersion) {
+        [FIRApp registerLibrary:@"xcode" withVersion:xcodeVersion];
+      }
+      if (sdkVersion) {
+        [FIRApp registerLibrary:@"apple-sdk" withVersion:sdkVersion];
+      }
+
+      NSString *swiftFlagValue = [self hasSwiftRuntime] ? @"true" : @"false";
+      [FIRApp registerLibrary:@"swift" withVersion:swiftFlagValue];
+
+      [FIRApp registerLibrary:kFIRAppDiagnosticsApplePlatformPrefix
+                  withVersion:[self applePlatform]];
+    });
+
+    NSMutableArray<NSString *> *libraries =
+        [[NSMutableArray<NSString *> alloc] initWithCapacity:sLibraryVersions.count];
+    for (NSString *libraryName in sLibraryVersions) {
+      [libraries addObject:[NSString stringWithFormat:@"%@/%@", libraryName,
+                                                      sLibraryVersions[libraryName]]];
+    }
+    [libraries sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    return [libraries componentsJoinedByString:@" "];
+  }
 }
 
-+ (NSString *)firebaseUserAgent {
-  return [[self userAgent] firebaseUserAgent];
++ (BOOL)hasSwiftRuntime {
+  // The class
+  // [Swift._SwiftObject](https://github.com/apple/swift/blob/5eac3e2818eb340b11232aff83edfbd1c307fa03/stdlib/public/runtime/SwiftObject.h#L35)
+  // is a part of Swift runtime, so it should be present if Swift runtime is available.
+
+  BOOL hasSwiftRuntime =
+      objc_lookUpClass("Swift._SwiftObject") != nil ||
+      // Swift object class name before
+      // https://github.com/apple/swift/commit/9637b4a6e11ddca72f5f6dbe528efc7c92f14d01
+      objc_getClass("_TtCs12_SwiftObject") != nil;
+
+  return hasSwiftRuntime;
+}
+
++ (NSString *)applePlatform {
+  NSString *applePlatform = @"unknown";
+
+  // When a Catalyst app is run on macOS then both `TARGET_OS_MACCATALYST` and `TARGET_OS_IOS` are
+  // `true`, which means the condition list is order-sensitive.
+#if TARGET_OS_MACCATALYST
+  applePlatform = @"maccatalyst";
+#elif TARGET_OS_IOS
+  applePlatform = @"ios";
+#elif TARGET_OS_TV
+  applePlatform = @"tvos";
+#elif TARGET_OS_OSX
+  applePlatform = @"macos";
+#elif TARGET_OS_WATCH
+  applePlatform = @"watchos";
+#endif
+
+  return applePlatform;
 }
 
 - (void)checkExpectedBundleID {
@@ -824,6 +897,17 @@ static FIRApp *sDefaultApp;
   return collectionEnabledPlistObject;
 }
 
+#pragma mark - Sending Logs
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-parameter"
+- (void)sendLogsWithServiceName:(NSString *)serviceName
+                        version:(NSString *)version
+                          error:(NSError *)error {
+  // Do nothing. Please remove calls to this method.
+}
+#pragma clang diagnostic pop
+
 #pragma mark - App Life Cycle
 
 - (void)subscribeForAppDidBecomeActiveNotifications {
@@ -847,9 +931,7 @@ static FIRApp *sDefaultApp;
 
 - (void)logCoreTelemetryIfEnabled {
   if ([self isDataCollectionDefaultEnabled]) {
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
-      [FIRCoreDiagnosticsConnector logCoreTelemetryWithOptions:[self options]];
-    });
+    [FIRCoreDiagnosticsConnector logCoreTelemetryWithOptions:_options];
   }
 }
 

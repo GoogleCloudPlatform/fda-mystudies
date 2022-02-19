@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#import "FirebaseMessaging/Sources/NSError+FIRMessaging.h"
+#import "NSError+FIRMessaging.h"
 
 NSString *const kFIRMessagingDomain = @"com.google.fcm";
 

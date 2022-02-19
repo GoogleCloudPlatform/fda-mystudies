@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-#import "GoogleUtilities/Environment/Public/GoogleUtilities/GULHeartbeatDateStorage.h"
-#import "GoogleUtilities/Environment/Public/GoogleUtilities/GULSecureCoding.h"
-
-NSString *const kGULHeartbeatStorageDirectory = @"Google/FIRApp";
+#import "GoogleUtilities/Environment/Private/GULHeartbeatDateStorage.h"
+#import "GoogleUtilities/Environment/Private/GULSecureCoding.h"
 
 @interface GULHeartbeatDateStorage ()
-
+/** The storage to store the date of the last sent heartbeat. */
+@property(nonatomic, readonly) NSFileCoordinator *fileCoordinator;
 /** The name of the file that stores heartbeat information. */
 @property(nonatomic, readonly) NSString *fileName;
 @end
@@ -30,124 +29,126 @@ NSString *const kGULHeartbeatStorageDirectory = @"Google/FIRApp";
 @synthesize fileURL = _fileURL;
 
 - (instancetype)initWithFileName:(NSString *)fileName {
-  if (fileName == nil) return nil;
+  if (fileName == nil) {
+    return nil;
+  }
 
   self = [super init];
   if (self) {
+    _fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
     _fileName = fileName;
   }
   return self;
 }
 
-/** Lazy getter for fileURL.
+/** Lazy getter for fileURL
  * @return fileURL where heartbeat information is stored.
  */
 - (NSURL *)fileURL {
   if (!_fileURL) {
-    NSURL *directoryURL = [self directoryPathURL];
-    [self checkAndCreateDirectory:directoryURL];
+    NSURL *directoryURL = [[self class] directoryPathURL];
+    [[self class] checkAndCreateDirectory:directoryURL fileCoordinator:_fileCoordinator];
     _fileURL = [directoryURL URLByAppendingPathComponent:_fileName];
   }
   return _fileURL;
 }
 
-/** Returns the URL path of the directory for heartbeat storage data.
- * @return the URL path of the directory for heartbeat storage data.
+/** Returns the URL path of the Application Support folder.
+ * @return the URL path of Application Support.
  */
-- (NSURL *)directoryPathURL {
-  NSArray<NSString *> *paths;
-#if TARGET_OS_TV
-  paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-#else
-  paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-#endif  // TARGET_OS_TV
-  NSString *rootPath = [paths lastObject];
-  NSURL *rootURL = [NSURL fileURLWithPath:rootPath];
-  NSURL *directoryURL = [rootURL URLByAppendingPathComponent:kGULHeartbeatStorageDirectory];
++ (NSURL *)directoryPathURL {
+  NSArray<NSString *> *paths =
+      NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+  NSArray<NSString *> *components = @[ paths.lastObject, @"Google/FIRApp" ];
+  NSString *directoryString = [NSString pathWithComponents:components];
+  NSURL *directoryURL = [NSURL fileURLWithPath:directoryString];
   return directoryURL;
 }
 
-/** Check for the existence of the directory specified by the URL, and create it if it does not
- * exist.
- * @param directoryPathURL The path to the directory that needs to exist.
+/** Checks and creates a directory for the directory specified by the
+ * directory url
+ * @param directoryPathURL The path to the directory which needs to be created.
+ * @param fileCoordinator The fileCoordinator object to coordinate writes to the directory.
  */
-- (void)checkAndCreateDirectory:(NSURL *)directoryPathURL {
++ (void)checkAndCreateDirectory:(NSURL *)directoryPathURL
+                fileCoordinator:(NSFileCoordinator *)fileCoordinator {
+  NSError *fileCoordinatorError = nil;
+  [fileCoordinator
+      coordinateWritingItemAtURL:directoryPathURL
+                         options:0
+                           error:&fileCoordinatorError
+                      byAccessor:^(NSURL *writingDirectoryURL) {
+                        NSError *error;
+                        if (![writingDirectoryURL checkResourceIsReachableAndReturnError:&error]) {
+                          // If fail creating the Application Support directory, log warning.
+                          NSError *error;
+                          [[NSFileManager defaultManager] createDirectoryAtURL:writingDirectoryURL
+                                                   withIntermediateDirectories:YES
+                                                                    attributes:nil
+                                                                         error:&error];
+                        }
+                      }];
+}
+
+- (nullable NSMutableDictionary *)heartbeatDictionaryWithFileURL:(NSURL *)readingFileURL {
   NSError *error;
-  if (![directoryPathURL checkResourceIsReachableAndReturnError:&error]) {
-    NSError *error;
-    [[NSFileManager defaultManager] createDirectoryAtURL:directoryPathURL
-                             withIntermediateDirectories:YES
-                                              attributes:nil
-                                                   error:&error];
+  NSMutableDictionary *dict;
+  NSData *objectData = [NSData dataWithContentsOfURL:readingFileURL options:0 error:&error];
+  if (objectData == nil || error != nil) {
+    dict = [NSMutableDictionary dictionary];
+  } else {
+    dict = [GULSecureCoding
+        unarchivedObjectOfClasses:[NSSet setWithArray:@[ NSDictionary.class, NSDate.class ]]
+                         fromData:objectData
+                            error:&error];
+    if (dict == nil || error != nil) {
+      dict = [NSMutableDictionary dictionary];
+    }
   }
+  return dict;
 }
 
 - (nullable NSDate *)heartbeatDateForTag:(NSString *)tag {
-  @synchronized(self.class) {
-    NSDictionary *heartbeatDictionary = [self heartbeatDictionaryWithFileURL:self.fileURL];
-    NSDate *heartbeatDate = heartbeatDictionary[tag];
-
-    // Validate the value type. If the storage file was corrupted or updated with a different format
-    // by a newer SDK version the value type may be different.
-    if (![heartbeatDate isKindOfClass:[NSDate class]]) {
-      heartbeatDate = nil;
-    }
-
-    return heartbeatDate;
-  }
+  __block NSMutableDictionary *dict;
+  NSError *error;
+  [self.fileCoordinator coordinateReadingItemAtURL:self.fileURL
+                                           options:0
+                                             error:&error
+                                        byAccessor:^(NSURL *readingURL) {
+                                          dict = [self heartbeatDictionaryWithFileURL:readingURL];
+                                        }];
+  return dict[tag];
 }
 
 - (BOOL)setHearbeatDate:(NSDate *)date forTag:(NSString *)tag {
-  // Synchronize on the class to ensure that the different instances of the class will not access
-  // the same file concurrently.
-  // TODO: Consider a different synchronization strategy here and in `-heartbeatDateForTag:` method.
-  // Currently no heartbeats can be read/written concurrently even if they are in different files.
-  @synchronized(self.class) {
-    NSMutableDictionary *heartbeatDictionary =
-        [[self heartbeatDictionaryWithFileURL:self.fileURL] mutableCopy];
-    heartbeatDictionary[tag] = date;
-    NSError *error;
-    BOOL isSuccess = [self writeDictionary:[heartbeatDictionary copy]
-                             forWritingURL:self.fileURL
-                                     error:&error];
-    return isSuccess;
-  }
-}
-
-- (NSDictionary *)heartbeatDictionaryWithFileURL:(NSURL *)readingFileURL {
-  NSDictionary *heartbeatDictionary;
-
   NSError *error;
-  NSData *objectData = [NSData dataWithContentsOfURL:readingFileURL options:0 error:&error];
-
-  if (objectData.length > 0 && error == nil) {
-    NSSet<Class> *objectClasses =
-        [NSSet setWithArray:@[ NSDictionary.class, NSDate.class, NSString.class ]];
-    heartbeatDictionary = [GULSecureCoding unarchivedObjectOfClasses:objectClasses
-                                                            fromData:objectData
-                                                               error:&error];
-  }
-
-  if (heartbeatDictionary.count == 0 || error != nil) {
-    heartbeatDictionary = [NSDictionary dictionary];
-  }
-
-  return heartbeatDictionary;
+  __block BOOL isSuccess = false;
+  [self.fileCoordinator coordinateReadingItemAtURL:self.fileURL
+                                           options:0
+                                  writingItemAtURL:self.fileURL
+                                           options:0
+                                             error:&error
+                                        byAccessor:^(NSURL *readingURL, NSURL *writingURL) {
+                                          NSMutableDictionary *dictionary =
+                                              [self heartbeatDictionaryWithFileURL:readingURL];
+                                          dictionary[tag] = date;
+                                          NSError *error;
+                                          isSuccess = [self writeDictionary:dictionary
+                                                              forWritingURL:writingURL
+                                                                      error:&error];
+                                        }];
+  return isSuccess;
 }
 
-- (BOOL)writeDictionary:(NSDictionary *)dictionary
+- (BOOL)writeDictionary:(NSMutableDictionary *)dictionary
           forWritingURL:(NSURL *)writingFileURL
                   error:(NSError **)outError {
-  // Archive a mutable copy `dictionary` for writing to disk. This is done for
-  // backwards compatibility. See Google Utilities issue #36 for more context.
-  // TODO: Remove usage of mutable copy in a future version of Google Utilities.
-  NSData *data = [GULSecureCoding archivedDataWithRootObject:[dictionary mutableCopy]
-                                                       error:outError];
-  if (data.length == 0) {
-    return NO;
+  NSData *data = [GULSecureCoding archivedDataWithRootObject:dictionary error:outError];
+  if (*outError != nil) {
+    return false;
+  } else {
+    return [data writeToURL:writingFileURL atomically:YES];
   }
-
-  return [data writeToURL:writingFileURL atomically:YES];
 }
 
 @end

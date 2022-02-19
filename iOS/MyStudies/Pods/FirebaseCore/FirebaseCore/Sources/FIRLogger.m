@@ -14,17 +14,22 @@
 
 #import "FirebaseCore/Sources/Private/FIRLogger.h"
 
-#import <GoogleUtilities/GULAppEnvironmentUtil.h>
-#import <GoogleUtilities/GULLogger.h>
 #import "FirebaseCore/Sources/Public/FirebaseCore/FIRLoggerLevel.h"
+#import "GoogleUtilities/Environment/Private/GULAppEnvironmentUtil.h"
+#import "GoogleUtilities/Logger/Private/GULLogger.h"
 
-#import "FirebaseCore/Sources/Public/FirebaseCore/FIRVersion.h"
+#import "FirebaseCore/Sources/FIRVersion.h"
 
 FIRLoggerService kFIRLoggerCore = @"[Firebase/Core]";
 
 // All the FIRLoggerService definitions should be migrated to clients. Do not add new ones!
+FIRLoggerService kFIRLoggerABTesting = @"[Firebase/ABTesting]";
+FIRLoggerService kFIRLoggerAdMob = @"[Firebase/AdMob]";
 FIRLoggerService kFIRLoggerAnalytics = @"[Firebase/Analytics]";
+FIRLoggerService kFIRLoggerAuth = @"[Firebase/Auth]";
 FIRLoggerService kFIRLoggerCrash = @"[Firebase/Crash]";
+FIRLoggerService kFIRLoggerMLKit = @"[Firebase/MLKit]";
+FIRLoggerService kFIRLoggerPerf = @"[Firebase/Performance]";
 FIRLoggerService kFIRLoggerRemoteConfig = @"[Firebase/RemoteConfig]";
 
 /// Arguments passed on launch.
@@ -53,10 +58,10 @@ static NSString *const kMessageCodePattern = @"^I-[A-Z]{3}[0-9]{6}$";
 static NSRegularExpression *sMessageCodeRegex;
 #endif
 
-void FIRLoggerInitializeASL(void) {
+void FIRLoggerInitializeASL() {
   dispatch_once(&sFIRLoggerOnceToken, ^{
     // Register Firebase Version with GULLogger.
-    GULLoggerRegisterVersion(FIRFirebaseVersion());
+    GULLoggerRegisterVersion(FIRVersionString);
 
     // Override the aslOptions to ASL_OPT_STDERR if the override argument is passed in.
     NSArray *arguments = [NSProcessInfo processInfo].arguments;
@@ -96,7 +101,7 @@ void FIRSetLoggerLevel(FIRLoggerLevel loggerLevel) {
 }
 
 #ifdef DEBUG
-void FIRResetLogger(void) {
+void FIRResetLogger() {
   extern void GULResetLogger(void);
   sFIRLoggerOnceToken = 0;
   [sFIRLoggerUserDefaults removeObjectForKey:kFIRPersistedDebugModeKey];

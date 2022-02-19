@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#import "FirebaseMessaging/Sources/Public/FirebaseMessaging/FIRMessaging.h"
+#import <FirebaseMessaging/FIRMessaging.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FIRMessagingTokenManager;
+@class FIRMessagingPubSubCache;
 
 /**
  *  FIRMessagingPubSub provides a publish-subscribe model for sending FIRMessaging topic messages.
@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FIRMessagingPubSub : NSObject
 
-- (instancetype)initWithTokenManager:(FIRMessagingTokenManager *)tokenManager;
+@property(nonatomic, readonly, strong) FIRMessagingPubSubCache *cache;
 
 /**
  *  Subscribes an app instance to a topic, enabling it to receive messages
