@@ -401,7 +401,7 @@
   }
   .table thead th {
     background: var(--athens-gray);
-    padding: 5px 10px !important;
+    padding: 8px 10px !important;
     margin-right: 10px;
     margin-bottom: 10px;
     border-radius: 10px !important;
@@ -728,4 +728,8 @@
   .modal {
     top: 0% !important;
   }
+}
+
+.mob_tbl_footer_text_center {
+  display: table-cell !important;
 }
