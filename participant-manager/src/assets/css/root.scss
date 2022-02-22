@@ -1734,3 +1734,16 @@ meter::-moz-meter-bar {
     display: none !important;
   }
 }
+
+// input::-webkit-calendar-picker-indicator {
+//   display: none !important;
+// }
+[list]::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+// input::-webkit-calendar-picker-indicator {
+//   background-color: inherit !important;
+//   }
+// input::-webkit-calendar-picker-indicator {
+//   opacity: 0 !important;
+// }
