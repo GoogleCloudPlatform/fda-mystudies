@@ -1579,7 +1579,7 @@
                           class="help-block-timer with-errors red-txt" style="display:none;"></span>
                        
                   </span>
-                  <span class="mb-sm" style='padding-right: 25px !important;'>
+                  <span class="mb-sm" style='padding-right: 20px !important;'>
                     <span
                         class="pr-sm light-txt opacity06"> days
                      </span>                        
@@ -1706,7 +1706,7 @@
                            
                     </span>
                    <!-- <span class="mb-sm pr-md"> --> 
-                     <span class="mb-sm" style='padding-right: 25px !important;'>
+                     <span class="mb-sm" style='padding-right: 20px !important;'>
                       <span
                           class="pr-sm light-txt opacity06"> days
                         </span>
@@ -1998,6 +1998,7 @@
           $("#lifeTimeId").text('-');
           $(".dailyanchorDiv").show();
           $(".dailyanchorDiv").find('input:text').attr('required', true);
+          $('#dailyXSign option[value="0"]').attr("selected", "selected");
         }
         if (schedule_opts == 'Weekly') {
           $("#weekEndDate").text('NA');
@@ -2342,6 +2343,7 @@
     }
 
     $(".schedule").change(function () {
+    	debugger
       $(".all").addClass("dis-none");
       var schedule_opts = $(this).attr('frequencytype');
       var val = $(this).val();
@@ -4837,7 +4839,7 @@
         + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block-timer with-errors red-txt'></span>"
         +"<span class='help-block with-errors red-txt' style='display:none'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md' style='padding-right: 25px !important;'><span class='pr-sm light-txt opacity06'> days </span>"
+		+ "<span class='mb-sm pr-md' style='padding-right: 20px !important;'><span class='pr-sm light-txt opacity06'> days </span>"
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px;width: 170px;'>"
        	+ "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
