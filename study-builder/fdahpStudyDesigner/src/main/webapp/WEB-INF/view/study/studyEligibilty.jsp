@@ -119,7 +119,7 @@
     </div>
     <div id="eligibilityQusDivId" 
          <c:if test="${eligibility.eligibilityMechanism eq 1}">style="display: none;"</c:if>>
-      <div class="right-content-head pt-none">
+      <div class="right-content-head">
         <div class="text-right">
           <div class="black-md-f  dis-line pull-left line34">Eligibility test questions
           <span>
