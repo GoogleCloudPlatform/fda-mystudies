@@ -870,8 +870,8 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="col-md-6 col-lg-4 p-none">
+            <div class="col-md-6 p-none">
+              <div class="col-md-9 col-lg-9 p-none">
                 <div class="gray-xs-f mb-xs">Max fraction digits
                   <span class="requiredStar">*</span>
                   <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
