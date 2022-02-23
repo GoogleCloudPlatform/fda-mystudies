@@ -60,6 +60,23 @@ button#deleteUser {
     text-align: center;
     margin-left: 9px;
 }
+
+input::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+.myarrow:after {
+  content: "";
+    width: 0;
+    position: absolute;
+    top: 45%;
+    right: 25px;
+    border-width: 4px 4px;
+    border-style: solid;
+    pointer-events: none;
+    border-color: #2d2926 transparent transparent transparent;
+
+}
+
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -222,7 +239,7 @@ button#deleteUser {
             <c:set var="gciEnabled" value="${gciEnabled}"/>
             <c:set var="mfaEnabled" value="${mfaEnabled}"/>
             <c:if test="${gciEnabled eq false }">
-            <div class="form-group">
+            <div class="form-group myarrow">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
@@ -235,7 +252,7 @@ button#deleteUser {
             </div>
             </c:if>
             <c:if test="${gciEnabled eq true }">
-		       <div class="form-group">
+		       <div class="form-group myarrow">
 		         <input type="text" class="form-control" id="emailId" list="mine"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
