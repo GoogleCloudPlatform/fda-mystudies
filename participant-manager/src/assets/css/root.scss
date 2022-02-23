@@ -1735,15 +1735,18 @@ meter::-moz-meter-bar {
   }
 }
 
-// input::-webkit-calendar-picker-indicator {
-//   display: none !important;
-// }
-[list]::-webkit-calendar-picker-indicator {
+input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
-// input::-webkit-calendar-picker-indicator {
-//   background-color: inherit !important;
-//   }
-// input::-webkit-calendar-picker-indicator {
-//   opacity: 0 !important;
-// }
+.myarrow:after {
+  content: "";
+    width: 0;
+    position: absolute;
+    top: 60%;
+    right: 12px;
+    border-width: 6px 4px;
+    border-style: solid;
+    pointer-events: none;
+    border-color: #999 transparent transparent transparent;
+
+}
