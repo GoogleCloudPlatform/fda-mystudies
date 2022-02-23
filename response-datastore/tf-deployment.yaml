@@ -133,7 +133,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: fhir_enabled                   
+                  key: fhir_enabled        
+            - name: DISCARD_FHIR_RESPONSE
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: discard_fhir_response            
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
