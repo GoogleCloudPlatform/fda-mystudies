@@ -1750,3 +1750,11 @@ input::-webkit-calendar-picker-indicator {
     border-color: #999 transparent transparent transparent;
 
 }
+
+@media only screen and (max-width: 500px) and (min-width: 200px) {
+  .tab_sub_menu {
+    width: 100% !important; 
+    max-width: 100% !important;
+  }
+}
+
