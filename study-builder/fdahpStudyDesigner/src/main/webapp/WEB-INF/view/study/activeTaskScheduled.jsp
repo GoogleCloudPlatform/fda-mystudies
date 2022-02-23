@@ -1475,6 +1475,7 @@
        
           $(".dailyanchorDiv").show();
           $(".dailyanchorDiv").find('input:text').attr('required', true);
+          $('#dailyXSign option[value="0"]').attr("selected", "selected");
         }
         if (schedule_opts == 'Weekly') {
        
