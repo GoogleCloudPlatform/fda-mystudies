@@ -940,7 +940,7 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6 p-none">
+              <div class="col-md-6 pl-none">
                 <div class="col-md-9 col-lg-9 p-none">
                   <div class="gray-xs-f mb-xs">Max fraction digits
                     <span
