@@ -492,7 +492,8 @@
     <string name="signed_out">You have been signed out of the app.</string>
     <string name="pdf_consent_error">Sorry, an error occurred and your e-consent could not be completed. Please try again.</string>
     <string name="delete_account_msg">This will also delete your app account.</string>
-    <string name="activity_loading_msg">Please wait as we set up the study for you, this may take a few seconds</string>
+    <string name="activity_loading_msg">Fetching study content....</string>
+    <string name="study_setup_msg">We are setting up the study for you. This may take a few minutes. Please check back shortly.</string>
     <string name="rsb_consent_section_more_info_welcome">&learn_more_txt;</string>
     <string name="rsb_consent_section_more_info_data_gathering">&learn_more_txt;</string>
     <string name="rsb_consent_section_more_info_privacy">&learn_more_txt;</string>
