@@ -146,6 +146,12 @@ public class ProgressDialogHelper {
     }
   }
 
+  public void updateMsg(String msg){
+    if (ringProgressDialog != null && ringProgressDialog.isShowing()) {
+      ringProgressDialog.setMessage(msg);
+    }
+  }
+
   private static Drawable getdrawable(Context context, int id) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       return context.getResources().getDrawable(id, context.getTheme());

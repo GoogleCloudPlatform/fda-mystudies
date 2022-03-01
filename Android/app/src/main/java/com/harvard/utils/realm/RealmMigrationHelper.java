@@ -35,78 +35,116 @@ public class RealmMigrationHelper implements RealmMigration {
     if (oldVersion == 0) {
       // time separated into start and end time
       RealmObjectSchema anchorRuns = schema.get("AnchorRuns");
-      anchorRuns
-          .addField("startTime", String.class)
-          .addField("endTime", String.class)
-          .transform(
-              new RealmObjectSchema.Function() {
-                @Override
-                public void apply(DynamicRealmObject obj) {
-                  obj.set("startTime", obj.getString("time"));
-                  obj.set("endTime", obj.getString("time"));
-                }
-              })
-          .removeField("time");
+      if (anchorRuns != null && !anchorRuns.hasField("startTime")) {
+        anchorRuns
+            .addField("startTime", String.class)
+            .transform(
+                new RealmObjectSchema.Function() {
+                  @Override
+                  public void apply(DynamicRealmObject obj) {
+                    obj.set("startTime", obj.getString("time"));
+                  }
+                });
+      }
+      if (anchorRuns != null && !anchorRuns.hasField("endTime")) {
+        anchorRuns
+            .addField("endTime", String.class)
+            .transform(
+                new RealmObjectSchema.Function() {
+                  @Override
+                  public void apply(DynamicRealmObject obj) {
+                    obj.set("endTime", obj.getString("time"));
+                  }
+                });
+      }
+      if (anchorRuns != null && anchorRuns.hasField("time")) {
+        anchorRuns.removeField("time");
+      }
 
       // Added enroll field
       RealmObjectSchema consentDocumentData = schema.get("ConsentDocumentData");
-      consentDocumentData
-          .addField("enrollAgain", boolean.class)
-          .transform(
-              new RealmObjectSchema.Function() {
-                @Override
-                public void apply(DynamicRealmObject obj) {
-                  obj.set("enrollAgain", false);
-                }
-              });
+      if (consentDocumentData != null && !consentDocumentData.hasField("enrollAgain")) {
+        consentDocumentData
+            .addField("enrollAgain", boolean.class)
+            .transform(
+                new RealmObjectSchema.Function() {
+                  @Override
+                  public void apply(DynamicRealmObject obj) {
+                    obj.set("enrollAgain", false);
+                  }
+                });
+      }
 
       RealmObjectSchema studyUpdate = schema.get("StudyUpdate");
-      studyUpdate
-          .addField("enrollAgain", boolean.class)
-          .transform(
-              new RealmObjectSchema.Function() {
-                @Override
-                public void apply(DynamicRealmObject obj) {
-                  obj.set("enrollAgain", false);
-                }
-              });
+      if (studyUpdate != null && !studyUpdate.hasField("enrollAgain")) {
+        studyUpdate
+            .addField("enrollAgain", boolean.class)
+            .transform(
+                new RealmObjectSchema.Function() {
+                  @Override
+                  public void apply(DynamicRealmObject obj) {
+                    obj.set("enrollAgain", false);
+                  }
+                });
+      }
 
       oldVersion++;
     } else if (oldVersion == 1) {
       // Added verificationTime field
       RealmObjectSchema profile = schema.get("Profile");
-      profile
-          .addField("verificationTime", String.class)
-          .transform(
-              new RealmObjectSchema.Function() {
-                @Override
-                public void apply(DynamicRealmObject obj) {
-                  obj.set("verificationTime", "");
-                }
-              });
+      if (profile != null && !profile.hasField("verificationTime")) {
+        profile
+            .addField("verificationTime", String.class)
+            .transform(
+                new RealmObjectSchema.Function() {
+                  @Override
+                  public void apply(DynamicRealmObject obj) {
+                    obj.set("verificationTime", "");
+                  }
+                });
+      }
 
       // Added Apps
-      schema.create("Android")
-          .addField("latestVersion",String.class)
-          .addField("forceUpdate",String.class);
+      if (!schema.contains("Android")) {
+        schema
+            .create("Android")
+            .addField("latestVersion", String.class)
+            .addField("forceUpdate", String.class);
+      }
 
-      schema.create("VersionModel")
-          .addField("android", Android.class);
+      if (!schema.contains("VersionModel")) {
+        schema.create("VersionModel").addField("android", Android.class);
+      }
 
-      schema.create("Apps")
-          .addField("message", String.class)
-          .addField("appName", String.class)
-          .addField("appId", String.class)
-          .addField("fromEmail", String.class)
-          .addField("contactUsEmail", String.class)
-          .addField("supportEmail", String.class)
-          .addField("status", int.class)
-          .addField("code", String.class)
-          .addField("termsUrl", String.class)
-          .addField("appWebsite", String.class)
-          .addField("version", VersionModel.class);
+      if (!schema.contains("Apps")) {
+        schema
+            .create("Apps")
+            .addField("message", String.class)
+            .addField("appName", String.class)
+            .addField("appId", String.class)
+            .addField("fromEmail", String.class)
+            .addField("contactUsEmail", String.class)
+            .addField("supportEmail", String.class)
+            .addField("status", int.class)
+            .addField("code", String.class)
+            .addField("termsUrl", String.class)
+            .addField("appWebsite", String.class)
+            .addField("version", VersionModel.class);
+      }
 
       oldVersion++;
     }
   }
+
+  public int hashCode() {
+    return RealmMigrationHelper.class.hashCode();
+  }
+
+  public boolean equals(Object object) {
+    if (object == null) {
+      return false;
+    }
+    return object instanceof RealmMigrationHelper;
+  }
+
 }
