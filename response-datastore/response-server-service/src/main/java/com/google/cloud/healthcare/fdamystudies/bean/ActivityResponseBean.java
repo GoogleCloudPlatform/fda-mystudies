@@ -26,4 +26,5 @@ public class ActivityResponseBean {
   private ActivityMetadataBean metadata = new ActivityMetadataBean();
   private ActivityResponseDataStructureBean data = new ActivityResponseDataStructureBean();
   private String createdTimestamp;
+  private ActivityRunBean activityRun;
 }
