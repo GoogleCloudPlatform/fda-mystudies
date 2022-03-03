@@ -4839,7 +4839,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
         + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block-timer with-errors red-txt'></span>"
+        + "maxlength='3' required data-error='Please fill out this field' pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field'/><span class='help-block-timer with-errors red-txt' style='display:none'></span>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
 		+ "<span class='mb-sm pr-md'><span class='pr-sm light-txt opacity06'> days </span>"
@@ -4847,7 +4847,7 @@
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px;width: 170px;'>"
        	+ "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
        	+ "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
-      	+ "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field'/><span class='help-block-timer with-errors red-txt'></span>"
+      	+ "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field'/><span class='help-block-timer with-errors red-txt' style='display:none'></span>"
        	+ "<span class='help-block with-errors red-txt'></span>"
       	+ "</span>"
        
@@ -5176,6 +5176,10 @@
       
  	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
+   	 
+   	if (isNaN(manualStartTime)) {
+	    return
+	}
 
    	if ($('#xdays' + parent_id).val() != '') {
   	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
@@ -5186,12 +5190,6 @@
    	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
    	}
    	
-    	 
-   	
- 	if (isNaN(manualStartTime)) {
-	    return
-	} 
-
      var pxday = $("#xdays" + parent_id).val();
      var pxsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
      
