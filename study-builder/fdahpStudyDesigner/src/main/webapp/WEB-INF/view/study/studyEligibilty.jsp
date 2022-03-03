@@ -260,9 +260,12 @@
                     }
                     $('#eleFormId').submit();
                   } else {
+                	  var eligibilityVal = $("input[name='eligibilityMechanism']:checked").val();
+                	  if (eligibilityVal == 3) {
+                	  $('#comment').removeAttr("required")
+                	  }
                     if (isFromValid('#eleFormId')) {
                       if (${liveStatus}) {
-                        var eligibilityVal = $("input[name='eligibilityMechanism']:checked").val();
                         if (eligibilityVal == 1) {
                           $("#inlineRadio1").prop("disabled", false);
                         } else if (eligibilityVal == 2) {
