@@ -20,6 +20,7 @@
 import Foundation
 import SDWebImage
 import UIKit
+import FirebaseAnalytics
 
 class StudyOverviewViewControllerSecond: UIViewController {
 
@@ -118,6 +119,9 @@ class StudyOverviewViewControllerSecond: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverview JoinStudy"
+    ])
 
     if User.currentUser.userType == UserType.anonymousUser {
       let leftController =
@@ -134,6 +138,9 @@ class StudyOverviewViewControllerSecond: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverview Website"
+    ])
 
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =

@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 let kMessageForSharingCharts =
   "This action will create a shareable image file of the charts currently seen in this section. Proceed?"
@@ -50,10 +51,16 @@ class ChartsViewController: UIViewController {
 
   // MARK: - Actions
   @IBAction func backButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back Button"
+    ])
     self.navigationController?.popViewController(animated: true)
   }
 
   @IBAction func shareButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Charts Share"
+    ])
 
     if StudyDashboard.instance.charts.count > 0 {
 
@@ -69,6 +76,9 @@ class ChartsViewController: UIViewController {
         },
 
         action2: {
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Charts Cancel"
+          ])
           // Handle cancel action.
         }
       )
