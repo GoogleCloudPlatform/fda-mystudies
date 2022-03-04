@@ -18,6 +18,7 @@
 
 import Foundation
 import ResearchKit
+import FirebaseAnalytics
 
 let kFetalKickIntroStepDefaultIdentifier = "FetalIntroStepIdentifier"
 
@@ -79,6 +80,9 @@ class FetalKickIntroStepViewController: ORKStepViewController {
   // MARK: IBActions
 
   @IBAction func nextButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickIntroStep Next"
+    ])
     self.goForward()
   }
 

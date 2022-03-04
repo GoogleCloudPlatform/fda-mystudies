@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 class GatewayResourcesListViewController: UIViewController {
 
@@ -48,6 +49,9 @@ class GatewayResourcesListViewController: UIViewController {
 
   // MARK: - ViewController Lifecycle.
   override func viewDidLoad() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Resources"
+    ])
     super.viewDidLoad()
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")
   }

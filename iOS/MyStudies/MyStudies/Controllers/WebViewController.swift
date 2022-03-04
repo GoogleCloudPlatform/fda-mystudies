@@ -21,6 +21,7 @@ import Foundation
 import MessageUI
 import UIKit
 import WebKit
+import FirebaseAnalytics
 
 class WebViewController: UIViewController {
 
@@ -47,7 +48,6 @@ class WebViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    setNavigationBarColor()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -104,12 +104,21 @@ class WebViewController: UIViewController {
   /// Dismiss ViewController
   @IBAction func cancelButtonClicked(_ sender: Any) {
     self.dismiss(animated: true, completion: nil)
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Cancel Website/Consent/Terms/PrivacyPolicy"
+    ])
   }
 
   @IBAction func buttonActionShare(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Share Document"
+    ])
     self.shareDocument { [weak self] (status) in
       if !status {
         self?.view.makeToast(kResourceShareError)
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Unable to ShareResourceAlert Ok"
+        ])
       }
     }
   }
