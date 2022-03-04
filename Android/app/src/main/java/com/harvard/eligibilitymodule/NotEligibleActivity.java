@@ -27,6 +27,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -40,17 +41,26 @@ public class NotEligibleActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 200;
   DbServiceSubscriber dbServiceSubscriber;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_not_eligible);
     dbServiceSubscriber = new DbServiceSubscriber();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     TextView textView = (TextView) findViewById(R.id.notEligibleOK);
     textView.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.not_eligible));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+
             finish();
           }
         });

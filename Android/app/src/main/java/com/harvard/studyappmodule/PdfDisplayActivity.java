@@ -25,16 +25,16 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
-
 import android.util.Base64;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -43,6 +43,7 @@ import com.harvard.studyappmodule.studymodel.ConsentPDF;
 import com.harvard.studyappmodule.studymodel.ConsentPdfData;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.PdfViewerView;
 import com.harvard.utils.Urls;
@@ -55,7 +56,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-
 import javax.crypto.CipherInputStream;
 
 public class PdfDisplayActivity extends AppCompatActivity
@@ -70,6 +70,9 @@ public class PdfDisplayActivity extends AppCompatActivity
   private String title;
   PdfViewerView pdfViewer;
 
+  private CustomFirebaseAnalytics analyticsInstance;
+
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -79,6 +82,8 @@ public class PdfDisplayActivity extends AppCompatActivity
 
 
     pdfViewer = findViewById(R.id.pdfViewer);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+
 
     AppCompatTextView titletxt = (AppCompatTextView) findViewById(R.id.title);
     titletxt.setText(getResources().getString(R.string.consent_pdf1));
@@ -97,7 +102,7 @@ public class PdfDisplayActivity extends AppCompatActivity
               AppController.generateDecryptedConsentPdf(studies.getPdfPath().toString());
           // we will get byte array pass to pdf view
           bytesArray = AppController.cipherInputStreamConvertToByte(cis);
-          setPdfView(bytesArray,file.getName());
+          setPdfView(bytesArray, file.getName());
         } else {
           callGetConsentPdfWebservice();
         }
@@ -111,6 +116,12 @@ public class PdfDisplayActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.pdf_display_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -118,6 +129,12 @@ public class PdfDisplayActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.pdf_display_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             // checking the permissions
             if ((ActivityCompat.checkSelfPermission(
                 PdfDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -203,7 +220,7 @@ public class PdfDisplayActivity extends AppCompatActivity
     // before writing pdf check permission
     pdfWritingPermission();
     pdfViewer.setVisibility(View.VISIBLE);
-    pdfViewer.setPdfFromBytes(bytesArray,"temp.pdf");
+    pdfViewer.setPdfFromBytes(bytesArray, "temp.pdf");
   }
 
   private void pdfWritingPermission() {
@@ -250,9 +267,9 @@ public class PdfDisplayActivity extends AppCompatActivity
       case PERMISSION_REQUEST_CODE:
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
           Toast.makeText(
-              PdfDisplayActivity.this,
-              getResources().getString(R.string.permission_enable_message),
-              Toast.LENGTH_LONG)
+                  PdfDisplayActivity.this,
+                  getResources().getString(R.string.permission_enable_message),
+                  Toast.LENGTH_LONG)
               .show();
         } else {
           sharePdfCreation();

@@ -31,6 +31,7 @@ import com.harvard.usermodule.event.ForgotPasswordEvent;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.ForgotPasswordData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -52,11 +53,13 @@ public class ForgotPasswordActivity extends AppCompatActivity
   private static final int RESEND_CONFIRMATION = 101;
   public static String FROM = "ForgotPasswordActivity";
   private static final int GO_TO_SIGNIN = 111;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_forgot_password);
+    analyticsInstance =CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setTextForView();
     setFont();
@@ -93,6 +96,12 @@ public class ForgotPasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.forgot_password_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               AppController.getHelperHideKeyboard(ForgotPasswordActivity.this);
             } catch (Exception e) {
@@ -106,6 +115,12 @@ public class ForgotPasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.forgot_password_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               AppController.getHelperHideKeyboard(ForgotPasswordActivity.this);
             } catch (Exception e) {
@@ -119,6 +134,12 @@ public class ForgotPasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.forgot_password_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (email.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       ForgotPasswordActivity.this,

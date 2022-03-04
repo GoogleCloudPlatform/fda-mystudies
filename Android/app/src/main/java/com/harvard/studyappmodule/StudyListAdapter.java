@@ -16,11 +16,13 @@
 
 package com.harvard.studyappmodule;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +47,7 @@ import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.RealmList;
 import java.util.ArrayList;
@@ -55,6 +58,7 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   private StudyFragment studyFragment;
   private ArrayList<CompletionAdherence> completionAdherenceCalcs;
   private boolean click = true;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   StudyListAdapter(
       Context context,
@@ -71,6 +75,7 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
     View v =
         LayoutInflater.from(parent.getContext()).inflate(R.layout.study_list_item, parent, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     return new Holder(v);
   }
 
@@ -147,7 +152,7 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   }
 
   @Override
-  public void onBindViewHolder(final Holder holder, final int position) {
+  public void onBindViewHolder(final Holder holder, @SuppressLint("RecyclerView") final int position) {
 
     if (!AppController.getHelperSharedPreference()
         .readPreference(context, context.getResources().getString(R.string.userid), "")
@@ -288,6 +293,12 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    context.getString(R.string.study_list));
+            analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (click) {
               click = false;
               new Handler()

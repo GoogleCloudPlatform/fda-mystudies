@@ -38,6 +38,7 @@ import com.harvard.studyappmodule.activitybuilder.model.Eligibility;
 import com.harvard.studyappmodule.consent.model.CorrectAnswers;
 import com.harvard.studyappmodule.custom.StepSwitcherCustom;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   private String pdfTitle;
   private TaskResult taskResult;
   private ArrayList<CorrectAnswers> correctAnswers;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public static Intent newIntent(
       Context context,
@@ -104,6 +106,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     super.setResult(RESULT_CANCELED);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     super.setContentView(R.layout.stepswitchercustom);
     Toolbar toolbar = findViewById(org.researchstack.backbone.R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -150,6 +153,11 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   }
 
   protected void showNextStep() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getString(R.string.custom_view_task_next));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     boolean eligible = checkStepResult(currentStep, taskResult);
     Step nextStep;
     if (eligible || currentStep.getIdentifier().equalsIgnoreCase("Eligibility Test")) {
@@ -203,6 +211,11 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   }
 
   protected void showPreviousStep() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getString(R.string.custom_view_task_back));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     Step previousStep = task.getStepBeforeStep(currentStep, taskResult);
     if (previousStep == null) {
       finish();
@@ -283,6 +296,11 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
       notifyStepOfBackPress();
       return true;
     } else if (item.getItemId() == R.id.action_settings) {
+      Bundle eventProperties = new Bundle();
+      eventProperties.putString(
+          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+          getString(R.string.custom_view_task_exit));
+      analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
       finish();
       return true;
     }
@@ -359,10 +377,28 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_view_task_edit_task));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     finish();
                   }
                 })
-            .setNegativeButton(R.string.cancel, null)
+            .setNegativeButton(
+                R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_view_task_cancel));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  }
+                })
             .create();
     alertDialog.show();
   }
