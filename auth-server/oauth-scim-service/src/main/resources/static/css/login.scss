@@ -93,3 +93,21 @@ body.my-login-page {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.btn-cancel {
+width: 110px !important;
+    height: 38px !important;
+    line-height: 100% !important;
+    font-size: 100% !important;
+    background: var(--pigeon-gray) !important;
+    color: var(--river-gray)!important;
+}
+
+.btn-add {
+width: 110px !important;
+    height: 38px !important;
+    line-height: 100% !important;
+    font-size: 100% !important;
+    background: var(--blue) !important;
+    color: var(--white) !important;
+}

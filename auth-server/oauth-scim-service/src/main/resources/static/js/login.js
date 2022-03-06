@@ -37,7 +37,7 @@ function validateLoginForm() {
 	var errorDiv = document.getElementById("password_error");
 	var serverContextPath = $('#serverContextPath').val(); 
 	var mfaEnabled = $('#mfaEnabled').val();
-	  
+
 	$.ajax({
 	    url: serverContextPath + "/isGCIUser",
 	    type: "POST",
@@ -46,9 +46,9 @@ function validateLoginForm() {
 	          email: email
 	        },
 	    success: function getResponse(data) {
+	    
 	        var isGCIUser = data.isGciUser;
 	        var phoneNumber = data.phoneNumber;
-	
 	        if(isGCIUser == 'true') {
 	
 			  firebase.auth().onAuthStateChanged(function(user) {
@@ -58,7 +58,6 @@ function validateLoginForm() {
 		   	    console.log("No user signed in " + email);
 		   	    }
 		   	  });
-		   	  
 		   	  firebase.auth().signInWithEmailAndPassword(email, password)
 		   	  	.then(function(firebaseUser) {
 	   	  		  if(mfaEnabled == 'true'){
@@ -110,19 +109,22 @@ function multiFactorAuth(email, password, phoneNumber) {
 	    .then(function(verificationId) {
 	     $('#recaptcha-container').hide();
 	     // Ask user for the verification code.
-	     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="float-left mt-lg mb-lg"><input name="verificationCode" autocomplete="off"/></div></form>');
+	     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="text-center mb-xs mt-md"><input name="verificationCode" autocomplete="off"/></div></form>');
 
-	    bootbox.confirm({
+	    var box= bootbox.confirm({
 	      closeButton: false,
 	      message: form,
 	      buttons: {
 	        'cancel': {
 	          label: 'Cancel',
+	          className: 'btn-cancel',
 	        },
 	        'confirm': {
 	          label: 'OK',
+	          className: 'btn-add',
 	        },
 	      },
+
 	      callback: function (result) {
 	        if (result) {
 		 	  var verificationCode = form.find('input[name=verificationCode]').val();
@@ -143,7 +145,9 @@ function multiFactorAuth(email, password, phoneNumber) {
   			  errorDiv.style.display = "block";
     		  return false;
            });
-		
+           
+            box.find(".btn-primary").removeClass("btn-primary").addClass("btn-add");
+			box.find(".btn-dafault").removeClass("btn-dafault").addClass("btn-cancel");
 	          }
 	        }
 	      })			
