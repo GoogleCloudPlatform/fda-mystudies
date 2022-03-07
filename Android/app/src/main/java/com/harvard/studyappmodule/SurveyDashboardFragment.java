@@ -42,6 +42,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -1094,13 +1095,15 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           ResponseInfoActiveTaskModel responseInfoActiveTaskModel =
                   new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
-                  dashboardData
-                          .getDashboard()
-                          .getStatistics()
-                          .get(i)
-                          .getDataSource()
-                          .getActivity()
-                          .getActivityId())) {
+              dashboardData
+                      .getDashboard()
+                      .getStatistics()
+                      .get(i)
+                      .getDataSource()
+                      .getActivity()
+                      .getActivityId()
+                  + ","
+                  + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
                     dashboardData
                             .getDashboard()
@@ -1121,26 +1124,30 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                     dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
-                    dashboardData
-                            .getDashboard()
-                            .getStatistics()
-                            .get(i)
-                            .getDataSource()
-                            .getActivity()
-                            .getActivityId());
+                dashboardData
+                        .getDashboard()
+                        .getStatistics()
+                        .get(i)
+                        .getDataSource()
+                        .getActivity()
+                        .getActivityId()
+                    + ","
+                    + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
           }
         }
         for (int i = 0; i < dashboardData.getDashboard().getCharts().size(); i++) {
           ResponseInfoActiveTaskModel responseInfoActiveTaskModel =
                   new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
-                  dashboardData
-                          .getDashboard()
-                          .getCharts()
-                          .get(i)
-                          .getDataSource()
-                          .getActivity()
-                          .getActivityId())) {
+              dashboardData
+                      .getDashboard()
+                      .getCharts()
+                      .get(i)
+                      .getDataSource()
+                      .getActivity()
+                      .getActivityId()
+                  + ","
+                  + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
                     dashboardData
                             .getDashboard()
@@ -1161,13 +1168,15 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                     dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey());
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
-                    dashboardData
-                            .getDashboard()
-                            .getCharts()
-                            .get(i)
-                            .getDataSource()
-                            .getActivity()
-                            .getActivityId());
+                dashboardData
+                        .getDashboard()
+                        .getCharts()
+                        .get(i)
+                        .getDataSource()
+                        .getActivity()
+                        .getActivityId()
+                    + ","
+                    + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey());
           }
         }
       }
@@ -1449,22 +1458,24 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               JSONObject jsonObject1 = new JSONObject(String.valueOf(jsonArray.get(i)));
               JSONArray jsonArray1 = (JSONArray) jsonObject1.get("data");
               int duration = 0;
+              Date completedDate = null;
               for (int j = 0; j < jsonArray1.length(); j++) {
                 JSONObject jsonObjectData = (JSONObject) jsonArray1.get(j);
                 Type type = new TypeToken<Map<String, Object>>() {}.getType();
                 Map<String, Object> map = gson.fromJson(String.valueOf(jsonObjectData), type);
                 StepRecordCustom stepRecordCustom = new StepRecordCustom();
-                Date completedDate = new Date();
-                try {
-                  Object completedDateValMap = gson.toJson(map.get("Created"));
-                  Map<String, Object> completedDateVal =
-                          gson.fromJson(String.valueOf(completedDateValMap), type);
-                  if (completedDateVal != null) {
-                    completedDate =
-                            simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
+                if (completedDate == null) {
+                  try {
+                    Object completedDateValMap = gson.toJson(map.get("Created"));
+                    Map<String, Object> completedDateVal =
+                        gson.fromJson(String.valueOf(completedDateValMap), type);
+                    if (completedDateVal != null) {
+                      completedDate =
+                          simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
+                    }
+                  } catch (JsonSyntaxException | ParseException e) {
+                    Logger.log(e);
                   }
-                } catch (JsonSyntaxException | ParseException e) {
-                  Logger.log(e);
                 }
 
                 try {
@@ -1477,91 +1488,134 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 } catch (Exception e) {
                   Logger.log(e);
                 }
+
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
                   String key = entry.getKey();
                   String valueobj = gson.toJson(entry.getValue());
                   Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
                   Object value = vauleMap.get("value");
                   if (!key.equalsIgnoreCase("container")
-                          && !key.equalsIgnoreCase("ParticipantId")
-                          && !key.equalsIgnoreCase("EntityId")
-                          && !key.equalsIgnoreCase("Modified")
-                          && !key.equalsIgnoreCase("lastIndexed")
-                          && !key.equalsIgnoreCase("ModifiedBy")
-                          && !key.equalsIgnoreCase("CreatedBy")
-                          && !key.equalsIgnoreCase("Key")
-                          && !key.equalsIgnoreCase("duration")
-                          && !key.equalsIgnoreCase(stepKey + "Id")
-                          && !key.equalsIgnoreCase("Created")) {
+                      && !key.equalsIgnoreCase("ParticipantId")
+                      && !key.equalsIgnoreCase("EntityId")
+                      && !key.equalsIgnoreCase("Modified")
+                      && !key.equalsIgnoreCase("lastIndexed")
+                      && !key.equalsIgnoreCase("ModifiedBy")
+                      && !key.equalsIgnoreCase("CreatedBy")
+                      && !key.equalsIgnoreCase("Key")
+                      && !key.equalsIgnoreCase("duration")
+                      && !key.equalsIgnoreCase(stepKey + "Id")
+                      && !key.equalsIgnoreCase("Created")) {
+
                     int runId =
-                            dbServiceSubscriber.getActivityRunForStatsAndCharts(
-                                    responseInfoActiveTaskModel.getActivityId(),
-                                    studyId,
-                                    completedDate,
-                                    realm);
+                        dbServiceSubscriber.getActivityRunForStatsAndCharts(
+                            responseInfoActiveTaskModel.getActivityId(),
+                            studyId,
+                            completedDate,
+                            realm);
+
                     if (key.equalsIgnoreCase("count")) {
                       stepRecordCustom.setStepId(stepKey);
                       stepRecordCustom.setTaskStepID(
-                              studyId
-                                      + "_STUDYID_"
-                                      + responseInfoActiveTaskModel.getActivityId()
-                                      + "_"
-                                      + runId
-                                      + "_"
-                                      + stepKey);
-                    } else {
-                      stepRecordCustom.setStepId(key);
-                      stepRecordCustom.setTaskStepID(
-                              studyId
-                                      + "_STUDYID_"
-                                      + responseInfoActiveTaskModel.getActivityId()
-                                      + "_"
-                                      + runId
-                                      + "_"
-                                      + key);
-                    }
-                    stepRecordCustom.setStudyId(studyId);
-                    stepRecordCustom.setActivityID(
-                            studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
-                    stepRecordCustom.setTaskId(
-                            studyId
-                                    + "_STUDYID_"
-                                    + responseInfoActiveTaskModel.getActivityId()
-                                    + "_"
-                                    + runId);
+                          studyId
+                              + "_STUDYID_"
+                              + responseInfoActiveTaskModel.getActivityId()
+                              + "_"
+                              + runId
+                              + "_"
+                              + stepKey);
 
-                    stepRecordCustom.setCompleted(completedDate);
-                    stepRecordCustom.setStarted(completedDate);
+                      stepRecordCustom.setStudyId(studyId);
+                      stepRecordCustom.setActivityID(
+                          studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
+                      stepRecordCustom.setTaskId(
+                          studyId
+                              + "_STUDYID_"
+                              + responseInfoActiveTaskModel.getActivityId()
+                              + "_"
+                              + runId);
 
-                    try {
-                      Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                      value = AppController.getDateFormatForApi().format(anchordate);
-                    } catch (ParseException e) {
-                      Logger.log(e);
-                    }
-                  }
-                  JSONObject jsonObject2 = new JSONObject();
-                  ActivitiesWS activityObj =
+                      stepRecordCustom.setCompleted(completedDate);
+                      stepRecordCustom.setStarted(completedDate);
+
+                      JSONObject jsonObject2 = new JSONObject();
+                      ActivitiesWS activityObj =
                           dbServiceSubscriber.getActivityObj(
-                                  responseInfoActiveTaskModel.getActivityId(), studyId, realm);
-                  if (activityObj.getType().equalsIgnoreCase("task")) {
-                    JSONObject jsonObject3 = new JSONObject();
-                    jsonObject3.put("value", value);
-                    jsonObject3.put("duration", duration);
+                              responseInfoActiveTaskModel.getActivityId(), studyId, realm);
+                      if (activityObj.getType().equalsIgnoreCase("task")) {
+                        JSONObject jsonObject3 = new JSONObject();
+                        jsonObject3.put("value", value);
+                        jsonObject3.put("duration", duration);
 
-                    jsonObject2.put("answer", jsonObject3);
-                  } else {
-                    jsonObject2.put("answer", value);
-                  }
+                        jsonObject2.put("answer", jsonObject3);
+                      } else {
+                        jsonObject2.put("answer", value);
+                      }
 
-                  stepRecordCustom.setResult(String.valueOf(jsonObject2));
-                  Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
-                  if (currentIdNum == null) {
-                    stepRecordCustom.setId(1);
-                  } else {
-                    stepRecordCustom.setId(currentIdNum.intValue() + 1);
+                      stepRecordCustom.setResult(String.valueOf(jsonObject2));
+                      Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
+                      if (currentIdNum == null) {
+                        stepRecordCustom.setId(1);
+                      } else {
+                        stepRecordCustom.setId(currentIdNum.intValue() + 1);
+                      }
+                      dbServiceSubscriber.updateStepRecord(context, stepRecordCustom);
+                    } else {
+                      if (key.equalsIgnoreCase(stepKey)) {
+                        stepRecordCustom.setStepId(key);
+                        stepRecordCustom.setTaskStepID(
+                            studyId
+                                + "_STUDYID_"
+                                + responseInfoActiveTaskModel.getActivityId()
+                                + "_"
+                                + runId
+                                + "_"
+                                + key);
+
+                        stepRecordCustom.setStudyId(studyId);
+                        stepRecordCustom.setActivityID(
+                            studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
+                        stepRecordCustom.setTaskId(
+                            studyId
+                                + "_STUDYID_"
+                                + responseInfoActiveTaskModel.getActivityId()
+                                + "_"
+                                + runId);
+
+                        stepRecordCustom.setCompleted(completedDate);
+                        stepRecordCustom.setStarted(completedDate);
+
+                        try {
+                          Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
+                          value = AppController.getDateFormatForApi().format(anchordate);
+                        } catch (ParseException e) {
+                          Logger.log(e);
+                        }
+
+                        JSONObject jsonObject2 = new JSONObject();
+                        ActivitiesWS activityObj =
+                            dbServiceSubscriber.getActivityObj(
+                                responseInfoActiveTaskModel.getActivityId(), studyId, realm);
+                        if (activityObj.getType().equalsIgnoreCase("task")) {
+                          JSONObject jsonObject3 = new JSONObject();
+                          jsonObject3.put("value", value);
+                          jsonObject3.put("duration", duration);
+
+                          jsonObject2.put("answer", jsonObject3);
+                        } else {
+                          jsonObject2.put("answer", value);
+                        }
+
+                        stepRecordCustom.setResult(String.valueOf(jsonObject2));
+                        Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
+                        if (currentIdNum == null) {
+                          stepRecordCustom.setId(1);
+                        } else {
+                          stepRecordCustom.setId(currentIdNum.intValue() + 1);
+                        }
+                        dbServiceSubscriber.updateStepRecord(context, stepRecordCustom);
+                      }
+                    }
                   }
-                  dbServiceSubscriber.updateStepRecord(context, stepRecordCustom);
                 }
               }
             }
