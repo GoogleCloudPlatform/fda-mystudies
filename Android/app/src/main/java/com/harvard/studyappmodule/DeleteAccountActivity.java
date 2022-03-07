@@ -34,6 +34,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -61,6 +62,7 @@ public class DeleteAccountActivity extends AppCompatActivity
   private ArrayList<String> studyIdList = new ArrayList<>();
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class DeleteAccountActivity extends AppCompatActivity
     setContentView(R.layout.activity_delete_account);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setTextForView();
     setFont();
@@ -105,6 +108,12 @@ public class DeleteAccountActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.delete_account_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -113,6 +122,12 @@ public class DeleteAccountActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.delete_account_disagree));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -121,9 +136,15 @@ public class DeleteAccountActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-              AppController.getHelperProgressDialog()
-                  .showProgress(DeleteAccountActivity.this, "", "", false);
-              deactivateAccount();
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.delete_account_agree));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            AppController.getHelperProgressDialog()
+                .showProgress(DeleteAccountActivity.this, "", "", false);
+            deactivateAccount();
           }
         });
   }

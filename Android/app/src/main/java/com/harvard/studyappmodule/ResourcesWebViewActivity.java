@@ -27,11 +27,6 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
 
 import android.os.StrictMode;
 import android.text.Html;
@@ -40,12 +35,19 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
 import com.harvard.BuildConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.PdfViewerView;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
@@ -57,9 +59,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import javax.crypto.CipherInputStream;
-
 import io.realm.Realm;
+
+import javax.crypto.CipherInputStream;
 
 public class ResourcesWebViewActivity extends AppCompatActivity {
   private AppCompatTextView titleTv;
@@ -80,12 +82,14 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   String resourceId;
   Resource resource;
   PdfViewerView pdfViewer;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     CreateFilePath = "/data/data/" + getPackageName() + "/files/";
     initializeXmlId();
@@ -153,6 +157,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.resources_webview_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -160,6 +170,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.resources_webview_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
 
               Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -182,7 +198,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
               } else {
                 shareIntent.setType("text/html");
                 shareIntent.putExtra(
-                    Intent.EXTRA_TEXT,Html.fromHtml(resource.getContent()).toString());
+                    Intent.EXTRA_TEXT, Html.fromHtml(resource.getContent()).toString());
                 shareIntent.putExtra(
                     Intent.EXTRA_HTML_TEXT, Html.fromHtml(resource.getContent()).toString());
               }

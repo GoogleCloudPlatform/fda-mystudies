@@ -38,6 +38,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -56,6 +58,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.LogoutEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -119,11 +122,13 @@ public class SurveyActivity extends AppCompatActivity
   private String latestVersion;
   private boolean force = false;
   AlertDialog.Builder alertDialogBuilder;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     bindEvents();
     // default settings
@@ -196,21 +201,24 @@ public class SurveyActivity extends AppCompatActivity
     drawer.addDrawerListener(
         new DrawerLayout.DrawerListener() {
           @Override
-          public void onDrawerSlide(View drawerView, float slideOffset) {
-          }
+          public void onDrawerSlide(View drawerView, float slideOffset) {}
 
           @Override
           public void onDrawerOpened(View drawerView) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.survey_side_menu));
+            analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             checkSignOrSignOutScenario();
           }
 
           @Override
-          public void onDrawerClosed(View drawerView) {
-          }
+          public void onDrawerClosed(View drawerView) {}
 
           @Override
-          public void onDrawerStateChanged(int newState) {
-          }
+          public void onDrawerStateChanged(int newState) {}
         });
   }
 
@@ -280,6 +288,12 @@ public class SurveyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_menu));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             openDrawer();
           }
         });
@@ -291,6 +305,12 @@ public class SurveyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_home));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             menulayout.setVisibility(View.VISIBLE);
             toolbar.setVisibility(View.GONE);
             closeDrawer();
@@ -305,6 +325,12 @@ public class SurveyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_resources));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             menulayout.setVisibility(View.GONE);
             toolbar.setVisibility(View.VISIBLE);
             menutitle.setText(R.string.resources);
@@ -328,6 +354,12 @@ public class SurveyActivity extends AppCompatActivity
 
             closeDrawer();
             if (previousValue != R.id.mSignInProfileLayout) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.survey_side_my_account));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               previousValue = R.id.mSignInProfileLayout;
               getSupportFragmentManager()
                   .beginTransaction()
@@ -342,6 +374,12 @@ public class SurveyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_reachout));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             menulayout.setVisibility(View.GONE);
             toolbar.setVisibility(View.VISIBLE);
             closeDrawer();
@@ -369,6 +407,12 @@ public class SurveyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_sign_out));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             closeDrawer();
             previousValue = R.id.mSignOutLayout;
             logout();
@@ -398,7 +442,12 @@ public class SurveyActivity extends AppCompatActivity
             getResources().getString(R.string.sign_out),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
-
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.survey_side_sign_out_ok));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 AppController.getHelperProgressDialog()
                     .showProgress(SurveyActivity.this, "", "", false);
 
@@ -409,7 +458,7 @@ public class SurveyActivity extends AppCompatActivity
                     "Authorization",
                     "Bearer "
                         + SharedPreferenceHelper.readPreference(
-                        SurveyActivity.this, getString(R.string.auth), ""));
+                            SurveyActivity.this, getString(R.string.auth), ""));
                 header.put("correlationId", "" + FdaApplication.getRandomString());
                 header.put("appId", "" + BuildConfig.APP_ID);
                 header.put("mobilePlatform", "ANDROID");
@@ -420,7 +469,7 @@ public class SurveyActivity extends AppCompatActivity
                         Urls.AUTH_SERVICE
                             + "/"
                             + SharedPreferenceHelper.readPreference(
-                            SurveyActivity.this, getString(R.string.userid), "")
+                                SurveyActivity.this, getString(R.string.userid), "")
                             + Urls.LOGOUT,
                         LOGOUT_REPSONSECODE,
                         SurveyActivity.this,
@@ -441,6 +490,12 @@ public class SurveyActivity extends AppCompatActivity
         getResources().getString(R.string.cancel),
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_sign_out_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             dialog.dismiss();
           }
         });
@@ -506,44 +561,69 @@ public class SurveyActivity extends AppCompatActivity
 
   @Override
   public void onClick(View view) {
+    Bundle eventProperties = new Bundle();
     switch (view.getId()) {
       case R.id.myDashboardButtonLayout:
-        dashboardButton.setBackgroundResource(R.drawable.dashboard_blue_active);
-        activitiesButton.setBackgroundResource(R.drawable.activities_grey);
-        resourcesButton.setBackgroundResource(R.drawable.resources_grey);
-        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.frameLayoutContainer, surveyDashboardFragment, "fragment")
-            .commit();
+        if (previousValue != R.id.myDashboardButtonLayout) {
+          previousValue = R.id.myDashboardButtonLayout;
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.dashboard_label));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+          dashboardButton.setBackgroundResource(R.drawable.dashboard_blue_active);
+          activitiesButton.setBackgroundResource(R.drawable.activities_grey);
+          resourcesButton.setBackgroundResource(R.drawable.resources_grey);
+          dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+          activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          getSupportFragmentManager()
+              .beginTransaction()
+              .replace(R.id.frameLayoutContainer, surveyDashboardFragment, "fragment")
+              .commit();
+        }
         break;
 
       case R.id.mActivitiesButtonLayout:
-        dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
-        activitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
-        resourcesButton.setBackgroundResource(R.drawable.resources_grey);
-        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.frameLayoutContainer, surveyActivitiesFragment, "fragment")
-            .commit();
+        if (previousValue != R.id.mActivitiesButtonLayout) {
+          previousValue = R.id.mActivitiesButtonLayout;
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.activities_label));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+          dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+          activitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
+          resourcesButton.setBackgroundResource(R.drawable.resources_grey);
+          dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+          resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          getSupportFragmentManager()
+              .beginTransaction()
+              .replace(R.id.frameLayoutContainer, surveyActivitiesFragment, "fragment")
+              .commit();
+        }
         break;
 
       case R.id.mResourcesButtonLayout:
-        dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
-        activitiesButton.setBackgroundResource(R.drawable.activities_grey);
-        resourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
-        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-        getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.frameLayoutContainer, surveyResourcesFragment, "fragment")
-            .commit();
+        if (previousValue != R.id.mResourcesButtonLayout) {
+          previousValue = R.id.mResourcesButtonLayout;
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.resources_label));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+          dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+          activitiesButton.setBackgroundResource(R.drawable.activities_grey);
+          resourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
+          dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+          getSupportFragmentManager()
+              .beginTransaction()
+              .replace(R.id.frameLayoutContainer, surveyResourcesFragment, "fragment")
+              .commit();
+        }
         break;
     }
   }
@@ -802,6 +882,12 @@ public class SurveyActivity extends AppCompatActivity
               positiveButton,
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   startActivityForResult(
                       new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
                       RESULT_CODE_UPGRADE);
@@ -812,12 +898,18 @@ public class SurveyActivity extends AppCompatActivity
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                        SurveyActivity.this,
-                        "Please update the app to continue using",
-                        Toast.LENGTH_SHORT)
+                            SurveyActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {
@@ -867,10 +959,16 @@ public class SurveyActivity extends AppCompatActivity
                   "ok",
                   new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                      Bundle eventProperties = new Bundle();
+                      eventProperties.putString(
+                          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          getString(R.string.app_update_next_time_ok));
+                      analyticsInstance.logEvent(
+                          CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                       dialog.dismiss();
                     }
-                  }).show();
-
+                  })
+              .show();
         }
       }
     }

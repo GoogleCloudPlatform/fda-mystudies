@@ -63,6 +63,7 @@ import com.harvard.usermodule.event.LogoutEvent;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
@@ -89,6 +90,7 @@ public class StudyActivity extends AppCompatActivity
   private AppCompatTextView titleFdaListens;
   private AppCompatTextView title;
   private AppCompatTextView sidebarTitle;
+  private CustomFirebaseAnalytics analyticsInstance;
   private LinearLayout homeLayout;
   private AppCompatTextView homeLabel;
   private LinearLayout resourcesLayout;
@@ -133,6 +135,7 @@ public class StudyActivity extends AppCompatActivity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
       isExit = false;
       setContentView(R.layout.activity_study);
@@ -490,6 +493,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_side_menu));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             checkSignOrSignOutScenario();
             openDrawer();
             try {
@@ -503,6 +512,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.filter_clicked));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(StudyActivity.this, FilterActivity.class);
             startActivityForResult(intent, 999);
           }
@@ -511,6 +526,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_search));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             toolBarLayout.setVisibility(View.GONE);
             searchToolBarLayout.setVisibility(View.VISIBLE);
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -578,6 +599,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_search_clear));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             searchEditText.setText("");
             clearLayout.setVisibility(View.INVISIBLE);
             studyFragment.setStudyFilteredStudyList();
@@ -588,6 +615,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_search_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             searchEditText.setText("");
             setToolBarEnable();
             hideKeyboard();
@@ -599,6 +632,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_notification));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(StudyActivity.this, NotificationActivity.class);
             startActivityForResult(intent, NOTIFICATION_RESULT);
           }
@@ -624,6 +663,11 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.study_info));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             SetDialogHelper.setNeutralDialog(
                 StudyActivity.this,
                 getResources().getString(R.string.registration_message),
@@ -715,8 +759,12 @@ public class StudyActivity extends AppCompatActivity
 
   @Override
   public void onClick(View view) {
+    Bundle eventProperties = new Bundle();
     switch (view.getId()) {
       case R.id.mHomeLayout:
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.study_side_home));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         previousValue = R.id.mHomeLayout;
         titleFdaListens.setText(getResources().getString(R.string.app_name));
         title.setText("");
@@ -750,6 +798,10 @@ public class StudyActivity extends AppCompatActivity
         break;
 
       case R.id.mResourcesLayout:
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            getString(R.string.study_side_resources));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         if (previousValue == R.id.mResourcesLayout) {
           closeDrawer();
         } else {
@@ -769,6 +821,10 @@ public class StudyActivity extends AppCompatActivity
         break;
 
       case R.id.mReachoutLayout:
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            getString(R.string.study_side_reachout));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         reachoutMenuClicked();
         break;
 
@@ -776,6 +832,11 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.study_side_sign_in));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           closeDrawer();
           SharedPreferenceHelper.writePreference(
               StudyActivity.this, getString(R.string.loginflow), "SideMenu");
@@ -805,6 +866,11 @@ public class StudyActivity extends AppCompatActivity
             closeDrawer();
           } else {
             previousValue = R.id.mSignInProfileLayout;
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_side_my_account));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             titleFdaListens.setText("");
             title.setText(getResources().getString(R.string.profile));
             editBtnLayout.setVisibility(View.VISIBLE);
@@ -818,6 +884,12 @@ public class StudyActivity extends AppCompatActivity
                 new View.OnClickListener() {
                   @Override
                   public void onClick(View view) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.study_edit));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     if (editTxt
                         .getText()
                         .toString()
@@ -846,6 +918,11 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.study_side_sign_up));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           titleFdaListens.setText("");
           title.setText(getResources().getString(R.string.signup));
           editBtnLayout.setVisibility(View.GONE);
@@ -860,10 +937,19 @@ public class StudyActivity extends AppCompatActivity
               .commit();
         } else {
           // SignOut Reach out menu click
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.study_side_reachout));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           reachoutMenuClicked();
         }
         break;
       case R.id.mSignOutLayout:
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            getString(R.string.study_side_sign_out));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         closeDrawer();
         logout();
         break;
@@ -931,7 +1017,12 @@ public class StudyActivity extends AppCompatActivity
             getResources().getString(R.string.sign_out),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
-
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.study_side_sign_out_ok));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 AppController.getHelperProgressDialog()
                     .showProgress(StudyActivity.this, "", "", false);
                 HashMap<String, String> params = new HashMap<>();
@@ -973,6 +1064,12 @@ public class StudyActivity extends AppCompatActivity
         getResources().getString(R.string.cancel),
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_side_sign_out_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             dialog.dismiss();
           }
         });
@@ -1139,10 +1236,16 @@ public class StudyActivity extends AppCompatActivity
                   "ok",
                   new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                      Bundle eventProperties = new Bundle();
+                      eventProperties.putString(
+                          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          getString(R.string.app_update_next_time_ok));
+                      analyticsInstance.logEvent(
+                          CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                       dialog.dismiss();
                     }
-                  }).show();
-
+                  })
+              .show();
         }
       }
     }
@@ -1307,6 +1410,12 @@ public class StudyActivity extends AppCompatActivity
               positiveButton,
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   startActivityForResult(
                       new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
                       RESULT_CODE_UPGRADE);
@@ -1317,12 +1426,18 @@ public class StudyActivity extends AppCompatActivity
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                        StudyActivity.this,
-                        "Please update the app to continue using",
-                        Toast.LENGTH_SHORT)
+                            StudyActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {

@@ -15,14 +15,14 @@
 
 package com.harvard.eligibilitymodule;
 
-import static com.harvard.studyappmodule.StudyFragment.CONSENT;
-
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -34,11 +34,17 @@ import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.utils.AppController;
-import io.realm.Realm;
-import java.util.List;
+import com.harvard.utils.CustomFirebaseAnalytics;
+
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
+
+import java.util.List;
+
+import io.realm.Realm;
+
+import static com.harvard.studyappmodule.StudyFragment.CONSENT;
 
 public class ComprehensionFailureActivity extends AppCompatActivity {
 
@@ -46,12 +52,14 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   private EligibilityConsent eligibilityConsent;
   private Realm realm;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_comprehension_failure);
 
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     TextView retrybutton = findViewById(R.id.retrybutton);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
@@ -59,6 +67,13 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.eligibility_failure_message));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
                     getIntent().getStringExtra("studyId"), realm);
@@ -76,17 +91,17 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
   private void startconsent(Consent consent) {
     ConsentBuilder consentBuilder = new ConsentBuilder();
     List<Step> consentstep =
-        consentBuilder.createsurveyquestion(this, consent, getIntent().getStringExtra("title"));
+            consentBuilder.createsurveyquestion(this, consent, getIntent().getStringExtra("title"));
     Task consentTask = new OrderedTask(CONSENT, consentstep);
     Intent intent =
-        CustomConsentViewTaskActivity.newIntent(
-            this,
-            consentTask,
-            getIntent().getStringExtra("studyId"),
-            getIntent().getStringExtra("enrollId"),
-            getIntent().getStringExtra("title"),
-            getIntent().getStringExtra("eligibility"),
-            getIntent().getStringExtra("type"));
+            CustomConsentViewTaskActivity.newIntent(
+                    this,
+                    consentTask,
+                    getIntent().getStringExtra("studyId"),
+                    getIntent().getStringExtra("enrollId"),
+                    getIntent().getStringExtra("title"),
+                    getIntent().getStringExtra("eligibility"),
+                    getIntent().getStringExtra("type"));
     startActivityForResult(intent, CONSENT_RESPONSE_CODE);
   }
 
