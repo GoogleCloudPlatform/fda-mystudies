@@ -103,3 +103,11 @@ meter::-webkit-meter-even-less-good-value{background:red;} */
 .cursor__none {
   cursor: default !important;
 }
+
+.form-group .custom__labels label:before {
+  display: none !important;
+}
+
+.search-icon {
+  display: none !important;
+}

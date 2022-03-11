@@ -27,40 +27,106 @@
 </div>
 <div>
   <div class="max__w__1280 add__location">
-    <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
-      <div class="border-bottom__c4d1e6 flex__justify__space-between">
-        <div>
-          <div class="form-group">
-            <div class="label">Location ID</div>
-            <div class="font16__grey">{{ locationBackup.customId }}</div>
+    <div class=" card__inside__pad m-none p-lg">
+      
+      <div class="bg__white box__shadow-cmn dsk__view_tbl">
+        <div class="border-bottom__c4d1e6 flex__justify__space-between">
+          <div>
+            <div class="form-group">
+              <div class="label">Location<span class="visibility__hidden">_</span>ID</div>
+              <div class="font16__grey">{{ locationBackup.customId }}</div>
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <div class="label txt_style_unset">Location<span class="visibility__hidden">_</span>name</div>
+              <div class="font16__grey ln-brk-anywhere">{{ locationBackup.name }}</div>
+            </div>
+          </div>
+          <div>
+            <div class="form-group">
+              <div
+                [ngClass]="locationBackup.status == 1 ? 'active__' : 'deactive__'"
+              >
+                {{ locationBackup.status == 1 ? "Active" : "Deactivated" }}
+              </div>
+            </div>
           </div>
         </div>
-        <div>
-          <div class="form-group">
-            <div class="label txt_style_unset">Location name</div>
-            <div class="font16__grey">{{ locationBackup.name }}</div>
-          </div>
+       
+            <div class="form-group">
+              <div class="label">Description</div>
+              <div class="font16__grey ln-brk-anywhere">
+                {{ locationBackup.description }}
+              </div>
+           
         </div>
-        <div>
-          <div class="form-group">
-            <div
+  </div>
+        <table
+        class="table  custom__table mbl__view_tbl">
+        <thead class="custom__thead">
+          <tr>
+            <span class="text__387fea__12 mobile__view mr-sm sort_by_txt pt-1">
+              Sort by:
+            </span>
+            <th>
+             
+                Location ID
+             
+            </th>
+            <th>
+             
+                Location name
+              
+            </th>
+            <th>Status</th>
+            <th>
+              Description
+            </th>
+          </tr>
+        </thead>
+        <tbody class="custom__tbody table_row_hover_shadow">
+          <tr
+            class="location_row border__bottom__red border-top__c4d1e6 progress__bar">
+            <td>
+              <span class="tbl__td__label">Location<span class="visibility__hidden">_</span>ID:</span>
+              <span
+                
+                class="outline__none"
+              >
+                {{ location.customId }}
+              </span>
+            </td>
+            <td>
+              <span class="tbl__td__label">Location<span class="visibility__hidden">_</span>name:</span>
+                    <span
+                     
+                      class="outline__none ln-brk-anywhere"
+                    >
+                      {{ location.name }}
+                    </span>
+            </td>
+            <td>
+             
+              <span class="tbl__td__label">Status: </span>
+              <span
               [ngClass]="locationBackup.status == 1 ? 'active__' : 'deactive__'"
-            >
+                class="outline__none ln-brk-anywhere"
+              >
               {{ locationBackup.status == 1 ? "Active" : "Deactivated" }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="">
-        <div class="">
-          <div class="form-group">
-            <div class="label">Description</div>
-            <div class="font16__grey">
+              </span>
+            </td>
+            <td>
+              <span class="tbl__td__label">Description</span>
+              <span class="outline__none ln-brk-anywhere"
+              >
               {{ locationBackup.description }}
-            </div>
-          </div>
-        </div>
-      </div>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+  
+      </table>
     </div>
 
     <div
