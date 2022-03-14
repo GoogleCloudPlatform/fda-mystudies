@@ -36,6 +36,7 @@ import androidx.core.content.FileProvider;
 import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.PdfViewerView;
 
@@ -56,11 +57,13 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   private String intentTitle;
   private String intentType;
   private File finalSharingFile;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     initializeXmlId();
     intentTitle = getIntent().getStringExtra("title");
@@ -74,6 +77,12 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.gateway_resource_webview_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -81,6 +90,12 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.gateway_resource_webview_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
 
               Intent shareIntent = new Intent(Intent.ACTION_SEND);

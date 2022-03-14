@@ -33,7 +33,6 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
@@ -44,6 +43,7 @@ import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.SignupActivity;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -67,11 +67,13 @@ public class GatewayActivity extends AppCompatActivity {
   private String latestVersion;
   private boolean force = false;
   AlertDialog.Builder alertDialogBuilder;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_gateway);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setFont();
     bindEvents();
@@ -165,6 +167,11 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.new_user));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(GatewayActivity.this, SignupActivity.class);
             startActivity(intent);
           }
@@ -174,6 +181,11 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.sign_in_btn));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             loadLogin();
           }
         });
@@ -182,6 +194,11 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.get_started));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             GetStartedEvent getStartedEvent = new GetStartedEvent();
             getStartedEvent.setCommingFrom(COMMING_FROM);
             onEvent(getStartedEvent);
@@ -269,10 +286,16 @@ public class GatewayActivity extends AppCompatActivity {
                   "ok",
                   new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                      Bundle eventProperties = new Bundle();
+                      eventProperties.putString(
+                          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          getString(R.string.app_update_next_time_ok));
+                      analyticsInstance.logEvent(
+                          CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                       dialog.dismiss();
                     }
-                  }).show();
-
+                  })
+              .show();
         }
       }
     }
@@ -331,6 +354,12 @@ public class GatewayActivity extends AppCompatActivity {
               positiveButton,
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   startActivityForResult(
                       new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
                       RESULT_CODE_UPGRADE);
@@ -341,12 +370,18 @@ public class GatewayActivity extends AppCompatActivity {
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                        GatewayActivity.this,
-                        "Please update the app to continue using",
-                        Toast.LENGTH_SHORT)
+                            GatewayActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {

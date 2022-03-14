@@ -37,6 +37,7 @@ import androidx.core.content.FileProvider;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.PdfViewerView;
 import io.realm.Realm;
@@ -62,6 +63,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
   private String comingFrom = "";
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
     setContentView(R.layout.activity_consent_completed);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     initializeXmlId();
     try {
@@ -87,6 +90,12 @@ public class ConsentCompletedActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.consent_complete_viewPdf));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if ((ActivityCompat.checkSelfPermission(
                         ConsentCompletedActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED)
@@ -113,6 +122,12 @@ public class ConsentCompletedActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.consent_complete_done));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (click) {
               click = false;
               new Handler()
@@ -208,6 +223,12 @@ public class ConsentCompletedActivity extends AppCompatActivity {
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.consent_complete_share));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent shareIntent = new Intent(Intent.ACTION_SEND);
               shareIntent.setData(Uri.parse("mailto:"));
               shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.signed_consent));
