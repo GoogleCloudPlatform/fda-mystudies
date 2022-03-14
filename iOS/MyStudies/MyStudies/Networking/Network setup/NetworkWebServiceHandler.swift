@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import FirebaseAnalytics
 
 enum RequestType: NSInteger {
   case requestTypeJSON
@@ -306,6 +307,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     if httpHeaders != nil && (httpHeaders?.count)! > 0 {
       request.allHTTPHeaderFields = httpHeaders as? [String: String]
     }
+
     self.fireRequest(request, requestName: requestName)
   }
 
@@ -422,7 +424,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     requestName: NSString?,
     error: NSError?
   ) {
-
+    
     if error != nil {
       if shouldRetryRequest && maxRequestRetryCount > 0 {
         maxRequestRetryCount -= 1
@@ -450,6 +452,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           responseDict =
             try JSONSerialization.jsonObject(with: data!, options: [])
             as? NSDictionary
+          
         } catch let error {
           Logger.sharedInstance.error("Serialization error: \(requestName ?? "")", error.localizedDescription)
           responseDict = [:]
@@ -474,12 +477,17 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
               options: .allowFragments
             )
             as? [String: Any]
+          
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Account Existing OKAlert"
+            ])
           } else {
             error1 = error ?? NSError(domain: "", code: statusCode, userInfo: [:])
           }
         } else {
+
           error1 = NSError(
             domain: NSURLErrorDomain,
             code: statusCode,

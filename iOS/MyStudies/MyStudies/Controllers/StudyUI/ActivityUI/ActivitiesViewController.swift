@@ -21,6 +21,7 @@ import Foundation
 import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 let kActivities = "activities"
 
@@ -82,6 +83,9 @@ class ActivitiesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities"
+    ])
 
     addObservers()
     selectedFilter = ActivityFilterType.all
@@ -115,6 +119,11 @@ class ActivitiesViewController: UIViewController {
     tableView?.addSubview(refreshControl!)
 
     setupStandaloneNotifications()
+    
+    UserDefaults.standard.removeObject(forKey: "isAlertShown")
+    UserDefaults.standard.synchronize()
+
+        
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -775,10 +784,16 @@ class ActivitiesViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities Home"
+    ])
     self.performSegue(withIdentifier: kActivityUnwindToStudyListIdentifier, sender: self)
   }
 
   @IBAction func filterButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities Filter"
+    ])
     let frame = self.view.frame
     if self.selectedFilter == nil {
       self.selectedFilter = ActivityFilterType.all
@@ -1017,6 +1032,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     let requestName = requestName as String
+    print("StartRequest11 :: \(requestName)")
+    
     if requestName != EnrollmentMethods.updateStudyState.method.methodName
       && requestName != ResponseMethods.updateActivityState.method.methodName
       && requestName != WCPMethods.studyDashboard.method.methodName
@@ -1032,6 +1049,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
+    print("FinishRequest22 :: \(requestName)")
+    
     if requestName as String == ResponseMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
     } else if requestName as String == WCPMethods.activityList.method.methodName {
@@ -1086,6 +1105,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
+    print("FailedRequestName33 :: \(requestName)")
 
     self.removeProgressIndicator()
 
@@ -1099,15 +1119,19 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Activity Error Ok Alert"
+          ])
+
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
       return
     }
     let requestName = requestName as String
-
+    
     switch requestName {
-
+  
     case ResponseMethods.activityState.method.methodName:
       if error.code != kNoNetworkErrorCode {
         self.loadActivitiesFromDatabase()
@@ -1226,7 +1250,8 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         let study = Study.currentStudy
         let activity = Study.currentActivity
         
-        if activity?.type != .activeTask {          
+        if activity?.type != .activeTask {
+          
           // Update RestortionData for Activity in DB
           DBHandler.updateActivityRestortionDataFor(
             activity: activity!,
@@ -1512,8 +1537,12 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           && activityId == Study.currentActivity?.actvityId
           && (stepViewController is ORKInstructionStepViewController)
         {
-
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "GoForward"
+          ])
           DispatchQueue.main.asyncAfter(deadline: .now()) {
+//            NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
             stepViewController.goForward()
           }
         }
@@ -1553,15 +1582,6 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     if let step = step as? QuestionStep,
       step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false
     {
-      let valStep = step
-      if valStep.isOptional {
-        UserDefaults.standard.set("true", forKey: "isOptionalTextChoice")
-        UserDefaults.standard.synchronize()
-      } else {
-        UserDefaults.standard.set("false", forKey: "isOptionalTextChoice")
-        UserDefaults.standard.synchronize()
-      }
-      
       if let result = taskViewController.result.stepResult(forStepIdentifier: step.identifier) {
         self.managedResult[step.identifier] = result
       }
@@ -1583,8 +1603,6 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
       return textChoiceQuestionController
     }
-    UserDefaults.standard.set("", forKey: "isOptionalTextChoice")
-    UserDefaults.standard.synchronize()
 
     if let step = step as? CustomInstructionStep {
       return CustomInstructionStepViewController(step: step)

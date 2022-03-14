@@ -40,7 +40,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
@@ -83,7 +82,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -257,41 +255,36 @@ public class AppController {
   }
 
   public static Realm getRealmobj(final Context context) {
-    if (config == null) {
-      byte[] key = getkey(context, context.getString(R.string.app_name));
-      config =
+    Realm realm;
+    try {
+      realm = Realm.getDefaultInstance();
+    } catch (Exception e) {
+      byte[] key = AppController.getkey(context, context.getString(R.string.app_name));
+      RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
               .schemaVersion(1)
               .migration(new RealmMigrationHelper())
               .build();
-    }
-    try {
-      return Realm.getInstance(config);
-    } catch (Exception e) {
+      Realm.setDefaultConfiguration(config);
+      realm = Realm.getDefaultInstance();
       Logger.log(e);
-      new Handler(Looper.getMainLooper()).post(new Runnable() {
-        @Override
-        public void run() {
-          Toast.makeText(context.getApplicationContext(), "Critical error occurred, Please clear data and sign in again", Toast.LENGTH_SHORT).show();
-        }
-      });
-      return null;
     }
+    return realm;
   }
 
   private static byte[] getkey(Context context, String keyName) {
     RealmEncryptionHelper realmEncryptionHelper = RealmEncryptionHelper.initHelper(context, keyName);
     byte[] key = realmEncryptionHelper.getEncryptKey();
     String s = bytesToHex(key);
-//    Log.e("realm key for " + keyName, "" + s);
+    Log.wtf("realm key for " + keyName, "" + s);
     return key;
   }
 
   public static void checkIfAppNameChangeAndMigrate(Context context) {
     if (!context.getString(R.string.app_name).equalsIgnoreCase(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)))) {
       byte[] key = getkey(context, SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
-      config =
+      RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
               .schemaVersion(1)
@@ -299,16 +292,21 @@ public class AppController {
               .build();
       Realm realm = Realm.getInstance(config);
       RealmEncryptionHelper.getInstance().deleteEntry(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
-      byte[] newKey = getkey(context, context.getString(R.string.app_name));
-      String s = bytesToHex(newKey);
-      realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), newKey);
-      config = null;
+      byte[] NewKey = getkey(context, context.getString(R.string.app_name));
+      realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), NewKey);
       realm.close();
       File file = new File(context.getFilesDir(), "default.realm");
       file.delete();
       renameFile(context, "temp.realm", "default.realm");
     }
-    getkey(context, context.getString(R.string.app_name)); // To initialize the realm once before starting the app
+    byte[] key = AppController.getkey(context, context.getString(R.string.app_name));
+    RealmConfiguration config =
+        new RealmConfiguration.Builder()
+            .encryptionKey(key)
+            .schemaVersion(1)
+            .migration(new RealmMigrationHelper())
+            .build();
+    Realm.setDefaultConfiguration(config);
     SharedPreferenceHelper.writePreference(context, "appname", context.getString(R.string.app_name));
   }
 
