@@ -23,6 +23,7 @@ import MediaPlayer
 import ResearchKit
 import SDWebImage
 import UIKit
+import FirebaseAnalytics
 
 class StudyOverviewViewControllerFirst: UIViewController {
 
@@ -155,6 +156,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func watchVideoButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverViewFirst watch video"
+    ])
 
     guard let urlString = overviewSectionDetail.link,
       let url = URL(string: urlString)
@@ -183,6 +187,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverViewFirst Join Study"
+    ])
 
     if User.currentUser.userType == UserType.anonymousUser {
       let leftController =
@@ -193,6 +200,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverviewFirst visit website"
+    ])
 
     if overViewWebsiteLink != nil {
 

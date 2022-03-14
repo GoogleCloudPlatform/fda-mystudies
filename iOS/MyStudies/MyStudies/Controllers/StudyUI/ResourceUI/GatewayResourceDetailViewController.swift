@@ -20,6 +20,7 @@
 import MessageUI
 import UIKit
 import WebKit
+import FirebaseAnalytics
 
 let resourcesDownloadPath = AKUtility.baseFilePath + "/Resources"
 
@@ -150,10 +151,16 @@ class GatewayResourceDetailViewController: UIViewController {
   // MARK: Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "GatewatResourceDetail Cancel"
+    ])
     self.dismiss(animated: true, completion: nil)
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "App Glosary Share"
+    ])
     self.shareResource()
   }
 

@@ -17,6 +17,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import FirebaseAnalytics
 
 let kComprehensionFailureViewIdentifier = "ComprehensionFailure"
 
@@ -63,12 +64,18 @@ class ComprehensionFailure: UIView {
   // MARK: - Button Actions
 
   @IBAction func buttonCancelAction() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ComprehensionFailure Cancel"
+    ])
     self.delegate?.didTapOnCancel()
     self.isHidden = true
     self.removeFromSuperview()
   }
 
   @IBAction func buttonRetryAction() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ComprehensionFailure Retry"
+    ])
     self.delegate?.didTapOnRetry()
     self.isHidden = true
     self.removeFromSuperview()
