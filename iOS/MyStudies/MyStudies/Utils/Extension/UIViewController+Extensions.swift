@@ -19,6 +19,7 @@
 
 import QuickLook
 import UIKit
+import FirebaseAnalytics
 
 let kResourceName = "fda_preload"
 
@@ -48,7 +49,7 @@ extension UIViewController {
   }
 
   func setNavigationBarItem() {
-
+    
     self.addLeftBarButtonWithImage(UIImage(named: "menu_icn")!)
     self.slideMenuController()?.removeLeftGestures()
     self.slideMenuController()?.removeRightGestures()
@@ -157,7 +158,7 @@ extension UIViewController {
   /// - Returns: Instance of child `UIButton`
   @discardableResult
   public func addBackBarButton() -> UIButton {
-
+    
     let customView = UIView(frame: CGRect(x: -15, y: 0, width: 46, height: 36))
 
     let backbutton: UIButton = UIButton.init(frame: customView.frame)
@@ -204,6 +205,9 @@ extension UIViewController {
   }
 
   @objc public func popController() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back Button"
+    ])
     _ = self.navigationController?.popViewController(animated: true)
   }
 }
@@ -243,3 +247,4 @@ extension UIViewController {
   }
 
 }
+

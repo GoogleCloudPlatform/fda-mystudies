@@ -301,6 +301,7 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     for (UIScrollView *view in pageViewController.view.subviews) {
         if ([view isKindOfClass:[UIScrollView class]]) {
             view.scrollEnabled = NO;
+          [view setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
         }
     }
     return pageViewController;
@@ -343,9 +344,13 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     
     self.taskRunUUID = taskRunUUID;
     
-    [self.childNavigationController.navigationBar setShadowImage:[UIImage new]];
+  [self.childNavigationController.navigationBar setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
+  [self.navigationController.navigationBar setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
+  [self.navigationBar setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
+  
+  [self.childNavigationController.view setBackgroundColor:[[UIColor clearColor] colorWithAlphaComponent:1.0]];
     self.hairline = [self findHairlineViewUnder:self.childNavigationController.navigationBar];
-    self.hairline.alpha = 0.0f;
+    self.hairline.alpha = 1.0f;
     self.childNavigationController.toolbar.clipsToBounds = YES;
     
     // Ensure taskRunUUID has non-nil valuetaskRunUUID
@@ -1136,6 +1141,9 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 - (void)observedScrollViewDidScroll:(UIScrollView *)scrollView {
     // alpha's range [0.0, 1.0]
     float alpha = MAX( MIN(scrollView.contentOffset.y / 64.0, 1.0), 0.0);
+  
+//  printf(@"alpha---%f", alpha);
+  printf("alpha---%f", alpha);
     self.hairline.alpha = alpha;
     _pageViewController.tableView.contentOffset = scrollView.contentOffset;
 }
@@ -1293,7 +1301,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     if (supportSaving && saveable) {
         [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_OPTION_SAVE", nil)
                                                   style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction *action) {
+                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKAction":@"ORKSaveForLater"};
+          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                         [self finishWithReason:ORKTaskViewControllerFinishReasonSaved error:nil];
                                                     });
@@ -1306,13 +1315,20 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
                                               style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction *action) {
                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                  NSDictionary *userDict = @{@"ORKAction":@"ORKEndTask"};
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
                                                     [self finishWithReason:ORKTaskViewControllerFinishReasonDiscarded error:nil];
                                                 });
                                             }]];
     
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil)
                                               style:UIAlertActionStyleCancel
-                                            handler:nil]];
+                                            handler:^(UIAlertAction *action) {
+                                                dispatch_async(dispatch_get_main_queue(), ^{NSDictionary *userDict = @{@"ORKAction":@"ORKCancelAlert"};
+                                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
+                                                [self finishWithReason:ORKTaskViewControllerFinishReasonDiscarded error:nil];
+                                            });
+                                        }]];
     
     [self presentViewController:alert animated:YES completion:nil];
 }
@@ -1347,6 +1363,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 
 - (IBAction)learnMoreAction:(id)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(taskViewController:learnMoreForStep:)]) {
+      NSDictionary* userInfo = @{@"ORKAction": @("ORKLearnMore")};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userInfo];
         [self.delegate taskViewController:self learnMoreForStep:self.currentStepViewController];
     }
 }
@@ -1425,7 +1443,7 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
         }
     }
     
-    // Alert the delegate that the step is finished 
+    // Alert the delegate that the step is finished
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     if ([strongDelegate respondsToSelector:@selector(taskViewController:stepViewControllerWillDisappear:navigationDirection:)]) {
         [strongDelegate taskViewController:self stepViewControllerWillDisappear:stepViewController navigationDirection:direction];
