@@ -22,6 +22,7 @@ import ResearchKit
 
 let kActivityResult = "result"
 let kActivityResults = "results"
+let kActivityStepSubmittedTime = "submittedTime"
 
 /// ActivityResult stores the result of each activity, whether it is questionary or active task.
 class ActivityResult {
@@ -123,6 +124,9 @@ class ActivityResult {
 
       activityDict?[kActivityEndTime] = Utilities.getStringFromDate(date: self.endTime!)
     }
+    let currentDate = Date()
+    let dateString = Utilities.getStringFromDate(date: currentDate)
+    activityDict?[kActivityStepSubmittedTime] = dateString
 
     if Utilities.isValidObject(someObject: result as AnyObject?) {
 

@@ -24,6 +24,8 @@
 #import "NSURLSession+GULPromises.h"
 #import "GULLogger.h"
 #import "GULLoggerLevel.h"
+#import "GULOriginalIMPConvenienceMacros.h"
+#import "GULSwizzler.h"
 #import "GULNSData+zlib.h"
 #import "GULMutableDictionary.h"
 #import "GULNetwork.h"

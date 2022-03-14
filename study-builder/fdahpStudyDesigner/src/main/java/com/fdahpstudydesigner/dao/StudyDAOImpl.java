@@ -6097,11 +6097,9 @@ public class StudyDAOImpl implements StudyDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       if (StringUtils.isNotEmpty(action)) {
         // For checking active task or questionnaire done or not
-        String searchQuery =
-            "from ActiveTaskBo where studyId =:studyId and shortTitle IS NOT NULL ";
         query =
             session
-                .createQuery(searchQuery)
+                .getNamedQuery("ActiveTaskBo.getActiveTasksByByStudyIdDone")
                 .setString(FdahpStudyDesignerConstants.STUDY_ID, studyId);
         completedactiveTasks = query.list();
         query =

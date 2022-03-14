@@ -237,7 +237,7 @@ class AnchorDateHandler {
             }
 
             if let data = latestResponse["data"] as? [JSONDictionary],
-              let userResponseDict = data[safe: 2],
+              let userResponseDict = data.first(where: { $0[emptyAnchorDateDetail.sourceKey] != nil }),
               let anchorDateObject = userResponseDict[emptyAnchorDateDetail.sourceKey]
                 as? [String: String],
               let anchorDateString = anchorDateObject["value"]

@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 enum SelectedTab: String {
   case day = "Day"
@@ -129,6 +130,10 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
   @IBAction func dayWeekMonthButtonAction(_ sender: AnyObject) {
 
     if sender.tag == 11 {
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "StudyDashboard Day"
+      ])
+
       // Day clicked
       buttonDay?.setTitle(kDaySpaces, for: UIControl.State.normal)
       buttonWeek?.setTitle(kWeek, for: UIControl.State.normal)
@@ -149,6 +154,10 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       self.updateForwardBtnState()
 
     } else if sender.tag == 12 {
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "StudyDashboard Week"
+      ])
+
       // Week clicked
       buttonWeek?.setTitle(kWeekSpaces, for: UIControl.State.normal)
       buttonDay?.setTitle(kDay, for: UIControl.State.normal)
@@ -173,6 +182,9 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
       self.updateForwardBtnState()
 
     } else if sender.tag == 13 {
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "StudyDashboard Month"
+      ])
 
       // Months clicked
       buttonMonth?.setTitle(kMonthSpaces, for: UIControl.State.normal)
@@ -196,6 +208,9 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
   }
 
   @IBAction func buttonForwardClicked(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Ascending"
+    ])
 
     let calendar = Calendar.current
 
@@ -234,6 +249,9 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
   }
 
   @IBAction func buttonBackwardClicked(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Descending"
+    ])
 
     let calendar = Calendar.current
 

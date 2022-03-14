@@ -111,7 +111,16 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                   if (items
                       .get(holder.getAdapterPosition())
                       .getSubtype()
-                      .equalsIgnoreCase("Study")) {
+                      .equalsIgnoreCase("Study")
+                      || items
+                      .get(holder.getAdapterPosition())
+                      .getSubtype().equalsIgnoreCase("Activity")
+                      || items
+                      .get(holder.getAdapterPosition())
+                      .getSubtype().equalsIgnoreCase("Announcement")
+                      || items
+                      .get(holder.getAdapterPosition())
+                      .getSubtype().equalsIgnoreCase("studyEvent")) {
 
                     Study study = dbServiceSubscriber.getStudyListFromDB(realm);
                     if (study != null) {

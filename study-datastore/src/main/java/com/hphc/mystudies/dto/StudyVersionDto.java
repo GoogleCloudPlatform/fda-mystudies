@@ -55,7 +55,7 @@ import org.hibernate.annotations.NamedQuery;
       name = "getStudyUpdatesDetailsByCurrentVersion",
       query =
           "from StudyVersionDto SVDTO"
-              + " where SVDTO.customStudyId =:customStudyId and ROUND(SVDTO.studyVersion, 1)>=:studyVersion"),
+              + " where SVDTO.customStudyId =:customStudyId and ROUND(SVDTO.studyVersion, 1)>=:studyVersion ORDER BY SVDTO.studyVersion"),
 })
 public class StudyVersionDto implements Serializable {
 
