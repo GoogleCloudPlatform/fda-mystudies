@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.Html;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyInfo;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.RealmList;
 
@@ -49,6 +51,7 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
   private Context context;
   private RealmList<StudyInfo> info;
   private AppCompatImageView bgImg;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   StudyInfoPagerAdapter(Context context, RealmList<StudyInfo> info, String studyId) {
     size = info.size();
@@ -75,6 +78,7 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
   public Object instantiateItem(ViewGroup collection, int position) {
     LayoutInflater inflater =
         (LayoutInflater) collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     if (info.get(position).getType().equalsIgnoreCase("video")) {
       View view = inflater.inflate(R.layout.study_info_item1, null);
       initializeXmlId(position, view);
@@ -160,6 +164,12 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
             new View.OnClickListener() {
               @Override
               public void onClick(View view) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    context.getString(R.string.watch_video));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(info.get(pos).getLink()));
                 context.startActivity(intent);
               }
