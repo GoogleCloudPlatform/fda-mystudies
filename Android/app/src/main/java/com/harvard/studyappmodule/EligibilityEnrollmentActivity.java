@@ -29,6 +29,7 @@ import com.harvard.R;
 import com.harvard.studyappmodule.enroll.EnrollData;
 import com.harvard.studyappmodule.events.VerifyEnrollmentIdEvent;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -47,11 +48,13 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
   private EditText enrollmentID;
   private TextView submit;
   private String enteredId;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_eligibility_enrollment);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setTextForView();
     setFont();
@@ -97,6 +100,12 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.eligibility_enroll_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -104,6 +113,12 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.eligibility_enroll_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (!enrollmentID.getText().toString().trim().equalsIgnoreCase("")) {
               callValidateEnrollmentId();
             } else {

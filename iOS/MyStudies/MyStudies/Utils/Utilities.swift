@@ -362,7 +362,7 @@ class Utilities: NSObject {
 
   // MARK: Alert handlers
 
-  class func showAlertWithTitleAndMessage(title: String, message: String, on vc: UIViewController) {
+  class func showAlertWithTitleAndMessage(title: String, message: String, on vc: UIViewController, cancelAction: () -> Void) {
 
     let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
