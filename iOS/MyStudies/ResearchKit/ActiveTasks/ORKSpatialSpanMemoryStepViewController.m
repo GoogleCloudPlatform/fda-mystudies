@@ -425,6 +425,9 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 }
 
 - (void)playbackNextItem {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKPlaybackNextItem"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
+
     const NSInteger sequenceLength = _currentGameState.game.sequenceLength;
     if (_playbackIndex >= sequenceLength) {
         [self transitionToState:ORKSpatialSpanStepStateGameplay];
@@ -483,6 +486,9 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 }
 
 - (void)activityTimeout {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKActivityTimeOut"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
+
     [self transitionToState:ORKSpatialSpanStepStateTimeout];
 }
 
@@ -575,6 +581,8 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 }
 
 - (void)continueAction {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKNext"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     ORKSpatialSpanMemoryStep *step = [self spatialSpanStep];
     if (_gamesCounter < step.maximumTests && _consecutiveGamesFailed < step.maximumConsecutiveFailures) {
         // Generate a new game
@@ -605,7 +613,8 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 #pragma mark ORKSpatialSpanStepStateFailed
 
 - (void)tryAgainAction {
-    // Restart with a new, shorter game
+  NSDictionary *userDict = @{@"ORKAction":@"ORKTryAgain"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];    // Restart with a new, shorter game
     [self transitionToState:ORKSpatialSpanStepStateRestart];
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
 }
@@ -666,12 +675,17 @@ typedef void (^_ORKStateHandler)(ORKState *fromState, ORKState *_toState, id con
 }
 
 - (void)showCopyright {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKShowCopyRight"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];    // Restart with a new, shorter game
+
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
                                                                    message:ORKLocalizedString(@"MEMORY_GAME_COPYRIGHT_TEXT", nil)
                                                             preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_OK", nil)
                                               style:UIAlertActionStyleDefault
-                                            handler:nil]];
+                                            handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKAction":@"ORKCopyRightOkAlert"};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
+    }]];
     [self presentViewController:alert animated:YES completion:nil];
 }
 

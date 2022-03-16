@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.NumberPicker;
 import com.harvard.R;
+import com.harvard.utils.CustomFirebaseAnalytics;
 
 public class CustomDialogClass<V> extends Dialog implements View.OnClickListener {
 
@@ -31,7 +32,7 @@ public class CustomDialogClass<V> extends Dialog implements View.OnClickListener
   private AppCompatTextView doneBtn;
   private final ProfileFragment profileFragment;
   private final String[] mins15 = {"00", "15", "30", "45"};
-
+  private CustomFirebaseAnalytics analyticsInstance;
   CustomDialogClass(Activity a, ProfileFragment profileFragment) {
     super(a);
     this.profileFragment = profileFragment;
@@ -46,6 +47,7 @@ public class CustomDialogClass<V> extends Dialog implements View.OnClickListener
     minPicker = (NumberPicker) findViewById(R.id.picker_min);
     doneBtn = (AppCompatTextView) findViewById(R.id.doneBtn);
     doneBtn.setOnClickListener(this);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(getContext());
     // if hr=24 then setvalue 1 means min arrays 0'th pos value
     minPicker.setOnValueChangedListener(
         new NumberPicker.OnValueChangeListener() {
@@ -88,6 +90,11 @@ public class CustomDialogClass<V> extends Dialog implements View.OnClickListener
 
   @Override
   public void onClick(View v) {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getContext().getString(R.string.custom_dialog_done));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     String selectedValue = hourPicker.getValue() + ":" + mins15[minPicker.getValue() - 1];
     profileFragment.updatePickerTime(selectedValue);
     dismiss();

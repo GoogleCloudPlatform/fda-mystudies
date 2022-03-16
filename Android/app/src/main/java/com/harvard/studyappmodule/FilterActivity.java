@@ -32,6 +32,7 @@ import com.harvard.studyappmodule.studymodel.Filter;
 import com.harvard.studyappmodule.studymodel.ParticipationStatus;
 import com.harvard.studyappmodule.studymodel.StudyStatus;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,11 +66,13 @@ public class FilterActivity extends AppCompatActivity {
   private AppCompatCheckBox pausedSelectBtn;
   private AppCompatTextView pausedLabel;
   private String userId;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_filter);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     userId =
         AppController.getHelperSharedPreference()
@@ -186,6 +189,12 @@ public class FilterActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.filter_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -193,7 +202,12 @@ public class FilterActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.filter_apply));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             StudyStatus studyStatus = new StudyStatus();
             ParticipationStatus participationStatus = new ParticipationStatus();
 
@@ -256,7 +270,6 @@ public class FilterActivity extends AppCompatActivity {
             } else {
               flag1 = false;
             }
-
 
             if (userId.equalsIgnoreCase("")) {
               if (flag1) {

@@ -18,6 +18,7 @@ package com.harvard.gatewaymodule;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 
 import io.realm.Realm;
@@ -41,6 +43,7 @@ public class GatewayPagerAdapter extends PagerAdapter {
   private AppCompatTextView desc;
   private AppCompatTextView watchVideoLabel;
   private Context context;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public GatewayPagerAdapter() {
     size = 2;
@@ -70,6 +73,7 @@ public class GatewayPagerAdapter extends PagerAdapter {
     final LayoutInflater inflater =
         (LayoutInflater) collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     context = inflater.getContext();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     switch (position) {
       case 0:
         View view = inflater.inflate(R.layout.gateway_item1, null);
@@ -120,6 +124,12 @@ public class GatewayPagerAdapter extends PagerAdapter {
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.watch_video));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent =
                   new Intent(
                       Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=6FGGquOrVic"));
@@ -137,12 +147,19 @@ public class GatewayPagerAdapter extends PagerAdapter {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.app_website));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
             Realm realm = AppController.getRealmobj(context);
             if (!dbServiceSubscriber.getApps(realm).getAppWebsite().equalsIgnoreCase("")) {
               Intent browserIntent =
                   new Intent(
-                      Intent.ACTION_VIEW, Uri.parse(dbServiceSubscriber.getApps(realm).getAppWebsite()));
+                      Intent.ACTION_VIEW,
+                      Uri.parse(dbServiceSubscriber.getApps(realm).getAppWebsite()));
               context.startActivity(browserIntent);
             }
           }
