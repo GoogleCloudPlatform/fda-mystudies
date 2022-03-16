@@ -92,10 +92,14 @@
 }
 
 - (void)keyboardAccessoryViewDoneButtonPressed {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKKeyboardDone"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [self resignFirstResponder];
 }
 
 - (void)keyboardAccessoryViewPlusMinusButtonPressed {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKKeyboardPlusMinus"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
   if ([self.text hasPrefix:@"-"]) {
     self.text = [self.text substringFromIndex:1];
   } else {

@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 let kConsentPdfKey = "consent"
 
@@ -83,6 +84,9 @@ class ResourcesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resources"
+    ])
 
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")
 
@@ -215,6 +219,9 @@ class ResourcesViewController: UIViewController {
   }
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resource Home"
+    ])
     self.navigationController?.navigationBar.isHidden = false
     self.performSegue(withIdentifier: kUnwindToStudyListIdentifier, sender: self)
 
@@ -345,12 +352,18 @@ class ResourcesViewController: UIViewController {
               viewControllerUsed: self,
               action1: {
                 // Retain Action
+                Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                  buttonClickReasonsKey: "Retain Alert Action"
+                ])
                 
                 self.shouldDeleteData = false
                 self.withdrawalFromStudy(deleteResponse: false)
                 
               },
               action2: {
+                Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                  buttonClickReasonsKey: "Delete Alert Action"
+                ])
                 
                 // Delete action
                 self.shouldDeleteData = true
@@ -383,10 +396,17 @@ class ResourcesViewController: UIViewController {
       errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
       viewControllerUsed: self,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeaveStudy Alert OK"
+        ])
         self.shouldDeleteData = false
         self.withdrawalFromStudy(deleteResponse: false)
       },
-      action2: {}
+      action2: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeaveStudy Alert Cancel"
+        ])
+      }
     )
   }
 

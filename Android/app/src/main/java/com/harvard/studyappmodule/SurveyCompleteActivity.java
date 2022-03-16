@@ -42,6 +42,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -50,6 +51,10 @@ import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigE
 import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -72,12 +77,14 @@ public class SurveyCompleteActivity extends AppCompatActivity
   private DbServiceSubscriber dbServiceSubscriber;
   private double completion = 0;
   private double adherence = 0;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey_complete);
     dbServiceSubscriber = new DbServiceSubscriber();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     realm = AppController.getRealmobj(this);
     initializeXmlId();
     setFont();
@@ -85,6 +92,12 @@ public class SurveyCompleteActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_complete_done));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             next.setClickable(false);
             next.setEnabled(false);
             updateProcessResponse();
@@ -198,6 +211,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
       dataobj.put("startTime", activityObj.getMetadata().getStartDate());
       dataobj.put("endTime", activityObj.getMetadata().getEndDate());
       dataobj.put("resultType", activityObj.getType());
+      dataobj.put("submittedTime", AppController.getDateFormatForApi().format(Calendar.getInstance().getTime()));
 
       JSONArray resultarray = new JSONArray();
       JsonParser jsonParser = new JsonParser();
