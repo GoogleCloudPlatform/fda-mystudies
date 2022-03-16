@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.security.KeyPairGeneratorSpec;
@@ -40,7 +41,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
@@ -83,7 +83,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -105,6 +104,7 @@ public class AppController {
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
   public static String loginCallback = "login_callback";
+  private static CustomFirebaseAnalytics analyticsInstance;
 
   public static final String STARTING_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
   public static final String ENDDING_TAGS = "</\\w+>";
@@ -257,41 +257,36 @@ public class AppController {
   }
 
   public static Realm getRealmobj(final Context context) {
-    if (config == null) {
-      byte[] key = getkey(context, context.getString(R.string.app_name));
-      config =
+    Realm realm;
+    try {
+      realm = Realm.getDefaultInstance();
+    } catch (Exception e) {
+      byte[] key = AppController.getkey(context, context.getString(R.string.app_name));
+      RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
               .schemaVersion(1)
               .migration(new RealmMigrationHelper())
               .build();
-    }
-    try {
-      return Realm.getInstance(config);
-    } catch (Exception e) {
+      Realm.setDefaultConfiguration(config);
+      realm = Realm.getDefaultInstance();
       Logger.log(e);
-      new Handler(Looper.getMainLooper()).post(new Runnable() {
-        @Override
-        public void run() {
-          Toast.makeText(context.getApplicationContext(), "Critical error occurred, Please clear data and sign in again", Toast.LENGTH_SHORT).show();
-        }
-      });
-      return null;
     }
+    return realm;
   }
 
   private static byte[] getkey(Context context, String keyName) {
     RealmEncryptionHelper realmEncryptionHelper = RealmEncryptionHelper.initHelper(context, keyName);
     byte[] key = realmEncryptionHelper.getEncryptKey();
     String s = bytesToHex(key);
-//    Log.e("realm key for " + keyName, "" + s);
+    Log.wtf("realm key for " + keyName, "" + s);
     return key;
   }
 
   public static void checkIfAppNameChangeAndMigrate(Context context) {
     if (!context.getString(R.string.app_name).equalsIgnoreCase(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)))) {
       byte[] key = getkey(context, SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
-      config =
+      RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
               .schemaVersion(1)
@@ -299,16 +294,21 @@ public class AppController {
               .build();
       Realm realm = Realm.getInstance(config);
       RealmEncryptionHelper.getInstance().deleteEntry(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
-      byte[] newKey = getkey(context, context.getString(R.string.app_name));
-      String s = bytesToHex(newKey);
-      realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), newKey);
-      config = null;
+      byte[] NewKey = getkey(context, context.getString(R.string.app_name));
+      realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), NewKey);
       realm.close();
       File file = new File(context.getFilesDir(), "default.realm");
       file.delete();
       renameFile(context, "temp.realm", "default.realm");
     }
-    getkey(context, context.getString(R.string.app_name)); // To initialize the realm once before starting the app
+    byte[] key = AppController.getkey(context, context.getString(R.string.app_name));
+    RealmConfiguration config =
+        new RealmConfiguration.Builder()
+            .encryptionKey(key)
+            .schemaVersion(1)
+            .migration(new RealmMigrationHelper())
+            .build();
+    Realm.setDefaultConfiguration(config);
     SharedPreferenceHelper.writePreference(context, "appname", context.getString(R.string.app_name));
   }
 
@@ -470,12 +470,26 @@ public class AppController {
           .setPositiveButton(
               positiveButton,
               new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {}
+                public void onClick(DialogInterface dialog, int id) {
+                  analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                }
               })
           .setNegativeButton(
               context.getResources().getString(R.string.cancel),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (finish) {
                     ((Activity) context).finish();
@@ -491,6 +505,12 @@ public class AppController {
               new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   // Do stuff, possibly set wantToCloseDialog to true then...
                   final String appPackageName = context.getPackageName();
                   try {
@@ -526,6 +546,11 @@ public class AppController {
               new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          context.getString(R.string.custom_data_question_cancel));
+                  analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                          eventProperties);
                   alertDialog.dismiss();
                   ((SplashActivity) context).loadsplash();
                 }
@@ -545,6 +570,11 @@ public class AppController {
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.upgrade));
+              analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                      eventProperties);
               final String appPackageName = context.getPackageName();
               try {
                 ((Activity) context)
