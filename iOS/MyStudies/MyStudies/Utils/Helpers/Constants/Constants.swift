@@ -315,3 +315,6 @@ public func log<T>(
 
 let activityBuilder: ActivityBuilder? = ActivityBuilder.currentActivityBuilder
 let consentbuilder: ConsentBuilder? = ConsentBuilder()
+
+let analyticsButtonClickEventsName = "button_click"
+let buttonClickReasonsKey = "button_click_reason"

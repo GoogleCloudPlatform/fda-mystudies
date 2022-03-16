@@ -754,6 +754,50 @@ class DBHandler: NSObject {
     }
     return date != nil
   }
+  
+  class func updateTargetForActivityAnchorDateDetail(
+    studyId: String,
+    activityId: String,
+    response: [String: Any]
+  ) -> Bool {
+    guard !response.isEmpty else { return false }
+    let realm = DBHandler.getRealmObject()!
+    let dbActivities = realm.objects(DBActivity.self)
+      .filter {
+        $0.sourceActivityId == activityId
+        && $0.studyId == studyId
+      }
+    
+    // get source question value and key
+    var date: Date? = nil
+    if let results = response["results"] as? [[String: Any]] {
+      var quesStepKey: String
+      var dictionary: [String: Any] = [:]
+      
+      for dbActivity in dbActivities {
+        
+        let sourceKey = (dbActivity.sourceKey)!
+        if dbActivity.sourceFormKey != nil && dbActivity.sourceFormKey!.count > 0 {
+          quesStepKey = dbActivity.sourceFormKey!
+          let quesResults = results.filter { $0["key"] as! String == quesStepKey }.first
+          let resultsArray = ((quesResults!["value"] as? [[Any]])?.first) as? [[String: Any]]
+          dictionary = resultsArray!.filter { $0["key"] as! String == sourceKey }.first!
+        } else {
+          dictionary = results.filter { $0["key"] as! String == sourceKey }.first!
+        }
+        
+        guard let userInputDate = dictionary["value"] as? String else {
+          return false
+        }
+        date = Utilities.getDateFromString(dateString: userInputDate)
+        
+        if let anchorDate = date {
+          self.updateActivityLifeTimeFor(dbActivity, anchorDate: anchorDate)
+        }
+      }
+    }
+    return date != nil
+  }
 
   /// Updates resources lifetime from anchor date received from source activity questionnaire response.
   /// - Parameters:
@@ -1083,11 +1127,11 @@ class DBHandler: NSObject {
       if activity.frequencyType == Frequency.oneTime && activity.endDate == nil {
         run = runs.last
       } else {
-        runsBeforeToday = runs.filter({ $0.endDate <= date })
+        runsBeforeToday = runs.filter({ $0.endDate ?? Date() <= date })
         run =
           runs.filter {
             $0.startDate <= date
-              && $0.endDate > date
+            && $0.endDate ?? Date() > date
           }.first  // current run
       }
 
@@ -1162,6 +1206,7 @@ class DBHandler: NSObject {
     anchorDate.endDays = dbActivity.endDays
     anchorDate.repeatInterval = dbActivity.repeatInterval
     anchorDate.endTime = dbActivity.endTime
+    anchorDate.anchorDateValue = dbActivity.anchorDateValue
     activity.anchorDate = anchorDate
 
     return activity

@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 let kDefaultEmail = "xyz@gmail.com"
 let kSignupCompletionSegue = "signupCompletionSegue"
@@ -78,6 +79,11 @@ class VerificationViewController: UIViewController {
 
   /// Navigate to previous screen.
   @IBAction func buttonActionBack(_ sender: UIButton) {
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back from verification"
+    ])
+    
     if viewLoadFrom == .login,
       let homeVC = self.navigationController?.viewControllers
         .first(where: { $0.isKind(of: HomeViewController.self) })
@@ -90,11 +96,18 @@ class VerificationViewController: UIViewController {
 
   /// Used to send the verification mail to registered mail id.
   @IBAction func continueTwoButtonAction(_ sender: UIButton) {
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Verify Email"
+    ])
 
     self.view.endEditing(true)
 
     if self.textFieldVerificationCode?.text == "" {
       self.showAlertMessages(textMessage: kMessageVerificationCodeEmpty)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid code ok alert"
+      ])
     } else {
       UserServices().verifyEmail(
         emailId: self.emailId!,
@@ -106,6 +119,11 @@ class VerificationViewController: UIViewController {
 
   /// Send the verification mail id to registered.
   @IBAction func continueButtonAction(_ sender: Any) {
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "VerificationCode Continue"
+    ])
+    
     if (textFieldVerificationCode?.text?.count)! > 0 {
       UserServices().verifyEmail(
         emailId: User.currentUser.emailId!,
@@ -114,11 +132,18 @@ class VerificationViewController: UIViewController {
       )
     } else {
       self.showAlertMessages(textMessage: kMessageVerificationCodeEmpty)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid code ok alert"
+      ])
     }
   }
 
   /// Resend the verification code to registered mail id.
   @IBAction func resendEmailButtonAction(_ sender: UIButton) {
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Verification Resend"
+    ])
 
     var finalEmail: String = User.currentUser.emailId!
 
@@ -127,6 +152,9 @@ class VerificationViewController: UIViewController {
     }
     if (finalEmail.isEmpty) || !(Utilities.isValidEmail(testStr: finalEmail)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid email alert"
+      ])
     } else {
       UserServices().resendEmailConfirmation(emailId: finalEmail, delegate: self)
     }
@@ -233,11 +261,17 @@ extension VerificationViewController: NMWebServiceDelegate {
           title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
           message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
         )
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Resend email alert"
+        ])
       } else {
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
           message: NSLocalizedString(kAlertMessageVerifyEmail, comment: "") as NSString
         )
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Verify email alert"
+        ])
       }
     }
   }

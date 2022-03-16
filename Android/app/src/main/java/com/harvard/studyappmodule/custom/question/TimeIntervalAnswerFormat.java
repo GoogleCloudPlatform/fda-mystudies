@@ -22,6 +22,7 @@ public class TimeIntervalAnswerFormat extends ChoiceAnswerFormatCustom {
   private final int step;
   private final String defaultvalue;
 
+
   public TimeIntervalAnswerFormat(
       CustomAnswerStyle style, int step, String defaultvalue) {
     this.style = style;
