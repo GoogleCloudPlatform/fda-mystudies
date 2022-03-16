@@ -19,6 +19,7 @@
 
 import IQKeyboardManagerSwift
 import UIKit
+import FirebaseAnalytics
 
 let kHelperTextForFilteredStudiesNotFound = "No studies found for the filters applied."
 
@@ -55,13 +56,15 @@ class StudyListViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                           name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
+                                           name: Notification.Name("LeftMenu Home"), object: nil)
+    
     addNavigationTitle()
     isComingFromFilterScreen = false
     DispatchQueue.main.async { [weak self] in
       self?.setupStudyListTableView()
-    }
-    if #available(iOS 15, *) {
-      UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
     }
   }
   
@@ -69,7 +72,6 @@ class StudyListViewController: UIViewController {
     if !isComingFromFilterScreen {
       self.addProgressIndicator()
     }
-    setNavigationBarColor()
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -240,7 +242,18 @@ class StudyListViewController: UIViewController {
     refresher.attributedTitle = NSAttributedString(string: "Pull to refresh")
     tableView.refreshControl = refresher
   }
-
+  
+  @objc func methodOfReceivedNotification(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
+    ])
+  }
+  
+  @objc func methodOfReceivedNotification1(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Home"
+    ])
+  }
   // MARK: - Utils
   func checkIfNotificationEnabled() {
 
@@ -464,6 +477,9 @@ class StudyListViewController: UIViewController {
 
   /// Navigate to notification screen on button clicked.
   @IBAction func buttonActionNotification(_: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Notification icon clicked"
+    ])
     navigateToNotifications()
   }
 
@@ -474,11 +490,17 @@ class StudyListViewController: UIViewController {
 
   /// Navigate to StudyFilter screen on button clicked.
   @IBAction func filterAction(_: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Filter icon clicked"
+    ])
     isComingFromFilterScreen = true
     performSegue(withIdentifier: filterListSegue, sender: nil)
   }
 
   @IBAction func searchButtonAction(_: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Search icon clicked"
+    ])
 
     searchView = SearchBarView.instanceFromNib(
       frame: CGRect(x: 0, y: -200, width: view.frame.size.width, height: 64.0),

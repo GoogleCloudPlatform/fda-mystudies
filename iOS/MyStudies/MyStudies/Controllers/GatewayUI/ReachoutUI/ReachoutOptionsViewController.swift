@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 class ReachoutOptionsViewController: UIViewController {
 
@@ -26,12 +27,24 @@ class ReachoutOptionsViewController: UIViewController {
   // MARK: - Viewcontroller Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Reach Out"
+    ])
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                           name: Notification.Name("Menu Clicked"), object: nil)
+
     self.navigationItem.title = NSLocalizedString("Reach out", comment: "")
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.setNavigationBarItem()
+  }
+  
+  @objc func methodOfReceivedNotification(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
+    ])
   }
 
 }

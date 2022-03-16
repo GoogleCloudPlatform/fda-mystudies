@@ -18,6 +18,7 @@ package com.harvard.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import com.harvard.R;
 
@@ -31,6 +32,8 @@ public class SetDialogHelper {
    * @param finish whether to finish the activity
    * @param positiveButton Name of pos button
    */
+  private static CustomFirebaseAnalytics analyticsInstance;
+
   public static void setNeutralDialog(
       final Context context,
       String message,
@@ -39,6 +42,7 @@ public class SetDialogHelper {
       String title) {
     AlertDialog.Builder alertDialogBuilder =
         new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     alertDialogBuilder.setTitle(title);
     alertDialogBuilder
         .setMessage(message)
@@ -47,6 +51,12 @@ public class SetDialogHelper {
             positiveButton,
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    context.getString(R.string.custom_message_ok));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 if (finish) {
                   ((Activity) context).finish();
                 }
@@ -65,6 +75,7 @@ public class SetDialogHelper {
    */
   public static void setDialogResultOK(
       final Context context, String message, String positiveButton) {
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     AlertDialog.Builder alertDialogBuilder =
         new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
     alertDialogBuilder.setTitle(
@@ -76,6 +87,11 @@ public class SetDialogHelper {
             positiveButton,
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          context.getString(R.string.custom_message_ok));
+                  analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                          eventProperties);
                 ((Activity) context).setResult(Activity.RESULT_OK);
                 ((Activity) context).finish();
               }
@@ -94,6 +110,7 @@ public class SetDialogHelper {
    */
   public static void setDialogResultOkWithCancel(
       final Context context, String message, String positiveButton, String negativeButton) {
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     AlertDialog.Builder alertDialogBuilder =
         new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
     alertDialogBuilder.setTitle(
@@ -105,6 +122,11 @@ public class SetDialogHelper {
             positiveButton,
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          context.getString(R.string.custom_message_ok));
+                  analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                          eventProperties);
                 ((Activity) context).setResult(Activity.RESULT_OK);
                 ((Activity) context).finish();
               }
@@ -113,6 +135,11 @@ public class SetDialogHelper {
             negativeButton,
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          context.getString(R.string.negative));
+                  analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                          eventProperties);
                 ((Activity) context).finish();
               }
             });

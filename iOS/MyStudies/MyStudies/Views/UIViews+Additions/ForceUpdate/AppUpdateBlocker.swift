@@ -17,6 +17,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 class AppUpdateBlocker: UIView {
 
@@ -96,6 +97,9 @@ class AppUpdateBlocker: UIView {
   // MARK: - Actions
 
   @IBAction func buttonUpgradeAction() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "AppUpgrade"
+    ])
     guard let appleID = Branding.appleID, !appleID.isEmpty else {
       // Ask user to update from AppStore.
       self.makeToast(LocalizableString.appStoreUpdateText.localizedString)
@@ -109,6 +113,9 @@ class AppUpdateBlocker: UIView {
   }
   
   @IBAction func buttonYesAction() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "AppUpgrade Yes"
+    ])
     guard let appleID = Branding.appleID, !appleID.isEmpty else {
       // Ask user to update from AppStore.
       self.makeToast(LocalizableString.appStoreUpdateText.localizedString)
@@ -122,6 +129,9 @@ class AppUpdateBlocker: UIView {
   }
   
   @IBAction func buttonSkipAction() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "AppUpgrade Skip"
+    ])
     self.isHidden = true
     self.removeFromSuperview()
   }

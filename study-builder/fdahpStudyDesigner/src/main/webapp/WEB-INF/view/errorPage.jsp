@@ -145,7 +145,7 @@ html, body {
         <span class="display-1 d-block">
           <img src="/studybuilder/images/icons/ErrorIcon.svg" alt="Page not found here" />
         </span>
-        <div class="invalidLink_text mt-4 mb-4 width__50  mar_0_auto">This page is no longer valid. 
+        <div class="invalidLink_text mt-4 mb-4 width__50  mar_0_auto">This link is no longer valid to be used. 
         For any assistance needed with your account,<br> please contact the system admin.
         </div>
       </div>

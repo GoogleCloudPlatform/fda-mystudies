@@ -69,6 +69,7 @@ import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -154,6 +155,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   private Studies studies;
   private ArrayList<ResponseInfoActiveTaskModel> arrayList;
   private ArrayList<String> arrayListDup;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   // NOTE: Regarding Day, Week and Month functionality
   //  currently day functionality next, previous are working
@@ -178,6 +180,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     view = inflater.inflate(R.layout.fragment_survey_dashboard, container, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
     initializeXmlId(view);
@@ -401,6 +404,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           @Override
           public void onClick(View v) {
             if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.survey_dashbord_home));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, StudyActivity.class);
               ComponentName cn = intent.getComponent();
               Intent mainIntent = Intent.makeRestartActivityTask(cn);
@@ -416,6 +425,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             screenshotWritingPermission(view);
           }
         });
@@ -424,6 +439,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_day));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (!dateType.equalsIgnoreCase(DAY)) {
               nextDateLayout.setVisibility(View.INVISIBLE);
               setDay();
@@ -436,6 +457,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_week));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (!dateType.equalsIgnoreCase(WEEK)) {
               nextDateLayout.setVisibility(View.INVISIBLE);
               setWeek();
@@ -447,6 +474,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_month));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               if (!dateType.equalsIgnoreCase(MONTH)) {
                 nextDateLayout.setVisibility(View.INVISIBLE);
@@ -462,6 +495,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_change_date_left));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             nextDateLayout.setVisibility(View.VISIBLE);
             if (dateType.equalsIgnoreCase(DAY)) {
               try {
@@ -534,7 +573,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_dashbord_change_date_right));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (dateType.equalsIgnoreCase(DAY)) {
               try {
                 SimpleDateFormat simpleDateFormat =
@@ -637,6 +681,11 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.trends));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (dashboardData != null && dashboardData.getDashboard().getCharts().size() > 0) {
               Intent intent = new Intent(context, ChartActivity.class);
               intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
@@ -1095,12 +1144,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
               dashboardData
-                  .getDashboard()
-                  .getStatistics()
-                  .get(i)
-                  .getDataSource()
-                  .getActivity()
-                  .getActivityId())) {
+                      .getDashboard()
+                      .getStatistics()
+                      .get(i)
+                      .getDataSource()
+                      .getActivity()
+                      .getActivityId()
+                  + ","
+                  + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
                 dashboardData
                     .getDashboard()
@@ -1122,12 +1173,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
                 dashboardData
-                    .getDashboard()
-                    .getStatistics()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId());
+                        .getDashboard()
+                        .getStatistics()
+                        .get(i)
+                        .getDataSource()
+                        .getActivity()
+                        .getActivityId()
+                    + ","
+                    + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
           }
         }
         for (int i = 0; i < dashboardData.getDashboard().getCharts().size(); i++) {
@@ -1135,12 +1188,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
               dashboardData
-                  .getDashboard()
-                  .getCharts()
-                  .get(i)
-                  .getDataSource()
-                  .getActivity()
-                  .getActivityId())) {
+                      .getDashboard()
+                      .getCharts()
+                      .get(i)
+                      .getDataSource()
+                      .getActivity()
+                      .getActivityId()
+                  + ","
+                  + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
                 dashboardData
                     .getDashboard()
@@ -1162,12 +1217,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
                 dashboardData
-                    .getDashboard()
-                    .getCharts()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId());
+                        .getDashboard()
+                        .getCharts()
+                        .get(i)
+                        .getDataSource()
+                        .getActivity()
+                        .getActivityId()
+                    + ","
+                    + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey());
           }
         }
       }
@@ -1448,22 +1505,24 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               JSONObject jsonObject1 = new JSONObject(String.valueOf(jsonArray.get(i)));
               JSONArray jsonArray1 = (JSONArray) jsonObject1.get("data");
               int duration = 0;
+              Date completedDate = null;
               for (int j = 0; j < jsonArray1.length(); j++) {
                 JSONObject jsonObjectData = (JSONObject) jsonArray1.get(j);
                 Type type = new TypeToken<Map<String, Object>>() {}.getType();
                 Map<String, Object> map = gson.fromJson(String.valueOf(jsonObjectData), type);
                 StepRecordCustom stepRecordCustom = new StepRecordCustom();
-                Date completedDate = new Date();
-                try {
-                  Object completedDateValMap = gson.toJson(map.get("Created"));
-                  Map<String, Object> completedDateVal =
-                      gson.fromJson(String.valueOf(completedDateValMap), type);
-                  if (completedDateVal != null) {
-                    completedDate =
-                        simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
+                if (completedDate == null) {
+                  try {
+                    Object completedDateValMap = gson.toJson(map.get("Created"));
+                    Map<String, Object> completedDateVal =
+                        gson.fromJson(String.valueOf(completedDateValMap), type);
+                    if (completedDateVal != null) {
+                      completedDate =
+                          simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
+                    }
+                  } catch (JsonSyntaxException | ParseException e) {
+                    Logger.log(e);
                   }
-                } catch (JsonSyntaxException | ParseException e) {
-                  Logger.log(e);
                 }
 
                 try {
@@ -1476,6 +1535,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 } catch (Exception e) {
                   Logger.log(e);
                 }
+
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
                   String key = entry.getKey();
                   String valueobj = gson.toJson(entry.getValue());
@@ -1508,59 +1568,98 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                               + runId
                               + "_"
                               + stepKey);
-                    } else {
-                      stepRecordCustom.setStepId(key);
-                      stepRecordCustom.setTaskStepID(
+                      stepRecordCustom.setStudyId(studyId);
+                      stepRecordCustom.setActivityID(
+                          studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
+                      stepRecordCustom.setTaskId(
                           studyId
                               + "_STUDYID_"
                               + responseInfoActiveTaskModel.getActivityId()
                               + "_"
-                              + runId
-                              + "_"
-                              + key);
+                              + runId);
+
+                      stepRecordCustom.setCompleted(completedDate);
+                      stepRecordCustom.setStarted(completedDate);
+
+                      JSONObject jsonObject2 = new JSONObject();
+                      ActivitiesWS activityObj =
+                          dbServiceSubscriber.getActivityObj(
+                              responseInfoActiveTaskModel.getActivityId(), studyId, realm);
+                      if (activityObj.getType().equalsIgnoreCase("task")) {
+                        JSONObject jsonObject3 = new JSONObject();
+                        jsonObject3.put("value", value);
+                        jsonObject3.put("duration", duration);
+
+                        jsonObject2.put("answer", jsonObject3);
+                      } else {
+                        jsonObject2.put("answer", value);
+                      }
+
+                      stepRecordCustom.setResult(String.valueOf(jsonObject2));
+                      Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
+                      if (currentIdNum == null) {
+                        stepRecordCustom.setId(1);
+                      } else {
+                        stepRecordCustom.setId(currentIdNum.intValue() + 1);
+                      }
+                      dbServiceSubscriber.updateStepRecord(context, stepRecordCustom);
+                    } else {
+                      if (key.equalsIgnoreCase(stepKey)) {
+                        stepRecordCustom.setStepId(key);
+                        stepRecordCustom.setTaskStepID(
+                            studyId
+                                + "_STUDYID_"
+                                + responseInfoActiveTaskModel.getActivityId()
+                                + "_"
+                                + runId
+                                + "_"
+                                + key);
+
+                        stepRecordCustom.setStudyId(studyId);
+                        stepRecordCustom.setActivityID(
+                            studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
+                        stepRecordCustom.setTaskId(
+                            studyId
+                                + "_STUDYID_"
+                                + responseInfoActiveTaskModel.getActivityId()
+                                + "_"
+                                + runId);
+
+                        stepRecordCustom.setCompleted(completedDate);
+                        stepRecordCustom.setStarted(completedDate);
+
+                        try {
+                          Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
+                          value = AppController.getDateFormatForApi().format(anchordate);
+                        } catch (ParseException e) {
+                          Logger.log(e);
+                        }
+
+                        JSONObject jsonObject2 = new JSONObject();
+                        ActivitiesWS activityObj =
+                            dbServiceSubscriber.getActivityObj(
+                                responseInfoActiveTaskModel.getActivityId(), studyId, realm);
+                        if (activityObj.getType().equalsIgnoreCase("task")) {
+                          JSONObject jsonObject3 = new JSONObject();
+                          jsonObject3.put("value", value);
+                          jsonObject3.put("duration", duration);
+
+                          jsonObject2.put("answer", jsonObject3);
+                        } else {
+                          jsonObject2.put("answer", value);
+                        }
+
+                        stepRecordCustom.setResult(String.valueOf(jsonObject2));
+                        Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
+                        if (currentIdNum == null) {
+                          stepRecordCustom.setId(1);
+                        } else {
+                          stepRecordCustom.setId(currentIdNum.intValue() + 1);
+                        }
+                        dbServiceSubscriber.updateStepRecord(context, stepRecordCustom);
+                      }
                     }
-                    stepRecordCustom.setStudyId(studyId);
-                    stepRecordCustom.setActivityID(
-                        studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());
-                    stepRecordCustom.setTaskId(
-                        studyId
-                            + "_STUDYID_"
-                            + responseInfoActiveTaskModel.getActivityId()
-                            + "_"
-                            + runId);
-
-                    stepRecordCustom.setCompleted(completedDate);
-                    stepRecordCustom.setStarted(completedDate);
-
-                    try {
-                      Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                      value = AppController.getDateFormatForApi().format(anchordate);
-                    } catch (ParseException e) {
-                      Logger.log(e);
-                    }
                   }
-                  JSONObject jsonObject2 = new JSONObject();
-                  ActivitiesWS activityObj =
-                      dbServiceSubscriber.getActivityObj(
-                          responseInfoActiveTaskModel.getActivityId(), studyId, realm);
-                  if (activityObj.getType().equalsIgnoreCase("task")) {
-                    JSONObject jsonObject3 = new JSONObject();
-                    jsonObject3.put("value", value);
-                    jsonObject3.put("duration", duration);
-
-                    jsonObject2.put("answer", jsonObject3);
-                  } else {
-                    jsonObject2.put("answer", value);
-                  }
-
-                  stepRecordCustom.setResult(String.valueOf(jsonObject2));
-                  Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
-                  if (currentIdNum == null) {
-                    stepRecordCustom.setId(1);
-                  } else {
-                    stepRecordCustom.setId(currentIdNum.intValue() + 1);
-                  }
-                  dbServiceSubscriber.updateStepRecord(context, stepRecordCustom);
                 }
               }
             }

@@ -42,6 +42,7 @@ import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.PdfViewerView;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
@@ -53,6 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.crypto.CipherInputStream;
+import io.realm.Realm;
 
 public class ResourcesWebViewActivity extends AppCompatActivity {
   private AppCompatTextView titleTv;
@@ -72,6 +74,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   String resourceId;
   Resource resource;
+  private CustomFirebaseAnalytics analyticsInstance;
   PdfViewerView pdfViewer;
 
   @Override
@@ -79,6 +82,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
 
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     CreateFilePath = "/data/data/" + getPackageName() + "/files/";
     initializeXmlId();
@@ -146,6 +150,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.resources_webview_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -153,6 +163,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.resources_webview_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
 
               Intent shareIntent = new Intent(Intent.ACTION_SEND);
