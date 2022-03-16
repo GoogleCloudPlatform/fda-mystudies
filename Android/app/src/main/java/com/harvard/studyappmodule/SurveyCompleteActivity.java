@@ -42,6 +42,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -76,12 +77,14 @@ public class SurveyCompleteActivity extends AppCompatActivity
   private DbServiceSubscriber dbServiceSubscriber;
   private double completion = 0;
   private double adherence = 0;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_survey_complete);
     dbServiceSubscriber = new DbServiceSubscriber();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     realm = AppController.getRealmobj(this);
     initializeXmlId();
     setFont();
@@ -89,6 +92,12 @@ public class SurveyCompleteActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_complete_done));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             next.setClickable(false);
             next.setEnabled(false);
             updateProcessResponse();
