@@ -20,6 +20,7 @@ import AVKit
 import Foundation
 import MediaPlayer
 import UIKit
+import FirebaseAnalytics
 
 class FirstGatewayOverviewViewController: UIViewController {
 
@@ -67,6 +68,9 @@ class FirstGatewayOverviewViewController: UIViewController {
 
   /// Watch video button clicked.
   @IBAction func watchVideoButtonClicked(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Watch Video"
+    ])
     let urlString = overviewSectionDetail.link!
     if urlString.contains("youtube") {
       guard let url = URL(string: urlString),
@@ -93,6 +97,9 @@ class FirstGatewayOverviewViewController: UIViewController {
 
   /// Used to create FDASlideMenuViewController and Gateway storyboard.
   @IBAction func getStartedButtonClicked(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Get Started"
+    ])
     self.createMenuView()
   }
 

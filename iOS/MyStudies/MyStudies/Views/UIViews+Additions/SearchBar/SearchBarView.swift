@@ -16,6 +16,7 @@
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 import Foundation
+import FirebaseAnalytics
 
 protocol searchBarDelegate: class {
   func didTapOnCancel()
@@ -53,6 +54,9 @@ class SearchBarView: UIView {
   }
 
   @IBAction func buttonCancelAction() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Search Cancel"
+    ])
 
     UIView.animate(
       withDuration: 0.2,

@@ -393,7 +393,7 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (void)setCancelButtonItem:(UIBarButtonItem *)cancelButton {
-    _cancelButtonItem = cancelButton;
+     _cancelButtonItem = cancelButton;
 }
 
 - (BOOL)hasPreviousStep {
@@ -492,15 +492,17 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
                                                                 preferredStyle:UIAlertControllerStyleActionSheet];
         [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CLEAR_ANSWER", nil)
                                                   style:UIAlertActionStyleDestructive
-                                                handler:^(UIAlertAction *action) {
+                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKAction":@"ORKClear Answer"};
+          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                         [self skipForward];
                                                     });
                                                 }]];
         [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil)
                                                   style:UIAlertActionStyleCancel
-                                                handler:nil
-                          ]];
+                                                handler:^(UIAlertAction *action) {NSDictionary *userDict = @{@"ORKAction":@"ORKCancelAlert"};
+          [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
+        }]];
         alert.popoverPresentationController.sourceView = sender;
         alert.popoverPresentationController.sourceRect = sender.bounds;
         [self presentViewController:alert animated:YES completion:nil];
@@ -550,7 +552,8 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
     
     [alert addAction:[UIAlertAction actionWithTitle:ORKLocalizedString(@"BUTTON_CANCEL", nil)
                                               style:UIAlertActionStyleDefault
-                                            handler:nil]];
+                                            handler:^(UIAlertAction * action) {NSDictionary *userDict = @{@"ORKAction":@"ORKCancelAlert"};
+      [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];}]];
     
     _presentingAlert = YES;
     [self presentViewController:alert animated:YES completion:^{

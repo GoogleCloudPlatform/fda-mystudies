@@ -181,7 +181,7 @@
                 <div class="form-group">
                   <input type="password" class="input-field wow_input emptyField" id="password"
                          maxlength="64" data-minlength="8"
-                         tabindex="2" name="password" data-error="Password is invalid"
+                         tabindex="2" name="password" data-pattern-error="Password is invalid" data-error="Please fill out this field"
                          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                          required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>

@@ -18,6 +18,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 enum CompletionLoadFrom: Int {
   case signup
@@ -58,6 +59,9 @@ class SignUpCompleteViewController: UIViewController {
 
   /// Next button clicked and navigate the screen to GateWay dashboard.
   @IBAction func nextButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-UpComplete Next"
+    ])
 
     // Updating Key & Vector
     let appDelegate = UIApplication.shared.delegate as! AppDelegate

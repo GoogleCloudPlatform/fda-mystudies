@@ -10,6 +10,7 @@ package com.harvard.studyappmodule.custom;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -20,6 +21,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.harvard.R;
+import com.harvard.utils.CustomFirebaseAnalytics;
+
 import java.lang.reflect.Constructor;
 import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.result.StepResult;
@@ -41,6 +46,7 @@ public class SurveyStepLayoutCustom extends FixedSubmitBarLayoutCustom implement
   private StepCallbacks callbacks;
   private LinearLayout container;
   private StepBody stepBody;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public SurveyStepLayoutCustom(Context context) {
     super(context);
@@ -72,6 +78,7 @@ public class SurveyStepLayoutCustom extends FixedSubmitBarLayoutCustom implement
     this.questionStep = (QuestionStep) step;
     this.stepResult = result;
 
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(getContext());
     initializeStep();
   }
 
@@ -203,6 +210,11 @@ public class SurveyStepLayoutCustom extends FixedSubmitBarLayoutCustom implement
   }
 
   public void onSkipClicked() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getContext().getString(R.string.rsb_step_skip));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     if (callbacks != null) {
       callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, getStep(), stepBody.getStepResult(true));
     }
