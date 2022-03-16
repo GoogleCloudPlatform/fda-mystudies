@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 let kActivityTitle = "title"
 
@@ -26,7 +27,7 @@ protocol ActivitiesCellDelegate: class {
 }
 
 class ActivitiesTableViewCell: UITableViewCell {
-  var runEndDate: Date?
+
   // MARK: - Outlets
   @IBOutlet var imageIcon: UIImageView?
 
@@ -289,67 +290,14 @@ class ActivitiesTableViewCell: UITableViewCell {
       labelTime?.text = runStartTime + "\n" + dailyStartDate + " to " + endDate
 
     case .weekly:
-      let val5 = activity.startRawDate ?? ""
-            
-      var valRawStartDate = activity.startRawDate
-      if val5.contains("W") {
-        valRawStartDate = rawDateW(rawStartDate: val5)
-      }
-      
-      if valRawStartDate != nil, valRawStartDate != "" {
-        let runStartDate = Utilities.getDateFromStringWithOutTimezone(
-          dateString: valRawStartDate!
-        )
-        let offset33 = UserDefaults.standard.value(forKey: "offset") as? Int
-        var updatedStartTime33 = runStartDate?.addingTimeInterval(TimeInterval(offset33!))
-        updatedStartTime33!.updateWithOffset()
-        
-        var weeklyStartTime = ActivitiesTableViewCell.weeklyformatter.string(from: updatedStartTime33!)
-        _ = ActivitiesTableViewCell.weeklyformatter.date(from: weeklyStartTime)
-        
-        weeklyStartTime = weeklyStartTime.replacingOccurrences(of: "+", with: "every")
-        weeklyStartTime = weeklyStartTime.replacingOccurrences(of: ";", with: "\n")
-        let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
-        
-        labelTime?.text = weeklyStartTime + " to " + endDate
-        
-      } else {
-        var weeklyStartTime = ActivitiesTableViewCell.weeklyformatter.string(from: startDate!)
-        weeklyStartTime = weeklyStartTime.replacingOccurrences(of: "+", with: "every")
-        weeklyStartTime = weeklyStartTime.replacingOccurrences(of: ";", with: "\n")
-        let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
-        
-        labelTime?.text = weeklyStartTime + " to " + endDate
-      }
+      var weeklyStartTime = ActivitiesTableViewCell.weeklyformatter.string(from: startDate!)
+      weeklyStartTime = weeklyStartTime.replacingOccurrences(of: "+", with: "every")
+      weeklyStartTime = weeklyStartTime.replacingOccurrences(of: ";", with: "\n")
+      let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
+
+      labelTime?.text = weeklyStartTime + " to " + endDate
 
     case .monthly:
-      let val5 = activity.startRawDate ?? ""
-            
-      var valRawStartDate = activity.startRawDate
-      if val5.contains("W") {
-        valRawStartDate = rawDateW(rawStartDate: val5)
-      }
-      
-      if valRawStartDate != nil, valRawStartDate != "" {
-        let runStartDate = Utilities.getDateFromStringWithOutTimezone(
-          dateString: valRawStartDate!
-        )
-        let offset33 = UserDefaults.standard.value(forKey: "offset") as? Int
-        var updatedStartTime33 = runStartDate?.addingTimeInterval(TimeInterval(offset33!))
-        
-        updatedStartTime33!.updateWithOffset()
-        
-        var monthlyStartTime = ActivitiesTableViewCell.monthlyformatter.string(from: updatedStartTime33!)
-        monthlyStartTime = monthlyStartTime.replacingOccurrences(of: "+", with: "on day")
-        monthlyStartTime = monthlyStartTime.replacingOccurrences(of: ";", with: "each month\n")
-        if let endDate = endDate {
-          let endDateString = DateHelper.formattedShortMonthYear(from: endDate)
-          labelTime?.text = monthlyStartTime + " to " + endDateString
-        } else {
-          labelTime?.text = monthlyStartTime
-        }
-        
-      } else {
       var monthlyStartTime = ActivitiesTableViewCell.monthlyformatter.string(from: startDate!)
       monthlyStartTime = monthlyStartTime.replacingOccurrences(of: "+", with: "on day")
       monthlyStartTime = monthlyStartTime.replacingOccurrences(of: ";", with: "each month\n")
@@ -359,7 +307,6 @@ class ActivitiesTableViewCell: UITableViewCell {
       } else {
         labelTime?.text = monthlyStartTime
       }
-    }
 
     case .scheduled:
       var runStartDate: Date?
@@ -454,13 +401,13 @@ class ActivitiesTableViewCell: UITableViewCell {
                 var endDate = runEndDate {
         startDate.updateWithOffset()
         endDate.updateWithOffset()
-        _ = ActivitiesTableViewCell.customScheduleFormatter.string(
+        let currentRunStartDate = ActivitiesTableViewCell.customScheduleFormatter.string(
           from: startDate
         )
-        _ = ActivitiesTableViewCell.customScheduleFormatter.string(
+        let currentRunEndDate = ActivitiesTableViewCell.customScheduleFormatter.string(
           from: endDate
         )
-        labelTime?.text = scheduledFirst(activity: activity) // currentRunStartDate + " to " + currentRunEndDate
+        labelTime?.text = currentRunStartDate + " to " + currentRunEndDate
       }
     }
   }
@@ -489,62 +436,6 @@ class ActivitiesTableViewCell: UITableViewCell {
           ActivitySchedules.formatter.string(from: startDate)
           + " to "
           + ActivitySchedules.formatter.string(from: endDate)
-      }
-    }
-    return valText
-  }
-  
-  func rawDateW(rawStartDate : String) -> String {
-    var valRawStartDate = rawStartDate
-    let val5 = rawStartDate
-    if val5.contains("W") {
-      let seperated1 = val5.components(separatedBy: "W")
-      let seperated2 = seperated1[0]
-      let seperated3 = seperated1[1]
-      
-      let intOF3 = Int(seperated3) ?? 0
-      let seperated2Date = Utilities.findDateFromStringWithTimezone(
-        dateString: seperated2
-      )
-      if seperated2Date != nil {
-        let va = seperated2Date?.convertToTimeZone(timeDifference: intOF3, date2: seperated2Date!)
-        if va != nil {
-          
-          let vacon1 = "\(va!)"
-          let vacon2 = vacon1.replacingFirstOccurrence(of: " ", with: "T")
-          let vacon3 = vacon2.replacingFirstOccurrence(of: " +0000", with: ".000+0000")
-          valRawStartDate = vacon3
-          return valRawStartDate
-        }
-      }
-    }
-    return val5
-  }
-  
-  func scheduledFirst(activity: Activity) -> String {
-    let frequencyType = activity.frequencyType
-    var valText = ""
-    
-    if frequencyType == Frequency.scheduled {
-      var valActivityRuns = activity.activityRuns ?? []
-      let val1 = self.getRunsForActivity(activity: activity)
-      
-      let valStartdate = val1.startDate ?? activity.startDate
-      var valEnddate = activity.endDate
-      if val1.startDate != nil {
-        valEnddate = val1.endDate ?? activity.endDate
-      }
-      
-      valActivityRuns = self.setScheduledRuns(activity: activity,
-                                              startTime: valStartdate, endTime: valEnddate, valActivityRuns: valActivityRuns)
-      if var startDate = valActivityRuns[0].startDate,
-         var endDate = valActivityRuns[0].endDate {
-        startDate.updateWithOffset()
-        endDate.updateWithOffset()
-        valText =
-        ActivitySchedules.formatter.string(from: startDate)
-        + " to "
-        + ActivitySchedules.formatter.string(from: endDate)
       }
     }
     return valText
@@ -705,143 +596,35 @@ class ActivitiesTableViewCell: UITableViewCell {
     endDate: Date?,
     activity: Activity
   ) {
-    let startDate1 = startDate
-    var startDate6 = startDate
-    startDate6?.updateWithOffset()
-    let startDate = startDate1
-    var endDate1 = endDate
-    endDate1?.updateWithOffset()
-    let endDate = endDate1
-    
-    let val5 = activity.startRawDate ?? ""
-    let valend5 = activity.endRawDate ?? ""
-    
-    var valRawStartDate = activity.startRawDate
-    if val5.contains("W") {
-      valRawStartDate = rawDateW(rawStartDate: val5)
+    var startDateString = ""
+    if let startDate = startDate {
+      startDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: startDate)
     }
-    var valRawEndDate = activity.endRawDate
-    if valend5.contains("W") {
-      valRawEndDate = rawDateW(rawStartDate: valend5)
+    var endDateString = ""
+    if let endDate = endDate {
+      endDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: endDate)
     }
-    
-    if valRawStartDate != nil, valRawStartDate != "", valRawEndDate != nil, valRawEndDate != "" {
-      let runStartDate = Utilities.getDateFromStringWithOutTimezone(
-        dateString: valRawStartDate!
-      )
-      let runEndDate = Utilities.getDateFromStringWithOutTimezone(
-        dateString: valRawEndDate!
-      )
-      let offset33 = UserDefaults.standard.value(forKey: "offset") as? Int
-      var updatedStartTime33 = runStartDate?.addingTimeInterval(TimeInterval(offset33!))
-      updatedStartTime33!.updateWithOffset()
-      
-      var updatedEndTime33 = runEndDate?.addingTimeInterval(TimeInterval(offset33!))
-      updatedEndTime33!.updateWithOffset()
-      
-      var startDateString = ""
-      var startDateString2: Date?
-      if startDate != nil {
-        startDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: updatedStartTime33!)
-        
-        startDateString2 = ActivitiesTableViewCell.oneTimeFormatter.date(from: startDateString)
-        startDateString2?.updateWithOffset()
+    startDateString = startDateString.replacingOccurrences(of: ";", with: "on")
+    endDateString = endDateString.replacingOccurrences(of: ";", with: "on")
+
+    if activity.isStudyLifeTime && activity.isLaunchWithStudy {
+      return
+    } else if activity.isLaunchWithStudy,
+      let endDate = endDate
+    {
+      if endDate > Date() {
+        labelTime?.text = "Ends: " + endDateString
+      } else {
+        labelTime?.text = "Ended: " + endDateString
       }
-      var endDateString = ""
-      if endDate != nil {
-        endDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: updatedEndTime33!)
+    } else if activity.isStudyLifeTime,
+      let startDate = startDate
+    {
+      if startDate > Date() {
+        labelTime?.text = "Starts: " + startDateString
       }
-      startDateString = startDateString.replacingOccurrences(of: ";", with: "on")
-      endDateString = endDateString.replacingOccurrences(of: ";", with: "on")
-      
-      if activity.isStudyLifeTime && activity.isLaunchWithStudy {
-        return
-      } else if activity.isLaunchWithStudy,
-                let endDate = endDate {
-        if endDate > Date() {
-          labelTime?.text = "Ends: " + endDateString
-        } else {
-          labelTime?.text = "Ended: " + endDateString
-        }
-      } else if activity.isStudyLifeTime,
-                let startDate = startDate {
-        if startDate > Date() {
-          labelTime?.text = "Starts: " + startDateString
-        }
-      } else if !endDateString.isEmpty {
-        labelTime?.text = startDateString + " - " + endDateString
-      }
-    } else if valRawStartDate != nil, valRawStartDate != "" {
-      let runStartDate = Utilities.getDateFromStringWithOutTimezone(
-        dateString: valRawStartDate!
-      )
-      let offset33 = UserDefaults.standard.value(forKey: "offset") as? Int
-      var updatedStartTime33 = runStartDate?.addingTimeInterval(TimeInterval(offset33!))
-      
-      updatedStartTime33!.updateWithOffset()
-      
-      var startDateString = ""
-      var startDateString2: Date?
-      if startDate != nil {
-        startDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: updatedStartTime33!)
-        
-        startDateString2 = ActivitiesTableViewCell.oneTimeFormatter.date(from: startDateString)
-        startDateString2?.updateWithOffset()
-      }
-      var endDateString = ""
-      if let endDate = endDate {
-        endDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: endDate)
-      }
-      startDateString = startDateString.replacingOccurrences(of: ";", with: "on")
-      endDateString = endDateString.replacingOccurrences(of: ";", with: "on")
-      
-      if activity.isStudyLifeTime && activity.isLaunchWithStudy {
-        return
-      } else if activity.isLaunchWithStudy,
-                let endDate = endDate {
-        if endDate > Date() {
-          labelTime?.text = "Ends: " + endDateString
-        } else {
-          labelTime?.text = "Ended: " + endDateString
-        }
-      } else if activity.isStudyLifeTime,
-                let startDate = startDate {
-        if startDate > Date() {
-          labelTime?.text = "Starts: " + startDateString
-        }
-      } else if !endDateString.isEmpty {
-        labelTime?.text = startDateString + " - " + endDateString
-      }
-    } else {
-      var startDateString = ""
-      if let startDate = startDate {
-        startDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: startDate)
-      }
-      var endDateString = ""
-      if let endDate = endDate {
-        endDateString = ActivitiesTableViewCell.oneTimeFormatter.string(from: endDate)
-      }
-      startDateString = startDateString.replacingOccurrences(of: ";", with: "on")
-      endDateString = endDateString.replacingOccurrences(of: ";", with: "on")
-      
-      if activity.isStudyLifeTime && activity.isLaunchWithStudy {
-        return
-      } else if activity.isLaunchWithStudy,
-                let endDate = endDate {
-        if endDate > Date() {
-          labelTime?.text = "Ends: " + endDateString
-        } else {
-          labelTime?.text = "Ended: " + endDateString
-        }
-      } else if activity.isStudyLifeTime,
-                let startDate = startDate {
-        if startDate > Date() {
-          labelTime?.text = "Starts: " + startDateString
-        }
-      } else if !endDateString.isEmpty {
-        labelTime?.text = startDateString + " - " + endDateString
-      }
-      
+    } else if !endDateString.isEmpty {
+      labelTime?.text = startDateString + " - " + endDateString
     }
   }
 
@@ -849,6 +632,9 @@ class ActivitiesTableViewCell: UITableViewCell {
 
   /// Clicked on  More Schedules.
   @IBAction func buttonMoreSchedulesClicked(_: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities More Schedules"
+    ])
     self.delegate?.activityCell(cell: self, activity: self.currentActivity)
   }
 
@@ -900,51 +686,4 @@ class ActivitiesTableViewCell: UITableViewCell {
     formatter.dateFormat = "HH:mm:ss"
     return formatter
   }()
-  
-  private func getLifeTime(
-    _ date: Date,
-    frequency: Frequency,
-    startDays: Int,
-    endDays: Int,
-    repeatInterval: Int
-  ) -> (Date?, Date?) {
-    
-    var startDate: Date!
-    var endDate: Date!
-    
-    switch frequency {
-    case .oneTime:
-      let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
-      let endDateInterval = TimeInterval(60 * 60 * 24 * (endDays))
-      startDate = date.addingTimeInterval(startDateInterval)
-      endDate = date.addingTimeInterval(endDateInterval)
-      
-    case .daily:
-      let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
-      let endDateInterval = TimeInterval(60 * 60 * 24 * (repeatInterval))
-      startDate = date.addingTimeInterval(startDateInterval)
-      endDate = startDate.addingTimeInterval(endDateInterval)
-      
-    case .weekly:
-      let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
-      let endDateInterval = TimeInterval(60 * 60 * 24 * 7 * (repeatInterval))
-      startDate = date.addingTimeInterval(startDateInterval)
-      endDate = startDate.addingTimeInterval(endDateInterval)
-      
-    case .monthly:
-      let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
-      startDate = date.addingTimeInterval(startDateInterval)
-      let calender = Calendar.current
-      endDate = calender.date(byAdding: .month, value: (repeatInterval), to: startDate)
-      
-    case .scheduled:
-      let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
-      let endDateInterval = TimeInterval(60 * 60 * 24 * (endDays))
-      startDate = date.addingTimeInterval(startDateInterval)
-      endDate = date.addingTimeInterval(endDateInterval)
-      
-    }
-    return (startDate, endDate)
-  }
-  
 }

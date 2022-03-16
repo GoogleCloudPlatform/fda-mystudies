@@ -11,6 +11,7 @@ package com.harvard.studyappmodule.consent;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
 import com.harvard.R;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.ConsentDocumentStep;
 import org.researchstack.backbone.step.Step;
@@ -34,6 +36,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
 
   private ConsentDocumentStep step;
   private StepResult<Boolean> stepResult;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public ConsentDocumentStepLayoutCustom(Context context) {
     super(context);
@@ -51,6 +54,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
   public void initialize(Step step, StepResult result) {
     this.step = (ConsentDocumentStep) step;
     this.confirmationDialogBody = ((ConsentDocumentStep) step).getConfirmMessage();
+    this.analyticsInstance = CustomFirebaseAnalytics.getInstance(getContext());
     this.htmlContent = ((ConsentDocumentStep) step).getConsentHTML();
     this.stepResult = result;
 
@@ -87,40 +91,68 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
     pdfView.loadData(htmlBase64, "text/html", "base64");
 
     SubmitBar submitBar = (SubmitBar) findViewById(R.id.submit_bar);
-    submitBar.setPositiveAction(new Action1() {
-      @Override
-      public void call(Object v) {
-        ConsentDocumentStepLayoutCustom.this.showDialog();
-      }
-    });
-    submitBar.setNegativeAction(new Action1() {
-      @Override
-      public void call(Object v) {
-        callbacks.onCancelStep();
-      }
-    });
+    submitBar.setPositiveAction(
+        new Action1() {
+          @Override
+          public void call(Object v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getContext().getString(R.string.consent_review_agree_text));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            ConsentDocumentStepLayoutCustom.this.showDialog();
+          }
+        });
+    submitBar.setNegativeAction(
+        new Action1() {
+          @Override
+          public void call(Object v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getContext().getString(R.string.consent_review_disagree_text));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            callbacks.onCancelStep();
+          }
+        });
   }
 
   private void showDialog() {
     new AlertDialog.Builder(getContext())
-            .setTitle(R.string.rsb_consent_review_alert_title)
-            .setMessage(confirmationDialogBody)
-            .setCancelable(false)
-            .setPositiveButton(
-                    R.string.rsb_agree, new DialogInterface.OnClickListener() {
-                      @Override
-                      public void onClick(DialogInterface dialog, int which) {
-                        stepResult.setResult(true);
-                        callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, stepResult);
-                      }
-                    })
-            .setNegativeButton(
-                    R.string.rsb_consent_review_cancel, new DialogInterface.OnClickListener() {
-                      @Override
-                      public void onClick(DialogInterface dialog, int which) {
-                        // Gives them a chance to read it again
-                      }
-                    })
-            .show();
+        .setTitle(R.string.rsb_consent_review_alert_title)
+        .setMessage(confirmationDialogBody)
+        .setCancelable(false)
+        .setPositiveButton(
+            R.string.rsb_agree,
+            new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getContext().getString(R.string.consent_agree_agree));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                stepResult.setResult(true);
+                callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, step, stepResult);
+              }
+            })
+        .setNegativeButton(
+            R.string.rsb_consent_review_cancel,
+            new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                // Gives them a chance to read it again
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getContext().getString(R.string.consent_agree_cancel));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              }
+            })
+        .show();
   }
 }

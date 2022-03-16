@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 class GraphChartTableViewCell: UITableViewCell {
   @IBOutlet weak var graphView: ORKGraphChartView!
@@ -242,6 +243,9 @@ class LineChartCell: GraphChartTableViewCell {
 
   // MARK: - Actions
   @IBAction func buttonForwardAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LineChart Forward"
+    ])
 
     let timeRange = currentChart.dataSourceTimeRange!
     let chartTimeRange = ChartTimeRange(rawValue: timeRange)!
@@ -756,11 +760,8 @@ class LineChartCell: GraphChartTableViewCell {
   }
 
   func handleRunsForDate(startDate: Date, endDate: Date, runs: [[String: Any]]) {
-
-    var dataList: [DBStatisticsData] = currentChart.statList.filter({
-      $0.startDate! >= startDate && $0.startDate! <= endDate
-    })
-
+    var dataList: [DBStatisticsData] = Array(currentChart.statList.sorted(byKeyPath: "startDate", ascending: true))
+    
     if !currentChart.scrollable, dataList.count > frequencyPageSize {
       // If the chart is not scrollable, only show the latest responses based on the page size.
       let frequencyPageSizeData = dataList.suffix(from: dataList.count - frequencyPageSize)

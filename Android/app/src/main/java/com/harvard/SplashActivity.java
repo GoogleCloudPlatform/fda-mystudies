@@ -36,6 +36,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.RegisterUserEvent;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
@@ -53,6 +54,7 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
   private boolean force = false;
   private static final int RESULT_CODE_UPGRADE = 102;
   private Apps apps;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
 
     AppController.keystoreInitilize(SplashActivity.this);
     new checkAndMigrate(this).execute();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
   }
 
 
@@ -153,6 +156,12 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
             getResources().getString(R.string.retry),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.splash_retry));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 getAppsInfo();
               }
             })
@@ -160,6 +169,12 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
             getResources().getString(R.string.cancel),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.splash_retry_cancel));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 dialog.dismiss();
                 finish();
               }
@@ -245,10 +260,16 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
                   "ok",
                   new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                      Bundle eventProperties = new Bundle();
+                      eventProperties.putString(
+                          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          getString(R.string.app_update_next_time_ok));
+                      analyticsInstance.logEvent(
+                          CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                       proceedToApp();
                     }
-                  }).show();
-
+                  })
+              .show();
         }
       }
     } else if (requestCode == PASSCODE_RESPONSE) {
@@ -313,6 +334,12 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
               positiveButton,
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   startActivityForResult(
                       new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
                       RESULT_CODE_UPGRADE);
@@ -323,12 +350,18 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                        SplashActivity.this,
-                        "Please update the app to continue using",
-                        Toast.LENGTH_SHORT)
+                            SplashActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {

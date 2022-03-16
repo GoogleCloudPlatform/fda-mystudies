@@ -462,12 +462,16 @@ const CGFloat PDFhideViewAnimationDuration = 0.5;
 }
 
 - (void)thumbnailButtonAction {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKPDFThumbNailButton"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [self animateViews:@[_pdfThumbnailView] setHidden:!_pdfThumbnailView.isHidden];
     [self updateActionButtonsAppearance];
     [_pdfView setAutoScales:YES];
 }
 
 - (void)annotationButtonAction {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKPDFAnnotationButton"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
 
     [self setPDFViewDisplayModeSinglePage:_isFreehandDrawingActive];
 
@@ -492,6 +496,8 @@ const CGFloat PDFhideViewAnimationDuration = 0.5;
 }
 
 - (void)searchButtonAction {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKPDFSearchButton"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [UIView animateWithDuration:0.5 animations:^{
         if (!_searchBar.isHidden) {
             [self searchBarDismissKeyboard];
@@ -524,6 +530,8 @@ const CGFloat PDFhideViewAnimationDuration = 0.5;
 }
 
 - (void)shareButtonAction {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKPDFShareButton"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     if (_isShareActive) {
         
     }
@@ -665,6 +673,8 @@ const CGFloat PDFhideViewAnimationDuration = 0.5;
 }
 
 - (void)clearButtonAction {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKPDFClearButton"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     if (_freehandDrawingView.freehandDrawingPath && _freehandDrawingView.freehandDrawingExists) {
         [_freehandDrawingView clear];
     }
@@ -672,6 +682,8 @@ const CGFloat PDFhideViewAnimationDuration = 0.5;
 }
 
 - (void)applybuttonAction {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKPDFApplyButton"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     if (_freehandDrawingView.freehandDrawingPath && _freehandDrawingView.freehandDrawingExists) {
         CGRect annotationRect = _pdfView.documentView.bounds;
         PDFAnnotation *annotation = [[PDFAnnotation alloc] initWithBounds:annotationRect forType:PDFAnnotationSubtypeInk withProperties:nil];
@@ -689,6 +701,8 @@ const CGFloat PDFhideViewAnimationDuration = 0.5;
 }
 
 - (void)exitButtonAction {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKPDFExitButton"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [self setPDFViewDisplayModeSinglePage:_isFreehandDrawingActive];
 
     if (_isFreehandDrawingActive && _freehandDrawingView) {

@@ -21,6 +21,7 @@ import MessageUI
 import SafariServices
 import UIKit
 import WebKit
+import FirebaseAnalytics
 
 class ResourceDetailViewController: UIViewController {
 
@@ -53,7 +54,6 @@ class ResourceDetailViewController: UIViewController {
     self.hidesBottomBarWhenPushed = true
     self.addBackBarButton()
     self.title = resource?.title
-    setNavigationBarColor()
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -151,10 +151,16 @@ class ResourceDetailViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Cancel"
+    ])
     self.dismiss(animated: true, completion: nil)
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Share"
+    ])
     self.shareResource { [weak self] (status) in
       if !status {
         self?.view.makeToast(kResourceShareError)
@@ -163,6 +169,9 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionBack(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Back"
+    ])
     if webView.canGoBack {
       webView.goBack()
     } else if webView.backForwardList.backList.count == 0 {
@@ -174,6 +183,9 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionGoForward(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail GoForward"
+    ])
     if webView.canGoForward {
       webView.goForward()
     }
