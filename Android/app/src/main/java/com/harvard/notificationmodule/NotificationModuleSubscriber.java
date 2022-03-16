@@ -183,12 +183,22 @@ public class NotificationModuleSubscriber {
                     .addCategory("android.intent.category.DEFAULT")
                     .putExtra("pendingIntentId", REQUEST_CODE_24HR_NOTIFICATION);
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context,
-                    REQUEST_CODE_24HR_NOTIFICATION,
-                    notificationIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent broadcast;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              REQUEST_CODE_24HR_NOTIFICATION,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              REQUEST_CODE_24HR_NOTIFICATION,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
               AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
@@ -245,9 +255,19 @@ public class NotificationModuleSubscriber {
 
     notificationIntent.putExtra("pendingIntentId", pendingIntentId);
 
-    PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent broadcast;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingIntentId,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     PendingIntents pendingIntents = new PendingIntents();
     pendingIntents.setActivityId(activityId);
     pendingIntents.setStudyId(studyId);
@@ -283,9 +303,19 @@ public class NotificationModuleSubscriber {
                     .putExtra("type", NO_USE_NOTIFICATION)
                     .putExtra("date", AppController.getDateFormatForApi().format(calendar.getTime()));
 
-    PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent broadcast;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingId,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
               AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
@@ -306,9 +336,19 @@ public class NotificationModuleSubscriber {
                     .putExtra(
                             "description", context.getResources().getString(R.string.studie_your_enrolled))
                     .putExtra("type", NO_USE_NOTIFICATION);
-    PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent broadcast;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingId,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context, pendingId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     broadcast.cancel();
     alarmManager.cancel(broadcast);
   }
@@ -332,9 +372,19 @@ public class NotificationModuleSubscriber {
                     .putExtra("type", NOTIFICATION_TURN_OFF_NOTIFICATION)
                     .putExtra("date", AppController.getDateFormatForApi().format(calendar.getTime()));
 
-    PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent broadcast;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingId1,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setExactAndAllowWhileIdle(
               AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), broadcast);
@@ -356,9 +406,19 @@ public class NotificationModuleSubscriber {
                             "description",
                             context.getResources().getString(R.string.notificatinturnoffnotification))
                     .putExtra("type", NOTIFICATION_TURN_OFF_NOTIFICATION);
-    PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent broadcast;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingId1,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context, pendingId1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     broadcast.cancel();
     alarmManager.cancel(broadcast);
   }
@@ -435,9 +495,19 @@ public class NotificationModuleSubscriber {
                     context,
                     context.getResources().getString(R.string.pendingCountResources),
                     "" + pendingIntentId);
-    PendingIntent broadcast =
-            PendingIntent.getBroadcast(
-                    context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent broadcast;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context,
+              pendingIntentId,
+              notificationIntent,
+              PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      broadcast =
+          PendingIntent.getBroadcast(
+              context, pendingIntentId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     PendingIntentsResources pendingIntents = new PendingIntentsResources();
     pendingIntents.setActivityId(activityId);
     pendingIntents.setStudyId(studyId);
@@ -476,12 +546,22 @@ public class NotificationModuleSubscriber {
               .putExtra("studyId", pendingIntentsResources.getStudyId())
               .putExtra("activityId", pendingIntentsResources.getActivityId())
               .putExtra("notificationId", pendingIntentsResources.getNotificationId());
-      PendingIntent broadcast =
-              PendingIntent.getBroadcast(
-                      context,
-                      pendingIntentsResources.getPendingIntentId(),
-                      notificationIntent,
-                      PendingIntent.FLAG_UPDATE_CURRENT);
+      PendingIntent broadcast;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        broadcast =
+            PendingIntent.getBroadcast(
+                context,
+                pendingIntentsResources.getPendingIntentId(),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+      } else {
+        broadcast =
+            PendingIntent.getBroadcast(
+                context,
+                pendingIntentsResources.getPendingIntentId(),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+      }
       broadcast.cancel();
       alarmManager.cancel(broadcast);
     }
@@ -508,12 +588,22 @@ public class NotificationModuleSubscriber {
               .putExtra("studyId", pendingIntentsResources.getStudyId())
               .putExtra("activityId", pendingIntentsResources.getActivityId())
               .putExtra("notificationId", pendingIntentsResources.getNotificationId());
-      PendingIntent broadcast =
-              PendingIntent.getBroadcast(
-                      context,
-                      pendingIntentsResources.getPendingIntentId(),
-                      notificationIntent,
-                      PendingIntent.FLAG_UPDATE_CURRENT);
+      PendingIntent broadcast;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        broadcast =
+            PendingIntent.getBroadcast(
+                context,
+                pendingIntentsResources.getPendingIntentId(),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+      } else {
+        broadcast =
+            PendingIntent.getBroadcast(
+                context,
+                pendingIntentsResources.getPendingIntentId(),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+      }
       broadcast.cancel();
       alarmManager.cancel(broadcast);
     }
@@ -539,12 +629,22 @@ public class NotificationModuleSubscriber {
               .putExtra("studyId", pendingIntents.getStudyId())
               .putExtra("activityId", pendingIntents.getActivityId())
               .putExtra("notificationId", pendingIntents.getNotificationId());
-      PendingIntent broadcast =
-              PendingIntent.getBroadcast(
-                      context,
-                      pendingIntents.getPendingIntentId(),
-                      notificationIntent,
-                      PendingIntent.FLAG_UPDATE_CURRENT);
+      PendingIntent broadcast;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        broadcast =
+            PendingIntent.getBroadcast(
+                context,
+                pendingIntents.getPendingIntentId(),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+      } else {
+        broadcast =
+            PendingIntent.getBroadcast(
+                context,
+                pendingIntents.getPendingIntentId(),
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+      }
       broadcast.cancel();
       alarmManager.cancel(broadcast);
     }
@@ -567,12 +667,22 @@ public class NotificationModuleSubscriber {
                 .putExtra("studyId", pendingIntents.getStudyId())
                 .putExtra("activityId", pendingIntents.getActivityId())
                 .putExtra("notificationId", pendingIntents.getNotificationId());
-        PendingIntent broadcast =
-                PendingIntent.getBroadcast(
-                        context,
-                        pendingIntents.getPendingIntentId(),
-                        notificationIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent broadcast;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+          broadcast =
+              PendingIntent.getBroadcast(
+                  context,
+                  pendingIntents.getPendingIntentId(),
+                  notificationIntent,
+                  PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+          broadcast =
+              PendingIntent.getBroadcast(
+                  context,
+                  pendingIntents.getPendingIntentId(),
+                  notificationIntent,
+                  PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         broadcast.cancel();
         alarmManager.cancel(broadcast);
       }

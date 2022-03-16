@@ -295,7 +295,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   
   @objc func receivedORKAction(_ notification: Notification) {
     let value = notification.userInfo
-    print(value as Any)
     if let action = value?["ORKAction"] as? String {
       Analytics.logEvent(analyticsButtonClickEventsName, parameters: [buttonClickReasonsKey: action])
     }

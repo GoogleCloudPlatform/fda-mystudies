@@ -191,34 +191,10 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     counterTextField?.text = "00" + "\(self.kickCounter!)"
     
     let isAlertShown = UserDefaults.standard.bool(forKey: "isAlertShown")
-    print("IsAlertShown :: \(isAlertShown)")
     if Int((counterTextField?.text)!) == self.maxKicksAllowed! && !isAlertShown {
       UserDefaults.standard.setValue(true, forKey: "isAlertShown")
       self.showAlertOnCompletion()
     }
-//    let isAlertShown = UserDefaults.standard.bool(forKey: "isAlertShown")
-//    let wasAlertDismissed = UserDefaults.standard.bool(forKey: "isAlertDismissed")
-//
-//    print("Is AlertShown :: \(isAlertShown)")
-//    print("Alert Dismmissed :: \(wasAlertDismissed)")
-//
-//    if isAlertShown && !wasAlertDismissed {
-//      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//        self.showAlertOnCompletion()
-//      }
-//    }
-//
-//    let isGreaterAlertShown = UserDefaults.standard.bool(forKey: "isGreaterAlertShown")
-//    let wasGreaterAlertDismissed = UserDefaults.standard.bool(forKey: "isGreaterAlertDismissed")
-//
-//    print("is Greater Alert Shown :: \(isGreaterAlertShown)")
-//    print("Was Greater Alert Dismissed :: \(wasGreaterAlertDismissed)")
-//
-//    if isGreaterAlertShown && !wasGreaterAlertDismissed {
-//      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//        self.showAlertForGreaterValues()
-//      }
-//    }
   }
   
   override func hasNextStep() -> Bool {
