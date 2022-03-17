@@ -1583,9 +1583,9 @@
                     <span
                         class="pr-sm light-txt opacity06"> days
                      </span>                        
-                      <span                     
-                    class="form-group dis-inline vertical-align-middle pr-md"
-                      style="margin-bottom: -13px;width: 170px;"><input id="manualStartTime0"
+                     <span                     
+                       class="form-group dis-inline vertical-align-middle pr-md"
+                       style="margin-bottom: -13px;width: 169px;"><input id="manualStartTime0"
                                                           type="text" class="form-control clock"
                                                           name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
                                                           value="${questionnaireCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
@@ -1594,16 +1594,12 @@
                         class='help-block with-errors red-txt'></span>
                          <span
                           class="help-block-timer with-errors red-txt" style="display:none;" ></span>
-                        
-                    
-                  </span>                       
-
-                        <span class="light-txt opacity06">
+                    </span>
+                    <span class="light-txt opacity06">
                      <span>to</span>
-                      Anchor date
+                     Anchor date
                     </span>
                   </span>
-                  
                   <span><select
                       class="signDropDown selectpicker sign-box selectYSign"
                       count='0' title="Select"
@@ -2343,7 +2339,6 @@
     }
 
     $(".schedule").change(function () {
-    	debugger
       $(".all").addClass("dis-none");
       var schedule_opts = $(this).attr('frequencytype');
       var val = $(this).val();
@@ -2893,8 +2888,8 @@
 	     	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").empty().append(
 	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	     	       "Please fill out this field"));
-	     	 $('#xdays0').parent().find(".help-block-timer").show();
-	    	$('#xdays0').parent().find(".help-block").hide();
+	     	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").show();
+	    	  $('#xdays' + customAnchorCount).parent().find(".help-block").hide();
 	    
 	    	}
 			
@@ -2903,8 +2898,8 @@
 	     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
 	     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
 	     	       "Please fill out this field"));
-	     	 $('#manualStartTime0').parent().find(".help-block-timer").show();
-	     	 $('#manualStartTime0').parent().find(".help-block").hide();
+	     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").show();
+	     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").hide();
 	    	}
 			
 			if ($('#manualEndTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
@@ -5016,7 +5011,6 @@
     	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
      }
      
-     
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
        $('#manualStartTime0').parent().find(".help-block-timer").show();
        $('#manualStartTime0').parent().find(".help-block").hide();
@@ -5291,6 +5285,20 @@
       $(this).parent().parent().addClass("current");
 
       $(".current").nextAll().remove();
+      var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
+      var parent_id = parseInt(parentId);
+      
+     	if ($('#xdays' + parent_id).val() != '') {
+    	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
+    	  $('#xdays' + parent_id).parent().find(".help-block").empty().css({'display': 'none'});
+    	  $('#xdays' + parent_id).parent().find(".xdays").empty().css({'position': 'relative', 'top': '-5px'});
+    	  $('#xdays' + parent_id).parent().find(".help-block-timer").add().css({'display': 'none'});
+     	} else {
+     	  $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+     	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
+    	  
+     	}
+     	
       
       if( $('.manually-anchor-option').filter(function() {
   	    return $(this).css('display') !== 'none';}).length == 1){
