@@ -1104,7 +1104,7 @@
                 class="help-block-timer with-errors red-txt" style='display:none'></span>
                 
           </span>
-          <span class="mb-sm pr-md">
+          <span class="mb-sm" style='padding-right: 25px !important;'>
             <span
                 class="pr-sm light-txt opacity06"> days
               </span>
@@ -1221,7 +1221,7 @@
                   <span
                   class="help-block-timer with-errors red-txt" style='display:none'></span>
             </span>
-            <span class="mb-sm pr-md">
+            <span class="mb-sm" style='padding-right: 25px !important;'>
               <span
                   class="pr-sm light-txt opacity06"> days
                   </span>
@@ -4268,6 +4268,20 @@
       $(this).parent().parent().addClass("current");
 
       $(".current").nextAll().remove();
+      
+      var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
+      var parent_id = parseInt(parentId);
+      
+     	if ($('#xdays' + parent_id).val() != '') {
+    	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
+    	  $('#xdays' + parent_id).parent().find(".help-block").empty().css({'display': 'none'});
+    	  $('#xdays' + parent_id).parent().find(".xdays").empty().css({'position': 'relative', 'top': '-5px'});
+    	  $('#xdays' + parent_id).parent().find(".help-block-timer").add().css({'display': 'none'});
+     	} else {
+     	  $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+     	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
+    	  
+     	}
       
       if( $('.manually-anchor-option').filter(function() {
     	    return $(this).css('display') !== 'none';}).length == 1){
