@@ -10,7 +10,6 @@ package com.fdahpstudydesigner.config;
 
 import javax.sql.DataSource;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -35,8 +34,8 @@ public class HibernateTestConfig {
 
   @Bean
   public SessionFactory sessionFactory() {
-    SessionFactory factory =
-        new AnnotationConfiguration().configure("hibernate.cfg.xml").buildSessionFactory();
+    SessionFactory factory = null;
+    // new AnnotationConfiguration().configure("hibernate.cfg.xml").buildSessionFactory();
     return factory;
   }
 
