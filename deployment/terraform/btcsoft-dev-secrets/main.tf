@@ -522,6 +522,20 @@ resource "google_secret_manager_secret" "manual_fhir_enabled" {
     }
   }
 }
+resource "google_secret_manager_secret" "manual_bigquery_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-bigquery-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
 resource "google_secret_manager_secret" "manual_did_enabled" {
   provider = google-beta
 

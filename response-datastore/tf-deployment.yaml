@@ -133,7 +133,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: fhir_enabled        
+                  key: fhir_enabled
+            - name: BIGQUERY_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: bigquery_enabled                   
             - name: DISCARD_FHIR_RESPONSE
               valueFrom:
                 secretKeyRef:
