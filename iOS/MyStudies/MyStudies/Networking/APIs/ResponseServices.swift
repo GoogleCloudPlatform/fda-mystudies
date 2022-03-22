@@ -55,7 +55,10 @@ class ResponseServices: NSObject {
   /// - Parameters:
   ///   - responseData: Response in form of `JSONDictionary`
   ///   - delegate: Class object to receive response
-  func processResponse(responseData: [String: Any], delegate: NMWebServiceDelegate) {
+  func processResponse(
+       responseData: [String: Any],
+       delegate: NMWebServiceDelegate
+     ) {
     self.delegate = delegate
 
     let method = ResponseMethods.processResponse.method
@@ -95,6 +98,58 @@ class ResponseServices: NSObject {
           JSONKey.applicationId: AppConfiguration.appID,
         ] as [String: Any]
 
+      let headers: [String: String] = [
+        JSONKey.userID: currentUser.userId ?? ""
+      ]
+      self.sendRequestWith(method: method, params: params, headers: headers)
+    }
+  }
+  
+  func processUpdateResponse(
+       responseData: [String: Any],
+       activityStatus: UserActivityStatus,
+       delegate: NMWebServiceDelegate
+  ) {
+    self.delegate = delegate
+    
+    let method = ResponseMethods.processResponse.method
+    
+    let currentUser = User.currentUser
+    if let userStudyStatus = currentUser.participatedStudies.filter({
+      $0.studyId == Study.currentStudy?.studyId!
+    }).first {
+      let currentStudy = Study.currentStudy
+      
+      let studyId = currentStudy?.studyId ?? ""
+      let activiyId = Study.currentActivity?.actvityId ?? ""
+      let activityName = Study.currentActivity?.shortName ?? ""
+      let activityVersion = Study.currentActivity?.version ?? ""
+      let currentRunId = Study.currentActivity?.currentRunId ?? 0
+      let studyVersion = currentStudy?.version ?? ""
+      let info =
+      [
+        kStudyId: studyId,
+        kActivityId: activiyId,
+        kActivityName: activityName,
+        "version": activityVersion,
+        kActivityRunId: "\(currentRunId)",
+        JSONKey.studyVersion: studyVersion,
+      ]
+      
+      let activityType = Study.currentActivity?.type?.rawValue
+      
+      let params =
+      [
+        kActivityType: activityType!,
+        kActivityInfoMetaData: info,
+        kParticipantId: userStudyStatus.participantId ?? "",
+        JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
+        JSONKey.siteID: userStudyStatus.siteID ?? "",
+        kActivityResponseData: responseData,
+        JSONKey.applicationId: AppConfiguration.appID,
+        "activityRun": activityStatus.getParticipatedUserUpdateRunActivityStatus(),
+      ] as [String: Any]
+      
       let headers: [String: String] = [
         JSONKey.userID: currentUser.userId ?? ""
       ]

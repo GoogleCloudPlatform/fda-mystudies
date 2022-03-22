@@ -95,6 +95,7 @@ class ResourcesViewController: UIViewController {
       appDelegate.checkConsentStatus(controller: self)
     }
     tableRows = getStaticResources()
+    setNavigationBarColor()
   }
 
   override func viewWillAppear(_ animated: Bool) {

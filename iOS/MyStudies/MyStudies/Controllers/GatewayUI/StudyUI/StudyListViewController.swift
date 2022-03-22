@@ -66,12 +66,16 @@ class StudyListViewController: UIViewController {
     DispatchQueue.main.async { [weak self] in
       self?.setupStudyListTableView()
     }
+    if #available(iOS 15, *) {
+      UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
+    }
   }
   
   override func viewWillAppear(_ animated: Bool) {
     if !isComingFromFilterScreen {
       self.addProgressIndicator()
     }
+    setNavigationBarColor()
   }
 
   override func viewDidAppear(_ animated: Bool) {
