@@ -126,8 +126,7 @@ class ActivitiesViewController: UIViewController {
     
     UserDefaults.standard.removeObject(forKey: "isAlertShown")
     UserDefaults.standard.synchronize()
-
-        
+   
   }
 
   override func viewWillAppear(_ animated: Bool) {
