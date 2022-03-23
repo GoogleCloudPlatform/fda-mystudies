@@ -655,6 +655,8 @@ class StudyListViewController: UIViewController {
 
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
           pushToStudyDashboard()
+        } else if userStudyStatus == .yetToEnroll {
+          checkDatabaseForStudyInfo(study: currentStudy)
         } else {
           checkDatabaseForStudyInfo(study: currentStudy)
         }
@@ -667,11 +669,35 @@ class StudyListViewController: UIViewController {
   }
 
   /// Checks `Study` status and do the action.
-  func performTaskBasedOnStudyStatus() {
+  func performTaskBasedOnStudyStatus(studyID: String? = nil) {
+    // Study ID from notification
+    if let studyID = studyID,
+        let study = studiesList.filter({ $0.studyId == studyID }).first {
+      Study.updateCurrentStudy(study: study)
+    }
+    
     guard let study = Study.currentStudy else { return }
 
     if User.currentUser.userType == UserType.loggedInUser {
-      if study.status == .active {
+
+       if Study.currentStudy?.status == .paused {
+        let userStudyStatus = study.userParticipateState.status
+
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
+          if (studyID == nil) {
+            UIUtilities.showAlertWithTitleAndMessage(
+              title: "",
+              message: NSLocalizedString(
+                kMessageForStudyPausedAfterJoiningState,
+                comment: ""
+              )
+              as NSString
+            )
+          }
+        } else {
+          checkForStudyUpdate(study: study)
+        }
+      } else if study.status == .active {
         let userStudyStatus = study.userParticipateState.status
 
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
@@ -682,26 +708,11 @@ class StudyListViewController: UIViewController {
             addProgressIndicator()
             perform(#selector(loadStudyDetails), with: self, afterDelay: 1)
           }
+        } else if userStudyStatus == .yetToEnroll {
+          checkDatabaseForStudyInfo(study: study)
         } else {
           checkForStudyUpdate(study: study)
         }
-      } else if Study.currentStudy?.status == .paused {
-        let userStudyStatus = study.userParticipateState.status
-
-        if userStudyStatus == .completed || userStudyStatus == .enrolled {
-          UIUtilities.showAlertWithTitleAndMessage(
-            title: "",
-            message: NSLocalizedString(
-              kMessageForStudyPausedAfterJoiningState,
-              comment: ""
-            )
-              as NSString
-          )
-        } else {
-          checkForStudyUpdate(study: study)
-        }
-      } else {
-        checkForStudyUpdate(study: study)
       }
     } else {
       checkForStudyUpdate(study: study)
