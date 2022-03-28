@@ -275,7 +275,11 @@ public class FDASchedulerService {
           .setParameter("notificationId", pushNotificationBean.getNotificationId())
           .executeUpdate();
     }
+
     trans.commit();
+    if (session.isOpen()) {
+      session.close();
+    }
   }
 
   private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {

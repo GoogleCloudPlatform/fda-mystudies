@@ -107,6 +107,10 @@ public class GCISchedulerService {
     } catch (Exception e) {
       logger.error("addorUpdateOrgUserInfo  - ERROR", e.getCause());
       e.printStackTrace();
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.info("addorUpdateOrgUserInfo  - Ends");
   }

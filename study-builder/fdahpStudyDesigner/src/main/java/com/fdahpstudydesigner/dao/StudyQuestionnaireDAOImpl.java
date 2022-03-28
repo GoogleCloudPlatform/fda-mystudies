@@ -5028,6 +5028,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
     } catch (Exception e) {
       logger.error("StudyQuestionnaireDAOImpl - isAnchorDateExistByQuestionnaire() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("isAnchorDateExistByQuestionnaire - Ends");
     return isExist;
