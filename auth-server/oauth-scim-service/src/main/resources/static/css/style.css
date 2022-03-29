@@ -262,7 +262,7 @@ footer ul li:last-child a {
 }
 
 /* media queries scss */
-@media ( min-width : 320px) {
+@media ( min-width : 300px) {
   .centered__div {
     width: 92%;
     bottom: 2%;
@@ -349,7 +349,7 @@ body#body-container {
   font-weight: 600;
 }
 
-@media ( min-width : 320px) {
+@media ( min-width : 300px) {
   .centered__div__mobile {
     width: 270px;
   }
@@ -448,7 +448,7 @@ body#body-container {
   padding: 40% 0% !important;
 }
 
-@media only screen and (max-width: 500px) and (min-width: 320px) {
+@media only screen and (max-width: 500px) and (min-width: 300px) {
   .input__field input {
     text-indent: 18px;
   }
@@ -551,7 +551,7 @@ body#body-container {
   100% { transform: rotate(360deg); transform: rotate(360deg); }
 }
 
-@media only screen and (max-width: 900px) and (min-width: 320px) {
+@media only screen and (max-width: 900px) and (min-width: 300px) {
   .loading_text {
     margin-top: 90%;
   }
@@ -565,7 +565,7 @@ body#body-container {
   margin-top: 60%;
 }
 
-@media only screen and (max-width: 500px) and (min-width: 320px) {
+@media only screen and (max-width: 500px) and (min-width: 300px) {
 .mob_mt { margin-top:10px; }
 }
 
