@@ -157,7 +157,7 @@
                     <input type="text" class="input-field wow_input phoneMask"
                            id="" name="phoneNumber" placeholder="Phone"
                            value="${userBO.phoneNumber}" data-minlength="12"
-                           maxlength="12" data-pattern-error="Phone number is invalid" required data-error="Please fill out this field" autocomplete="off"/>
+                           maxlength="12" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
