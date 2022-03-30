@@ -70,7 +70,15 @@ class CustomInstructionStepViewController: ORKStepViewController {
     let detailText = step?.detailText ?? ""
     let regex = "<[^>]+>"
     if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
-      textView.text = detailText
+      if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
+        if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttributedString, attributedText.length > 0 {
+          textView.attributedText = attributedText
+        } else {
+          textView.text = detailText
+        }
+      } else {
+        textView.text = detailText
+      }
     } else {
       textView.attributedText =
         detailText.stringByDecodingHTMLEntities.htmlToAttributedString
