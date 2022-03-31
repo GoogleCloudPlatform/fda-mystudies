@@ -87,7 +87,3 @@ spec:
       - name: gcloud-key-volume
         secret:
           secretName: hydra-gke-sa-gcloud-key   
-      log:
-        level: warn
-        format: json
-        leak_sensitive_values: false
