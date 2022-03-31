@@ -74,7 +74,9 @@ class CustomInstructionStepViewController: ORKStepViewController {
         
         if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttributedString, attributedText.length > 0 {
           textView.attributedText = attributedText
-        } else if let attributedText = detailText.htmlToAttributedString?.attributedString2Html?.stringByDecodingHTMLEntities.htmlToAttributedString, attributedText.length > 0 {
+        } else if let attributedText =
+                    detailText.htmlToAttributedString?.attributedString2Html?.stringByDecodingHTMLEntities.htmlToAttributedString,
+                  attributedText.length > 0 {
           textView.attributedText = attributedText
         } else {
           textView.text = detailText
