@@ -234,6 +234,9 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+    
+    UserDefaults.standard.set("", forKey: "isOptionalTextChoice")
+    UserDefaults.standard.synchronize()
 
     if self.answerFormat?.style == .multipleChoice {
       self.tableView?.allowsMultipleSelection = true
@@ -292,28 +295,24 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     // Try to get the ref of the continue of the next button
     if let nextBtn = self.view.allSubViewsOf(type: ORKContinueButton.self).last {
       self.continueBtn = nextBtn
-      
-      //        if #available(iOS 15, *) {
       if self.questionStep?.isOptional ?? false {
         self.continueBtn?.setTitle("Next", for: .normal)
       }
-      //        }
-      
+      if self.questionStep?.isOptional ?? false {
+        self.continueBtn?.setTitle("Next", for: .normal)
+      }
       continueBtn?.addTarget(
         self,
         action: #selector(didTapOnDoneOrNextBtn),
         for: .touchUpInside
       )
-    } else {
-      //      fatalError("Couldn't able to find continue Button")
     }
     
     if super.hasPreviousStep() {
-      
       if navigationItem.leftBarButtonItem == nil {
         let view = UIView(frame: CGRect(x: -15, y: 0, width: 46, height: 36))
-//        (x: 0, y: 0, width: 26, height: 26)
-        //        Filter Button
+        
+        //  Filter Button
         let filterButton = addFilterButton()
         filterButton.clipsToBounds = true
         view.addSubview(filterButton)
@@ -323,13 +322,12 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
         navigationItem.leftBarButtonItem = barButton
       }
     }
-    
   }
   
   func addFilterButton() -> UIButton {
     let filterButton = UIButton(type: .custom)
     filterButton.setImage(
-      UIImage(named: "leftIconBlue2"),
+      #imageLiteral(resourceName: "leftIconBlue2"),
       for: UIControl.State.normal
     )
     filterButton.addTarget(self, action: #selector(filterAction(_:)), for: .touchUpInside)
