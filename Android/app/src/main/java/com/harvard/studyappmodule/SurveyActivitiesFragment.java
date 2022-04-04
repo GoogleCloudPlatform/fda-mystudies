@@ -192,6 +192,7 @@ public class SurveyActivitiesFragment extends Fragment
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
   String title = "";
+  Intent calculateRunHoldServiceeintent;
 
   @Override
   public void onAttach(Context context) {
@@ -1648,6 +1649,12 @@ public class SurveyActivitiesFragment extends Fragment
 
     @Override
     protected ArrayList<ActivitiesWS> doInBackground(ArrayList<ActivitiesWS>... params) {
+      SharedPreferenceHelper.writePreference(context, "runsCalculating", "true");
+      calculateRunHoldServiceeintent = new Intent(context, CalculateRunHoldService.class);
+      if (!AppController.isMyServiceRunning(context, CalculateRunHoldService.class)) {
+        context.startService(calculateRunHoldServiceeintent);
+      }
+
       realm = AppController.getRealmobj(context);
 
       try {
@@ -2329,7 +2336,13 @@ public class SurveyActivitiesFragment extends Fragment
 
     @Override
     protected void onPostExecute(ArrayList<ActivitiesWS> result) {
+      AppController.getHelperProgressDialog()
+          .updateMsg(context.getString(R.string.activity_loading_msg));
 
+      SharedPreferenceHelper.writePreference(context, "runsCalculating", "false");
+      if (AppController.isMyServiceRunning(context, CalculateRunHoldService.class)) {
+        context.stopService(calculateRunHoldServiceeintent);
+      }
       realm = AppController.getRealmobj(context);
 
       surveyActivitiesRecyclerView.setLayoutManager(new LinearLayoutManager(context));

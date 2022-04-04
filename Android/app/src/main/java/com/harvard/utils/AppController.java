@@ -104,6 +104,7 @@ public class AppController {
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
   public static String loginCallback = "login_callback";
+  public static int SchemaVersion = 2;
   private static CustomFirebaseAnalytics analyticsInstance;
 
   public static final String STARTING_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
@@ -265,9 +266,10 @@ public class AppController {
       RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
-              .schemaVersion(1)
+              .schemaVersion(SchemaVersion)
               .migration(new RealmMigrationHelper())
               .build();
+      Realm.removeDefaultConfiguration();
       Realm.setDefaultConfiguration(config);
       realm = Realm.getDefaultInstance();
       Logger.log(e);
@@ -289,7 +291,7 @@ public class AppController {
       RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
-              .schemaVersion(1)
+              .schemaVersion(SchemaVersion)
               .migration(new RealmMigrationHelper())
               .build();
       Realm realm = Realm.getInstance(config);
@@ -305,9 +307,10 @@ public class AppController {
     RealmConfiguration config =
         new RealmConfiguration.Builder()
             .encryptionKey(key)
-            .schemaVersion(1)
+            .schemaVersion(SchemaVersion)
             .migration(new RealmMigrationHelper())
             .build();
+    Realm.removeDefaultConfiguration();
     Realm.setDefaultConfiguration(config);
     SharedPreferenceHelper.writePreference(context, "appname", context.getString(R.string.app_name));
   }

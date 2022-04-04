@@ -414,6 +414,7 @@
                 <action android:name="com.harvard.ActiveTask" />
             </intent-filter>
         </service>
+        <service android:name=".studyappmodule.CalculateRunHoldService" />
 
         <receiver android:name=".utils.AlarmService" />
 
