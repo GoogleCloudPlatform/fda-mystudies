@@ -251,82 +251,78 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
   
   /// Ready the view
-    private func stepDidChange() {
-      
-      guard let step = self.step as? QuestionStep, isViewLoaded else {
-        return
-      }
-      self.questionStep = step
-      self.textChoices = answerFormat?.textChoices ?? []
-
-      self.otherChoice = step.otherChoice
-
-      if let indexOfOtherChoiceValue = self.answers?.firstIndex(of: self.otherChoice.value) {
-        self.answers?.remove(at: indexOfOtherChoiceValue)
-      }
-      /// Update the selected result here
-      if let answers = self.answers {
-        for answer in answers {
-          if let selectedChoice = self.textChoices.filter({ $0.value as! String == answer })
+  private func stepDidChange() {
+    
+    guard let step = self.step as? QuestionStep, isViewLoaded else {
+      return
+    }
+    self.questionStep = step
+    self.textChoices = answerFormat?.textChoices ?? []
+    
+    self.otherChoice = step.otherChoice
+    
+    if let indexOfOtherChoiceValue = self.answers?.firstIndex(of: self.otherChoice.value) {
+      self.answers?.remove(at: indexOfOtherChoiceValue)
+    }
+    /// Update the selected result here
+    if let answers = self.answers {
+      for answer in answers {
+        if let selectedChoice = self.textChoices.filter({ $0.value as! String == answer })
             .first
-          {
-            self.selectedChoices.append(selectedChoice)
-          } else {  // unable to find the answer in textchoices, perhaps other choice was selected
-            self.isOtherCellSelected = true
-            self.otherChoice.otherChoiceText = answer
-          }
+        {
+          self.selectedChoices.append(selectedChoice)
+        } else {  // unable to find the answer in textchoices, perhaps other choice was selected
+          self.isOtherCellSelected = true
+          self.otherChoice.otherChoiceText = answer
         }
-        self.answers = nil
       }
-
-      // Get the ref of the super class table view
-      if let tableView = self.view.allSubViewsOf(type: UITableView.self).first {
-        self.tableView = tableView
-        tableView.registerCell(cell: TextChoiceCell.self)
-        tableView.registerCell(cell: OtherTextChoiceCell.self)
-        tableView.isHidden = true
+      self.answers = nil
+    }
+    
+    // Get the ref of the super class table view
+    if let tableView = self.view.allSubViewsOf(type: UITableView.self).first {
+      self.tableView = tableView
+      tableView.registerCell(cell: TextChoiceCell.self)
+      tableView.registerCell(cell: OtherTextChoiceCell.self)
+      tableView.isHidden = true
+    }
+    
+    if self.isShowSearchBar {
+      self.searchBar = UISearchBar()
+      searchBar?.delegate = self
+    }
+    
+    // Try to get the ref of the continue of the next button
+    if let nextBtn = self.view.allSubViewsOf(type: ORKContinueButton.self).last {
+      self.continueBtn = nextBtn
+      if self.questionStep?.isOptional ?? false {
+        self.continueBtn?.setTitle("Next", for: .normal)
       }
-
-      if self.isShowSearchBar {
-        self.searchBar = UISearchBar()
-        searchBar?.delegate = self
+      if self.questionStep?.isOptional ?? false {
+        self.continueBtn?.setTitle("Next", for: .normal)
       }
-
-      // Try to get the ref of the continue of the next button
-      if let nextBtn = self.view.allSubViewsOf(type: ORKContinueButton.self).last {
-        self.continueBtn = nextBtn
-        if self.questionStep?.isOptional ?? false {
-          self.continueBtn?.setTitle("Next", for: .normal)
-        }
-          
-  //        if #available(iOS 15, *) {
-          if self.questionStep?.isOptional ?? false {
-              self.continueBtn?.setTitle("Next", for: .normal)
-          }
-  //        }
-          
-        continueBtn?.addTarget(
-          self,
-          action: #selector(didTapOnDoneOrNextBtn),
-          for: .touchUpInside
-        )
-      }
+      continueBtn?.addTarget(
+        self,
+        action: #selector(didTapOnDoneOrNextBtn),
+        for: .touchUpInside
+      )
+    }
+    
+    if super.hasPreviousStep() {
+      if navigationItem.leftBarButtonItem == nil {
+        let view = UIView(frame: CGRect(x: -15, y: 0, width: 46, height: 36))
         
-      if super.hasPreviousStep() {
-        if navigationItem.leftBarButtonItem == nil {
-          let view = UIView(frame: CGRect(x: 0, y: 0, width: 26, height: 26))
-          
-          //  Filter Button
-          let filterButton = addFilterButton()
-          filterButton.clipsToBounds = true
-          view.addSubview(filterButton)
-          filterButton.isExclusiveTouch = true
-          
-          let barButton = UIBarButtonItem(customView: view)
-          navigationItem.leftBarButtonItem = barButton
-        }
+        //  Filter Button
+        let filterButton = addFilterButton()
+        filterButton.clipsToBounds = true
+        view.addSubview(filterButton)
+        filterButton.isExclusiveTouch = true
+        
+        let barButton = UIBarButtonItem(customView: view)
+        navigationItem.leftBarButtonItem = barButton
       }
-     }
+    }
+  }
   
   func addFilterButton() -> UIButton {
     let filterButton = UIButton(type: .custom)
@@ -335,7 +331,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       for: UIControl.State.normal
     )
     filterButton.addTarget(self, action: #selector(filterAction(_:)), for: .touchUpInside)
-    filterButton.frame = CGRect(x: 0, y: 0, width: 26, height: 26)
+    filterButton.frame = CGRect(x: -17, y: 0, width: 46, height: 36)
     return filterButton
   }
       
