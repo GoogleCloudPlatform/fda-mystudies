@@ -87,6 +87,10 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
     self.view.backgroundColor = ORKColor(ORKConsentBackgroundColorKey);
     if (self.navigationController.navigationBar) {
         [self.navigationController.navigationBar setBarTintColor:self.view.backgroundColor];
+      
+        [self.navigationController.navigationBar setBackgroundColor:self.view.backgroundColor];
+        [self.navigationController.view setBackgroundColor:self.view.backgroundColor];
+
     }
     
     WKWebViewConfiguration *webViewConfiguration = [WKWebViewConfiguration new];

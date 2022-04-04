@@ -1141,9 +1141,6 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 - (void)observedScrollViewDidScroll:(UIScrollView *)scrollView {
     // alpha's range [0.0, 1.0]
     float alpha = MAX( MIN(scrollView.contentOffset.y / 64.0, 1.0), 0.0);
-  
-//  printf(@"alpha---%f", alpha);
-  printf("alpha---%f", alpha);
     self.hairline.alpha = alpha;
     _pageViewController.tableView.contentOffset = scrollView.contentOffset;
 }

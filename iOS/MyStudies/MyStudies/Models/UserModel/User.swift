@@ -811,4 +811,15 @@ class UserActivityStatus {
 
     return studyDetail
   }
+  
+  func getParticipatedUserUpdateRunActivityStatus() -> [String: Any] {
+    let runDetail = [
+      "total": self.totalRuns,
+      "completed": self.compeltedRuns,
+      "missed": self.incompletedRuns,
+    ]
+
+    return runDetail
+  }
+  
 }

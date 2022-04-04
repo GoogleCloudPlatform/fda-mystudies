@@ -75,6 +75,8 @@ class ResourcesViewController: UIViewController {
   var resourcePrivacy: String = TableRow.privacy.title
   var aboutTheStudy: String = TableRow.about.title
   var consentPDF: String = TableRow.consent.title
+  private lazy var tableViewSections: [[String: Any]]! = []
+  private lazy var selectedIndexPath: IndexPath? = nil
 
   private var tableRows: [ResourceRow] = []
 
@@ -95,6 +97,7 @@ class ResourcesViewController: UIViewController {
       appDelegate.checkConsentStatus(controller: self)
     }
     tableRows = getStaticResources()
+    setNavigationBarColor()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -181,6 +184,22 @@ class ResourcesViewController: UIViewController {
       ResourcesViewController.scheduleNotificationForResources()
     }
   }
+  
+  func userDidNavigateFromNotification() {
+    let activityId = NotificationHandler.instance.studyId
+    let rowDetail = tableViewSections[0]
+    let activities = rowDetail["activities"] as? [Activity] ?? []
+    if let index = activities.firstIndex(where: { $0.studyId == activityId }),
+      let tableView = self.tableView
+    {
+      let indexPath = IndexPath(row: index, section: 2)
+      self.selectedIndexPath = indexPath
+      tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
+      tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    NotificationHandler.instance.reset()
+  }
+
 
   func checkIfResourcePresent() {
     if DBHandler.isResourcesEmpty((Study.currentStudy?.studyId)!) {
