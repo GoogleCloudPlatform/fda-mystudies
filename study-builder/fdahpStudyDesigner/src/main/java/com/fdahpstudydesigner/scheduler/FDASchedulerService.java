@@ -300,5 +300,8 @@ public class FDASchedulerService {
           .executeUpdate();
     }
     trans.commit();
+    if (session.isOpen()) {
+      session.close();
+    }
   }
 }

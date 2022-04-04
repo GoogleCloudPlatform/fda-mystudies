@@ -545,6 +545,7 @@ public class StudyExportImportService {
   public String saveFileToCloudStorage(StudyBo studyBo, List<String> insertSqlStatements) {
     StringBuilder content = new StringBuilder();
     String message = FdahpStudyDesignerConstants.FAILURE;
+    Session session = null;
     try {
       for (String insertSqlStatement : insertSqlStatements) {
         if (StringUtils.isNotEmpty(insertSqlStatement)) {
@@ -556,7 +557,7 @@ public class StudyExportImportService {
       byte[] bytes = content.toString().getBytes();
       Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
 
-      Session session = hibernateTemplate.getSessionFactory().openSession();
+      session = hibernateTemplate.getSessionFactory().openSession();
 
       studyBo.setExportSqlByte(bytes);
       study.getResourcesFromStorage(session, studyBo);
@@ -575,6 +576,10 @@ public class StudyExportImportService {
     } catch (Exception e) {
       logger.error("Save file to cloud storage failed", e);
       return e.getMessage();
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     return message;
   }
