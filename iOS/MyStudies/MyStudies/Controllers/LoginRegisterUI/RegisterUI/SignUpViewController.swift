@@ -102,7 +102,7 @@ class SignUpViewController: UIViewController {
     let terms = Branding.termsAndConditionURL
     TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
     self.agreeToTermsAndConditions()
-    
+    setNavigationBarColor()
   }
 
   override func viewWillAppear(_ animated: Bool) {

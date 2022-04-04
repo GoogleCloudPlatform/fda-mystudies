@@ -1427,6 +1427,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
       logger.error("StudyDAOImpl - eligibilityTestOrderCount - Error", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("eligibilityTestOrderCount - Ends");
     return count;
@@ -6458,6 +6462,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getStudyVersionInfo() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("getStudyVersionInfo() - Ends");
     return result;
@@ -6639,6 +6647,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
 
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("isAnchorDateExistForEnrollment - Ends");
     return isExist;
@@ -6709,6 +6721,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
 
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("isAnchorDateExistForEnrollmentDraftStudy - Ends");
     return isExist;
@@ -7374,6 +7390,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getComprehensionTestResponseList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     return comprehensionTestResponseList;
   }
@@ -8133,6 +8153,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getComprehensionTestResponseList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     return comprehensionTestResponseList;
   }

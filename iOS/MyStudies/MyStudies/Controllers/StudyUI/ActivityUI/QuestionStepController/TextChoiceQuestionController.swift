@@ -225,7 +225,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    stepDidChange()
+    self.stepDidChange()
   }
   
   override func viewWillAppear(_ animated: Bool) {

@@ -67,6 +67,7 @@ static const CGFloat shadowHeight = 0.75;
         self.cancelButtonStyle = ORKNavigationContainerButtonStyleTextBold;
         [self setUpConstraints];
         [self updateContinueAndSkipEnabled];
+        [self setNeedsUpdateConstraints];
     }
     return self;
 }
@@ -472,6 +473,13 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (CGFloat)skipButtonAlpha {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *myString = [prefs stringForKey:@"isOptionalTextChoice"];
+    if ([myString isEqualToString:@"true"]) {
+        return 1.0;
+    } else if ([myString isEqualToString:@"false"]) {
+        return 0.0;
+    }
     return ([self skipButtonHidden] ? 0.0 : 1.0);
 }
 

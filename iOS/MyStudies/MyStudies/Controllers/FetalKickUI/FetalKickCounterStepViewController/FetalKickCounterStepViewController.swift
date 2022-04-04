@@ -548,7 +548,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
             (hours < 10 ? "0\(hours):" : "\(hours):") + (minutes < 10 ? "0\(minutes):" : "\(minutes):")
             + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
 
-          Utilities.showAlertWithTitleAndMessage(
+          Utilities.showAlertWithTitleAndMessageAction(
             title: kMessage,
             message: "Please select a valid time(Max " + value + ")",
             on: self, cancelAction: {
@@ -686,29 +686,24 @@ extension FetalKickCounterStepViewController: UITextFieldDelegate {
     let finalString = textField.text! + string
 
     if textField == counterTextField && finalString.count > 0 {
-
+      
       if Int(finalString)! <= self.maxKicksAllowed! {
 
         return true
 
       } else {
+        if Int(finalString)! >= self.maxKicksAllowed! {
+          let finalValue = (Int((counterTextField?.text)!))
+          self.editCounterButton?.isUserInteractionEnabled = true
+          counterTextField?.isHidden = false
+          seperatorLineView?.isHidden = false
+          counterTextField?.becomeFirstResponder()
+          counterTextField?.text = "\(finalValue ?? 0)"
+        }
         
-//        if Int(finalString)! >= self.maxKicksAllowed! {
-//
-//          let finalValue = (Int((counterTextField?.text)!))
-//          self.editCounterButton?.isUserInteractionEnabled = true
-//          counterTextField?.isHidden = false
-//          seperatorLineView?.isHidden = false
-//          counterTextField?.becomeFirstResponder()
-//          counterTextField?.text = "\(finalValue ?? 0)"
-//
-//        }
-
         self.showAlertForGreaterValues()
-
         return false
       }
-      
     } else {
       return true
     }

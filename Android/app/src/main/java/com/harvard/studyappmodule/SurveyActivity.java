@@ -66,10 +66,8 @@ import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
-
 import java.util.HashMap;
 
 public class SurveyActivity extends AppCompatActivity
@@ -567,52 +565,66 @@ public class SurveyActivity extends AppCompatActivity
     Bundle eventProperties = new Bundle();
     switch (view.getId()) {
       case R.id.myDashboardButtonLayout:
-        eventProperties.putString(
-            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.dashboard_label));
-        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-        dashboardButton.setBackgroundResource(R.drawable.dashboard_blue_active);
-        activitiesButton.setBackgroundResource(R.drawable.activities_grey);
-        resourcesButton.setBackgroundResource(R.drawable.resources_grey);
-        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.frameLayoutContainer, surveyDashboardFragment, "fragment")
-            .commit();
+        if (previousValue != R.id.myDashboardButtonLayout) {
+          previousValue = R.id.myDashboardButtonLayout;
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.dashboard_label));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+          dashboardButton.setBackgroundResource(R.drawable.dashboard_blue_active);
+          activitiesButton.setBackgroundResource(R.drawable.activities_grey);
+          resourcesButton.setBackgroundResource(R.drawable.resources_grey);
+          dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+          activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          getSupportFragmentManager()
+              .beginTransaction()
+              .replace(R.id.frameLayoutContainer, surveyDashboardFragment, "fragment")
+              .commit();
+        }
         break;
 
       case R.id.mActivitiesButtonLayout:
-        eventProperties.putString(
-            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-            getString(R.string.activities_label));
-        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-        dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
-        activitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
-        resourcesButton.setBackgroundResource(R.drawable.resources_grey);
-        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.frameLayoutContainer, surveyActivitiesFragment, "fragment")
-            .commit();
+        if (previousValue != R.id.mActivitiesButtonLayout) {
+          previousValue = R.id.mActivitiesButtonLayout;
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.activities_label));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+          dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+          activitiesButton.setBackgroundResource(R.drawable.activities_blue_active);
+          resourcesButton.setBackgroundResource(R.drawable.resources_grey);
+          dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+          resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          getSupportFragmentManager()
+              .beginTransaction()
+              .replace(R.id.frameLayoutContainer, surveyActivitiesFragment, "fragment")
+              .commit();
+        }
         break;
 
       case R.id.mResourcesButtonLayout:
-        eventProperties.putString(
-            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.resources_label));
-        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-        dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
-        activitiesButton.setBackgroundResource(R.drawable.activities_grey);
-        resourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
-        dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
-        resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
-        getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.frameLayoutContainer, surveyResourcesFragment, "fragment")
-            .commit();
+        if (previousValue != R.id.mResourcesButtonLayout) {
+          previousValue = R.id.mResourcesButtonLayout;
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.resources_label));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+          dashboardButton.setBackgroundResource(R.drawable.dashboard_grey);
+          activitiesButton.setBackgroundResource(R.drawable.activities_grey);
+          resourcesButton.setBackgroundResource(R.drawable.resources_blue_active);
+          dashboardButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          activitiesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimaryBlack));
+          resourcesButtonLabel.setTextColor(getResources().getColor(R.color.colorPrimary));
+          getSupportFragmentManager()
+              .beginTransaction()
+              .replace(R.id.frameLayoutContainer, surveyResourcesFragment, "fragment")
+              .commit();
+        }
         break;
     }
   }

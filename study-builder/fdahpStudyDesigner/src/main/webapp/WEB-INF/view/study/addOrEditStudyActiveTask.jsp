@@ -221,8 +221,8 @@
      	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").empty().append(
      	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
      	       "Please fill out this field"));
-     	 $('#xdays0').parent().find(".help-block-timer").show();
-    	 $('#xdays0').parent().find(".help-block").hide();
+   	  	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").show();
+	  	  $('#xdays' + customAnchorCount).parent().find(".help-block").hide();
     	}
 		
 		if ($('#manualStartTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
@@ -230,8 +230,8 @@
      	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
      	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
      	       "Please fill out this field"));
-     	 $('#manualStartTime0').parent().find(".help-block-timer").show();
-    	 $('#manualStartTime0').parent().find(".help-block").hide();
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").show();
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").hide();
     	}
 		
 		if ($('#manualEndTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
