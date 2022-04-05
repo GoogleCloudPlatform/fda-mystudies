@@ -9,6 +9,10 @@
   font-weight: 600;
 }
 
+.cust_p-3 {
+  padding-bottom: 1rem !important;
+  padding-top: 1rem !important;
+}
 @media only screen and (max-width: 500px) and (min-width: 320px) {
   .scrollable-element {
     margin: 0 auto;
@@ -45,10 +49,21 @@
   .enrol_btn {
     margin-top: -8px !important;
   }
+
+  .cust_p-3 {
+    padding-bottom: 0rem !important;
+    padding-top: 0rem !important;
+    padding: 1rem !important;
+  }
+
 }
 table.custom-table-css > :not(:first-child) {
   border-top: 0px;
 }
 .table.custom-table-css > :not(caption) > * > * {
   box-shadow: none;
+}
+.study-participant-registry.subheader {
+  padding-bottom: 1rem !important;
+  padding-top: 1rem !important;
 }
