@@ -64,7 +64,7 @@ public enum PathMappingUri {
 
   VIEW_STUDY_DETAILS("/adminStudies/viewStudyDetails.do"),
 
-  UPDATE_STUDY_ACTION("/adminStudies/updateStudyAction"),
+  UPDATE_STUDY_ACTION("/adminStudies/updateStudyAction.do"),
 
   SAVE_OR_UPDATE_SETTINGS_AND_ADMINS("/adminStudies/saveOrUpdateSettingAndAdmins.do"),
 

@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <app.dir.name>fdahpStudyDesigner</app.dir.name>
-    <org.springframework.version>5.3.18</org.springframework.version>
+    <org.springframework.version>5.3.17</org.springframework.version>
     <spring.security.version>5.6.2</spring.security.version>
   </properties>
   <build>
@@ -63,7 +63,7 @@
         <artifactId>jib-maven-plugin</artifactId>
         <version>2.6.0</version>
         <configuration>
-          <from><image>tomcat:10.1.0-M12-jdk11-openjdk</image></from>
+          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
           <container><appRoot>/usr/local/tomcat/webapps/studybuilder</appRoot></container>
         </configuration>
       </plugin>
@@ -87,12 +87,6 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
-  <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.200</version>
-            <scope>compile</scope>
-        </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-logging</artifactId>
@@ -328,13 +322,13 @@
     <artifactId>jta</artifactId>
     <version>1.1</version>
 </dependency>
-<!--     <dependency> -->
-<!--       <groupId>javax.persistence</groupId> -->
-<!--       <artifactId>persistence-api</artifactId> -->
-<!--       <version>1.0</version> -->
-<!--       <type>jar</type> -->
-<!--       <scope>compile</scope> -->
-<!--     </dependency> -->
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>persistence-api</artifactId>
+      <version>1.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
 
     <!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
     <dependency>
@@ -434,7 +428,7 @@
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
-      <version>1.9.8</version>
+      <version>1.6.8</version>
     </dependency>
 
     <dependency>
@@ -573,40 +567,11 @@
       <artifactId>google-cloud-storage</artifactId>
       <version>1.96.0</version>
     </dependency>
-    <dependency>
-    <groupId>com.google.oauth-client</groupId>
-    <artifactId>google-oauth-client</artifactId>
-    <version>1.32.1</version>
-</dependency>
   	<dependency>
 	  <groupId>org.apache.commons</groupId>
 	  <artifactId>commons-text</artifactId>
 	  <version>1.4</version>
   	</dependency>
-  	<dependency>
-    <groupId>org.codehaus.plexus</groupId>
-    <artifactId>plexus-utils</artifactId>
-    <version>3.3.0</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.xmlbeans</groupId>
-    <artifactId>xmlbeans</artifactId>
-    <version>3.1.0</version>
-</dependency>
-<dependency>
-    <groupId>commons-beanutils</groupId>
-    <artifactId>commons-beanutils</artifactId>
-    <version>1.9.4</version>
-</dependency>
- 	<dependency>
-    <groupId>io.netty</groupId>
-    <artifactId>netty-transport</artifactId>
-    <version>4.1.59.Final</version>
-</dependency>
-<dependency>
-    <groupId>io.netty</groupId>
-    <artifactId>netty-codec-http</artifactId>
-    <version>4.1.74.Final</version>
-</dependency>
+  	
   </dependencies>
 </project>
