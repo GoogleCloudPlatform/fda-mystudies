@@ -107,7 +107,7 @@ public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnC
                 } else if (finalI == 1) {
                   name = "surveys";
                 } else {
-                  name = "taskes";
+                  name = "tasks";
                 }
                 Bundle eventProperties = new Bundle();
                 eventProperties.putString(

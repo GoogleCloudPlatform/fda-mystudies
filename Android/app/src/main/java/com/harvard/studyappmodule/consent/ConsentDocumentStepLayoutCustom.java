@@ -95,7 +95,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
     String htmlBase64 = Base64.encodeToString(htmlContent.getBytes(), Base64.NO_WRAP);
     pdfView.loadData(htmlBase64, "text/html", "base64");
 
-    SubmitBar submitBar = (SubmitBar) findViewById(R.id.submit_bar);
+    final SubmitBar submitBar = (SubmitBar) findViewById(R.id.submit_bar);
     submitBar.setPositiveAction(
         new Action1() {
           @Override
@@ -106,7 +106,8 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
                 context.getString(R.string.consent_review_agree_text));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-            ConsentDocumentStepLayoutCustom.this.showDialog();
+            submitBar.getPositiveActionView().setEnabled(false);
+            ConsentDocumentStepLayoutCustom.this.showDialog(submitBar);
           }
         });
     submitBar.setNegativeAction(
@@ -124,7 +125,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
         });
   }
 
-  private void showDialog() {
+  private void showDialog(final SubmitBar submitBar) {
     new AlertDialog.Builder(getContext())
         .setTitle(R.string.rsb_consent_review_alert_title)
         .setMessage(confirmationDialogBody)
@@ -154,6 +155,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
                 eventProperties.putString(
                     CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
                     context.getString(R.string.consent_agree_cancel));
+                submitBar.getPositiveActionView().setEnabled(true);
                 analyticsInstance.logEvent(
                     CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               }
