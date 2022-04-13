@@ -177,11 +177,11 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
+            if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
               Bundle eventProperties = new Bundle();
               eventProperties.putString(
                   CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                  getContext().getString(R.string.survey_resource_home));
+                  getString(R.string.survey_resource_home));
               analyticsInstance.logEvent(
                   CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, StudyActivity.class);
@@ -198,7 +198,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     AppCompatImageView backBtnimg = view.findViewById(R.id.backBtnimg);
     AppCompatImageView menubtnimg = view.findViewById(R.id.menubtnimg);
 
-    if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
+    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
       backBtnimg.setVisibility(View.VISIBLE);
       menubtnimg.setVisibility(View.GONE);
     } else {
@@ -208,7 +208,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   }
 
   private void setTextForView() {
-    title.setText(getContext().getResources().getString(R.string.resources));
+    title.setText(context.getResources().getString(R.string.resources));
   }
 
   private void setFont() {
@@ -243,7 +243,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       dbServiceSubscriber.deleteActivityDataRow(context, studyId);
       dbServiceSubscriber.deleteActivityWsData(context, studyId);
 
-      if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
+      if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
         Intent intent = new Intent(context, StudyActivity.class);
         ComponentName cn = intent.getComponent();
         Intent mainIntent = Intent.makeRestartActivityTask(cn);
@@ -369,10 +369,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
           if (resourceArrayList.get(i).getAvailability() != null
               && resourceArrayList.get(i).getAvailability().getAvailableDate() != null
               && !resourceArrayList
-              .get(i)
-              .getAvailability()
-              .getAvailableDate()
-              .equalsIgnoreCase("")) {
+                  .get(i)
+                  .getAvailability()
+                  .getAvailableDate()
+                  .equalsIgnoreCase("")) {
             try {
               Calendar expiryDate = Calendar.getInstance();
               expiryDate.setTime(
@@ -394,9 +394,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
 
               Calendar currentday = Calendar.getInstance();
               if ((currentday.getTime().before(expiryDate.getTime())
-                  || currentday.getTime().equals(expiryDate.getTime()))
+                      || currentday.getTime().equals(expiryDate.getTime()))
                   && (currentday.getTime().after(availableDate.getTime())
-                  || currentday.getTime().equals(availableDate.getTime()))) {
+                      || currentday.getTime().equals(availableDate.getTime()))) {
                 resources.add(resourceArrayList.get(i));
               }
             } catch (ParseException e) {
@@ -427,8 +427,8 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     dbServiceSubscriber.getSurveyResponseFromDB(
                         ((SurveyActivity) context).getStudyId()
                             + "_STUDYID_"
-                            + AppController.getSourceActivityId(resourceArrayList.get(i)),
-                        AppController.getSourceKey(resourceArrayList.get(i)),
+                                + AppController.getSourceActivityId(resourceArrayList.get(i)),
+                            AppController.getSourceKey(resourceArrayList.get(i)),
                         realm);
                 if (stepRecordCustom != null) {
                   Calendar startCalender = Calendar.getInstance();
@@ -444,10 +444,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                         Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
                     if (resourceArrayList.get(i).getAvailability().getStartTime() == null
                         || resourceArrayList
-                        .get(i)
-                        .getAvailability()
-                        .getStartTime()
-                        .equalsIgnoreCase("")) {
+                            .get(i)
+                            .getAvailability()
+                            .getStartTime()
+                            .equalsIgnoreCase("")) {
                       startCalender.set(Calendar.HOUR_OF_DAY, 0);
                       startCalender.set(Calendar.MINUTE, 0);
                       startCalender.set(Calendar.SECOND, 0);
@@ -492,10 +492,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
 
                     if (resourceArrayList.get(i).getAvailability().getEndTime() == null
                         || resourceArrayList
-                        .get(i)
-                        .getAvailability()
-                        .getEndTime()
-                        .equalsIgnoreCase("")) {
+                            .get(i)
+                            .getAvailability()
+                            .getEndTime()
+                            .equalsIgnoreCase("")) {
                       endCalender.set(Calendar.HOUR_OF_DAY, 23);
                       endCalender.set(Calendar.MINUTE, 59);
                       endCalender.set(Calendar.SECOND, 59);
@@ -510,9 +510,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     Calendar currentday = Calendar.getInstance();
 
                     if ((currentday.getTime().after(startCalender.getTime())
-                        || currentday.getTime().equals(startCalender.getTime()))
+                            || currentday.getTime().equals(startCalender.getTime()))
                         && (currentday.getTime().before(endCalender.getTime())
-                        || currentday.getTime().equals(endCalender.getTime()))) {
+                            || currentday.getTime().equals(endCalender.getTime()))) {
                       resources.add(resourceArrayList.get(i));
                     }
                   } catch (JSONException | ParseException e) {
@@ -546,10 +546,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                 }
                 if (resourceArrayList.get(i).getAvailability().getStartTime() == null
                     || resourceArrayList
-                    .get(i)
-                    .getAvailability()
-                    .getStartTime()
-                    .equalsIgnoreCase("")) {
+                        .get(i)
+                        .getAvailability()
+                        .getStartTime()
+                        .equalsIgnoreCase("")) {
                   startCalender.set(Calendar.HOUR_OF_DAY, 0);
                   startCalender.set(Calendar.MINUTE, 0);
                   startCalender.set(Calendar.SECOND, 0);
@@ -590,10 +590,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
 
                 if (resourceArrayList.get(i).getAvailability().getEndTime() == null
                     || resourceArrayList
-                    .get(i)
-                    .getAvailability()
-                    .getEndTime()
-                    .equalsIgnoreCase("")) {
+                        .get(i)
+                        .getAvailability()
+                        .getEndTime()
+                        .equalsIgnoreCase("")) {
                   endCalender.set(Calendar.HOUR_OF_DAY, 23);
                   endCalender.set(Calendar.MINUTE, 59);
                   endCalender.set(Calendar.SECOND, 59);
@@ -608,9 +608,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                 Calendar currentday = Calendar.getInstance();
 
                 if ((currentday.getTime().after(startCalender.getTime())
-                    || currentday.getTime().equals(startCalender.getTime()))
+                        || currentday.getTime().equals(startCalender.getTime()))
                     && (currentday.getTime().before(endCalender.getTime())
-                    || currentday.getTime().equals(endCalender.getTime()))) {
+                        || currentday.getTime().equals(endCalender.getTime()))) {
                   resources.add(resourceArrayList.get(i));
                 }
               } catch (ParseException e) {
@@ -661,15 +661,15 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         Realm realm = AppController.getRealmobj(context);
         HashMap<String, String> header = new HashMap<>();
         header.put(
-            getContext().getString(R.string.clientToken),
-            SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.clientToken), ""));
+            context.getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(context, context.getString(R.string.clientToken), ""));
         header.put(
             "Authorization",
             "Bearer "
-                + SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.auth), ""));
+                + SharedPreferenceHelper.readPreference(context, context.getString(R.string.auth), ""));
         header.put(
             "userId",
-            SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.userid), ""));
+            SharedPreferenceHelper.readPreference(context, context.getString(R.string.userid), ""));
         Studies studies =
             realm
                 .where(Studies.class)
@@ -724,7 +724,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             && !response.equalsIgnoreCase("")) {
           response = response;
         } else {
-          response = getContext().getString(R.string.unknown_error);
+          response = context.getString(R.string.unknown_error);
         }
       }
       return response;
@@ -740,9 +740,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         } else if (response.equalsIgnoreCase("timeout")) {
           metadataProcess();
           Toast.makeText(
-              context,
-              getContext().getResources().getString(R.string.connection_timeout),
-              Toast.LENGTH_SHORT)
+                  context,
+                  context.getResources().getString(R.string.connection_timeout),
+                  Toast.LENGTH_SHORT)
               .show();
         } else if (Integer.parseInt(responseCode) == 500) {
           try {
@@ -817,7 +817,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         }
       } else {
         metadataProcess();
-        Toast.makeText(context, getContext().getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
       }
     }
   }
@@ -844,13 +844,13 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     ArrayList<Resource> tempResourceArrayList = new ArrayList<>();
     tempResourceArrayList.addAll(resourceArrayList);
     resourceArrayList.clear();
-    labelArray.add(getContext().getResources().getString(R.string.about_study));
-    labelArray.add(getContext().getResources().getString(R.string.consent_pdf));
-    if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_standalone))) {
-      labelArray.add(getContext().getResources().getString(R.string.resourceTerms));
-      labelArray.add(getContext().getResources().getString(R.string.resourcePolicy));
+    labelArray.add(context.getResources().getString(R.string.about_study));
+    labelArray.add(context.getResources().getString(R.string.consent_pdf));
+    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_standalone))) {
+      labelArray.add(context.getResources().getString(R.string.resourceTerms));
+      labelArray.add(context.getResources().getString(R.string.resourcePolicy));
     }
-    labelArray.add(getContext().getResources().getString(R.string.leave_study));
+    labelArray.add(context.getResources().getString(R.string.leave_study));
 
     for (int i = 0; i < labelArray.size(); i++) {
       Resource r = new Resource();
@@ -899,11 +899,11 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-            .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
+                .readPreference(context, context.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
+            .readPreference(context, context.getResources().getString(R.string.userid), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -992,11 +992,11 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-            .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
+                .readPreference(context, context.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
+            .readPreference(context, context.getResources().getString(R.string.userid), ""));
     DeleteAccountEvent deleteAccountEvent = new DeleteAccountEvent();
     Gson gson = new Gson();
     DeleteAccountData deleteAccountData = new DeleteAccountData();
