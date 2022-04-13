@@ -130,8 +130,8 @@ import org.researchstack.backbone.task.Task;
 
 public class SurveyActivitiesFragment extends Fragment
     implements ApiCall.OnAsyncRequestComplete,
-        ActivityCompat.OnRequestPermissionsResultCallback,
-        CustomActivitiesDailyDialogClass.DialogClick {
+    ActivityCompat.OnRequestPermissionsResultCallback,
+    CustomActivitiesDailyDialogClass.DialogClick {
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private static final int GET_PREFERENCES = 112;
@@ -243,7 +243,7 @@ public class SurveyActivitiesFragment extends Fragment
     AppCompatImageView backBtnimg = view.findViewById(R.id.backBtnimg);
     AppCompatImageView menubtnimg = view.findViewById(R.id.menubtnimg);
 
-    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+    if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
       backBtnimg.setVisibility(View.VISIBLE);
       menubtnimg.setVisibility(View.GONE);
     } else {
@@ -253,7 +253,7 @@ public class SurveyActivitiesFragment extends Fragment
   }
 
   private void setTextForView() {
-    titleTv.setText(context.getResources().getString(R.string.study_activities));
+    titleTv.setText(getContext().getResources().getString(R.string.study_activities));
   }
 
   private void setFont() {
@@ -269,13 +269,13 @@ public class SurveyActivitiesFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+            if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
               Bundle eventProperties = new Bundle();
               eventProperties.putString(
-                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                      getString(R.string.survey_activities_home));
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getContext().getString(R.string.survey_activities_home));
               analyticsInstance.logEvent(
-                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, StudyActivity.class);
               ComponentName cn = intent.getComponent();
               Intent mainIntent = Intent.makeRestartActivityTask(cn);
@@ -291,9 +291,9 @@ public class SurveyActivitiesFragment extends Fragment
           @Override
           public void onClick(View view) {
             final ArrayList<String> mScheduledTime = new ArrayList<>();
-            mScheduledTime.add(context.getResources().getString(R.string.all));
-            mScheduledTime.add(context.getResources().getString(R.string.surveys1));
-            mScheduledTime.add(context.getResources().getString(R.string.tasks1));
+            mScheduledTime.add(getContext().getResources().getString(R.string.all));
+            mScheduledTime.add(getContext().getResources().getString(R.string.surveys1));
+            mScheduledTime.add(getContext().getResources().getString(R.string.tasks1));
             CustomActivitiesDailyDialogClass c =
                 new CustomActivitiesDailyDialogClass(
                     context,
@@ -307,7 +307,7 @@ public class SurveyActivitiesFragment extends Fragment
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getString(R.string.survey_activities_filter));
+                getContext().getString(R.string.survey_activities_filter));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           }
@@ -333,7 +333,7 @@ public class SurveyActivitiesFragment extends Fragment
           .showSwipeListCustomProgress(getActivity(), R.drawable.transparent, false);
     } else {
       AppController.getHelperProgressDialog()
-          .showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
+          .showProgressWithText(getActivity(), "", getContext().getString(R.string.activity_loading_msg), false);
     }
 
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
@@ -428,7 +428,7 @@ public class SurveyActivitiesFragment extends Fragment
             && !response.equalsIgnoreCase("")) {
           response = response;
         } else {
-          response = getString(R.string.unknown_error);
+          response = getContext().getString(R.string.unknown_error);
         }
       }
       return response;
@@ -445,9 +445,9 @@ public class SurveyActivitiesFragment extends Fragment
         } else if (response.equalsIgnoreCase("timeout")) {
           AppController.getHelperProgressDialog().dismissDialog();
           Toast.makeText(
-                  context,
-                  context.getResources().getString(R.string.connection_timeout),
-                  Toast.LENGTH_SHORT)
+              context,
+              getContext().getResources().getString(R.string.connection_timeout),
+              Toast.LENGTH_SHORT)
               .show();
         } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_OK) {
 
@@ -503,14 +503,14 @@ public class SurveyActivitiesFragment extends Fragment
         } else {
           AppController.getHelperProgressDialog().dismissDialog();
           Toast.makeText(
-                  context,
-                  context.getResources().getString(R.string.unable_to_retrieve_data),
-                  Toast.LENGTH_SHORT)
+              context,
+              getContext().getResources().getString(R.string.unable_to_retrieve_data),
+              Toast.LENGTH_SHORT)
               .show();
         }
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
-        Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getContext().getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
       }
     }
 
@@ -532,9 +532,9 @@ public class SurveyActivitiesFragment extends Fragment
   private void startConsent(Consent consent, String type) {
     eligibilityType = type;
     Toast.makeText(
-            context,
-            context.getResources().getString(R.string.please_review_the_updated_consent),
-            Toast.LENGTH_SHORT)
+        context,
+        getContext().getResources().getString(R.string.please_review_the_updated_consent),
+        Toast.LENGTH_SHORT)
         .show();
     StudyList studyList =
         dbServiceSubscriber.getStudiesDetails(((SurveyActivity) context).getStudyId(), realm);
@@ -610,7 +610,7 @@ public class SurveyActivitiesFragment extends Fragment
       if (studyUpdate
           .getStudyUpdateData()
           .getStatus()
-          .equalsIgnoreCase(getString(R.string.paused))) {
+          .equalsIgnoreCase(getContext().getString(R.string.paused))) {
         AppController.getHelperProgressDialog().dismissDialog();
         onItemsLoadComplete();
         Toast.makeText(context, R.string.studyPaused, Toast.LENGTH_SHORT).show();
@@ -618,7 +618,7 @@ public class SurveyActivitiesFragment extends Fragment
       } else if (studyUpdate
           .getStudyUpdateData()
           .getStatus()
-          .equalsIgnoreCase(getString(R.string.closed))) {
+          .equalsIgnoreCase(getContext().getString(R.string.closed))) {
         AppController.getHelperProgressDialog().dismissDialog();
         onItemsLoadComplete();
         Toast.makeText(context, R.string.studyClosed, Toast.LENGTH_SHORT).show();
@@ -663,11 +663,11 @@ public class SurveyActivitiesFragment extends Fragment
           "Authorization",
           "Bearer "
               + AppController.getHelperSharedPreference()
-                  .readPreference(context, context.getResources().getString(R.string.auth), ""));
+              .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
-              .readPreference(context, context.getResources().getString(R.string.userid), ""));
+              .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
       Realm realm = AppController.getRealmobj(context);
       Studies studies =
           dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
@@ -913,7 +913,7 @@ public class SurveyActivitiesFragment extends Fragment
                   String endTime = "";
                   if (activityListData.getActivities().get(i).getAnchorDate() != null
                       && activityListData.getActivities().get(i).getAnchorDate().getStart()
-                          != null) {
+                      != null) {
                     if (!activityListData
                         .getActivities()
                         .get(i)
@@ -974,7 +974,7 @@ public class SurveyActivitiesFragment extends Fragment
                     Calendar calendar;
                     if (activityListData.getActivities().get(i).getAnchorDate() != null
                         && activityListData.getActivities().get(i).getAnchorDate().getStart()
-                            != null) {
+                        != null) {
                       calendar = Calendar.getInstance();
                       try {
                         date = simpleDateFormat.parse(arrayList.get(j).getAnchorDate());
@@ -1003,7 +1003,7 @@ public class SurveyActivitiesFragment extends Fragment
                     }
                     if (activityListData.getActivities().get(i).getAnchorDate() != null
                         && activityListData.getActivities().get(i).getAnchorDate().getEnd()
-                            != null) {
+                        != null) {
                       calendar = Calendar.getInstance();
                       try {
                         date = simpleDateFormat.parse(arrayList.get(j).getAnchorDate());
@@ -1224,21 +1224,21 @@ public class SurveyActivitiesFragment extends Fragment
                     // custom runs
                     if (activityListData.getActivities().get(i).getStartTime().equalsIgnoreCase("")
                         && activityListData
-                            .getActivities()
-                            .get(i)
-                            .getEndTime()
-                            .equalsIgnoreCase("")) {
+                        .getActivities()
+                        .get(i)
+                        .getEndTime()
+                        .equalsIgnoreCase("")) {
                       Calendar startCalendar;
                       Calendar endCalendar;
                       for (int k = 0;
-                          k
-                              < activityListData
-                                  .getActivities()
-                                  .get(i)
-                                  .getFrequency()
-                                  .getAnchorRuns()
-                                  .size();
-                          k++) {
+                           k
+                               < activityListData
+                               .getActivities()
+                               .get(i)
+                               .getFrequency()
+                               .getAnchorRuns()
+                               .size();
+                           k++) {
                         startCalendar = Calendar.getInstance();
                         endCalendar = Calendar.getInstance();
 
@@ -1268,12 +1268,12 @@ public class SurveyActivitiesFragment extends Fragment
                                 dateSimpleDateFormat.format(startCalendar.getTime())
                                     + "T"
                                     + activityListData
-                                        .getActivities()
-                                        .get(i)
-                                        .getFrequency()
-                                        .getAnchorRuns()
-                                        .get(k)
-                                        .getStartTime()
+                                    .getActivities()
+                                    .get(i)
+                                    .getFrequency()
+                                    .getAnchorRuns()
+                                    .get(k)
+                                    .getStartTime()
                                     + ".000"
                                     + timezoneSimpleDateFormat.format(startCalendar.getTime()));
 
@@ -1303,12 +1303,12 @@ public class SurveyActivitiesFragment extends Fragment
                                 dateSimpleDateFormat.format(endCalendar.getTime())
                                     + "T"
                                     + activityListData
-                                        .getActivities()
-                                        .get(i)
-                                        .getFrequency()
-                                        .getAnchorRuns()
-                                        .get(k)
-                                        .getEndTime()
+                                    .getActivities()
+                                    .get(i)
+                                    .getFrequency()
+                                    .getAnchorRuns()
+                                    .get(k)
+                                    .getEndTime()
                                     + ".000"
                                     + timezoneSimpleDateFormat.format(endCalendar.getTime()));
 
@@ -1399,8 +1399,8 @@ public class SurveyActivitiesFragment extends Fragment
                   realm);
           if (activitiesWS != null
               && !activitiesWS
-                  .getActivityVersion()
-                  .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
+              .getActivityVersion()
+              .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
             activityUpdated = true;
             // update ActivityWS DB with new version
             dbServiceSubscriber.updateActivitiesWsVersion(
@@ -1426,8 +1426,8 @@ public class SurveyActivitiesFragment extends Fragment
                 realm);
         if (activitiesWS != null
             && !activitiesWS
-                .getActivityVersion()
-                .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
+            .getActivityVersion()
+            .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
           activityUpdated = true;
           // update ActivityWS DB with new version
           dbServiceSubscriber.updateActivitiesWsVersion(
@@ -1507,10 +1507,10 @@ public class SurveyActivitiesFragment extends Fragment
       for (int i = 0; i < studyVideoAdapter.items.size(); i++) {
         if (studyVideoAdapter.items.get(i).getActivityId() != null
             && studyVideoAdapter
-                .items
-                .get(i)
-                .getActivityId()
-                .equalsIgnoreCase(((SurveyActivity) context).activityId)) {
+            .items
+            .get(i)
+            .getActivityId()
+            .equalsIgnoreCase(((SurveyActivity) context).activityId)) {
           position = i;
           break;
         }
@@ -1527,19 +1527,19 @@ public class SurveyActivitiesFragment extends Fragment
         Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
       } else {
         if (studyVideoAdapter
-                .status
-                .get(position)
-                .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
+            .status
+            .get(position)
+            .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
             && (studyVideoAdapter
-                    .currentRunStatusForActivities
-                    .get(position)
-                    .getStatus()
-                    .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)
-                || studyVideoAdapter
-                    .currentRunStatusForActivities
-                    .get(position)
-                    .getStatus()
-                    .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START))) {
+            .currentRunStatusForActivities
+            .get(position)
+            .getStatus()
+            .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)
+            || studyVideoAdapter
+            .currentRunStatusForActivities
+            .get(position)
+            .getStatus()
+            .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START))) {
           if (studyVideoAdapter.currentRunStatusForActivities.get(position).isRunIdAvailable()) {
             getActivityInfo(
                 studyVideoAdapter.items.get(position).getActivityId(),
@@ -1551,9 +1551,9 @@ public class SurveyActivitiesFragment extends Fragment
                 studyVideoAdapter.items.get(position));
           } else {
             Toast.makeText(
-                    context,
-                    context.getResources().getString(R.string.survey_message),
-                    Toast.LENGTH_SHORT)
+                context,
+                getContext().getResources().getString(R.string.survey_message),
+                Toast.LENGTH_SHORT)
                 .show();
           }
         } else if (studyVideoAdapter
@@ -1707,10 +1707,10 @@ public class SurveyActivitiesFragment extends Fragment
                 activityAvailable = true;
                 if (activityListDataDB.getActivities().get(i).getStartTime().equalsIgnoreCase("")
                     && !activityListData
-                        .getActivities()
-                        .get(j)
-                        .getStartTime()
-                        .equalsIgnoreCase("")) {
+                    .getActivities()
+                    .get(j)
+                    .getStartTime()
+                    .equalsIgnoreCase("")) {
                   dbServiceSubscriber.saveActivityStartTime(
                       activityListDataDB.getActivities().get(i),
                       realm,
@@ -1743,10 +1743,10 @@ public class SurveyActivitiesFragment extends Fragment
                 activityAvailable = true;
                 if (activityListData.getActivities().get(j).getState().equalsIgnoreCase(DELETE)
                     && activityListDataDB
-                        .getActivities()
-                        .get(i)
-                        .getState()
-                        .equalsIgnoreCase(ACTIVE)) {
+                    .getActivities()
+                    .get(i)
+                    .getState()
+                    .equalsIgnoreCase(ACTIVE)) {
                   RealmResults<ActivityRun> activityRuns =
                       dbServiceSubscriber.getAllActivityRunFromDB(
                           ((SurveyActivity) context).getStudyId(),
@@ -1816,8 +1816,8 @@ public class SurveyActivitiesFragment extends Fragment
 
             if (!activitiesArrayList.get(i).getStartTime().equalsIgnoreCase("")) {
               if ((activitiesArrayList.get(i).getEndTime().equalsIgnoreCase("")
-                      && activitiesArrayList.get(i).getAnchorDate() != null
-                      && activitiesArrayList.get(i).getAnchorDate().getEnd() != null)
+                  && activitiesArrayList.get(i).getAnchorDate() != null
+                  && activitiesArrayList.get(i).getAnchorDate().getEnd() != null)
                   || !activitiesArrayList.get(i).getEndTime().equalsIgnoreCase("")) {
                 try {
                   starttime =
@@ -1944,7 +1944,7 @@ public class SurveyActivitiesFragment extends Fragment
                               + activitiesArrayList.get(i).getActivityId()
                               + "_"
                               + runIds.get(
-                                  activityIds.indexOf(activitiesArrayList.get(i).getActivityId())));
+                              activityIds.indexOf(activitiesArrayList.get(i).getActivityId())));
                     }
                   }
                 }
@@ -2091,13 +2091,13 @@ public class SurveyActivitiesFragment extends Fragment
       ArrayList<String> otherStatusList = new ArrayList<>();
       for (int i = 0; i < currentactivityList.size(); i++) {
         if (currentActivityStatus
-                .get(i)
-                .getStatus()
-                .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START)
+            .get(i)
+            .getStatus()
+            .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START)
             || currentActivityStatus
-                .get(i)
-                .getStatus()
-                .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)) {
+            .get(i)
+            .getStatus()
+            .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)) {
           yetToStartOrResumeList.add(currentactivityList.get(i));
           yetToStartOrResumeActivityStatusList.add(currentActivityStatus.get(i));
           yetToStartOrResumeStatusList.add(currentStatus.get(i));
@@ -2233,10 +2233,10 @@ public class SurveyActivitiesFragment extends Fragment
           activitiesWS.setStudyLifeTime(activitiesArrayList.get(k).isStudyLifeTime());
           activitiesWS.setSchedulingType(activitiesArrayList.get(k).getSchedulingType());
           if (activitiesArrayList
-                  .get(k)
-                  .getFrequency()
-                  .getType()
-                  .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)
+              .get(k)
+              .getFrequency()
+              .getType()
+              .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)
               && activitiesArrayList.get(k).getAnchorDate() != null) {
             SchedulingAnchorDate schedulingAnchorDate = new SchedulingAnchorDate();
             schedulingAnchorDate.setSourceType(
@@ -2338,7 +2338,7 @@ public class SurveyActivitiesFragment extends Fragment
     @Override
     protected void onPostExecute(ArrayList<ActivitiesWS> result) {
       AppController.getHelperProgressDialog()
-          .updateMsg(context.getString(R.string.activity_loading_msg));
+          .updateMsg(getContext().getString(R.string.activity_loading_msg));
 
       SharedPreferenceHelper.writePreference(context, "runsCalculating", "false");
       if (AppController.isMyServiceRunning(context, CalculateRunHoldService.class)) {
@@ -2351,13 +2351,13 @@ public class SurveyActivitiesFragment extends Fragment
 
       AppController.getHelperSharedPreference()
           .writePreference(
-              context, context.getResources().getString(R.string.completedRuns), "" + completed);
+              context, getContext().getResources().getString(R.string.completedRuns), "" + completed);
       AppController.getHelperSharedPreference()
           .writePreference(
-              context, context.getResources().getString(R.string.missedRuns), "" + missed);
+              context, getContext().getResources().getString(R.string.missedRuns), "" + missed);
       AppController.getHelperSharedPreference()
           .writePreference(
-              context, context.getResources().getString(R.string.totalRuns), "" + total);
+              context, getContext().getResources().getString(R.string.totalRuns), "" + total);
 
       double completion = 0;
       MotivationalNotification motivationalNotification =
@@ -2375,27 +2375,27 @@ public class SurveyActivitiesFragment extends Fragment
           fiftyPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.study)
+              getContext().getResources().getString(R.string.study)
                   + " "
                   + title
                   + " "
-                  + context.getResources().getString(R.string.percent_complete1),
+                  + getContext().getResources().getString(R.string.percent_complete1),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
         } else if (missed > 0) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.missed_activity)
+              getContext().getResources().getString(R.string.missed_activity)
                   + " "
                   + ((SurveyActivity) context).getTitle1()
                   + " "
-                  + context.getResources().getString(R.string.we_encourage),
+                  + getContext().getResources().getString(R.string.we_encourage),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         }
       } else if (!motivationalNotification.isFiftyPc() && !motivationalNotification.isHundredPc()) {
         if (completion >= 100) {
@@ -2403,52 +2403,52 @@ public class SurveyActivitiesFragment extends Fragment
           fiftyPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.study)
+              getContext().getResources().getString(R.string.study)
                   + " "
                   + title
                   + " "
                   + context.getResources().getString(R.string.percent_complete1),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
         } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.missed_activity)
+              getContext().getResources().getString(R.string.missed_activity)
                   + " "
                   + ((SurveyActivity) context).getTitle1()
                   + " "
-                  + context.getResources().getString(R.string.we_encourage),
+                  + getContext().getResources().getString(R.string.we_encourage),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         }
       } else if (!motivationalNotification.isHundredPc()) {
         if (completion >= 100) {
           hundredPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.study)
+              getContext().getResources().getString(R.string.study)
                   + " "
                   + title
                   + " "
-                  + context.getResources().getString(R.string.percent_complete1),
+                  + getContext().getResources().getString(R.string.percent_complete1),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.missed_activity)
+              getContext().getResources().getString(R.string.missed_activity)
                   + " "
                   + ((SurveyActivity) context).getTitle1()
                   + " "
-                  + context.getResources().getString(R.string.we_encourage),
+                  + getContext().getResources().getString(R.string.we_encourage),
               false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
+              getContext().getResources().getString(R.string.ok),
+              getContext().getResources().getString(R.string.app_name));
         }
 
       } else if (motivationalNotification.getMissed() != missed) {
@@ -2458,10 +2458,10 @@ public class SurveyActivitiesFragment extends Fragment
                 + " "
                 + ((SurveyActivity) context).getTitle1()
                 + " "
-                + context.getResources().getString(R.string.we_encourage),
+                + getContext().getResources().getString(R.string.we_encourage),
             false,
-            context.getResources().getString(R.string.ok),
-            context.getResources().getString(R.string.app_name));
+            getContext().getResources().getString(R.string.ok),
+            getContext().getResources().getString(R.string.app_name));
       }
 
       if (motivationalNotification != null && motivationalNotification.isHundredPc()) {
@@ -2500,11 +2500,11 @@ public class SurveyActivitiesFragment extends Fragment
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(context, context.getResources().getString(R.string.auth), ""));
+            .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.userid), ""));
+            .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -2802,7 +2802,7 @@ public class SurveyActivitiesFragment extends Fragment
 
       if (activityObj != null) {
         AppController.getHelperSharedPreference()
-            .writePreference(context, getString(R.string.mapCount), "0");
+            .writePreference(context, getContext().getString(R.string.mapCount), "0");
         stepsBuilder = new StepsBuilder(context, activityObj, branching, realm);
         task =
             ActivityBuilder.create(
@@ -2824,15 +2824,15 @@ public class SurveyActivitiesFragment extends Fragment
           }
           if (locationPermission) {
             if ((ActivityCompat.checkSelfPermission(
-                        context, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED)
+                context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
                 || (ActivityCompat.checkSelfPermission(
-                        context, Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED)) {
+                context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)) {
               String[] permission =
                   new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                      Manifest.permission.ACCESS_FINE_LOCATION,
+                      Manifest.permission.ACCESS_COARSE_LOCATION
                   };
               if (!hasPermissions(permission)) {
                 ActivityCompat.requestPermissions(
@@ -2906,11 +2906,11 @@ public class SurveyActivitiesFragment extends Fragment
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(context, context.getResources().getString(R.string.auth), ""));
+            .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.userid), ""));
+            .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
     header.put("participantId", studies.getParticipantId());
     dbServiceSubscriber.closeRealmObj(realm);
     JSONObject jsonObject = new JSONObject();
@@ -3042,15 +3042,15 @@ public class SurveyActivitiesFragment extends Fragment
         Realm realm = AppController.getRealmobj(context);
         HashMap<String, String> header = new HashMap<>();
         header.put(
-            getString(R.string.clientToken),
-            SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
+            getContext().getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.clientToken), ""));
         header.put(
             "Authorization",
             "Bearer "
-                + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+                + SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.auth), ""));
         header.put(
             "userId",
-            SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
+            SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.userid), ""));
         Studies studies =
             realm
                 .where(Studies.class)
@@ -3121,9 +3121,9 @@ public class SurveyActivitiesFragment extends Fragment
         } else if (response.equalsIgnoreCase("timeout")) {
           metadataProcess();
           Toast.makeText(
-                  context,
-                  context.getResources().getString(R.string.connection_timeout),
-                  Toast.LENGTH_SHORT)
+              context,
+              getContext().getResources().getString(R.string.connection_timeout),
+              Toast.LENGTH_SHORT)
               .show();
         } else if (Integer.parseInt(responseCode) == 500) {
           try {
@@ -3197,7 +3197,7 @@ public class SurveyActivitiesFragment extends Fragment
         }
       } else {
         metadataProcess();
-        Toast.makeText(context, getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getContext().getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
       }
     }
   }
