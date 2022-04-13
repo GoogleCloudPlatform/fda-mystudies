@@ -27,7 +27,6 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-
 import android.os.StrictMode;
 import android.text.Html;
 import android.util.Base64;
@@ -36,12 +35,10 @@ import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
-
 import com.harvard.BuildConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -51,16 +48,13 @@ import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.PdfViewerView;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
-
+import io.realm.Realm;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import io.realm.Realm;
-
 import javax.crypto.CipherInputStream;
 
 public class ResourcesWebViewActivity extends AppCompatActivity {
@@ -110,7 +104,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       title = intentTitle;
       Logger.log(e);
     }
-    title =title.replace("/", "\u2215");
+    title = title.replace("/", "\u2215");
     fileName = title + studyId;
 
     if (intentType.equalsIgnoreCase("pdf")) {
@@ -253,10 +247,15 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     String webData = resource.getContent();
     if (Build.VERSION.SDK_INT >= 24) {
-      webView.loadDataWithBaseURL(null,
-              Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
+      webView.loadDataWithBaseURL(
+          null,
+          Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(),
+          "text/html",
+          "UTF-8",
+          null);
     } else {
-      webView.loadDataWithBaseURL(null, Html.fromHtml((webData)).toString(), "text/html", "UTF-8", null);
+      webView.loadDataWithBaseURL(
+          null, Html.fromHtml((webData)).toString(), "text/html", "UTF-8", null);
     }
   }
 
