@@ -20,7 +20,6 @@ import android.webkit.WebView;
 import android.widget.LinearLayout;
 import com.harvard.R;
 import com.harvard.utils.CustomFirebaseAnalytics;
-
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.ConsentDocumentStep;
 import org.researchstack.backbone.step.Step;
@@ -42,17 +41,17 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
 
   public ConsentDocumentStepLayoutCustom(Context context) {
     super(context);
-    this.context=context;
+    this.context = context;
   }
 
   public ConsentDocumentStepLayoutCustom(Context context, AttributeSet attrs) {
     super(context, attrs);
-    this.context=context;
+    this.context = context;
   }
 
   public ConsentDocumentStepLayoutCustom(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    this.context=context;
+    this.context = context;
   }
 
   @Override

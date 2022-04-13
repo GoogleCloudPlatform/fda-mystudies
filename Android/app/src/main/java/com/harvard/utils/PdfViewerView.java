@@ -23,17 +23,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.tabs.TabLayout;
 import com.harvard.R;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -235,6 +231,7 @@ public class PdfViewerView extends ViewPager {
     }
     return false;
   }
+
   @Override
   public boolean onInterceptTouchEvent(MotionEvent ev) {
     try {
