@@ -31,7 +31,14 @@
                 #location="ngModel"
                 placeholder="Enter app ID or name"
               >
-                <option value="" disabled selected>Select location</option>
+                <option
+                  value=""
+                  disabled="disabled"
+                  selected="selected"
+                  style="display: none"
+                >
+                  Select location
+                </option>
                 <option
                   class="cursor__pointer"
                   *ngFor="let location of manageLocations.locations"

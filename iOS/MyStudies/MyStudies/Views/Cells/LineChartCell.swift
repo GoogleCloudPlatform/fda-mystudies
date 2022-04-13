@@ -709,10 +709,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleHoursOfDayForDate(date: Date) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter({
-      $0.startDate! >= date.startOfDay && $0.startDate! <= date.endOfDay!
-    })
-
+    let dataList: [DBStatisticsData] = Array(currentChart.statList.sorted(byKeyPath: "startDate", ascending: true))
     var points: [ORKValueRange] = []
     xAxisTitles = []
     plotPoints = []

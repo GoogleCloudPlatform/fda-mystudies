@@ -74,10 +74,10 @@
                 </div>
               </div>
             </div>
-            <div class="mb__width__100">
+            <div class="mb__width__100 tab_mb__width__100 tab_pull_right">
               <div class="flex__ flex__row align__items__center">
                 <div class="mb__width__100">
-                  <div class="col-xs-12 p-none lh__6">
+                  <div class="col-xs-12 p-none lh__6 tab_pull_right">
                     <div class="prog">
                       <div class="pro__base">
                         <div
@@ -118,10 +118,18 @@
                   </div>
                   <div class="text-grey__sm">
                     <span *ngIf="study.type !== studyTypes.Open">
-                      Enrolled / Invited
+                      Enrolled
+                      <span class="visibility__hidden">_</span>
+                      /
+                      <span class="visibility__hidden">_</span>
+                      Invited
                     </span>
                     <span *ngIf="study.type === studyTypes.Open">
-                      Enrolled / Target
+                      Enrolled
+                      <span class="visibility__hidden">_</span>
+                      /
+                      <span class="visibility__hidden">_</span>
+                      Target
                     </span>
                   </div>
                 </div>

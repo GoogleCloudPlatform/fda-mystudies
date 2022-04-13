@@ -120,16 +120,20 @@ class ActivitiesViewController: UIViewController {
 
     setupStandaloneNotifications()
     
+    if #available(iOS 15, *) {
+        UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
+    }
+    
     UserDefaults.standard.removeObject(forKey: "isAlertShown")
     UserDefaults.standard.synchronize()
-
-        
+   
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-
+    setNavigationBarColor()
+    
     if Utilities.isStandaloneApp() {
       self.setNavigationBarItem()
     } else {
@@ -518,6 +522,30 @@ class ActivitiesViewController: UIViewController {
     }
 
   }
+  
+    func updateNewActivityRun(status: UserActivityStatus.ActivityStatus, alert: Bool = true) -> UserActivityStatus? {
+        
+        guard let activity = Study.currentActivity else { return nil }
+        
+        let activityStatus = User.currentUser.updateActivityStatus(
+            studyId: activity.studyId!,
+            activityId: activity.actvityId!,
+            runId: String(activity.currentRunId),
+            status: status
+        )
+        activityStatus.compeltedRuns = activity.compeltedRuns
+        activityStatus.incompletedRuns = activity.incompletedRuns
+        activityStatus.totalRuns = activity.totalRuns
+        activityStatus.activityVersion = activity.version
+        
+        /// Update participationStatus to DB
+        DBHandler.updateParticipationStatus(for: activity)
+        
+        if status == .completed {
+            self.updateCompletionAdherence(with: alert)
+        }
+        return activityStatus
+    }
 
   /// Calculates the Completion & Adherence based on following criteria.
   ///
@@ -630,6 +658,11 @@ class ActivitiesViewController: UIViewController {
   func updateActivityStatusToComplete(alert: Bool) {
     self.updateActivityRun(status: .completed, alert: alert)
   }
+  
+    func updateNewActivityStatusToComplete(alert: Bool) -> UserActivityStatus? {
+        let valUserActivityStatus = self.updateNewActivityRun(status: .completed, alert: alert)
+        return valUserActivityStatus
+    }
 
   /// Schedules AD resources with activity response.
   /// - Parameters:
@@ -672,7 +705,7 @@ class ActivitiesViewController: UIViewController {
     self.updateActivityStatusToComplete(alert: alert)
     let activityResponse = self.lastActivityResponse ?? [:]
     lastActivityResponse = [:]
-    let isActivitylifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
+    let isActivitylifeTimeUpdated = DBHandler.updateTargetForActivityAnchorDateDetail(
       studyId: studyID,
       activityId: activityID,
       response: activityResponse
@@ -684,6 +717,39 @@ class ActivitiesViewController: UIViewController {
     } else {
       self.tableView?.reloadData()
     }
+  }
+  
+  func updateNewRunCountStatusToComplete(with alert: Bool = true) -> UserActivityStatus? {
+    guard let currentActivity = Study.currentActivity,
+          let activityID = currentActivity.actvityId,
+          let studyID = currentActivity.studyId
+    else { return nil}
+    
+    let key = "Response" + studyID
+    UserDefaults.standard.set(false, forKey: key)
+    
+    currentActivity.compeltedRuns += 1
+    DBHandler.updateRunToComplete(
+      runId: currentActivity.currentRunId,
+      activityId: activityID,
+      studyId: studyID
+    )
+    let valUserActivityStatus = self.updateNewActivityStatusToComplete(alert: alert)
+    let activityResponse = self.lastActivityResponse ?? [:]
+    lastActivityResponse = [:]
+    let isActivitylifeTimeUpdated = DBHandler.updateTargetForActivityAnchorDateDetail(
+      studyId: studyID,
+      activityId: activityID,
+      response: activityResponse
+    )
+    scheduleAnchorDateResources(studyID, activityID, activityResponse)
+    if isActivitylifeTimeUpdated {
+      Study.currentStudy?.activitiesLocalNotificationUpdated = false
+      self.loadActivitiesFromDatabase()
+    } else {
+      self.tableView?.reloadData()
+    }
+    return valUserActivityStatus
   }
 
   /// Update Run Status based on Run Id.
@@ -1070,7 +1136,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
       self.removeProgressIndicator()
-      self.updateRunStatusToComplete(with: false)
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
@@ -1142,9 +1207,21 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       }
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
-        self.updateRunStatusToComplete(with: false)
+        _ = self.updateNewRunCountStatusToComplete(with: false)
       } else {
         self.lastActivityResponse = nil
+      }
+      self.loadActivitiesFromDatabase()
+      self.removeProgressIndicator()
+      if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
+        self.refreshControl?.endRefreshing()
+      }
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        self.tableView?.beginUpdates()
+        self.tableView?.reloadData()
+        self.removeProgressIndicator()
+        self.tableView?.endUpdates()
       }
 
     default: break
@@ -1414,7 +1491,9 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         }
         self.lastActivityResponse = response
         // Save response to server.
-        ResponseServices().processResponse(responseData: response ?? [:], delegate: self)
+       let valActivityStatus = self.updateNewRunCountStatusToComplete(with: false)!
+        
+        ResponseServices().processUpdateResponse(responseData: response ?? [:], activityStatus: valActivityStatus, delegate: self)
 
       }
     }
@@ -1433,7 +1512,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
               // runid is changed
               self.updateRunStatusForRunId(runId: runid)
             } else {
-              self.updateRunStatusToComplete()
+              _ = self.updateNewRunCountStatusToComplete()
             }
           }
 
@@ -1549,6 +1628,23 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
       }
     }
   }
+  
+  fileprivate func updatedActivityStatus(
+      for activity: Activity,
+      status: UserActivityStatus.ActivityStatus
+  ) -> UserActivityStatus {
+      let activityStatus = User.currentUser.updateActivityStatus(
+        studyId: activity.studyId ?? "",
+        activityId: activity.actvityId ?? "",
+        runId: String(activity.currentRunId),
+        status: status
+      )
+      activityStatus.compeltedRuns = activity.compeltedRuns
+      activityStatus.incompletedRuns = activity.incompletedRuns
+      activityStatus.totalRuns = activity.totalRuns
+      activityStatus.activityVersion = activity.version
+      return activityStatus
+  }
 
   // MARK: - StepViewController Delegate
   public func stepViewController(
@@ -1577,6 +1673,15 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     if let step = step as? QuestionStep,
       step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false
     {
+      let valStep = step
+      if valStep.isOptional {
+        UserDefaults.standard.set("true", forKey: "isOptionalTextChoice")
+        UserDefaults.standard.synchronize()
+      } else {
+        UserDefaults.standard.set("false", forKey: "isOptionalTextChoice")
+        UserDefaults.standard.synchronize()
+      }
+      
       if let result = taskViewController.result.stepResult(forStepIdentifier: step.identifier) {
         self.managedResult[step.identifier] = result
       }
@@ -1599,6 +1704,8 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
       return textChoiceQuestionController
     }
 
+    UserDefaults.standard.set("", forKey: "isOptionalTextChoice")
+    UserDefaults.standard.synchronize()
     if let step = step as? CustomInstructionStep {
       return CustomInstructionStepViewController(step: step)
     }

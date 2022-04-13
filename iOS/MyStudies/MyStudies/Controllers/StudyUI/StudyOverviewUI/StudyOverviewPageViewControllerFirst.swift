@@ -113,10 +113,25 @@ class StudyOverviewViewControllerFirst: UIViewController {
         self.textViewDescription?.dataDetectorTypes = [.link, .phoneNumber]
         self.textViewDescription?.text = detailText
         if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
-          self.textViewDescription?.text = detailText
+          if let valReConversiontoHTMLfromHTML =
+              detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
+            
+            if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttributedString,
+               attributedText.length > 0 {
+              textViewDescription?.attributedText = attributedText
+            } else if let attributedText =
+                        detailText.htmlToAttributedString?.attributedString2Html?.stringByDecodingHTMLEntities.htmlToAttributedString,
+                      attributedText.length > 0 {
+              textViewDescription?.attributedText = attributedText
+            } else {
+              textViewDescription?.text = detailText
+            }
+          } else {
+            textViewDescription?.text = detailText
+          }
         } else {
           self.textViewDescription?.attributedText =
-            detailText.stringByDecodingHTMLEntities.htmlToAttributedString
+          detailText.stringByDecodingHTMLEntities.htmlToAttributedString
         }
       } else {
         self.textViewDescription?.text = ""

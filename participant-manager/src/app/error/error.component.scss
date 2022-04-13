@@ -13,3 +13,8 @@
 #desktop-menu {
   display: block;
 }
+@media only screen and (max-width: 1024px) and (min-width: 200px) {
+  #desktop-menu {
+    display: block !important;
+  }
+}
