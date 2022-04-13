@@ -19,6 +19,7 @@
 
 import MessageUI
 import UIKit
+import FirebaseAnalytics
 
 class StudyDashboardTabbarViewController: UITabBarController {
 
@@ -66,6 +67,9 @@ class StudyDashboardTabbarViewController: UITabBarController {
           title: NSLocalizedString(kTitleOk, comment: ""),
           style: .default,
           handler: { (_) in
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "StudyDashboardTabBar OK Alert"
+            ])
 
             self.dismiss(animated: true, completion: nil)
 

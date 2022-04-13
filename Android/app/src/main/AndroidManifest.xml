@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 
     <application
         android:name=".FdaApplication"
@@ -59,6 +60,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -71,6 +73,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter android:label="@string/filter_signup">
                 <action android:name="android.intent.action.VIEW" />
@@ -89,6 +92,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter android:label="@string/filter_callback">
                 <action android:name="android.intent.action.VIEW" />
@@ -117,6 +121,7 @@
             android:name=".usermodule.AuthServerErrorHandler"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter android:label="@string/filter_error">
@@ -152,6 +157,7 @@
             android:name=".usermodule.ForgotPasswordActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter android:label="@string/filter_forgotPassword">
@@ -213,6 +219,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden">
             <intent-filter android:label="@string/filter_privacy">
                 <action android:name="android.intent.action.VIEW" />
@@ -364,7 +371,8 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden" />
 
-        <receiver android:name=".notificationmodule.AlarmReceiver">
+        <receiver android:name=".notificationmodule.AlarmReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.media.action.DISPLAY_NOTIFICATION" />
 
@@ -400,11 +408,13 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-        <service android:name=".utils.ActiveTaskService">
+        <service android:name=".utils.ActiveTaskService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.harvard.ActiveTask" />
             </intent-filter>
         </service>
+        <service android:name=".studyappmodule.CalculateRunHoldService" />
 
         <receiver android:name=".utils.AlarmService" />
 
@@ -415,7 +425,8 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden" />
 
-        <receiver android:name=".utils.BootCompleteListener">
+        <receiver android:name=".utils.BootCompleteListener"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

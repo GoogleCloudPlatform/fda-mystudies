@@ -26,6 +26,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.security.KeyPairGeneratorSpec;
@@ -103,6 +104,8 @@ public class AppController {
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
   public static String loginCallback = "login_callback";
+  public static int SchemaVersion = 2;
+  private static CustomFirebaseAnalytics analyticsInstance;
 
   public static final String STARTING_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
   public static final String ENDDING_TAGS = "</\\w+>";
@@ -263,9 +266,10 @@ public class AppController {
       RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
-              .schemaVersion(1)
+              .schemaVersion(SchemaVersion)
               .migration(new RealmMigrationHelper())
               .build();
+      Realm.removeDefaultConfiguration();
       Realm.setDefaultConfiguration(config);
       realm = Realm.getDefaultInstance();
       Logger.log(e);
@@ -287,7 +291,7 @@ public class AppController {
       RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
-              .schemaVersion(1)
+              .schemaVersion(SchemaVersion)
               .migration(new RealmMigrationHelper())
               .build();
       Realm realm = Realm.getInstance(config);
@@ -303,9 +307,10 @@ public class AppController {
     RealmConfiguration config =
         new RealmConfiguration.Builder()
             .encryptionKey(key)
-            .schemaVersion(1)
+            .schemaVersion(SchemaVersion)
             .migration(new RealmMigrationHelper())
             .build();
+    Realm.removeDefaultConfiguration();
     Realm.setDefaultConfiguration(config);
     SharedPreferenceHelper.writePreference(context, "appname", context.getString(R.string.app_name));
   }
@@ -468,12 +473,26 @@ public class AppController {
           .setPositiveButton(
               positiveButton,
               new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {}
+                public void onClick(DialogInterface dialog, int id) {
+                  analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                }
               })
           .setNegativeButton(
               context.getResources().getString(R.string.cancel),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (finish) {
                     ((Activity) context).finish();
@@ -489,6 +508,12 @@ public class AppController {
               new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   // Do stuff, possibly set wantToCloseDialog to true then...
                   final String appPackageName = context.getPackageName();
                   try {
@@ -524,6 +549,11 @@ public class AppController {
               new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          context.getString(R.string.custom_data_question_cancel));
+                  analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                          eventProperties);
                   alertDialog.dismiss();
                   ((SplashActivity) context).loadsplash();
                 }
@@ -543,6 +573,11 @@ public class AppController {
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.upgrade));
+              analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                      eventProperties);
               final String appPackageName = context.getPackageName();
               try {
                 ((Activity) context)

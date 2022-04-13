@@ -21,6 +21,7 @@ import Foundation
 import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 let kActivities = "activities"
 
@@ -82,6 +83,9 @@ class ActivitiesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities"
+    ])
 
     addObservers()
     selectedFilter = ActivityFilterType.all
@@ -119,13 +123,17 @@ class ActivitiesViewController: UIViewController {
     if #available(iOS 15, *) {
         UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
     }
+    
+    UserDefaults.standard.removeObject(forKey: "isAlertShown")
+    UserDefaults.standard.synchronize()
+   
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     setNavigationBarColor()
-
+    
     if Utilities.isStandaloneApp() {
       self.setNavigationBarItem()
     } else {
@@ -514,6 +522,30 @@ class ActivitiesViewController: UIViewController {
     }
 
   }
+  
+    func updateNewActivityRun(status: UserActivityStatus.ActivityStatus, alert: Bool = true) -> UserActivityStatus? {
+        
+        guard let activity = Study.currentActivity else { return nil }
+        
+        let activityStatus = User.currentUser.updateActivityStatus(
+            studyId: activity.studyId!,
+            activityId: activity.actvityId!,
+            runId: String(activity.currentRunId),
+            status: status
+        )
+        activityStatus.compeltedRuns = activity.compeltedRuns
+        activityStatus.incompletedRuns = activity.incompletedRuns
+        activityStatus.totalRuns = activity.totalRuns
+        activityStatus.activityVersion = activity.version
+        
+        /// Update participationStatus to DB
+        DBHandler.updateParticipationStatus(for: activity)
+        
+        if status == .completed {
+            self.updateCompletionAdherence(with: alert)
+        }
+        return activityStatus
+    }
 
   /// Calculates the Completion & Adherence based on following criteria.
   ///
@@ -626,6 +658,11 @@ class ActivitiesViewController: UIViewController {
   func updateActivityStatusToComplete(alert: Bool) {
     self.updateActivityRun(status: .completed, alert: alert)
   }
+  
+    func updateNewActivityStatusToComplete(alert: Bool) -> UserActivityStatus? {
+        let valUserActivityStatus = self.updateNewActivityRun(status: .completed, alert: alert)
+        return valUserActivityStatus
+    }
 
   /// Schedules AD resources with activity response.
   /// - Parameters:
@@ -680,6 +717,39 @@ class ActivitiesViewController: UIViewController {
     } else {
       self.tableView?.reloadData()
     }
+  }
+  
+  func updateNewRunCountStatusToComplete(with alert: Bool = true) -> UserActivityStatus? {
+    guard let currentActivity = Study.currentActivity,
+          let activityID = currentActivity.actvityId,
+          let studyID = currentActivity.studyId
+    else { return nil}
+    
+    let key = "Response" + studyID
+    UserDefaults.standard.set(false, forKey: key)
+    
+    currentActivity.compeltedRuns += 1
+    DBHandler.updateRunToComplete(
+      runId: currentActivity.currentRunId,
+      activityId: activityID,
+      studyId: studyID
+    )
+    let valUserActivityStatus = self.updateNewActivityStatusToComplete(alert: alert)
+    let activityResponse = self.lastActivityResponse ?? [:]
+    lastActivityResponse = [:]
+    let isActivitylifeTimeUpdated = DBHandler.updateTargetForActivityAnchorDateDetail(
+      studyId: studyID,
+      activityId: activityID,
+      response: activityResponse
+    )
+    scheduleAnchorDateResources(studyID, activityID, activityResponse)
+    if isActivitylifeTimeUpdated {
+      Study.currentStudy?.activitiesLocalNotificationUpdated = false
+      self.loadActivitiesFromDatabase()
+    } else {
+      self.tableView?.reloadData()
+    }
+    return valUserActivityStatus
   }
 
   /// Update Run Status based on Run Id.
@@ -780,10 +850,16 @@ class ActivitiesViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities Home"
+    ])
     self.performSegue(withIdentifier: kActivityUnwindToStudyListIdentifier, sender: self)
   }
 
   @IBAction func filterButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities Filter"
+    ])
     let frame = self.view.frame
     if self.selectedFilter == nil {
       self.selectedFilter = ActivityFilterType.all
@@ -1022,6 +1098,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     let requestName = requestName as String
+    
     if requestName != EnrollmentMethods.updateStudyState.method.methodName
       && requestName != ResponseMethods.updateActivityState.method.methodName
       && requestName != WCPMethods.studyDashboard.method.methodName
@@ -1036,7 +1113,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-
+    
     if requestName as String == ResponseMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
     } else if requestName as String == WCPMethods.activityList.method.methodName {
@@ -1059,7 +1136,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
       self.removeProgressIndicator()
-      self.updateRunStatusToComplete(with: false)
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
@@ -1091,7 +1167,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-
     self.removeProgressIndicator()
 
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
@@ -1104,15 +1179,19 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         buttonTitle: kTitleOk,
         viewControllerUsed: self,
         action: {
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Activity Error Ok Alert"
+          ])
+
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
         }
       )
       return
     }
     let requestName = requestName as String
-
+    
     switch requestName {
-
+  
     case ResponseMethods.activityState.method.methodName:
       if error.code != kNoNetworkErrorCode {
         self.loadActivitiesFromDatabase()
@@ -1128,9 +1207,21 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       }
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
-        self.updateRunStatusToComplete(with: false)
+        _ = self.updateNewRunCountStatusToComplete(with: false)
       } else {
         self.lastActivityResponse = nil
+      }
+      self.loadActivitiesFromDatabase()
+      self.removeProgressIndicator()
+      if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
+        self.refreshControl?.endRefreshing()
+      }
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        self.tableView?.beginUpdates()
+        self.tableView?.reloadData()
+        self.removeProgressIndicator()
+        self.tableView?.endUpdates()
       }
 
     default: break
@@ -1231,7 +1322,8 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         let study = Study.currentStudy
         let activity = Study.currentActivity
         
-        if activity?.type != .activeTask {          
+        if activity?.type != .activeTask {
+          
           // Update RestortionData for Activity in DB
           DBHandler.updateActivityRestortionDataFor(
             activity: activity!,
@@ -1399,7 +1491,9 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         }
         self.lastActivityResponse = response
         // Save response to server.
-        ResponseServices().processResponse(responseData: response ?? [:], delegate: self)
+       let valActivityStatus = self.updateNewRunCountStatusToComplete(with: false)!
+        
+        ResponseServices().processUpdateResponse(responseData: response ?? [:], activityStatus: valActivityStatus, delegate: self)
 
       }
     }
@@ -1418,7 +1512,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
               // runid is changed
               self.updateRunStatusForRunId(runId: runid)
             } else {
-              self.updateRunStatusToComplete()
+              _ = self.updateNewRunCountStatusToComplete()
             }
           }
 
@@ -1517,8 +1611,12 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           && activityId == Study.currentActivity?.actvityId
           && (stepViewController is ORKInstructionStepViewController)
         {
-
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "GoForward"
+          ])
           DispatchQueue.main.asyncAfter(deadline: .now()) {
+//            NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
             stepViewController.goForward()
           }
         }
@@ -1529,6 +1627,23 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         }
       }
     }
+  }
+  
+  fileprivate func updatedActivityStatus(
+      for activity: Activity,
+      status: UserActivityStatus.ActivityStatus
+  ) -> UserActivityStatus {
+      let activityStatus = User.currentUser.updateActivityStatus(
+        studyId: activity.studyId ?? "",
+        activityId: activity.actvityId ?? "",
+        runId: String(activity.currentRunId),
+        status: status
+      )
+      activityStatus.compeltedRuns = activity.compeltedRuns
+      activityStatus.incompletedRuns = activity.incompletedRuns
+      activityStatus.totalRuns = activity.totalRuns
+      activityStatus.activityVersion = activity.version
+      return activityStatus
   }
 
   // MARK: - StepViewController Delegate
@@ -1588,9 +1703,9 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
       return textChoiceQuestionController
     }
+
     UserDefaults.standard.set("", forKey: "isOptionalTextChoice")
     UserDefaults.standard.synchronize()
-
     if let step = step as? CustomInstructionStep {
       return CustomInstructionStepViewController(step: step)
     }

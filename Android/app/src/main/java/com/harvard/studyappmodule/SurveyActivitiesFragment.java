@@ -94,6 +94,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
@@ -152,6 +153,7 @@ public class SurveyActivitiesFragment extends Fragment
   private String activityId; // activityId for webservice on click of activity
   private boolean branching; // branching for webservice on click of activity
   private String activityVersion; // activityVersion for webservice on click of activity
+  private CustomFirebaseAnalytics analyticsInstance;
 
   private static final int ACTIVTTYLIST_RESPONSECODE = 100;
   private static final int ACTIVTTYINFO_RESPONSECODE = 101;
@@ -190,6 +192,7 @@ public class SurveyActivitiesFragment extends Fragment
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
   String title = "";
+  Intent calculateRunHoldServiceeintent;
 
   @Override
   public void onAttach(Context context) {
@@ -202,6 +205,7 @@ public class SurveyActivitiesFragment extends Fragment
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_survey_activities, container, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     initializeXmlId(view);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
@@ -266,6 +270,12 @@ public class SurveyActivitiesFragment extends Fragment
           @Override
           public void onClick(View view) {
             if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.survey_activities_home));
+              analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, StudyActivity.class);
               ComponentName cn = intent.getComponent();
               Intent mainIntent = Intent.makeRestartActivityTask(cn);
@@ -286,8 +296,20 @@ public class SurveyActivitiesFragment extends Fragment
             mScheduledTime.add(context.getResources().getString(R.string.tasks1));
             CustomActivitiesDailyDialogClass c =
                 new CustomActivitiesDailyDialogClass(
-                    context, mScheduledTime, filterPos, true, SurveyActivitiesFragment.this, status.get(filterPos), currentRunStatusForActivities.get(filterPos));
+                    context,
+                    mScheduledTime,
+                    filterPos,
+                    true,
+                    SurveyActivitiesFragment.this,
+                    status.get(filterPos),
+                    currentRunStatusForActivities.get(filterPos));
             c.show();
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_activities_filter));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           }
         });
     swipeRefreshLayout.setOnRefreshListener(
@@ -728,7 +750,6 @@ public class SurveyActivitiesFragment extends Fragment
       } else {
         Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
-
     } else if (responseCode == UPDATE_STUDY_PREFERENCE) {
       // check for notification
       AppController.getHelperProgressDialog().dismissDialog();
@@ -1628,6 +1649,12 @@ public class SurveyActivitiesFragment extends Fragment
 
     @Override
     protected ArrayList<ActivitiesWS> doInBackground(ArrayList<ActivitiesWS>... params) {
+      SharedPreferenceHelper.writePreference(context, "runsCalculating", "true");
+      calculateRunHoldServiceeintent = new Intent(context, CalculateRunHoldService.class);
+      if (!AppController.isMyServiceRunning(context, CalculateRunHoldService.class)) {
+        context.startService(calculateRunHoldServiceeintent);
+      }
+
       realm = AppController.getRealmobj(context);
 
       try {
@@ -2309,7 +2336,13 @@ public class SurveyActivitiesFragment extends Fragment
 
     @Override
     protected void onPostExecute(ArrayList<ActivitiesWS> result) {
+      AppController.getHelperProgressDialog()
+          .updateMsg(context.getString(R.string.activity_loading_msg));
 
+      SharedPreferenceHelper.writePreference(context, "runsCalculating", "false");
+      if (AppController.isMyServiceRunning(context, CalculateRunHoldService.class)) {
+        context.stopService(calculateRunHoldServiceeintent);
+      }
       realm = AppController.getRealmobj(context);
 
       surveyActivitiesRecyclerView.setLayoutManager(new LinearLayoutManager(context));

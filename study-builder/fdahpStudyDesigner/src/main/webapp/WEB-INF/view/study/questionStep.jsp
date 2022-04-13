@@ -939,8 +939,8 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="col-md-6 col-lg-4 p-none">
+             <div class="col-md-6">
+              <div class="col-md-9 col-lg-9 p-none">
                   <div class="gray-xs-f mb-xs">Max fraction digits
                     <span
                         class="requiredStar">*
@@ -2250,18 +2250,16 @@
                         <div class="form-group mb-none">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextChoiceStepId0"
-                                  class="selectpicker destionationYes"
-                                  <c:if
-                                      test="${not empty questionnairesStepsBo.questionResponseSubTypeList[0].exclusive && questionnairesStepsBo.questionResponseSubTypeList[0].exclusive eq 'No'}">disabled</c:if>>
+                                  class="selectpicker destionationYes">
                             <option value="" selected>Select</option>
-                            <c:forEach items="${destinationStepList}" var="destinationStep">
-                              <option
-                                  value="${destinationStep.stepId}" ${questionResponseSubType.destinationStepId eq destinationStep.stepId ? 'selected' :''} >
+                                  <c:forEach items="${destinationStepList}" var="destinationStep">
+                              <option 
+                                  value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
                                 Step ${destinationStep.sequenceNo}
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>

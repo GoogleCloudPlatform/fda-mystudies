@@ -23,6 +23,7 @@ import MediaPlayer
 import ResearchKit
 import SDWebImage
 import UIKit
+import FirebaseAnalytics
 
 class StudyOverviewViewControllerFirst: UIViewController {
 
@@ -112,10 +113,25 @@ class StudyOverviewViewControllerFirst: UIViewController {
         self.textViewDescription?.dataDetectorTypes = [.link, .phoneNumber]
         self.textViewDescription?.text = detailText
         if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
-          self.textViewDescription?.text = detailText
+          if let valReConversiontoHTMLfromHTML =
+              detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
+            
+            if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttributedString,
+               attributedText.length > 0 {
+              textViewDescription?.attributedText = attributedText
+            } else if let attributedText =
+                        detailText.htmlToAttributedString?.attributedString2Html?.stringByDecodingHTMLEntities.htmlToAttributedString,
+                      attributedText.length > 0 {
+              textViewDescription?.attributedText = attributedText
+            } else {
+              textViewDescription?.text = detailText
+            }
+          } else {
+            textViewDescription?.text = detailText
+          }
         } else {
           self.textViewDescription?.attributedText =
-            detailText.stringByDecodingHTMLEntities.htmlToAttributedString
+          detailText.stringByDecodingHTMLEntities.htmlToAttributedString
         }
       } else {
         self.textViewDescription?.text = ""
@@ -155,6 +171,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func watchVideoButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverViewFirst watch video"
+    ])
 
     guard let urlString = overviewSectionDetail.link,
       let url = URL(string: urlString)
@@ -183,6 +202,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverViewFirst Join Study"
+    ])
 
     if User.currentUser.userType == UserType.anonymousUser {
       let leftController =
@@ -193,6 +215,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverviewFirst visit website"
+    ])
 
     if overViewWebsiteLink != nil {
 

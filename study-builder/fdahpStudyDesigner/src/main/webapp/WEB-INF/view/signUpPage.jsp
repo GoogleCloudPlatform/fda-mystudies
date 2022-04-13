@@ -167,7 +167,7 @@
                            id="password" maxlength="64" data-minlength="8"
                            placeholder="Password*" required data-error="Please fill out this field" 
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                           autocomplete="off" data-error="Password is invalid"/>
+                           autocomplete="off" data-pattern-error="Password is invalid"/>
                     <div class="help-block with-errors red-txt"></div>
                     <span class="arrowLeftSugg"></span>
 
@@ -187,7 +187,7 @@
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required" data-error="Please check this box if you want to proceed." > <label for="inlineCheckbox">
+                        required="required" data-error="Please check this box if you want to proceed" > <label for="inlineCheckbox">
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"

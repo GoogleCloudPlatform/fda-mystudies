@@ -19,6 +19,7 @@
 
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 /// A value type whose instances will have Other Choice configuration in TextChoiceQuestionStep .
 struct OtherChoice {
@@ -226,7 +227,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     super.viewDidLoad()
     self.stepDidChange()
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     self.tableView?.tableHeaderView = headerViewForAdditionalText()
   }
@@ -236,7 +237,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     
     UserDefaults.standard.set("", forKey: "isOptionalTextChoice")
     UserDefaults.standard.synchronize()
-    
+
     if self.answerFormat?.style == .multipleChoice {
       self.tableView?.allowsMultipleSelection = true
     } else {
@@ -248,18 +249,18 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     self.updateNextOrContinueBtnState()
 
   }
-
+  
   /// Ready the view
   private func stepDidChange() {
-
+    
     guard let step = self.step as? QuestionStep, isViewLoaded else {
       return
     }
     self.questionStep = step
     self.textChoices = answerFormat?.textChoices ?? []
-
+    
     self.otherChoice = step.otherChoice
-
+    
     if let indexOfOtherChoiceValue = self.answers?.firstIndex(of: self.otherChoice.value) {
       self.answers?.remove(at: indexOfOtherChoiceValue)
     }
@@ -267,7 +268,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     if let answers = self.answers {
       for answer in answers {
         if let selectedChoice = self.textChoices.filter({ $0.value as! String == answer })
-          .first
+            .first
         {
           self.selectedChoices.append(selectedChoice)
         } else {  // unable to find the answer in textchoices, perhaps other choice was selected
@@ -277,7 +278,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       }
       self.answers = nil
     }
-
+    
     // Get the ref of the super class table view
     if let tableView = self.view.allSubViewsOf(type: UITableView.self).first {
       self.tableView = tableView
@@ -285,15 +286,18 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       tableView.registerCell(cell: OtherTextChoiceCell.self)
       tableView.isHidden = true
     }
-
+    
     if self.isShowSearchBar {
       self.searchBar = UISearchBar()
       searchBar?.delegate = self
     }
-
+    
     // Try to get the ref of the continue of the next button
     if let nextBtn = self.view.allSubViewsOf(type: ORKContinueButton.self).last {
       self.continueBtn = nextBtn
+      if self.questionStep?.isOptional ?? false {
+        self.continueBtn?.setTitle("Next", for: .normal)
+      }
       if self.questionStep?.isOptional ?? false {
         self.continueBtn?.setTitle("Next", for: .normal)
       }
@@ -303,10 +307,10 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
         for: .touchUpInside
       )
     }
-      
+    
     if super.hasPreviousStep() {
       if navigationItem.leftBarButtonItem == nil {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 26, height: 26))
+        let view = UIView(frame: CGRect(x: -15, y: 0, width: 46, height: 36))
         
         //  Filter Button
         let filterButton = addFilterButton()
@@ -319,7 +323,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       }
     }
   }
-    
+  
   func addFilterButton() -> UIButton {
     let filterButton = UIButton(type: .custom)
     filterButton.setImage(
@@ -327,14 +331,17 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       for: UIControl.State.normal
     )
     filterButton.addTarget(self, action: #selector(filterAction(_:)), for: .touchUpInside)
-    filterButton.frame = CGRect(x: 0, y: 0, width: 26, height: 26)
+    filterButton.frame = CGRect(x: -17, y: 0, width: 46, height: 36)
     return filterButton
   }
-    
-    @IBAction func filterAction(_: UIBarButtonItem) {
-        super.goBackward()
-    }
-
+      
+  @IBAction func filterAction(_: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "TextChoiceQuestion BackButton"
+    ])
+    super.goBackward()
+  }
+        
   // MARK: - UI
 
   /// Header View of the question displayed in the Table View section.
@@ -450,6 +457,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
           searchBar.heightAnchor.constraint(equalToConstant: self.searchBarHeight),
         ])
     }
+
   }
 
   // MARK: - Utils
@@ -558,6 +566,8 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
 
   override func skipForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
     self.answers = []
     self.selectedChoices = []
     self.isOtherCellSelected = false
@@ -565,7 +575,6 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
   }
 
   override func goForward() {
-
     if self.otherChoice.otherChoiceText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
       self.isOtherCellSelected,
       self.otherChoice.isMandatory
@@ -592,12 +601,17 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
       updateNextOrContinueBtnState()
     } else {
+      NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
       super.goForward()
     }
 
   }
 
   @objc func didTapOnDoneOrNextBtn(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "TextChoice Done/Next"
+    ])
     // Next or done button pressed.
   }
 
@@ -673,7 +687,7 @@ extension TextChoiceQuestionController: UITableViewDataSource, UITableViewDelega
       if self.isOtherCellSelected {
         tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
         cell.didSelected = true
-          
+
         if self.otherChoice.isShowOtherField {
           cell.updateOtherView(isShow: true)
         } else {

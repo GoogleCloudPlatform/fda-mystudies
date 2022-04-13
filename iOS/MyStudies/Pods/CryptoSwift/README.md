@@ -9,7 +9,7 @@
 
 Crypto related functions and helpers for [Swift](https://swift.org) implemented in Swift. ([#PureSwift](https://twitter.com/hashtag/pureswift))
 
-**Note**: The `master` branch follows the latest currently released **version of Swift**. If you need an earlier version for an older version of Swift, you can specify its version in your `Podfile` or use the code on the branch for that version. Older branches are unsupported. Check [versions](#swift-versions-support) for details.
+**Note**: The `main` branch follows the latest currently released **version of Swift**. If you need an earlier version for an older version of Swift, you can specify its version in your `Podfile` or use the code on the branch for that version. Older branches are unsupported. Check [versions](#swift-versions-support) for details.
 
 ---
 
@@ -36,10 +36,10 @@ Good mood
 #### Hash (Digest)
   [MD5](http://tools.ietf.org/html/rfc1321)
 | [SHA1](http://tools.ietf.org/html/rfc3174)
-| [SHA224](http://tools.ietf.org/html/rfc6234)
-| [SHA256](http://tools.ietf.org/html/rfc6234)
-| [SHA384](http://tools.ietf.org/html/rfc6234)
-| [SHA512](http://tools.ietf.org/html/rfc6234)
+| [SHA2-224](http://tools.ietf.org/html/rfc6234)
+| [SHA2-256](http://tools.ietf.org/html/rfc6234)
+| [SHA2-384](http://tools.ietf.org/html/rfc6234)
+| [SHA2-512](http://tools.ietf.org/html/rfc6234)
 | [SHA3](http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf)
 
 #### Cyclic Redundancy Check (CRC)
@@ -81,6 +81,7 @@ Good mood
 | [PKCS#7](http://tools.ietf.org/html/rfc5652#section-6.3)
 | [Zero padding](https://en.wikipedia.org/wiki/Padding_(cryptography)#Zero_padding)
 | [ISO78164](http://www.embedx.com/pdfs/ISO_STD_7816/info_isoiec7816-4%7Bed21.0%7Den.pdf)
+| [ISO10126](https://en.wikipedia.org/wiki/Padding_(cryptography)#ISO_10126)
 | No padding
 
 #### Authenticated Encryption with Associated Data (AEAD)
@@ -121,7 +122,7 @@ It is recommended to enable [Whole-Module Optimization](https://swift.org/blog/w
 You can use [Swift Package Manager](https://swift.org/package-manager/) and specify dependency in `Package.swift` by adding this:
 
 ```swift
-.package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMinor(from: "1.4.0"))
+.package(url: "https://github.com/krzyzanowskim/CryptoSwift.git", .upToNextMajor(from: "1.4.3"))
 ```
 
 See: [Package.swift - manual](http://blog.krzyzanowskim.com/2016/08/09/package-swift-manual/)
@@ -133,7 +134,7 @@ Notice: Swift Package Manager uses debug configuration for debug Xcode build, th
 You can use [CocoaPods](https://cocoapods.org/pods/CryptoSwift).
 
 ```ruby
-pod 'CryptoSwift', '~> 1.4.0'
+pod 'CryptoSwift', '~> 1.4.1'
 ```
 
 Bear in mind that CocoaPods will build CryptoSwift without [Whole-Module Optimization](https://swift.org/blog/whole-module-optimizations/) that may impact performance. You can change it manually after installation, or use [cocoapods-wholemodule](https://github.com/jedlewison/cocoapods-wholemodule) plugin.
@@ -184,7 +185,7 @@ In the project, you'll find [single scheme](https://mxcl.dev/PromiseKit/news/201
 - Swift 4.2, branch [swift42](https://github.com/krzyzanowskim/CryptoSwift/tree/swift42) version <= 0.15.0
 - Swift 5.0, branch [swift5](https://github.com/krzyzanowskim/CryptoSwift/tree/swift5) version <= 1.2.0
 - Swift 5.1, branch [swift5](https://github.com/krzyzanowskim/CryptoSwift/tree/swift51) version <= 1.3.3
-- Swift 5.3 and newer, branch [master](https://github.com/krzyzanowskim/CryptoSwift/tree/master)
+- Swift 5.3 and newer, branch [main](https://github.com/krzyzanowskim/CryptoSwift/tree/main)
 
 ## How-to
 
@@ -533,7 +534,7 @@ This distribution includes cryptographic software. The country in which you curr
 
 ## License
 
-Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+Copyright (C) 2014-2021 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 This software is provided 'as-is', without any express or implied warranty.
 
 In no event will the authors be held liable for any damages arising from the use of this software.

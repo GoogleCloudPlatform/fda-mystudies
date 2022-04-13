@@ -21,6 +21,7 @@ import MessageUI
 import SafariServices
 import UIKit
 import WebKit
+import FirebaseAnalytics
 
 class ResourceDetailViewController: UIViewController {
 
@@ -91,7 +92,7 @@ class ResourceDetailViewController: UIViewController {
         {
           activityIndicator.startAnimating()
           activityIndicator.isHidden.toggle()
-          let fileURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
+          let fileURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "").pdf")
           if let url = fileURL {
             webView.loadFileURL(url, allowingReadAccessTo: url)
             self.isFileAvailable = true
@@ -151,10 +152,16 @@ class ResourceDetailViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Cancel"
+    ])
     self.dismiss(animated: true, completion: nil)
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Share"
+    ])
     self.shareResource { [weak self] (status) in
       if !status {
         self?.view.makeToast(kResourceShareError)
@@ -163,6 +170,9 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionBack(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Back"
+    ])
     if webView.canGoBack {
       webView.goBack()
     } else if webView.backForwardList.backList.count == 0 {
@@ -174,6 +184,9 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionGoForward(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail GoForward"
+    ])
     if webView.canGoForward {
       webView.goForward()
     }
@@ -264,7 +277,7 @@ extension ResourceDetailViewController {
     } else if self.resource?.file?.mimeType == .pdf,
       isFileAvailable,
       let path = resourceLink,
-      let documentURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
+      let documentURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "").pdf")
     {
       attachResource(from: documentURL)
       completion(true)
@@ -276,7 +289,9 @@ extension ResourceDetailViewController {
         attachResource(from: tempPath)
         completion(true)
       } else {
-        ResourceDetailViewController.saveTempPdf(from: pdfData, name: self.resource?.file?.name ?? "Resource") {
+        let valName = self.resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "Resource"
+        ResourceDetailViewController.saveTempPdf(from: pdfData, name:
+                                                  valName) {
           [weak self] (url) in
           self?.tempResourceFilePath = url
           if let tempPath = url {
@@ -314,7 +329,7 @@ extension ResourceDetailViewController {
     DispatchQueue.global(qos: .background).async { [weak self] in
 
       let pdfData = try? Data(contentsOf: url)
-      let pdfNameFromUrl = "\(self?.resource?.file?.name ?? "").pdf"
+      let pdfNameFromUrl = "\(self?.resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "").pdf"
       let actualPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
       do {
         try pdfData?.write(to: actualPath, options: .atomic)
@@ -344,7 +359,7 @@ extension ResourceDetailViewController {
     completion: @escaping (_ url: URL?) -> Void
   ) {
     DispatchQueue.global(qos: .background).async {
-      let pdfNameFromUrl = name + ".pdf"
+      let pdfNameFromUrl = name.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "" + ".pdf"
       let tempPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
       do {
         try data.write(to: tempPath, options: .atomic)

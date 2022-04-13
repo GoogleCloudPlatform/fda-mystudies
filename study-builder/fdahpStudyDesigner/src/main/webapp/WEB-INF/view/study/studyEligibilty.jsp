@@ -119,7 +119,7 @@
     </div>
     <div id="eligibilityQusDivId"
          <c:if test="${eligibility.eligibilityMechanism eq 1}">style="display: none;"</c:if>>
-      <div class="right-content-head pt-none">
+      <div class="right-content-head">
         <div class="text-right">
           <div class="black-md-f  dis-line pull-left line34">Eligibility test questions
           <span>
@@ -260,9 +260,12 @@
                     }
                     $('#eleFormId').submit();
                   } else {
+                	  var eligibilityVal = $("input[name='eligibilityMechanism']:checked").val();
+                	  if (eligibilityVal == 3) {
+                	  $('#comment').removeAttr("required")
+                	  }
                     if (isFromValid('#eleFormId')) {
                       if (${liveStatus}) {
-                        var eligibilityVal = $("input[name='eligibilityMechanism']:checked").val();
                         if (eligibilityVal == 1) {
                           $("#inlineRadio1").prop("disabled", false);
                         } else if (eligibilityVal == 2) {
