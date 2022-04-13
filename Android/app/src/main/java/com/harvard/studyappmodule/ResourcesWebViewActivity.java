@@ -110,6 +110,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       title = intentTitle;
       Logger.log(e);
     }
+    title =title.replace("/", "\u2215");
     fileName = title + studyId;
 
     if (intentType.equalsIgnoreCase("pdf")) {
