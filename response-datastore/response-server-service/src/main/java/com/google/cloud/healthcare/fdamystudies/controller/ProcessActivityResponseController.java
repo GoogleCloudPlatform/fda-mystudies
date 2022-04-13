@@ -35,6 +35,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEven
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.WITHDRAWAL_INFORMATION_UPDATE_FAILED;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ActivityRunBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantActivityBean;
@@ -276,6 +277,16 @@ public class ProcessActivityResponseController {
           participantActivityBean.setActivityId(activityId);
           participantActivityBean.setActivityVersion(activityVersion);
           participantActivityBean.setActivityState(AppConstants.COMPLETED);
+
+          if (questionnaireActivityResponseBean.getActivityRun() != null) {
+            ActivityRunBean activityRun = new ActivityRunBean();
+            activityRun.setCompleted(
+                questionnaireActivityResponseBean.getActivityRun().getCompleted());
+            activityRun.setMissed(questionnaireActivityResponseBean.getActivityRun().getMissed());
+            activityRun.setTotal(questionnaireActivityResponseBean.getActivityRun().getTotal());
+            participantActivityBean.setActivityRun(activityRun);
+          }
+
           List<ParticipantActivityBean> activity = new ArrayList<>();
           activity.add(participantActivityBean);
           activityStateRequestBean.setActivity(activity);
