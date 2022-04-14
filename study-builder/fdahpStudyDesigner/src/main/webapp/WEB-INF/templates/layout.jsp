@@ -106,7 +106,8 @@
     </script>
 
   </head>
-  <body class="loading" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
+  <body class="loading" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="" id="body"
+  onLoad="noBack();" onpageshow="if (event.persisted) noBack();" onUnload="">
     <div id="loader">
       <span></span>
     </div>
@@ -207,7 +208,99 @@
     	}
     </script>
     
+    
+     <script type="text/javascript">
+
+    
+     $(document).ready(function() {
+            window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+        });
    
+$(document).ready(function(){
+  if (jQuery) {  
+    // jQuery is loaded  
+    // alert("Yeah!");
+      window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+  } else {
+    // jQuery is not loaded
+    alert("Doesn't Work");
+      window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+  }
+});
+
+
+window.onload = function() {
+    if (window.jQuery) {  
+        // jQuery is loaded  
+        //alert("window!");
+         window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+    } else {
+        // jQuery is not loaded
+        alert("Doesn't Work");
+         window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+    }
+}
+
+
+$(function() {
+  window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+});
+
+
+$(window).bind("load", function() {
+   
+   window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+            
+            
+            $(document).load(function () {
+ window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+});
+
+
+   
+});
+
+</script>
+
+
+<script type="text/javascript">
+    window.history.forward();
+    function noBack()
+    {
+        
+        window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+    }
+</script>
+
+
+    
     
   </body>
 </html>
