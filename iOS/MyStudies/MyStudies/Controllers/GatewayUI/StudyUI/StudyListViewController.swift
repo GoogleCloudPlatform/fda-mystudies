@@ -680,19 +680,21 @@ class StudyListViewController: UIViewController {
 
     if User.currentUser.userType == UserType.loggedInUser {
 
-       if Study.currentStudy?.status == .paused {
+      if Study.currentStudy?.status == .paused {
         let userStudyStatus = study.userParticipateState.status
-
+        
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
-          if (studyID == nil) {
-            UIUtilities.showAlertWithTitleAndMessage(
-              title: "",
-              message: NSLocalizedString(
-                kMessageForStudyPausedAfterJoiningState,
-                comment: ""
+          DispatchQueue.main.async {
+            if (studyID == nil) {
+              UIUtilities.showAlertWithTitleAndMessage(
+                title: "",
+                message: NSLocalizedString(
+                  kMessageForStudyPausedAfterJoiningState,
+                  comment: ""
+                )
+                as NSString
               )
-              as NSString
-            )
+            }
           }
         } else {
           checkForStudyUpdate(study: study)
