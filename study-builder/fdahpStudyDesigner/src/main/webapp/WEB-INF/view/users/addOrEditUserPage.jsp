@@ -573,6 +573,9 @@ input::-webkit-calendar-picker-indicator {
     
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
+ 	 if(element != 'Superadmin' ){
+    	 $('#enforcePasswordId').hide(); 
+    	 }else $('#enforcePasswordId').show(); 
       setStudySettingByRole(element);
     });
 
@@ -949,6 +952,7 @@ input::-webkit-calendar-picker-indicator {
     });
 
     $('.addUpdate').on('click', function () {
+    	var enforce=0;
       var email = $('#emailId').val();
       var oldEmail = $('#emailId').attr('oldVal');
       var isEmail;
@@ -975,6 +979,7 @@ input::-webkit-calendar-picker-indicator {
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                 $('#emailId').parent().find(".help-block").empty();
                 saveUser();
+                enforce=enforce+1;
               } else {
                 $("body").removeClass("loading");
                 isFromValid($('.addUpdate').parents('form'));
@@ -992,7 +997,11 @@ input::-webkit-calendar-picker-indicator {
         $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
         $('#emailId').parent().find(".help-block").empty();
         saveUser();
+        enforce=enforce+1;
       }
+      if(enforce==2){
+     	 $('#enforcePasswordId').show();
+     }
     });
 
     
