@@ -12,7 +12,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <app.dir.name>fdahpStudyDesigner</app.dir.name>
-    <org.springframework.version>5.3.17</org.springframework.version>
+    <org.springframework.version>5.3.18</org.springframework.version>
     <spring.security.version>5.6.2</spring.security.version>
   </properties>
   <build>
@@ -322,13 +322,6 @@
     <artifactId>jta</artifactId>
     <version>1.1</version>
 </dependency>
-    <dependency>
-      <groupId>javax.persistence</groupId>
-      <artifactId>persistence-api</artifactId>
-      <version>1.0</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
 
     <!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
     <dependency>
