@@ -206,39 +206,60 @@
                   ></meter>
                 </div>
                 <div
-                  class="text-left"
-                  *ngIf="f.password.errors?.passwordlength"
+                  *ngIf="
+                    submitted ||
+                    (f.password.invalid &&
+                      (f.password.dirty || f.password.touched))
+                  "
+                  class="help-block"
                 >
-                  {{ getError("EC_0084") }}
+                  <span
+                    class="help-block with-errors error__msg text-left"
+                    *ngIf="f.password.errors?.required"
+                  >
+                    Enter a password
+                  </span>
+                  <div
+                    class="text-left"
+                    *ngIf="f.password.errors?.passwordlength"
+                  >
+                    {{ getError("EC_0084") }}
+                  </div>
+                  <div
+                    class="text-left"
+                    *ngIf="f.password.errors?.consecutiveCharactErrorwhitespace"
+                  >
+                    {{ getError("EC_0081") }}
+                  </div>
+                  <div
+                    class="text-left"
+                    *ngIf="f.password.errors?.userNameError"
+                  >
+                    {{ getError("EC_0082") }}
+                  </div>
+                  <div
+                    class="text-left"
+                    *ngIf="f.password.errors?.serviceNameError"
+                  >
+                    {{ getError("EC_0083") }}
+                  </div>
+                  <!-- <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.password.errors?.validPassword"
+                  >
+                    Your password must be at least 8 characters long and contain
+                    lower case, upper case, numeric and special characters.
+                  </span> -->
+                  <span
+                    class="help-block float-left"
+                    *ngIf="
+                      f.password.invalid &&
+                      setupAccountForm.controls['password'].value.length == 0
+                    "
+                  >
+                    Enter a password
+                  </span>
                 </div>
-                <div
-                  class="text-left"
-                  *ngIf="f.password.errors?.consecutiveCharactErrorwhitespace"
-                >
-                  {{ getError("EC_0081") }}
-                </div>
-                <div class="text-left" *ngIf="f.password.errors?.userNameError">
-                  {{ getError("EC_0082") }}
-                </div>
-                <div
-                  class="text-left"
-                  *ngIf="f.password.errors?.serviceNameError"
-                >
-                  {{ getError("EC_0083") }}
-                </div>
-                <!-- <span
-                  class="help-block with-errors error__msg"
-                  *ngIf="f.password.errors?.validPassword"
-                >
-                  Your password must be at least 8 characters long and contain
-                  lower case, upper case, numeric and special characters.
-                </span> -->
-                <span
-                  class="help-block with-errors error__msg text-left"
-                  *ngIf="f.password.errors?.required"
-                >
-                  Enter a password
-                </span>
               </div>
             </div>
           </div>
