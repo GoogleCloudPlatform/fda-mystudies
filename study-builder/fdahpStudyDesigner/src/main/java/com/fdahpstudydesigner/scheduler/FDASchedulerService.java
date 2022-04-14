@@ -74,7 +74,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -275,7 +275,11 @@ public class FDASchedulerService {
           .setParameter("notificationId", pushNotificationBean.getNotificationId())
           .executeUpdate();
     }
+
     trans.commit();
+    if (session.isOpen()) {
+      session.close();
+    }
   }
 
   private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {

@@ -24,7 +24,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -107,6 +107,10 @@ public class GCISchedulerService {
     } catch (Exception e) {
       logger.error("addorUpdateOrgUserInfo  - ERROR", e.getCause());
       e.printStackTrace();
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.info("addorUpdateOrgUserInfo  - Ends");
   }

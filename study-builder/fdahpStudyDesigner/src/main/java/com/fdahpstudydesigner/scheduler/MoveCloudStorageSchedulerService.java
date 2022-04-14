@@ -17,7 +17,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -52,12 +52,12 @@ public class MoveCloudStorageSchedulerService {
       initialDelayString = "${move.cloud.storage.initial.delay.ms}")
   public void moveCloudStorageStructure() {
     logger.info("moveCloudStorageStructure  - Starts");
-
+    Session session = null;
     try {
 
       if (moveCloudStorageSchedulerEnable) {
 
-        Session session = hibernateTemplate.getSessionFactory().openSession();
+        session = hibernateTemplate.getSessionFactory().openSession();
         // LIMIT = 10 add order by SBO.createdOn desc
         List<StudyBo> studyBoList =
             session
@@ -85,6 +85,10 @@ public class MoveCloudStorageSchedulerService {
     } catch (Exception e) {
       logger.error("moveCloudStorageStructure  - ERROR", e.getCause());
       e.printStackTrace();
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.info("moveCloudStorageStructure  - Ends");
   }

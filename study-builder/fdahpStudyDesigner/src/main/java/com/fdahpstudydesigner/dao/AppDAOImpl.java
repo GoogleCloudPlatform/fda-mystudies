@@ -48,7 +48,7 @@ import org.hibernate.Transaction;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -780,6 +780,10 @@ public class AppDAOImpl implements AppDAO {
       appList = query.list();
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getAllStudyList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("getAllStudyList() - Ends");
     return appList;
@@ -1014,6 +1018,10 @@ public class AppDAOImpl implements AppDAO {
       }
     } catch (Exception e) {
       logger.error("AppDAOImpl - getAppById() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("getAppById() - Ends");
     return count;
@@ -1189,6 +1197,10 @@ public class AppDAOImpl implements AppDAO {
       }
     } catch (Exception e) {
       logger.error("AppDAOImpl - getAppsByCustomAppId() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("getAppsByCustomAppId() - Ends");
     return count;
@@ -1216,6 +1228,10 @@ public class AppDAOImpl implements AppDAO {
       }
     } catch (Exception e) {
       logger.error("AppDAOImpl - getStudiesCountByAppId() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("getAppById() - Ends");
     return count;

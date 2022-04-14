@@ -122,7 +122,7 @@ import org.jsoup.Jsoup;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -1438,6 +1438,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
       logger.error("StudyDAOImpl - eligibilityTestOrderCount - Error", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("eligibilityTestOrderCount - Ends");
     return count;
@@ -6474,6 +6478,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getStudyVersionInfo() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("getStudyVersionInfo() - Ends");
     return result;
@@ -6655,6 +6663,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
 
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("isAnchorDateExistForEnrollment - Ends");
     return isExist;
@@ -6725,6 +6737,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
 
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     logger.exit("isAnchorDateExistForEnrollmentDraftStudy - Ends");
     return isExist;
@@ -7253,6 +7269,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getComprehensionTestResponseList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     return comprehensionTestResponseList;
   }
@@ -8016,6 +8036,10 @@ public class StudyDAOImpl implements StudyDAO {
       }
     } catch (Exception e) {
       logger.error("StudyDAOImpl - getComprehensionTestResponseList() - ERROR ", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     return comprehensionTestResponseList;
   }
