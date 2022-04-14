@@ -3661,10 +3661,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String updateQuery =
               "update QuestionnairesStepsBo QSBO set QSBO.destinationStep=:stepId "
                   + " where "
-                  + "QSBO.destinationStep="
-                  + 0
+                  + "QSBO.destinationStep='0'"
                   + " and QSBO.sequenceNo=:sequenceNo"
-                  + " and QSBO.questionnairesId=:questionnairesId ";
+                  + " and QSBO.questionnairesId=:questionnairesId";
           session
               .createQuery(updateQuery)
               .setString("stepId", questionnairesStepsBo.getStepId())
