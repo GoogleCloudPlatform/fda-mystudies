@@ -679,8 +679,10 @@ class StudyListViewController: UIViewController {
     guard let study = Study.currentStudy else { return }
 
     if User.currentUser.userType == UserType.loggedInUser {
-
-      if Study.currentStudy?.status == .paused {
+      let val = UserDefaults.standard.value(forKey: "pausedNotification") as? String ?? ""
+      if Study.currentStudy?.status == .paused || val == "paused" {
+        UserDefaults.standard.set("", forKey: "pausedNotification")
+        UserDefaults.standard.synchronize()
         let userStudyStatus = study.userParticipateState.status
         
         if userStudyStatus == .completed || userStudyStatus == .enrolled {

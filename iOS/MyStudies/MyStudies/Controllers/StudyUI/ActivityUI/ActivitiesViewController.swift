@@ -1163,6 +1163,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       DispatchQueue.main.async {
         ResourcesViewController.refreshNotifications()
       }
+    } else if requestName as String == EnrollmentMethods.updateStudyState.method.methodName {
+      self.removeProgressIndicator()
     }
   }
 

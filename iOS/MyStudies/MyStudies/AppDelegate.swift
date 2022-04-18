@@ -673,7 +673,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
        !studyId.isEmpty
     {
       let notificationType = userInfoDetails![kNotificationType] as? String ?? ""
-      
       let subType = AppNotification.NotificationSubType(rawValue: (userInfoDetails![kNotificationSubType] as? String ?? "")) ?? .announcement
       
       switch AppNotification.NotificationType(rawValue: notificationType) {
@@ -715,6 +714,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                   as? LeftMenuViewController
         
         if (initialVC is StudyListViewController) {
+          let val = userInfoDetails["message"] as? String ?? ""
+          if val.containsIgnoringCase("has been paused") {
+            UserDefaults.standard.set("paused", forKey: "pausedNotification")
+            UserDefaults.standard.synchronize()
+          }
           (initialVC as? StudyListViewController)!.addRightNavigationItem()
           (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
         } else if !(initialVC is StudyListViewController) {
