@@ -36,18 +36,7 @@ button#deleteUser {
 input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
-.myarrow:after {
-  content: "";
-    width: 0;
-    position: absolute;
-    top: 45%;
-    right: 25px;
-    border-width: 4px 4px;
-    border-style: solid;
-    pointer-events: none;
-    border-color: #2d2926 transparent transparent transparent;
 
-}
 
 </style>
 
