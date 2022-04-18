@@ -33,14 +33,14 @@ spec:
               service:
                 name: participant-user-datastore-np
                 port: 
-                  number: 50000
+                 number: 50000
             path: /participant-user-datastore/*
             pathType: ImplementationSpecific
          - backend:
               service:
                name: participant-consent-datastore-np
                port: 
-                 number: 50000
+                number: 50000
             path: /participant-consent-datastore/*
             pathType: ImplementationSpecific
          - backend:
@@ -54,14 +54,14 @@ spec:
               service:
               name: hydra-np
               port: 
-                number: 50000
+               number: 50000
             path: /oauth2/*
             pathType: ImplementationSpecific
            - backend:
               service :
                name: participant-manager-np
                port: 
-                 number: 50000
+                number: 50000
             path: /participant-manager/*
             pathType: ImplementationSpecific
            - backend:
@@ -85,7 +85,7 @@ spec:
               service:
                name: study-builder-np
                port: 
-                 number: 50000
+                number: 50000
             path: /studybuilder/*
             pathType: ImplementationSpecific
            - backend:
