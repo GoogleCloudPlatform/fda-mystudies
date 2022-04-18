@@ -25,14 +25,14 @@ spec:
          - backend:
              service:
               name: response-datastore-np
-               port: 
-                 number: 50000
+              port: 
+                number: 50000
             path: /response-datastore/*
             pathType: ImplementationSpecific
          - backend:
               service:
-                name: participant-user-datastore-np
-                port: 
+               name: participant-user-datastore-np
+               port: 
                  number: 50000
             path: /participant-user-datastore/*
             pathType: ImplementationSpecific
@@ -40,35 +40,35 @@ spec:
               service:
                name: participant-consent-datastore-np
                port: 
-                number: 50000
+                 number: 50000
             path: /participant-consent-datastore/*
             pathType: ImplementationSpecific
          - backend:
               service:
-              name: participant-enroll-datastore-np
-              port: 
-                number: 50000
+               name: participant-enroll-datastore-np
+               port: 
+                 number: 50000
             path: /participant-enroll-datastore/*
             pathType: ImplementationSpecific
           - backend:
               service:
-              name: hydra-np
-              port: 
-               number: 50000
+               name: hydra-np
+               port: 
+                 number: 50000
             path: /oauth2/*
             pathType: ImplementationSpecific
            - backend:
               service :
                name: participant-manager-np
                port: 
-                number: 50000
+                 number: 50000
             path: /participant-manager/*
             pathType: ImplementationSpecific
            - backend:
               service:
-              name: participant-manager-datastore-np
-              port: 
-                number: 50000
+               name: participant-manager-datastore-np
+               port: 
+                 number: 50000
             path: /participant-manager-datastore/*
             pathType: ImplementationSpecific
     - host: studies.<PREFIX>-<ENV>.<DOMAIN>
@@ -85,7 +85,7 @@ spec:
               service:
                name: study-builder-np
                port: 
-                number: 50000
+                 number: 50000
             path: /studybuilder/*
             pathType: ImplementationSpecific
            - backend:
