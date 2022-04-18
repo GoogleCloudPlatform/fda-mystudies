@@ -108,6 +108,9 @@ public class NotificationDto implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
+  @Column(name = "schedule_timestamp")
+  private String scheduleTimestamp;
+
   public String getPlatform() {
     return platform;
   }
@@ -290,5 +293,13 @@ public class NotificationDto implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public String getScheduleTimestamp() {
+    return scheduleTimestamp;
+  }
+
+  public void setScheduleTimestamp(String scheduleTimestamp) {
+    this.scheduleTimestamp = scheduleTimestamp;
   }
 }
