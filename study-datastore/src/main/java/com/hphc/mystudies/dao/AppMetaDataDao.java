@@ -134,7 +134,7 @@ public class AppMetaDataDao {
                 + " or NDTO.appId is null) and NDTO.notificationSent=true"
                 + " and (NDTO.platform=:platform"
                 + " or NDTO.platform = 'I,A')"
-                + " ORDER BY NDTO.scheduleDate DESC";
+                + " ORDER BY NDTO.scheduleTimestamp DESC";
 
         notificationList =
             session
