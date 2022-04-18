@@ -682,6 +682,7 @@ public class UsersDAOImpl implements UsersDAO {
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
+      Transaction transaction = session.beginTransaction();
       query =
           session
               .createSQLQuery(" delete from user_permission_mapping where user_id =:userId ")
@@ -705,8 +706,12 @@ public class UsersDAOImpl implements UsersDAO {
               .setParameter("userId", userId);
       query.executeUpdate()*/ ;
 
+      transaction.commit();
       message = FdahpStudyDesignerConstants.SUCCESS;
     } catch (Exception e) {
+      if (null != transaction) {
+        transaction.rollback();
+      }
       logger.error("UsersDAOImpl - deleteByUserId() - ERROR", e);
     } finally {
       if (null != session) {

@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -57,8 +58,12 @@ public class GCISchedulerService {
   public void addorUpdateOrgUserInfo() {
     logger.info("addorUpdateOrgUserInfo  - Starts");
     Session session = null;
+    Transaction transaction = null;
+
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
+      transaction = session.beginTransaction();
+
       List<UserBO> gciUserList = usersDAO.getGciUserList();
       List<String> userEmail = new ArrayList<>();
       List<String> gciEmail = new ArrayList<>();
@@ -104,7 +109,12 @@ public class GCISchedulerService {
           }
         }
       }
+
+      transaction.commit();
     } catch (Exception e) {
+      if (null != transaction) {
+        transaction.rollback();
+      }
       logger.error("addorUpdateOrgUserInfo  - ERROR", e.getCause());
       e.printStackTrace();
     } finally {
