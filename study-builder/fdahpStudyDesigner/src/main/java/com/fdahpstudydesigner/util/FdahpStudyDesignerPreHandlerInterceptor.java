@@ -135,7 +135,7 @@ public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorA
               response.sendRedirect(sessionOutUrl + "?msg=" + timeoutMsg);
               logger.info("FdahpStudyDesignerPreHandlerInterceptor -preHandle(): force logout");
               return false;
-            } else if (user.getEmailChanged()) {
+            } else if (user.getEmailChanged().equals(1)) {
               response.sendRedirect(
                   sessionOutUrl + "?msg=" + propMap.get("email.not.varified.error"));
               logger.info("FdahpStudyDesignerPreHandlerInterceptor -preHandle(): email change");

@@ -670,7 +670,7 @@ public class StudyController {
     logger.exit("deleteEligibiltyTestQusAns() - Ends");
   }
 
-  @RequestMapping(value = "/adminStudies/deleteResourceInfo", method = RequestMethod.POST)
+  @RequestMapping(value = "/adminStudies/deleteResourceInfo.do", method = RequestMethod.POST)
   public void deleteResourceInfo(HttpServletRequest request, HttpServletResponse response) {
     logger.entry("begin deleteResourceInfo()");
     JSONObject jsonobject = new JSONObject();
@@ -4075,7 +4075,7 @@ public class StudyController {
   }
 
   @RequestMapping(
-      value = "/adminStudies/studyPlatformValidationforActiveTask",
+      value = "/adminStudies/studyPlatformValidationforActiveTask.do",
       method = RequestMethod.POST)
   public void studyPlatformValidationforActiveTask(
       HttpServletRequest request, HttpServletResponse response) {
@@ -4123,7 +4123,7 @@ public class StudyController {
     logger.exit("studyPlatformValidationforActiveTask() - Ends");
   }
 
-  @RequestMapping(value = "/adminStudies/updateStudyAction", method = RequestMethod.POST)
+  @RequestMapping(value = "/adminStudies/updateStudyAction.do", method = RequestMethod.POST)
   public ModelAndView updateStudyActionOnAction(
       HttpServletRequest request, HttpServletResponse response) {
     logger.entry("begin updateStudyActionOnAction()");

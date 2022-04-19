@@ -42,7 +42,7 @@ import org.hibernate.annotations.GenericGenerator;
   @NamedQuery(
       name = "getStudyByCustomStudyId",
       query =
-          " From StudyVersionBo SVBO WHERE SVBO.customStudyId =:customStudyId order by studyVersion DESC LIMIT 1"),
+          " From StudyVersionBo SVBO WHERE SVBO.customStudyId =:customStudyId order by studyVersion DESC"),
   @NamedQuery(
       name = "getStudyVersionsByCustomStudyId",
       query =
