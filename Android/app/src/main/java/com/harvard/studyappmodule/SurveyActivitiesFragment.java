@@ -33,6 +33,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -753,10 +755,10 @@ public class SurveyActivitiesFragment extends Fragment
 
     } else if (responseCode == UPDATE_STUDY_PREFERENCE) {
       // check for notification
-      AppController.getHelperProgressDialog().dismissDialog();
       getResourceListWebservice();
       onItemsLoadComplete();
       checkForNotification();
+      AppController.getHelperProgressDialog().dismissDialog();
     } else if (responseCode == RESOURCE_REQUEST_CODE) {
       // call study info
       callGetStudyInfoWebservice();
@@ -776,6 +778,8 @@ public class SurveyActivitiesFragment extends Fragment
           // remove duplicate and
           dbServiceSubscriber.deleteStudyResourceDuplicateRow(context, studyId);
           dbServiceSubscriber.saveResourceList(context, studyResource);
+          onItemsLoadComplete();
+          AppController.getHelperProgressDialog().dismissDialog();
         }
       }
     } else {
