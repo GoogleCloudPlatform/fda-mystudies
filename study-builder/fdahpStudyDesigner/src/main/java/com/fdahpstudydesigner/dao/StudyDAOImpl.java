@@ -125,7 +125,7 @@ import org.jsoup.Jsoup;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -8544,6 +8544,8 @@ public class StudyDAOImpl implements StudyDAO {
         }
       }
       session = hibernateTemplate.getSessionFactory().openSession();
+      Transaction transaction = session.beginTransaction();
+
       query =
           session
               .createSQLQuery(" delete FROM study_page WHERE study_id=:studyId")
@@ -8639,8 +8641,13 @@ public class StudyDAOImpl implements StudyDAO {
               .createSQLQuery("delete from studies  WHERE id =:studyId")
               .setParameter("studyId", studyId);
       query.executeUpdate();
+
+      transaction.commit();
       message = FdahpStudyDesignerConstants.SUCCESS;
     } catch (Exception e) {
+      if (null != transaction) {
+        transaction.rollback();
+      }
       logger.error("StudyDAOImpl - deleteStudyById() - ERROR", e);
     } finally {
       if (null != session) {

@@ -65,7 +65,7 @@ input::-webkit-calendar-picker-indicator {
       <div class="dis-line pull-right">
         <div class="form-group mb-none">
           <c:if
-              test="${not empty userBO.userPassword && userBO.enabled && not userBO.emailChanged}">
+              test="${not empty userBO.userPassword && userBO.enabled && userBO.emailChanged eq '0'}">
             <div class="dis-inline mt-sm">
               <span class="stat">
                 <span class="black-sm-f">Account status:
@@ -112,7 +112,7 @@ input::-webkit-calendar-picker-indicator {
 	      	 </c:choose> 
             </div>
           </c:if>
-          <c:if test="${userBO.emailChanged}">
+          <c:if test="${userBO.emailChanged eq '1'}">
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -144,7 +144,7 @@ input::-webkit-calendar-picker-indicator {
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
       <c:if
-          test="${actionPage eq 'EDIT_PAGE' && not empty userBO.userPassword && not userBO.emailChanged}">
+          test="${actionPage eq 'EDIT_PAGE' && not empty userBO.userPassword && userBO.emailChanged eq '0'}">
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"
@@ -262,7 +262,7 @@ input::-webkit-calendar-picker-indicator {
                       value="${userBO.enabled}" id="change${userBO.userId}"
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
-                          test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged}">disabled</c:if>
+                          test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged eq '1'}">disabled</c:if>
                       onclick="activateOrDeactivateUser('${userBO.userId}');">
                     <span class="switch-label bg-transparent" data-on="On"
                           data-off="Off"></span>

@@ -47,7 +47,7 @@ import org.hibernate.Transaction;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -586,7 +586,7 @@ public class UsersDAOImpl implements UsersDAO {
           userBO.setRoleName(null != obj[4] ? String.valueOf(obj[4]) : "");
           userBO.setEnabled(null != obj[5] ? (Boolean) obj[5] : false);
           userBO.setUserPassword(null != obj[6] ? String.valueOf(obj[6]) : "");
-          userBO.setEmailChanged(null != obj[7] ? (Boolean) obj[7] : false);
+          userBO.setEmailChanged(null != obj[7] ? Byte.toUnsignedInt((Byte) (obj[7])) : 0);
           userBO.setAccessLevel(null != obj[8] ? String.valueOf(obj[8]) : "");
           userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
           userList.add(userBO);
@@ -678,6 +678,8 @@ public class UsersDAOImpl implements UsersDAO {
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
+      Transaction transaction = session.beginTransaction();
+
       query =
           session
               .createSQLQuery(" delete from user_permission_mapping where user_id =:userId ")
@@ -694,8 +696,12 @@ public class UsersDAOImpl implements UsersDAO {
               .setParameter("userId", userId);
       query.executeUpdate();
 
+      transaction.commit();
       message = FdahpStudyDesignerConstants.SUCCESS;
     } catch (Exception e) {
+      if (null != transaction) {
+        transaction.rollback();
+      }
       logger.error("UsersDAOImpl - deleteByUserId() - ERROR", e);
     } finally {
       if (null != session) {
