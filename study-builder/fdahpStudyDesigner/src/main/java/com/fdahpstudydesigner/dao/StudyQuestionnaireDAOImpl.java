@@ -87,7 +87,7 @@ import org.hibernate.Transaction;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -3675,10 +3675,9 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String updateQuery =
               "update QuestionnairesStepsBo QSBO set QSBO.destinationStep=:stepId "
                   + " where "
-                  + "QSBO.destinationStep="
-                  + 0
+                  + "QSBO.destinationStep='0'"
                   + " and QSBO.sequenceNo=:sequenceNo"
-                  + " and QSBO.questionnairesId=:questionnairesId ";
+                  + " and QSBO.questionnairesId=:questionnairesId";
           session
               .createQuery(updateQuery)
               .setString("stepId", questionnairesStepsBo.getStepId())

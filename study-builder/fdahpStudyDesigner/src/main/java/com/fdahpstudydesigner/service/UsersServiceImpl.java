@@ -170,7 +170,7 @@ public class UsersServiceImpl implements UsersService {
         userBO2.setLastName(null != userBO.getLastName() ? userBO.getLastName().trim() : "");
         if (!userBO2.getUserEmail().equals(userBO.getUserEmail())) {
           emailIdChange = true;
-          userBO2.setEmailChanged(true);
+          userBO2.setEmailChanged(1);
         }
         userBO2.setUserEmail(
             (null != userBO.getUserEmail() ? userBO.getUserEmail().trim() : "").toLowerCase());

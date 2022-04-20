@@ -1163,6 +1163,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       DispatchQueue.main.async {
         ResourcesViewController.refreshNotifications()
       }
+    } else if requestName as String == EnrollmentMethods.updateStudyState.method.methodName {
+      self.removeProgressIndicator()
     }
   }
 
@@ -1610,16 +1612,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           && activityId != nil
           && activityId == Study.currentActivity?.actvityId
           && (stepViewController is ORKInstructionStepViewController)
-        {
-          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
-            buttonClickReasonsKey: "GoForward"
-          ])
-          DispatchQueue.main.asyncAfter(deadline: .now()) {
-//            NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
-
-            stepViewController.goForward()
-          }
-        }
+        {}
 
         // Disable back button
         if stepViewController is FetalKickCounterStepViewController {

@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -214,5 +215,23 @@ public class PdfViewerView extends ViewPager {
     public boolean isViewFromObject(View view, Object object) {
       return view == object;
     }
+  }
+  @Override
+  public boolean onTouchEvent(MotionEvent ev) {
+    try {
+      return super.onTouchEvent(ev);
+    } catch (IllegalArgumentException ex) {
+      ex.printStackTrace();
+    }
+    return false;
+  }
+  @Override
+  public boolean onInterceptTouchEvent(MotionEvent ev) {
+    try {
+      return super.onInterceptTouchEvent(ev);
+    } catch (IllegalArgumentException ex) {
+      ex.printStackTrace();
+    }
+    return false;
   }
 }

@@ -1723,7 +1723,7 @@ meter::-moz-meter-bar {
     display: none !important;
   }
 }
-@media only screen and (max-width: 340px) and (min-width: 320px) {
+@media only screen and (max-width: 390px) and (min-width: 320px) {
   .btn_mb_2 {
     margin-bottom: 20px !important;
   }
@@ -1740,17 +1740,6 @@ meter::-moz-meter-bar {
 
 input::-webkit-calendar-picker-indicator {
   display: none !important;
-}
-.myarrow:after {
-  content: "";
-  width: 0;
-  position: absolute;
-  top: 60%;
-  right: 12px;
-  border-width: 6px 4px;
-  border-style: solid;
-  pointer-events: none;
-  border-color: #999 transparent transparent transparent;
 }
 
 @media only screen and (max-width: 500px) and (min-width: 200px) {

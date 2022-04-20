@@ -54,7 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.crypto.CipherInputStream;
-import io.realm.Realm;
+
 
 public class ResourcesWebViewActivity extends AppCompatActivity {
   private AppCompatTextView titleTv;
@@ -99,6 +99,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     // removing space b/w the string : name of the pdf
     try {
       title = intentTitle.replaceAll("\\s+", "");
+      title = title.replace("/", "\u2215");
     } catch (Exception e) {
       title = intentTitle;
       Logger.log(e);
@@ -245,10 +246,15 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
     String webData = resource.getContent();
     if (Build.VERSION.SDK_INT >= 24) {
-      webView.loadDataWithBaseURL(null,
-              Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
+      webView.loadDataWithBaseURL(
+          null,
+          Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(),
+          "text/html",
+          "UTF-8",
+          null);
     } else {
-      webView.loadDataWithBaseURL(null, Html.fromHtml((webData)).toString(), "text/html", "UTF-8", null);
+      webView.loadDataWithBaseURL(
+          null, Html.fromHtml((webData)).toString(), "text/html", "UTF-8", null);
     }
   }
 

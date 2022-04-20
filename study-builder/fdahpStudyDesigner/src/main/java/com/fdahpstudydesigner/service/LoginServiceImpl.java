@@ -414,7 +414,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           auditRequest.setUserId(String.valueOf(userdetails.getUserId()));
           auditLogEventHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
         }
-        if ("".equals(type) && userdetails.getEmailChanged()) {
+        if ("".equals(type) && userdetails.getEmailChanged().equals(1)) {
           userdetails = null;
         }
         UserAttemptsBo userAttempts = loginDAO.getUserAttempts(email);
@@ -591,7 +591,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     try {
       userBO = loginDAO.getUserBySecurityToken(securityToken);
       if (null != userBO) {
-        userBO.setEmailChanged(false);
+        userBO.setEmailChanged(0);
         userBO.setTokenUsed(true);
         result = loginDAO.updateUser(userBO);
       }
@@ -614,7 +614,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           Integer.parseInt(propMap.get("accountlocked.resetLink.expiration.in.hour"));
       String passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
       UserBO userdetails = loginDAO.getValidUserByEmail(email);
-      if (null != userdetails && !userdetails.getEmailChanged()) {
+      if (null != userdetails && userdetails.getEmailChanged().equals(0)) {
         userdetails.setSecurityToken(passwordResetToken);
         userdetails.setTokenUsed(false);
         userdetails.setTokenExpiryDate(

@@ -659,7 +659,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   /// Handler for local & remote notification
   /// - Parameter userInfoDetails: contains the info for notification
   func handleLocalAndRemoteNotification(userInfoDetails: JSONDictionary?) {
-    
     var initialVC: UIViewController?
     
     if let dashboardTabBar = initialVC as? UITabBarController {
@@ -674,7 +673,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
        !studyId.isEmpty
     {
       let notificationType = userInfoDetails![kNotificationType] as? String ?? ""
-      
       let subType = AppNotification.NotificationSubType(rawValue: (userInfoDetails![kNotificationSubType] as? String ?? "")) ?? .announcement
       
       switch AppNotification.NotificationType(rawValue: notificationType) {
@@ -716,6 +714,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                   as? LeftMenuViewController
         
         if (initialVC is StudyListViewController) {
+          let val = userInfoDetails["message"] as? String ?? ""
+          if val.containsIgnoringCase("has been paused") {
+            UserDefaults.standard.set("paused", forKey: "pausedNotification")
+            UserDefaults.standard.synchronize()
+          }
           (initialVC as? StudyListViewController)!.addRightNavigationItem()
           (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
         } else if !(initialVC is StudyListViewController) {
@@ -874,7 +877,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         
       case .resource:  // Resource Notifications
         if !(initialVC is UITabBarController) {
-          
           if Gateway.instance.studies?.isEmpty == false {
             guard let study = Gateway.instance.studies?.filter({ $0.studyId == studyId })
                     .first
@@ -1136,7 +1138,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Checks for `StudyListViewController` and adds right navigation item
   func updateNotification(userInfoDetails: [String:Any]?) {
-    
     let ud = UserDefaults.standard
     ud.set(true, forKey: kShowNotification)
     ud.synchronize()
@@ -1179,6 +1180,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     }
   }
 
+  func updateActiveNotification() {
+    let ud = UserDefaults.standard
+    ud.set(true, forKey: kShowNotification)
+    ud.synchronize()
+    var nav: UINavigationController?
+    // fetch the visible view controller
+    guard let navigationController = self.window?.rootViewController as? UINavigationController else {
+      return
+    }
+    
+    let menuVC = navigationController.viewControllers.last
+    
+    if menuVC is FDASlideMenuViewController {
+      let mainController = (menuVC as? FDASlideMenuViewController)!.mainViewController
+      
+      if mainController is UINavigationController {
+        nav = (mainController as? UINavigationController)!
+        let studyListVC = nav?.viewControllers.last
+        if studyListVC is StudyListViewController {
+          (studyListVC as? StudyListViewController)!.addRightNavigationItem()
+          
+        }
+      }
+    }
+  }
 
   private func refreshStudyActivitiesState(with userInfo: JSONDictionary) {
     guard let currentStudyID = Study.currentStudy?.studyId,
@@ -2047,8 +2073,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     let userInfo = notification.request.content.userInfo
 
     if userInfo.count > 0 && userInfo.keys.contains(kType) {
-
-      self.updateNotification(userInfoDetails: userInfo as? JSONDictionary)
+      self.updateActiveNotification()
     }
     if let userInfo = userInfo as? JSONDictionary {
       refreshStudyActivitiesState(with: userInfo)
@@ -2061,7 +2086,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     didReceive response: UNNotificationResponse,
     withCompletionHandler completionHandler: @escaping () -> Void
   ) {
-    
     let userInfo = response.notification.request.content.userInfo
     UIApplication.shared.applicationIconBadgeNumber = 0
 

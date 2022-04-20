@@ -98,6 +98,11 @@ class ResourcesViewController: UIViewController {
     }
     tableRows = getStaticResources()
     setNavigationBarColor()
+    let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    if appDelegate.notificationDetails != nil, User.currentUser.userType == .loggedInUser {
+      appDelegate.notificationDetails = nil
+      StudyUpdates.studyResourcesUpdated = true
+    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
