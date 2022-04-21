@@ -721,15 +721,15 @@ Please follow the below steps to whitelist the port:
 1. In the deployment/terraform/<Prefix>-<env>-apps/main.tf, find the section 
 module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of this section:
  
- ```
-   node_pools = [
-      {
-        name       = "default-node-pool"
-        image_type = "COS_CONTAINERD"
-      },
-    ]
-  }
- ```
+     ```
+     node_pools = [
+        {
+          name       = "default-node-pool"
+          image_type = "COS_CONTAINERD"
+        },
+      ]
+    }
+    ```
 3.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
  
 
