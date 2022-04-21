@@ -17,9 +17,7 @@
 button#exportId {
     margin-right: 7px;
 }
-.modal-footer {
-    border-top: none !important;
-}
+
 .modal-header {
     border-bottom: none !important; 
 }
