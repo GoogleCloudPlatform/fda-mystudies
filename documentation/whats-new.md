@@ -6,6 +6,18 @@
 -->
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
+# Release 2.0.9
+* This release fixes the security vulnerability detected with Log4j recently. More information on the vulnerability is here (https://logging.apache.org/log4j/2.x/security.html#CVE-2021-45046). 
+* Note: The platform was using a log4j version and logging framework which is not impacted by this vulnerability. However, as a safety measure, the platform is updated with release v2.0.9, to use the latest Log4j version 2.16.0 that was provided by Apache to address this issue.
+
+# Release 2.0.8
+* Note: This release requires users to update to new versions of the mobile apps from the app stores.
+* Added functionality to manage apps using the Study Builder interface. Read more about setting up apps [here](/deployment/README.md#manage-apps-in-the-study-builder)
+* Upgrading to 2.0.8 requires following [these steps](/deployment/README.md#managing-apps-208-upgrade)
+* Added the ability to notify app users when an app update is required
+* Changed iOS push notifications to use Firebase Cloud Messaging (FCM). See [iOS configuration instructions](/iOS/README.md#configuration-instructions) for details
+* Additional code improvements and minor enhancements
+* The full list of bugs and features addressed in this release can be viewed [here ](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/11?closed=1)
 
 # Release 2.0.7
 * Minor feature enhancements
@@ -23,7 +35,7 @@
 * Changes to Cloud Storage permissions for study resources in new deployments. For upgrading existing deployments, follow [these steps](/deployment/README.md#study-resources-in-cloud-storage-205-upgrade).
 * Added support for additional email services
 * Bug fixes and UI refinements
-* Additional code improvements
+* Additional code improvements and minor enhancements
 * The full list of bugs and features addressed in this release can be viewed [`here`](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/8?closed=1)
 
 # Release 2.0.4
