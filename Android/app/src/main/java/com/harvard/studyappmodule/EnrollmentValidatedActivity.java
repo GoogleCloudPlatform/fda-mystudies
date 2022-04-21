@@ -19,8 +19,8 @@ package com.harvard.studyappmodule;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import com.harvard.AppConfig;
 import com.harvard.R;
@@ -33,6 +33,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -59,6 +60,7 @@ public class EnrollmentValidatedActivity extends AppCompatActivity
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private static final int UPDATE_USER_PREFERENCE_RESPONSE_CODE = 200;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +68,19 @@ public class EnrollmentValidatedActivity extends AppCompatActivity
     setContentView(R.layout.activity_enrollment_validated);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setFont();
     continueButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.enrollment_validated_continue));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
                     getIntent().getStringExtra("studyId"), realm);

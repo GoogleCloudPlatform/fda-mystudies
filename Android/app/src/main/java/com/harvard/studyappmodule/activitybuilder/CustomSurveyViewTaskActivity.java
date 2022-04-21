@@ -24,11 +24,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
@@ -54,6 +54,7 @@ import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.utils.ActiveTaskService;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -90,6 +91,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   private static final String RUN_START_DATE = "ViewTaskActivity.RunStartDate";
   private static final String RUN_END_DATE = "ViewTaskActivity.RunEndDate";
   private static final String BRANCHING = "ViewTaskActivity.branching";
+  private CustomFirebaseAnalytics analyticsInstance;
 
   private StepSwitcherCustom root;
 
@@ -144,6 +146,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     super.setResult(RESULT_CANCELED);
     super.setContentView(R.layout.stepswitchercustom);
     Toolbar toolbar = (Toolbar) findViewById(org.researchstack.backbone.R.id.toolbar);
@@ -224,6 +227,11 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   }
 
   protected void showNextStep() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getString(R.string.custom_survey_task_next));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     savestepresult(currentStep, true);
     Step nextStep = task.getStepAfterStep(currentStep, taskResult);
     if (nextStep == null) {
@@ -428,6 +436,11 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   }
 
   protected void showPreviousStep() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getString(R.string.custom_survey_task_back));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     Step previousStep = task.getStepBeforeStep(currentStep, taskResult);
     if (previousStep == null) {
       finish();
@@ -520,6 +533,11 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
       return true;
     } else if (item.getItemId() == R.id.action_settings) {
       showConfirmExitDialog();
+      Bundle eventProperties = new Bundle();
+      eventProperties.putString(
+          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+          getString(R.string.custom_survey_task_exit));
+      analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
       return true;
     }
 
@@ -633,10 +651,28 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_survey_task_end_task));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     finish();
                   }
                 })
-            .setNegativeButton(R.string.cancel, null)
+            .setNegativeButton(
+                R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_survey_task_cancel));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  }
+                })
             .create();
     alertDialog.show();
   }

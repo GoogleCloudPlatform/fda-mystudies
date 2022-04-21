@@ -27,44 +27,40 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
 import android.util.Base64;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.PdfViewerView;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
-import java.io.BufferedInputStream;
+import io.realm.Realm;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import javax.crypto.CipherInputStream;
 
-import io.realm.Realm;
 
 public class ResourcesWebViewActivity extends AppCompatActivity {
   private AppCompatTextView titleTv;
   private RelativeLayout backBtn;
   private WebView webView;
   private RelativeLayout shareBtn;
-  private PDFView pdfView;
   private String CreateFilePath;
   private String fileName;
   private static final int PERMISSION_REQUEST_CODE = 1000;
@@ -78,11 +74,15 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   String resourceId;
   Resource resource;
+  private CustomFirebaseAnalytics analyticsInstance;
+  PdfViewerView pdfViewer;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
+
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     CreateFilePath = "/data/data/" + getPackageName() + "/files/";
     initializeXmlId();
@@ -99,6 +99,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     // removing space b/w the string : name of the pdf
     try {
       title = intentTitle.replaceAll("\\s+", "");
+      title = title.replace("/", "\u2215");
     } catch (Exception e) {
       title = intentTitle;
       Logger.log(e);
@@ -150,6 +151,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.resources_webview_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -157,6 +164,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.resources_webview_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
 
               Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -177,9 +190,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
                   shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                 }
               } else {
-                shareIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(intentContent));
+                shareIntent.setType("text/html");
+                shareIntent.putExtra(
+                    Intent.EXTRA_TEXT,Html.fromHtml(resource.getContent()).toString());
+                shareIntent.putExtra(
+                    Intent.EXTRA_HTML_TEXT, Html.fromHtml(resource.getContent()).toString());
               }
-
               startActivity(shareIntent);
             } catch (Exception e) {
               Logger.log(e);
@@ -218,7 +234,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     titleTv = (AppCompatTextView) findViewById(R.id.title);
     webView = (WebView) findViewById(R.id.webView);
     shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
-    pdfView = (PDFView) findViewById(R.id.pdfView);
+    pdfViewer = (PdfViewerView) findViewById(R.id.pdfViewer);
   }
 
   private void setTextForView() {
@@ -228,12 +244,17 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     webView.getSettings().setJavaScriptEnabled(true);
     webView.getSettings().setDefaultTextEncodingName("utf-8");
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-    String webData = resource.getContent();;
+    String webData = resource.getContent();
     if (Build.VERSION.SDK_INT >= 24) {
-      webView.loadDataWithBaseURL(null,
-              Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
+      webView.loadDataWithBaseURL(
+          null,
+          Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(),
+          "text/html",
+          "UTF-8",
+          null);
     } else {
-      webView.loadDataWithBaseURL(null, Html.fromHtml((webData)).toString(), "text/html", "UTF-8", null);
+      webView.loadDataWithBaseURL(
+          null, Html.fromHtml((webData)).toString(), "text/html", "UTF-8", null);
     }
   }
 
@@ -344,6 +365,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
           Logger.log(e1);
         }
       }
+      AppController.generateEncryptedConsentPdf(filePath, fileName);
       return null;
     }
 
@@ -356,7 +378,6 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         // downlaod success mean file exist else check offline file
         File file = new File(filePath + fileName + ".pdf");
         if (file.exists()) {
-          AppController.generateEncryptedConsentPdf(filePath, fileName);
           displayPdfView(filePath + fileName + ".pdf");
         } else {
           // offline functionality
@@ -414,16 +435,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   }
 
   private void displayPdfView(String filePath) {
-    pdfView.setVisibility(View.VISIBLE);
-    try {
-      pdfView
-          .fromFile(new File(filePath))
-          .defaultPage(0)
-          .enableAnnotationRendering(true)
-          .scrollHandle(new DefaultScrollHandle(ResourcesWebViewActivity.this))
-          .load();
-    } catch (Exception e) {
-      Logger.log(e);
-    }
+    pdfViewer.setVisibility(View.VISIBLE);
+    pdfViewer.setPdf(new File(filePath));
   }
 }

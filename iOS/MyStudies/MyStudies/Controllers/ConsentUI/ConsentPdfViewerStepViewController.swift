@@ -20,6 +20,7 @@ import MessageUI
 import ResearchKit
 import UIKit
 import WebKit
+import FirebaseAnalytics
 
 let kPdfMimeType = "application/pdf"
 let kUTF8Encoding = "UTF-8"
@@ -62,6 +63,8 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   }
 
   override func goForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
     super.goForward()
   }
 
@@ -124,10 +127,16 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionNext(sender: UIBarButtonItem?) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConsentPdfViewerStep Done"
+    ])
     self.goForward()
   }
 
   @IBAction func buttonActionEmailPdf(sender: UIBarButtonItem?) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConsentPdfViewerStep SharePdf"
+    ])
     self.sendConsentByMail()
   }
 
@@ -155,6 +164,9 @@ extension ConsentPdfViewerStepViewController: WKNavigationDelegate {
         title: buttonTitleOK,
         style: .default,
         handler: { (_) in
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Ok Alert"
+          ])
           self.dismiss(animated: true, completion: nil)
 
         }

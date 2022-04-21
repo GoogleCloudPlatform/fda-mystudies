@@ -719,11 +719,28 @@ public class FdahpStudyDesignerUtil {
           regEx += "^A-Za-z0-9";
         }
         if ((exceptCharacters != null) && StringUtils.isNotEmpty(exceptCharacters)) {
-          String[] exceptChar = exceptCharacters.split("\\|");
+          String[] exceptChar = exceptCharacters.split("");
           StringBuilder except = new StringBuilder();
+          String escapeSplChar = "";
           for (String element : exceptChar) {
-            except.append("^(?!.*" + element.trim().replace(" ", "") + ")");
+
+            for (int i = 0; i < element.length(); i++) {
+              if (!Character.isDigit(element.charAt(i))
+                  && !Character.isLetter(element.charAt(i))
+                  && !Character.isWhitespace(element.charAt(i))) {
+                if (element.charAt(i) == '|') {
+                  escapeSplChar = escapeSplChar + element.charAt(i);
+                } else {
+                  escapeSplChar = escapeSplChar + "\\" + element.charAt(i);
+                }
+
+              } else {
+                escapeSplChar = escapeSplChar + "" + element.charAt(i);
+              }
+            }
           }
+          except.append("^(?!.*" + escapeSplChar.trim().replace(" ", "") + ")");
+
           regEx = except + regEx + "]+";
         } else {
           regEx += "]+";
@@ -731,7 +748,30 @@ public class FdahpStudyDesignerUtil {
       } else {
         if (validCharacters.equalsIgnoreCase(FdahpStudyDesignerConstants.ALLCHARACTERS)) {
           if ((exceptCharacters != null) && StringUtils.isNotEmpty(exceptCharacters)) {
-            regEx += "^(?:" + exceptCharacters.trim().replace(" ", "") + ")$";
+            String[] exceptChar = exceptCharacters.split("");
+            StringBuilder except = new StringBuilder();
+            String escapeSplChar = "";
+            for (String element : exceptChar) {
+
+              for (int i = 0; i < element.length(); i++) {
+
+                if (!Character.isDigit(element.charAt(i))
+                    && !Character.isLetter(element.charAt(i))
+                    && !Character.isWhitespace(element.charAt(i))) {
+                  if (element.charAt(i) == '|') {
+                    escapeSplChar = escapeSplChar + element.charAt(i);
+                  } else {
+                    escapeSplChar = escapeSplChar + "\\" + element.charAt(i);
+                  }
+
+                } else {
+                  escapeSplChar = escapeSplChar + "" + element.charAt(i);
+                }
+              }
+            }
+            except.append("^(?:" + escapeSplChar.trim().replace(" ", "") + ")$");
+
+            regEx = except + regEx;
           } else {
             regEx += "[.]";
           }
@@ -1187,6 +1227,7 @@ public class FdahpStudyDesignerUtil {
             bf = new BufferedReader(new InputStreamReader(zip.getInputStream(entry)));
             obj = new Object[] {entry.getName(), bf};
           } else if (FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("jpg")
+              || FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("jpeg")
               || FilenameUtils.getExtension(entry.getName()).equalsIgnoreCase("png")) {
             byte[] imageArray = getImage(zip.getInputStream(entry));
             CustomMultipartFile customMultipartFile =

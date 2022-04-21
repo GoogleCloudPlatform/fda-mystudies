@@ -73,8 +73,8 @@ public class UserBO implements Serializable {
   @Column(name = "credentialsNonExpired", length = 1)
   private boolean credentialsNonExpired;
 
-  @Column(name = "email_changed", columnDefinition = "TINYINT(1)")
-  private Boolean emailChanged = false;
+  @Column(name = "email_changed", columnDefinition = "int default 0")
+  private Integer emailChanged = 0;
 
   @Column(name = "status", length = 1)
   private boolean enabled;
@@ -152,7 +152,7 @@ public class UserBO implements Serializable {
     return createdOn;
   }
 
-  public Boolean getEmailChanged() {
+  public Integer getEmailChanged() {
     return emailChanged;
   }
 
@@ -268,7 +268,7 @@ public class UserBO implements Serializable {
     this.credentialsNonExpired = credentialsNonExpired;
   }
 
-  public void setEmailChanged(Boolean emailChanged) {
+  public void setEmailChanged(Integer emailChanged) {
     this.emailChanged = emailChanged;
   }
 

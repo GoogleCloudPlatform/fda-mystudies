@@ -289,7 +289,11 @@
     [_pageViewController didMoveToParentViewController:self];
     
     if (self.taskViewController.navigationBar) {
-        [self.taskViewController.navigationBar setBarTintColor:self.view.backgroundColor];
+        [self.taskViewController.navigationBar setBarTintColor:self.view.backgroundColor];        
+        [self.navigationController.navigationBar setBackgroundColor:self.view.backgroundColor];
+        [self.navigationController.view setBackgroundColor:self.view.backgroundColor];
+        [_pageViewController.navigationController.view setBackgroundColor:self.view.backgroundColor];
+        [_pageViewController.view setBackgroundColor:self.view.backgroundColor];
     }
     _animationView.userInteractionEnabled = NO;
     

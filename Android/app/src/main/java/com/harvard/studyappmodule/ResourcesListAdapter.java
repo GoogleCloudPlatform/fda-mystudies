@@ -18,20 +18,22 @@ package com.harvard.studyappmodule;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.usermodule.TermsPrivacyPolicyActivity;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -43,6 +45,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
   private final Context context;
   private final ArrayList<Resource> items = new ArrayList<>();
   private Fragment fragment;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   ResourcesListAdapter(Context context, RealmList<Resource> items, Fragment fragment) {
     this.context = context;
@@ -55,6 +58,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
     View v =
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.resources_list_item, parent, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     return new Holder(v);
   }
 
@@ -140,6 +144,12 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.resources_list));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
               Realm realm = AppController.getRealmobj(context);
               if (items.get(i).getType() != null) {
@@ -181,9 +191,9 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                   .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.resourceTerms))) {
                 try {
-                  Intent termsIntent =
-                      new Intent(context, TermsPrivacyPolicyActivity.class);
-                  termsIntent.putExtra("title", context.getResources().getString(R.string.resourceTerms));
+                  Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
+                  termsIntent.putExtra(
+                      "title", context.getResources().getString(R.string.resourceTerms));
                   termsIntent.putExtra("url", dbServiceSubscriber.getApps(realm).getTermsUrl());
                   context.startActivity(termsIntent);
                 } catch (Exception e) {
@@ -194,10 +204,11 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                   .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.resourcePolicy))) {
                 try {
-                  Intent termsIntent =
-                      new Intent(context, TermsPrivacyPolicyActivity.class);
-                  termsIntent.putExtra("title", context.getResources().getString(R.string.resourcePolicy));
-                  termsIntent.putExtra("url", dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
+                  Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
+                  termsIntent.putExtra(
+                      "title", context.getResources().getString(R.string.resourcePolicy));
+                  termsIntent.putExtra(
+                      "url", dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
                   context.startActivity(termsIntent);
                 } catch (Exception e) {
                   Logger.log(e);
@@ -212,7 +223,8 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                         .get(i)
                         .getTitle()
                         .equalsIgnoreCase(context.getResources().getString(R.string.leave_study))
-                        && AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_standalone))) {
+                    && AppConfig.AppType.equalsIgnoreCase(
+                        context.getString(R.string.app_standalone))) {
                   message = context.getString(R.string.leaveStudyDeleteAccount);
                 } else {
                   message = context.getString(R.string.leaveStudy);
@@ -226,6 +238,12 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
+                        Bundle eventProperties = new Bundle();
+                        eventProperties.putString(
+                            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                            context.getString(R.string.resources_list_leave_study_yes));
+                        analyticsInstance.logEvent(
+                            CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                         ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy();
                       }
                     });
@@ -235,6 +253,12 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
+                        Bundle eventProperties = new Bundle();
+                        eventProperties.putString(
+                            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                            context.getString(R.string.resources_list_leave_study_no));
+                        analyticsInstance.logEvent(
+                            CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                         dialog.cancel();
                       }
                     });

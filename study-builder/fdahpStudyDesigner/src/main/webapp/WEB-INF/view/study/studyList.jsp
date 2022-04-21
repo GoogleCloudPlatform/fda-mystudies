@@ -14,9 +14,6 @@
 .mr-lg {
     margin-right: 15px !important;
 }
-.modal-footer {
-    border-top: none !important;
-}
 .modal-header {
     border-bottom: none !important; 
 }
@@ -127,16 +124,13 @@ padding-left: 7px;
 						<c:when test="${not empty study.status && (study.status eq 'Deactivated')}">
 							  cursor-none
 						</c:when>
-						<c:when test="${empty study.customStudyId}">
-						      cursor-none
-						</c:when>
 						<c:when test="${not fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}"> 
 						      cursor-none
 						</c:when>
 			  </c:choose>"
              
-                   data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
-                  title="Copy-into-new" onclick='copyStudy("${study.id}" , "${study.liveStudyId}" ,
+                   permission="view" data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
+                  title="${(not empty study.customStudyId)?'Copy-into-new':'Please complete the Study Information section to enable this action'}" onclick='copyStudy("${study.id}" , "${study.liveStudyId}" ,
                    ${(not empty study.liveStudyId)?((study.flag)? true : false): false});'>
                     </span>
            <c:if test="${not empty study.liveStudyId}">
@@ -145,6 +139,19 @@ padding-left: 7px;
                     permission="view" data-toggle="tooltip" data-placement="top"
                     title="View last published version"></span>
             </c:if>
+              <c:if test="${empty study.liveStudyId}">
+             <span class="sprites_icon delete  
+             <c:choose>
+						<c:when test="${not study.viewPermission}">
+							  cursor-none
+						</c:when>
+						</c:choose>"
+              isLive="No"
+                   delstudyId="${study.id}"
+                    permission="view" data-toggle="tooltip" data-placement="top"
+                    title="Delete" onclick='validateStudy("${study.id}");'></span>  
+                 
+             </c:if>
           </td>
         </tr>
       </c:forEach>
@@ -257,7 +264,7 @@ padding-left: 7px;
 
         "lengthChange": false,
         language: {
-          "zeroRecords": "No studies found.",
+          "zeroRecords": "No studies found",
         },
         "searching": true,
         "pageLength": 10,
@@ -305,7 +312,45 @@ padding-left: 7px;
     document.body.appendChild(form);
     form.submit();
   });
+  
+  //delete prelaunch study
+  function validateStudy(studyId) {
+   bootbox.confirm({
+     message: "Are you sure you wish to delete this study?",
+     buttons: {
+       confirm: {
+         label: 'Yes',
+       },
+       cancel: {
+         label: 'No',
+       }
+     },
+     callback: function (result) {
+   	  if (result) {
+   		  deleteStudy(studyId);
+         }
+       }
+     });}
+ 
+  function deleteStudy(studyId){
+	      var studyId = studyId;
+	     var form = document.createElement('form');
+	      form.method = 'post';
+	      var input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = 'studyId';
+	      input.value = studyId;
+	      form.appendChild(input);
 
+	      input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = '${_csrf.parameterName}';
+	      input.value = '${_csrf.token}';
+	      form.appendChild(input);
+	     form.action = '/studybuilder/adminStudies/deleteStudy.do';
+	     document.body.appendChild(form);
+	     form.submit();
+	  }
   //datatable icon toggle
   $(".table thead tr th").click(function () {
     $(this).children().removeAttr('class')
@@ -426,7 +471,10 @@ padding-left: 7px;
 			  var total = $('input[name="options[]"]:checked').length;
 			  if(total == 0){
 				  $(".dropdown-text").html('Filter by apps');
-			  }else{
+			  }else if(a.length == a.filter(":checked").length){
+				  $(".dropdown-text").html('All apps');
+			   }
+			  else{
 				  $(".dropdown-text").html(total + ' app(s)');
 			  }
 			  

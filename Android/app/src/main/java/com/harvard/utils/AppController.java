@@ -26,16 +26,21 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.security.KeyPairGeneratorSpec;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
@@ -45,7 +50,6 @@ import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
-import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 import com.harvard.utils.realm.RealmMigrationHelper;
@@ -59,7 +63,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.URLDecoder;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPairGenerator;
@@ -80,7 +83,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -102,6 +104,8 @@ public class AppController {
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
   public static String loginCallback = "login_callback";
+  public static int SchemaVersion = 2;
+  private static CustomFirebaseAnalytics analyticsInstance;
 
   public static final String STARTING_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
   public static final String ENDDING_TAGS = "</\\w+>";
@@ -149,8 +153,7 @@ public class AppController {
   }
 
   public static void getHelperSessionExpired(Context context, String msg) {
-    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(context);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {
@@ -254,19 +257,62 @@ public class AppController {
     return retTypeface;
   }
 
-  public static Realm getRealmobj(Context context) {
-    if (config == null) {
-      RealmEncryptionHelper realmEncryptionHelper =
-          RealmEncryptionHelper.initHelper(context, context.getString(R.string.app_name));
-      byte[] key = realmEncryptionHelper.getEncryptKey();
-      config =
+  public static Realm getRealmobj(final Context context) {
+    Realm realm;
+    try {
+      realm = Realm.getDefaultInstance();
+    } catch (Exception e) {
+      byte[] key = AppController.getkey(context, context.getString(R.string.app_name));
+      RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
-              .schemaVersion(2)
+              .schemaVersion(SchemaVersion)
               .migration(new RealmMigrationHelper())
               .build();
+      Realm.removeDefaultConfiguration();
+      Realm.setDefaultConfiguration(config);
+      realm = Realm.getDefaultInstance();
+      Logger.log(e);
     }
-    return Realm.getInstance(config);
+    return realm;
+  }
+
+  private static byte[] getkey(Context context, String keyName) {
+    RealmEncryptionHelper realmEncryptionHelper = RealmEncryptionHelper.initHelper(context, keyName);
+    byte[] key = realmEncryptionHelper.getEncryptKey();
+    String s = bytesToHex(key);
+    Log.wtf("realm key for " + keyName, "" + s);
+    return key;
+  }
+
+  public static void checkIfAppNameChangeAndMigrate(Context context) {
+    if (!context.getString(R.string.app_name).equalsIgnoreCase(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)))) {
+      byte[] key = getkey(context, SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
+      RealmConfiguration config =
+          new RealmConfiguration.Builder()
+              .encryptionKey(key)
+              .schemaVersion(SchemaVersion)
+              .migration(new RealmMigrationHelper())
+              .build();
+      Realm realm = Realm.getInstance(config);
+      RealmEncryptionHelper.getInstance().deleteEntry(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
+      byte[] NewKey = getkey(context, context.getString(R.string.app_name));
+      realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), NewKey);
+      realm.close();
+      File file = new File(context.getFilesDir(), "default.realm");
+      file.delete();
+      renameFile(context, "temp.realm", "default.realm");
+    }
+    byte[] key = AppController.getkey(context, context.getString(R.string.app_name));
+    RealmConfiguration config =
+        new RealmConfiguration.Builder()
+            .encryptionKey(key)
+            .schemaVersion(SchemaVersion)
+            .migration(new RealmMigrationHelper())
+            .build();
+    Realm.removeDefaultConfiguration();
+    Realm.setDefaultConfiguration(config);
+    SharedPreferenceHelper.writePreference(context, "appname", context.getString(R.string.app_name));
   }
 
   public static void clearDBfile() {
@@ -427,12 +473,26 @@ public class AppController {
           .setPositiveButton(
               positiveButton,
               new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {}
+                public void onClick(DialogInterface dialog, int id) {
+                  analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                }
               })
           .setNegativeButton(
               context.getResources().getString(R.string.cancel),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (finish) {
                     ((Activity) context).finish();
@@ -448,6 +508,12 @@ public class AppController {
               new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   // Do stuff, possibly set wantToCloseDialog to true then...
                   final String appPackageName = context.getPackageName();
                   try {
@@ -483,6 +549,11 @@ public class AppController {
               new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          context.getString(R.string.custom_data_question_cancel));
+                  analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                          eventProperties);
                   alertDialog.dismiss();
                   ((SplashActivity) context).loadsplash();
                 }
@@ -502,6 +573,11 @@ public class AppController {
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.upgrade));
+              analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                      eventProperties);
               final String appPackageName = context.getPackageName();
               try {
                 ((Activity) context)
@@ -881,8 +957,7 @@ public class AppController {
   }
 
   public static void forceSignout(Context context) {
-    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(context);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {
@@ -926,8 +1001,7 @@ public class AppController {
   }
 
   public static void signout(Context context) {
-    SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(context);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {
@@ -966,6 +1040,34 @@ public class AppController {
       context.startActivity(mainIntent);
       ((Activity) context).finish();
     }
+  }
+
+  public static void clearAllAppData(Context context) {
+    SharedPreferenceHelper.deletePreferences(context);
+    // delete passcode from keystore
+    String pass = AppController.refreshKeys("passcode");
+    if (pass != null) {
+      AppController.deleteKey("passcode_" + pass);
+    }
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = getRealmobj(context);
+    dbServiceSubscriber.deleteDb(context);
+    try {
+      NotificationModuleSubscriber notificationModuleSubscriber =
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+      notificationModuleSubscriber.cancleActivityLocalNotification(context);
+      notificationModuleSubscriber.cancleResourcesLocalNotification(context);
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    NotificationModuleSubscriber notificationModuleSubscriber =
+        new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+    notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
+    dbServiceSubscriber.closeRealmObj(realm);
+
+    // clear notifications from notification tray
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+    notificationManager.cancelAll();
   }
 
   public static String getHashedValue(String valueToHash) {
@@ -1046,5 +1148,35 @@ public class AppController {
       }
     }
     return false;
+  }
+
+  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
+  public static String bytesToHex(byte[] bytes) {
+    char[] hexChars = new char[bytes.length * 2];
+    for (int j = 0; j < bytes.length; j++) {
+      int v = bytes[j] & 0xFF;
+      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    }
+    return new String(hexChars);
+  }
+
+
+  public static void renameFile(Context context, String oldName, String newName) {
+    File dir = context.getFilesDir();
+    if (dir.exists()) {
+      File from = new File(dir, oldName);
+      File to = new File(dir, newName);
+      if (from.exists()) {
+        from.renameTo(to);
+      }
+    }
+  }
+
+  public static ArrayList<String> getExcludePreferenceList() {
+    ArrayList<String> excludedList = new ArrayList<>();
+    excludedList.add("appname");
+    return excludedList;
   }
 }

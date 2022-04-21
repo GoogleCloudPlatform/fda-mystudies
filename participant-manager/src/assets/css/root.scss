@@ -1723,8 +1723,28 @@ meter::-moz-meter-bar {
     display: none !important;
   }
 }
-@media only screen and (max-width: 340px) and (min-width: 320px) {
+@media only screen and (max-width: 390px) and (min-width: 320px) {
   .btn_mb_2 {
     margin-bottom: 20px !important;
+  }
+}
+
+.min_content {
+  width: min-content !important;
+}
+@media only screen and (max-width: 500px) and (min-width: 200px) {
+  #desktop-menu {
+    display: none !important;
+  }
+}
+
+input::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
+@media only screen and (max-width: 500px) and (min-width: 200px) {
+  .tab_sub_menu {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }

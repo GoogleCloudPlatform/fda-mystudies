@@ -29,12 +29,12 @@
                 android:paddingRight="20dp"
                 android:paddingTop="18dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/first_name_label"
                     style="@style/signUpTextField"
                     android:text="@string/first_name" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_first_name"
                     style="@style/signUpEditText"
                     android:layout_alignBaseline="@+id/first_name_label"
@@ -46,7 +46,7 @@
                     android:maxLines="1"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline2"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -67,12 +67,12 @@
                 android:paddingRight="20dp"
                 android:paddingTop="18dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/last_name_label"
                     style="@style/signUpTextField"
                     android:text="@string/last_name" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_last_name"
                     style="@style/signUpEditText"
                     android:hint="@string/enter_last_name"
@@ -81,7 +81,7 @@
                     android:maxLines="1"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline3"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -100,12 +100,12 @@
                 android:paddingRight="20dp"
                 android:paddingTop="18dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/email_label"
                     style="@style/signUpTextField"
                     android:text="@string/email_id" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_email"
                     style="@style/signUpEditText"
                     android:hint="@string/enter_email"
@@ -115,7 +115,7 @@
                     android:maxLines="1"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline4"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -133,12 +133,12 @@
                 android:paddingRight="20dp"
                 android:paddingTop="18dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/password_label"
                     style="@style/signUpTextField"
                     android:text="@string/password" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_password"
                     style="@style/signUpEditText"
                     android:hint="@string/add_password"
@@ -149,7 +149,7 @@
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!#$%&amp;'()*+,-.:;&lt;&gt;=?@[]^_{}|~"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline5"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -167,12 +167,12 @@
                 android:paddingRight="20dp"
                 android:paddingTop="18dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/confirm_password_label"
                     style="@style/signUpTextField"
                     android:text="@string/confirm_password" />
 
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edittxt_confirm_password"
                     style="@style/signUpEditText"
                     android:hint="@string/enter_confirm_password"
@@ -186,7 +186,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline6"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -224,7 +224,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@id/switch_touch">
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/touch_id_label"
                         style="@style/TextType2"
                         android:layout_width="wrap_content"
@@ -237,7 +237,7 @@
 
                 </RelativeLayout>
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/hrline7"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -258,7 +258,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp">
 
-                <android.support.v7.widget.AppCompatCheckBox
+                <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/agreeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -267,7 +267,7 @@
                     android:button="@drawable/radio_button_netwok_selector"
                     android:saveEnabled="false" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/agree_label"
                     style="@style/TextType2"
                     android:layout_centerVertical="true"
@@ -277,7 +277,7 @@
                     android:textColor="@color/colorPrimaryBlack" />
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/submitButton"
                 style="@style/TextType2"
                 android:layout_centerHorizontal="true"

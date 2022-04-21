@@ -25,7 +25,7 @@ class DBHandler: NSObject {
   private static var realm: Realm? = {
     let key = FDAKeychain.shared[kRealmEncryptionKeychainKey]
     let data = Data.init(base64Encoded: key!)
-    let encryptionConfig = Realm.Configuration(encryptionKey: data)
+    let encryptionConfig = Realm.Configuration.defaultConfiguration
     return try? Realm(configuration: encryptionConfig)
   }()
 
@@ -178,7 +178,6 @@ class DBHandler: NSObject {
             .rawValue
           {
             dbStudy?.updatedVersion = study.version
-
           } else {
             dbStudy?.updatedVersion = study.version
           }
@@ -622,6 +621,8 @@ class DBHandler: NSObject {
     dbActivity.type = activity.type?.rawValue
     dbActivity.name = activity.name
     dbActivity.startDate = activity.startDate
+    dbActivity.startRawDate = activity.startRawDate
+    dbActivity.endRawDate = activity.endRawDate
     dbActivity.endDate = activity.endDate
     dbActivity.version = activity.version
     dbActivity.state = activity.state
@@ -746,10 +747,53 @@ class DBHandler: NSObject {
       return false
     }
     let date = Utilities.getDateFromString(dateString: userInputDate)
-
     for activity in dbActivities {
       if let anchorDate = date {
         self.updateActivityLifeTimeFor(activity, anchorDate: anchorDate)
+      }
+    }
+    return date != nil
+  }
+  
+  class func updateTargetForActivityAnchorDateDetail(
+    studyId: String,
+    activityId: String,
+    response: [String: Any]
+  ) -> Bool {
+    guard !response.isEmpty else { return false }
+    let realm = DBHandler.getRealmObject()!
+    let dbActivities = realm.objects(DBActivity.self)
+      .filter {
+        $0.sourceActivityId == activityId
+        && $0.studyId == studyId
+      }
+    
+    // get source question value and key
+    var date: Date? = nil
+    if let results = response["results"] as? [[String: Any]] {
+      var quesStepKey: String
+      var dictionary: [String: Any] = [:]
+      
+      for dbActivity in dbActivities {
+        
+        let sourceKey = (dbActivity.sourceKey)!
+        if dbActivity.sourceFormKey != nil && dbActivity.sourceFormKey!.count > 0 {
+          quesStepKey = dbActivity.sourceFormKey!
+          let quesResults = results.filter { $0["key"] as! String == quesStepKey }.first
+          let resultsArray = ((quesResults!["value"] as? [[Any]])?.first) as? [[String: Any]]
+          dictionary = resultsArray!.filter { $0["key"] as! String == sourceKey }.first!
+        } else {
+          dictionary = results.filter { $0["key"] as! String == sourceKey }.first!
+        }
+        
+        guard let userInputDate = dictionary["value"] as? String else {
+          return false
+        }
+        date = Utilities.getDateFromString(dateString: userInputDate)
+        
+        if let anchorDate = date {
+          self.updateActivityLifeTimeFor(dbActivity, anchorDate: anchorDate)
+        }
       }
     }
     return date != nil
@@ -814,7 +858,7 @@ class DBHandler: NSObject {
   /// - Parameters:
   ///   - dbActivity: Instance of  `DBActivity` for which anchor date will be updated.
   ///   - anchorDate: Calculated anchor date.
-  class func updateActivityLifeTimeFor(_ dbActivity: DBActivity, anchorDate: Date) {
+  class func updateActivityLifeTimeFor(_ dbActivity: DBActivity, anchorDate: Date, _ anchorRawDate: String = "") {
 
     var date = anchorDate
     let realm = DBHandler.getRealmObject()!
@@ -824,7 +868,6 @@ class DBHandler: NSObject {
     let startTimeEnrollment = "00:00:00"
     startDateStringEnrollment = (startDateStringEnrollment ?? "") + " " + startTimeEnrollment
     date = Utilities.findDateFromString(dateString: startDateStringEnrollment ?? "")!
-
     let frequency = Frequency(rawValue: (dbActivity.frequencyType)!)!
     let lifeTime = DBHandler.getLifeTime(
       date,
@@ -833,10 +876,10 @@ class DBHandler: NSObject {
       endDays: (dbActivity.endDays),
       repeatInterval: (dbActivity.repeatInterval)
     )
-
+    
     guard var anchorStartDate = lifeTime.0
     else { return }
-
+    
     var anchorEndDate = lifeTime.1
     // Update Start date and time.
     if let startTime = dbActivity.startTime,
@@ -846,7 +889,7 @@ class DBHandler: NSObject {
     } else if let activityStartDate = dbActivity.startDate {
       anchorStartDate = activityStartDate
     }
-
+ 
     // Update End date and time.
     if let endTime = dbActivity.endTime,
       let updatedEndDate = DateHelper.updateTime(of: anchorEndDate, with: endTime)
@@ -861,7 +904,12 @@ class DBHandler: NSObject {
 
     let activity = DBHandler.getActivityFromDBActivity(dbActivity, runDate: currentDate)
     activity.startDate = anchorStartDate
+    let val1 = TimeZone.current.secondsFromGMT(for: activity.startDate!)
+    activity.startRawDate = "\(anchorStartDate)W\(val1)"
     activity.endDate = anchorEndDate
+    if anchorEndDate != nil {
+    activity.endRawDate = "\(anchorEndDate!)W\(val1)"
+    }
     activity.anchorDate?.anchorDateValue = date
     Schedule().getRunsForActivity(
       activity: activity,
@@ -884,7 +932,12 @@ class DBHandler: NSObject {
         try? realm.write {
           dbActivity.activityRuns.append(objectsIn: dbActivityRuns)
           dbActivity.startDate = anchorStartDate
+          dbActivity.startRawDate = "\(anchorStartDate)W\(val1)"
           dbActivity.endDate = anchorEndDate
+          if anchorEndDate != nil {
+            dbActivity.endRawDate = "\(anchorEndDate!)W\(val1)"
+          }
+          
           dbActivity.anchorDateValue = date
         }
       }
@@ -942,7 +995,6 @@ class DBHandler: NSObject {
       endDate = date.addingTimeInterval(endDateInterval)
 
     }
-
     return (startDate, endDate)
   }
 
@@ -1033,7 +1085,9 @@ class DBHandler: NSObject {
     activity.studyId = dbActivity.studyId
     activity.name = dbActivity.name
     activity.startDate = dbActivity.startDate
+    activity.startRawDate = dbActivity.startRawDate
     activity.endDate = dbActivity.endDate
+    activity.endRawDate = dbActivity.endRawDate
     activity.type = ActivityType(rawValue: dbActivity.type!)
     activity.frequencyType = Frequency(rawValue: dbActivity.frequencyType!)!
     activity.schedulingType = ActivityScheduleType(rawValue: dbActivity.schedulingType!)!
@@ -1073,11 +1127,11 @@ class DBHandler: NSObject {
       if activity.frequencyType == Frequency.oneTime && activity.endDate == nil {
         run = runs.last
       } else {
-        runsBeforeToday = runs.filter({ $0.endDate <= date })
+        runsBeforeToday = runs.filter({ $0.endDate ?? Date() <= date })
         run =
           runs.filter {
             $0.startDate <= date
-              && $0.endDate > date
+            && $0.endDate ?? Date() > date
           }.first  // current run
       }
 
@@ -1152,6 +1206,7 @@ class DBHandler: NSObject {
     anchorDate.endDays = dbActivity.endDays
     anchorDate.repeatInterval = dbActivity.repeatInterval
     anchorDate.endTime = dbActivity.endTime
+    anchorDate.anchorDateValue = dbActivity.anchorDateValue
     activity.anchorDate = anchorDate
 
     return activity

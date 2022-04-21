@@ -46,6 +46,10 @@ resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" {
     protocol = "tcp"
     ports    = ["8080"]
   }
+  allow {
+    protocol = "tcp"
+    ports    = ["10256"]
+  }
 
   # Load Balancer Health Check IP ranges.
   source_ranges = [

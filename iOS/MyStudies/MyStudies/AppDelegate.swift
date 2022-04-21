@@ -23,6 +23,7 @@ import RealmSwift
 import UIKit
 import UserNotifications
 import Firebase
+import FirebaseAnalytics
 
 @UIApplicationMain
 
@@ -128,27 +129,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Handler for TimeZone changes, updates time zone in the local database
   func calculateTimeZoneChange() {
-
+    
     let timeZoneCurrent = TimeZone.current
+    let valTimezone = timeZoneCurrent
     let differenceFromCurrent = timeZoneCurrent.secondsFromGMT()
-
+    
     // Saving TimeZone to User Defaults
     let ud = UserDefaults.standard
     let setuptimeDiff = ud.value(forKey: ksetUpTimeIdentifier) as? Int
-
+    
     // Saving time difference
     if setuptimeDiff == nil {
       ud.set(differenceFromCurrent, forKey: ksetUpTimeIdentifier)
       ud.set(0, forKey: "offset")
-
+      
+      let timezoneArray = InitialTimezone.init(playerName: valTimezone)
+      let encodedData = NSKeyedArchiver.archivedData(withRootObject: timezoneArray)
+      ud.set(encodedData, forKey: "oldTimezone")
     } else {
-
       let difference = differenceFromCurrent - setuptimeDiff!
       ud.set(difference, forKey: "offset")
-      if difference == 0 {
-        // Do Nothing
-      } else {
-
+      if difference != 0 {
         Schedule.utcFormatter = nil
         Schedule.currentZoneFormatter = nil
       }
@@ -214,21 +215,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     self.isAppLaunched = true
     IQKeyboardManager.shared.enable = true
     self.customizeNavigationBar()
-      
-    //Fixes navigation bar tint issue in iOS 15.0
-    if #available(iOS 15, *) {
-      let appearance = UINavigationBarAppearance()
-      let navigationBar = UINavigationBar()
-      
-      appearance.configureWithOpaqueBackground()
-      appearance.backgroundColor = .white
-      navigationBar.standardAppearance = appearance
-      UINavigationBar.appearance().standardAppearance.backgroundColor = .white
-      UINavigationBar.appearance().standardAppearance.shadowColor = .white
-      UINavigationBar.appearance().scrollEdgeAppearance = appearance
-      UINavigationBar.appearance().standardAppearance = appearance
-    }
     
+    NotificationCenter.default.addObserver(self, selector: #selector(self.receivedORKAction(_:)),
+                                           name: Notification.Name("ORKAction"), object: nil)
     // Use Firebase library to configure APIs
     FirebaseApp.configure()
     Messaging.messaging().delegate = self
@@ -241,6 +230,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     UserServices().getUserManageApps(self)
     
     UIApplication.shared.applicationIconBadgeNumber = 0
+    
+    UserDefaults.standard.removeObject(forKey: "applict")
 
     let ud1 = UserDefaults.standard
 
@@ -283,6 +274,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     // set Flag to handle foreground to background transition
     self.appIsResignedButDidNotEnteredBackground = false
+    let ud = UserDefaults.standard
+    ud.set(false, forKey: kPasscodeIsPending)
     blockerScreen?.isHidden = true
     blockerScreen?.removeFromSuperview()
   }
@@ -299,7 +292,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     self.checkForStudyUpdates()
     let number = UIApplication.shared.applicationIconBadgeNumber
     if number >= 1 {
-      self.updateNotification()
+      self.updateNotification(userInfoDetails: nil)
     }
     // Check For Manage Apps details
     self.addAndRemoveProgress(add: true)
@@ -370,7 +363,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     if self.isAppLaunched! {
       self.isAppLaunched = false
-
       DispatchQueue.main.async {
         // Update Local Notifications
         self.checkForRegisteredNotifications()
@@ -390,12 +382,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
+    ///UnComment the below for APNS approach of Push Notification
     let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
     if User.currentUser.userType == .loggedInUser {
       User.currentUser.settings?.remoteNotifications = true
       User.currentUser.settings?.localNotifications = true
-      // Update device Token to Local server
-      UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
+//      // Update device Token to Local server
+//      UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
     }
   }
 
@@ -652,114 +645,291 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
       leftController.changeViewController(.studyList)
       leftController.createLeftmenuItems()
     }
+    
+    if let dashboardTabBar = initialVC as? UITabBarController {
+      dashboardTabBar.selectedIndex = 2 // Go to resources screen.
+      if let resourcesVC = (dashboardTabBar.viewControllers?.first as? UINavigationController)?.topViewController as? ResourcesViewController
+      {
+        resourcesVC.userDidNavigateFromNotification()
+      }
+    }
 
   }
 
   /// Handler for local & remote notification
   /// - Parameter userInfoDetails: contains the info for notification
-  func handleLocalAndRemoteNotification(userInfoDetails: [String: Any]?) {
-
-    // User info is valid
-    if let userInfoDetails = userInfoDetails,
-      !userInfoDetails.isEmpty
+  func handleLocalAndRemoteNotification(userInfoDetails: JSONDictionary?) {
+    var initialVC: UIViewController?
+    
+    if let dashboardTabBar = initialVC as? UITabBarController {
+      dashboardTabBar.selectedIndex = 2 // Go to resources screen.
+      if let resourcesVC = (dashboardTabBar.viewControllers?.first as? UINavigationController)?.topViewController as? ResourcesViewController
+      {
+        resourcesVC.userDidNavigateFromNotification()
+      }
+    }
+    
+    if let studyId = userInfoDetails?[kStudyId] as? String,
+       !studyId.isEmpty
     {
+      let notificationType = userInfoDetails![kNotificationType] as? String ?? ""
+      let subType = AppNotification.NotificationSubType(rawValue: (userInfoDetails![kNotificationSubType] as? String ?? "")) ?? .announcement
+      
+      switch AppNotification.NotificationType(rawValue: notificationType) {
+      case .gateway:
+        hanldeGatewayNotificationType(userInfoDetails: userInfoDetails!, subType: subType)
+        break
+      case .study:
+        handleStudyNotificationType(userInfoDetails: userInfoDetails!, subType: subType)
+      default:
+        print(notificationType)
+        
+      }
+    }
+  }
+  
+  private func handleStudyNotificationType(userInfoDetails: [String: Any], subType: AppNotification.NotificationSubType) {
+    if let studyId = userInfoDetails[kStudyId] as? String,
+       !studyId.isEmpty
+    {
+      var initialVC: UIViewController?
+      
+      // fetch the visible view controller
+      let navigationController = self.window?.rootViewController as? UINavigationController
+      let menuVC = navigationController?.viewControllers.last
+      if menuVC is FDASlideMenuViewController {
+        let mainController = (menuVC as? FDASlideMenuViewController)?
+          .mainViewController
+        if mainController is UINavigationController {
+          let nav = mainController as? UINavigationController
+          initialVC = nav?.viewControllers.last
+        }
+      }
+      // Handling Notifications based on SubType
+      switch subType {
+        
+      case .study, .studyEvent:  // Study Notifications
+        let leftController =
+                  (menuVC as? FDASlideMenuViewController)?.leftViewController
+                  as? LeftMenuViewController
+        
+        if (initialVC is StudyListViewController) {
+          let val = userInfoDetails["message"] as? String ?? ""
+          if val.containsIgnoringCase("has been paused") {
+            UserDefaults.standard.set("paused", forKey: "pausedNotification")
+            UserDefaults.standard.synchronize()
+          }
+          (initialVC as? StudyListViewController)!.addRightNavigationItem()
+          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
+        } else if !(initialVC is StudyListViewController) {
+          if initialVC is ProfileViewController
+              || initialVC
+              is ReachoutOptionsViewController
+              || initialVC is GatewayResourcesListViewController || initialVC is ActivitiesViewController || initialVC is ResourcesViewController ||
+              initialVC is StudyDashboardViewController || initialVC is StudyDashboardTabbarViewController ||
+              initialVC is NotificationViewController || initialVC is LeftMenuViewController
+          {
+            
+            NotificationHandler.instance.appOpenFromNotification = true
+            NotificationHandler.instance.studyId = studyId
+            
+            leftController?.changeViewController(.studyList)
+            leftController?.createLeftmenuItems()
+            
+           }
+        } else {
+          
+          NotificationHandler.instance.appOpenFromNotification = true
+          NotificationHandler.instance.studyId = studyId
+    
+          
+          leftController?.changeViewController(.studyList)
+          leftController?.createLeftmenuItems()
+        }
+        
+      case .activity:  // Activity Notifications
+        
+        if !(initialVC is UITabBarController) {
+          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
 
-      let notificationType = userInfoDetails[kNotificationType] as? String ?? ""
-
-      let subType =
-        AppNotification.NotificationSubType(
-          rawValue: (userInfoDetails[kNotificationSubType] as? String ?? "")
-        ) ?? .announcement
-
-      if notificationType == AppNotification.NotificationType.study.rawValue {  // Study Level Notification
-
-        if let studyId = userInfoDetails[kStudyId] as? String,
-          !studyId.isEmpty
-        {
-
-          var initialVC: UIViewController?
-
+          // push tabbar and switch to activty tab
+          if let initialVC = initialVC {
+            self.pushToTabbar(
+              viewController: initialVC,
+              selectedTab: subType == .activity ? 0 : 2
+            )
+          }
+        } else {
+          // switch to activity tab
+          (initialVC as? UITabBarController)?.selectedIndex =
+          subType == .activity ? 0 : 2
+        }
+        
+      case .resource:
+        if !(initialVC is UITabBarController) {
+          
           if Gateway.instance.studies?.isEmpty == false {
-            guard
-              let study = Gateway.instance.studies?.filter({ $0.studyId == studyId })
+            guard let study = Gateway.instance.studies?.filter({ $0.studyId == studyId })
                 .first
             else { return }
             Study.updateCurrentStudy(study: study)
           }
-          // fetch the visible view controller
-          let navigationController = self.window?.rootViewController as? UINavigationController
-          let menuVC = navigationController?.viewControllers.last
-          if menuVC is FDASlideMenuViewController {
-            let mainController = (menuVC as? FDASlideMenuViewController)?
-              .mainViewController
-            if mainController is UINavigationController {
-              let nav = mainController as? UINavigationController
-              initialVC = nav?.viewControllers.last
-            }
+          
+          // push tabbar and switch to resource tab
+          if let initialVC = initialVC {
+            self.pushToTabbar(
+              viewController: initialVC,
+              selectedTab: 2
+            )
           }
-          // Handling Notifications based on SubType
-          switch subType {
-          case .activity, .resource:  // Activity & Resource  Notifications
+        }
+        else {
+          (initialVC as? UITabBarController)?.selectedIndex = 2
+        }
+        
+      case .announcement:
+        if !(initialVC is UITabBarController) {
+          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
 
-            if !(initialVC is UITabBarController) {
-              // push tabbar and switch to activty tab
-              if let initialVC = initialVC {
-                self.pushToTabbar(
-                  viewController: initialVC,
-                  selectedTab: subType == .activity ? 0 : 2
-                )
-              }
-            } else {
-              // switch to activity tab
-              (initialVC as? UITabBarController)?.selectedIndex =
-                subType == .activity ? 0 : 2
-            }
-
-          case .study, .studyEvent:  // Study Notifications
-
-            let leftController =
-              (menuVC as? FDASlideMenuViewController)?.leftViewController
-              as? LeftMenuViewController
-
-            if !(initialVC is StudyListViewController) {
-
-              if initialVC is ProfileViewController
-                || initialVC
-                  is ReachoutOptionsViewController
-                || initialVC is GatewayResourcesListViewController
-              {
-
-                NotificationHandler.instance.appOpenFromNotification = true
-                NotificationHandler.instance.studyId = studyId
-
-                leftController?.changeViewController(.studyList)
-                leftController?.createLeftmenuItems()
-
-              }
-            } else {
-
-              NotificationHandler.instance.appOpenFromNotification = true
-              NotificationHandler.instance.studyId = studyId
-
-              leftController?.changeViewController(.studyList)
-              leftController?.createLeftmenuItems()
-            }
-
-          case .announcement:
-            break
+          // push tabbar and switch to activty tab
+          if let initialVC = initialVC {
+            self.pushToTabbar(
+              viewController: initialVC,
+              selectedTab: subType == .announcement ? 0 : 2
+            )
           }
+        } else {
+          // switch to activity tab
+          (initialVC as? UITabBarController)?.selectedIndex =
+          subType == .announcement ? 0 : 2
         }
       }
     }
-    self.notificationDetails = nil
+  }
+  
+  private func hanldeGatewayNotificationType(userInfoDetails: [String: Any], subType: AppNotification.NotificationSubType) {
+    if let studyId = userInfoDetails[kStudyId] as? String,
+       !studyId.isEmpty
+    {
+      var initialVC: UIViewController?
+      
+      // fetch the visible view controller
+      let navigationController = self.window?.rootViewController as? UINavigationController
+      let menuVC = navigationController?.viewControllers.last
+      if menuVC is FDASlideMenuViewController {
+        let mainController = (menuVC as? FDASlideMenuViewController)?
+          .mainViewController
+        if mainController is UINavigationController {
+          let nav = mainController as? UINavigationController
+          initialVC = nav?.viewControllers.last
+        }
+      }
+      // Handling Notifications based on SubType
+      switch subType {
+        
+      case .study, .studyEvent:  // Study Notifications
+        let leftController =
+                  (menuVC as? FDASlideMenuViewController)?.leftViewController
+                  as? LeftMenuViewController
+        
+        if (initialVC is StudyListViewController) {
+          (initialVC as? StudyListViewController)!.addRightNavigationItem()
+          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
+        } else if !(initialVC is StudyListViewController) {
+          if initialVC is ProfileViewController || initialVC is ReachoutOptionsViewController || initialVC is GatewayResourcesListViewController ||
+              initialVC is ActivitiesViewController || initialVC is ResourcesViewController ||
+              initialVC is StudyDashboardViewController || initialVC is StudyDashboardTabbarViewController ||
+              initialVC is NotificationViewController || initialVC is LeftMenuViewController
+          {
+            
+            NotificationHandler.instance.appOpenFromNotification = true
+            NotificationHandler.instance.studyId = studyId
+            
+            leftController?.changeViewController(.studyList)
+            leftController?.createLeftmenuItems()
+
+          }
+        } else {
+          
+          NotificationHandler.instance.appOpenFromNotification = true
+          NotificationHandler.instance.studyId = studyId
+          
+          leftController?.changeViewController(.studyList)
+          leftController?.createLeftmenuItems()
+        }
+        
+      case .activity:  // Activity Notifications
+        
+        if !(initialVC is UITabBarController) {
+          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
+        
+          // push tabbar and switch to activty tab
+          if let initialVC = initialVC {
+            self.pushToTabbar(
+              viewController: initialVC,
+              selectedTab: subType == .activity ? 0 : 2
+            )
+          }
+        } else {
+          (initialVC as? UITabBarController)?.selectedIndex =
+          subType == .activity ? 0 : 2
+        }
+        
+      case .resource:  // Resource Notifications
+        if !(initialVC is UITabBarController) {
+          if Gateway.instance.studies?.isEmpty == false {
+            guard let study = Gateway.instance.studies?.filter({ $0.studyId == studyId })
+                    .first
+            else { return }
+            Study.updateCurrentStudy(study: study)
+          }
+          
+          // push tabbar and switch to resource tab
+          if let initialVC = initialVC {
+            self.pushToTabbar(
+              viewController: initialVC,
+              selectedTab: 2
+            )
+          }
+        } else {
+          (initialVC as? UITabBarController)?.selectedIndex = 2
+        }
+        
+      case .announcement:
+        if !(initialVC is UITabBarController) {
+          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
+          
+          // push tabbar and switch to activty tab
+          if let initialVC = initialVC {
+            self.pushToTabbar(
+              viewController: initialVC,
+              selectedTab: subType == .announcement ? 0 : 2
+            )
+          }
+        } else {
+          (initialVC as? UITabBarController)?.selectedIndex =
+          subType == .announcement ? 0 : 2
+        }
+      }
+    }
+  }
+  
+  func navigateToStudyHome(viewController: UIViewController, studyID: String? = nil) {
+    let studyStoryBoard = UIStoryboard(name: kStudyStoryboard, bundle: Bundle.main)
+    let studyHomeController =
+      (studyStoryBoard.instantiateViewController(
+        withIdentifier: String(describing: StudyHomeViewController.classForCoder())
+      )
+      as? StudyHomeViewController)!
+    viewController.navigationController?.pushViewController(studyHomeController, animated: true)
   }
 
   /// Push to tabbar Controller with tabs Activity, Dashboard & Resource
   /// - Parameters:
   ///   - viewController: Instance of `UIViewController`
   ///   - selectedTab: Selected tab in form of `Int`
-  func pushToTabbar(viewController: UIViewController, selectedTab: Int) {
-
+  func pushToTabbar(viewController: UIViewController, selectedTab: Int, studyID: String? = nil) {
+    DispatchQueue.main.async {
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
 
     let studyDashboard =
@@ -771,6 +941,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     studyDashboard.selectedIndex = selectedTab
     viewController.navigationController?.navigationBar.isHidden = true
     viewController.navigationController?.pushViewController(studyDashboard, animated: true)
+    }
   }
 
   /// Verifies passcode if enabled or set passcode
@@ -902,7 +1073,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     // Update User Defaults
     let ud = UserDefaults.standard
-    ud.set(false, forKey: kPasscodeIsPending)
+    ud.set(true, forKey: kPasscodeIsPending)
     ud.set(false, forKey: kShowNotification)
     ud.synchronize()
 
@@ -938,7 +1109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
       ORKPasscodeViewController.removePasscodeFromKeychain()
     }
     let ud = UserDefaults.standard
-    ud.set(false, forKey: kPasscodeIsPending)
+    ud.set(true, forKey: kPasscodeIsPending)
     ud.set(false, forKey: kShowNotification)
     ud.synchronize()
 
@@ -966,8 +1137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   }
 
   /// Checks for `StudyListViewController` and adds right navigation item
-  func updateNotification() {
-
+  func updateNotification(userInfoDetails: [String:Any]?) {
     let ud = UserDefaults.standard
     ud.set(true, forKey: kShowNotification)
     ud.synchronize()
@@ -987,7 +1157,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         let studyListVC = nav?.viewControllers.last
         if studyListVC is StudyListViewController {
           (studyListVC as? StudyListViewController)!.addRightNavigationItem()
+          if let studyId = userInfoDetails?[kStudyId] as? String,
+             !studyId.isEmpty
+          {
+            let notificationType = userInfoDetails![kNotificationType] as? String ?? ""
+            
+            let subType = AppNotification.NotificationSubType(rawValue: (userInfoDetails![kNotificationSubType] as? String ?? "")) ?? .announcement
+            
+            switch AppNotification.NotificationType(rawValue: notificationType) {
+            case .gateway:
+              hanldeGatewayNotificationType(userInfoDetails: userInfoDetails!, subType: subType)
+              break
+            case .study:
+              handleStudyNotificationType(userInfoDetails: userInfoDetails!, subType: subType)
+            default:
+              print(notificationType)
+              
+            }
+          }
+        }
+      }
+    }
+  }
 
+  func updateActiveNotification() {
+    let ud = UserDefaults.standard
+    ud.set(true, forKey: kShowNotification)
+    ud.synchronize()
+    var nav: UINavigationController?
+    // fetch the visible view controller
+    guard let navigationController = self.window?.rootViewController as? UINavigationController else {
+      return
+    }
+    
+    let menuVC = navigationController.viewControllers.last
+    
+    if menuVC is FDASlideMenuViewController {
+      let mainController = (menuVC as? FDASlideMenuViewController)!.mainViewController
+      
+      if mainController is UINavigationController {
+        nav = (mainController as? UINavigationController)!
+        let studyListVC = nav?.viewControllers.last
+        if studyListVC is StudyListViewController {
+          (studyListVC as? StudyListViewController)!.addRightNavigationItem()
+          
         }
       }
     }
@@ -1358,7 +1571,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     case ORKTaskViewControllerFinishReason.completed:
       if !(taskViewController.task?.identifier == kConsentTaskIdentifier) {  // other surveys/Active tasks/ Passcode
         let ud = UserDefaults.standard
-        ud.set(false, forKey: kPasscodeIsPending)
+        ud.set(true, forKey: kPasscodeIsPending)
         ud.synchronize()
         self.appIsResignedButDidNotEnteredBackground = false
       }
@@ -1773,7 +1986,10 @@ extension AppDelegate: ORKPasscodeDelegate {
   }
 
   func passcodeViewControllerForgotPasscodeTapped(_ viewController: UIViewController) {
-
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Forgot Passcode?ActionClicked"
+    ])
+    
     var topVC = UIApplication.shared.keyWindow?.rootViewController
 
     while topVC?.presentedViewController != nil {
@@ -1787,6 +2003,9 @@ extension AppDelegate: ORKPasscodeDelegate {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: topVC!,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "ForgotPasscodeAlert OK"
+        ])
         self.window?.addProgressIndicatorOnWindowFromTop()
 
         viewController.dismiss(
@@ -1809,7 +2028,11 @@ extension AppDelegate: ORKPasscodeDelegate {
           }
         )
       },
-      action2: {}
+      action2: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "ForgotPasscodeAlert Cancel"
+        ])
+      }
     )
   }
 }
@@ -1825,6 +2048,14 @@ extension AppDelegate: ComprehensionFailureDelegate {
     // Create Consent Task on Retry
     self.createEligibilityConsentTask()
   }
+  
+  @objc func receivedORKAction(_ notification: Notification) {
+    let value = notification.userInfo
+    if let action = value?["ORKAction"] as? String {
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [buttonClickReasonsKey: action])
+    }
+  }
+
 }
 
 // MARK: - UNUserNotification Delegate
@@ -1842,7 +2073,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     let userInfo = notification.request.content.userInfo
 
     if userInfo.count > 0 && userInfo.keys.contains(kType) {
-      self.updateNotification()
+      self.updateActiveNotification()
     }
     if let userInfo = userInfo as? JSONDictionary {
       refreshStudyActivitiesState(with: userInfo)
@@ -1855,7 +2086,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     didReceive response: UNNotificationResponse,
     withCompletionHandler completionHandler: @escaping () -> Void
   ) {
-
     let userInfo = response.notification.request.content.userInfo
     UIApplication.shared.applicationIconBadgeNumber = 0
 
@@ -1863,15 +2093,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
       || UIApplication.shared.applicationState == UIApplication.State.active
     {
 
-      self.handleLocalAndRemoteNotification(userInfoDetails: (userInfo as? [String: Any])!)
+      self.handleLocalAndRemoteNotification(userInfoDetails: (userInfo as? JSONDictionary ?? [:]))
     }
 
     // UserInfo is valid & contains Type for Notification
     if userInfo.count > 0 && userInfo.keys.contains(kType) {
-      self.updateNotification()
-
-    } else {
-      self.handleLocalNotification(userInfoDetails: userInfo as? JSONDictionary ?? [:])
+      self.handleLocalAndRemoteNotification(userInfoDetails: (userInfo as? JSONDictionary ?? [:]))
     }
     completionHandler()
   }
@@ -1927,4 +2154,11 @@ extension UIWindow {
       )
     }
   }
+}
+
+enum EnumORKAction: String {
+  case ORKCancel, ORKDone, ORKSave, ORKSkip, ORKContinue, ORKClearAnswer, ORKButtonTapped, ORKBackButton, ORKEndTask,
+       ORKProceed, ORKLearnMore, ORKSaveForLater, ORKCancelAlert, ORKReviewAgreeAlert, ORKReviewCancel, ORKReviewAgree, ORKReviewDisAgree,
+       ORKContinueButton, ORKLearnMoreDone, ORKKeyboardDone, ORKKeyboardPlusMinus, ORKTryAgain, ORKNext, ORKClearSign, ORKPasscodeCancel,
+       ORKPasscodeInvalidAlertOK, ORKActivityTimeOut, ORKCopyRightOkAlert, ORKShowCopyRight, ORKPlaybackNextItem, ORKOK
 }

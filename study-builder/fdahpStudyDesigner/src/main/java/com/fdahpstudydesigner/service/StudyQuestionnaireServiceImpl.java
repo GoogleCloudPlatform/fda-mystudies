@@ -871,6 +871,8 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
                             questionnaireBo.getStudyLifetimeStart(),
                             FdahpStudyDesignerConstants.UI_SDF_DATE,
                             FdahpStudyDesignerConstants.DB_SDF_DATE));
+                  } else {
+                    addQuestionnaireBo.setStudyLifetimeStart(null);
                   }
                 }
                 if (!questionnaireBo.getQuestionnairesFrequenciesBo().getIsStudyLifeTime()) {

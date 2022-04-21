@@ -18,25 +18,28 @@ package com.harvard.usermodule;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 
 public class SignupProcessCompleteActivity extends AppCompatActivity {
   private AppCompatTextView congratsLabel;
   private AppCompatTextView nextButton;
   private AppCompatTextView signupCompleteLabel;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_signup_process_complete);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     initializeXmlId();
     setFont();
@@ -68,6 +71,12 @@ public class SignupProcessCompleteActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_process_complete_done));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (getIntent().getStringExtra("from") != null
                 && getIntent().getStringExtra("from").equalsIgnoreCase("StudyInfo")) {
               Intent intent = new Intent();

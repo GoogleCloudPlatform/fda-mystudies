@@ -21,15 +21,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,6 +53,7 @@ import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -96,6 +97,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   private static String RESOURCES = "resources";
   private Realm realm;
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   public void onAttach(Context context) {
@@ -108,6 +110,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_survey_resources, container, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(context);
     initializeXmlId(view);
@@ -175,6 +178,12 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
           @Override
           public void onClick(View view) {
             if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.survey_resource_home));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, StudyActivity.class);
               ComponentName cn = intent.getComponent();
               Intent mainIntent = Intent.makeRestartActivityTask(cn);

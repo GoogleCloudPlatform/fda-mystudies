@@ -19,6 +19,7 @@
 
 import QuickLook
 import UIKit
+import FirebaseAnalytics
 
 let kResourceName = "fda_preload"
 
@@ -48,13 +49,31 @@ extension UIViewController {
   }
 
   func setNavigationBarItem() {
-
+    
     self.addLeftBarButtonWithImage(UIImage(named: "menu_icn")!)
     self.slideMenuController()?.removeLeftGestures()
     self.slideMenuController()?.removeRightGestures()
     self.slideMenuController()?.addLeftGestures()
     self.slideMenuController()?.addRightGestures()
+    setNavigationBarColor()
   }
+  
+  func setNavigationBarColor() {
+    if #available(iOS 15, *) {
+      let appearance = UINavigationBarAppearance()
+      let navigationBar = UINavigationBar()
+      appearance.configureWithTransparentBackground()
+      appearance.backgroundColor = .white
+      appearance.shadowColor = .lightGray
+      navigationBar.standardAppearance = appearance
+      
+      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+      self.navigationController?.navigationBar.standardAppearance = appearance
+      self.navigationController?.navigationBar.scrollEdgeAppearance?.backgroundColor = .white
+      self.navigationController?.navigationBar.standardAppearance.backgroundColor = .white
+    }
+  }
+
 
   func showAlert(title: String, message: String) {
 
@@ -157,7 +176,7 @@ extension UIViewController {
   /// - Returns: Instance of child `UIButton`
   @discardableResult
   public func addBackBarButton() -> UIButton {
-
+    
     let customView = UIView(frame: CGRect(x: -15, y: 0, width: 46, height: 36))
 
     let backbutton: UIButton = UIButton.init(frame: customView.frame)
@@ -204,6 +223,9 @@ extension UIViewController {
   }
 
   @objc public func popController() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back Button"
+    ])
     _ = self.navigationController?.popViewController(animated: true)
   }
 }
@@ -243,3 +265,4 @@ extension UIViewController {
   }
 
 }
+

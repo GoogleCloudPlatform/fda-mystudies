@@ -23,11 +23,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
@@ -39,12 +34,16 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
-import com.harvard.usermodule.SignupActivity;
 import com.harvard.usermodule.TermsPrivacyPolicyActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.VerificationStepActivity;
@@ -54,8 +53,8 @@ import com.harvard.usermodule.model.TermsAndConditionData;
 import com.harvard.usermodule.webservicemodel.RegistrationData;
 import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
-import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
@@ -88,6 +87,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
   private String userAuth;
   private String userID;
   private RegistrationData registrationData;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   public void onAttach(Context context) {
@@ -100,6 +100,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.content_signup, container, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     clicked = false;
     initializeXmlId(view);
     customTextView(agreeLabel);
@@ -152,8 +153,14 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
           @Override
           public void onClick(View widget) {
+            Bundle eventProperties = new Bundle();
             if (termsAndConditionData != null
                 && !termsAndConditionData.getTerms().equalsIgnoreCase("")) {
+              eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.signup_fragment_terms));
+              analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
               termsIntent.putExtra("url", termsAndConditionData.getTerms());
@@ -186,6 +193,12 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
           @Override
           public void onClick(View widget) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.signup_fragment_privacy_policy));
+            analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (termsAndConditionData != null && !termsAndConditionData.getPrivacy().isEmpty()) {
               Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));
@@ -231,6 +244,12 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_fragment_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (clicked == false) {
               clicked = true;
               password.clearFocus();

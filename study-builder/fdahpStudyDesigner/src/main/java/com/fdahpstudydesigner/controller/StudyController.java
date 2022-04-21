@@ -670,7 +670,7 @@ public class StudyController {
     logger.exit("deleteEligibiltyTestQusAns() - Ends");
   }
 
-  @RequestMapping(value = "/adminStudies/deleteResourceInfo", method = RequestMethod.POST)
+  @RequestMapping(value = "/adminStudies/deleteResourceInfo.do", method = RequestMethod.POST)
   public void deleteResourceInfo(HttpServletRequest request, HttpServletResponse response) {
     logger.entry("begin deleteResourceInfo()");
     JSONObject jsonobject = new JSONObject();
@@ -4075,7 +4075,7 @@ public class StudyController {
   }
 
   @RequestMapping(
-      value = "/adminStudies/studyPlatformValidationforActiveTask",
+      value = "/adminStudies/studyPlatformValidationforActiveTask.do",
       method = RequestMethod.POST)
   public void studyPlatformValidationforActiveTask(
       HttpServletRequest request, HttpServletResponse response) {
@@ -4123,7 +4123,7 @@ public class StudyController {
     logger.exit("studyPlatformValidationforActiveTask() - Ends");
   }
 
-  @RequestMapping(value = "/adminStudies/updateStudyAction", method = RequestMethod.POST)
+  @RequestMapping(value = "/adminStudies/updateStudyAction.do", method = RequestMethod.POST)
   public ModelAndView updateStudyActionOnAction(
       HttpServletRequest request, HttpServletResponse response) {
     logger.entry("begin updateStudyActionOnAction()");
@@ -4528,14 +4528,16 @@ public class StudyController {
         } else if (StringUtils.isEmpty(studyBo.getCustomStudyId())
             && StringUtils.isNotEmpty(studyBo.getDestinationCustomStudyId())) {
 
-          String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
-          String customId = "";
-          if (copyCustomIdArray[1].contains("COPY")) {
-            customId = copyCustomIdArray[0];
-            studyBo.setDestinationCustomStudyId(customId);
-          } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
-            customId = copyCustomIdArray[0];
-            studyBo.setDestinationCustomStudyId(customId + "@Export");
+          if (studyBo.getDestinationCustomStudyId().contains("@")) {
+            String[] copyCustomIdArray = studyBo.getDestinationCustomStudyId().split("@");
+            String customId = "";
+            if (copyCustomIdArray[1].contains("COPY")) {
+              customId = copyCustomIdArray[0];
+              studyBo.setDestinationCustomStudyId(customId);
+            } else if (copyCustomIdArray[1].equalsIgnoreCase("EXPORT")) {
+              customId = copyCustomIdArray[0];
+              studyBo.setDestinationCustomStudyId(customId + "@Export");
+            }
           }
 
           map.addAttribute(
@@ -5519,6 +5521,42 @@ public class StudyController {
     }
 
     logger.info("StudyController - replicateStudy() - Ends");
+    return new ModelAndView("redirect:/adminStudies/studyList.do");
+  }
+
+  @RequestMapping(value = "/adminStudies/deleteStudy.do")
+  public ModelAndView deleteById(HttpServletRequest request) {
+    logger.entry("begin studydeleteById()");
+    ModelAndView mav = new ModelAndView();
+    String msg = "";
+    Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    try {
+      HttpSession session = request.getSession();
+      SessionObject userSession =
+          (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+
+      String studyId =
+          FdahpStudyDesignerUtil.isEmpty(request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
+              ? ""
+              : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
+      if (StringUtils.isNotEmpty(studyId)) {
+        msg = studyService.deleteById(studyId, auditRequest);
+      }
+
+      if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
+
+        request
+            .getSession()
+            .setAttribute(
+                FdahpStudyDesignerConstants.SUC_MSG, propMap.get("delete.study.success.message"));
+        auditLogEventHelper.logEvent(StudyBuilderAuditEvent.STUDY_DELETED, auditRequest);
+      }
+    } catch (Exception e) {
+      logger.error("StudyController - deleteById() - ERROR", e);
+    }
+    logger.exit("deleteById() - Ends");
+
     return new ModelAndView("redirect:/adminStudies/studyList.do");
   }
 }
