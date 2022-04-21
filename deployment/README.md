@@ -711,7 +711,7 @@ Please follow the below steps to whitelist the port:
       - Look at the suggested commands under "Events", in the form of "Firewall
         change required by network admin"
       - Run each of the suggested commands
-1. Verify the status of your Kubernetes cluster
+1. Verify the status of your Kubernetes cluster:
      - Check the [Kubernetes ingress dashboard](https://console.cloud.google.com/kubernetes/ingresses) in your `{PREFIX}-{ENV}-apps` project to view the status of your cluster ingress (if status is not green, repeat the firewall step above)
     - Check the [Kubernetes workloads dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your applications (confirm all applications are green before proceeding)
  
