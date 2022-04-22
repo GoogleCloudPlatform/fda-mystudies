@@ -14,7 +14,7 @@
 * Bug fixes and UI refinements
 * Additional code improvements and minor enhancements
 * The full list of bugs and refinements addressed in this release can be viewed [here ](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/13?closed=1).
-* Refer to [these](https://github.com/GoogleCloudPlatform/fda-mystudies/blob/infra-develop/deployment/README.md#whitelisting-the-tcp-port-10256-in-the-firewall-when-upgrading-to-2010-or-greater) steps when upgrading existing deployments to 2.0.10 or greater
+* Refer to [these](/deployment/README.md#whitelisting-the-tcp-port-10256-in-the-firewall-when-upgrading-to-2010-or-greater) steps when upgrading existing deployments to 2.0.10 or greater
 
 
 # Release 2.0.9
