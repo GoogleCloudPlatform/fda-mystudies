@@ -644,13 +644,6 @@ The following secrets which were in earlier versions are no longer being used as
 These secrets can be deleted from your deployment with the following steps. However, make sure you have a record of them handy before deleting, as these need to be updated in the Study Builder interface when [managing the apps](#manage-apps-in-the-study-builder)
 
 1. Update your repository with the latest changes from release 2.0.8 or greater, create a new working branch and make the following changes:
-1. In the `deployment/terraform/kubernetes/main.tf` file, find the section `# Data sources from Secret Manager` and remove the following lines:
-    - `manual-android-bundle-id`
-    - `manual-android-server-key`
-    - `manual-ios-bundle-id`
-    - `manual-ios-certificate`
-    - `manual-ios-certificate-password`
-    - `manual-mobile-app-appid`
 1. In the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, remove the following resources:
     -   ```
         resource "google_secret_manager_secret" "manual_mobile_app_appid" {
@@ -684,6 +677,54 @@ These secrets can be deleted from your deployment with the following steps. Howe
         ```
 1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
 
+### Whitelisting the TCP Port 10256 in the firewall when upgrading to 2.0.10 or greater
+
+One of the Backend service health checks is using the 10256 port, and it was observed this port needs to be whitelisted.
+Please follow the below steps to whitelist the port:
+1.  Update your repository with the latest changes from release 2.0.10 or greater, create a new working branch, and make the following changes.
+1.  In the deployment/terraform/<Prefix>-<env>-network/main.tf, find the section resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" { [...] } and add below script along with other port numbers script: 
+ 
+        allow {
+         protocol = "tcp"
+         ports  = ["10256"]
+        }   
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+ 
+### Ingress version Upgrade when upgrading to 2.0.10 or greater
+ 
+ The Beta API versions (extensions/v1beta1 and networking.k8s.io/v1beta1) of Ingress are no longer served for GKE clusters created on versions 1.22 and later.
+ We have upgraded the API version in the deployment/kubernetes/ingress.yaml as part of this release. After updating the repo with the latest changes from release 2.0.10 or greater, please follow the below steps:
+1.  Pull the latest code from your repository and checkout your specified branch, which contains the upgraded ingress.yaml.
+1.  Run the following command to apply the latest ingress.yaml:
+ 
+         kubectl apply \
+             -f $GIT_ROOT/deployment/kubernetes/ingress.yaml
+1. Update firewalls:
+      - Run `kubectl describe ingress $PREFIX-$ENV`
+      - Look at the suggested commands under "Events", in the form of "Firewall
+        change required by network admin"
+      - Run each of the suggested commands
+1. Verify the status of your Kubernetes cluster:
+     - Check the [Kubernetes ingress dashboard](https://console.cloud.google.com/kubernetes/ingresses) in your `{PREFIX}-{ENV}-apps` project to view the status of your cluster ingress (if status is not green, repeat the firewall step above)
+    - Check the [Kubernetes workloads dashboard](https://console.cloud.google.com/kubernetes/workload) in your `{PREFIX}-{ENV}-apps` project to view the status of your applications (confirm all applications are green before proceeding)
+ 
+### Migrate to Containerd node images before GKE v1.24
+ 
+1. Update your repository with the latest changes from release 2.0.10 or greater, create a new working branch, and make the following changes.
+1. In the deployment/terraform/<Prefix>-<env>-apps/main.tf, find the section 
+module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of this section:
+ 
+     ```
+     node_pools = [
+        {
+          name       = "default-node-pool"
+          image_type = "COS_CONTAINERD"
+        },
+      ]
+    }
+    ```
+3.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+ 
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
