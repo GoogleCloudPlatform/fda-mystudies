@@ -24,49 +24,37 @@
 
 package com.fdahpstudydesigner.bo;
 
-import java.util.Set;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "user_permissions")
-public class UserPermissions {
+public class UserPermissions implements Serializable {
 
-  private String permissions;
-
-  private Integer userRoleId;
-
-  private Set<UserBO> users;
-
-  public UserPermissions() {}
-
-  public UserPermissions(Set<UserBO> users, String permissions) {
-    this.setUsers(users);
-    this.setPermissions(permissions);
-  }
+  private static final long serialVersionUID = 135353554543L;
 
   @Column(name = "permissions", nullable = false, length = 45)
-  public String getPermissions() {
-    return permissions;
-  }
+  private String permissions;
 
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
   @Column(name = "permission_id", updatable = false, nullable = false)
-  public Integer getUserRoleId() {
-    return this.userRoleId;
+  private Integer userRoleId;
+
+  public UserPermissions() {}
+
+  public String getPermissions() {
+    return permissions;
   }
 
-  @ManyToMany(fetch = FetchType.EAGER)
-  public Set<UserBO> getUsers() {
-    return users;
+  public Integer getUserRoleId() {
+    return this.userRoleId;
   }
 
   public void setPermissions(String permissions) {
@@ -75,9 +63,5 @@ public class UserPermissions {
 
   public void setUserRoleId(Integer userRoleId) {
     this.userRoleId = userRoleId;
-  }
-
-  public void setUsers(Set<UserBO> users) {
-    this.users = users;
   }
 }
