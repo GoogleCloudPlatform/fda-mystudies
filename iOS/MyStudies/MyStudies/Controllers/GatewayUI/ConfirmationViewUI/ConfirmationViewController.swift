@@ -17,6 +17,7 @@
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 import UIKit
+import FirebaseAnalytics
 
 let kConfirmationSegueIdentifier = "confirmationSegue"
 let kHeaderDescription =
@@ -189,6 +190,9 @@ class ConfirmationViewController: UIViewController {
 
   /// Delete account button clicked.
   @IBAction func deleteAccountAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Delete Account"
+    ])
 
     var found: Bool = false
     for withdrawnStudy in studiesToWithdraw where withdrawnStudy.shouldDelete == nil {
@@ -212,6 +216,9 @@ class ConfirmationViewController: UIViewController {
 
   /// Don't Delete button action.
   @IBAction func doNotDeleteAccountAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "DoNot Delete Account"
+    ])
     _ = self.navigationController?.popViewController(animated: true)
   }
 }

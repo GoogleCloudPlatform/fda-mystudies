@@ -32,6 +32,7 @@ class AnchorDateQueryMetaData {
   var sourceActivityId: String!
   var sourceFormKey: String?
   var anchorDate: Date?
+  var anchorRawDate: String?
   var sourceFormId: String!
   var isFinishedFetching: Bool = false
   var fetchAnchorDateFor: FetchAnchorDateFor = .activity
@@ -236,13 +237,14 @@ class AnchorDateHandler {
             }
 
             if let data = latestResponse["data"] as? [JSONDictionary],
-              let userResponseDict = data[safe: 2],
+              let userResponseDict = data.first(where: { $0[emptyAnchorDateDetail.sourceKey] != nil }),
               let anchorDateObject = userResponseDict[emptyAnchorDateDetail.sourceKey]
                 as? [String: String],
               let anchorDateString = anchorDateObject["value"]
             {
               let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString)
               emptyAnchorDateDetail.anchorDate = date
+              emptyAnchorDateDetail.anchorRawDate = anchorDateString
               completion()
             } else {
               completion()
@@ -273,7 +275,7 @@ class AnchorDateHandler {
     }
     for item in listItems {
       if item.fetchAnchorDateFor == .activity {
-        DBHandler.updateActivityLifeTimeFor(item.activity, anchorDate: item.anchorDate!)
+        DBHandler.updateActivityLifeTimeFor(item.activity, anchorDate: item.anchorDate!, item.anchorRawDate ?? "")
       } else if item.fetchAnchorDateFor == .resource {
 
         var startDateStringEnrollment = Utilities.formatterShort?.string(

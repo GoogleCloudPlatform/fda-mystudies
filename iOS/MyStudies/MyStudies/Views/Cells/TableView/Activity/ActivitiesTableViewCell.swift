@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 let kActivityTitle = "title"
 
@@ -631,6 +632,9 @@ class ActivitiesTableViewCell: UITableViewCell {
 
   /// Clicked on  More Schedules.
   @IBAction func buttonMoreSchedulesClicked(_: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Activities More Schedules"
+    ])
     self.delegate?.activityCell(cell: self, activity: self.currentActivity)
   }
 

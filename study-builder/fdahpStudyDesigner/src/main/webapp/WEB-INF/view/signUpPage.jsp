@@ -167,7 +167,7 @@
                            id="password" maxlength="64" data-minlength="8"
                            placeholder="Password*" required data-error="Please fill out this field" 
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                           autocomplete="off" data-error="Password is invalid"/>
+                           autocomplete="off" data-pattern-error="Password is invalid"/>
                     <div class="help-block with-errors red-txt"></div>
                     <span class="arrowLeftSugg"></span>
 
@@ -187,7 +187,7 @@
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required" data-error="Please fill out this field" > <label for="inlineCheckbox">
+                        required="required" data-error="Please check this box if you want to proceed" > <label for="inlineCheckbox">
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"
@@ -200,9 +200,10 @@
                         </a>
                         associated with using this portal
                       </span>
+                       <div class="help-block with-errors red-txt"></div>
                     </label>
                     </span>
-                    <div class="help-block with-errors red-txt"></div>
+                   
                   </div>
                 </div>
                 <div class="clearfix"></div>
@@ -210,7 +211,9 @@
                     class="mb-lg form-group text-center col-md-4 col-lg-4 boxcenter">
                   <button type="button" class="btn lg-btn" id="signPasswordBut">Submit</button>
                 </div>
+             
               </c:if>
+             
               <c:if test="${not isValidToken}">
                 <p class="passwordExp text-center">
                   <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
@@ -222,7 +225,7 @@
               <input type="hidden" name="securityToken" value="${securityToken}"/>
               <input type="password" name="password" id="hidePass"
                      style="display: none;"/>
-            </form:form>
+                      </form:form>
           </div>
           <!--container-->
           <jsp:include page="../templates/copyright.jsp">

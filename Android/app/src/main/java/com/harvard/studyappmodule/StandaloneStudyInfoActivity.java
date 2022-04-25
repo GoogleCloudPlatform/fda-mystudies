@@ -26,17 +26,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.viewpager.widget.ViewPager;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -48,7 +47,6 @@ import com.google.gson.stream.JsonWriter;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
-import com.harvard.WebViewActivity;
 import com.harvard.eligibilitymodule.CustomViewTaskActivity;
 import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.gatewaymodule.CircleIndicator;
@@ -63,12 +61,12 @@ import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;
-import com.harvard.usermodule.VerificationStepActivity;
 import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -115,11 +113,13 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   private String latestVersion;
   private boolean force = false;
   AlertDialog.Builder alertDialogBuilder;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_standalone_study_info);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
@@ -175,6 +175,11 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.join_study));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (SharedPreferenceHelper.readPreference(
                     StandaloneStudyInfoActivity.this, getString(R.string.userid), "")
                 .equalsIgnoreCase("")) {
@@ -205,11 +210,13 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                           R.anim.slide_out_right)
                       .build();
               Apps apps = dbServiceSubscriber.getApps(realm);
-              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
-                  .replace("$FromEmail", apps.getFromEmail())
-                  .replace("$SupportEmail", apps.getSupportEmail())
-                  .replace("$AppName", apps.getAppName())
-                  .replace("$ContactEmail", apps.getContactUsEmail())));
+              customTabsIntent.intent.setData(
+                  Uri.parse(
+                      Urls.LOGIN_URL
+                          .replace("$FromEmail", apps.getFromEmail())
+                          .replace("$SupportEmail", apps.getSupportEmail())
+                          .replace("$AppName", apps.getAppName())
+                          .replace("$ContactEmail", apps.getContactUsEmail())));
               startActivity(customTabsIntent.intent);
             } else {
               loginCallback();
@@ -702,10 +709,16 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                   "ok",
                   new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                      Bundle eventProperties = new Bundle();
+                      eventProperties.putString(
+                          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          getString(R.string.app_update_next_time_ok));
+                      analyticsInstance.logEvent(
+                          CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                       dialog.dismiss();
                     }
-                  }).show();
-
+                  })
+              .show();
         }
       }
     }
@@ -727,6 +740,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.visit_website));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 Intent browserIntent =
                     new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
                 startActivity(browserIntent);
@@ -738,14 +757,21 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     } else if (!studyHome.getStudyWebsite().equalsIgnoreCase("")) {
       bottombar1.setVisibility(View.VISIBLE);
       consentLayButton.setText(getResources().getString(R.string.visit_website));
-      consentLay.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          Intent browserIntent =
+      consentLay.setOnClickListener(
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.visit_website));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              Intent browserIntent =
                   new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
-          startActivity(browserIntent);
-        }
-      });
+              startActivity(browserIntent);
+            }
+          });
     } else {
       bottombar1.setVisibility(View.INVISIBLE);
     }
@@ -906,6 +932,12 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
               positiveButton,
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   startActivityForResult(
                       new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
                       RESULT_CODE_UPGRADE);
@@ -916,12 +948,18 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                        StandaloneStudyInfoActivity.this,
-                        "Please update the app to continue using",
-                        Toast.LENGTH_SHORT)
+                            StandaloneStudyInfoActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {

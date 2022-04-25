@@ -23,6 +23,20 @@
     border-radius: 5px;
     cursor: pointer;
 }
+button#deleteUser {
+    background: #cf0036 !important;
+    border-color: #cf0036 !important;
+    color: #fff;
+    padding: 4px 8px;
+    text-align: center;
+    margin-left: 9px;
+}
+
+
+input::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
 
 </style>
 
@@ -51,7 +65,7 @@
       <div class="dis-line pull-right">
         <div class="form-group mb-none">
           <c:if
-              test="${not empty userBO.userPassword && userBO.enabled && not userBO.emailChanged}">
+              test="${not empty userBO.userPassword && userBO.enabled && userBO.emailChanged eq '0'}">
             <div class="dis-inline mt-sm">
               <span class="stat">
                 <span class="black-sm-f">Account status:
@@ -98,7 +112,7 @@
 	      	 </c:choose> 
             </div>
           </c:if>
-          <c:if test="${userBO.emailChanged}">
+          <c:if test="${userBO.emailChanged eq '1'}">
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -130,7 +144,7 @@
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
       <c:if
-          test="${actionPage eq 'EDIT_PAGE' && not empty userBO.userPassword && not userBO.emailChanged}">
+          test="${actionPage eq 'EDIT_PAGE' && not empty userBO.userPassword && userBO.emailChanged eq '0'}">
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"
@@ -184,7 +198,7 @@
               </c:if>
               <span class="requiredStar"> *</span>
             </div>
-            <div class="form-group">
+            <div class="form-group myarrow">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}"
@@ -248,7 +262,7 @@
                       value="${userBO.enabled}" id="change${userBO.userId}"
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
-                          test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged}">disabled</c:if>
+                          test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged eq '1'}">disabled</c:if>
                       onclick="activateOrDeactivateUser('${userBO.userId}');">
                     <span class="switch-label bg-transparent" data-on="On"
                           data-off="Off"></span>
@@ -466,6 +480,11 @@
             <div class="dis-line form-group mb-none">
               <button type="button" class="btn btn-primary blue-btn addUpdate">Update</button>
             </div>
+            </c:if>
+          <c:if test="${actionPage eq 'EDIT_PAGE' &&  not userBO.enabled}">  
+            <div class="dis-line">
+              <button type="button" class="btn btn-primary red-btn deleteUser" id = "deleteUser" onclick="validateAdminStatus(this);">Delete admin</button>
+            </div>
           </c:if>
         </div>
       </div>
@@ -543,6 +562,9 @@
     
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
+ 	 if(element != 'Superadmin' ){
+    	 $('#enforcePasswordId').hide(); 
+    	 }else $('#enforcePasswordId').show(); 
       setStudySettingByRole(element);
     });
 
@@ -773,14 +795,16 @@
     $('#inlineCheckbox6').on('click', function () {
         if ($(this).prop("checked") == true) {
           $(this).val(1);
-        } else if ($(this).prop("checked") == false) {
+           } else if ($(this).prop("checked") == false) {
           $(this).val('');
         }
+          
       });
     
     // Adding selected study items
     $(".study-addbtn").click(function () {
-
+    	var noSelected = $('#multiple :selected').length;
+  if(noSelected != 0 ){
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li.selected").hide();
 
       $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").each(function () {
@@ -788,7 +812,7 @@
           $(this).remove();
         }
       });
-
+	    if ($('#inlineCheckbox4').prop("checked") == true) {
       $('#multiple :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -802,7 +826,7 @@
             + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
             + " <input type='radio' class='v" + selVal + " changeView' id='v1" + selVal
             + "' name='radio" + selVal + "' value='0' checked='checked'>"
-            + "<label for='v1" + selVal + "'></label></span>"
+            + "<label for='v1" + selVal + "'style='padding-left:8px;'></label></span>"
             + "<span class='radio radio-inline'>"
             + "<input type='radio' class='v" + selVal + " changeView' id='v2" + selVal
             + "' name='radio" + selVal + "' value='1'>"
@@ -813,17 +837,29 @@
 
         $('.study-selected').append(existingStudyDiv);
       });
-      
+       } else if ($('#inlineCheckbox4').prop("checked") == false) {
+          $(this).val('');
+          
+        }
+	if ($(".changeView").find('.dropdown-menu').is(":hidden")){
+	    $('.dropdown-toggle').dropdown('toggle');
+	    var show_elements_count1 = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
+	  }
+  else var show_elements_count2 = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
 
+	//var show_elements_count = $( ".study-list .dropdown-menu ul.dropdown-menu.inner" ).find( ":visible" ).length;
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
       var count = $(".study-selected-item").length;
-      if (count == tot_items) {
-    	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
-        $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
-        	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
-      }
-
+   
+      if (show_elements_count1 == 0 || show_elements_count2 == 0) {
+       	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+           $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+         }
+     
+    }
+     
     });
     
     
@@ -838,7 +874,8 @@
           $(this).remove();
         }
       });
-
+	 if ($('#inlineCheckboxApp').prop("checked") == true) {
+		
       $('#multipleApps :selected').each(function (i, sel) {
         var selVal = $(sel).val();
         var selTxt = DOMPurify.sanitize($(sel).text());
@@ -852,7 +889,7 @@
             + "<span class='radio radio-info radio-inline p-45 mr-xs'>"
             + " <input type='radio' class='v3" + selVal + " changeView3' id='v4" + selVal
             + "' name='radio" + selVal + "' value='0' checked='checked'>"
-            + "<label for='v4" + selVal + "'></label></span>"
+            + "<label for='v4" + selVal + "'style='padding-left:8px;'></label></span>"
             + "<span class='radio radio-inline'>"
             + "<input type='radio' class='v3" + selVal + " changeView3' id='v5" + selVal
             + "' name='radio" + selVal + "' value='1'>"
@@ -863,6 +900,11 @@
 
         $('.app-selected').append(existingAppDiv);
       });
+           } else if ($('#inlineCheckboxApp').prop("checked") == false) {
+      			$(this).val('');
+      		}
+      
+      
      
       $(".selectpicker").selectpicker('deselectAll');
       var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
@@ -899,6 +941,7 @@
     });
 
     $('.addUpdate').on('click', function () {
+    	var enforce=0;
       var email = $('#emailId').val();
       var oldEmail = $('#emailId').attr('oldVal');
       var isEmail;
@@ -925,6 +968,7 @@
                 $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
                 $('#emailId').parent().find(".help-block").empty();
                 saveUser();
+                enforce=enforce+1;
               } else {
                 $("body").removeClass("loading");
                 isFromValid($('.addUpdate').parents('form'));
@@ -942,7 +986,11 @@
         $('#emailId').parent().removeClass("has-danger").removeClass("has-error");
         $('#emailId').parent().find(".help-block").empty();
         saveUser();
+        enforce=enforce+1;
       }
+      if(enforce==2){
+     	 $('#enforcePasswordId').show();
+     }
     });
 
     
@@ -1193,6 +1241,47 @@
 	    setTimeout(hideDisplayMessage, 10000);
 	  }
   
+  function validateAdminStatus(obj) {
+	    var buttonText = obj.id;
+	    var messageText = "";
+	    if (buttonText) {
+	      if (buttonText == 'deleteUser') {
+	        	 messageText = "Are you sure you want to delete this admin?";
+	        	 bootbox.confirm({
+	                 closeButton: false,
+	                 message: messageText,
+	                 buttons: {
+	                   'cancel': {
+	                     label: 'Cancel',
+	                   },
+	                   'confirm': {
+	                     label: 'OK',
+	                   },
+	                 },
+	                 callback: function (result) {
+	                   if (result) {
+	                	   deleteUserAdmin();
+	                   }
+	                 }
+	               });}}}
+  
+function deleteUserAdmin(){
+	     var form = document.createElement('form');
+	      form.method = 'post';
+	      var input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = 'userId';
+	      input.value = '${userBO.userId}';
+	      form.appendChild(input);
+	      input = document.createElement('input');
+	      input.type = 'hidden';
+	      input.name = '${_csrf.parameterName}';
+	      input.value = '${_csrf.token}';
+	      form.appendChild(input);
+	     form.action = '/studybuilder/adminUsersView/deleteUser.do';
+	     document.body.appendChild(form);
+	     form.submit();
+	  }
   function addUser(){
 	  var selectedStudies = "";
 	    var permissionValues = "";

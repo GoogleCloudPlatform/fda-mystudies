@@ -23,6 +23,8 @@ import android.security.KeyPairGeneratorSpec;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
+import android.util.Log;
+
 import com.harvard.R;
 import com.harvard.utils.Logger;
 import java.io.ByteArrayInputStream;
@@ -30,9 +32,16 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Enumeration;
+
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -47,17 +56,12 @@ public class RealmEncryptionHelper {
   private static final String ANDROID_KEY_STORE = "AndroidKeyStore";
   private static final String RSA_MODE = "RSA/ECB/PKCS1Padding";
   private static final String ENCRYPTED_KEY = "ENCRYPTED_KEY";
-
   private String keyName;
-
   private KeyStore keyStore;
-
   private SharedPreferences prefsHelper;
 
   public static RealmEncryptionHelper initHelper(Context context, String keyName) {
-    if (instance == null) {
-      instance = new RealmEncryptionHelper(context, keyName);
-    }
+    instance = new RealmEncryptionHelper(context, keyName);
     return instance;
   }
 
@@ -74,14 +78,23 @@ public class RealmEncryptionHelper {
     prefsHelper = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
+  public void deleteEntry(String alias) {
+    try {
+      keyStore = KeyStore.getInstance(ANDROID_KEY_STORE);
+      keyStore.load(null);
+      keyStore.deleteEntry(alias);
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+  }
+
   @SuppressWarnings("NewApi")
   public byte[] getEncryptKey() {
     byte[] encryptedKey = new byte[64];
     try {
       keyStore = KeyStore.getInstance(ANDROID_KEY_STORE);
       keyStore.load(null);
-
-      if (!keyStore.containsAlias(context.getString(R.string.app_name))) {
+      if (!keyStore.containsAlias(keyName)) {
         // Create new key and save to KeyStore
         KeyPairGenerator kpg =
             KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, ANDROID_KEY_STORE);
@@ -128,27 +141,28 @@ public class RealmEncryptionHelper {
     String encryptedKeyB64 = prefsHelper.getString(ENCRYPTED_KEY, null);
     byte[] key = new byte[64];
     try {
-      byte[] encryptedKey = Base64.decode(encryptedKeyB64, Base64.DEFAULT);
-      key = rsaDecrypt(encryptedKey);
-
+      if (encryptedKeyB64 == null || encryptedKeyB64.equalsIgnoreCase("")) {
+        deleteEntry(keyName);
+        key = getEncryptKey();
+      } else {
+        byte[] encryptedKey = Base64.decode(encryptedKeyB64, Base64.DEFAULT);
+        key = rsaDecrypt(encryptedKey);
+      }
     } catch (Exception e) {
       Logger.log(e);
     }
-
     return key;
   }
 
   private byte[] generate64BitSecretKey() {
     byte[] key = new byte[64];
+    String encryptedKeyB64;
     try {
-      String encryptedKeyB64 = prefsHelper.getString(ENCRYPTED_KEY, null);
-      if (encryptedKeyB64 == null) {
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(key);
-        byte[] encryptedKey = rsaEncrypt(key);
-        encryptedKeyB64 = Base64.encodeToString(encryptedKey, Base64.DEFAULT);
-        prefsHelper.edit().putString(ENCRYPTED_KEY, encryptedKeyB64).apply();
-      }
+      SecureRandom secureRandom = new SecureRandom();
+      secureRandom.nextBytes(key);
+      byte[] encryptedKey = rsaEncrypt(key);
+      encryptedKeyB64 = Base64.encodeToString(encryptedKey, Base64.DEFAULT);
+      prefsHelper.edit().putString(ENCRYPTED_KEY, encryptedKeyB64).apply();
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -157,7 +171,9 @@ public class RealmEncryptionHelper {
 
   private byte[] rsaEncrypt(byte[] secret) throws Exception {
     Cipher inputCipher = Cipher.getInstance(RSA_MODE);
-    inputCipher.init(Cipher.ENCRYPT_MODE, keyStore.getCertificate(keyName).getPublicKey());
+    Certificate cert = keyStore.getCertificate(keyName);
+    PublicKey publicKey = cert.getPublicKey();
+    inputCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     CipherOutputStream cipherOutputStream = new CipherOutputStream(outputStream, inputCipher);

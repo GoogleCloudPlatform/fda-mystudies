@@ -11,7 +11,7 @@ package com.harvard.studyappmodule;
 import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
 
-import android.support.test.InstrumentationRegistry;
+import androidx.test.platform.app.InstrumentationRegistry;
 import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.activitylistmodel.AnchorRuns;
 import com.harvard.studyappmodule.activitylistmodel.Frequency;
@@ -80,7 +80,7 @@ public class SurveyActivitiesListAdapterTest {
             TEST_POSITION,
             joiningdate,
             startDate,
-            InstrumentationRegistry.getTargetContext(), status);
+            InstrumentationRegistry.getInstrumentation().getTargetContext(), status);
     assertTrue(anchordate.toLowerCase().contains(TEST_RESULT_ONE.toLowerCase()));
 
     String regular =
@@ -90,7 +90,7 @@ public class SurveyActivitiesListAdapterTest {
             TEST_POSITION,
             startDate,
             joiningdate,
-            InstrumentationRegistry.getTargetContext(), status);
+            InstrumentationRegistry.getInstrumentation().getTargetContext(), status);
     assertTrue(regular.toLowerCase().contains(TEST_RESULT_TWO.toLowerCase()));
 
     String studyLifeTime =
@@ -100,7 +100,7 @@ public class SurveyActivitiesListAdapterTest {
             TEST_POSITION,
             startDate,
             joiningdate,
-            InstrumentationRegistry.getTargetContext(), status);
+            InstrumentationRegistry.getInstrumentation().getTargetContext(), status);
     assertTrue(studyLifeTime.toLowerCase().contains(TEST_RESULT_THREE.toLowerCase()));
   }
 
@@ -111,7 +111,8 @@ public class SurveyActivitiesListAdapterTest {
     AnchorRuns anchorRuns = new AnchorRuns();
     anchorRuns.setEndDays(TEST_END_DAYS);
     anchorRuns.setStartDays(TEST_START_DAYS);
-    anchorRuns.setTime(TEST_TIME);
+    anchorRuns.setStartTime(TEST_TIME);
+    anchorRuns.setEndTime(TEST_TIME);
     RealmList<FrequencyRuns> runslist = new RealmList<>();
     runslist.add(frequencyRuns);
     RealmList<AnchorRuns> anchorRunslist = new RealmList<>();

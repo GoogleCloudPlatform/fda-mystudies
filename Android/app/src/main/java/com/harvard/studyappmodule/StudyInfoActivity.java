@@ -23,15 +23,14 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.viewpager.widget.ViewPager;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -56,7 +55,6 @@ import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;
-import com.harvard.usermodule.VerificationStepActivity;
 import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.model.Apps;
@@ -64,6 +62,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -112,6 +111,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private Realm realm;
   private EligibilityConsent eligibilityConsent;
   private RealmList<Studies> userPreferenceStudies;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +119,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     setContentView(R.layout.activity_study_info);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     initializeXmlId();
     setFont();
@@ -171,6 +172,12 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_info_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             backClicked();
           }
         });
@@ -179,7 +186,11 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.join_study));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (AppController.getHelperSharedPreference()
                 .readPreference(
                     StudyInfoActivity.this, getResources().getString(R.string.userid), "")
@@ -234,11 +245,13 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                           StudyInfoActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
                       .build();
               Apps apps = dbServiceSubscriber.getApps(realm);
-              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
-                  .replace("$FromEmail", apps.getFromEmail())
-                  .replace("$SupportEmail", apps.getSupportEmail())
-                  .replace("$AppName", apps.getAppName())
-                  .replace("$ContactEmail", apps.getContactUsEmail())));
+              customTabsIntent.intent.setData(
+                  Uri.parse(
+                      Urls.LOGIN_URL
+                          .replace("$FromEmail", apps.getFromEmail())
+                          .replace("$SupportEmail", apps.getSupportEmail())
+                          .replace("$AppName", apps.getAppName())
+                          .replace("$ContactEmail", apps.getContactUsEmail())));
               startActivity(customTabsIntent.intent);
             } else {
               new CallConsentMetaData(true).execute();
@@ -250,6 +263,12 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.visit_website));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               Intent browserIntent =
                   new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
@@ -263,6 +282,12 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.view_consent));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               Intent intent = new Intent(StudyInfoActivity.this, WebViewActivity.class);
               intent.putExtra("consent", consentDocumentData.getConsent().getContent());
@@ -694,6 +719,12 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.view_consent));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 Intent browserIntent =
                     new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
                 startActivity(browserIntent);
@@ -711,6 +742,12 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.view_consent));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               try {
                 Intent intent = new Intent(StudyInfoActivity.this, WebViewActivity.class);
                 intent.putExtra("consent", consentDocumentData.getConsent().getContent());

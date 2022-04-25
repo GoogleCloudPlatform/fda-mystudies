@@ -26,10 +26,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +36,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -191,10 +191,6 @@ public class LocationQuestion
                                     .addOnConnectionFailedListener(LocationQuestion.this)
                                     .build();
 
-                            LocationManager service =
-                                (LocationManager)
-                                    context.getSystemService(Context.LOCATION_SERVICE);
-                            service.addGpsStatusListener(LocationQuestion.this);
                             try {
                               googleApiClient.connect();
                             } catch (Exception e) {

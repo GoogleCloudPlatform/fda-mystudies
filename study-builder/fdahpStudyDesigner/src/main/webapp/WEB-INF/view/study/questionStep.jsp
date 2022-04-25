@@ -801,7 +801,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -842,7 +842,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -939,8 +939,8 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="col-md-6 col-lg-4 p-none">
+             <div class="col-md-6">
+              <div class="col-md-9 col-lg-9 p-none">
                   <div class="gray-xs-f mb-xs">Max fraction digits
                     <span
                         class="requiredStar">*
@@ -999,7 +999,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -1041,7 +1041,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                   <div class="form-group col-smthumb-2">
                     <div class="sm-thumb-btn" onclick="openUploadWindow(this);">
@@ -2250,18 +2250,16 @@
                         <div class="form-group mb-none">
                           <select name="questionResponseSubTypeList[0].destinationStepId"
                                   id="destinationTextChoiceStepId0"
-                                  class="selectpicker destionationYes"
-                                  <c:if
-                                      test="${not empty questionnairesStepsBo.questionResponseSubTypeList[0].exclusive && questionnairesStepsBo.questionResponseSubTypeList[0].exclusive eq 'No'}">disabled</c:if>>
+                                  class="selectpicker destionationYes">
                             <option value="" selected>Select</option>
-                            <c:forEach items="${destinationStepList}" var="destinationStep">
-                              <option
-                                  value="${destinationStep.stepId}" ${questionResponseSubType.destinationStepId eq destinationStep.stepId ? 'selected' :''} >
+                                  <c:forEach items="${destinationStepList}" var="destinationStep">
+                              <option 
+                                  value="${destinationStep.stepId}" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq destinationStep.stepId ? 'selected' :''} >
                                 Step ${destinationStep.sequenceNo}
                                 : ${destinationStep.stepShortTitle}</option>
                             </c:forEach>
                             <option
-                                value="0" ${questionResponseSubType.destinationStepId eq '0' ? 'selected' :''}>
+                                value="0" ${questionnairesStepsBo.questionResponseSubTypeList[0].destinationStepId eq '0' ? 'selected' :''}>
                               Completion Step
                             </option>
                           </select>
@@ -2570,7 +2568,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                 </div>
                 <div class="col-md-2 pl-none col-smthumb-2">
@@ -2581,7 +2579,7 @@
                     <span
                         class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-html="true"
-                        title="Image requirements: The image must be of type .JPG or .PNG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
+                        title="Image requirements: The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 90 x 90. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></span>
                   </div>
                 </div>
                 <div class="col-md-2 pl-none">
@@ -5892,7 +5890,7 @@
             "    <div class='form-group'>" +
             "      <input type='text' class='form-control TextscaleRequired' data-error='Please fill out this field'  name='questionResponseSubTypeList["
             + scaleCount + "].text' id='displayTextSclText" + scaleCount
-            + "'+  maxlength='15' required>" +
+            + "'+  maxlength='100' required>" +
             "      <div class='help-block with-errors red-txt'></div>" +
             "   </div>" +
             "</div>" +

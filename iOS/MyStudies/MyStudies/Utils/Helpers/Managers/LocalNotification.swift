@@ -119,7 +119,7 @@ class LocalNotification: NSObject {
       if activity.frequencyType == Frequency.oneTime && activity.endDate == nil {
         runsBeforeToday = activity.activityRuns
       } else {
-        runsBeforeToday = activity.activityRuns.filter({ $0.endDate >= date })
+        runsBeforeToday = activity.activityRuns.filter({ $0.endDate ?? Date() >= date })
       }
 
       for run in runsBeforeToday {
@@ -344,8 +344,9 @@ class LocalNotification: NSObject {
           ]
 
           if let message = notification.message,
-            let startDate = notification.startDate
+            var startDate = notification.startDate
           {
+            startDate.updateWithOffset()
             // Reschedule top 50 Local Notifications.
             LocalNotification.scheduleNotificationOn(
               date: startDate,

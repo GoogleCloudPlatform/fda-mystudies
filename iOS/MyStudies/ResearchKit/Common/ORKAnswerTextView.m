@@ -29,12 +29,10 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #import "ORKAnswerTextView.h"
 
 #import "ORKHelpers_Internal.h"
 #import "ORKSkin.h"
-
 
 @implementation ORKAnswerTextView {
     UITextView *_placeholderTextView;
@@ -93,6 +91,8 @@
 }
 
 - (void)keyboardAccessoryViewDoneButtonPressed {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKKeyboardDone"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [self resignFirstResponder];
 }
 

@@ -1096,12 +1096,15 @@
                    count='0' placeholder="X"
                    name="activeTaskCustomScheduleBo[0].timePeriodFromDays"
                    value="${activeTaskCustomScheduleBo.timePeriodFromDays}"
-                   maxlength="3" required data-error="Please fill out this field" pattern="[0-9]+"
-                   data-pattern-error="Please enter valid number"/>
+                   maxlength="3" data-error="Please fill out this field" pattern="[0-9]+"
+                   data-pattern-error="Please enter valid number" required/>
             <span
                 class="help-block with-errors red-txt"></span>
+                <span
+                class="help-block-timer with-errors red-txt" style='display:none'></span>
+                
           </span>
-          <span class="mb-sm pr-md">
+          <span class="mb-sm" style='padding-right: 25px !important;'>
             <span
                 class="pr-sm light-txt opacity06"> days
               </span>
@@ -1113,9 +1116,10 @@
 					 name="activeTaskCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
 					 value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
 					 placeholder="Start time" required/>
-            <span
-                class='help-block-timer with-errors red-txt' style='display:none'></span>
+           
             <span class='help-block with-errors red-txt'></span>
+             <span
+                class='help-block-timer with-errors red-txt' style='display:none'></span>
           </span>
 
           <span
@@ -1214,8 +1218,10 @@
                      data-pattern-error="Please enter valid number" data-type='xancorText'/>
               <span
                   class="help-block with-errors red-txt"></span>
+                  <span
+                  class="help-block-timer with-errors red-txt" style='display:none'></span>
             </span>
-            <span class="mb-sm pr-md">
+            <span class="mb-sm" style='padding-right: 25px !important;'>
               <span
                   class="pr-sm light-txt opacity06"> days
                   </span>
@@ -1227,9 +1233,10 @@
                   name="activeTaskCustomScheduleBo[0].frequencyStartTime" 
                   value="${activeTaskCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                   placeholder="Start time" required data-error="Please fill out this field"/>
+            
+            <span class='help-block with-errors red-txt'></span>
             <span
                 class='help-block-timer with-errors red-txt' style='display:none'></span>
-            <span class='help-block with-errors red-txt'></span>
           </span>
 
           <span
@@ -1480,6 +1487,7 @@
         if (schedule_opts == 'Daily') {
           $(".dailyanchorDiv").show();
           $(".dailyanchorDiv").find('input:text').attr('required', true);
+          $('#dailyXSign option[value="0"]').attr("selected", "selected");
         }
         if (schedule_opts == 'Weekly') {
           $(".weeklyanchorDiv").show();
@@ -3810,20 +3818,21 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate xancorText'"
         + "count='" + customAnchorCount + "' placeholder='X' name='activeTaskCustomScheduleBo["
         + customAnchorCount + "].timePeriodFromDays'"
-        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='xancorText'/><span class='help-block-timer with-errors red-txt'></span>"
+        + "<span class='help-block with-errors red-txt' style='display:none'></span>"
         + "</span>"
-		+ "<span class='mb-sm pr-md'><span class='pr-sm light-txt opacity06'> days </span>" 
+		+ "<span class='mb-sm pr-xl'><span class='pr-sm light-txt opacity06'> days </span>" 
         
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px;width: 170px;'>"
         + "<input id='manualStartTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
         + "' class='form-control clock' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].frequencyStartTime' placeholder='Start time' onclick='ancStartTime(this.id," + customAnchorCount + ");' required data-error='Please fill out this field' />"
-        + "<span class='help-block-timer with-errors red-txt' style='display:none'></span>"
+        + "<span class='help-block-timer with-errors red-txt'></span>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
         
         +"<span class='light-txt opacity06'>"
-        +"<span style='padding-right:0px;padding-left:5px'>to </span>  Anchor date </span></span>"
+        +"<span style='padding-right:0px;padding-left:4px'>to </span>  Anchor date </span></span>"
         + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box' count='" + customAnchorCount
         + "' title='Select' name='activeTaskCustomScheduleBo[" + customAnchorCount
         + "].yDaysSign' id='ySign" + customAnchorCount + "'>"
@@ -3834,7 +3843,7 @@
         + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate yancorText' count='"
         + customAnchorCount + "' placeholder='Y'"
         + "name='activeTaskCustomScheduleBo[" + customAnchorCount
-        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block with-errors red-txt'></span>"
+        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number' data-error='Please fill out this field' data-type='yancorText'/><span class='help-block-timer with-errors red-txt' style='display:none'></span><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-sm'><span class='pr-sm light-txt opacity06'> days</span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px;width: 170px;'>"
@@ -4145,6 +4154,10 @@
 
  	var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
     var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
+    
+    if (isNaN(manualStartTime)) {
+ 	    return
+ 	} 
 
    	if ($('#xdays' + parent_id).val() != '') {
   	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
@@ -4155,10 +4168,6 @@
    	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
    	}
     	   	
-  	if (isNaN(manualStartTime)) {
- 	    return
- 	} 
-  	
   	 var pxday = $("#xdays" + parent_id).val();
      var pxsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
      
@@ -4259,6 +4268,20 @@
       $(this).parent().parent().addClass("current");
 
       $(".current").nextAll().remove();
+      
+      var parentId = $(this).parent().parent().attr("id").replace('AnchorDate','');
+      var parent_id = parseInt(parentId);
+      
+     	if ($('#xdays' + parent_id).val() != '') {
+    	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
+    	  $('#xdays' + parent_id).parent().find(".help-block").empty().css({'display': 'none'});
+    	  $('#xdays' + parent_id).parent().find(".xdays").empty().css({'position': 'relative', 'top': '-5px'});
+    	  $('#xdays' + parent_id).parent().find(".help-block-timer").add().css({'display': 'none'});
+     	} else {
+     	  $('#xdays' + parent_id).parent().find(".help-block").empty().removeAttr("style");
+     	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
+    	  
+     	}
       
       if( $('.manually-anchor-option').filter(function() {
     	    return $(this).css('display') !== 'none';}).length == 1){

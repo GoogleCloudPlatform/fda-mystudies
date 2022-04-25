@@ -26,8 +26,8 @@ import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -196,9 +196,14 @@ public class AppFirebaseMessagingService extends FirebaseMessagingService {
     notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     Random random = new Random();
     int m = random.nextInt(9999 - 1000) + 1000;
-    PendingIntent contentIntent =
-        PendingIntent.getActivity(
-            context, m, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent contentIntent;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      contentIntent = PendingIntent.getActivity(
+          context, m, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    } else {
+      contentIntent = PendingIntent.getActivity(
+          context, m, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     if (type.equalsIgnoreCase(NOTIFICATION_TYPE)) {
       Study study = dbServiceSubscriber.getStudyListFromDB(realm);
       StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);

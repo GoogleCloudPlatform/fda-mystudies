@@ -18,8 +18,8 @@ package com.harvard.usermodule;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.passcodemodule.PasscodeView;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 
 public class ConfirmPasscodeSetup extends AppCompatActivity {
@@ -37,11 +38,13 @@ public class ConfirmPasscodeSetup extends AppCompatActivity {
   private PasscodeView passcodeView;
   private static final int JOIN_STUDY_RESPONSE = 100;
   private TextView passcodetitle;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_passcode_setup);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     initializeXmlId();
     setTextForView();
@@ -90,6 +93,12 @@ public class ConfirmPasscodeSetup extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.confirm_passcode_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });

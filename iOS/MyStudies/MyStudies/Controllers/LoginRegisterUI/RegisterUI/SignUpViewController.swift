@@ -20,6 +20,9 @@
 import Foundation
 import IQKeyboardManagerSwift
 import UIKit
+import GoogleUtilities
+import GoogleDataTransport
+import FirebaseAnalytics
 
 let kVerifyMessageFromSignUp =
   "An email has been sent to xyz@gmail.com. Please type in the verification code received in the email to complete account setup."
@@ -63,6 +66,10 @@ class SignUpViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "New User"
+    ])
 
     self.navigationController?.navigationBar.backgroundColor = .white
     navigationController?.navigationBar.barTintColor = .white
@@ -95,6 +102,7 @@ class SignUpViewController: UIViewController {
     let terms = Branding.termsAndConditionURL
     TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
     self.agreeToTermsAndConditions()
+    setNavigationBarColor()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -130,11 +138,12 @@ class SignUpViewController: UIViewController {
 
   ///  Attributed string for Terms & Privacy Policy.
   func agreeToTermsAndConditions() {
-
+    
     self.termsAndCondition?.delegate = self
     let attributedString = (termsAndCondition?.attributedText.mutableCopy() as? NSMutableAttributedString)!
 
     var foundRange = attributedString.mutableString.range(of: "terms")
+    
     attributedString.addAttribute(
       NSAttributedString.Key.link,
       value: (TermsAndPolicy.currentTermsAndPolicy?.termsURL!)! as String,
@@ -170,27 +179,51 @@ class SignUpViewController: UIViewController {
         .isEmpty
     {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Sign-Up required fields alert"
+      ])
       return false
     } else if self.user.emailId == "" {
       self.showAlertMessages(textMessage: kMessageEmailBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter email alert"
+      ])
       return false
     } else if !(Utilities.isValidEmail(testStr: self.user.emailId!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter validMail alert"
+      ])
       return false
     } else if self.user.password == "" {
       self.showAlertMessages(textMessage: kMessagePasswordBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter password alert"
+      ])
       return false
     } else if Utilities.isPasswordValid(text: (self.user.password)!) == false {
       self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password criteria alert"
+      ])
       return false
     } else if (self.user.password)! == user.emailId {
       self.showAlertMessages(textMessage: kMessagePasswordMatchingToOtherFeilds)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password+Email match alert"
+      ])
       return false
     } else if confirmPassword == "" {
       self.showAlertMessages(textMessage: kMessageProfileConfirmPasswordBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Confirm password alert"
+      ])
       return false
     } else if self.user.password != confirmPassword {
       self.showAlertMessages(textMessage: kMessageValidatePasswords)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password dont match alert"
+      ])
       return false
     }
     return true
@@ -200,6 +233,9 @@ class SignUpViewController: UIViewController {
     if self.user.emailId == "" {
     } else if !(Utilities.isValidEmail(testStr: self.user.emailId!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter validMail Alert"
+      ])
     }
   }
   
@@ -207,8 +243,14 @@ class SignUpViewController: UIViewController {
     if self.user.password == "" {
     } else if Utilities.isPasswordValid(text: (self.user.password)!) == false {
       self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password criteria alert"
+      ])
     } else if (self.user.password)! == user.emailId {
       self.showAlertMessages(textMessage: kMessagePasswordMatchingToOtherFeilds)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password+Email match alert"
+      ])
     }
   }
   
@@ -216,6 +258,9 @@ class SignUpViewController: UIViewController {
     if confirmPassword == "" {
     } else if self.user.password ?? "" != "" && self.user.password != confirmPassword {
       self.showAlertMessages(textMessage: kMessageValidatePasswords)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password dont match alert"
+      ])
     }
   }
 
@@ -239,12 +284,18 @@ class SignUpViewController: UIViewController {
   /// Used to check all the validations
   /// before making a Register webservice call.
   @IBAction func submitButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-Up Submit"
+    ])
 
     self.view.endEditing(true)
 
     if self.validateAllFields() == true {
       if !(agreedToTerms) {
         self.showAlertMessages(textMessage: kMessageAgreeToTermsAndConditions)
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Review terms/conditions alert"
+        ])
       } else {
         // Call the Webservice
         UserServices().registerUser(self as NMWebServiceDelegate)
@@ -261,6 +312,10 @@ class SignUpViewController: UIViewController {
       agreedToTerms = true
       (sender as? UIButton)!.isSelected = !(sender as? UIButton)!.isSelected
     }
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-Up Terms&Policy"
+    ])
   }
 
   // MARK: - Segue Method
@@ -330,6 +385,9 @@ extension SignUpViewController: UITextViewDelegate {
   {
 
     var link: String = TermsAndPolicy.currentTermsAndPolicy?.termsURL ?? ""
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-Up Terms"
+    ])
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
       && characterRange
@@ -337,7 +395,11 @@ extension SignUpViewController: UITextViewDelegate {
     {
       link = TermsAndPolicy.currentTermsAndPolicy?.policyURL ?? ""
       title = kNavigationTitlePrivacyPolicy
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Sign-Up PrivacyPolicy"
+      ])
     }
+    
     guard !link.isEmpty else { return false }
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =
@@ -487,6 +549,9 @@ extension SignUpViewController: UITextFieldDelegate {
           !Utilities.isPasswordValid(text: password)
         {
           self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Password criteria alert"
+          ])
         }
         self.user.password = password
         validatePasswordField()

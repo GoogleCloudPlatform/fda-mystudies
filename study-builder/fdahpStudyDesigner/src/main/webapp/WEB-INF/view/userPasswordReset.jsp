@@ -59,9 +59,9 @@
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
 		.hover_text_white:focus { color:#fff !important;}
-		.arrowLeftSugg {
-    			top: 82px; !important;
-    	}
+    	.form-wrap{
+    position:relative;
+    }
 	</style>
 
   </head>
@@ -84,21 +84,20 @@
         <div>
           <form:form id="passwordResetForm" data-toggle="validator"
                      role="form" action="addPassword.do" method="post"
-                     autocomplete="off" style="top: 20% !important;">
+                     autocomplete="off" style="margin-top: 0px !important;margin-bottom: 0px !important;">
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
             <c:if test="${not isInactiveUser && isValidToken}">
               <div>
               <p class="white__text">Create new password</p>
-              <div class="mb-lg form-group">
+              <div class="mb-lg form-group form-wrap">
                 <input type="password" class="input-field wow_input"
                        id="password" tabindex="2" maxlength="64" data-minlength="8"
                        placeholder="New password*" required data-error="Please fill out this field" 
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                        data-error="Password is invalid" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
-                <span class="arrowLeftSugg"></span>
-
+                 <span class="arrowLeftSugg" id="arrowleftSugg"></span>
               </div>
 
               <div class="mb-lg form-group">
@@ -115,11 +114,7 @@
               </div>
             </c:if>
             <c:if test="${isInactiveUser}">
-              <p class="passwordExp">
-                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                Your account has been
-                deactivated.
-              </p>
+              <jsp:forward page="errorPage.jsp" />
             </c:if>
             <c:if test="${not isInactiveUser && not isValidToken}">
               <jsp:forward page="errorPage.jsp" />

@@ -307,7 +307,7 @@ li.dropdown-header {
                     data-toggle="tooltip" data-placement="top"
                     data-html="true"
                     title=" <p class='text-left'>Image requirements: The default image shown below will be used for the study list thumbnail in the mobile app. Upload an alternate image if you wish to override it</p>
-					<p class='text-left'>The image must be of type .JPG or .PNG. The minimum image size required is 225 x 225. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></p>
+					<p class='text-left'>The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 225 x 225. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger"></p>
             </span>
       </div>
           
@@ -439,7 +439,8 @@ li.dropdown-header {
                         ['fontname',
                           ['fontname']],
                         ['fontsize',
-                          ['fontsize']],]
+                          ['fontsize']],],
+                          fontSizes: ['8', '9', '10', '11', '12', '14','16', '18', '20', '22', '24', '36']
 
                     });
             <c:if test="${not empty permission}">

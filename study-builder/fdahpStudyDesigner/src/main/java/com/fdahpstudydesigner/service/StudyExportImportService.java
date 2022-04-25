@@ -90,7 +90,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -445,7 +445,8 @@ public class StudyExportImportService {
     addQuestionsResponseSubTypeInsertSql(
         responseList, insertSqlStatements, customIdsMap, questionMap);
 
-    addQuestionsResponseTypeInsertSql(questionResponseTypeBo, insertSqlStatements, customIdsMap);
+    addQuestionsResponseTypeInsertSql(
+        questionResponseTypeBo, insertSqlStatements, customIdsMap, questionMap);
 
     addQuestionnairesStepsListInsertSql(
         questionnairesStepsList, insertSqlStatements, customIdsMap, questionMap);
@@ -544,6 +545,7 @@ public class StudyExportImportService {
   public String saveFileToCloudStorage(StudyBo studyBo, List<String> insertSqlStatements) {
     StringBuilder content = new StringBuilder();
     String message = FdahpStudyDesignerConstants.FAILURE;
+    Session session = null;
     try {
       for (String insertSqlStatement : insertSqlStatements) {
         if (StringUtils.isNotEmpty(insertSqlStatement)) {
@@ -555,7 +557,7 @@ public class StudyExportImportService {
       byte[] bytes = content.toString().getBytes();
       Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
 
-      Session session = hibernateTemplate.getSessionFactory().openSession();
+      session = hibernateTemplate.getSessionFactory().openSession();
 
       studyBo.setExportSqlByte(bytes);
       study.getResourcesFromStorage(session, studyBo);
@@ -574,6 +576,10 @@ public class StudyExportImportService {
     } catch (Exception e) {
       logger.error("Save file to cloud storage failed", e);
       return e.getMessage();
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
     }
     return message;
   }
@@ -653,7 +659,8 @@ public class StudyExportImportService {
   private void addQuestionsResponseTypeInsertSql(
       List<QuestionReponseTypeBo> questionResponseTypeBoList,
       List<String> insertSqlStatements,
-      Map<String, String> customIdsMap)
+      Map<String, String> customIdsMap,
+      Map<String, String> questionMap)
       throws Exception {
 
     if (CollectionUtils.isEmpty(questionResponseTypeBoList)) {
@@ -688,7 +695,12 @@ public class StudyExportImportService {
               questionResponseTypeBo.getMinValue(),
               questionResponseTypeBo.getMultipleLines(),
               questionResponseTypeBo.getOtherDescription(),
-              questionResponseTypeBo.getOtherDestinationStepId(),
+              StringUtils.isNotEmpty(questionResponseTypeBo.getOtherDestinationStepId())
+                      && questionResponseTypeBo
+                          .getOtherDestinationStepId()
+                          .equals(String.valueOf(0))
+                  ? String.valueOf(0)
+                  : questionMap.get(questionResponseTypeBo.getOtherDestinationStepId()),
               questionResponseTypeBo.getOtherExclusive(),
               questionResponseTypeBo.getOtherIncludeText(),
               questionResponseTypeBo.getOtherParticipantFill(),

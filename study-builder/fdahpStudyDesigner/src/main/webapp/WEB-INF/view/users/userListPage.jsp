@@ -118,17 +118,17 @@
                                              <c:if
                                                  test="${empty user.userPassword}">title="Account status: Invitation sent, pending activation"</c:if>
                                              <c:if
-                                                 test="${user.emailChanged}">title="Account status: Pending verification"</c:if>
+                                                 test="${user.emailChanged  eq '1'}">title="Account status: Pending verification"</c:if>
                                              <c:if
-                                                 test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Account status: Active"</c:if>
+                                                 test="${user.emailChanged eq '0' && not empty user.userPassword && user.enabled}">title="Account status: Active"</c:if>
                                              <c:if
-                                                 test="${!user.emailChanged && not empty user.userPassword &&  not user.enabled}">title="Account status: Deactivated"</c:if>>
+                                                 test="${user.emailChanged eq '0' && not empty user.userPassword &&  not user.enabled}">title="Account status: Deactivated"</c:if>>
                     <input type="checkbox" class="switch-input"
                            value="${user.enabled ? 1 : 0}" id="${user.userId}"
                            <c:if test="${user.enabled}">checked</c:if>
                              onchange="activateOrDeactivateUser('${user.userId}')"
                            <c:if
-                               test="${empty user.userPassword || user.emailChanged}">disabled</c:if>>
+                               test="${empty user.userPassword || user.emailChanged eq '1'}">disabled</c:if>>
                     <span class="switch-label" data-on="On" data-off="Off"></span>
                     <span class="switch-handle"></span>
                   </label>

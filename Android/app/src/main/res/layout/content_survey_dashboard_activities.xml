@@ -15,7 +15,7 @@
         android:paddingRight="20dp"
         android:paddingTop="14dp">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/mActivitiesLabel"
             style="@style/TextType3"
             android:layout_alignParentLeft="true"
@@ -37,14 +37,14 @@
                 android:layout_weight=".995"
                 android:gravity="center">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mTodayActivitiesCompletedValue1"
                     style="@style/TextType1"
                     android:layout_centerHorizontal="true"
                     android:text="2"
                     android:textColor="@color/colorPrimary" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mTodayActivitiesCompletedLabel1"
                     style="@style/TextType4"
                     android:layout_below="@id/mTodayActivitiesCompletedValue1"
@@ -52,7 +52,7 @@
                     android:text="@string/completed4"
                     android:textColor="@color/colorPrimary" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mTodayActivitiesCompletedDetails1"
                     style="@style/TextType4"
                     android:layout_below="@id/mTodayActivitiesCompletedLabel1"
@@ -75,14 +75,14 @@
                 android:layout_weight=".995"
                 android:gravity="center">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mTodayActivitiesCompletedValue2"
                     style="@style/TextType1"
                     android:layout_centerHorizontal="true"
                     android:text="3"
                     android:textColor="@color/colorPrimary" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mTodayActivitiesCompletedLabel2"
                     style="@style/TextType4"
                     android:layout_below="@id/mTodayActivitiesCompletedValue2"
@@ -90,7 +90,7 @@
                     android:text="@string/pending1"
                     android:textColor="@color/colorPrimary" />
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mTodayActivitiesCompletedDetails2"
                     style="@style/TextType4"
                     android:layout_below="@id/mTodayActivitiesCompletedLabel2"

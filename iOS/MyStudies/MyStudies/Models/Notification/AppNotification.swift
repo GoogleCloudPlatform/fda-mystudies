@@ -58,7 +58,7 @@ class AppLocalNotification: AppNotification {
 
 class AppNotification {
 
-  enum NotificationType: String {
+  enum NotificationType: String, CaseIterable {
     case gateway = "Gateway"
     case study = "Study"
   }
@@ -68,7 +68,7 @@ class AppNotification {
     case study = "Study"
     case resource = "Resource"
     case activity = "Activity"
-    case studyEvent
+    case studyEvent = "studyEvent"
   }
 
   var id: String?

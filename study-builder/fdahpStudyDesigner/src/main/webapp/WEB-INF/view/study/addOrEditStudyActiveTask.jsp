@@ -135,7 +135,8 @@
       var typeOfActiveTask = $(this).val();
       var activeTaskInfoId = $(this).attr('taskId');
       $('.changeContent').empty();
-      $(document).find('#saveId,#doneId').unbind();
+      $(document).find('#saveId').unbind();
+      $(document).off('click', '#doneId');
       loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType);
       $('.actBut').show();
       $('.scheduleTaskClass').prop('disabled', false);
@@ -155,8 +156,7 @@
             actionType: actionType
           },
           function () {
-            $(this).parents('form').attr('action',
-                '/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
+            
             resetValidation($(this).parents('form'));
             var dt = new Date();
             $('#inputClockId').datetimepicker({
@@ -218,17 +218,20 @@
 	$('.manually-anchor-option').each(function(customAnchorCount) {
 		if ($('#xdays' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
 	  	  $('#xdays' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
-     	  $('#xdays' + customAnchorCount).parent().find(".help-block").empty().append(
+     	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").empty().append(
      	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
      	       "Please fill out this field"));
+   	  	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").show();
+	  	  $('#xdays' + customAnchorCount).parent().find(".help-block").hide();
     	}
 		
 		if ($('#manualStartTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
 	  	  $('#manualStartTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
-     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").empty().append(
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
      	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
      	       "Please fill out this field"));
-     	 $('#manualStartTime0').parent().find(".help-block-timer").hide();
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").show();
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").hide();
     	}
 		
 		if ($('#manualEndTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {

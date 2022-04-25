@@ -15,10 +15,12 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 
     <application
         android:name=".FdaApplication"
         android:allowBackup="false"
+        tools:replace="android:allowBackup"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -37,7 +39,7 @@
             android:theme="@style/AppThemeNoActionBar" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="@string/FileProvider_authorities"
             android:exported="false"
             android:grantUriPermissions="true"
@@ -58,6 +60,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,6 +73,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter android:label="@string/filter_signup">
                 <action android:name="android.intent.action.VIEW" />
@@ -88,6 +92,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter android:label="@string/filter_callback">
                 <action android:name="android.intent.action.VIEW" />
@@ -116,6 +121,7 @@
             android:name=".usermodule.AuthServerErrorHandler"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter android:label="@string/filter_error">
@@ -151,6 +157,7 @@
             android:name=".usermodule.ForgotPasswordActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter android:label="@string/filter_forgotPassword">
@@ -212,6 +219,7 @@
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
+            android:exported="true"
             android:windowSoftInputMode="stateHidden">
             <intent-filter android:label="@string/filter_privacy">
                 <action android:name="android.intent.action.VIEW" />
@@ -337,12 +345,14 @@
             android:theme="@style/AppThemeNoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-        <service android:name=".AppFirebaseMessagingService">
+        <service android:name=".AppFirebaseMessagingService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".AppFirebaseInstanceIdService">
+        <service android:name=".AppFirebaseInstanceIdService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -361,7 +371,8 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden" />
 
-        <receiver android:name=".notificationmodule.AlarmReceiver">
+        <receiver android:name=".notificationmodule.AlarmReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.media.action.DISPLAY_NOTIFICATION" />
 
@@ -376,7 +387,8 @@
             android:syncable="true"
             tools:replace="android:authorities" />
 
-        <service android:name=".offlinemodule.auth.StubAuthenticatorService">
+        <service android:name=".offlinemodule.auth.StubAuthenticatorService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -387,8 +399,7 @@
         </service>
         <service
             android:name=".offlinemodule.auth.SyncAdapterService"
-            android:exported="false"
-            android:process=":sync">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
@@ -397,11 +408,13 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
-        <service android:name=".utils.ActiveTaskService">
+        <service android:name=".utils.ActiveTaskService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.harvard.ActiveTask" />
             </intent-filter>
         </service>
+        <service android:name=".studyappmodule.CalculateRunHoldService" />
 
         <receiver android:name=".utils.AlarmService" />
 
@@ -412,7 +425,8 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden" />
 
-        <receiver android:name=".utils.BootCompleteListener">
+        <receiver android:name=".utils.BootCompleteListener"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

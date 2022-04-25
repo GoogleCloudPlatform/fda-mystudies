@@ -568,6 +568,8 @@ class ActivityQuestionStep: ActivityStep {
           // By default a step is skippable
           if skippable == false {
             questionStep?.isOptional = false
+          } else {
+            questionStep?.isOptional = true
           }
           // setting the placeholder Value if exist any
           if Utilities.isValidValue(someObject: placeholderText as AnyObject?) {

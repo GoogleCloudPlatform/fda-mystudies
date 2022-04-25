@@ -170,7 +170,7 @@ public class UsersServiceImpl implements UsersService {
         userBO2.setLastName(null != userBO.getLastName() ? userBO.getLastName().trim() : "");
         if (!userBO2.getUserEmail().equals(userBO.getUserEmail())) {
           emailIdChange = true;
-          userBO2.setEmailChanged(true);
+          userBO2.setEmailChanged(1);
         }
         userBO2.setUserEmail(
             (null != userBO.getUserEmail() ? userBO.getUserEmail().trim() : "").toLowerCase());
@@ -342,5 +342,18 @@ public class UsersServiceImpl implements UsersService {
     }
     logger.exit("getUserRoleList() - Ends");
     return roleBOList;
+  }
+
+  @Override
+  public String deleteByUserId(String userId) {
+    logger.entry("begin deleteUserByUserId()");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    try {
+      message = usersDAO.deleteByUserId(userId);
+    } catch (Exception e) {
+      logger.error("UsersServiceImpl - deleteUserByUserId() - ERROR", e);
+    }
+    logger.exit("deleteUserByUserId() - Ends");
+    return message;
   }
 }

@@ -21,13 +21,13 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.browser.customtabs.CustomTabsIntent;
 import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -36,6 +36,7 @@ import com.harvard.usermodule.event.VerifyUserEvent;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -67,11 +68,13 @@ public class VerificationStepActivity extends AppCompatActivity
   private String emailId;
   private String type;
   private LoginData loginData;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_verification_step);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     userId = getIntent().getStringExtra("userid");
     auth = getIntent().getStringExtra("auth");
     emailId = getIntent().getStringExtra("email");
@@ -145,9 +148,13 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            SharedPreferences settings =
-                SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-            settings.edit().clear().apply();
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.verification_step_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            SharedPreferenceHelper.deletePreferences(VerificationStepActivity.this);
             // delete passcode from keystore
             String pass = AppController.refreshKeys("passcode");
             if (pass != null) {
@@ -161,9 +168,13 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            SharedPreferences settings =
-                SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-            settings.edit().clear().apply();
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.verification_step_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            SharedPreferenceHelper.deletePreferences(VerificationStepActivity.this);
             // delete passcode from keystore
             String pass = AppController.refreshKeys("passcode");
             if (pass != null) {
@@ -177,7 +188,12 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.verification_step_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             VerifyUserEvent verifyUserEvent = new VerifyUserEvent();
             HashMap<String, String> params = new HashMap<>();
             HashMap<String, String> header = new HashMap<String, String>();
@@ -216,6 +232,12 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.verification_step_resend));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             AppController.getHelperProgressDialog()
                 .showProgress(VerificationStepActivity.this, "", "", false);
             ResendEmailEvent resendEmailEvent = new ResendEmailEvent();
@@ -305,9 +327,7 @@ public class VerificationStepActivity extends AppCompatActivity
       if (statusCode.equalsIgnoreCase("401")) {
         Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
         if (from != null && from.equalsIgnoreCase("Activity")) {
-          SharedPreferences settings =
-              SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-          settings.edit().clear().apply();
+          SharedPreferenceHelper.deletePreferences(this);
           // delete passcode from keystore
           String pass = AppController.refreshKeys("passcode");
           if (pass != null) {
@@ -330,9 +350,7 @@ public class VerificationStepActivity extends AppCompatActivity
   @Override
   public void onBackPressed() {
     super.onBackPressed();
-    SharedPreferences settings =
-        SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(this);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {

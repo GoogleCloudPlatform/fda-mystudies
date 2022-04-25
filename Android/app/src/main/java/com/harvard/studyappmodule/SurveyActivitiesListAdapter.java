@@ -19,10 +19,11 @@ package com.harvard.studyappmodule;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.studyappmodule.surveyscheduler.model.ActivityStatus;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -57,6 +59,7 @@ public class SurveyActivitiesListAdapter
   private boolean paused;
   private Date joiningDate;
   private ArrayList<Integer> timePos = new ArrayList<>();
+  private CustomFirebaseAnalytics analyticsInstance;
 
   SurveyActivitiesListAdapter(
           Context context,
@@ -80,6 +83,7 @@ public class SurveyActivitiesListAdapter
     View v =
             LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.survey_activities_list_item, parent, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     return new Holder(v);
   }
 
@@ -749,6 +753,12 @@ public class SurveyActivitiesListAdapter
       holder.container.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+          Bundle eventProperties = new Bundle();
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              context.getString(R.string.survey_activities_list));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           int currentRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getCurrentRunId();
           int totalRunVal = currentRunStatusForActivities.get(holder.getAdapterPosition()).getTotalRun();
           if (click) {
@@ -818,6 +828,12 @@ public class SurveyActivitiesListAdapter
       holder.more.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+          Bundle eventProperties = new Bundle();
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              context.getString(R.string.survey_activities_list_more));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           int p = 0;
           try {
             p = timePos.get(holder.getAdapterPosition());

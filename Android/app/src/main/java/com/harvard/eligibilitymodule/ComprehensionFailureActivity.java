@@ -20,7 +20,7 @@ import static com.harvard.studyappmodule.StudyFragment.CONSENT;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import com.harvard.AppConfig;
@@ -34,6 +34,8 @@ import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
+
 import io.realm.Realm;
 import java.util.List;
 import org.researchstack.backbone.step.Step;
@@ -46,11 +48,13 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   private EligibilityConsent eligibilityConsent;
   private Realm realm;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_comprehension_failure);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     TextView retrybutton = findViewById(R.id.retrybutton);
     dbServiceSubscriber = new DbServiceSubscriber();
@@ -59,6 +63,12 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.eligibility_failure_message));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
                     getIntent().getStringExtra("studyId"), realm);

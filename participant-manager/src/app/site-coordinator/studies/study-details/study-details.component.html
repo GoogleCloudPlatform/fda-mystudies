@@ -1,8 +1,8 @@
 <ng-container *ngIf="studyDetail$ | async as studyDetails">
   <div *ngIf="studyDetails && studyDetails.participantRegistryDetail">
-    <div class="subheader p-none p-3 study-participant-registry">
+    <div class="subheader p-none cust_p-3 study-participant-registry">
       <div
-        class="max__w__1280 m-none flex__justify__space-between scrollable-element"
+        class="max__w__1280 m-none flex__justify__space-between scrollable-element tab_sub_menu"
       >
         <div class="flex__justify__space-between">
           <div
@@ -128,7 +128,7 @@
     <div class="max__w__1280 m-none site__participant">
       <div class="cards1 m-none">
         <table
-          class="table table-striped custom__table"
+          class="table table-striped custom__table custom-table-css"
           [mfData]="
             studyDetails.participantRegistryDetail.registryParticipants
               | paginate

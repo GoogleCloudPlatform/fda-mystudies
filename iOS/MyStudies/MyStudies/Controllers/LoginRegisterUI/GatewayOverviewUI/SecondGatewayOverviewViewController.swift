@@ -18,6 +18,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 class SecondGatewayOverviewViewController: UIViewController {
 
@@ -67,6 +68,9 @@ class SecondGatewayOverviewViewController: UIViewController {
 
   /// To create FDASlideMenuViewController and Gateway storyboard.
   @IBAction func getStartedButtonClicked(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "SecondGateway GetStarted"
+    ])
     self.createMenuView()
   }
 }

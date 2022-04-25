@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 let kConsentPdfKey = "consent"
 
@@ -74,6 +75,8 @@ class ResourcesViewController: UIViewController {
   var resourcePrivacy: String = TableRow.privacy.title
   var aboutTheStudy: String = TableRow.about.title
   var consentPDF: String = TableRow.consent.title
+  private lazy var tableViewSections: [[String: Any]]! = []
+  private lazy var selectedIndexPath: IndexPath? = nil
 
   private var tableRows: [ResourceRow] = []
 
@@ -83,6 +86,9 @@ class ResourcesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resources"
+    ])
 
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")
 
@@ -91,6 +97,12 @@ class ResourcesViewController: UIViewController {
       appDelegate.checkConsentStatus(controller: self)
     }
     tableRows = getStaticResources()
+    setNavigationBarColor()
+    let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    if appDelegate.notificationDetails != nil, User.currentUser.userType == .loggedInUser {
+      appDelegate.notificationDetails = nil
+      StudyUpdates.studyResourcesUpdated = true
+    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -177,6 +189,22 @@ class ResourcesViewController: UIViewController {
       ResourcesViewController.scheduleNotificationForResources()
     }
   }
+  
+  func userDidNavigateFromNotification() {
+    let activityId = NotificationHandler.instance.studyId
+    let rowDetail = tableViewSections[0]
+    let activities = rowDetail["activities"] as? [Activity] ?? []
+    if let index = activities.firstIndex(where: { $0.studyId == activityId }),
+      let tableView = self.tableView
+    {
+      let indexPath = IndexPath(row: index, section: 2)
+      self.selectedIndexPath = indexPath
+      tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
+      tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    NotificationHandler.instance.reset()
+  }
+
 
   func checkIfResourcePresent() {
     if DBHandler.isResourcesEmpty((Study.currentStudy?.studyId)!) {
@@ -215,6 +243,9 @@ class ResourcesViewController: UIViewController {
   }
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resource Home"
+    ])
     self.navigationController?.navigationBar.isHidden = false
     self.performSegue(withIdentifier: kUnwindToStudyListIdentifier, sender: self)
 
@@ -345,12 +376,18 @@ class ResourcesViewController: UIViewController {
               viewControllerUsed: self,
               action1: {
                 // Retain Action
+                Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                  buttonClickReasonsKey: "Retain Alert Action"
+                ])
                 
                 self.shouldDeleteData = false
                 self.withdrawalFromStudy(deleteResponse: false)
                 
               },
               action2: {
+                Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                  buttonClickReasonsKey: "Delete Alert Action"
+                ])
                 
                 // Delete action
                 self.shouldDeleteData = true
@@ -383,10 +420,17 @@ class ResourcesViewController: UIViewController {
       errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
       viewControllerUsed: self,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeaveStudy Alert OK"
+        ])
         self.shouldDeleteData = false
         self.withdrawalFromStudy(deleteResponse: false)
       },
-      action2: {}
+      action2: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeaveStudy Alert Cancel"
+        ])
+      }
     )
   }
 
