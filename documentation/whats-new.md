@@ -6,8 +6,18 @@
 -->
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
+# Release 2.0.10
+* Spring framework upgrade from version 3.0 to 5.3.18
+* Upgrade of related dependencies -- H2, Junit, Hibernate, Tiles, spring-security etc
+* Security updates
+* Introduction of Google Analytics for the iOS and Android mobile apps
+* Bug fixes and UI refinements
+* Additional code improvements and minor enhancements
+* The full list of bugs and refinements addressed in this release can be viewed [here ](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/13?closed=1).
+* Refer to [these](/deployment/README.md#whitelisting-the-tcp-port-10256-in-the-firewall-when-upgrading-to-2010-or-greater) steps when upgrading existing deployments to release 2.0.10
+
 # Release 2.0.9
-* This release fixes the security vulnerability detected with Log4j recently. More information on the vulnerability is here (https://logging.apache.org/log4j/2.x/security.html#CVE-2021-45046). 
+* This release fixes the security vulnerability detected with Log4j recently. More information on the vulnerability is [here ](https://logging.apache.org/log4j/2.x/security.html#CVE-2021-45046). 
 * Note: The platform was using a log4j version and logging framework which is not impacted by this vulnerability. However, as a safety measure, the platform is updated with release v2.0.9, to use the latest Log4j version 2.16.0 that was provided by Apache to address this issue.
 
 # Release 2.0.8
