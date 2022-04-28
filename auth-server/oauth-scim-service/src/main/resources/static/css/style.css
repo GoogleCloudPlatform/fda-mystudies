@@ -576,3 +576,14 @@ body#body-container {
 @media only screen and (max-width: 500px) and (min-width: 300px) {
 .mob_mt { margin-top:10px; }
 }
+
+@media (min-width: 375px) {
+@supports (-webkit-hyphens:none){
+  .centered__div__mobile {
+    width: 300px;
+    max-width: 100%;
+    max-width: auto;
+   }
+  }
+}
+
