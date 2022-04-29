@@ -587,3 +587,8 @@ body#body-container {
   }
 }
 
+@media screen and (max-width: 500px) {
+  input, select, textarea {
+    font-size: 13px;
+  }
+}
