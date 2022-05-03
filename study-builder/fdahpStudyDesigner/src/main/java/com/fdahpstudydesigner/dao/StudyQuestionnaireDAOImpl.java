@@ -4806,6 +4806,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       timeRange = FdahpStudyDesignerUtil.getTimeRangeString(frequency);
+      transaction = session.beginTransaction();
       // checking in the question step
       String searchQuery =
           "select count(*) from questions QBO,questionnaires_steps QSBO where QBO.id=QSBO.instruction_form_id and QSBO.questionnaires_id=:questionnaireId "
@@ -4822,6 +4823,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   .uniqueResult();
       if ((count != null) && (count.intValue() > 0)) {
         message = FdahpStudyDesignerConstants.SUCCESS;
+        // if one or more step has a question added to dashboard line chart then update
+        // questionnaires status
+        String query = " update questionnaires QR set QR.status=0 where QR.id=:questionnaireId ";
+        session.createSQLQuery(query).setString("questionnaireId", questionnaireId).executeUpdate();
+        // end here
       } else {
         // checking in the form step questions
         String searchSubQuery =
@@ -4838,9 +4844,19 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                     .uniqueResult();
         if ((subCount != null) && (subCount.intValue() > 0)) {
           message = FdahpStudyDesignerConstants.SUCCESS;
+          // if one or more step has a question added to dashboard line chart then update
+          // questionnaires status
+          String query = " update questionnaires QR set QR.status=0 where QR.id=:questionnaireId ";
+          session
+              .createSQLQuery(query)
+              .setString("questionnaireId", questionnaireId)
+              .executeUpdate();
+          // end here
         }
       }
+      transaction.commit();
     } catch (Exception e) {
+      transaction.rollback();
       logger.error("StudyQuestionnaireDAOImpl - validateLineChartSchedule() - ERROR ", e);
     } finally {
       if (session != null) {
