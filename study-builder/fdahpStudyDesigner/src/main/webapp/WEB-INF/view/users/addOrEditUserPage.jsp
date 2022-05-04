@@ -1028,13 +1028,16 @@ input::-webkit-calendar-picker-indicator {
       var isEmail;
       var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
       isEmail = regEX.test(email);
+      var isphone;
+      var regexPh=/[+][0-9]{12,13}/;
+      isphone=regexPh.test(phoneNumber);
       
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
         var csrfDetcsrfParamName = $('#csrfDet').attr('csrfParamName');
         var csrfToken = $('#csrfDet').attr('csrfToken');
         $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if ('' !== email && '' !== roleId  && null !== roleId && '' !== lastName  && 
-        		'' !== firstName && '' !== phoneNumber ) {
+        		'' !== firstName && '' !== phoneNumber && isphone ) {
         	const adminList = '${adminList}' 
         	    var element = $("#roleId option:selected").text();
                 if(!adminList.includes(email) && adminList != null && ${gciEnabled}){
