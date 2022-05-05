@@ -894,7 +894,7 @@ $(document)
                       var message = jsonobject.message;
                       if (message == "SUCCESS") {
                         $('#email')
-                            .val('');
+                            .val(email);
                         $('#password')
                             .val(passwordLength);
                         $('#landingId')
