@@ -71,6 +71,23 @@
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
 		.hover_text_white:focus { color:#fff !important;}
+		
+		.popup_input{
+		    text-align: center;
+		    border: 1px solid #c9d2d6;
+		    color: #2d2926;
+		    outline: none !important;
+		    box-shadow: none;
+		    -webkit-box-shadow: none;
+		    transition: none;
+		    -webkit-transition: none;
+		    resize: none;
+		    background-color: #fff;
+		    width: 90%;
+		    height: 34px;
+		    border-radius: 4px;
+		    display: inline-block;
+		}
 	</style>
 
   </head>

@@ -716,6 +716,7 @@ $(document)
 			
 			 this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
 			 
+			  document.getElementById("recaptcha-container").style.display = "inline-block";
 			 setTimeout(function() {
 	           	var provider = new firebase.auth.PhoneAuthProvider();
 				return provider.verifyPhoneNumber(userPhoneNumber, recaptchaVerifier)
@@ -723,7 +724,7 @@ $(document)
 				     $('#recaptcha-container').hide();
 				     // Ask user for the verification code.
 				     
-				     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="float-left mb-xs mt-md"><input name="verificationCode" autocomplete="off"/></div></form>');
+				     var form = $('<form><div class="bootbox-font">Please enter the verification code that was sent to your mobile device.</div><div class="float-left mb-xs mt-md"><input name="verificationCode" class="popup_input" autocomplete="off"/></div></form>');
 
 				    bootbox.confirm({
 				      closeButton: false,
