@@ -968,7 +968,6 @@ $(document)
                           'csrfParamName');
                       var csrfToken = $('#csrfDet').attr(
                           'csrfToken');
-                          $("body").addClass("loading");        
                       var isGCIUser = false;
                       var fdaLink = $('#fdaLink').val();
                       var gciEnabled = $('#gci').val();
@@ -1003,6 +1002,7 @@ $(document)
 								   	    $('#recaptcha-container').show();
 								   	   	multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber);
 								   	  } else {
+								   	    $("body").addClass("loading");
 								   	    viewDashBoard(fdaLink, email, password, passwordLength); 
 								   	  }
 								   })
@@ -1091,12 +1091,13 @@ $(document)
 				                     }  
 			                       });
 				   	  		} else {
+				   	  		   $("body").addClass("loading");
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
 				                 },
-				                global: false
                             });
                             } else {
+                               $("body").addClass("loading");
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
 				   	  		
