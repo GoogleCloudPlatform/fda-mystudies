@@ -41,7 +41,9 @@ import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import com.google.cloud.storage.StorageException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -151,7 +153,7 @@ public class UserConsentManagementController {
 
       studyConsent.setStudy(studyInfo);
       studyConsent.setParticipantStudy(participantStudies);
-      studyConsent.setConsentDate(participantStudies.getEnrolledDate());
+      studyConsent.setConsentDate(Timestamp.from(Instant.now()));
       studyConsent.setSharing(dataSharing.value());
       studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
       studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
