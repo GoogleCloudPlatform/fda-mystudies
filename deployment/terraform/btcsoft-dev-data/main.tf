@@ -104,6 +104,20 @@ module "mystudies" {
   database_version  = "MYSQL_5_7"
   vpc_network       = "projects/btcsoft-dev-networks/global/networks/btcsoft-dev-network"
   user_password     = data.google_secret_manager_secret_version.db_secrets["auto-mystudies-sql-default-user-password"].secret_data
+  database_flags = [
+    {
+      name  = "group_concat_max_len"
+      value = "4000000000"
+    },
+    {
+      name  = "innodb_lock_wait_timeout"
+      value = "500"
+    },
+    {
+      name  = "transaction_isolation"
+      value = "READ-COMMITTED"
+    },
+  ]
 }
 
 module "project_iam_members" {
