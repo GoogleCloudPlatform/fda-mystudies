@@ -1095,6 +1095,7 @@ $(document)
 				   	  	       viewDashBoard(fdaLink, email, password, passwordLength);
 				   	  		}
 				                 },
+				                  global: false
                             });
                             } else {
                                $("body").addClass("loading");
