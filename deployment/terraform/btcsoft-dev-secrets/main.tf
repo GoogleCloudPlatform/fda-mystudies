@@ -480,20 +480,7 @@ resource "google_secret_manager_secret" "manual_consent_dataset_id" {
     }
   }
 }
-resource "google_secret_manager_secret" "manual_consent_store_id" {
-  provider = google-beta
 
-  secret_id = "manual-consent-store-id"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-east1"
-      }
-    }
-  }
-}
 resource "google_secret_manager_secret" "manual_consent_enabled" {
   provider = google-beta
 
