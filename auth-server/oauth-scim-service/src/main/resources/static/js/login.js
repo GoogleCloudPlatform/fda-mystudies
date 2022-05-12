@@ -34,7 +34,7 @@ function validateLoginForm() {
 
 	var email = $(document.getElementById("email")).val();
 	var password = $(document.getElementById("password")).val();
-	var errorDiv = document.getElementById("commonError");
+	var errorDiv = document.getElementById("password_error");
 	var serverContextPath = $('#serverContextPath').val(); 
 	var mfaEnabled = $('#mfaEnabled').val();
 
