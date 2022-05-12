@@ -194,7 +194,7 @@
                   <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required" data-error="Please check this box if you want to proceed"> <label for="inlineCheckbox">
+                        required="required"  data-error="Please check this box if you want to proceed"> <label for="inlineCheckbox">
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"
