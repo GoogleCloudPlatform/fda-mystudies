@@ -59,4 +59,22 @@ public class ApplicationConfiguration {
 
   @Value("${enroll.mgmt.service.url}")
   private String regServerPartStudyInfoUrl;
+
+  @Value("${projectId}")
+  private String projectId;
+
+  @Value("${regionId}")
+  private String regionId;
+
+  @Value("${fhirDatasetId}")
+  private String fhirDatasetId;
+
+  @Value("${enableFHIRManagementAPI}")
+  private String enableFHIRManagementAPI;
+
+  @Value("${didDatasetId}")
+  private String didDatasetId;
+
+  @Value("${discardFHIRAfterDID}")
+  private String discardFHIRAfterDID;
 }

@@ -71,4 +71,10 @@ public class AppConstants {
   public static final String DETAIL_MESSAGE = "detailMessage";
   public static final String BASIC_PREFIX = "Basic ";
   public static final String COMMA_STR = ",";
+
+  public static final String DATE_FORMAT_RESPONSE_MOBILE = "yyyy-MM-dd'T'HH:mm:ss.SSSXX";
+  public static final String DATE_FORMAT_RESPONSE_FHIR = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+  public static final String PATIENT_TYPE = "Patient";
+  public static final String QUESTIONNAIRE_RESPONSE_TYPE = "QuestionnaireResponse";
 }
