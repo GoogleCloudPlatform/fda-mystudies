@@ -543,6 +543,8 @@
     <string name="rsb_invalid_answer_time_none">Please choose a time.</string>
     <string name="rsb_invalid_answer_date_time_none">Please choose a date and time.</string>
 
+    <string name="noeligibleStandalonemsg">Sorry, you are not eligible for participation in this study. We thank you for your interest and time, and encourage you to explore other studies in the future.</string>
+
     <!--google analytics implementation 13/12/2021 -->
     <string name="eligibility_sucess_message">Eligible</string>
     <string name="eligibility_failure_message">Not eligible</string>
