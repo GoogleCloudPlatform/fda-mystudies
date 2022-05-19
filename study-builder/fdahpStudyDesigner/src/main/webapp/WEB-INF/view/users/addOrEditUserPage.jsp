@@ -6,7 +6,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page import = "java.util.ResourceBundle" %>
 
-<script src="/studybuilder/js/datalist-css-min.js"></script>
+
     
 <style>
 .disabled {
@@ -79,29 +79,8 @@ input::-webkit-calendar-picker-indicator {
 
 }
 
-/* <datalist> and <option> styling */
-datalist {
-  position: relative;
-  border: 0 none;
-  overflow-x: hidden;
-  overflow-y: auto;
-  border: 1px solid rgba(0,0,0,.15)  !important;
- -webkit-box-shadow: 0 6px 12px rgb(0 0 0 / 18%) !important;
-  box-shadow: 0 6px 12px rgb(0 0 0 / 18%) !important;
-}
-
-datalist option {
-background-color: #fff;
-padding: 10px;
-color: #2d2926 !important;
-}
-
-datalist option:hover, datalist option:focus {
- color: #007cba !important;
-background-color: #f5f5f5;
-}
-
 </style>
+
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
 
@@ -591,6 +570,8 @@ background-color: #f5f5f5;
 <form:form action="/studybuilder/adminUsersView/getUserList.do"
            id="backOrCancelBtnForm" name="backOrCancelBtnForm" method="post">
 </form:form>
+
+
 <script>
 
 
