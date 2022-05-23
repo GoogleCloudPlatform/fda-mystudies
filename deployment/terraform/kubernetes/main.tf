@@ -105,10 +105,10 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-certificate-password",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
-	  "manual-idp-enabled-pm",
-	  "manual-idp-enabled-sb",
+      "manual-idp-enabled-pm",
+      "manual-idp-enabled-sb"
       "manual-mfa-enabled-pm",
-	  "manual-mfa-enabledsb",
+      "manual-mfa-enabled-sb",
       "manual-idp-auth-domain",
       "manual-idp-api-key",
       "manual-project-id",
