@@ -73,8 +73,8 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
   }
 
   @Override
-  public void getGCIUserData(HttpServletResponse response, String email) {
-    dashBoardAndProfiledao.getGCIUserData(response, email);
+  public void getIDPUserData(HttpServletResponse response, String email) {
+    dashBoardAndProfiledao.getIDPUserData(response, email);
   }
 
   @Override

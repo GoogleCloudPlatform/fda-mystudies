@@ -34,7 +34,7 @@ public interface DashBoardAndProfileService {
 
   public String isEmailValid(String email);
 
-  public void getGCIUserData(HttpServletResponse response, String email);
+  public void getIDPUserData(HttpServletResponse response, String email);
 
   public String updateProfileDetails(UserBO userBO, String userId, SessionObject userSession);
 }

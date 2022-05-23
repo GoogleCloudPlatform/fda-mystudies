@@ -6,8 +6,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page import = "java.util.ResourceBundle" %>
 
-<script src="/studybuilder/js/datalist-css-min.js"></script>
-    
 <style>
 .disabled {
   pointer-events: none;
@@ -66,6 +64,7 @@ button#deleteUser {
 input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
+
 .myarrow:after {
   content: "";
     width: 0;
@@ -128,7 +127,7 @@ background-color: #f5f5f5;
       <div class="dis-line pull-right">
         <div class="form-group mb-none">
           <c:if
-              test="${(userBO.gciUser eq true || not empty userBO.userPassword) && userBO.enabled && userBO.emailChanged  eq '0'}">
+              test="${(userBO.idpUser eq true || not empty userBO.userPassword) && userBO.enabled && userBO.emailChanged  eq '0'}">
             <div class="dis-inline mt-sm">
               <span class="stat">
                 <span class="black-sm-f">Account status:
@@ -140,7 +139,7 @@ background-color: #f5f5f5;
             </div>
           </c:if>
           <c:if
-              test="${(userBO.gciUser eq true || not empty userBO.userPassword) &&  not userBO.enabled}">
+              test="${(userBO.idpUser eq true || not empty userBO.userPassword) &&  not userBO.enabled}">
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -149,7 +148,7 @@ background-color: #f5f5f5;
               </span>
             </div>
           </c:if>
-          <c:if test="${userBO.gciUser eq false && empty userBO.userPassword}">
+          <c:if test="${userBO.idpUser eq false && empty userBO.userPassword}">
             <div class="dis-inline mt-sm">
               <span class="black-sm-f">Account status:
                 <span
@@ -207,7 +206,7 @@ background-color: #f5f5f5;
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="white-bg box-space">
       <c:if
-          test="${actionPage eq 'EDIT_PAGE' && (userBO.gciUser eq false && not empty userBO.userPassword) && userBO.emailChanged  eq '0'}">
+          test="${actionPage eq 'EDIT_PAGE' && (userBO.idpUser eq false && not empty userBO.userPassword) && userBO.emailChanged  eq '0'}">
         <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
           <div class="gray-xs-f text-weight-semibold pull-right">
             <button type="button" class="btn btn-default gray-btn"id="enforcePasswordId">Enforce password change
@@ -260,9 +259,9 @@ background-color: #f5f5f5;
               </c:if>
               <span class="requiredStar"> *</span>
             </div>
-            <c:set var="gciEnabled" value="${gciEnabled}"/>
+            <c:set var="idpEnabled" value="${idpEnabled}"/>
             <c:set var="mfaEnabled" value="${mfaEnabled}"/>
-            <c:if test="${gciEnabled eq false }">
+            <c:if test="${idpEnabled eq false }">
             <div class="form-group myarrow">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" value="${userBO.userEmail}"
@@ -271,26 +270,41 @@ background-color: #f5f5f5;
                      data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
                      required
                       <c:if
-                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.gciUser eq true}">disabled</c:if> />
+                         test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.idpUser eq true}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
             </div>
             </c:if>
-            <c:if test="${gciEnabled eq true }">
-		       <div class="form-group myarrow">
+            <c:if test="${idpEnabled eq true }">
+		     <div class="form-group myarrow">
 		         <input type="text" class="form-control" id="emailId" list="mine"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                      data-pattern-error="Email address is invalid" data-error="Please fill out this field" maxlength="100"
                      required
-                     <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.gciUser eq true}">disabled</c:if>/>
+                     <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || userBO.idpUser eq true}">disabled</c:if>/>
                          <datalist id="mine">
 					   <c:forEach items="${adminList}" var="adminList">
                         <option value="${adminList}">${adminList}</option>
                       </c:forEach>
 							</datalist>
-                         <div class="help-block with-errors red-txt"></div>
+                      <div class="help-block with-errors red-txt"></div>
 		       </div>
+		       
+		       <input type="text" id="favcolors" list="colors" placeholder="Pick a color">
+  <datalist id="colors">
+   <option value="Blue">
+   <option value="Brown">
+   <option value="Cyan">
+   <option value="Green">
+   <option value="Orange">
+   <option value="Pink">
+   <option value="Purple">
+   <option value="Red">
+   <option value="Yellow">
+  </datalist>
+  
+  
 		       </c:if>
           </div>
           
@@ -346,7 +360,7 @@ background-color: #f5f5f5;
                   <span class="ml-xs">&nbsp; <label
                       class="switch bg-transparent mt-xs"
                       data-toggle="tooltip"  data-placement="top" 
-                      <c:if test="${not empty gciDisableUser && gciDisableUser eq 'Y'}">title="This user may be deleted from the organization directory or user whitelist for the Study Builder. Please contact your IT admin to have them added back and try again."
+                      <c:if test="${not empty idpDisableUser && idpDisableUser eq 'Y'}">title="This user may be deleted from the organization directory or user whitelist for the Study Builder. Please contact your IT admin to have them added back and try again."
 		              </c:if>> <input
                       type="checkbox" class="switch-input"  
                       value="${userBO.enabled}" id="change${userBO.userId}" 
@@ -354,7 +368,7 @@ background-color: #f5f5f5;
 		            	
                       <c:if test="${userBO.enabled}">checked</c:if>
                       <c:if
-                          test="${(userBO.gciUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged  eq '1' || (not empty gciDisableUser && gciDisableUser eq 'Y')}">disabled</c:if>
+                          test="${(userBO.idpUser eq false && empty userBO.userPassword) || actionPage eq 'VIEW_PAGE' || userBO.emailChanged  eq '1' || (not empty idpDisableUser && idpDisableUser eq 'Y')}">disabled</c:if>
                       onclick="activateOrDeactivateUser('${userBO.userId}');">
                       
                     <span class="switch-label bg-transparent" data-on="On"
@@ -591,6 +605,9 @@ background-color: #f5f5f5;
 <form:form action="/studybuilder/adminUsersView/getUserList.do"
            id="backOrCancelBtnForm" name="backOrCancelBtnForm" method="post">
 </form:form>
+    
+<script src="/studybuilder/js/datalist-css-min.js"></script>
+
 <script>
 
 
@@ -661,8 +678,6 @@ background-color: #f5f5f5;
     }
     </c:if>
 
-   
-    
     $('#roleId').on('change', function () {
       var element = $(this).find('option:selected').text();
     	 if(element != 'Superadmin' ){
@@ -1064,7 +1079,7 @@ background-color: #f5f5f5;
         		'' !== firstName && '' !== phoneNumber && isphone ) {
         	const adminList = '${adminList}' 
         	    var element = $("#roleId option:selected").text();
-                if(!adminList.includes(email) && adminList != null && ${gciEnabled}){
+                if(!adminList.includes(email) && adminList != null && ${idpEnabled}){
                 if(element == "Superadmin")
                 	 var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
                else
@@ -1485,4 +1500,58 @@ background-color: #f5f5f5;
 	        $("body").removeClass("loading");
 	    }
   }
+	      
+	      
+	      
+ 
+</script>
+
+<script>
+function dlRestoreValue(i) {
+debugger
+    let t = $('#' + i);
+    if (t.val() === '') {
+
+        if (t.attr('org-placeholder') !== t.attr('placeholder')) {
+            t.val(t.attr('placeholder'));
+        }
+
+        t.attr('placeholder', '');
+        if (t.val() === '') {
+            t.attr('placeholder', t.attr('org-placeholder'));
+        }
+      
+    }
+
+}
+
+function dlShowAllOnArrowClick(i) {
+
+    $('#' + i)
+        .on('click', function(e) {
+
+            let t = $(this);
+            if ((t.width() - (e.clientX - t.offset().left)) < 14) {
+                if (t.val() !== "") {
+                    t.attr('placeholder', t.val());
+                    t.val('');
+                }
+            } else {
+                dlRestoreValue(i)
+            }
+        })
+
+    .on('mouseleave', function() {
+        dlRestoreValue(this.id);
+    })
+
+
+    .on('mouseenter', function() {
+        if (!$(this).is("[org-placeholder]")) $(this).attr('org-placeholder', $(this).attr('placeholder'));
+    })
+
+}
+
+
+dlShowAllOnArrowClick('favcolors');
 </script>

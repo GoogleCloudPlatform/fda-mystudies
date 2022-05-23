@@ -118,7 +118,7 @@
           <form:form id="loginForm" data-toggle="validator" role="form" action="#" name="loginForm"
                      method="post"
                      autocomplete="off">
-            <input type="hidden" id="gci" value="${gciEnabled}" name="gci"/>
+            <input type="hidden" id="idp" value="${idpEnabled}" name="idp"/>
             <input type="hidden" id="mfa" value="${mfaEnabled}" name="mfa"/>
             <div id="errMsg" class="error_msg">${errMsg}</div>
             <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
@@ -249,11 +249,11 @@
     <script>
       var isChanged = true;
       $(document).ready(function (e) {
-   	  var gciEnabled = ${gciEnabled};
-   	  if(gciEnabled == true){
+   	  var idpEnabled = ${idpEnabled};
+   	  if(idpEnabled == true){
         var config = {
-    		  apiKey: "${gciApiKey}",
-    	   	  authDomain: "${gciAuthDomain}",
+    		  apiKey: "${idpApiKey}",
+    	   	  authDomain: "${idpAuthDomain}",
    	    };
    	    firebase.initializeApp(config);
       }

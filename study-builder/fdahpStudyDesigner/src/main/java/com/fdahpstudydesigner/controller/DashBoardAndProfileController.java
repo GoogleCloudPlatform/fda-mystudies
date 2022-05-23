@@ -76,9 +76,9 @@ public class DashBoardAndProfileController {
   @Autowired private AppService appService;
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
-  String gciEnabled = configMap.get("gciEnabled");
-  String gciAuthDomain = configMap.get("gciAuthDomain");
-  String gciApiKey = configMap.get("gciApiKey");
+  String idpEnabled = configMap.get("idpEnabledForSB");
+  String idpAuthDomain = configMap.get("idpAuthDomain");
+  String idpApiKey = configMap.get("idpApiKey");
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -121,9 +121,9 @@ public class DashBoardAndProfileController {
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     try {
-      map.addAttribute("gciEnabled", gciEnabled);
-      map.addAttribute("gciApiKey", gciApiKey);
-      map.addAttribute("gciAuthDomain", gciAuthDomain);
+      map.addAttribute("idpEnabled", idpEnabled);
+      map.addAttribute("idpApiKey", idpApiKey);
+      map.addAttribute("idpAuthDomain", idpAuthDomain);
       mav = new ModelAndView("fdaAdminDashBoardPage", map);
     } catch (Exception e) {
       logger.error("DashBoardAndProfileController - getAdminDashboard - ERROR", e);
@@ -153,18 +153,18 @@ public class DashBoardAndProfileController {
     logger.exit("isEmailValid() - Ends ");
   }
 
-  @RequestMapping(value = "/getGCIUserData.do", method = RequestMethod.POST)
-  public void getGCIUserData(HttpServletResponse response, String email) {
-    logger.entry("begin DashBoardAndProfileController - getGCIUserData()");
+  @RequestMapping(value = "/getIDPUserData.do", method = RequestMethod.POST)
+  public void getIDPUserData(HttpServletResponse response, String email) {
+    logger.entry("begin DashBoardAndProfileController - getIDPUserData()");
     try {
       if (FdahpStudyDesignerUtil.isNotEmpty(email)) {
-        dashBoardAndProfileService.getGCIUserData(response, email);
+        dashBoardAndProfileService.getIDPUserData(response, email);
       }
     } catch (Exception e) {
       response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
-      logger.error("DashBoardAndProfileController - getGCIUserData() - ERROR " + e);
+      logger.error("DashBoardAndProfileController - getIDPUserData() - ERROR " + e);
     }
-    logger.exit("DashBoardAndProfileController - isGCIUser() - Ends ");
+    logger.exit("DashBoardAndProfileController - getIDPUserData() - Ends ");
   }
 
   @RequestMapping("/adminDashboard/updateUserDetails.do")

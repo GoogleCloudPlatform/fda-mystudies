@@ -1179,14 +1179,14 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnNotSuperAdminErrorForGci() throws Exception {
+  public void shouldReturnNotSuperAdminErrorForIdp() throws Exception {
     UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
     // Step 1: Call API and expect NOT_SUPER_ADMIN_ACCESS error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, nonSuperAdmin.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_GCI_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+            get(ApiEndpoint.GET_IDP_USERS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(
@@ -1195,26 +1195,26 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnGciUsers() throws Exception {
+  public void shouldReturnIdpUsers() throws Exception {
     UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
     // Step 1: Call API and expect SUPER_ADMIN_ACCESS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, superAdmin.getId());
-    when(participantManagerUtil.getGCIUsers()).thenReturn(getGCIUsers());
+    when(participantManagerUtil.getIDPUsers()).thenReturn(getIDPUsers());
 
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_GCI_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+            get(ApiEndpoint.GET_IDP_USERS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value(MessageCode.GET_GCI_USERS_SUCCESS.getMessage()))
+        .andExpect(jsonPath("$.message").value(MessageCode.GET_IDP_USERS_SUCCESS.getMessage()))
         .andExpect(jsonPath("$.email").isArray())
         .andExpect(jsonPath("$.email", hasSize(1)))
         .andExpect(jsonPath("$.email[0]").value(TestConstants.USER_EMAIL_VALUE))
         .andReturn();
   }
 
-  private List<String> getGCIUsers() {
+  private List<String> getIDPUsers() {
     // TODO Auto-generated method stub
     List<String> users = new ArrayList<>();
     users.add(TestDataHelper.EMAIL_VALUE);

@@ -21,7 +21,7 @@
         <button
           (click)="changeStatus(user.status)"
           class="btn banner__default__btn pad__5__13 bt__font12__pad113 ml-sm"
-          [disabled]="user.gciUser && user.deletedOrDisabledInGci"
+          [disabled]="user.idpUser && user.deletedOrDisabledInIdp"
         >
           {{
             user.status === userStatus.Deactivated
@@ -32,7 +32,7 @@
           }}
 
         </button>
-        <span style="line-height: 15px;" *ngIf="user.gciUser && user.deletedOrDisabledInGci"
+        <span style="line-height: 15px;" *ngIf="user.idpUser && user.deletedOrDisabledInIdp"
                   class="tool " 
 
                   data-tip="This user may be deleted from the organization directory or user whitelist for the Participant Manager. Please contact your IT admin to have them added back and try again."

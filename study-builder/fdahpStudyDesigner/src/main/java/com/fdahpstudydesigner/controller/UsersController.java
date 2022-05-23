@@ -37,7 +37,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_V
 
 import com.fdahpstudydesigner.bean.AppListBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
-import com.fdahpstudydesigner.bean.GciAdminList;
+import com.fdahpstudydesigner.bean.IdpAdminList;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.RoleBO;
@@ -102,8 +102,8 @@ public class UsersController {
   @Autowired private UsersDAO usersDAO;
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
-  String gciEnabled = configMap.get("gciEnabled");
-  String mfaEnabled = configMap.get("mfaEnabled");
+  String idpEnabled = configMap.get("idpEnabledForSB");
+  String mfaEnabled = configMap.get("mfaEnabledForSB");
 
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
@@ -147,9 +147,9 @@ public class UsersController {
     List<AppListBean> appBos = null;
     List<AppsBo> appList = new ArrayList<>();
     List<UserBO> userList = null;
-    List<GciAdminList> gciAdminList = new ArrayList<GciAdminList>();
+    List<IdpAdminList> idpAdminList = new ArrayList<IdpAdminList>();
     Set<String> sbUserList = new HashSet<>();
-    Set<String> gciUserList = new HashSet<>();
+    Set<String> idpUserList = new HashSet<>();
     List<String> adminList = new ArrayList<String>();
 
     try {
@@ -167,13 +167,13 @@ public class UsersController {
           if (!"".equals(userId)) {
             userBO = usersService.getUserDetails(userId);
           }
-          if (Boolean.parseBoolean(gciEnabled)) {
+          if (Boolean.parseBoolean(idpEnabled)) {
             userList = usersService.getUserList();
 
-            List<GciAdminList> users = new ArrayList<GciAdminList>();
-            Map<String, GciAdminList> userMap = new HashMap<>();
+            List<IdpAdminList> users = new ArrayList<IdpAdminList>();
+            Map<String, IdpAdminList> userMap = new HashMap<>();
             for (UserBO user : userList) {
-              GciAdminList sbUser = new GciAdminList();
+              IdpAdminList sbUser = new IdpAdminList();
               // Study builder user email list
               sbUserList.add(user.getUserEmail());
               sbUser.setEmailId(user.getUserEmail());
@@ -186,17 +186,17 @@ public class UsersController {
 
             for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
               // Google identity platform user email list
-              gciUserList.add(exportedUserRecord.getEmail());
-              GciAdminList admin = new GciAdminList();
+              idpUserList.add(exportedUserRecord.getEmail());
+              IdpAdminList admin = new IdpAdminList();
               if (!exportedUserRecord.isDisabled()
                   & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
                 admin.setEmailId(exportedUserRecord.getEmail());
                 admin.setUid(exportedUserRecord.getUid());
-                gciAdminList.add(admin);
+                idpAdminList.add(admin);
               }
             }
 
-            for (GciAdminList a1 : gciAdminList) {
+            for (IdpAdminList a1 : idpAdminList) {
               if (!userMap.containsKey(a1.getEmailId())) {
                 adminList.add(a1.getEmailId());
               }
@@ -240,7 +240,7 @@ public class UsersController {
           map.addAttribute("studyBOs", studyBOs);
           map.addAttribute("apps", appList);
           map.addAttribute("appBos", appBos);
-          map.addAttribute("gciEnabled", gciEnabled);
+          map.addAttribute("idpEnabled", idpEnabled);
           map.addAttribute("mfaEnabled", mfaEnabled);
           mav = new ModelAndView("addOrEditUserPage", map);
         } else {
@@ -537,14 +537,14 @@ public class UsersController {
 
         ownUser = (String) request.getSession().getAttribute("ownUser");
         userList = usersService.getUserList();
-        List<UserBO> gciUserList = usersDAO.getGciUserList();
-        getGciUserInfo(userList, gciUserList);
+        List<UserBO> idpUserList = usersDAO.getIdpUserList();
+        getIdpUserInfo(userList, idpUserList);
 
         roleList = usersService.getUserRoleList();
         map.addAttribute("roleList", roleList);
         map.addAttribute("userList", userList);
         map.addAttribute("ownUser", ownUser);
-        map.addAttribute("gciEnabled", gciEnabled);
+        map.addAttribute("idpEnabled", idpEnabled);
 
         mav = new ModelAndView("userListPage", map);
       }
@@ -555,13 +555,13 @@ public class UsersController {
     return mav;
   }
 
-  private void getGciUserInfo(List<UserBO> userList, List<UserBO> gciUserList)
+  private void getIdpUserInfo(List<UserBO> userList, List<UserBO> idpUserList)
       throws FirebaseAuthException {
     List<String> userEmail = new ArrayList<>();
-    List<String> gciEmail = new ArrayList<>();
-    List<String> gciDisabledEmail = new ArrayList<>();
-    if (Boolean.parseBoolean(gciEnabled)) {
-      for (UserBO user : gciUserList) {
+    List<String> idpEmail = new ArrayList<>();
+    List<String> idpDisabledEmail = new ArrayList<>();
+    if (Boolean.parseBoolean(idpEnabled)) {
+      for (UserBO user : idpUserList) {
         userEmail.add(user.getUserEmail());
       }
       // Start listing users from the beginning, 1000 at a time.
@@ -569,28 +569,28 @@ public class UsersController {
       for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
         if (exportedUserRecord.isDisabled()
             & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
-          gciDisabledEmail.add(exportedUserRecord.getEmail());
+          idpDisabledEmail.add(exportedUserRecord.getEmail());
         }
-        gciEmail.add(exportedUserRecord.getEmail());
+        idpEmail.add(exportedUserRecord.getEmail());
       }
 
-      List<String> deletedGciUser = ListUtils.removeAll(userEmail, gciEmail);
+      List<String> deletedIdpUser = ListUtils.removeAll(userEmail, idpEmail);
       List<String> disableUsers = new ArrayList<>();
-      disableUsers.addAll(deletedGciUser);
-      disableUsers.addAll(gciDisabledEmail);
+      disableUsers.addAll(deletedIdpUser);
+      disableUsers.addAll(idpDisabledEmail);
 
       for (UserBO user : userList) {
         for (String disableUser : disableUsers) {
-          if (user.getUserEmail().equals(disableUser) && user.isGciUser()) {
-            user.setDisableGciUser("Y");
+          if (user.getUserEmail().equals(disableUser) && user.isIdpUser()) {
+            user.setDisableIdpUser("Y");
           }
         }
       }
     } else {
-      if (!gciUserList.isEmpty()) {
+      if (!idpUserList.isEmpty()) {
         for (UserBO user : userList) {
-          if (user.isGciUser()) {
-            user.setDisableGciUser("Y");
+          if (user.isIdpUser()) {
+            user.setDisableIdpUser("Y");
           }
         }
       }
@@ -673,21 +673,21 @@ public class UsersController {
           if (!"".equals(userId)) {
             userBO = usersService.getUserDetails(userId);
             if (null != userBO) {
-              if (Boolean.parseBoolean(gciEnabled)) {
-                if (userBO.isGciUser()) {
+              if (Boolean.parseBoolean(idpEnabled)) {
+                if (userBO.isIdpUser()) {
                   try {
                     UserRecord userRecord =
                         FirebaseAuth.getInstance().getUserByEmail(userBO.getUserEmail());
                     if (userRecord.isDisabled()) {
-                      map.addAttribute("gciDisableUser", "Y");
+                      map.addAttribute("idpDisableUser", "Y");
                     }
                   } catch (Exception e) {
-                    map.addAttribute("gciDisableUser", "Y");
+                    map.addAttribute("idpDisableUser", "Y");
                   }
                 }
               } else {
-                if (userBO.isGciUser()) {
-                  map.addAttribute("gciDisableUser", "Y");
+                if (userBO.isIdpUser()) {
+                  map.addAttribute("idpDisableUser", "Y");
                 }
               }
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
@@ -715,7 +715,7 @@ public class UsersController {
           map.addAttribute("studyBOs", studyBOs);
           map.addAttribute("apps", appList);
           map.addAttribute("appBos", appBos);
-          map.addAttribute("gciEnabled", gciEnabled);
+          map.addAttribute("idpEnabled", idpEnabled);
           map.addAttribute("mfaEnabled", mfaEnabled);
 
           mav = new ModelAndView("addOrEditUserPage", map);

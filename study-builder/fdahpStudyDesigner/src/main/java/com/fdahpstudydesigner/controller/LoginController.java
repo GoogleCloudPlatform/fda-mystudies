@@ -71,10 +71,10 @@ public class LoginController {
   private LoginServiceImpl loginService;
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
-  String gciEnabled = configMap.get("gciEnabled");
-  String mfaEnabled = configMap.get("mfaEnabled");
-  String gciAuthDomain = configMap.get("gciAuthDomain");
-  String gciApiKey = configMap.get("gciApiKey");
+  String idpEnabled = configMap.get("idpEnabledForSB");
+  String mfaEnabled = configMap.get("mfaEnabledForSB");
+  String idpAuthDomain = configMap.get("idpAuthDomain");
+  String idpApiKey = configMap.get("idpApiKey");
 
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
@@ -184,13 +184,6 @@ public class LoginController {
       message = loginService.changePassword(userId, newPassword, oldPassword, sesObj);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
 
-        // GCI user password update
-        //        UpdateRequest updateRequest =
-        //            new UpdateRequest(userId).setEmailVerified(true).setPassword(newPassword);
-        //
-        //        UserRecord userRecord = FirebaseAuth.getInstance().updateUser(updateRequest);
-        //        System.out.println("Successfully updated user: " + userRecord.getUid());
-
         sesObj.setPasswordExpiryDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
         mv =
             new ModelAndView(
@@ -284,10 +277,10 @@ public class LoginController {
       request.getSession().removeAttribute("errMsg");
     }
     masterDataBO = dashBoardAndProfileService.getMasterData("terms");
-    map.addAttribute("gciEnabled", gciEnabled);
+    map.addAttribute("idpEnabled", idpEnabled);
     map.addAttribute("mfaEnabled", mfaEnabled);
-    map.addAttribute("gciApiKey", gciApiKey);
-    map.addAttribute("gciAuthDomain", gciAuthDomain);
+    map.addAttribute("idpApiKey", idpApiKey);
+    map.addAttribute("idpAuthDomain", idpAuthDomain);
     map.addAttribute("masterDataBO", masterDataBO);
     return new ModelAndView("loginPage", map);
   }
@@ -446,9 +439,9 @@ public class LoginController {
       map.addAttribute("isInactiveUser", isInactiveUser);
       map.addAttribute("masterDataBO", masterDataBO);
       if ((userBO != null) && (StringUtils.isEmpty(userBO.getUserPassword()))) {
-        boolean gciUser = loginService.isGciUser(userBO.getUserEmail());
-        if (gciUser) {
-          map.addAttribute("gciUser", "gciUser");
+        boolean idpUser = loginService.isIdpUser(userBO.getUserEmail());
+        if (idpUser) {
+          map.addAttribute("idpUser", "idpUser");
         }
         map.addAttribute("mfaEnabled", mfaEnabled);
         map.addAttribute("userBO", userBO);

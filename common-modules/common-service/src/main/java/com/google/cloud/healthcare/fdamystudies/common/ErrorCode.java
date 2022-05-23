@@ -382,7 +382,7 @@ public enum ErrorCode {
 
   APP_INACTIVE(400, "EC_0089", Constants.BAD_REQUEST, "This app is no longer active."),
 
-  GCI_USER_ERROR(
+  IDP_USER_ERROR(
       400,
       "EC_0088",
       Constants.BAD_REQUEST,

@@ -57,5 +57,5 @@ public interface LoginService {
 
   public boolean isIntialPasswordSetUp(String securityToken);
 
-  public boolean isGciUser(String userEmail);
+  public boolean isIdpUser(String userEmail);
 }

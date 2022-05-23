@@ -31,12 +31,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 @EnableScheduling
-public class GCISchedulerService {
+public class IDPSchedulerService {
 
-  private static Logger logger = Logger.getLogger(GCISchedulerService.class.getName());
+  private static Logger logger = Logger.getLogger(IDPSchedulerService.class.getName());
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
-  String gciEnabled = configMap.get("gciEnabled");
+  String idpEnabled = configMap.get("idpEnabledForSB");
 
   @Bean()
   public ThreadPoolTaskScheduler taskScheduler() {
@@ -64,12 +64,12 @@ public class GCISchedulerService {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
-      List<UserBO> gciUserList = usersDAO.getGciUserList();
+      List<UserBO> idpUserList = usersDAO.getIdpUserList();
       List<String> userEmail = new ArrayList<>();
-      List<String> gciEmail = new ArrayList<>();
-      List<String> gciDisabledEmail = new ArrayList<>();
-      if (Boolean.parseBoolean(gciEnabled)) {
-        for (UserBO user : gciUserList) {
+      List<String> idpEmail = new ArrayList<>();
+      List<String> idpDisabledEmail = new ArrayList<>();
+      if (Boolean.parseBoolean(idpEnabled)) {
+        for (UserBO user : idpUserList) {
           userEmail.add(user.getUserEmail());
         }
         // Start listing users from the beginning, 1000 at a time.
@@ -77,17 +77,17 @@ public class GCISchedulerService {
         for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
           if (exportedUserRecord.isDisabled()
               & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
-            gciDisabledEmail.add(exportedUserRecord.getEmail());
+            idpDisabledEmail.add(exportedUserRecord.getEmail());
           }
-          gciEmail.add(exportedUserRecord.getEmail());
+          idpEmail.add(exportedUserRecord.getEmail());
         }
 
-        List<String> deletedGciUsers = ListUtils.removeAll(userEmail, gciEmail);
+        List<String> deletedIdpUsers = ListUtils.removeAll(userEmail, idpEmail);
         List<String> disableUsers = new ArrayList<>();
-        disableUsers.addAll(deletedGciUsers);
-        disableUsers.addAll(gciDisabledEmail);
+        disableUsers.addAll(deletedIdpUsers);
+        disableUsers.addAll(idpDisabledEmail);
 
-        for (UserBO user : gciUserList) {
+        for (UserBO user : idpUserList) {
           for (String disableUser : disableUsers) {
             if (user.getUserEmail().equals(disableUser)) {
               session
@@ -99,8 +99,8 @@ public class GCISchedulerService {
           }
         }
       } else {
-        if (!gciUserList.isEmpty()) {
-          for (UserBO user : gciUserList) {
+        if (!idpUserList.isEmpty()) {
+          for (UserBO user : idpUserList) {
             session
                 .createSQLQuery(
                     "Update users set force_logout='Y', status=0 WHERE email =:userEmail")

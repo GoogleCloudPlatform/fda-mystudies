@@ -25,7 +25,7 @@ public final class UserProfileMapper {
     profileResponse.setUserId(userRegAdminEntity.getId());
     profileResponse.setManageLocations(userRegAdminEntity.getLocationPermission());
     profileResponse.setSuperAdmin(userRegAdminEntity.isSuperAdmin());
-    profileResponse.setGciUser(userRegAdminEntity.getGciUser());
+    profileResponse.setIdpUser(userRegAdminEntity.getIdpUser());
     profileResponse.setPhoneNum(userRegAdminEntity.getPhoneNumber());
     return profileResponse;
   }

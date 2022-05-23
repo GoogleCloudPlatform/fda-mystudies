@@ -91,8 +91,7 @@
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <script type="text/javascript" src="/studybuilder/vendor/dompurify/purify.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
-     <script type="text/javascript" src="/studybuilder/js/summernote-bs4.js"></script>
-       
+    <script type="text/javascript" src="/studybuilder/js/summernote-bs4.js"></script>
         
     <script>
       $(window).on('keydown keypress mousedown', function (event) {
@@ -277,12 +276,12 @@ $(window).bind("load", function() {
             };
             
             
-            $(document).load(function () {
- window.history.pushState(null, "", window.location.href);        
-            window.onpopstate = function() {
-                window.history.pushState(null, "", window.location.href);
-            };
-});
+//             $(document).load(function () {
+//  window.history.pushState(null, "", window.location.href);        
+//             window.onpopstate = function() {
+//                 window.history.pushState(null, "", window.location.href);
+//             };
+// });
 
 
    

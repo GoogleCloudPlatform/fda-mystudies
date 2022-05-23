@@ -35,9 +35,9 @@ public class User {
 
   private String status;
 
-  private boolean gciUser;
+  private boolean idpUser;
 
-  private boolean deletedOrDisabledInGci;
+  private boolean deletedOrDisabledInIdp;
 
   private List<UserAppDetails> apps = new ArrayList<>();
 }

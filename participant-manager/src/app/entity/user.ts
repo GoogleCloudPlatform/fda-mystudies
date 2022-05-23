@@ -5,8 +5,8 @@ import {ApiResponse} from './api.response.model';
 
 export interface User extends ApiResponse {
   
-  gciUser: any;
-  deletedOrDisabledInGci:boolean;
+  idpUser: any;
+  deletedOrDisabledInIdp:boolean;
 
   id: string;
 
@@ -62,7 +62,7 @@ export interface SetUpUser {
   password: string;
   phoneNum: string;
 }
-export interface gciUser {
-  gciUser: boolean;
+export interface idpUser {
+  idpUser: boolean;
   
 }

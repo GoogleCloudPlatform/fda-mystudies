@@ -297,11 +297,11 @@
           document.studyListForm.action = "/studybuilder/adminDashboard/viewUserDetails.do";
           document.studyListForm.submit();
         });
-        var gciEnabled = ${gciEnabled};
-      	 if(gciEnabled == true){
+        var idpEnabled = ${idpEnabled};
+      	 if(idpEnabled == true){
         var config = {
-	   	  apiKey: "${gciApiKey}",
-	   	  authDomain: "${gciAuthDomain}",
+	   	  apiKey: "${idpApiKey}",
+	   	  authDomain: "${idpAuthDomain}",
 	   	};
 	   	firebase.initializeApp(config);
       	}

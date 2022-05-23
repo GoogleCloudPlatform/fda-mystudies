@@ -8,14 +8,14 @@
 
 $(document).ready(function () {
 
-  var gciEnabled = $('#gciEnabled').val();
-  var gciApiKey = $('#gciApiKey').val();
-  var gciAuthDomain = $('#gciAuthDomain').val();
+  var idpEnabled = $('#idpEnabledForPM').val();
+  var idpApiKey = $('#idpApiKey').val();
+  var idpAuthDomain = $('#idpAuthDomain').val();
 
-  if(gciEnabled) {
+  if(idpEnabled) {
   	var config = {
-      apiKey: gciApiKey,
-      authDomain: gciAuthDomain,
+      apiKey: idpApiKey,
+      authDomain: idpAuthDomain,
   	};
   	firebase.initializeApp(config);
   
@@ -36,10 +36,10 @@ function validateLoginForm() {
 	var password = $(document.getElementById("password")).val();
 	var errorDiv = document.getElementById("password_error");
 	var serverContextPath = $('#serverContextPath').val(); 
-	var mfaEnabled = $('#mfaEnabled').val();
+	var mfaEnabled = $('#mfaEnabledForPM').val();
 
 	$.ajax({
-	    url: serverContextPath + "/isGCIUser",
+	    url: serverContextPath + "/isIDPUser",
 	    type: "POST",
 	    dataType: 'json',
 	    data: {
@@ -47,9 +47,9 @@ function validateLoginForm() {
 	        },
 	    success: function getResponse(data) {
 	    
-	        var isGCIUser = data.isGciUser;
+	        var isIdpUser = data.isIdpUser;
 	        var phoneNumber = data.phoneNumber;
-	        if(isGCIUser == 'true') {
+	        if(isIdpUser == 'true') {
 	
 			  firebase.auth().onAuthStateChanged(function(user) {
 		   	    if (user) {

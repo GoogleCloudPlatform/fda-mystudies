@@ -72,5 +72,5 @@ public interface UserRegAdminRepository extends JpaRepository<UserRegAdminEntity
   @Query(
       value = "update ur_admin_user set status=:status where email IN (:userEmails) ",
       nativeQuery = true)
-  public void updateDisableGciUserToDeactivate(Integer status, List<String> userEmails);
+  public void updateDisableIdPUserToDeactivate(Integer status, List<String> userEmails);
 }

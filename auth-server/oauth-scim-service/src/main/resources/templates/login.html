@@ -125,10 +125,10 @@ display: block;
               <form th:action="@{/login}" method="POST" id="loginForm"
                 novalidate onsubmit="return validateform();"
                 th:object="${loginRequest}">
-                 <input type="hidden" id="gciEnabled" th:value="${gciEnabled}" name="gciEnabled"/>
-                 <input type="hidden" id="mfaEnabled" th:value="${mfaEnabled}" name="mfaEnabled"/>
-                 <input type="hidden" id="gciApiKey" th:value="${gciApiKey}" name="gciApiKey"/>
-                 <input type="hidden" id="gciAuthDomain" th:value="${gciAuthDomain}" name="gciAuthDomain"/>
+                 <input type="hidden" id="idpEnabled" th:value="${idpEnabledForPM}" name="idpEnabled"/>
+                 <input type="hidden" id="mfaEnabled" th:value="${mfaEnabledForPM}" name="mfaEnabled"/>
+                 <input type="hidden" id="idpApiKey" th:value="${idpApiKey}" name="idpApiKey"/>
+                 <input type="hidden" id="idpAuthDomain" th:value="${idpAuthDomain}" name="idpAuthDomain"/>
                  <input type="hidden" id="serverContextPath" th:value="${serverContextPath}" name="serverContextPath"/>
                 <div
                   class="centered__div centered__div__mobile box__shadow-cmn">

@@ -143,23 +143,23 @@ public class UserServiceImpl implements UserService {
     UserEntity userEntity = UserMapper.fromUserRequest(userRequest);
     ObjectNode userInfo = getObjectNode();
 
-    if (userRequest.getGciUser() && appConfig.isGciEnabled()) {
+    if (userRequest.getIdpUser() && appConfig.isIdpEnabled()) {
       UserRecord userRecord;
       try {
         userRecord = FirebaseAuth.getInstance().getUserByEmail(userRequest.getEmail());
 
         // See the UserRecord reference doc for the contents of userRecord.
-        logger.info("Successfully fetched GCI user data: ", userRecord.getEmail());
-        // GCI user password update
+        logger.info("Successfully fetched IDP user data: ", userRecord.getEmail());
+        // IDP user password update
         UpdateRequest updateRequest =
             new UpdateRequest(userRecord.getUid())
                 .setEmailVerified(true)
                 .setPassword(userRequest.getPassword());
 
         UserRecord userRecordUpdated = FirebaseAuth.getInstance().updateUser(updateRequest);
-        logger.info("Successfully updated GCI user data: ", userRecordUpdated.getEmail());
+        logger.info("Successfully updated IDP user data: ", userRecordUpdated.getEmail());
 
-        userEntity.setGciUser(true);
+        userEntity.setIdpUser(true);
         userEntity.setPhoneNumber(userRequest.getPhoneNumber());
       } catch (FirebaseAuthException e) {
         logger.error("UserServiceImpl.createUser firebase error: ", e);
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
     } else {
       setPasswordAndPasswordHistoryFields(
           userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
-      userEntity.setGciUser(false);
+      userEntity.setIdpUser(false);
     }
 
     userEntity.setUserInfo(userInfo);
@@ -266,8 +266,8 @@ public class UserServiceImpl implements UserService {
       }
     }
 
-    if (userEntity.getGciUser() && appConfig.isGciEnabled()) {
-      throw new ErrorCodeException(ErrorCode.GCI_USER_ERROR);
+    if (userEntity.getIdpUser() && appConfig.isIdpEnabled()) {
+      throw new ErrorCodeException(ErrorCode.IDP_USER_ERROR);
     }
 
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
@@ -442,12 +442,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Boolean isGCIUser(HttpServletResponse response, String email)
+  public Boolean isIDPUser(HttpServletResponse response, String email)
       throws IOException, JSONException {
-    logger.entry("begin isGCIUser(response,email)");
+    logger.entry("begin isIDPUser(response,email)");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
-    Boolean gciUser = false;
+    Boolean idpUser = false;
 
     Optional<UserEntity> optUserEntity =
         repository.findByAppIdAndEmail("Participant Manager", email);
@@ -456,20 +456,20 @@ public class UserServiceImpl implements UserService {
       UserEntity userEntity = optUserEntity.get();
 
       jsonobject.put(
-          "isGciUser",
-          StringUtils.isNotEmpty(userEntity.getGciUser().toString())
-              ? userEntity.getGciUser().toString()
+          "isIdpUser",
+          StringUtils.isNotEmpty(userEntity.getIdpUser().toString())
+              ? userEntity.getIdpUser().toString()
               : "false");
       jsonobject.put(
           "phoneNumber",
           StringUtils.isNotEmpty(userEntity.getPhoneNumber())
               ? userEntity.getPhoneNumber().toString()
               : "");
-      gciUser = userEntity.getGciUser();
+      idpUser = userEntity.getIdpUser();
 
     } else {
 
-      jsonobject.put("isGciUser", "false");
+      jsonobject.put("isIdpUser", "false");
       jsonobject.put("phoneNumber", "");
     }
 
@@ -477,8 +477,8 @@ public class UserServiceImpl implements UserService {
     out = response.getWriter();
     out.print(jsonobject);
 
-    logger.exit("exit isGCIUser(response,email)");
-    return gciUser;
+    logger.exit("exit isIDPUser(response,email)");
+    return idpUser;
   }
 
   @Override
@@ -535,7 +535,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(noRollbackFor = ErrorCodeException.class)
-  public AuthenticationResponse authenticateGCIUser(
+  public AuthenticationResponse authenticateIDPUser(
       UserRequest user, AuditLogEventRequest auditRequest) throws JsonProcessingException {
     logger.entry("begin authenticate(user)");
     Optional<UserEntity> optUserEntity =

@@ -119,7 +119,7 @@ public enum MessageCode {
 
   GET_APP_SUCCESS(HttpStatus.OK, "MSG_0046", "App fetched successfully"),
 
-  GET_GCI_USERS_SUCCESS(HttpStatus.OK, "MSG_0047", "Gci Users fetched successfully");
+  GET_IDP_USERS_SUCCESS(HttpStatus.OK, "MSG_0047", "IdP Users fetched successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

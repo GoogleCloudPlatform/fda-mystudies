@@ -10,9 +10,9 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.GCIAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.IDPAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 
 public interface ManageUserService {
@@ -38,7 +38,7 @@ public interface ManageUserService {
 
   public void sendUserEmail();
 
-  public GCIAdminDetailsResponse getGCIAdminDetails(String signedInUserId);
+  public IDPAdminDetailsResponse getIDPAdminDetails(String signedInUserId);
 
-  public void updateGciUsers();
+  public void updateIdpUsers();
 }

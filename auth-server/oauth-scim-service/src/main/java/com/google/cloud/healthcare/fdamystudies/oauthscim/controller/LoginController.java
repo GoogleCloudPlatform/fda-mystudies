@@ -23,9 +23,9 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FROM_EMAIL_COOKIE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GCI_API_KEY;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GCI_AUTH_DOMAIN;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GCI_ENABLED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.IDP_API_KEY;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.IDP_AUTH_DOMAIN;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.IDP_ENABLED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_VIEW_NAME;
@@ -133,10 +133,10 @@ public class LoginController {
     MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
     paramMap.add(LOGIN_CHALLENGE, loginChallenge);
 
-    model.addAttribute(GCI_ENABLED, appConfig.isGciEnabled());
+    model.addAttribute(IDP_ENABLED, appConfig.isIdpEnabled());
     model.addAttribute(MFA_ENABLED, appConfig.isMfaEnabled());
-    model.addAttribute(GCI_API_KEY, appConfig.getGciApiKey());
-    model.addAttribute(GCI_AUTH_DOMAIN, appConfig.getGciAuthDomain());
+    model.addAttribute(IDP_API_KEY, appConfig.getIdpApiKey());
+    model.addAttribute(IDP_AUTH_DOMAIN, appConfig.getIdpAuthDomain());
     model.addAttribute(SERVER_CONTEXT_PATH, appConfig.getServerContextPath());
 
     ResponseEntity<JsonNode> loginResponse = oauthService.requestLogin(paramMap);
@@ -224,8 +224,8 @@ public class LoginController {
 
     AuthenticationResponse authenticationResponse =
         (PlatformComponent.PARTICIPANT_MANAGER.equals(platformComponent)
-                && userService.isGCIUser(response, loginRequest.getEmail()))
-            ? userService.authenticateGCIUser(user, auditRequest)
+                && userService.isIDPUser(response, loginRequest.getEmail()))
+            ? userService.authenticateIDPUser(user, auditRequest)
             : userService.authenticate(user, auditRequest);
 
     if (UserAccountStatus.PENDING_CONFIRMATION.getStatus()
@@ -249,20 +249,20 @@ public class LoginController {
     return redirectToConsentPage(loginChallenge, authenticationResponse.getUserId(), response);
   }
 
-  @RequestMapping("/isGCIUser")
-  public void isGCIUser(HttpServletResponse response, String email) {
-    logger.entry("begin isGCIUser()");
-    Boolean gciUser = false;
+  @RequestMapping("/isIDPUser")
+  public void isIDPUser(HttpServletResponse response, String email) {
+    logger.entry("begin isIDPUser()");
+    Boolean idpUser = false;
     try {
       if (StringUtils.isNotEmpty(email)) {
-        gciUser = userService.isGCIUser(response, email);
+        idpUser = userService.isIDPUser(response, email);
       }
 
     } catch (Exception e) {
       response.setContentType(APPLICATION_JSON);
-      logger.error("LoginController - isGCIUser() - ERROR " + e);
+      logger.error("LoginController - isIDPUser() - ERROR " + e);
     }
-    logger.exit("isGCIUser() - Ends ");
+    logger.exit("isIDPUser() - Ends ");
   }
 
   private String redirectToLoginOrConsentPage(
@@ -408,10 +408,10 @@ public class LoginController {
           PRIVACY_POLICY_LINK,
           redirectConfig.getPrivacyPolicyUrl(mobilePlatform, deeplinkUrlCookie));
       modelView.addObject(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
-      modelView.addObject(GCI_ENABLED, appConfig.isGciEnabled());
+      modelView.addObject(IDP_ENABLED, appConfig.isIdpEnabled());
       modelView.addObject(MFA_ENABLED, appConfig.isMfaEnabled());
-      modelView.addObject(GCI_API_KEY, appConfig.getGciApiKey());
-      modelView.addObject(GCI_AUTH_DOMAIN, appConfig.getGciAuthDomain());
+      modelView.addObject(IDP_API_KEY, appConfig.getIdpApiKey());
+      modelView.addObject(IDP_AUTH_DOMAIN, appConfig.getIdpAuthDomain());
       modelView.addObject(SERVER_CONTEXT_PATH, appConfig.getServerContextPath());
 
       PlatformComponent platformComponent = PlatformComponent.fromValue(source);

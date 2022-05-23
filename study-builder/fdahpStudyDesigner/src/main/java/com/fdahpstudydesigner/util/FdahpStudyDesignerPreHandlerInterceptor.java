@@ -116,7 +116,7 @@ public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorA
           UserBO user = usersService.getUserDetails(session.getUserId());
           passwordExpiredDateTime = session.getPasswordExpiryDateTime();
           if (StringUtils.isNotBlank(passwordExpiredDateTime)
-              && !user.isGciUser()
+              && !user.isIdpUser()
               && FdahpStudyDesignerUtil.addDaysToDate(
                       new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
                           .parse(passwordExpiredDateTime),

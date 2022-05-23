@@ -8,20 +8,20 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeactivateDisabledGciUsersScheduledTask {
+public class DeactivateDisabledIdpUsersScheduledTask {
 
   private XLogger logger =
-      XLoggerFactory.getXLogger(DeactivateDisabledGciUsersScheduledTask.class.getName());
+      XLoggerFactory.getXLogger(DeactivateDisabledIdpUsersScheduledTask.class.getName());
 
   @Autowired ManageUserService manageUserService;
 
   // 1min fixed delay and 10s initial delay
   @Scheduled(
-      fixedDelayString = "${gci.participant.fixed.delay.ms}",
+      fixedDelayString = "${idp.participant.fixed.delay.ms}",
       initialDelayString = "${invite.participant.initial.delay.ms}")
-  public void deactivateDeletedOrDisbledGciUsers() {
-    logger.entry("begin deactivateDeletedOrDisbledGciUsers()");
-    manageUserService.updateGciUsers();
-    logger.exit("deactivateDeletedOrDisbledGciUsers() completed");
+  public void deactivateDeletedOrDisbledIdPUsers() {
+    logger.entry("begin deactivateDeletedOrDisbledIdPUsers()");
+    manageUserService.updateIdpUsers();
+    logger.exit("deactivateDeletedOrDisbledIdPUsers() completed");
   }
 }

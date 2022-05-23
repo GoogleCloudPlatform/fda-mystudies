@@ -21,7 +21,7 @@ export class AccountProfileComponent
   implements OnInit {
   profileForm: FormGroup;
   user = {} as Profile;
-  gciUser=true;
+  idpUser=true;
   
   constructor(
     private readonly fb: FormBuilder,

@@ -10,7 +10,7 @@ import {UserService} from '../shared/user.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {AppDetails, App, Study, Site} from '../shared/app-details';
-import {gciUser, User} from 'src/app/entity/user';
+import {idpUser, User} from 'src/app/entity/user';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {Permission} from 'src/app/shared/permission-enums';
@@ -57,13 +57,13 @@ export class AddNewUserComponent
   ngOnInit(): void {
     this.getAllApps();
     
-    this.getGciUsersDetails();
+    this.getIdpUsersDetails();
     
   }
 
-  getGciUsersDetails():void 
+  getIdpUsersDetails():void 
   {
-    this.userService.getGciUsers().subscribe((data)=>
+    this.userService.getIdpUsers().subscribe((data)=>
     {
      
       
@@ -73,11 +73,11 @@ export class AddNewUserComponent
     }
     )
   }
-  gciUserStatus():void
+  idpUserStatus():void
   {
    
     {
-      this.user.gciUser=true;
+      this.user.idpUser=true;
       
     }
     
@@ -235,20 +235,20 @@ export class AddNewUserComponent
   }
   openModal( template: TemplateRef<any>): void {
 
-  let gciUser=false;
+  let idpUser=false;
   
   let userEmail = this.userEmail;
   userEmail.forEach((element: any) => {
   
     if(this.user.email === element){
-       gciUser=true;
+       idpUser=true;
        
-      this.gciUserStatus();
+      this.idpUserStatus();
        this.add();
     }
   });
   
-  if(!gciUser)
+  if(!idpUser)
    {
     this.modalRef = this.modalService.show( template);
    }

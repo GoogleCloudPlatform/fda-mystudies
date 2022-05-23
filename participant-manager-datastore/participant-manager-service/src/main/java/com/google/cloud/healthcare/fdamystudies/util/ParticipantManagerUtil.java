@@ -81,8 +81,8 @@ public class ParticipantManagerUtil {
     return null;
   }
 
-  public List<String> getGCIUsers() {
-    List<String> gciEmail = new ArrayList<>();
+  public List<String> getIDPUsers() {
+    List<String> idpEmail = new ArrayList<>();
     ListUsersPage page;
     try {
       page = FirebaseAuth.getInstance().listUsers(null);
@@ -90,7 +90,7 @@ public class ParticipantManagerUtil {
         for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
           if (!exportedUserRecord.isDisabled()
               & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
-            gciEmail.add(exportedUserRecord.getEmail());
+            idpEmail.add(exportedUserRecord.getEmail());
           }
         }
         page = page.getNextPage();
@@ -99,6 +99,6 @@ public class ParticipantManagerUtil {
       logger.error("Failed with Firebase exception");
       e.printStackTrace();
     }
-    return gciEmail;
+    return idpEmail;
   }
 }

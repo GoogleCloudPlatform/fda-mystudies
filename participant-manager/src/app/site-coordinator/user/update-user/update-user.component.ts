@@ -36,8 +36,8 @@ export class UpdateUserComponent
   permission = Permission;
   adminId = '';
   userStatus = Status;
-  gciUser=true;
-  deletedOrDisabledInGci=true;
+  idpUser=true;
+  deletedOrDisabledInIdp=true;
   
  
   sitesMessageMapping: {[k: string]: string} = {

@@ -22,9 +22,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppPermissionDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.GCIAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.IDPAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SitePermissionDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyPermissionDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
@@ -615,8 +615,8 @@ public class ManageUserServiceImpl implements ManageUserService {
         optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     User user = UserMapper.prepareUserInfo(adminDetails);
-    user.setDeletedOrDisabledInGci(
-        isGciDeletedOrDisabled(adminDetails.getGciUser(), adminDetails.getEmail()));
+    user.setDeletedOrDisabledInIdp(
+        isIdpDeletedOrDisabled(adminDetails.getIdpUser(), adminDetails.getEmail()));
     if (adminDetails.isSuperAdmin()) {
       logger.exit(String.format("superadmin=%b, status=%s", user.isSuperAdmin(), user.getStatus()));
       return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
@@ -728,20 +728,20 @@ public class ManageUserServiceImpl implements ManageUserService {
     return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
   }
 
-  private boolean isGciDeletedOrDisabled(boolean gciUser, String email) {
-    boolean gciDisabledOrDeleted = false;
-    if (gciUser) {
+  private boolean isIdpDeletedOrDisabled(boolean idpUser, String email) {
+    boolean idpDisabledOrDeleted = false;
+    if (idpUser) {
       try {
         UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
         if (userRecord.isDisabled()) {
-          gciDisabledOrDeleted = true;
+          idpDisabledOrDeleted = true;
         }
       } catch (FirebaseAuthException e) {
-        gciDisabledOrDeleted = true;
+        idpDisabledOrDeleted = true;
         e.printStackTrace();
       }
     }
-    return gciDisabledOrDeleted;
+    return idpDisabledOrDeleted;
   }
 
   private void sortUserStudyDetailsSitesByLocationName(UserStudyDetails userStudyDetails) {
@@ -1008,75 +1008,75 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Override
   @Transactional(readOnly = true)
-  public GCIAdminDetailsResponse getGCIAdminDetails(String signedInUserId) {
-    logger.entry("getGCIAdminDetails()");
-    List<String> gciEmails = new ArrayList<>();
+  public IDPAdminDetailsResponse getIDPAdminDetails(String signedInUserId) {
+    logger.entry("getIDPAdminDetails()");
+    List<String> idpEmails = new ArrayList<>();
     Optional<UserRegAdminEntity> optUserRegAdminEntity =
         userAdminRepository.findById(signedInUserId);
     if (!(optUserRegAdminEntity.isPresent() && optUserRegAdminEntity.get().isSuperAdmin())) {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
-    if (appPropertyConfig.isGciEnabled()) {
+    if (appPropertyConfig.isIdpEnabled()) {
       List<UserRegAdminEntity> users = userAdminRepository.findAll();
       List<String> usersEmail =
           users.stream().map(UserRegAdminEntity::getEmail).collect(Collectors.toList());
 
-      List<String> gciEmail = participantManagerUtil.getGCIUsers();
+      List<String> idpEmail = participantManagerUtil.getIDPUsers();
 
-      gciEmails =
-          gciEmail.stream().filter(e -> !usersEmail.contains(e)).collect(Collectors.toList());
+      idpEmails =
+          idpEmail.stream().filter(e -> !usersEmail.contains(e)).collect(Collectors.toList());
     }
 
-    return new GCIAdminDetailsResponse(MessageCode.GET_GCI_USERS_SUCCESS, gciEmails);
+    return new IDPAdminDetailsResponse(MessageCode.GET_IDP_USERS_SUCCESS, idpEmails);
   }
 
   @Override
-  public void updateGciUsers() {
-    logger.entry("updateGciUsers()");
-    List<String> gciDisbledUsers = new ArrayList<>();
-    List<String> gciUsers = new ArrayList<>();
+  public void updateIdpUsers() {
+    logger.entry("updateIdpUsers()");
+    List<String> idpDisbledUsers = new ArrayList<>();
+    List<String> idpUsers = new ArrayList<>();
     List<UserRegAdminEntity> users = userAdminRepository.findAll();
     if (CollectionUtils.isNotEmpty(users)) {
-      List<String> gciEmails =
+      List<String> idpEmails =
           users
               .stream()
               .filter(
                   user ->
-                      user.getGciUser() && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
+                      user.getIdpUser() && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
               .map(UserRegAdminEntity::getEmail)
               .collect(Collectors.toList());
-      if (appPropertyConfig.isGciEnabled()) {
-        getGciUser(gciDisbledUsers, gciUsers);
-        List<String> deletedGciUsers = ListUtils.removeAll(gciEmails, gciUsers);
+      if (appPropertyConfig.isIdpEnabled()) {
+        getIdpUser(idpDisbledUsers, idpUsers);
+        List<String> deletedIdpUsers = ListUtils.removeAll(idpEmails, idpUsers);
         List<String> deactivateUsers = new ArrayList<>();
-        deactivateUsers.addAll(deletedGciUsers);
-        List<String> gciDisabledEmails =
+        deactivateUsers.addAll(deletedIdpUsers);
+        List<String> idpDisabledEmails =
             users
                 .stream()
                 .filter(
                     user ->
-                        gciDisbledUsers.contains(user.getEmail())
-                            && user.getGciUser()
+                        idpDisbledUsers.contains(user.getEmail())
+                            && user.getIdpUser()
                             && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
                 .map(UserRegAdminEntity::getEmail)
                 .collect(Collectors.toList());
-        deactivateUsers.addAll(gciDisabledEmails);
+        deactivateUsers.addAll(idpDisabledEmails);
         if (!deactivateUsers.isEmpty()) {
-          updateGciAuthUserAccountStatus(deactivateUsers);
-          userAdminRepository.updateDisableGciUserToDeactivate(
+          updateIdpAuthUserAccountStatus(deactivateUsers);
+          userAdminRepository.updateDisableIdPUserToDeactivate(
               UserStatus.DEACTIVATED.getValue(), deactivateUsers);
         }
       } else {
-        if (CollectionUtils.isNotEmpty(gciEmails)) {
-          updateGciAuthUserAccountStatus(gciEmails);
-          userAdminRepository.updateDisableGciUserToDeactivate(
-              UserStatus.DEACTIVATED.getValue(), gciEmails);
+        if (CollectionUtils.isNotEmpty(idpEmails)) {
+          updateIdpAuthUserAccountStatus(idpEmails);
+          userAdminRepository.updateDisableIdPUserToDeactivate(
+              UserStatus.DEACTIVATED.getValue(), idpEmails);
         }
       }
     }
   }
 
-  private void getGciUser(List<String> gciDisbledUsers, List<String> gciUsers) {
+  private void getIdpUser(List<String> idpDisbledUsers, List<String> idpUsers) {
     ListUsersPage page;
     try {
       page = FirebaseAuth.getInstance().listUsers(null);
@@ -1084,9 +1084,9 @@ public class ManageUserServiceImpl implements ManageUserService {
         for (ExportedUserRecord exportedUserRecord : page.iterateAll()) {
           if (exportedUserRecord.isDisabled()
               & StringUtils.isNotBlank(exportedUserRecord.getEmail())) {
-            gciDisbledUsers.add(exportedUserRecord.getEmail());
+            idpDisbledUsers.add(exportedUserRecord.getEmail());
           }
-          gciUsers.add(exportedUserRecord.getEmail());
+          idpUsers.add(exportedUserRecord.getEmail());
         }
         page = page.getNextPage();
       }
@@ -1096,11 +1096,11 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
   }
 
-  private void updateGciAuthUserAccountStatus(List<String> gciEmails) {
+  private void updateIdpAuthUserAccountStatus(List<String> idpEmails) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
-    List<String> authUserIds = userAdminRepository.findByUsersEmail(gciEmails);
+    List<String> authUserIds = userAdminRepository.findByUsersEmail(idpEmails);
     for (String authUserId : authUserIds) {
       if (authUserId != null) {
         UpdateEmailStatusRequest emailStatusRequest = new UpdateEmailStatusRequest();

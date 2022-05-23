@@ -27,7 +27,7 @@ public class AuthUserRequest {
 
   private Integer status;
 
-  private Boolean gciUser;
+  private Boolean idpUser;
 
   private String phoneNumber;
 }

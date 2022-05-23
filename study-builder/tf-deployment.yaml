@@ -93,31 +93,26 @@ spec:
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/auth-server"
             # GOOGLE IDENTITY PLATFORM
-            - name: GCI_ENABLED
+            - name: IDP_ENABLED_SB
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: gci_enabled
-            - name: MFA_ENABLED
+                  key: idp_enabled_sb
+            - name: MFA_ENABLED_SB
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: mfa_enabled
-            - name: GCI_AUTH_DOMAIN
+                  key: mfa_enabled_sb
+            - name: IDP_AUTH_DOMAIN
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: gci_auth_domain
-            - name: GCI_API_KEY
+                  key: idp_auth_domain
+            - name: IDP_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: gci_api_key
-            - name: GCI_TEMP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: gci_temp_password
+                  key: idp_api_key
             # MISC
             - name: GCP_BUCKET_NAME
               valueFrom:

@@ -11,7 +11,7 @@ export interface Profile {
   status: 200;
   message: string;
   code: string;
-  gciUser:boolean;
+  idpUser:boolean;
   
 }
 export interface UpdateProfile {

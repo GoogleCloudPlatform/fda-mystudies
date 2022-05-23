@@ -100,9 +100,9 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
   }
 
   @Override
-  public void getGCIUserData(HttpServletResponse response, String email) {
-    logger.entry("begin DashBoardAndProfileDAOImpl- getGCIUserData()");
-    Boolean gciUser = false;
+  public void getIDPUserData(HttpServletResponse response, String email) {
+    logger.entry("begin DashBoardAndProfileDAOImpl- getIDPUserData()");
+    Boolean idpUser = false;
     Session session = null;
     Query query = null;
     UserBO userBO = null;
@@ -116,23 +116,23 @@ public class DashBoardAndProfileDAOImpl implements DashBoardAndProfileDAO {
       userBO = (UserBO) query.uniqueResult();
 
       if (null != userBO) {
-        gciUser = userBO.isGciUser();
+        idpUser = userBO.isIdpUser();
         userPhoneNumber = userBO.getPhoneNumber();
       }
 
-      jsonobject.put("gciUser", gciUser);
+      jsonobject.put("idpUser", idpUser);
       jsonobject.put("userPhoneNumber", userPhoneNumber);
       response.setContentType(FdahpStudyDesignerConstants.APPLICATION_JSON);
       out = response.getWriter();
       out.print(jsonobject);
     } catch (Exception e) {
-      logger.error("DashBoardAndProfileDAOImpl - getGCIUserData() - ERROR " + e);
+      logger.error("DashBoardAndProfileDAOImpl - getIDPUserData() - ERROR " + e);
     } finally {
       if (null != session) {
         session.close();
       }
     }
-    logger.exit("DashBoardAndProfileDAOImpl - getGCIUserData() - Ends");
+    logger.exit("DashBoardAndProfileDAOImpl - getIDPUserData() - Ends");
   }
 
   @Autowired

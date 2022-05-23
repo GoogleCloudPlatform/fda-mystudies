@@ -968,13 +968,13 @@ $(document)
                           'csrfParamName');
                       var csrfToken = $('#csrfDet').attr(
                           'csrfToken');
-                      var isGCIUser = false;
+                      var isIDPUser = false;
                       var fdaLink = $('#fdaLink').val();
-                      var gciEnabled = $('#gci').val();
+                      var idpEnabled = $('#idp').val();
                       var mfaEnabled = $('#mfa').val();
-                      if(gciEnabled == 'true'){
+                      if(idpEnabled == 'true'){
                        		$.ajax({
-                              url: "/studybuilder/getGCIUserData.do?"
+                              url: "/studybuilder/getIDPUserData.do?"
                                   + csrfDetcsrfParamName
                                   + "="
                                   + csrfToken,
@@ -985,9 +985,9 @@ $(document)
                               },
                               success: function getResponse(
                                   data) {
-                                var isGCIUser = data.gciUser;
+                                var isIDPUser = data.idpUser;
                                 var userPhoneNumber = data.userPhoneNumber;
-			                     if(isGCIUser) {
+			                     if(isIDPUser) {
 				   	   			  firebase.auth().onAuthStateChanged(function(user) {
 							   	    if (user) {
 							   	//    alert("success  " + email);

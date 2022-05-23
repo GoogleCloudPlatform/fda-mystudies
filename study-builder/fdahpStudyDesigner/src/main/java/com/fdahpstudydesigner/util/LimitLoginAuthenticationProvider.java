@@ -25,6 +25,7 @@ package com.fdahpstudydesigner.util;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_SUCCEEDED;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.IDP_TEMP_PASSWORD;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
@@ -59,9 +60,6 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-
-  Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
-  String gciUserTempPassword = configMap.get("gciUserTempPassword");
 
   @Override
   public Authentication authenticate(Authentication authentication) {
@@ -112,12 +110,12 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
         logger.error("LimitLoginAuthenticationProvider - authenticate - ERROR", e);
       }
 
-      if (null != userBO && userBO.isGciUser()) {
+      if (null != userBO && userBO.isIdpUser()) {
 
         UsernamePasswordAuthenticationToken token =
             new UsernamePasswordAuthenticationToken(
                 authentication.getPrincipal(),
-                gciUserTempPassword,
+                IDP_TEMP_PASSWORD,
                 new ArrayList<GrantedAuthority>());
 
         // if reach here, means login success, else an exception will be thrown

@@ -103,13 +103,13 @@ public final class AuthScimConstants {
 
   public static final String LOGIN_VIEW_NAME = "login";
 
-  public static final String GCI_ENABLED = "gciEnabled";
+  public static final String IDP_ENABLED = "idpEnabledForPM";
 
-  public static final String MFA_ENABLED = "mfaEnabled";
+  public static final String MFA_ENABLED = "mfaEnabledForPM";
 
-  public static final String GCI_API_KEY = "gciApiKey";
+  public static final String IDP_API_KEY = "idpApiKey";
 
-  public static final String GCI_AUTH_DOMAIN = "gciAuthDomain";
+  public static final String IDP_AUTH_DOMAIN = "idpAuthDomain";
 
   public static final String SERVER_CONTEXT_PATH = "serverContextPath";
 

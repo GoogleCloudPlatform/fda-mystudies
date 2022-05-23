@@ -57,9 +57,9 @@ public class UserRequest {
   @Email
   private String fromEmail;
 
-  @Column(name = "gci_user", nullable = false)
+  @Column(name = "idp_user", nullable = false)
   @Type(type = "yes_no")
-  private Boolean gciUser = false;
+  private Boolean idpUser = false;
 
   @ToString.Exclude
   @Size(min = 12, max = 14)

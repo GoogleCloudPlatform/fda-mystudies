@@ -105,11 +105,12 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-certificate-password",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
-      "manual-gci-enabled",
-      "manual-mfa-enabled",
-      "manual-gci-auth-domain",
-      "manual-gci-api-key",
-      "manual-gci-temp-password",
+	  "manual-idp-enabled-pm",
+	  "manual-idp-enabled-sb",
+      "manual-mfa-enabled-pm",
+	  "manual-mfa-enabledsb",
+      "manual-idp-auth-domain",
+      "manual-idp-api-key",
       "manual-project-id",
       "manual-region-id",
       "manual-consent-dataset-id",
@@ -157,11 +158,12 @@ resource "kubernetes_secret" "shared_secrets" {
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
     privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
     fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
-    gci_enabled                       = data.google_secret_manager_secret_version.secrets["manual-gci-enabled"].secret_data
-    mfa_enabled                       = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled"].secret_data
-    gci_auth_domain                   = data.google_secret_manager_secret_version.secrets["manual-gci-auth-domain"].secret_data
-    gci_api_key                       = data.google_secret_manager_secret_version.secrets["manual-gci-api-key"].secret_data
-    gci_temp_password                 = data.google_secret_manager_secret_version.secrets["manual-gci-temp-password"].secret_data
+	idp_enabled_pm                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-pm"].secret_data
+	idp_enabled_sb                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-sb"].secret_data
+    mfa_enabled_pm                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-pm"].secret_data
+	mfa_enabled_sb                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-sb"].secret_data
+    idp_auth_domain                   = data.google_secret_manager_secret_version.secrets["manual-idp-auth-domain"].secret_data
+    idp_api_key                       = data.google_secret_manager_secret_version.secrets["manual-idp-api-key"].secret_data
     project_id                        = data.google_secret_manager_secret_version.secrets["manual-project-id"].secret_data
     region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
     consent_dataset_id                = data.google_secret_manager_secret_version.secrets["manual-consent-dataset-id"].secret_data

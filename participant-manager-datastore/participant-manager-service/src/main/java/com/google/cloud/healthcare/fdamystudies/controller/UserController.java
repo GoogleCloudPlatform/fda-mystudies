@@ -10,9 +10,9 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.GCIAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.IDPAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -173,11 +173,11 @@ public class UserController {
   }
 
   @ApiOperation(value = "fetch cloud identity users")
-  @GetMapping(value = {"/users/gciAdmins"})
-  public ResponseEntity<GCIAdminDetailsResponse> getGCIAdminDetails(
+  @GetMapping(value = {"/users/idpAdmins"})
+  public ResponseEntity<IDPAdminDetailsResponse> getIDPAdminDetails(
       @RequestHeader("userId") String signedInUserId, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    GCIAdminDetailsResponse userResponse = manageUserService.getGCIAdminDetails(signedInUserId);
+    IDPAdminDetailsResponse userResponse = manageUserService.getIDPAdminDetails(signedInUserId);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }

@@ -21,7 +21,7 @@ public class UserProfileResponse extends BaseResponse {
   private String userId;
   private Integer manageLocations;
   private boolean superAdmin;
-  private boolean gciUser;
+  private boolean idpUser;
   private String phoneNum;
 
   public UserProfileResponse(MessageCode messageCode) {

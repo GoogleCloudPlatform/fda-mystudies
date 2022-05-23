@@ -422,10 +422,25 @@ resource "google_secret_manager_secret" "manual_android_deeplink_url" {
   }
 }
 
-resource "google_secret_manager_secret" "manual_gci_enabled" {
+resource "google_secret_manager_secret" "manual_idp_enabled_pm" {
   provider = google-beta
 
-  secret_id = "manual-gci-enabled"
+  secret_id = "manual-idp-enabled-pm"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_idp_enabled_sb" {
+  provider = google-beta
+
+  secret_id = "manual-idp-enabled-sb"
   project   = module.project.project_id
 
   replication {
@@ -565,10 +580,24 @@ resource "google_secret_manager_secret" "manual_did_dataset_id" {
     }
   }
 }
-resource "google_secret_manager_secret" "manual_mfa_enabled" {
+resource "google_secret_manager_secret" "manual_mfa_enabled_pm" {
   provider = google-beta
 
-  secret_id = "manual-mfa-enabled"
+  secret_id = "manual-mfa-enabled-pm"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-east1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_mfa_enabled_sb" {
+  provider = google-beta
+
+  secret_id = "manual-mfa-enabled-sb"
   project   = module.project.project_id
 
   replication {
@@ -594,10 +623,10 @@ resource "google_secret_manager_secret" "manual_discard_fhir_response_enabled" {
   }
 }
 
-resource "google_secret_manager_secret" "manual_gci_auth_domain" {
+resource "google_secret_manager_secret" "manual_idp_auth_domain" {
   provider = google-beta
 
-  secret_id = "manual-gci-auth-domain"
+  secret_id = "manual-idp-auth-domain"
   project   = module.project.project_id
 
   replication {
@@ -609,10 +638,10 @@ resource "google_secret_manager_secret" "manual_gci_auth_domain" {
   }
 }
 
-resource "google_secret_manager_secret" "manual_gci_api_key" {
+resource "google_secret_manager_secret" "manual_idp_api_key" {
   provider = google-beta
 
-  secret_id = "manual-gci-api-key"
+  secret_id = "manual-idp-api-key"
   project   = module.project.project_id
 
   replication {
@@ -623,22 +652,6 @@ resource "google_secret_manager_secret" "manual_gci_api_key" {
     }
   }
 }
-
-resource "google_secret_manager_secret" "manual_gci_temp_password" {
-  provider = google-beta
-
-  secret_id = "manual-gci-temp-password"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-east1"
-      }
-    }
-  }
-}
-
 
 resource "google_secret_manager_secret" "auto_mystudies_sql_default_user_password" {
   provider = google-beta

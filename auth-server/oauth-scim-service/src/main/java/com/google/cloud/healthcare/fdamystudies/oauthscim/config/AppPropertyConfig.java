@@ -69,17 +69,17 @@ public class AppPropertyConfig implements Serializable {
   @Value("${cookie.secure:true}")
   private boolean secureCookie;
 
-  @Value("${gciEnabled:false}")
-  private boolean gciEnabled;
+  @Value("${idpEnabledForPM:false}")
+  private boolean idpEnabled;
 
-  @Value("${mfaEnabled:false}")
+  @Value("${mfaEnabledForPM:false}")
   private boolean mfaEnabled;
 
-  @Value("${gciApiKey}")
-  private String gciApiKey;
+  @Value("${idpApiKey}")
+  private String idpApiKey;
 
-  @Value("${gciAuthDomain}")
-  private String gciAuthDomain;
+  @Value("${idpAuthDomain}")
+  private String idpAuthDomain;
 
   @Value("${server.servlet.context-path}")
   private String serverContextPath;

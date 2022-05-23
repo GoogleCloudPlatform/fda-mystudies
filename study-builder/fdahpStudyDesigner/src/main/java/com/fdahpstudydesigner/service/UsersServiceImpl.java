@@ -72,7 +72,7 @@ public class UsersServiceImpl implements UsersService {
   @Autowired private EmailNotification emailNotification;
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
-  String gciEnabled = configMap.get("gciEnabled");
+  String idpEnabled = configMap.get("idpEnabledForSB");
 
   @Override
   public String activateOrDeactivateUser(
@@ -92,7 +92,7 @@ public class UsersServiceImpl implements UsersService {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
       userBo = usersDAO.getUserDetails(userId);
-      if (Boolean.parseBoolean(gciEnabled) && userBo.isGciUser()) {
+      if (Boolean.parseBoolean(idpEnabled) && userBo.isIdpUser()) {
         UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userBo.getUserEmail());
         UpdateRequest userRequest =
             userStatus == 1
@@ -197,7 +197,7 @@ public class UsersServiceImpl implements UsersService {
         if (!userSession.getUserId().equals(userBO.getUserId())) {
           userBO2.setForceLogout(true);
         }
-        if (userBO2.isGciUser()) {
+        if (userBO2.isIdpUser()) {
           UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userBO.getUserEmail());
           UpdateRequest userRequest =
               userBO.isEnabled()

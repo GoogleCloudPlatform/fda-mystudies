@@ -8,7 +8,7 @@
 
 package com.fdahpstudydesigner.bean;
 
-public class GciAdminList {
+public class IdpAdminList {
 
   String emailId;
   String uid;

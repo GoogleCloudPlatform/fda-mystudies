@@ -34,6 +34,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESE
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.IDP_TEMP_PASSWORD;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
@@ -89,8 +90,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   @Autowired private UsersDAO usersDAO;
 
   Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
-  String gciUserTempPassword = configMap.get("gciUserTempPassword");
-  String gciEnabled = configMap.get("gciEnabled");
+  String idpEnabled = configMap.get("idpEnabledForSB");
 
   @Override
   public String authAndAddPassword(
@@ -153,13 +153,13 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     ? userBO2.getPhoneNumber().trim()
                     : userBO.getPhoneNumber());
 
-            if (isGciUser(userBO.getUserEmail())) {
+            if (isIdpUser(userBO.getUserEmail())) {
 
               UserRecord userRecord =
                   FirebaseAuth.getInstance().getUserByEmail(userBO.getUserEmail());
               // See the UserRecord reference doc for the contents of userRecord.
               logger.info("Successfully fetched user data: ", userRecord.getEmail());
-              // GCI user password update
+              // IDP user password update
               UpdateRequest updateRequest =
                   new UpdateRequest(userRecord.getUid())
                       .setEmailVerified(true)
@@ -169,8 +169,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               logger.info("Successfully updated user data: ", userRecordUpdated.getEmail());
 
               userBO.setUserPassword(
-                  FdahpStudyDesignerUtil.getEncryptedPassword(gciUserTempPassword));
-              userBO.setGciUser(true);
+                  FdahpStudyDesignerUtil.getEncryptedPassword(IDP_TEMP_PASSWORD));
+              userBO.setIdpUser(true);
             } else {
               userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
             }
@@ -472,7 +472,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
         if (flag) {
           flag = false;
           if (null != userdetails) {
-            if (!userdetails.isGciUser()) {
+            if (!userdetails.isIdpUser()) {
               userdetails.setSecurityToken(passwordResetToken);
               userdetails.setTokenUsed(false);
               userdetails.setTokenExpiryDate(
@@ -560,7 +560,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                         email,
                         null,
                         null);
-              } else if ("enforcePasswordChange".equals(type) && !userdetails.isGciUser()) {
+              } else if ("enforcePasswordChange".equals(type) && !userdetails.isIdpUser()) {
                 dynamicContent =
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailForEnforcePasswordChangeContent", keyValueForSubject);
@@ -580,7 +580,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                         null,
                         null);
               } else if ("".equals(type) && userdetails.isEnabled()) {
-                if (!userdetails.isGciUser()) {
+                if (!userdetails.isIdpUser()) {
                   dynamicContent =
                       FdahpStudyDesignerUtil.genarateEmailContent(
                           "passwordResetLinkContent", keyValueForSubject);
@@ -604,8 +604,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               if ("".equals(type) && StringUtils.isEmpty(userdetails.getUserPassword())) {
                 message = propMap.get("user.not.found.msg");
               }
-              if ("".equals(type) && userdetails.isGciUser()) {
-                message = propMap.get("gci.user.msg");
+              if ("".equals(type) && userdetails.isIdpUser()) {
+                message = propMap.get("idp.user.msg");
               }
             }
           }
@@ -710,18 +710,18 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   }
 
   @Override
-  public boolean isGciUser(String userEmail) {
-    boolean isGciUser = false;
-    if (Boolean.parseBoolean(gciEnabled)) {
+  public boolean isIdpUser(String userEmail) {
+    boolean isIdpUser = false;
+    if (Boolean.parseBoolean(idpEnabled)) {
       try {
         UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(userEmail);
         if (userRecord != null) {
-          isGciUser = true;
+          isIdpUser = true;
         }
       } catch (Exception e) {
-        return isGciUser;
+        return isIdpUser;
       }
     }
-    return isGciUser;
+    return isIdpUser;
   }
 }

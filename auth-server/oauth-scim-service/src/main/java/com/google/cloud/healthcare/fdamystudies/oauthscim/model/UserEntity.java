@@ -74,9 +74,9 @@ public class UserEntity {
   @Column(name = "status", nullable = false)
   private Integer status;
 
-  @Column(name = "gci_user", nullable = false)
+  @Column(name = "idp_user", nullable = false)
   @Type(type = "yes_no")
-  private Boolean gciUser = false;
+  private Boolean idpUser = false;
 
   @ToString.Exclude
   @Column(name = "phone_number", length = XS_LENGTH)

@@ -115,11 +115,11 @@ spec:
                   name: shared-secrets
                   key: log_path
             # GOOGLE IDENTITY PLATFORM
-            - name: GCI_ENABLED
+            - name: IDP_ENABLED_PM
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: gci_enabled
+                  key: idp_enabled_pm
             - name: PROJECT_ID
               valueFrom:
                 secretKeyRef:

@@ -46,13 +46,13 @@ public interface UserService {
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException;
 
-  public Boolean isGCIUser(HttpServletResponse response, String email)
+  public Boolean isIDPUser(HttpServletResponse response, String email)
       throws IOException, JSONException;
 
   public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
 
-  public AuthenticationResponse authenticateGCIUser(
+  public AuthenticationResponse authenticateIDPUser(
       UserRequest user, AuditLogEventRequest auditRequest) throws JsonProcessingException;
 
   public void resetTempRegId(String userId);

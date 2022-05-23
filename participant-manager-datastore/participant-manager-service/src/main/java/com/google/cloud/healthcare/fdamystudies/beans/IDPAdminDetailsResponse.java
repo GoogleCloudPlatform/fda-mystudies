@@ -17,11 +17,11 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class GCIAdminDetailsResponse extends BaseResponse {
+public class IDPAdminDetailsResponse extends BaseResponse {
 
   private List<String> email;
 
-  public GCIAdminDetailsResponse(MessageCode messageCode, List<String> email) {
+  public IDPAdminDetailsResponse(MessageCode messageCode, List<String> email) {
     super(messageCode);
     this.email = email;
   }

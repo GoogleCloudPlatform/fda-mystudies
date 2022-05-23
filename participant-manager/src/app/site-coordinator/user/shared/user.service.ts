@@ -68,10 +68,10 @@ export class UserService {
     );
   }
   
-  getGciUsers():Observable<any>
+  getIdpUsers():Observable<any>
   {
     return this.http.get<any>(
-      `${environment.participantManagerDatastoreUrl}/users/gciAdmins`,
+      `${environment.participantManagerDatastoreUrl}/users/idpAdmins`,
     );
   }
 
