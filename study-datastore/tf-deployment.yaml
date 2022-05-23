@@ -20,6 +20,7 @@ spec:
         app: study-datastore
       annotations:
         sidecar.istio.io/inject: "true"
+        cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
     spec:
       containers:
         - name: study-datastore
