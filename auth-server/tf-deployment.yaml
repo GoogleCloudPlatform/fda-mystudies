@@ -124,7 +124,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: mfa_enabled_PM
+                  key: mfa_enabled_pm
             - name: IDP_AUTH_DOMAIN
               valueFrom:
                 secretKeyRef:
