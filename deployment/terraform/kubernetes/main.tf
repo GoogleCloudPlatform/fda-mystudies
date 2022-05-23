@@ -106,7 +106,7 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
       "manual-idp-enabled-pm",
-      "manual-idp-enabled-sb"
+      "manual-idp-enabled-sb",
       "manual-mfa-enabled-pm",
       "manual-mfa-enabled-sb",
       "manual-idp-auth-domain",
