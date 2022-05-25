@@ -192,6 +192,19 @@ open class AKUtility: NSObject {
       return (false, error)
     }
   }
+  
+  static func createCacheDirectoryIfNotExists(withName name: String) -> (Bool, Error?) {
+    let directoryUrl = self.cacheDirectoryPath.appendingPathComponent(name)
+    if FileManager.default.fileExists(atPath: directoryUrl.path) {
+      return (true, nil)
+    }
+    do {
+      try FileManager.default.createDirectory(at: directoryUrl, withIntermediateDirectories: true, attributes: nil)
+      return (true, nil)
+    } catch {
+      return (false, error)
+    }
+  }
 
   /// Verifies the file available in the directory.
   /// - Parameters:

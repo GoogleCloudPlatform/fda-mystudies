@@ -307,7 +307,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     if httpHeaders != nil && (httpHeaders?.count)! > 0 {
       request.allHTTPHeaderFields = httpHeaders as? [String: String]
     }
-
+    print("1response---\(requestName)---\(params)---\(httpHeaders)")
     self.fireRequest(request, requestName: requestName)
   }
 
@@ -353,6 +353,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       if httpHeaders != nil {
         request.allHTTPHeaderFields = httpHeaders! as? [String: String]
       }
+      print("2response---\(requestName)---\(params)---\(httpHeaders)")
       self.fireRequest(request, requestName: requestName)
 
     } catch let error {
@@ -365,7 +366,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
   ///   - request: instance of URLRequest
   ///   - requestName: name of the request of type String
   fileprivate func fireRequest(_ request: URLRequest?, requestName: NSString?) {
-
+    print("Webservice call: ", request?.url?.absoluteString ?? "")
     if NetworkManager.isNetworkAvailable() {
 
       let config = URLSessionConfiguration.default
@@ -424,7 +425,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     requestName: NSString?,
     error: NSError?
   ) {
-    
+    print("3response---\(requestName)---\(response)---\(error)")
     if error != nil {
       if shouldRetryRequest && maxRequestRetryCount > 0 {
         maxRequestRetryCount -= 1
@@ -433,6 +434,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         if error?.code == -1001 {  //Could not connect to the server.
         }
         if (delegate?.failedRequest) != nil {
+          print("2a---\((requestName as String?))---\(response)---\(data)")
           delegate?.failedRequest(
             networkManager!,
             requestName: requestName!,
@@ -452,6 +454,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           responseDict =
             try JSONSerialization.jsonObject(with: data!, options: [])
             as? NSDictionary
+          print("4response---\(requestName)---\(responseDict)")
           
         } catch let error {
           Logger.sharedInstance.error("Serialization error: \(requestName ?? "")", error.localizedDescription)
@@ -477,6 +480,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
               options: .allowFragments
             )
             as? [String: Any]
+          print("5response---\(requestName)---\(responseDict)")
           
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)

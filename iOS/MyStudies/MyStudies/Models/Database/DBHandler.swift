@@ -1732,6 +1732,7 @@ class DBHandler: NSObject {
             dbResource?.key = resource.key
             dbResource?.povAvailable = resource.povAvailable
             dbResource?.serverUrl = resource.file?.link
+            print("6self.link---\(dbResource?.serverUrl)---\(dbResource?.title)")
             dbResource?.level = resource.level?.rawValue
             dbResource?.notificationMessage = resource.notificationMessage
 

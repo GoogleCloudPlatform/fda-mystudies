@@ -443,6 +443,28 @@ struct SharingConsent {
         learnMore = dict[kConsentSharingSteplearnMore] as? String
         if let learnMoreString = learnMore {
           learnMore = learnMoreString.stringByDecodingHTMLEntities
+          
+          
+          let regex = "<[^>]+>"
+                      if learnMore?.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+                          if let valReConversiontoHTMLfromHTML =
+                              learnMore?.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+                              
+                              if let attributedText =
+                                  valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+                                  self.learnMore = attributedText.attriString2Html
+                              } else if let attributedText =
+                                          learnMoreString.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                                        attributedText.length > 0 {
+                                  self.learnMore = attributedText.attriString2Html
+                              } else {
+                                  self.learnMore = learnMoreString
+                              }
+                          } else {
+                              self.learnMore = learnMoreString
+                          }
+                      }
+          
         }
       }
 
@@ -494,6 +516,25 @@ struct ReviewConsent {
         signatureContent = dict[kConsentReviewStepSignatureContent] as? String
         if let reviewHTML = signatureContent {
           signatureContent = reviewHTML.stringByDecodingHTMLEntities
+          let regex = "<[^>]+>"
+                      if signatureContent?.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+                          if let valReConversiontoHTMLfromHTML =
+                              signatureContent?.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+                              
+                              if let attributedText =
+                                  valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+                                self.signatureContent = attributedText.attriString2Html
+                              } else if let attributedText =
+                                          reviewHTML.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                                        attributedText.length > 0 {
+                                  self.signatureContent = attributedText.attriString2Html
+                              } else {
+                                  self.signatureContent = reviewHTML
+                              }
+                          } else {
+                              self.signatureContent = reviewHTML
+                          }
+                      }
         }
       }
       if Utilities.isValidValue(
@@ -567,3 +608,4 @@ class CustomCompletionStep: ORKCompletionStep {
     return true
   }
 }
+

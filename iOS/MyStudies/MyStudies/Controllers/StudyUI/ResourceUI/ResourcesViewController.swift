@@ -234,6 +234,7 @@ class ResourcesViewController: UIViewController {
       resourceDetail.resource = (sender as? Resource)!
       if self.resourceLink != nil {
         resourceDetail.requestLink = self.resourceLink!
+        print("22pdfNameFromUrl---\(resourceDetail)")
       }
       if self.fileType != nil {
         resourceDetail.type = self.fileType!

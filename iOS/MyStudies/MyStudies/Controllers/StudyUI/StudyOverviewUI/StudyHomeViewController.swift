@@ -183,6 +183,10 @@ class StudyHomeViewController: UIViewController {
   private func unHideSubViews() {
     for subview in view.subviews {
       subview.isHidden = false
+      let val = subview.alpha
+      if val == 0.6499999761581421 {
+        subview.alpha = 0
+      }
     }
     updateViewsStatus()
   }
@@ -769,11 +773,11 @@ class StudyHomeViewController: UIViewController {
   func navigateToWebView(link: String?, htmlText: String?, isEmailAvailable: Bool?) {
     let loginStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
     let webViewController =
-      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
-      as? UINavigationController)!
+    (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+     as? UINavigationController)!
     let webView = (webViewController.viewControllers[0] as? WebViewController)!
     webView.isEmailAvailable = isEmailAvailable!
-
+    
     if link != nil {
       webView.requestLink = Study.currentStudy?.overview.websiteLink
     }
@@ -781,14 +785,42 @@ class StudyHomeViewController: UIViewController {
       webView.htmlString = htmlText
       let regex = "<[^>]+>"
       let detailText = htmlText ?? ""
-      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) != nil {
-        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
-          webView.htmlString = "\(valReConversiontoHTMLfromHTML)"
+      //      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) != nil {
+      //        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attributedString2Html {
+      //          webView.htmlString = "\(valReConversiontoHTMLfromHTML)"
+      //        }
+      //      }
+      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+          
+          if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else if let attributedText =
+                      detailText.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                    attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else {
+            webView.htmlString = detailText
+          }
+        } else {
+          webView.htmlString = detailText
+        }
+      } else {
+        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+          
+          if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else {
+            webView.htmlString = "\(detailText.stringByDecodingHTMLEntities.htmlToAttriString!)"
+          }
+        } else {
+          webView.htmlString = "\(detailText.stringByDecodingHTMLEntities.htmlToAttriString!)"
         }
       }
     }
     navigationController?.present(webViewController, animated: true, completion: nil)
   }
+
 }
 
 extension StudyHomeViewController: ComprehensionFailureDelegate {
@@ -798,6 +830,9 @@ extension StudyHomeViewController: ComprehensionFailureDelegate {
 
   func didTapOnCancel() {
     consentRestorationData = nil
+    if Utilities.isStandaloneApp() {
+      unHideSubViews()
+    }
   }
 }
 
@@ -994,13 +1029,14 @@ extension StudyHomeViewController: NMWebServiceDelegate {
 extension StudyHomeViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_: ORKTaskViewController) -> Bool {
+    print("taskViewControllerSupportsSaveAndRestore---")
     return true
   }
 
   /// This method updates the study status to DB and Server.
   /// - Parameter status: `UserStudyStatus.StudyStatus` to be updated.
   fileprivate func updateStudyStatus(status: UserStudyStatus.StudyStatus) {
-
+    print("taskViewControllerSupportsSaveAndRestore---")
     guard let currentStudy = Study.currentStudy,
       let studyID = currentStudy.studyId
     else { return }
@@ -1025,6 +1061,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
+    print("didFinishWith reason---")
     consentRestorationData = nil
 
     if taskViewController.task?.identifier == kPasscodeTaskIdentifier {
@@ -1107,6 +1144,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
+    print("stepViewControllerWillAppear stepViewController---")
     if (taskViewController.result.results?.count)! > 1 {
       if activityBuilder?.actvityResult?.result?.count
         == taskViewController.result.results?
@@ -1205,18 +1243,49 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _: ORKStepViewController,
     didFinishWith _: ORKStepViewControllerNavigationDirection
-  ) {}
+  ) {
+    print("didFinishWith direction---")
+  }
 
-  public func stepViewControllerResultDidChange(_: ORKStepViewController) {}
+  public func stepViewControllerResultDidChange(_: ORKStepViewController) {
+    print("stepViewControllerResultDidChange---")
+  }
 
   public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {}
+  
+  func captureScreen() -> UIImage {
+
+      UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, false, 0);
+
+    self.view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+
+      let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+
+      UIGraphicsEndImageContext()
+
+      return image
+  }
 
   func taskViewController(
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
     // CurrentStep is TokenStep
+    print("viewControllerFor step---")
+    let val = captureScreen()
+    
+    UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0);
 
+  self.view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+
+    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+
+    UIGraphicsEndImageContext()
+
+    let image2 = image
+    
+    
+    
     if step.identifier == kEligibilityTokenStep {
       let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
 
@@ -1447,4 +1516,51 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       return nil
     }
   }
+  
+//  func taskViewController(_ taskViewController: ORKTaskViewController,
+//                          stepViewControllerWillDisappear stepViewController: ORKStepViewController,
+//                          navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+//
+//    print("stepViewControllerWillDisappear---")
+//    if let val = stepViewController.step?.identifier, val == kConsentSharing {
+//    UIGraphicsBeginImageContextWithOptions(stepViewController.view.bounds.size, false, 0)
+//    stepViewController.view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+//    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+//    UIGraphicsEndImageContext()
+//    let image2 = image
+//     let imageURl = saveImageInDocumentDirectory(image: image2, fileName: "ConsentSharingImage")
+//      print("imageURl---\(imageURl)")
+//    }
+//  }
+  
+  func taskViewController(_ taskViewController: ORKTaskViewController,
+                          stepViewControllerWillDisappear stepViewController: ORKStepViewController,
+                          navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+    
+    print("stepViewControllerWillDisappear---")
+    if let val = stepViewController.step?.identifier, val == kConsentSharing {
+    UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0)
+      taskViewController.view.drawHierarchy(in: taskViewController.view.bounds, afterScreenUpdates: true)
+    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+    UIGraphicsEndImageContext()
+    let image2 = image
+     let imageURl = saveImageInDocumentDirectory(image: image2, fileName: "ConsentSharingImage")
+      print("imageURl---\(imageURl)")
+    }
+  }
+  
+  func saveImageInDocumentDirectory(image: UIImage, fileName: String) -> URL? {
+
+          let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+          let fileURL = documentsUrl.appendingPathComponent(fileName)
+    if let imageData = image.pngData() {
+              try? imageData.write(to: fileURL, options: .atomic)
+              return fileURL
+          }
+          return nil
+      }
+
+
+  
+  
 }
