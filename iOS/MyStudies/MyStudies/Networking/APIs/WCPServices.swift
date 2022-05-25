@@ -327,6 +327,7 @@ class WCPServices: NSObject {
       listOfResources.append(resourceObj)
     }
 
+    print("7self.link---\(Study.currentStudy?.studyId)---\(listOfResources)")
     // save in database
     DBHandler.saveResourcesForStudy(
       studyId: (Study.currentStudy?.studyId)!,

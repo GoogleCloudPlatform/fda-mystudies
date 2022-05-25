@@ -72,10 +72,12 @@ class StudyListViewController: UIViewController {
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    if !isComingFromFilterScreen {
+    print("self.slideMenuController()?.isLeftOpen()---\(self.slideMenuController()?.isLeftOpen())")
+    if !isComingFromFilterScreen && !(self.slideMenuController()?.isLeftOpen() ?? true) {
       self.addProgressIndicator()
     }
     setNavigationBarColor()
+    Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
   }
 
   override func viewDidAppear(_ animated: Bool) {

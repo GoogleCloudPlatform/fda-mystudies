@@ -412,7 +412,7 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
-
+    print("ORKTaskViewController didFinishWith---")
     switch reason {
     case ORKTaskViewControllerFinishReason.completed:
       ConsentBuilder.currentConsent?.consentResult?.consentDocument =
@@ -438,7 +438,7 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
-
+    print("stepViewControllerWillAppear---")
     if (taskViewController.result.results?.count)! > 1,
       activityBuilder?.actvityResult?.result?.count == taskViewController.result.results?.count
     {
@@ -491,9 +491,11 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection
   ) {
+    print("didFinishWith direction---")
   }
 
   public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
+    print("stepViewControllerResultDidChange---")
   }
 
   public func stepViewControllerDidFail(
@@ -506,7 +508,7 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
-
+    print("viewControllerFor---")
     // CurrentStep is TokenStep
     if step.identifier == kEligibilityTokenStep {  // For EligibilityToken Step
       let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
