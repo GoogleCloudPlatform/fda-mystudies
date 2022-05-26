@@ -8,7 +8,7 @@
 
 $(document).ready(function () {
 
-  var idpEnabled = $('#idpEnabledForPM').val();
+  var idpEnabled = $('#idpEnabled').val();
   var idpApiKey = $('#idpApiKey').val();
   var idpAuthDomain = $('#idpAuthDomain').val();
 
@@ -36,7 +36,7 @@ function validateLoginForm() {
 	var password = $(document.getElementById("password")).val();
 	var errorDiv = document.getElementById("password_error");
 	var serverContextPath = $('#serverContextPath').val(); 
-	var mfaEnabled = $('#mfaEnabledForPM').val();
+	var mfaEnabled = $('#mfaEnabled').val();
 
 	$.ajax({
 	    url: serverContextPath + "/isIDPUser",
