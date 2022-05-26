@@ -21,6 +21,7 @@ import ActionSheetPicker_3_0
 import Foundation
 import IQKeyboardManagerSwift
 import ResearchKit
+import FirebaseAnalytics
 
 let kFetalKickCounterStepDefaultIdentifier = "defaultIdentifier"
 let kTapToRecordKick = "TAP TO RECORD A KICK"
@@ -38,7 +39,7 @@ let kFetalKickActivityId = "FetalKickActivityId"
 let kFetalkickStudyId = "FetalKickStudyId"
 let kFetalKickCounterValue = "FetalKickCounterValue"
 let kFetalKickCounterRunId = "FetalKickCounterRunid"
-let kSelectTimeLabel = "Select Time"
+let kSelectTimeLabel = "Select a time"
 
 class FetalKickCounterStepViewController: ORKStepViewController {
 
@@ -173,7 +174,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         self.startButtonAction(UIButton())
       }
       backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: {})
-
+            
       // adding guesture to view to support outside tap
       let gestureRecognizer = UITapGestureRecognizer(
         target: self,
@@ -183,13 +184,26 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       self.view.addGestureRecognizer(gestureRecognizer)
     }
   }
-
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    counterTextField?.text = "00" + "\(self.kickCounter!)"
+    
+    let isAlertShown = UserDefaults.standard.bool(forKey: "isAlertShown")
+    if Int((counterTextField?.text)!) == self.maxKicksAllowed! && !isAlertShown {
+      UserDefaults.standard.setValue(true, forKey: "isAlertShown")
+      self.showAlertOnCompletion()
+    }
+  }
+  
   override func hasNextStep() -> Bool {
     super.hasNextStep()
     return true
   }
 
   override func goForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
     super.goForward()
   }
 
@@ -228,6 +242,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
           if self.timerValue! > self.totalTime! {
             self.setResults()
+            UserDefaults.standard.setValue(true, forKey: "isAlertShown")
             self.showAlertOnCompletion()
 
           } else {
@@ -266,20 +281,19 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     if ud.object(forKey: kFetalKickStartTimeStamp) != nil {
 
       ud.set(true, forKey: "FKC")
-
+      
       ud.set(Study.currentActivity?.actvityId, forKey: kFetalKickActivityId)
       ud.set(Study.currentStudy?.studyId, forKey: kFetalkickStudyId)
 
       ud.set(self.kickCounter, forKey: kFetalKickCounterValue)
-
+      
       // check if runid is saved
       if ud.object(forKey: kFetalKickCounterRunId) == nil {
         ud.set(Study.currentActivity?.currentRun.runId, forKey: kFetalKickCounterRunId)
       }
-
+            
       ud.synchronize()
     }
-
   }
 
   /// Resets the keys when app becomes Active.
@@ -288,6 +302,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     let ud = UserDefaults.standard
     ud.set(false, forKey: "FKC")
     ud.synchronize()
+    
   }
 
   /// Alerts User if Kick counts or time is exceeded.
@@ -296,12 +311,19 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     let message =
       kGreaterValueMessage + "\(self.maxKicksAllowed!) kicks, " + "please enter "
       + "\(self.maxKicksAllowed!) kicks only"
-
-    Utilities.showAlertWithTitleAndMessage(
+    
+    UserDefaults.standard.setValue(true, forKey: "isGreaterAlertShown")
+    
+    Utilities.showAlertWithTitleAndMessage (
       title: kMessage,
       message: message,
-      on: self
-    )
+      on: self,
+      cancelAction: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "FetalKick Greater value cancel alert"
+        ])
+        UserDefaults.standard.setValue(true, forKey: "isGreaterAlertDismissed")
+      })
   }
 
   /// Updates results for the Task.
@@ -365,15 +387,26 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     let message =
       kConfirmMessage + "\(self.kickCounter!) kicks in " + "\(timeConsumed!)."
       + kConfirmMessage2
-
+    
+//    UserDefaults.standard.setValue(true, forKey: "isAlertShown")
+    
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
       NSLocalizedString(kConfirmation, comment: ""),
       errorMessage: NSLocalizedString(message, comment: ""),
       errorAlertActionTitle: NSLocalizedString(kTitleCancel, comment: ""),
       errorAlertActionTitle2: NSLocalizedString(kProceedTitle, comment: ""),
       viewControllerUsed: self,
-      action1: {},
+      action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "OnCompletion Cancel Alert"
+        ])
+      },
       action2: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "OnCompletion GoFoward Alert"
+        ])
+        UserDefaults.standard.removeObject(forKey: "isAlertShown")
+        UserDefaults.standard.synchronize()
         self.goForward()
       }
     )
@@ -382,6 +415,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   // MARK: Button Actions
 
   @IBAction func editCounterButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickCounter EditCounter"
+    ])
     counterTextField?.isUserInteractionEnabled = true
     counterTextField?.isHidden = false
     seperatorLineView?.isHidden = false
@@ -389,6 +425,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
   }
 
   @IBAction func startButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickCounter Start"
+    ])
 
     if Int((self.counterTextField?.text)!)! == 0 {
 
@@ -435,11 +474,13 @@ class FetalKickCounterStepViewController: ORKStepViewController {
 
         if self.kickCounter == self.maxKicksAllowed! {
           self.setResults()
+          UserDefaults.standard.setValue(true, forKey: "isAlertShown")
           self.showAlertOnCompletion()
         }
 
       } else if self.kickCounter! == self.maxKicksAllowed! {
         self.setResults()
+        UserDefaults.standard.setValue(true, forKey: "isAlertShown")
         self.showAlertOnCompletion()
 
       } else if self.kickCounter! > self.maxKicksAllowed! {
@@ -453,9 +494,16 @@ class FetalKickCounterStepViewController: ORKStepViewController {
     self.taskResult.duration = self.timerValue!
     self.taskResult.totalKickCount = self.kickCounter == nil ? 0 : self.kickCounter!
     self.perform(#selector(self.goForward))
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickCounterStep Submit"
+    ])
   }
 
   @IBAction func editTimerButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "FetalKickCounterStep EditTimer"
+    ])
 
     let timerArray = self.getTimerArray()
     let defaultTime = self.getIndexes()
@@ -468,6 +516,10 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         _,
         _,
         indexes in
+        
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "EditTimer Done Alert"
+        ])
 
         let result: [String] = (indexes as! [String])
         let hours = result.first?.components(
@@ -496,10 +548,14 @@ class FetalKickCounterStepViewController: ORKStepViewController {
             (hours < 10 ? "0\(hours):" : "\(hours):") + (minutes < 10 ? "0\(minutes):" : "\(minutes):")
             + (seconds < 10 ? "0\(seconds)" : "\(seconds)")
 
-          Utilities.showAlertWithTitleAndMessage(
+          Utilities.showAlertWithTitleAndMessageAction(
             title: kMessage,
             message: "Please select a valid time(Max " + value + ")",
-            on: self
+            on: self, cancelAction: {
+              Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                buttonClickReasonsKey: "EditTimer Cancel Alert"
+              ])
+            }
           )
 
         } else {
@@ -508,6 +564,9 @@ class FetalKickCounterStepViewController: ORKStepViewController {
         return
       },
       cancel: { _ in
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "EditTimer Cancel Alert"
+        ])
         return
       },
       origin: sender
@@ -610,6 +669,7 @@ extension FetalKickCounterStepViewController: UITextFieldDelegate {
 
       if self.kickCounter == self.maxKicksAllowed! {
         self.setResults()
+        UserDefaults.standard.setValue(true, forKey: "isAlertShown")
         self.showAlertOnCompletion()
       }
 
@@ -626,13 +686,21 @@ extension FetalKickCounterStepViewController: UITextFieldDelegate {
     let finalString = textField.text! + string
 
     if textField == counterTextField && finalString.count > 0 {
-
+      
       if Int(finalString)! <= self.maxKicksAllowed! {
 
         return true
 
       } else {
-
+        if Int(finalString)! >= self.maxKicksAllowed! {
+          let finalValue = (Int((counterTextField?.text)!))
+          self.editCounterButton?.isUserInteractionEnabled = true
+          counterTextField?.isHidden = false
+          seperatorLineView?.isHidden = false
+          counterTextField?.becomeFirstResponder()
+          counterTextField?.text = "\(finalValue ?? 0)"
+        }
+        
         self.showAlertForGreaterValues()
         return false
       }

@@ -6,30 +6,25 @@
         class="openNav display-inline-block mr-sm btn pl-none"
         (click)="toggleNav()"
       >
-      
         <img src="assets/svgs/menu-icon.svg" />
       </button>
-      
       <a routerLink="/coordinator/studies/sites">
         <img
-          class="mr-sm width__auto pt-1"
+          class="mr-sm width__auto logo"
           src="assets/images/branding/landing-logo.png"
           alt="main logo"
         />
       </a>
-      </div>
-      <a
-        [routerLink]="
-          displayHeaderOnResetpassword ? '/coordinator/studies/sites' : []
-        "
-        [ngClass]="{cursor__none: displayHeaderOnResetpassword === false}"
-        [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
-        routerLink="/coordinator/studies/sites"
-      >
-     
-        
-      </a>
-    
+    </div>
+    <a
+      [routerLink]="
+        displayHeaderOnResetpassword ? '/coordinator/studies/sites' : []
+      "
+      [ngClass]="{cursor__none: displayHeaderOnResetpassword === false}"
+      [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
+      routerLink="/coordinator/studies/sites"
+    ></a>
+
     <div
       *ngIf="showSearchBar"
       class="navbar-nav inner-addon right-addon search-icon"
@@ -44,7 +39,7 @@
           [attr.placeholder]="searchPlaceholder"
           autocomplete="off"
           [(ngModel)]="mobileFilterQuery"
-          class="form-control search-box search__ "
+          class="form-control search-box search__"
         />
         <button
           class="btn p-none cursor__pointer"

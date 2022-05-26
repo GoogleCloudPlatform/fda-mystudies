@@ -50,7 +50,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -164,7 +163,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Disabled
   public void shouldRegisterUser() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
@@ -194,7 +192,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     String subject = appConfig.getConfirmationMailSubject();
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", userDetails.getEmailCode());
-    /*templateArgs.put("orgName", optApp.get().getOrganizationName());*/
     templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
     String body =
         PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);

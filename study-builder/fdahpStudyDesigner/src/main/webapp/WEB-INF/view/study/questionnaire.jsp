@@ -98,6 +98,7 @@
   
  /* error box css end here  */
   
+   
 </style>
 
 <script type="text/javascript">
@@ -218,11 +219,10 @@
             </span>
             <span
                 class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."></span>
-          </div>
+                title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."></span></div>
           <div class="form-group col-md-5 p-none">
             <input autofocus="autofocus" type="text" autocomplete="off" custAttType="customValidate"
-                   class="form-control" name="shortTitle" id="shortTitleId"
+                   class="form-control" name="shortTitle" id="shortTitleId" data-error="Please fill out this field" 
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
                 <c:if
                     test="${not empty questionnaireBo.shortTitleDuplicate && (questionnaireBo.shortTitleDuplicate gt 0)}"> disabled</c:if>
@@ -409,7 +409,7 @@
                 <div class="form-group">
                   <select id="anchorDateId"
                           class="selectpicker ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          required data-error="Please fill out this field" name="anchorDateId">
+                          required name="anchorDateId">
                     <option value=''>Select</option>
                     <c:forEach items="${anchorTypeList}" var="anchorTypeInfo">
                       <option value="${anchorTypeInfo.id}"
@@ -509,8 +509,9 @@
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                   data-toggle="tooltip"
                   data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-              </span>
+                 title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+            </span>
             </div>
             <div class="mt-sm">
               <span class="checkbox checkbox-inline"><input
@@ -557,7 +558,7 @@
                                  value=""
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
-                                 maxlength="3" data-error="Please fill out this field" pattern="[0-9]+"
+                                 maxlength="3" pattern="[0-9]+"
                                  data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
@@ -612,7 +613,7 @@
                 </span>
                 <span
                     class="form-group m-none dis-inline vertical-align-middle pr-md">
-                  <input id="selectTime1" type="text"
+                   <input id="selectTime1" type="text" data-error="Please fill out this field" 
                          class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                          name="questionnairesFrequenciesBo.frequencyTime"
                          value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
@@ -635,7 +636,7 @@
                   type="checkbox" id="isStudyLifeTime"
                   name="questionnairesFrequenciesBo.isStudyLifeTime" value="true"
                 ${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime ?'checked':''}
-                  required ${(questionnaireBo.shortTitleDuplicate>
+                 required data-error="Please fill out this field"  ${(questionnaireBo.shortTitleDuplicate>
                   0)?'disabled' : ''}> <label for="isStudyLifeTime"> Study
                 lifetime </label>
               </span>
@@ -697,7 +698,7 @@
                                  value=""
                               <c:if
                                   test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
-                                 maxlength="3" data-error="Please fill out this field" pattern="[0-9]+"
+                                  maxlength="3" pattern="[0-9]+"
                                  data-pattern-error="Please enter valid number"/>
                         </c:when>
                         <c:otherwise>
@@ -753,8 +754,9 @@
                   </span>
                   <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                         data-placement="bottom" id="helpNote"
-                        title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-                  </span>
+                            title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                    </span>
                   <br/> <input id="startDate"
                                type="text"
                                class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
@@ -843,8 +845,9 @@
                 <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                       data-toggle="tooltip"
                       data-placement="bottom" id="helpNote"
-                      title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-                </span>
+                        title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                       </span>
               </div>
               <div class="black-xs-f"
                    id="endDateId">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
@@ -862,8 +865,9 @@
                 </span>
                 <span class="ml-xs sprites_v3 filled-tooltip Selectedtooltip" data-toggle="tooltip"
                       data-placement="bottom" id="helpNote"
-                      title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-                </span>
+                      title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                    </span>
               </div>
               <div class="dailyContainer">
                 <c:if
@@ -882,7 +886,7 @@
                           class="hide addBtnDis addbtn mr-sm align-span-center"
                           onclick='addTime();'>+
                     </span>
-                     <span
+                        <span
                           class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
                           onclick='removeTime(this);'></span>
                   </div>
@@ -960,7 +964,8 @@
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                      title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                 </span>
                 </span>
                 <br/>
@@ -1018,8 +1023,9 @@
                         class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
                         data-placement="bottom"
-                        title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-                    </span>
+                          title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                       </span>
                   </span>
                   <br/> <input
                     id="startWeeklyDate" type="text"
@@ -1048,7 +1054,7 @@
                       </span>
                       <span><select
                           class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          title="Select" name="questionnairesFrequenciesBo.xDaysSign"
+                          title="Select" name="questionnairesFrequenciesBo.xDaysSign" data-error="Please fill out this field" 
                           id="weeklyXSign">
                         <option value="0"
                           ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+
@@ -1140,7 +1146,8 @@
                     class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                      title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
                 </span>
               </div>
               <div class="black-xs-f"
@@ -1188,7 +1195,9 @@
                     class="ml-xs sprites_v3 filled-tooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
+                    title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                     </span>
                 </span>
               </span>
               <br/>
@@ -1227,8 +1236,9 @@
                         class="ml-xs sprites_v3 filled-tooltip"
                         data-toggle="tooltip"
                         data-placement="bottom"
-                        title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-                    </span>
+                        title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                  </span>
                   </span>
                   <br/> <input id="pickStartDate"
                                type="text"
@@ -1350,8 +1360,9 @@
                     class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                     data-toggle="tooltip"
                     data-placement="bottom"
-                    title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-                </span>
+                    title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                   </span>
               </div>
               <div class="black-xs-f"
                    id="monthEndDate">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
@@ -1394,8 +1405,9 @@
                   class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
                   data-toggle="tooltip"
                   data-placement="bottom"
-                  title="Selected dates and times will work as per the mobile device time. Selections of dates or times in the past (as per the server timezone which is ${server_timezone}) is not allowed.">
-              </span>
+                  title="1. When setting up an activity's schedule, selection of a time that has gone past in ${server_timezone} (server time zone) is not allowed.
+              2. Once published via the Study Builder, activities are made available to mobile app users at the selected date and time in accordance with their device time.">
+                 </span>
             </div>
             
             <div class="manuallyContainer">
@@ -1424,7 +1436,7 @@
                            class="form-control clock cusTime customTime startTime"
                            name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
                            placeholder="Start time" onclick='startTimep(this.id,0);' disabled required />
-                    <span class='help-block-timer help-block with-errors red-txt' id="startTimeError"></span>
+                    <span class='help-block-timer help-block with-errors red-txt'  id="startTimeError"></span>
                   </span>
 
                  
@@ -1574,10 +1586,9 @@
                            maxlength="3" pattern="[0-9]+" data-error="Please fill out this field"
                            data-pattern-error="Please enter valid number" required/>
                     <span
-                        class='help-block with-errors red-txt'></span>
-                         <span
-                          class="help-block-timer with-errors red-txt" style="display:none;"></span>
-                       
+                        class="help-block with-errors red-txt"></span>
+                        <span
+                        class="help-block-timer with-errors red-txt" style='display:none'></span>
                   </span>
                   <span class="mb-sm" style='padding-right: 20px !important;'>
                     <span
@@ -1590,16 +1601,18 @@
                                                           name="questionnaireCustomScheduleBo[0].frequencyStartTime" data-error="Please fill out this field"
                                                           value="${questionnaireCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
                                                           placeholder="Start time" required/>
-                    <span
-                        class='help-block with-errors red-txt'></span>
-                         <span
-                          class="help-block-timer with-errors red-txt" style="display:none;" ></span>
-                    </span>
-                    <span class="light-txt opacity06">
+                    
+                    <span class='help-block with-errors red-txt'></span>
+                                 <span
+                        class="help-block-timer with-errors red-txt" style='display:none'></span>
+                  </span>                       
+
+                        <span class="light-txt opacity06">
                      <span>to</span>
-                     Anchor date
+                      Anchor date
                     </span>
                   </span>
+                  
                   <span><select
                       class="signDropDown selectpicker sign-box selectYSign"
                       count='0' title="Select"
@@ -1674,7 +1687,7 @@
                       </span>
                     </span>
                     <span><select
-                        class="signDropDown selectpicker sign-box selectXSign ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
+                        class="signDropDown selectpicker sign-box selectXsign ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         count='${customVar.index}' title="Select"
                         name="questionnaireCustomScheduleBo[${customVar.index}].xDaysSign"
                         id="xSign${customVar.index}">
@@ -1692,17 +1705,15 @@
                              class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                              count='${customVar.index}' placeholder="X"
                              name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
-                             value="${questionnaireCustomScheduleBo.timePeriodFromDays}" onclick='onXdays(item,count);'
+                             value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
                              maxlength="3" pattern="[0-9]+" data-error="Please fill out this field"
                              data-pattern-error="Please enter valid number" required/>
                       <span
                           class="help-block with-errors red-txt"></span>
-                          <span
-                          class="help-block-timer with-errors red-txt" style="display:none;"></span>
-                           
+                                       <span
+                        class="help-block-timer with-errors red-txt" style='display:none'></span>
                     </span>
-                   <!-- <span class="mb-sm pr-md"> --> 
-                     <span class="mb-sm" style='padding-right: 20px !important;'>
+                    <span class="mb-sm" style='padding-right: 20px !important;'>
                       <span
                           class="pr-sm light-txt opacity06"> days
                         </span>
@@ -1713,10 +1724,11 @@
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                         name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartTime"
                         value="${questionnaireCustomScheduleBo.frequencyStartTime}"  onclick='ancStartTime(this.id,0);' 
-                        placeholder="Start time" required/>
-                      
+                        placeholder="Start time" required data-error="Please fill out this field"/>
+                  
                       <span class='help-block with-errors red-txt'></span>
-                       <span class='help-block-timer with-errors red-txt' style="display:none;"></span>
+                                   <span
+                        class="help-block-timer with-errors red-txt" style='display:none'></span>
                     </span>
                          <span
                           class="light-txt opacity06">  
@@ -1874,11 +1886,12 @@
   $('#dailyFormId input[type="text"]').prop('disabled', true);
   $('#weeklyFormId input[type="text"]').prop('disabled', true);
   $('#monthlyFormId input[type="text"]').prop('disabled', true);
-  $('#customFormId input[type="text"]').prop('disabled', true); 
+  $('#customFormId input[type="text"]').prop('disabled', true);
   $('select').prop('disabled', true);
   $('#inlineRadio1,#inlineRadio2,#inlineRadio3,#inlineRadio4,#inlineRadio5').prop('disabled', true);
   $('.addBtnDis, .remBtnDis').addClass('dis-none');
   </c:if>
+
 
   var count = 0;
   var customCount = 0;
@@ -1895,7 +1908,7 @@
   if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined') {
     scheduletype = $('input[name="scheduleType"]:checked').val();
   }
- 
+  
   $(document).ready(function () {
 	$('.studyClass').addClass("active");
     $("#dailyxdaysId").change(function () {
@@ -1923,6 +1936,11 @@
     $('input:radio[value="' + frequencyVal + '"]').prop('checked', true); 
     $('input:radio[value="' + scheduletypeVal + '"]').prop('checked', true); 
     
+    if(actionType == 'view'){
+ 		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+ 		  $('.remBtnDis').removeClass('cursor-display').addClass('cursor-none');
+   }
+    
     $(".scheduleQusClass").click(function () {
       if ($("#schedule2").prop("checked")) {
         $("#weekDaysId").hide();
@@ -1930,11 +1948,6 @@
         $("#monthlyDateId").hide();
         $(".monthlyRegular").hide();
       }
-    	 
-     if(actionType == 'view'){
-   		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
-   		  $('.remBtnDis').removeClass('cursor-display').addClass('cursor-none');
-     }
     })
 
     $(".scheduleQusClass").click(function () {
@@ -2038,15 +2051,14 @@
            if($('#'+id).find('#xdays'+count12).val()=="" && $('.manually-anchor-option').filter(function() {	
                return $(this).css('display') !== 'none';	
            }).length !== 1){	
-         	
-                   $("#"+id).remove();	
-                   $("#"+id).find('input:text').removeAttr('required', true);	
-                   $("#AddButton").show();	
-                   $("#AddButton").attr('required', true);	
-               }else {	
-                     $("#AddButton").hide();	
-                     $("#AddButton").attr('required', false);	
-                 }	
+             $("#"+id).remove();	
+             $("#"+id).find('input:text').removeAttr('required', true);	
+             $("#AddButton").show();	
+             $("#AddButton").attr('required', true);	
+           }else {	
+             $("#AddButton").hide();	
+             $("#AddButton").attr('required', false);	
+           }	
         });	
         	
         if( $('.manually-anchor-option').filter(function() {	
@@ -2107,14 +2119,14 @@
            if($('#'+id).find('#StartDate'+count12).val()=="" && $('.manually-option').filter(function() {	
                return $(this).css('display') !== 'none';	
            }).length !== 1){	
-                   $("#"+id).remove();	
-                   $("#"+id).find('input:text').removeAttr('required', true);	
-                   $("#AddButton").show();	
-                   $("#AddButton").attr('required', true);
-               }else {
-                     $("#AddButton").hide();	
-                     $("#AddButton").attr('required', false);	
-                 }	
+               $("#"+id).remove();	
+               $("#"+id).find('input:text').removeAttr('required', true);	
+               $("#AddButton").show();	
+               $("#AddButton").attr('required', true);	
+             }else {	
+                 $("#AddButton").hide();	
+                 $("#AddButton").attr('required', false);	
+             }	
         });
         if( $('.manually-option').filter(function() {	
             return $(this).css('display') !== 'none';}).length == 1){	
@@ -2126,42 +2138,42 @@
             $('.manually-option').find('#AddButton').first().hide();
         }
         
-	        var startDate = $("#startDate").val();
-	        if(startDate!=''){
-	            var days = $("#days").val();
-	            var endDate = ''
-	            if (startDate) {
-	              $('#time0').prop("disabled", false);
-	              $("#dailyAddTimeButton").removeClass('hide');
-	            }
-	            if (startDate && days && days > 0) {
-	              var dt = new Date(startDate);
-	              dt.setDate(dt.getDate() + Number(days) - 1);
-	              endDate = formatDate(dt);
-	            } else {
-	              startDate = '';
-	              endDate = '';
-	            }
-	            $("#studyDailyLifetimeEnd").val(endDate);
-	            $("#lifeTimeId").text(startDate + ' - ' + endDate);
-	            $("#endDateId").text(endDate ? endDate : 'NA');
+        var startDate = $("#startDate").val();
+        if(startDate!=''){
+          var days = $("#days").val();
+          var endDate = ''
+          if (startDate) {
+            $('#time0').prop("disabled", false);
+            $("#dailyAddTimeButton").removeClass('hide');
+          }
+          if (startDate && days && days > 0) {
+            var dt = new Date(startDate);
+            dt.setDate(dt.getDate() + Number(days) - 1);
+            endDate = formatDate(dt);
+          } else {
+            startDate = '';
+            endDate = '';
+          }
+          $("#studyDailyLifetimeEnd").val(endDate);
+          $("#lifeTimeId").text(startDate + ' - ' + endDate);
+          $("#endDateId").text(endDate ? endDate : 'NA');
 	      }
 	        
 	      var weeklyDate = $("#startWeeklyDate").val();
 	      if(weeklyDate!=''){
-	          var weeks = $("#weeks").val();
-	          $('#startWeeklyDate').attr("readonly", true);
-	          if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks
-	              != null && weeks != '' && typeof weeks != 'undefined')) {
-	            var dt = new Date(weeklyDate);
-	            var weekcount = Number(weeks) * 7;
-	  
-	            dt.setDate(dt.getDate() + Number(weekcount));
-	            endDate = formatDate(dt);
-	            $("#studyWeeklyLifetimeEnd").val(endDate);
-	            $("#weekEndDate").text(endDate);
-	            $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
-	          }
+          var weeks = $("#weeks").val();
+          $('#startWeeklyDate').attr("readonly", true);
+          if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks
+              != null && weeks != '' && typeof weeks != 'undefined')) {
+            var dt = new Date(weeklyDate);
+            var weekcount = Number(weeks) * 7;
+
+            dt.setDate(dt.getDate() + Number(weekcount));
+            endDate = formatDate(dt);
+            $("#studyWeeklyLifetimeEnd").val(endDate);
+            $("#weekEndDate").text(endDate);
+            $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
+          }
 	      }
 	      var pickStartDate = $("#pickStartDate").val();
 	      if(pickStartDate!=''){
@@ -2342,6 +2354,7 @@
       $(".all").addClass("dis-none");
       var schedule_opts = $(this).attr('frequencytype');
       var val = $(this).val();
+
       $("." + schedule_opts).removeClass("dis-none");
       resetValidation($("#oneTimeFormId"));
       resetValidation($("#customFormId"));
@@ -2365,7 +2378,6 @@
             }
             $('#onetimexdaysId').val('');
             $('#onetimeydaysId').val('');
-            
           } else if (val == 'Manually Schedule') {
             $('.manually').find('input:text').val('');
             isValidManuallySchedule = true;
@@ -2407,7 +2419,6 @@
             $("#monthLifeTimeDate").text('-');
             $('#monthlyxdaysId').val('');
           }
-          
         }
       } else {
         $('.oneTime').find('input:text').val('');
@@ -2509,22 +2520,21 @@
         $("#anchorDateId").val("");
       }
       //AnchorDate type end
-      
       if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
-        	$('.dailyContainer').find('.help-block').empty();
-        }
-        if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
-        	$('.oneTime').find('.help-block').empty();
-        }
-        if($('.week').find('.help-block').text()=== "Time reset to current time"){
-        	$('.week').find('.help-block').empty();
-        }
-        if($('.month').find('.help-block').text()=== "Time reset to current time"){
-        	$('.month').find('.help-block').empty();
-        }
-        if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
-        	$('.manually-option').find('.help-block').empty();
-        }
+      	$('.dailyContainer').find('.help-block').empty();
+      }
+      if($('.oneTime').find('.help-block').text()=== "Time reset to current time"){
+      	$('.oneTime').find('.help-block').empty();
+      }
+      if($('.week').find('.help-block').text()=== "Time reset to current time"){
+      	$('.week').find('.help-block').empty();
+      }
+      if($('.month').find('.help-block').text()=== "Time reset to current time"){
+      	$('.month').find('.help-block').empty();
+      }
+      if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
+      	$('.manually-option').find('.help-block').empty();
+      }
     });
 
     if (frequencey != null && frequencey != "" && typeof frequencey != 'undefined') {
@@ -2607,7 +2617,6 @@
         $('.anchortypeclass').hide();
         $('.anchortypeclass').removeAttr('required');
       }
-    
     }
 
     var startToday;
@@ -2619,6 +2628,14 @@
     startToday=${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}
     </c:if>
     
+    var startToday;
+    <c:if test="${ empty questionnaireBo.questionnairesFrequenciesBo.frequencyDate}">
+    startToday = serverDate();
+    </c:if>
+    
+    <c:if test="${not empty questionnaireBo.questionnairesFrequenciesBo.frequencyDate}">
+    startToday=${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}
+    </c:if>
     
     $('#chooseDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
@@ -3097,7 +3114,7 @@
                   $("#chooseEndDate").data("DateTimePicker").minDate(serverDate());
               });
         }
-      }  else{
+      } else {
         $("#chooseDate").val('');
         $("#selectTime1").val('');
         if (scheduletype == 'AnchorDate') {
@@ -3458,11 +3475,9 @@
 	   $("#" + item).parent().find(".help-block-timer").empty();
 	   $("#customTime" + count).parent().removeClass("has-danger").removeClass("has-error");
 	   $("#customTime" + count).parent().find(".help-block-timer").empty();
-	   
 	   if (!$("#" + item).parent().find(".help-block-timer").hasClass("help-block") ) {
 		   $("#" + item).parent().find(".help-block-timer").addClass("help-block");
 	   }
-	  
 	 }
 	});
   }
@@ -3517,7 +3532,7 @@
   }
 
   function customEndDate(id, count) {
-	  if($('#customStartTime' + count).parent().find("span#startTimeError").text()== "Time reset to current time"){
+	  if($('#customStartTime' + count).parent().find("span#startTimeError").text()=== "Time reset to current time"){
 		  $("#customStartTime" + count).parent().find(".help-block").empty();
 	  }
 	
@@ -4041,7 +4056,7 @@
         questionnaire.studyLifetimeEnd = null;
       }
     }
-   
+
     var data = JSON.stringify(questionnaire);
     $(item).prop('disabled', true);
     if (study_id != null && short_title != '' && short_title != null && isFormValid) {
@@ -4101,7 +4116,6 @@
                   'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
             }
             frequencey = frequency_text;
-
             if($('.dailyContainer').find('.help-block').text()=== "Time reset to current time"){
             	$('.dailyContainer').find('.help-block').empty();
             }
@@ -4117,7 +4131,6 @@
             if($('.manually-option').find('.help-block').text()=== "Time reset to current time"){
             	$('.manually-option').find('.help-block').empty();
             }
-            
             if (callback)
               callback(true);
           } else {
@@ -4173,14 +4186,14 @@
 	                  $(thisAttr).parents('.manually-option').find('.cusStrDate').val(),
 	                  "MM/DD/YYYY").toDate();
 	              var thisStartTime = moment($(thisAttr).parents('.manually-option').find('.startTime').val(),
-	                  "HH:mm A").toDate()
+	                  "HH:mm A").toDate();
 	              thisFromDate.setHours(thisStartTime.getHours());
 	              thisFromDate.setMinutes(thisStartTime.getMinutes());
 	              var thisToDate = moment(
 	                  $(thisAttr).parents('.manually-option').find('.cusEndDate').val(),
 	                  "MM/DD/YYYY").toDate();
 	              var thisEndTime = moment($(thisAttr).parents('.manually-option').find('.endTime').val(),
-	              "HH:mm A").toDate()
+	              "HH:mm A").toDate();
 	              thisToDate.setHours(thisEndTime.getHours());
 	              thisToDate.setMinutes(thisEndTime.getMinutes());
 
@@ -4213,7 +4226,6 @@
 	      $('.manuallyContainer').find('.manually-option').each(function () {
 	        if ($(this).find('.startTime').parent().find('.help-block-timer').children().length > 0) {
 	          a++;
-	          
 	        }
 	      });
 	      var b = 0;
@@ -4554,7 +4566,7 @@
     $(item).prop('disabled', true);
     <c:if test="${actionType ne 'view'}">
     bootbox.confirm({
-      closeButton: true,
+      closeButton: false,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {
@@ -4582,7 +4594,6 @@
     </c:if>
   }
   var countOfTime=0;
-
   function disablePastTime(timeId, dateId) {
     $(document).on('click change dp.change', timeId + ', ' + dateId, function () {
       var dt = $(dateId).val();
@@ -4597,7 +4608,7 @@
         } else {
           $(timeId).data("DateTimePicker").minDate(serverDateTime());
         }
-        if ($(timeId).val() && dt == today ) {
+		if ($(timeId).val() && dt == today ) {
         	
         	if( moment($(timeId).val(), 'h:mm a').toDate() < serverDateTime()){
         		$(timeId).val(serverTime());
@@ -4613,8 +4624,6 @@
         		}else{
         			$(timeId).parent().find(".help-block").empty();
         		}
-        		
-        		
         	}
           
         }
@@ -4624,7 +4633,6 @@
     });
   }
 
- 
   function validateShortTitle(item, callback) {
     var shortTitle = $("#shortTitleId").val();
     var studyId = $("#studyId").val();
@@ -4970,7 +4978,6 @@
       $('.selectpicker').selectpicker('refresh');
     }
   }
- 
 
   function ancStartTime(item, count) {
  
@@ -5011,9 +5018,10 @@
     	 manualEndTime.setDate(manualEndTime.getDate() + parseInt(pyday));
      }
      
+     
    	 if (manualStartTime != '' && manualEndTime != '' && manualStartTime > manualEndTime) {
-       $('#manualStartTime0').parent().find(".help-block-timer").show();
-       $('#manualStartTime0').parent().find(".help-block").hide();
+       $('#manualStartTime' + count).parent().find(".help-block-timer").show();
+       $('#manualStartTime' + count).parent().find(".help-block").hide();
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).addClass("red-border");
   	   $('#' + item).parent().find(".help-block").empty().removeAttr("style");
@@ -5070,8 +5078,8 @@
    	   $("#manualStartTime" + count).val('');
    	   $('.help-block-timer').selectpicker('refresh');
    	 } else {
-       $('#manualStartTime' + count).parent().find(".help-block-timer").hide();
-       $('#manualStartTime' + count).parent().find(".help-block").show();
+   	   $('#manualStartTime' + count).parent().find(".help-block-timer").hide();
+   	   $('#manualStartTime' + count).parent().find(".help-block").show();
    	   $(this).removeClass("red-border");
    	   $("#" + item).parent().removeClass("has-danger").removeClass("has-error");
    	   $("#" + item).parent().find(".help-block-timer").empty();
@@ -5137,7 +5145,7 @@
 
    	 } else {
    	   if (!$("#" + item).parent().find(".help-block-timer").hasClass("help-block") ) {
-   		   $("#" + item).parent().find(".help-block-timer").addClass("help-block");
+   		 $("#" + item).parent().find(".help-block-timer").addClass("help-block");
    	   }
    	   $('.help-block-timer').selectpicker('refresh');
    	   $(this).removeClass("red-border");
@@ -5158,7 +5166,7 @@
 	   } else {
 		   $(this).parent().find("#endTimeTimer").removeClass("help-block"); 
 	   }
-   });
+  });
   
   $(document).ready(function () {
 
@@ -5169,9 +5177,9 @@
  	 var manualStartTime = moment($("#manualStartTime" + parent_id).val(), "HH:mm A").toDate();
    	 var manualEndTime =  moment($("#manualEndTime" + parent_id).val(), "HH:mm A").toDate();
    	 
-   	 if (isNaN(manualStartTime)) {
+   	if (isNaN(manualStartTime)) {
 	    return
-	 } 
+	}
 
    	if ($('#xdays' + parent_id).val() != '') {
   	  $('#xdays' + parent_id).parent().removeClass("has-danger").removeClass("has-error");
@@ -5182,7 +5190,6 @@
    	  $('#xdays' + parent_id).parent().find(".xdays").empty().removeAttr("style");
    	}
    	
-
      var pxday = $("#xdays" + parent_id).val();
      var pxsign = $("#xSign" + parent_id).val() === "0" ? "+" : "-";
      

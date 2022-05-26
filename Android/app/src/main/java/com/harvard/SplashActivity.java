@@ -15,47 +15,171 @@
 
 package com.harvard;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.NewPasscodeSetupActivity;
+import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.event.RegisterUserEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.SharedPreferenceHelper;
+import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import java.util.HashMap;
 
-public class SplashActivity extends AppCompatActivity implements VersionChecker.Upgrade {
+
+public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 
   private static final int PASSCODE_RESPONSE = 101;
-  private VersionChecker versionChecker;
-  private String newVersion = "";
+  private static final int APPS_RESPONSE = 103;
+  private String newVersion;
   private boolean force = false;
   private static final int RESULT_CODE_UPGRADE = 102;
+  private Apps apps;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
 
-      // sync registration
-      SyncAdapterManager.init(this);
-      AppController.keystoreInitilize(SplashActivity.this);
-      versionChecker = new VersionChecker(SplashActivity.this);
-      versionChecker.execute();
+    AppController.keystoreInitilize(SplashActivity.this);
+    new checkAndMigrate(this).execute();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+  }
 
-    AppController.getHelperSharedPreference()
-        .writePreference(SplashActivity.this, getString(R.string.json_object_filter), "");
+
+  private class checkAndMigrate extends AsyncTask<String, Void, String> {
+    Context context;
+
+    public checkAndMigrate(Context context) {
+      this.context = context;
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+      AppController.checkIfAppNameChangeAndMigrate(context);
+      return "";
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+      // sync registration
+      SyncAdapterManager.init(context);
+      getAppsInfo();
+
+      AppController.getHelperSharedPreference()
+          .writePreference(SplashActivity.this, getString(R.string.json_object_filter), "");
+    }
+
+    @Override
+    protected void onPreExecute() {}
+  }
+
+  private void getAppsInfo() {
+    AppController.getHelperProgressDialog().showProgress(SplashActivity.this, "", "", false);
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
+            "get",
+            Urls.APPS + "?appId=" + AppConfig.APP_ID_VALUE,
+            APPS_RESPONSE,
+            this,
+            Apps.class,
+            new HashMap<String, String>(),
+            null,
+            null,
+            false,
+            this);
+    RegisterUserEvent registerUserEvent = new RegisterUserEvent();
+    registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performRegistration(registerUserEvent);
+  }
+
+  @Override
+  public <T> void asyncResponse(T response, int responseCode) {
+    AppController.getHelperProgressDialog().dismissDialog();
+    if (responseCode == APPS_RESPONSE) {
+      apps = (Apps) response;
+      if (apps != null && apps.getVersion().getAndroid().getLatestVersion() != null) {
+        DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+        apps.setAppId(AppConfig.APP_ID_VALUE);
+        dbServiceSubscriber.saveApps(SplashActivity.this, apps);
+        Version currVer = new Version(AppController.currentVersion());
+        Version newVer = new Version(apps.getVersion().getAndroid().getLatestVersion());
+        newVersion = apps.getVersion().getAndroid().getLatestVersion();
+        force = Boolean.parseBoolean(apps.getVersion().getAndroid().getForceUpdate());
+        if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
+          isUpgrade(false, newVersion, force);
+        } else {
+          isUpgrade(true, newVersion, force);
+        }
+      } else {
+        retryAlert();
+      }
+    }
+  }
+
+  @Override
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
+    AppController.getHelperProgressDialog().dismissDialog();
+    if (responseCode == APPS_RESPONSE) {
+      retryAlert();
+    }
+  }
+
+  private void retryAlert() {
+    AlertDialog.Builder alertDialogBuilder =
+        new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
+    alertDialogBuilder
+        .setMessage("Error, can't continue")
+        .setCancelable(false)
+        .setPositiveButton(
+            getResources().getString(R.string.retry),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.splash_retry));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                getAppsInfo();
+              }
+            })
+        .setNegativeButton(
+            getResources().getString(R.string.cancel),
+            new DialogInterface.OnClickListener() {
+              public void onClick(DialogInterface dialog, int id) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.splash_retry_cancel));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                dialog.dismiss();
+                finish();
+              }
+            });
+    alertDialogBuilder.show();
   }
 
   public void loadsplash() {
@@ -69,13 +193,13 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
               @Override
               public void run() {
                 if (!AppController.getHelperSharedPreference()
-                        .readPreference(
-                            SplashActivity.this, getResources().getString(R.string.userid), "")
-                        .equalsIgnoreCase("")
+                    .readPreference(
+                        SplashActivity.this, getResources().getString(R.string.userid), "")
+                    .equalsIgnoreCase("")
                     && AppController.getHelperSharedPreference()
-                        .readPreference(
-                            SplashActivity.this, getResources().getString(R.string.verified), "")
-                        .equalsIgnoreCase("true")) {
+                    .readPreference(
+                        SplashActivity.this, getResources().getString(R.string.verified), "")
+                    .equalsIgnoreCase("true")) {
                   if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
                     Intent intent = new Intent(SplashActivity.this, StudyActivity.class);
                     startActivity(intent);
@@ -84,9 +208,7 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
                     startActivity(intent);
                   }
                 } else {
-                  SharedPreferences settings =
-                      SharedPreferenceHelper.getPreferences(SplashActivity.this);
-                  settings.edit().clear().apply();
+                  SharedPreferenceHelper.deletePreferences(SplashActivity.this);
                   // delete passcode from keystore
                   String pass = AppController.refreshKeys("passcode");
                   if (pass != null) {
@@ -110,23 +232,44 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == RESULT_CODE_UPGRADE) {
-      Version currVer = new Version(versionChecker.currentVersion());
+      Version currVer = new Version(AppController.currentVersion());
       Version newVer = new Version(newVersion);
       if (currVer.equals(newVer) || currVer.compareTo(newVer) > 0) {
         proceedToApp();
       } else {
         if (force) {
           Toast.makeText(
-                  SplashActivity.this,
-                  "Please update the app to continue using",
-                  Toast.LENGTH_SHORT)
+              SplashActivity.this,
+              "Please update the app to continue using",
+              Toast.LENGTH_SHORT)
               .show();
-          finish();
+          moveTaskToBack(true);
+          if (Build.VERSION.SDK_INT < 21) {
+            finishAffinity();
+          } else {
+            finishAndRemoveTask();
+          }
         } else {
-          Toast.makeText(
-                  SplashActivity.this, "Please consider updating app next time", Toast.LENGTH_SHORT)
+          AlertDialog.Builder alertDialogBuilder =
+              new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
+          alertDialogBuilder.setTitle("Upgrade");
+          alertDialogBuilder
+              .setMessage("Please consider updating app next time")
+              .setCancelable(false)
+              .setPositiveButton(
+                  "ok",
+                  new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                      Bundle eventProperties = new Bundle();
+                      eventProperties.putString(
+                          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          getString(R.string.app_update_next_time_ok));
+                      analyticsInstance.logEvent(
+                          CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                      proceedToApp();
+                    }
+                  })
               .show();
-          proceedToApp();
         }
       }
     } else if (requestCode == PASSCODE_RESPONSE) {
@@ -161,34 +304,58 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
     }
 
     @Override
-    protected void onPreExecute() {}
+    protected void onPreExecute() {
+    }
   }
 
-  @Override
   public void isUpgrade(boolean b, String newVersion, final boolean force) {
     this.newVersion = newVersion;
     this.force = force;
+    String msg;
+    String positiveButton;
+    String negativeButton;
     if (b) {
+      if (force) {
+        msg = "Please upgrade the app to continue.";
+        positiveButton = "Ok";
+        negativeButton = "Cancel";
+      } else {
+        msg = "A new version of this app is available. Do you want to update it now?";
+        positiveButton = "Yes";
+        negativeButton = "Skip";
+      }
       AlertDialog.Builder alertDialogBuilder =
           new AlertDialog.Builder(SplashActivity.this, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle("Upgrade");
       alertDialogBuilder
-          .setMessage("Please upgrade the app to continue.")
+          .setMessage(msg)
           .setCancelable(false)
           .setPositiveButton(
-              "Upgrade",
+              positiveButton,
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   startActivityForResult(
                       new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
                       RESULT_CODE_UPGRADE);
                 }
               })
           .setNegativeButton(
-              "Cancel",
+              negativeButton,
               new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
@@ -196,7 +363,12 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
                             "Please update the app to continue using",
                             Toast.LENGTH_SHORT)
                         .show();
-                    finish();
+                    moveTaskToBack(true);
+                    if (Build.VERSION.SDK_INT < 21) {
+                      finishAffinity();
+                    } else {
+                      finishAndRemoveTask();
+                    }
                   } else {
                     proceedToApp();
                   }
@@ -211,11 +383,11 @@ public class SplashActivity extends AppCompatActivity implements VersionChecker.
 
   private void proceedToApp() {
     if (!AppController.getHelperSharedPreference()
-            .readPreference(SplashActivity.this, getResources().getString(R.string.userid), "")
-            .equalsIgnoreCase("")
+        .readPreference(SplashActivity.this, getResources().getString(R.string.userid), "")
+        .equalsIgnoreCase("")
         && AppController.getHelperSharedPreference()
-            .readPreference(SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
-            .equalsIgnoreCase("no")) {
+        .readPreference(SplashActivity.this, getString(R.string.initialpasscodeset), "yes")
+        .equalsIgnoreCase("no")) {
       Intent intent = new Intent(SplashActivity.this, NewPasscodeSetupActivity.class);
       intent.putExtra("from", "signin");
       startActivityForResult(intent, PASSCODE_RESPONSE);

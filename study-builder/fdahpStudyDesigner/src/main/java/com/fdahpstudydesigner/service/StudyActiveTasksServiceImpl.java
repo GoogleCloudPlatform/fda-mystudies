@@ -72,10 +72,12 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
 
   @Override
   public ActiveTaskBo getActiveTaskById(String ativeTaskId, String customStudyId) {
+    logger.entry("begin getActiveTaskById()");
     ActiveTaskBo activeTask = null;
     try {
       activeTask = studyActiveTasksDAO.getActiveTaskById(ativeTaskId, customStudyId);
       if (activeTask != null) {
+
         List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleList =
             studyActiveTasksDAO.getActivetaskCustomFrequencies(activeTask.getId());
         List<ActiveTaskFrequencyBo> activeTaskFrequencyList =
@@ -139,6 +141,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
             }
           }
         }
+
         activeTask.setActiveTaskFrequenciesList(activeTaskFrequencyList);
         if ((activeTask.getActiveTaskFrequenciesBo() != null)
             && StringUtils.isNotBlank(activeTask.getActiveTaskFrequenciesBo().getFrequencyDate())) {

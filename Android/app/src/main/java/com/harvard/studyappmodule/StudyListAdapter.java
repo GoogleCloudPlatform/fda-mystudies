@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,34 +11,43 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.RealmList;
 import java.util.ArrayList;
@@ -49,6 +58,7 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   private StudyFragment studyFragment;
   private ArrayList<CompletionAdherence> completionAdherenceCalcs;
   private boolean click = true;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   StudyListAdapter(
       Context context,
@@ -65,6 +75,7 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
     View v =
         LayoutInflater.from(parent.getContext()).inflate(R.layout.study_list_item, parent, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     return new Holder(v);
   }
 
@@ -141,7 +152,7 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
   }
 
   @Override
-  public void onBindViewHolder(final Holder holder, final int position) {
+  public void onBindViewHolder(final Holder holder, @SuppressLint("RecyclerView") final int position) {
 
     if (!AppController.getHelperSharedPreference()
         .readPreference(context, context.getResources().getString(R.string.userid), "")
@@ -244,23 +255,28 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
       bgShape.setColor(context.getResources().getColor(R.color.rectangle_yellow));
     }
 
-    Glide.with(context)
-            .load(items.get(position).getLogo())
-            .asBitmap()
-            .thumbnail(0.5f)
-            .crossFade()
+    RequestOptions requestOptions = new RequestOptions()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .into(new SimpleTarget<Bitmap>(200, 200) {
+            .skipMemoryCache(false);
+
+    Glide.with(context)
+            .load(Base64.decode(items.get(holder.getAdapterPosition()).getLogo().split(",")[1], Base64.DEFAULT))
+            .thumbnail(0.5f)
+            .apply(requestOptions)
+            .listener(new RequestListener<Drawable>() {
               @Override
-              public void onLoadFailed(Exception e, Drawable errorDrawable) {
+              public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 holder.defaultthumbnail.setVisibility(View.VISIBLE);
+                return false;
               }
 
               @Override
-              public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                holder.studyImg.setImageBitmap(resource);
+              public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.defaultthumbnail.setVisibility(View.GONE);
+                holder.studyImg.setImageDrawable(resource);
+                return false;
               }
-            });
+            }).into(holder.studyImg);
 
     holder.studyTitle.setText(items.get(position).getTitle());
     holder.studyTitleLatin.setText(Html.fromHtml(items.get(position).getTagline()));
@@ -277,6 +293,12 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    context.getString(R.string.study_list));
+            analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (click) {
               click = false;
               new Handler()
@@ -317,11 +339,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                 AppController.getHelperSharedPreference()
                     .writePreference(
                         context,
-                        context.getString(R.string.rejoin),
-                        "" + items.get(holder.getAdapterPosition()).getSetting().getRejoin());
-                AppController.getHelperSharedPreference()
-                    .writePreference(
-                        context,
                         context.getString(R.string.studyVersion),
                         "" + items.get(holder.getAdapterPosition()).getStudyVersion());
               } catch (Exception e) {
@@ -355,8 +372,6 @@ public class StudyListAdapter extends RecyclerView.Adapter<StudyListAdapter.Hold
                 intent.putExtra(
                     "enroll",
                     "" + items.get(holder.getAdapterPosition()).getSetting().isEnrolling());
-                intent.putExtra(
-                    "rejoin", "" + items.get(holder.getAdapterPosition()).getSetting().getRejoin());
                 ((StudyActivity) context).startActivityForResult(intent, 100);
               }
             }

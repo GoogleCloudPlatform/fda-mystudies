@@ -82,7 +82,6 @@ static const CGFloat CellBottomPadding = 20.0;
         [self addSubview:_tableView];
         
         _scrollView = _tableView;
-        
         _realFooterView = [UIView new];
         _realFooterView.layoutMargins = UIEdgeInsetsZero;
 #ifdef LAYOUT_DEBUG

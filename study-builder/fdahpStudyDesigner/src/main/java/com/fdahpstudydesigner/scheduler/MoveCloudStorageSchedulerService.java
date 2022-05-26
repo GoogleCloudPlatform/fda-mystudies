@@ -1,9 +1,25 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.scheduler;
@@ -14,6 +30,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -53,16 +70,20 @@ public class MoveCloudStorageSchedulerService {
   public void moveCloudStorageStructure() {
     logger.info("moveCloudStorageStructure  - Starts");
     Session session = null;
+    Transaction transaction = null;
+
     try {
 
       if (moveCloudStorageSchedulerEnable) {
 
         session = hibernateTemplate.getSessionFactory().openSession();
+        transaction = session.beginTransaction();
+
         // LIMIT = 10 add order by SBO.createdOn desc
         List<StudyBo> studyBoList =
             session
                 .createQuery(
-                    "FROM StudyBo SBO WHERE SBO.live = 0 and SBO.isCloudStorageMoved=0 and SBO.customStudyId IS NOT NULL order by SBO.createdOn desc")
+                    "FROM StudyBo SBO WHERE SBO.live = 0 and SBO.isCloudStorageMoved=0 order by SBO.createdOn desc")
                 .list();
 
         for (StudyBo studyBo : studyBoList) {
@@ -82,7 +103,11 @@ public class MoveCloudStorageSchedulerService {
               .executeUpdate();
         }
       }
+      transaction.commit();
     } catch (Exception e) {
+      if (null != transaction) {
+        transaction.rollback();
+      }
       logger.error("moveCloudStorageStructure  - ERROR", e.getCause());
       e.printStackTrace();
     } finally {

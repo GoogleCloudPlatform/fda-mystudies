@@ -34,6 +34,14 @@ class SplashViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    let ud = UserDefaults.standard
+    ud.set(true, forKey: kFromSplashScreen)
+    ud.set(Upgrade.fromSplash.rawValue, forKey: kFromBackground)
+    ud.set(false, forKey: kIsShowUpdateAppVersion)
+    ud.set("", forKey: "pausedNotification")
+    ud.removeObject(forKey: "isAlertShown")
+    ud.synchronize()
   }
 
   override func viewWillAppear(_ animated: Bool) {

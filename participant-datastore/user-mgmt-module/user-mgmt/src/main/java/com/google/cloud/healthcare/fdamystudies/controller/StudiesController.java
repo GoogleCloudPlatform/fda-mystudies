@@ -53,7 +53,7 @@ public class StudiesController {
 
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
-  @ApiOperation(value = "Add or update studymetadata")
+  @ApiOperation(value = "Add or update metadata details of the study")
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
       @Valid @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request) {
@@ -74,7 +74,7 @@ public class StudiesController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
-  @ApiOperation(value = "Send Notification")
+  @ApiOperation(value = "Sends notifications to users")
   @PostMapping("/sendNotification")
   public ResponseEntity<?> SendNotification(
       @Valid @RequestBody NotificationForm notificationForm, HttpServletRequest request)

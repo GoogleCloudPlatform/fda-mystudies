@@ -65,7 +65,6 @@ public class UserSupportServiceImpl implements UserSupportService {
     templateArgs.put("body", feedbackRequest.getBody());
     templateArgs.put("orgName", optApp.get().getOrganizationName());
     templateArgs.put("appName", feedbackRequest.getAppName());
-
     String fromEmail =
         (optApp.get().getFromEmailId() != null)
             ? optApp.get().getFromEmailId()
@@ -116,7 +115,6 @@ public class UserSupportServiceImpl implements UserSupportService {
     templateArgs.put("body", contactUsRequest.getBody());
     templateArgs.put("orgName", optApp.get().getOrganizationName());
     templateArgs.put("appName", contactUsRequest.getAppName());
-
     String fromEmail =
         (optApp.get().getFromEmailId() != null)
             ? optApp.get().getFromEmailId()

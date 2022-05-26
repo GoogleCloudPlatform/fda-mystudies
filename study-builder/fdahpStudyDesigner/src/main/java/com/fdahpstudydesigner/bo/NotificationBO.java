@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -118,9 +119,6 @@ public class NotificationBO implements Serializable {
   @Column(name = "study_id")
   private String studyId;
 
-  @Column(name = "platform")
-  private String platform;
-
   @Column(name = "x_days")
   private Integer xDays;
 
@@ -132,6 +130,9 @@ public class NotificationBO implements Serializable {
 
   @Column(name = "sequence_number")
   private Integer sequenceNumber;
+
+  @Column(name = "platform")
+  private String platform;
 
   @Transient private boolean appPermission;
 
@@ -359,7 +360,7 @@ public class NotificationBO implements Serializable {
     this.sequenceNumber = sequenceNumber;
   }
 
-  public boolean getAppPermission() {
+  public boolean isAppPermission() {
     return appPermission;
   }
 

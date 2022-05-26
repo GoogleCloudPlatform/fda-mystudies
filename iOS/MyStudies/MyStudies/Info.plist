@@ -4,8 +4,6 @@
 <dict>
 	<key>API_KEY</key>
 	<string>$(API_KEY)</string>
-	<key>HYDRA_CLIENT_ID</key>
-	<string>$(HYDRA_CLIENT_ID)</string>
 	<key>AUTH_URL</key>
 	<string>$(AUTH_URL)</string>
 	<key>ApplicationID</key>
@@ -34,6 +32,8 @@
 	<string>$(ENROLLMENT_DATASTORE_URL)</string>
 	<key>HYDRA_BASE_URL</key>
 	<string>$(HYDRA_BASE_URL)</string>
+	<key>HYDRA_CLIENT_ID</key>
+	<string>$(HYDRA_CLIENT_ID)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -41,34 +41,34 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<false/>
+		<true/>
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<false/>
+		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your camera for the task to give more accurate result.</string>
+	<string>$(PRODUCT_NAME) would like to access your camera for this task.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use Face ID for quick and secure access to the app. </string>
+	<string>$(PRODUCT_NAME) would like to use your Face ID for quick and secure access to the app. </string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Health App data to read data from Health to answer questions.</string>
+	<string>$(PRODUCT_NAME) would like to access Health data on your device to help you respond to the question. This will not result in your data getting automatically submitted as a response.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to update your Health App data to save your responses.</string>
+	<string>$(PRODUCT_NAME) would like to update your Health data.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Location to answer location-based questions and will not result in your location automatically getting submitted as a response.</string>
+	<string>$(PRODUCT_NAME) would like to access your location to answer location-based questions. This will not result in your location getting automatically submitted as a response.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Location to answer location-based questions and will not result in your location automatically getting submitted as a response.</string>
+	<string>$(PRODUCT_NAME) would like to access your location to answer location-based questions. This will not result in your location getting automatically submitted as a response.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Location to answer location-based questions and will not result in your location automatically getting submitted as a response.</string>
+	<string>$(PRODUCT_NAME) would like to access your location to answer location-based questions. This will not result in your location getting automatically submitted as a response.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your microphone for the task to give more accurate result.</string>
+	<string>$(PRODUCT_NAME) would like to access your microphone for this task.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use Motion data for the task to give more accurate result.</string>
+	<string>$(PRODUCT_NAME) would like to access motion data from your device for this task.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to use Speech Recognition for the task to give more accurate result.</string>
-	<key>USER_DATASTORE_URL</key>
-	<string>$(USER_DATASTORE_URL)</string>
+	<string>$(PRODUCT_NAME) would like to use Speech Recognition for this task.</string>
 	<key>RESPONSE_DATASTORE_URL</key>
 	<string>$(RESPONSE_DATASTORE_URL)</string>
+	<key>STUDY_DATASTORE_URL</key>
+	<string>$(STUDY_DATASTORE_URL)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Verdana Italic.ttf</string>
@@ -94,7 +94,7 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>STUDY_DATASTORE_URL</key>
-	<string>$(STUDY_DATASTORE_URL)</string>
+	<key>USER_DATASTORE_URL</key>
+	<string>$(USER_DATASTORE_URL)</string>
 </dict>
 </plist>

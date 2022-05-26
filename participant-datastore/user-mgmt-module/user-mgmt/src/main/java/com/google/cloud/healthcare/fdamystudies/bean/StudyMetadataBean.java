@@ -45,15 +45,6 @@ public class StudyMetadataBean implements Serializable {
   @Size(max = XS_LENGTH)
   private String studyStatus;
 
-  //  @Size(max = SMALL_LENGTH)
-  //  private String studyCategory;
-  //
-  //  @Size(max = MEDIUM_LENGTH)
-  //  private String studyTagline;
-  //
-  //  @Size(max = MEDIUM_LENGTH)
-  //  private String studySponsor;
-
   @Size(max = TINY_LENGTH)
   private String studyEnrolling;
 

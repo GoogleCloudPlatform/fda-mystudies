@@ -22,11 +22,12 @@ import IQKeyboardManagerSwift
 import SlideMenuControllerSwift
 import UIKit
 import WebKit
+import FirebaseAnalytics
 
 let kVerifyMessageFromSignIn =
   """
-  Your registered email is pending verification. Please type in the Verification Code received in the email \
-  to complete this step and proceed to using the app.
+  Your account is pending verification. Please type in the verification code received in email \
+  to complete this step and use the app.
   """
 
 enum SignInLoadFrom: Int {
@@ -86,9 +87,23 @@ class SignInViewController: UIViewController {
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign In"
+    ])
     // unhide navigationbar
+    self.view.isUserInteractionEnabled = true
+    self.webKitView.isUserInteractionEnabled = true
+      
     self.navigationController?.setNavigationBarHidden(false, animated: true)
     self.webKitView.navigationDelegate = self
+    self.webKitView.scrollView.isScrollEnabled = true
+    
+    let delegate = UIApplication.shared.delegate as? AppDelegate
+    delegate?.window?.removeProgressIndicatorFromWindow()
+    progressView.removeFromSuperview()
+    removeProgressIndicator()
+      
     setupProgressView()
     setupEstimatedProgressObserver()
     if viewLoadFrom != .signUp {

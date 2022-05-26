@@ -46,10 +46,6 @@ export class UserListComponent implements OnInit {
         return manageUser;
       }),
     );
-    // if(idpUser && deletedOrDisabledInIdp ==true)
-    // {
-    //   [disabled]= disableButton" 
-    // }
   }
 
   search(query: string): void {

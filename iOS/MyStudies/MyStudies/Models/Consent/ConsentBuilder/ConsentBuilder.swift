@@ -66,18 +66,18 @@ let kConsentViewPdfStoryboardId = "ConsentPdfViewerStepViewControllerIdentifier"
 /// Comprehenion Instruction Step Keys
 let kConsentComprehensionTestTitle = "Comprehension"
 let kConsentComprehensionTestText =
-  "Let's do a quick and simple test of your understanding of this Study."
+  "Let's do a quick and simple test of your understanding of this study."
 let kComprehensionInstructionStepIdentifier = "ComprehensionInstructionStep"
 
 /// Comprehension Completion Step Keys
-let kComprehensionCompletionTitle = "Great Job!"
+let kComprehensionCompletionTitle = "Great job!"
 let kComprehensionCompletionText =
-  "You answered all of the questions correctly. Tap on Next to proceed"
+  "You answered all of the questions correctly. Tap next to continue."
 let kComprehensionCompletionStepIdentifier = "ComprehensionCompletionStep"
 
 /// Consent Completion
 let kConsentCompletionMainTitle = "Consent confirmed"
-let kConsentCompletionSubTitle = "You can now start participating in the Study"
+let kConsentCompletionSubTitle = "You can now start participating in the study"
 let kSignaturePageContentText = "I agree to participate in this research study."
 
 /// Signature Page
@@ -142,10 +142,7 @@ class ConsentBuilder {
           let consentSection: ConsentSectionStep? = ConsentSectionStep()
           consentSection?.initWithDict(stepDict: sectionDict)
           consentSectionArray.append((consentSection?.createConsentSection())!)
-
-          if consentSection?.type != .custom {
-            consentHasVisualStep = true
-          }
+          consentHasVisualStep = true
         }
       }
 
@@ -444,6 +441,9 @@ struct SharingConsent {
       }
       if Utilities.isValidValue(someObject: dict[kConsentSharingSteplearnMore] as AnyObject) {
         learnMore = dict[kConsentSharingSteplearnMore] as? String
+        if let learnMoreString = learnMore {
+          learnMore = learnMoreString.stringByDecodingHTMLEntities
+        }
       }
 
       if Utilities.isValidValue(someObject: dict[kConsentSharingStepText] as AnyObject) {
@@ -492,11 +492,16 @@ struct ReviewConsent {
         someObject: dict[kConsentReviewStepSignatureContent] as AnyObject
       ) {
         signatureContent = dict[kConsentReviewStepSignatureContent] as? String
+        if let reviewHTML = signatureContent {
+          signatureContent = reviewHTML.stringByDecodingHTMLEntities
+        }
       }
       if Utilities.isValidValue(
         someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject
       ) {
         reasonForConsent = dict[kConsentReviewStepReasonForConsent] as? String
+      } else {
+        reasonForConsent = kMessageconsentConfirmation
       }
     }
   }

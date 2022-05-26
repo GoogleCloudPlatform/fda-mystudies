@@ -21,29 +21,30 @@ import IQKeyboardManagerSwift
 import LocalAuthentication
 import SlideMenuControllerSwift
 import UIKit
+import FirebaseAnalytics
 
 let kProfileTableViewCellIdentifier = "ProfileTableViewCell"
 
-let kLeadTimeSelectText = "Select Lead Time"
+let kLeadTimeSelectText = "Select lead time"
 let kActionSheetDoneButtonTitle = "Done"
 let kActionSheetCancelButtonTitle = "Cancel"
 
 let kChangePasswordSegueIdentifier = "changePasswordSegue"
 let kErrorTitle = ""
 let kProfileAlertTitleText = "Profile"
-let kProfileAlertUpdatedText = "Profile updated Successfully."
+let kProfileAlertUpdatedText = "Your profile has been updated."
 
 let signupCellLastIndex = 2
 
-let kProfileTitleText = "My Account"
+let kProfileTitleText = "My account"
 
-let kSignOutText = "Sign Out"
+let kSignOutText = "Sign out"
 let kLabelName = "LabelName"
 
-let kUseTouchIdOrPasscode = "Use Passcode or Touch ID to access app"
-let kUseFaceIdOrPasscode = "Use Passcode or Face ID to access app"
+let kUseTouchIdOrPasscode = "Use passcode or Touch ID to access app"
+let kUseFaceIdOrPasscode = "Use passcode or Face ID to access app"
 
-let kUsePasscodeToAccessApp = "Use Passcode to access app"
+let kUsePasscodeToAccessApp = "Use passcode to access the app?"
 
 let ktouchid = "touchIdEnabled"
 let korkPasscode = "ORKPasscode"
@@ -90,6 +91,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu MyAccount"
+    ])
 
     // Load plist info
     let plistPath = Bundle.main.path(forResource: "Profile", ofType: ".plist", inDirectory: nil)
@@ -128,6 +132,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Change password button clicked.
   @IBAction func buttonActionChangePassCode(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Change Passcode"
+    ])
 
     let passcodeViewController = ORKPasscodeViewController.passcodeEditingViewController(
       withText: kSetPasscodeDescription,
@@ -141,6 +148,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   ///  Edit Profile button clicked
   @IBAction func editBarButtonAction(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Profile Edit"
+    ])
 
     if self.isCellEditable! == false {
       self.isCellEditable = true
@@ -161,6 +171,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   ///  Button action for LeadtimeButton, CancelButton & DoneButton.
   @IBAction func buttonActionLeadTime(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Lead Time"
+    ])
 
     let alertView = UIAlertController(
       title: kLeadTimeSelectText,
@@ -186,6 +199,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       style: UIAlertAction.Style.default,
       handler: {
         _ in
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeadTime Done Alert"
+        ])
 
         let calender: Calendar? = Calendar.current
 
@@ -216,6 +232,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       style: UIAlertAction.Style.default,
       handler: {
         _ in
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeadTime Cancel Alert"
+        ])
 
       }
     )
@@ -228,6 +247,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Signout Button Clicked.
   @IBAction func buttonActionSignOut(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-Out"
+    ])
 
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
       NSLocalizedString(kSignOutText, comment: ""),
@@ -236,11 +258,17 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: self,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Sign-Out Ok"
+        ])
         self.isSigningOut = true
         LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
 
       },
       action2: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Sign-Out Cancel"
+        ])
         // Handle cancel action
       }
     )
@@ -249,6 +277,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   /// Delete Account clicked.
   @IBAction func buttonActionDeleteAccount(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Delete Account"
+    ])
 
     if (Gateway.instance.studies?.count)! > 0 {
       let studies = Gateway.instance.studies
@@ -291,11 +322,17 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
           errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
           viewControllerUsed: self,
           action1: {
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "DeleteAccount Ok"
+            ])
 
             self.sendRequestToDeleteAccount()
 
           },
           action2: {
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "DeleteAccount Cancel"
+            ])
             // Handle cancel action
           }
         )
@@ -369,19 +406,23 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
       buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
       viewControllerUsed: self
     ) {
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Account Deleted OKAlert"
+      ])
 
       if Utilities.isStandaloneApp() {
 
         UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
         Study.currentStudy = nil
         self.slideMenuController()?.leftViewController?.navigationController?
-          .popToRootViewController(animated: true)
+          .popToRootViewController(animated: false)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
           UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
         }
       } else {
         self.slideMenuController()?.leftViewController?.navigationController?
-          .popToRootViewController(animated: true)
+          .popToRootViewController(animated: false)
+        HomeViewController.setRootView()
       }
 
     }
@@ -447,6 +488,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   }
 
   @objc func toggleValueChanged(_ sender: UISwitch) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ToggleValue Changed"
+    ])
 
     let toggle = sender
 
@@ -493,6 +537,9 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   ///  Button action for Change password button.
   @objc func pushToChangePassword(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Change Password"
+    ])
     self.performSegue(withIdentifier: kChangePasswordSegueIdentifier, sender: nil)
   }
 
@@ -502,12 +549,21 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
     if (user.emailId?.isEmpty)! {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Fill all fields alert"
+      ])
       return false
     } else if user.emailId == "" {
       self.showAlertMessages(textMessage: kMessageEmailBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter email alert"
+      ])
       return false
     } else if !(Utilities.isValidEmail(testStr: user.emailId!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter valid email alert"
+      ])
       return false
     }
     return true
@@ -630,12 +686,14 @@ extension ProfileViewController: UITableViewDataSource {
       case .emailId:
         keyBoardType = .emailAddress
         isSecuredEntry = false
+        cell.textFieldValue?.isHidden = false
+        cell.buttonChangePassword?.isHidden = true
 
       case .confirmPassword:  //  ChangePasscode
 
         cell.textFieldValue?.isHidden = true
         cell.buttonChangePassword?.isHidden = false
-        cell.buttonChangePassword?.setTitle("Change Passcode", for: .normal)
+        cell.buttonChangePassword?.setTitle("Change passcode", for: .normal)
 
         if User.currentUser.settings?.passcode == true {
           cell.buttonChangePassword?.isUserInteractionEnabled = true

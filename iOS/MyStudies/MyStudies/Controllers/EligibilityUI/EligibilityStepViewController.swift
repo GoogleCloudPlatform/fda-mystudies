@@ -20,8 +20,8 @@
 import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
-let kStudyWithStudyId = "Study with StudyId"
 let kTitleOK = "OK"
 
 class EligibilityStep: ORKStep {
@@ -79,6 +79,7 @@ class EligibilityStepViewController: ORKStepViewController {
   }
 
   override func goForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
     super.goForward()
   }
 
@@ -104,6 +105,8 @@ class EligibilityStepViewController: ORKStepViewController {
       step.type = "token"
     }
     tokenTextField.delegate = self
+    IQKeyboardManager.shared.disabledDistanceHandlingClasses.append(EligibilityStepViewController.self)
+
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -145,9 +148,23 @@ class EligibilityStepViewController: ORKStepViewController {
     )
     self.present(alert, animated: true, completion: nil)
   }
+  
+  /// For lifting the view up
+  func animateViewMoving (up:Bool, moveValue :CGFloat) {
+    let movementDuration:TimeInterval = 0.3
+    let movement:CGFloat = ( up ? -moveValue : moveValue)
+    UIView.beginAnimations( "animateView", context: nil)
+    UIView.setAnimationBeginsFromCurrentState(true)
+    UIView.setAnimationDuration(movementDuration )
+    self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
+    UIView.commitAnimations()
+  }
 
   // MARK: - Action
   @IBAction func buttonActionSubmit(sender: UIButton?) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "EligibilityStep Submit"
+    ])
 
     self.view.endEditing(true)
     let token = tokenTextField.text
@@ -189,7 +206,14 @@ extension EligibilityStepViewController: UITextFieldDelegate {
       return true
     }
   }
+  
+  func textFieldDidBeginEditing(_ textField: UITextField) {
+    animateViewMoving(up: true, moveValue: 100)
+  }
 
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    animateViewMoving(up: false, moveValue: 100)
+  }
 }
 
 // MARK: Webservice Delegates
@@ -211,24 +235,12 @@ extension EligibilityStepViewController: NMWebServiceDelegate {
     } else {
       self.taskResult.enrollmentToken = ""
     }
-
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
     self.goForward()
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     self.removeProgressIndicator()
-    if error.localizedDescription.localizedCaseInsensitiveContains(tokenTextField.text!) {
-
-      self.showAlert(message: kMessageInvalidTokenOrIfStudyDoesNotExist)
-
-    } else {
-      if error.localizedDescription.localizedCaseInsensitiveContains(kStudyWithStudyId) {
-
-        self.showAlert(message: kMessageInvalidTokenOrIfStudyDoesNotExist)
-
-      } else {
-        self.showAlert(message: error.localizedDescription)
-      }
-    }
+    self.showAlert(message: error.localizedDescription)
   }
 }

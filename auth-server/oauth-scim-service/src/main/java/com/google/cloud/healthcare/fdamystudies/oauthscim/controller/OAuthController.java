@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -46,9 +46,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Get Token",
+    value = "Get access token and refresh token based on grant type",
+    description = "Get access token and refresh token based on grant type")
 @CrossOrigin
 @RestController
-@Api(tags = "Get Token", description = "Get access token and refresh token based on grant type")
 public class OAuthController {
 
   private static final String STATUS_400_AND_ERRORS_LOG = "status=400 and errors=%s";
@@ -65,9 +68,11 @@ public class OAuthController {
 
   @ApiOperation(
       notes =
-          "Refer [The OAuth 2.0 Token Endpoint](https://www.ory.sh/hydra/docs/reference/api/#the-oauth-20-token-endpoint) for request and response details ",
+          "Refer to the [The OAuth 2.0 Token Endpoint](https://www.ory.sh/hydra/docs/reference/api/#the-oauth-20-token-endpoint)"
+              + " for request and response details ",
       value =
-          "Get access token and refresh token based on grant type. Refer ORY Hydra REST API documentation for request and response details")
+          "Get access token and refresh token based on grant type. "
+              + "Refer to the ORY Hydra REST API documentation for request and response details")
   @PostMapping(
       value = "/oauth2/token",
       produces = MediaType.APPLICATION_JSON_VALUE,

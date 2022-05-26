@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -103,9 +104,6 @@ public class QuestionnaireBo implements Serializable {
   @Column(name = "modified_date")
   private String modifiedDate;
 
-  @Column(name = "sequence_number")
-  private Integer sequenceNumber;
-
   @Transient private String previousFrequency;
 
   @Transient
@@ -155,6 +153,9 @@ public class QuestionnaireBo implements Serializable {
   private String anchorDateId;
 
   @Transient private boolean anchorQuestionnaireExist = false;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public Boolean getActive() {
     return active;

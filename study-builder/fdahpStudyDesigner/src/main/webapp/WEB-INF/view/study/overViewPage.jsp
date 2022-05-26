@@ -57,7 +57,7 @@
                  id="studyMediaLinkId" name="mediaLink"
                  value="${studyBo.mediaLink}" maxlength="300"
                  pattern="^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
-                 title="Include http://" data-error="Please fill out this field"
+                 title="Include http://"
                  data-pattern-error="Please enter a valid URL">
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -74,8 +74,8 @@
                     data-html="true"
                     title=""
                     data-original-title="
-	                 	<p class='text-left'>These pages are meant for an introductory section of your study in the mobile app. It is intended to help users get a quick summary of what the study is about and how it may benefit them and others.</p>
-						<p class='text-left'>Each page has an image, title and about 200 character-length of description allowed. Given below are some suggested topics you can touch upon in these pages:</p>	
+	                 	<p class='text-left'>These pages are meant to provide app users with an introductory overview of the study.</p>
+						<p class='text-left'>Each page comprises of an image, a title and a description. Given below are some suggested topics for content on these pages:</p>	
 						<div class='text-left'>o Study purpose and goals</div>
 						<div class='text-left'>o Target audience</div>
 						<div class='text-left'>o Data usage</div>
@@ -193,7 +193,7 @@
                     </div>
                     <div class="form-group elaborateClass">
                       <textarea class=" form-control updateInput summernote" rows="5"
-                                id="editor1" name="description" required
+                                id="editor1" name="description" required data-error="Please fill out this field" 
                                 data-error="Please fill out this field"
                                 ></textarea>
 
@@ -336,7 +336,7 @@
                     </div>
                     <div class="form-group elaborateClass">
                       <textarea class="form-control summernote" rows="5"
-                                name="description" id="editor${spbSt.count}" required
+                                name="description" id="editor${spbSt.count}" required data-error="Please fill out this field" 
                                 data-error="Please fill out this field"
                                 >${studyPageBo.description}</textarea>
                       <div class="help-block with-errors red-txt"></div>
@@ -436,7 +436,6 @@
                  
                }
       },
-                  
               disableResizeEditor: true,
               tabsize: 2,
               height: 200,
@@ -480,7 +479,7 @@
           "/studybuilder/images/dummy-img.jpg");
       $(this).parent().parent().find(".imagePathCls").val('');
     });
-    
+
     //deleting panel
     var b = $("#accordion").find(".panel-default").length;
     if (b == 1) {
@@ -536,7 +535,7 @@
           "<div class='collapse panel-collapse' id='collapse" + count + "'>" +
           "<div class=panel-body  pt-none>" +
           "<div>" +
-          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='Image requirements: The default image shown below will be used for the study overview screen (second page onwards) in the mobile app. Upload an alternate image if you wish to override it.</br></br>The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 750 x 570. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger'></span></span> </div>"
+          "<div class='gray-xs-f mb-sm'>Image <span><span class='filled-tooltip' data-toggle='tooltip' data-placement='top' data-html='true' title='' src='/studybuilder/images/icons/tooltip.png' data-original-title='Image requirements: The default image shown below will be used for the study overview screen (second page onwards) in the mobile app. Upload an alternate image if you wish to override it</br></br>The image must be of type .JPG or .PNG or .JPEG. The minimum image size required is 750 x 570. For optimum display in the mobile app, upload an image of either the minimum size or one that is proportionally larger'></span></span> </div>"
           +
           "<div>" +
           "<div class=thumb style='display: inline-block;width:77px !important'><img src='${defaultPageOverviewImageSignedUrl}' class=wid100></div>" +
@@ -595,8 +594,6 @@
       countId++;
       $("[data-toggle=tooltip]").tooltip();
       $('body').find('.panel-collapse:last').collapse('show').addClass('in');
-
-      
       $('.summernote')
       .summernote(
           {
@@ -674,13 +671,8 @@
       $('#actTy').remove();
       $('<input />').attr('type', 'hidden').attr('name', "actionType").attr('value',
           $(this).attr('actType')).attr('id', 'actTy').appendTo('#overViewFormId');
-//       if ($(this).attr('actType') == 'save') {
-//         e.preventDefault();
-//         $('#overViewFormId').validator('destroy');
-//         $('#overViewFormId').submit();
-//       }
+     
     });
-
     function validateSummernote(){   
         var valid=true;     
            $("textarea[id^='editor']").each(function (i, el) {
@@ -774,13 +766,13 @@
       var thisAttr = this;
       var thisId = $(this).attr("data-imageId");
       if ((file = this.files[0])) {
-      	const allowedExtensions =  ['jpg','png','jpeg'];
-       	const { name:fileName } = file;
-       	const fileExtension = fileName.split(".").pop().toLowerCase();
-        if(allowedExtensions.includes(fileExtension)){ 
+    	  const allowedExtensions =  ['jpg','png','jpeg'];
+         	const { name:fileName } = file;
+         	const fileExtension = fileName.split(".").pop().toLowerCase();
+          if(allowedExtensions.includes(fileExtension)){ 
         img = new Image();
         img.onload = function () {
-        	           
+          
           if (thisId != '' && thisId == 1) {
         	  if(this.height>=1334 && this.width>=750){
               	  this.height=1334;
@@ -788,8 +780,7 @@
                 }
                   var ht = this.height;
                   var wds = this.width;
-              	
-            if (ht == 1334 && wds == 750 ) {
+            if (ht == 1334 && wds == 750) {
               $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
               $(thisAttr).parent().parent().parent().find(".thumb img")
                   .attr('src', img.src)
@@ -799,12 +790,12 @@
               $(thisAttr).parent().find(".help-block").empty();
             } else {
             	if(this.height>=570 && this.width>=750){
-               	 this.height=570;
-                   this.width=750;
-                 }
-          	
-              var ht = this.height;
-              var wds = this.width;
+                	 this.height=570;
+                    this.width=750;
+                  }
+           	
+               var ht = this.height;
+               var wds = this.width;
               $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
@@ -814,12 +805,12 @@
             }
           } else {
         	  if(this.height>=570 && this.width>=750){
-               	 this.height=570;
-                   this.width=750;
-                 }
-         	  var ht = this.height;
-               var wds = this.width;
-               
+                	 this.height=570;
+                    this.width=750;
+                  }
+          	  var ht = this.height;
+                var wds = this.width;
+                
             if (ht == 570 && wds == 750) {
               $(thisAttr).parent().parent().find('.removeUrl').css("visibility", "visible");
               $(thisAttr).parent().parent().parent().find(".thumb img")
@@ -848,7 +839,8 @@
           $(thisAttr).parent().parent().parent().find(".removeUrl").click();
         };
         img.src = _URL.createObjectURL(file);
-        }else{
+        
+          }else{
         	  $(thisAttr).val("");
               $(thisAttr).parent().find('.form-group').addClass('has-error has-danger');
               $(thisAttr).parent().find(".help-block").empty().append(
@@ -872,6 +864,7 @@
   // Displaying images from file upload
   function readURL(input) {
     if (input.files && input.files[0]) {
+    	
     	const allowedExtensions =  ['jpg','png','jpeg'];
      	const { name:fileName } = input.files[0];
      	const fileExtension = fileName.split(".").pop().toLowerCase();

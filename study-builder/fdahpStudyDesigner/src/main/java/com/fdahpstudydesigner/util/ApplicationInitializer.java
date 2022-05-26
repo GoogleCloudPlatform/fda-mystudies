@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -27,9 +28,14 @@ public class ApplicationInitializer implements WebApplicationInitializer {
 
   private static XLogger logger = XLoggerFactory.getXLogger(ApplicationInitializer.class.getName());
 
+  static Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  static String idpEnabled = configMap.get("idpEnabledForSB");
+
   static {
-    // Initializing the Firebase SDK using default credentials
-    FirebaseApp.initializeApp();
+    if (Boolean.parseBoolean(idpEnabled)) {
+      // Initializing the Firebase SDK using default credentials
+      FirebaseApp.initializeApp();
+    }
   }
 
   @Override

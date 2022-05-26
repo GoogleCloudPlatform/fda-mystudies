@@ -1,10 +1,18 @@
+/*
+ * Copyright 2020-2021 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.harvard.studyappmodule.custom.question;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.support.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsIntent;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
@@ -116,10 +124,10 @@ public class InstructionStepLayoutCustom extends FixedSubmitBarLayout implements
         });
         String all = (step.getText()).replaceAll("<", "&lt;").replaceAll(">", "&gt;");
         if (Build.VERSION.SDK_INT >= 24) {
-          summary.loadData(
-                  Html.fromHtml((all), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8");
+          summary.loadDataWithBaseURL(null,
+                  Html.fromHtml((all), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
         } else {
-          summary.loadData(Html.fromHtml((all)).toString(), "text/html", "UTF-8");
+          summary.loadDataWithBaseURL(null, Html.fromHtml((all)).toString(), "text/html", "UTF-8", null);
         }
       }
 

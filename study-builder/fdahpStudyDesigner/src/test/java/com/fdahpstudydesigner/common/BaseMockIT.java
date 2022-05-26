@@ -24,6 +24,7 @@ import com.fdahpstudydesigner.config.WebAppTestConfig;
 import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -122,7 +123,7 @@ public class BaseMockIT {
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
     logger.debug(String.format("BEGIN TEST: %s", testName.getMethodName()));
 
     MockHttpServletRequest request = new MockHttpServletRequest();

@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.usermodule;
@@ -20,24 +21,26 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatCheckBox;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.event.RegisterUserEvent;
@@ -46,11 +49,13 @@ import com.harvard.usermodule.model.TermsAndConditionData;
 import com.harvard.usermodule.webservicemodel.RegistrationData;
 import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,8 +89,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   private RegistrationData registrationData;
   private String userAuth;
   private String userID;
-  String passwordPattern =
-          "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +101,13 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     customTextView(agreeLabel);
     setFont();
     bindEvents();
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(this);
     termsAndConditionData = new TermsAndConditionData();
-    termsAndConditionData.setPrivacy(getString(R.string.privacyurl));
-    termsAndConditionData.setTerms(getString(R.string.termsurl));
+    termsAndConditionData.setPrivacy(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
+    termsAndConditionData.setTerms(dbServiceSubscriber.getApps(realm).getTermsUrl());
+    dbServiceSubscriber.closeRealmObj(realm);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
   }
 
   private void initializeXmlId() {
@@ -151,6 +159,12 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void onClick(View widget) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_terms));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (termsAndConditionData != null && !termsAndConditionData.getTerms().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
@@ -185,6 +199,12 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
 
           @Override
           public void onClick(View widget) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_privacy_policy));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (termsAndConditionData != null && !termsAndConditionData.getPrivacy().isEmpty()) {
               Intent termsIntent =
                   new Intent(SignupActivity.this, TermsPrivacyPolicyActivity.class);
@@ -231,6 +251,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.signup_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               AppController.getHelperHideKeyboard(SignupActivity.this);
             } catch (Exception e) {
@@ -244,6 +269,12 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -252,8 +283,16 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.signup_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (clicked == false) {
               clicked = true;
+              password.clearFocus();
+              confirmPassword.clearFocus();
               callRegisterUserWebService();
               new Handler()
                   .postDelayed(
@@ -271,6 +310,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.signup_info));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             SetDialogHelper.setNeutralDialog(
                 SignupActivity.this,
                 getResources().getString(R.string.registration_message),
@@ -284,10 +328,29 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       @Override
       public void onFocusChange(View v, boolean hasFocus) {
         if (!hasFocus) {
-          if (!password.getText().toString().matches(passwordPattern)) {
+          if (!password.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
             password.setError(getResources().getString(R.string.password_validation));
           }
         }
+      }
+    });
+
+    confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      @Override
+      public void onFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+          if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
+            confirmPassword.setError(getResources().getString(R.string.password_mismatch_error));
+          }
+        }
+      }
+    });
+
+    agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        password.clearFocus();
+        confirmPassword.clearFocus();
       }
     });
   }
@@ -308,7 +371,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     } else if (password.getText().toString().isEmpty()) {
       Toast.makeText(this, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (!password.getText().toString().matches(passwordPattern)) {
+    } else if (!password.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
       password.setError(getResources().getString(R.string.password_validation));
     } else if (checkPasswordContainsEmailID(
         email.getText().toString(), password.getText().toString())) {

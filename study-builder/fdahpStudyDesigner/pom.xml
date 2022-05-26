@@ -318,10 +318,10 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-    <groupId>javax.transaction</groupId>
-    <artifactId>jta</artifactId>
-    <version>1.1</version>
-</dependency>
+     <groupId>javax.transaction</groupId>
+     <artifactId>jta</artifactId>
+     <version>1.1</version>
+    </dependency>
 
     <!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
     <dependency>

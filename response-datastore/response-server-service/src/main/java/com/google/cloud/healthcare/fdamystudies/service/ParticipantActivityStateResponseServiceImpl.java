@@ -130,23 +130,18 @@ public class ParticipantActivityStateResponseServiceImpl
                   participantActivityInput.getActivityVersion());
               participantActivityExisting.setActivityState(
                   participantActivityInput.getActivityState());
-
+              participantActivityExisting.setBookmark(participantActivityInput.getBookmark());
               if (StringUtils.isNotBlank(participantActivityInput.getActivityRunId())) {
                 participantActivityExisting.setActivityRunId(
                     participantActivityInput.getActivityRunId());
               }
-
-              participantActivityExisting.setBookmark(participantActivityInput.getBookmark());
-
               if (participantActivityInput.getTotalCount() != null) {
                 participantActivityExisting.setTotalCount(participantActivityInput.getTotalCount());
               }
-
               if (participantActivityInput.getCompletedCount() != null) {
                 participantActivityExisting.setCompletedCount(
                     participantActivityInput.getCompletedCount());
               }
-
               if (participantActivityInput.getMissedCount() != null) {
                 participantActivityExisting.setMissedCount(
                     participantActivityInput.getMissedCount());

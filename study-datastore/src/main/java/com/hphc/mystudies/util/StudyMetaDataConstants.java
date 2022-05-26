@@ -81,7 +81,7 @@ public interface StudyMetaDataConstants {
   public static final String STUDY_CLOSED = "Closed";
 
   public static final String STUDY_REF_CATEGORIES = "Categories";
-  public static final String STUDY_REF_SPONSERS = "Research Sponsors";
+  public static final String STUDY_REF_SPONSERS = "Research sponsors";
 
   public static final String YES = "Yes";
   public static final String NO = "No";
@@ -102,6 +102,8 @@ public interface StudyMetaDataConstants {
 
   public static final String CONSENT_DOC_TYPE_NEW = "New";
   public static final String CONSENT_DOC_TYPE_AUTO = "Auto";
+  public static final String REASON_FOR_CONSENT =
+      "By agreeing to this you confirm that you read the consent and that you wish to take part in this research study.";
 
   public static final String ACTIVITY_ACTIVE_TASK = "task";
   public static final String ACTIVITY_QUESTIONNAIRE = "questionnaire";

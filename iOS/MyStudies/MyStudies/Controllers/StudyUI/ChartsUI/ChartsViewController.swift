@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 let kMessageForSharingCharts =
   "This action will create a shareable image file of the charts currently seen in this section. Proceed?"
@@ -38,20 +39,28 @@ class ChartsViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
-    DBHandler.loadChartsForStudy(studyId: (Study.currentStudy?.studyId)!) { (chartList) in
-      if chartList.count != 0 {
-        StudyDashboard.instance.charts = chartList
-        self.tableView?.reloadData()
+    DispatchQueue.main.async {
+      DBHandler.loadChartsForStudy(studyId: (Study.currentStudy?.studyId)!) { (chartList) in
+        if chartList.count != 0 {
+          StudyDashboard.instance.charts = chartList
+          self.tableView?.reloadData()
+        }
       }
     }
   }
 
   // MARK: - Actions
   @IBAction func backButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back Button"
+    ])
     self.navigationController?.popViewController(animated: true)
   }
 
   @IBAction func shareButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Charts Share"
+    ])
 
     if StudyDashboard.instance.charts.count > 0 {
 
@@ -67,6 +76,9 @@ class ChartsViewController: UIViewController {
         },
 
         action2: {
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Charts Cancel"
+          ])
           // Handle cancel action.
         }
       )
@@ -77,27 +89,9 @@ class ChartsViewController: UIViewController {
 
   /// To Create screen shot of current visible view.
   func shareScreenShotByMail() {
-
     //Create the UIImage
-
-    let savedContentOffset = self.tableView.contentOffset
-    let savedFrame = tableView.frame
-
-    UIGraphicsBeginImageContextWithOptions(tableView.contentSize, self.view.isOpaque, 0.0)
-    tableView.contentOffset = .zero
-    tableView.frame = CGRect(
-      x: 0,
-      y: 0,
-      width: tableView.contentSize.width,
-      height: tableView.contentSize.height
-    )
-    tableView.layer.render(in: UIGraphicsGetCurrentContext()!)
-    let image = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-
-    tableView.contentOffset = savedContentOffset
-    tableView.frame = savedFrame
-
+    let image = tableView.asFullImage()
+    
     (self.tabBarController as! StudyDashboardTabbarViewController).shareScreenshotByEmail(
       image: image,
       subject: kEmailSubjectCharts,

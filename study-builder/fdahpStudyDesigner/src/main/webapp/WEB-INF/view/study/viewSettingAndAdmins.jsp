@@ -258,7 +258,6 @@
     $('.radcls').prop('disabled', true);
     </c:if>
     $("#completedId").on('click', function (e) {
-
       if ($('.checkbox input:checked').length == 0) {
   	    $("input").attr("required", true);
   	  	$("#inlineCheckbox1,#inlineCheckbox2").prop('disabled', false);
@@ -308,7 +307,6 @@
   
   function platformTypeValidation(buttonText) {
     var platformNames = '';
-    debugger;
     $("input:checkbox[name=platform]:checked").each(function () {
       platformNames = platformNames + $(this).val();
     });
@@ -449,7 +447,6 @@
   if (sucMsg.length > 0) {
     showSucMsg(sucMsg);
   }
-
 	function showSucMsg(message) {
 	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
 	  $('#alertMsg').show('5000');

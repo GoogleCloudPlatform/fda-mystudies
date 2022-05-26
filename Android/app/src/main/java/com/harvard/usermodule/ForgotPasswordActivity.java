@@ -17,22 +17,26 @@ package com.harvard.usermodule;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.harvard.AppConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.event.ForgotPasswordEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.ForgotPasswordData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 
 public class ForgotPasswordActivity extends AppCompatActivity
@@ -48,11 +52,13 @@ public class ForgotPasswordActivity extends AppCompatActivity
   private static final int RESEND_CONFIRMATION = 101;
   public static String FROM = "ForgotPasswordActivity";
   private static final int GO_TO_SIGNIN = 111;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_forgot_password);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     initializeXmlId();
     setTextForView();
     setFont();
@@ -89,6 +95,12 @@ public class ForgotPasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.forgot_password_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               AppController.getHelperHideKeyboard(ForgotPasswordActivity.this);
             } catch (Exception e) {
@@ -102,6 +114,12 @@ public class ForgotPasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.forgot_password_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
               AppController.getHelperHideKeyboard(ForgotPasswordActivity.this);
             } catch (Exception e) {
@@ -115,6 +133,12 @@ public class ForgotPasswordActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.forgot_password_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (email.getText().toString().equalsIgnoreCase("")) {
               Toast.makeText(
                       ForgotPasswordActivity.this,
@@ -141,6 +165,13 @@ public class ForgotPasswordActivity extends AppCompatActivity
     headers.put("correlationId", FdaApplication.getRandomString());
     headers.put("appId", AppConfig.APP_ID_VALUE);
     headers.put("mobilePlatform", "ANDROID");
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(ForgotPasswordActivity.this);
+    Apps apps = dbServiceSubscriber.getApps(realm);
+    headers.put("contactEmail", apps.getContactUsEmail());
+    headers.put("supportEmail", apps.getSupportEmail());
+    headers.put("fromEmail", apps.getFromEmail());
+    dbServiceSubscriber.closeRealmObj(realm);
 
     HashMap<String, String> params = new HashMap<>();
     params.put("email", email.getText().toString());
@@ -177,8 +208,15 @@ public class ForgotPasswordActivity extends AppCompatActivity
       }
       Toast.makeText(
               this, getResources().getString(R.string.forgot_password_error), Toast.LENGTH_SHORT)
-          .show();
-      finish();
+              .show();
+      if (getIntent().getStringExtra("from") != null
+              && getIntent().getStringExtra("from").equalsIgnoreCase("verification")) {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+      } else {
+        finish();
+      }
     }
   }
 

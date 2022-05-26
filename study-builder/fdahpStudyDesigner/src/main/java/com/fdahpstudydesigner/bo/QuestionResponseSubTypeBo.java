@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -41,7 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
   @NamedQuery(
       name = "getQuestionSubResponse",
       query =
-          "from QuestionResponseSubTypeBo QRBO where QRBO.responseTypeId=:responseTypeId and QRBO.active=1 order by QRBO.sequenceNumber "),
+          "from QuestionResponseSubTypeBo QRBO where QRBO.responseTypeId=:responseTypeId and QRBO.active=1  order by QRBO.sequenceNumber "),
 })
 public class QuestionResponseSubTypeBo implements Serializable {
 
@@ -92,12 +93,12 @@ public class QuestionResponseSubTypeBo implements Serializable {
   @Column(name = "value")
   private String value;
 
-  @Column(name = "sequence_number")
-  private Integer sequenceNumber;
-
   @Transient private String signedImage;
 
   @Transient private String signedSelectedImage;
+
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
   public Boolean getActive() {
     return active;

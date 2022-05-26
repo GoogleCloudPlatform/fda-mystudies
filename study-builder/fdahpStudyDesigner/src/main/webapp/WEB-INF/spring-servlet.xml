@@ -25,7 +25,7 @@
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- one of the properties available; the maximum file size in bytes -->
-        <property name="maxUploadSize" value="5000000"/>
+        <property name="maxUploadSize" value="10000000"/>
         <property name="defaultEncoding" value="utf-8"/>
     </bean>
     <bean id="viewResolver"

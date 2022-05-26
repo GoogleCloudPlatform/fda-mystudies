@@ -54,7 +54,8 @@ public class StudyMetadataController {
 
   @ApiOperation(
       value =
-          "Add or update study metadata in response datastore when a study is published from study builder")
+          "Add or update study metadata in response datastore"
+              + " when a study is published from study builder")
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
       @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request)

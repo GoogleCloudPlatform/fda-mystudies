@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -20,7 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -102,7 +103,7 @@ public class StandaloneActivity extends AppCompatActivity
   private String activityId;
   private String localNotification;
   private String latestConsentVersion = "0";
-
+  private boolean enrollAgain;
   private ArrayList<CompletionAdherence> completionAdherenceCalcs = new ArrayList<>();
 
   private static final String FROM = "from";
@@ -293,11 +294,6 @@ public class StandaloneActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .writePreference(
                 StandaloneActivity.this,
-                getString(R.string.rejoin),
-                "" + studyListArrayList.get(0).getSetting().getRejoin());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                StandaloneActivity.this,
                 getString(R.string.studyVersion),
                 "" + studyListArrayList.get(0).getStudyVersion());
 
@@ -332,8 +328,6 @@ public class StandaloneActivity extends AppCompatActivity
                   intent.putExtra("position", "0");
                   intent.putExtra(
                       "enroll", "" + studyListArrayList.get(j).getSetting().isEnrolling());
-                  intent.putExtra(
-                      "rejoin", "" + studyListArrayList.get(j).getSetting().getRejoin());
                   startActivity(intent);
                   finish();
                 }
@@ -353,7 +347,6 @@ public class StandaloneActivity extends AppCompatActivity
             intent.putExtra("studyStatus", studyListArrayList.get(0).getStudyStatus());
             intent.putExtra("position", "0");
             intent.putExtra("enroll", "" + studyListArrayList.get(0).getSetting().isEnrolling());
-            intent.putExtra("rejoin", "" + studyListArrayList.get(0).getSetting().getRejoin());
             startActivity(intent);
             finish();
           }
@@ -386,7 +379,7 @@ public class StandaloneActivity extends AppCompatActivity
       if (studyUpdate.getStudyUpdateData().isInfo()) {
         dbServiceSubscriber.deleteStudyInfoFromDb(this, studyId);
       }
-      if (studyUpdate.getStudyUpdateData().isConsent()) {
+      if (studyUpdate.getStudyUpdateData().isConsent() && studyUpdate.isEnrollAgain()) {
         callConsentMetaDataWebservice();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
@@ -403,12 +396,12 @@ public class StandaloneActivity extends AppCompatActivity
     } else if (responseCode == GET_CONSENT_DOC) {
       ConsentDocumentData consentDocumentData = (ConsentDocumentData) response;
       latestConsentVersion = consentDocumentData.getConsent().getVersion();
-
+      enrollAgain = consentDocumentData.isEnrollAgain();
       callGetConsentPdfWebservice();
 
     } else if (responseCode == CONSENTPDF) {
       ConsentPDF consentPdfData = (ConsentPDF) response;
-      if (latestConsentVersion != null
+      if (enrollAgain && latestConsentVersion != null
           && consentPdfData != null
           && consentPdfData.getConsent() != null
           && consentPdfData.getConsent().getVersion() != null) {
@@ -488,7 +481,6 @@ public class StandaloneActivity extends AppCompatActivity
           intent.putExtra("studyStatus", studyListArrayList.get(0).getStudyStatus());
           intent.putExtra("position", "0");
           intent.putExtra("enroll", "" + studyListArrayList.get(0).getSetting().isEnrolling());
-          intent.putExtra("rejoin", "" + studyListArrayList.get(0).getSetting().getRejoin());
           startActivity(intent);
           finish();
         }
@@ -557,11 +549,6 @@ public class StandaloneActivity extends AppCompatActivity
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StandaloneActivity.this,
-                              getString(R.string.rejoin),
-                              "" + studyListArrayList.get(i).getSetting().getRejoin());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StandaloneActivity.this,
                               getString(R.string.studyVersion),
                               "" + studyListArrayList.get(i).getStudyVersion());
                     } catch (Exception e) {
@@ -607,8 +594,6 @@ public class StandaloneActivity extends AppCompatActivity
                       intent.putExtra("position", "" + i);
                       intent.putExtra(
                           "enroll", "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      intent.putExtra(
-                          "rejoin", "" + studyListArrayList.get(i).getSetting().getRejoin());
                       startActivity(intent);
                       finish();
                     }
@@ -665,11 +650,6 @@ public class StandaloneActivity extends AppCompatActivity
                               StandaloneActivity.this,
                               getString(R.string.enroll),
                               "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StandaloneActivity.this,
-                              getString(R.string.rejoin),
-                              "" + studyListArrayList.get(i).getSetting().getRejoin());
                     } catch (Exception e) {
                       Logger.log(e);
                     }

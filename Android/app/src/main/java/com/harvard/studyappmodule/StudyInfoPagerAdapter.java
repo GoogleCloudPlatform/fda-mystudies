@@ -17,20 +17,27 @@ package com.harvard.studyappmodule;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
+import android.os.Build;
+import android.os.Bundle;
 import android.text.Html;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.viewpager.widget.PagerAdapter;
+import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.StudyInfo;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import io.realm.RealmList;
 
@@ -38,12 +45,13 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
 
   private int size;
   private AppCompatTextView title;
-  private AppCompatTextView desc;
+  private WebView desc;
   private RelativeLayout watchVideo;
   private AppCompatTextView watchVideoLabel;
   private Context context;
   private RealmList<StudyInfo> info;
   private AppCompatImageView bgImg;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   StudyInfoPagerAdapter(Context context, RealmList<StudyInfo> info, String studyId) {
     size = info.size();
@@ -70,6 +78,7 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
   public Object instantiateItem(ViewGroup collection, int position) {
     LayoutInflater inflater =
         (LayoutInflater) collection.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     if (info.get(position).getType().equalsIgnoreCase("video")) {
       View view = inflater.inflate(R.layout.study_info_item1, null);
       initializeXmlId(position, view);
@@ -91,25 +100,41 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
 
   private void setData(int pos) {
     title.setText(info.get(pos).getTitle());
-    desc.setText(Html.fromHtml(info.get(pos).getText()));
+    desc.setBackgroundColor(Color.TRANSPARENT);
+    String txtcolor;
+    if (info.get(pos).getType().equalsIgnoreCase("video")) {
+      txtcolor = "white";
+    } else {
+      txtcolor = "black";
+    }
+    String html = "&lt;font color=\"" + txtcolor + "\"&gt;" + (info.get(pos).getText()) + "&lt;/font&gt;";
+    if (Build.VERSION.SDK_INT >= 24) {
+      desc.loadDataWithBaseURL(null,
+              Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);
+    } else {
+      desc.loadDataWithBaseURL(null, Html.fromHtml(html).toString(), "text/html", "UTF-8", null);
+    }
+    RequestOptions requestOptions = new RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .skipMemoryCache(false);
+
     Glide.with(context)
-        .load(info.get(pos).getImage())
-        .thumbnail(0.5f)
-        .crossFade()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .into(bgImg);
+            .load(Base64.decode(info.get(pos).getImage().split(",")[1], Base64.DEFAULT))
+            .thumbnail(0.5f)
+            .apply(requestOptions)
+            .into(bgImg);
   }
 
   private void initializeXmlId(int pos, View view) {
     if (info.get(pos).getType().equalsIgnoreCase("video")) {
       title = (AppCompatTextView) view.findViewById(R.id.title);
-      desc = (AppCompatTextView) view.findViewById(R.id.desc);
+      desc = (WebView) view.findViewById(R.id.desc);
       watchVideo = (RelativeLayout) view.findViewById(R.id.watch_video);
       watchVideoLabel = (AppCompatTextView) view.findViewById(R.id.watchVideoLabel);
       bgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
     } else {
       title = (AppCompatTextView) view.findViewById(R.id.title);
-      desc = (AppCompatTextView) view.findViewById(R.id.desc);
+      desc = (WebView) view.findViewById(R.id.desc);
       bgImg = (AppCompatImageView) view.findViewById(R.id.bgImg);
     }
   }
@@ -118,11 +143,9 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
     try {
       if (info.get(pos).getType().equalsIgnoreCase("video")) {
         title.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
-        desc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
         watchVideoLabel.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
       } else {
         title.setTypeface(AppController.getTypeface(view.getContext(), "thin"));
-        desc.setTypeface(AppController.getTypeface(view.getContext(), "regular"));
       }
     } catch (Exception e) {
       Logger.log(e);
@@ -141,6 +164,12 @@ public class StudyInfoPagerAdapter extends PagerAdapter {
             new View.OnClickListener() {
               @Override
               public void onClick(View view) {
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    context.getString(R.string.watch_video));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(info.get(pos).getLink()));
                 context.startActivity(intent);
               }

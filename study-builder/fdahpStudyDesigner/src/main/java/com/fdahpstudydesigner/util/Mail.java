@@ -266,7 +266,6 @@ public class Mail {
     props.put("mail.smtp.host", this.getSmtpHostname());
     props.put("mail.smtp.port", this.getSmtpPortvalue());
     props.put("mail.smtp.starttls.enable", "true");
-
     if (useIpWhitelist) {
       props.put("mail.smtp.auth", "false");
       props.put("mail.smtp.ssl.enable", "true");

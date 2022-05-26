@@ -29,6 +29,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_ACTIVE_TASK_CREATED;
 import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ADD;
+
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;

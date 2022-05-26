@@ -380,13 +380,13 @@ public class AppMetaDataDao {
     Session session = null;
     StudyUpdatesResponse studyUpdates = new StudyUpdatesResponse();
     StudyUpdatesBean updates = new StudyUpdatesBean();
-    ConsentDto consent = null;
     List<StudyVersionDto> studyVersionList = null;
     StudyVersionDto currentVersion = null;
     StudyVersionDto latestVersion = null;
     List<ResourcesDto> resourcesList = null;
     StudyDto studyDto = null;
     StudyDto studyActivityStatus = null;
+    ConsentDto consent = null;
     try {
       session = sessionFactory.openSession();
       studyVersionList =

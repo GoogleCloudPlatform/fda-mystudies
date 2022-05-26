@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -13,8 +13,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
@@ -22,6 +22,7 @@ import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.ChangePasswordActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
@@ -41,6 +42,7 @@ import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,12 +77,13 @@ public class LoginCallbackActivity extends AppCompatActivity
     Uri appLinkData = intent.getData();
     if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null) {
       Uri uri = intent.getData();
-      if (uri != null) {
-        userId = uri.getQueryParameter("userId");
-        emailId = uri.getQueryParameter("email");
+      Map<String, String> urlParams = AppController.decodeUrl(uri.getEncodedQuery());
+      if (uri != null && urlParams!=null) {
+        userId = urlParams.get("userId");
+        emailId = urlParams.get("email");
         if (uri.getPath().equalsIgnoreCase(Urls.DEEPLINK_CALLBACK)) {
-          code = uri.getQueryParameter("code");
-          accountStatus = uri.getQueryParameter("accountStatus");
+          code = urlParams.get("code");
+          accountStatus = urlParams.get("accountStatus");
           AppController.getHelperProgressDialog().showProgress(this, "", "", false);
 
           HashMap<String, String> headers = new HashMap<>();
@@ -114,10 +117,10 @@ public class LoginCallbackActivity extends AppCompatActivity
           UserModulePresenter userModulePresenter = new UserModulePresenter();
           userModulePresenter.performLogin(loginEvent);
         } else if (uri.getPath().equalsIgnoreCase(Urls.DEEPLINK_ACTIVATION)) {
-          emailId = uri.getQueryParameter("email");
+          emailId = urlParams.get("email");
           Intent verificationIntent =
               new Intent(LoginCallbackActivity.this, VerificationStepActivity.class);
-          verificationIntent.putExtra("email", uri.getQueryParameter("email"));
+          verificationIntent.putExtra("email", urlParams.get("email"));
           verificationIntent.putExtra("type", INTENT_SIGNIN);
           startActivity(verificationIntent);
           finish();
@@ -213,6 +216,8 @@ public class LoginCallbackActivity extends AppCompatActivity
             "" + userProfileData.getProfile().getEmailId());
     AppController.getHelperSharedPreference()
         .writePreference(LoginCallbackActivity.this, getString(R.string.verified), "true");
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    dbServiceSubscriber.saveUserProfileData(LoginCallbackActivity.this, userProfileData);
     if (userProfileData != null
         && (!userProfileData.getSettings().isLocalNotifications()
             || userProfileData.getSettings().isRemoteNotifications())) {
@@ -255,10 +260,6 @@ public class LoginCallbackActivity extends AppCompatActivity
           "enroll",
           SharedPreferenceHelper.readPreference(
               LoginCallbackActivity.this, getString(R.string.login_studyinfo_enroll), ""));
-      intent.putExtra(
-          "rejoin",
-          SharedPreferenceHelper.readPreference(
-              LoginCallbackActivity.this, getString(R.string.login_studyinfo_rejoin), ""));
       startActivity(intent);
     } else {
       if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {

@@ -234,10 +234,6 @@ public class CommonDaoImpl implements CommonDao {
             String[] deviceTokens = deviceToken.split(",");
             String[] deviceTypes = deviceType.split(",");
 
-            System.out.println("deviceTokens.length " + deviceTokens.length);
-            System.out.println("deviceTypes.length " + deviceTypes.length);
-            logger.info("deviceTokens.length " + deviceTokens.length);
-            logger.info("deviceTypes.length " + deviceTypes.length);
             if (((deviceTokens != null && deviceTokens.length > 0)
                     && (deviceType != null && deviceTypes.length > 0))
                 && (deviceTokens.length == deviceTypes.length)) {

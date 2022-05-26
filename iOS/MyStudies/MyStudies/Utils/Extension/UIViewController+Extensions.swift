@@ -19,6 +19,7 @@
 
 import QuickLook
 import UIKit
+import FirebaseAnalytics
 
 let kResourceName = "fda_preload"
 
@@ -48,13 +49,31 @@ extension UIViewController {
   }
 
   func setNavigationBarItem() {
-
+    
     self.addLeftBarButtonWithImage(UIImage(named: "menu_icn")!)
     self.slideMenuController()?.removeLeftGestures()
     self.slideMenuController()?.removeRightGestures()
     self.slideMenuController()?.addLeftGestures()
     self.slideMenuController()?.addRightGestures()
+    setNavigationBarColor()
   }
+  
+  func setNavigationBarColor() {
+    if #available(iOS 15, *) {
+      let appearance = UINavigationBarAppearance()
+      let navigationBar = UINavigationBar()
+      appearance.configureWithTransparentBackground()
+      appearance.backgroundColor = .white
+      appearance.shadowColor = .lightGray
+      navigationBar.standardAppearance = appearance
+      
+      self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+      self.navigationController?.navigationBar.standardAppearance = appearance
+      self.navigationController?.navigationBar.scrollEdgeAppearance?.backgroundColor = .white
+      self.navigationController?.navigationBar.standardAppearance.backgroundColor = .white
+    }
+  }
+
 
   func showAlert(title: String, message: String) {
 
@@ -91,6 +110,10 @@ extension UIViewController {
       progressView.topAnchor.constraint(equalTo: self.view.topAnchor),
       progressView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
     ])
+    let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    if let valBlocker = appDelegate.blockerScreen, Utilities.isVisible(view: valBlocker) {
+      UIApplication.shared.keyWindow?.bringSubviewToFront(appDelegate.blockerScreen!)
+    }
 
     UIView.animate(withDuration: 0.3) {
       progressView.alpha = 1
@@ -119,6 +142,31 @@ extension UIViewController {
       }
     }
   }
+  
+  func checkBlockerScreen() {
+    if let isForceUpdate = UserManageApps.appDetails?.isForceUpdate {
+      guard let isForceUpdate = Bool(isForceUpdate) else { return }
+      
+      let ud = UserDefaults.standard
+      let valFromSplash = ud.value(forKey: kFromSplashScreen) as? Bool ?? false
+      let valFromBackground = ud.value(forKey: kFromBackground) as? Int ?? 0
+      let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+      
+      if !valFromSplash {
+        if isForceUpdate {
+          appDelegate.showAppVersionUpdate()
+        } else {
+          let valIsShowUpdateAppVersion = ud.value(forKey: kIsShowUpdateAppVersion) as? Bool ?? false
+          if (valFromBackground >= Upgrade.onceDisplayed.rawValue &&
+                valFromBackground != Upgrade.pendingUpdate.rawValue) && !valIsShowUpdateAppVersion {
+            appDelegate.showAppVersionUpdate()
+            ud.set(Upgrade.optionalShown.rawValue, forKey: kFromBackground)
+            ud.synchronize()
+          }
+        }
+      }
+    }
+  }
 
 }
 
@@ -128,7 +176,7 @@ extension UIViewController {
   /// - Returns: Instance of child `UIButton`
   @discardableResult
   public func addBackBarButton() -> UIButton {
-
+    
     let customView = UIView(frame: CGRect(x: -15, y: 0, width: 46, height: 36))
 
     let backbutton: UIButton = UIButton.init(frame: customView.frame)
@@ -175,6 +223,9 @@ extension UIViewController {
   }
 
   @objc public func popController() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Back Button"
+    ])
     _ = self.navigationController?.popViewController(animated: true)
   }
 }
@@ -214,3 +265,4 @@ extension UIViewController {
   }
 
 }
+

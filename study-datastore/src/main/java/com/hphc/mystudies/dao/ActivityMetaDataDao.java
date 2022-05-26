@@ -2260,7 +2260,7 @@ public class ActivityMetaDataDao {
   public Map<String, Object> getQuestionaireQuestionFormatByType(
       QuestionsDto questionDto, String questionResultType, Session session, StudyDto studyDto)
       throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Starts");
+    LOGGER.entry("begin getQuestionaireQuestionFormatByType()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     QuestionReponseTypeDto reponseType = null;
     try {
@@ -2357,7 +2357,7 @@ public class ActivityMetaDataDao {
 
   public Map<String, Object> formatQuestionScaleDetails(
       QuestionReponseTypeDto reponseType, StudyDto studyDto) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionScaleDetails() :: Starts");
+    LOGGER.entry("begin formatQuestionScaleDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(
@@ -2417,7 +2417,6 @@ public class ActivityMetaDataDao {
                       + propMap.get(StudyMetaDataConstants.FDA_SMD_QUESTIONNAIRE_IMAGE).trim()
                       + reponseType.getMaxImage(),
                   StudyMetaDataConstants.DATA_IMAGE));
-
       questionFormat.put(
           "minImage",
           ((reponseType == null) || StringUtils.isEmpty(reponseType.getMinImage()))
@@ -2440,7 +2439,7 @@ public class ActivityMetaDataDao {
 
   public Map<String, Object> formatQuestionContinuousScaleDetails(
       QuestionReponseTypeDto reponseType, StudyDto studyDto) throws DAOException {
-    LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionContinuousScaleDetails() :: Starts");
+    LOGGER.entry("begin formatQuestionContinuousScaleDetails()");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     try {
       questionFormat.put(

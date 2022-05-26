@@ -1,7 +1,7 @@
 //
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2021 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -16,20 +16,24 @@
 // MARK: Cryptors
 
 extension AES: Cryptors {
+  @inlinable
   public func makeEncryptor() throws -> Cryptor & Updatable {
-    let worker = try blockMode.worker(blockSize: AES.blockSize, cipherOperation: encrypt)
+    let blockSize = blockMode.customBlockSize ?? AES.blockSize
+    let worker = try blockMode.worker(blockSize: blockSize, cipherOperation: encrypt, encryptionOperation: encrypt)
     if worker is StreamModeWorker {
-      return try StreamEncryptor(blockSize: AES.blockSize, padding: padding, worker)
+      return try StreamEncryptor(blockSize: blockSize, padding: padding, worker)
     }
-    return try BlockEncryptor(blockSize: AES.blockSize, padding: padding, worker)
+    return try BlockEncryptor(blockSize: blockSize, padding: padding, worker)
   }
 
+  @inlinable
   public func makeDecryptor() throws -> Cryptor & Updatable {
+    let blockSize = blockMode.customBlockSize ?? AES.blockSize
     let cipherOperation: CipherOperationOnBlock = blockMode.options.contains(.useEncryptToDecrypt) == true ? encrypt : decrypt
-    let worker = try blockMode.worker(blockSize: AES.blockSize, cipherOperation: cipherOperation)
+    let worker = try blockMode.worker(blockSize: blockSize, cipherOperation: cipherOperation, encryptionOperation: encrypt)
     if worker is StreamModeWorker {
-      return try StreamDecryptor(blockSize: AES.blockSize, padding: padding, worker)
+      return try StreamDecryptor(blockSize: blockSize, padding: padding, worker)
     }
-    return try BlockDecryptor(blockSize: AES.blockSize, padding: padding, worker)
+    return try BlockDecryptor(blockSize: blockSize, padding: padding, worker)
   }
 }

@@ -1,7 +1,7 @@
 //
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2021 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -14,9 +14,11 @@
 //
 
 #if canImport(Darwin)
-  import Darwin
-#else
-  import Glibc
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif canImport(ucrt)
+import ucrt
 #endif
 
 protocol _UInt32Type {}
@@ -24,12 +26,13 @@ extension UInt32: _UInt32Type {}
 
 /** array of bytes */
 extension UInt32 {
-  @_specialize(exported: true, where T == ArraySlice<UInt8>)
+  @_specialize(where T == ArraySlice<UInt8>)
   init<T: Collection>(bytes: T) where T.Element == UInt8, T.Index == Int {
     self = UInt32(bytes: bytes, fromIndex: bytes.startIndex)
   }
 
-  @_specialize(exported: true, where T == ArraySlice<UInt8>)
+  @_specialize(where T == ArraySlice<UInt8>)
+  @inlinable
   init<T: Collection>(bytes: T, fromIndex index: T.Index) where T.Element == UInt8, T.Index == Int {
     if bytes.isEmpty {
       self = 0

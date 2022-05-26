@@ -140,7 +140,7 @@ public class StudiesServicesImpl implements StudiesServices {
               userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
             }
 
-            logger.info(
+            logger.debug(
                 String.format(
                     "status=%d and fcmNotificationResponse=%s",
                     fcmNotificationResponse.getStatus(), fcmNotificationResponse.getFcmResponse()));
@@ -168,7 +168,7 @@ public class StudiesServicesImpl implements StudiesServices {
               userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
             }
 
-            logger.info(
+            logger.debug(
                 String.format(
                     "status=%d and fcmNotificationResponse=%s",
                     fcmNotificationResponse.getStatus(), fcmNotificationResponse.getFcmResponse()));
@@ -204,19 +204,13 @@ public class StudiesServicesImpl implements StudiesServices {
     notificationBean.setNotificationType(AppConstants.STUDY);
     FcmPushNotificationResponse pushNotificationResponse = null;
     if (deviceTokensMap != null) {
-      System.out.println("inside deviceTokensMap");
-      logger.info("inside deviceTokensMap");
-      // if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
       if (AppConstants.DEVICE_ANDROID.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
         pushNotificationResponse =
             pushFcmNotification(
                 notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-        // } else if (deviceTokensMap.get(AppConstants.DEVICE_IOS) != null) {
       } else if (AppConstants.DEVICE_IOS.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_IOS));
-        // pushNotification(notificationBean,
-        // appInfobyAppCustomId.get(notificationBean.getAppId()));
         pushNotificationResponse =
             pushFcmNotification(
                 notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
@@ -229,8 +223,6 @@ public class StudiesServicesImpl implements StudiesServices {
 
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_IOS));
         notificationBean.setDeviceType(AppConstants.DEVICE_IOS);
-        // pushNotification(notificationBean,
-        // appInfobyAppCustomId.get(notificationBean.getAppId()));
         pushNotificationResponse =
             pushFcmNotification(
                 notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
@@ -343,18 +335,10 @@ public class StudiesServicesImpl implements StudiesServices {
       FcmPushNotificationResponse fcmNotificationResponse =
           new FcmPushNotificationResponse(
               responseJson, conn.getResponseCode(), conn.getResponseMessage());
-      logger.info("Request of Notification" + dataInfo.toString());
-      logger.info("Request json of complete Notification" + json.toString());
       logger.trace(
           String.format(
               "FCM Notification Response status=%d, response=%s",
               conn.getResponseCode(), response));
-
-      logger.info(
-          String.format(
-              "FCM Notification Response status=%d, response=%s",
-              conn.getResponseCode(), response));
-      System.out.println("response = " + response);
       return fcmNotificationResponse;
     }
 

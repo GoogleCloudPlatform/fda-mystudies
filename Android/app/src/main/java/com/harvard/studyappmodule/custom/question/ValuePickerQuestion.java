@@ -18,6 +18,7 @@ package com.harvard.studyappmodule.custom.question;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import android.widget.TextView;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.result.StepResult;
@@ -43,6 +45,7 @@ public class ValuePickerQuestion<T> implements StepBody {
   private String currentSelected;
   private TextView textView;
   private String resultValue;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public ValuePickerQuestion(Step step, StepResult result) {
     if (step instanceof QuestionStepCustom) {
@@ -65,7 +68,6 @@ public class ValuePickerQuestion<T> implements StepBody {
   @Override
   public View getBodyView(int viewType, LayoutInflater inflater, ViewGroup parent) {
     View view = getViewForType(viewType, inflater, parent);
-
     Resources res = parent.getResources();
     LinearLayout.MarginLayoutParams layoutParams =
         new LinearLayout.LayoutParams(
@@ -75,7 +77,7 @@ public class ValuePickerQuestion<T> implements StepBody {
     layoutParams.rightMargin =
         res.getDimensionPixelSize(org.researchstack.backbone.R.dimen.rsb_margin_right);
     view.setLayoutParams(layoutParams);
-
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(inflater.getContext().getApplicationContext());
     return view;
   }
 
@@ -104,6 +106,12 @@ public class ValuePickerQuestion<T> implements StepBody {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                inflater.getContext().getString(R.string.text_view));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             showDialog(inflater.getContext());
           }
         });
@@ -111,7 +119,7 @@ public class ValuePickerQuestion<T> implements StepBody {
     return body;
   }
 
-  private void showDialog(Context context) {
+  private void showDialog(final Context context) {
 
     final Dialog dialog = new Dialog(context);
     dialog.setCancelable(false);
@@ -122,7 +130,12 @@ public class ValuePickerQuestion<T> implements StepBody {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.valuer_picker_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             dialog.dismiss();
           }
         });
@@ -141,6 +154,12 @@ public class ValuePickerQuestion<T> implements StepBody {
         new AdapterView.OnItemClickListener() {
           @Override
           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.valuer_picker_list));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             textView.setText(numberpickervalue[position]);
             resultValue = choices[position].getValue().toString();
 
@@ -180,6 +199,10 @@ public class ValuePickerQuestion<T> implements StepBody {
 
   @Override
   public BodyAnswer getBodyAnswerState() {
-    return BodyAnswer.VALID;
+    if (resultValue != null) {
+      return BodyAnswer.VALID;
+    } else {
+      return BodyAnswer.INVALID;
+    }
   }
 }

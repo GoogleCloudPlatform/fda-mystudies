@@ -1,84 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2020 Google LLC Use of this source code is governed by an 
-	MIT-style license that can be found in the LICENSE file or at https://opensource.org/licenses/MIT. -->
+  MIT-style license that can be found in the LICENSE file or at https://opensource.org/licenses/MIT. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.2.6.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
-	</parent>
-	<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
-	<artifactId>response-server-service</artifactId>
-	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>response-server-service</name>
-	<description>Response Server web service components for the FDA MyStudies Open Implementation</description>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.2.6.RELEASE</version>
+    <relativePath /> <!-- lookup parent from repository -->
+  </parent>
+  <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+  <artifactId>response-server-service</artifactId>
+  <packaging>war</packaging>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>response-server-service</name>
+  <description>Response Server web service components for the FDA MyStudies Open Implementation</description>
 
-	<properties>
-		<java.version>1.8</java.version>
-		<clover.version>4.4.1</clover.version>
-		<common.text.version>1.8</common.text.version>
-		<wiremock.version>2.26.3</wiremock.version>
-	</properties>
-	<build>
-		<finalName>response-datastore</finalName>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>com.google.cloud.healthcare.fdamystudies.FdaMystudiesResponseServerApplication</mainClass>
-					<layout>WAR</layout>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.openclover</groupId>
-				<artifactId>clover-maven-plugin</artifactId>
-				<version>${clover.version}</version>
-				<configuration>
-					<excludesList>**/*ExcludedFile.*</excludesList>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>instrument</goal>
-							<goal>clover</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
-				<artifactId>jib-maven-plugin</artifactId>
-				<version>2.6.0</version>
-				<configuration>
-					<from>
-						<image>tomcat:9.0.33-jdk11-openjdk</image>
-					</from>
-					<container>
-						<appRoot>/usr/local/tomcat/webapps/response-datastore</appRoot>
-					</container>
-				</configuration>
-			</plugin>
-			<plugin>
+  <properties>
+    <java.version>1.8</java.version>
+    <clover.version>4.4.1</clover.version>
+    <common.text.version>1.8</common.text.version>
+    <wiremock.version>2.26.3</wiremock.version>
+  </properties>
+  <build>
+    <finalName>response-datastore</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>com.google.cloud.healthcare.fdamystudies.FdaMystudiesResponseServerApplication</mainClass>
+          <layout>WAR</layout>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.openclover</groupId>
+        <artifactId>clover-maven-plugin</artifactId>
+        <version>${clover.version}</version>
+        <configuration>
+          <excludesList>**/*ExcludedFile.*</excludesList>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>instrument</goal>
+              <goal>clover</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>2.6.0</version>
+        <configuration>
+          <from><image>tomcat:9.0.33-jdk11-openjdk</image></from>
+          <container><appRoot>/usr/local/tomcat/webapps/response-datastore</appRoot></container>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -105,9 +101,9 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
-      </plugin>
-		</plugins>
-	</build>
+      </plugin>	
+    </plugins>
+  </build>
 
   <dependencyManagement>
     <dependencies>
@@ -125,11 +121,11 @@
     </dependencies>
   </dependencyManagement>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>

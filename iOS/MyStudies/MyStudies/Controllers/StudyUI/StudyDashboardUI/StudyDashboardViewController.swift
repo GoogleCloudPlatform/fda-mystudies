@@ -19,6 +19,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
 
 let kMessageForSharingDashboard =
   "This action will create a shareable image file of the dashboard currently seen in this section. Proceed?"
@@ -71,6 +72,9 @@ class StudyDashboardViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard"
+    ])
     // load plist info
     let plistPath = Bundle.main.path(
       forResource: "StudyDashboard",
@@ -88,11 +92,10 @@ class StudyDashboardViewController: UIViewController {
     labelStudyTitle?.text = Study.currentStudy?.name
 
     // check if consent is udpated
-    if StudyUpdates.studyConsentUpdated {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }
-
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -110,7 +113,12 @@ class StudyDashboardViewController: UIViewController {
 
     // show navigationbar
     self.navigationController?.setNavigationBarHidden(true, animated: true)
-    self.tableView?.reloadData()
+    
+    guard let study = Study.currentStudy else { return }
+    let key = "Response" + study.studyId
+    if !(UserDefaults.standard.bool(forKey: key)) {
+      DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
+    }
     getResponse()
   }
 
@@ -120,6 +128,9 @@ class StudyDashboardViewController: UIViewController {
     DBHandler.loadStatisticsForStudy(studyId: study.studyId) { (statiticsList) in
       if !statiticsList.isEmpty {
         StudyDashboard.instance.statistics = statiticsList
+        self.tableView?.reloadData()
+      } else {
+        StudyDashboard.instance.statistics = []
         self.tableView?.reloadData()
       }
     }
@@ -131,10 +142,16 @@ class StudyDashboardViewController: UIViewController {
     guard let study = Study.currentStudy else { return }
     let key = "Response" + study.studyId
     if !(UserDefaults.standard.bool(forKey: key)) {
+      DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
+      StudyDashboard.instance.dashboardResponse = []
+      
       self.addProgressIndicator(with: kDashSetupMessage)
       responseDataFetch?.checkUpdates { [unowned self] in
-        self.loadStatsFromDB(for: study)
-        self.removeProgressIndicator()
+        
+        DispatchQueue.main.async {
+          self.loadStatsFromDB(for: study)
+          self.removeProgressIndicator()
+        }
       }
     } else {
       loadStatsFromDB(for: study)
@@ -190,6 +207,9 @@ class StudyDashboardViewController: UIViewController {
 
   /// Home button clicked.
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Home"
+    ])
     let button = sender as! UIButton
     if button.tag == 200 {
       self.slideMenuController()?.openLeft()
@@ -200,7 +220,9 @@ class StudyDashboardViewController: UIViewController {
 
   /// Share to others button clicked.
   @IBAction func shareButtonAction(_ sender: AnyObject) {
-
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Share"
+    ])
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
       NSLocalizedString(kTitleMessage, comment: ""),
       errorMessage: NSLocalizedString(kMessageForSharingDashboard, comment: ""),
@@ -208,9 +230,17 @@ class StudyDashboardViewController: UIViewController {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: self,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "StudyDashboard Ok Alert"
+        ])
+
         self.shareScreenShotByMail()
       },
       action2: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "StudyDashboard Cancel Alert"
+        ])
+
         // Handle cancel action
       }
     )
@@ -444,6 +474,8 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
 
       // Checking if Signature is consented after Review Step
       if consentSignatureResult?.didTapOnViewPdf == false {
+        NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
         // Directly moving to completion step by skipping Intermediate PDF viewer screen
         stepViewController.goForward()
       }

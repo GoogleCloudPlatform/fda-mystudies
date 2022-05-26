@@ -63,7 +63,7 @@
                  class="form-control ${eligibilityTest.used ? 'cursor-none-disabled-event' : ''}"
                  name="shortTitle" id="shortTitleId"
                  value="${fn:escapeXml(eligibilityTest.shortTitle)}"
-                 required="required" data-error="Please fill out this field"
+                 required="required" data-error="Please fill out this field" 
                  maxlength="15" ${eligibilityTest.used ? 'readonly' : ''} />
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -100,7 +100,7 @@
             <input type="text" class="form-control" name="tentativeDuration" value="Yes" disabled/>
           </div>
           <div class="form-group col-md-6 pr-none">
-            <select class="selectpicker elaborateClass" required data-error="Please fill out this field" title="Select"
+            <select class="selectpicker elaborateClass" required data-error="Please fill out this field"  title="Select"
                     name="responseYesOption"
                     id="resYesOptId" onchange="chkValidChoosedOption()">
               <option value="true" ${eligibilityTest.responseYesOption ? 'selected':''}>Pass
@@ -118,7 +118,7 @@
             <input type="text" class="form-control" name="tentativeDuration" value="No" disabled/>
           </div>
           <div class="form-group col-md-6 pr-none">
-            <select class="selectpicker elaborateClass form-control" required data-error="Please fill out this field" title="Select"
+            <select class="selectpicker elaborateClass form-control" required data-error="Please fill out this field"  title="Select"
                     name="responseNoOption" id="resNoOptId" onchange="chkValidChoosedOption()">
               <option value="true" ${eligibilityTest.responseNoOption ? 'selected':''} >Pass
               </option>
@@ -252,7 +252,7 @@
     $(item).prop('disabled', true);
     <c:if test="${actionTypeForQuestionPage ne 'view'}">
     bootbox.confirm({
-      closeButton: true,
+      closeButton: false,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {
@@ -296,7 +296,7 @@
     }
 
   }
-
+  
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");
   });

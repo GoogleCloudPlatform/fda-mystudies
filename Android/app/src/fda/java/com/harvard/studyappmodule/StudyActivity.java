@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -28,17 +28,9 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -49,6 +41,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.harvard.AppConfig;
 import com.harvard.AppFirebaseMessagingService;
 import com.harvard.BuildConfig;
@@ -62,12 +63,16 @@ import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.LogoutEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
+import com.harvard.utils.version.Version;
+import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import io.realm.Realm;
@@ -88,6 +93,7 @@ public class StudyActivity extends AppCompatActivity
   private AppCompatTextView titleFdaListens;
   private AppCompatTextView title;
   private AppCompatTextView sidebarTitle;
+  private CustomFirebaseAnalytics analyticsInstance;
   private LinearLayout homeLayout;
   private AppCompatTextView homeLabel;
   private LinearLayout resourcesLayout;
@@ -108,6 +114,7 @@ public class StudyActivity extends AppCompatActivity
   private AppCompatTextView signOutLabel;
   private int previousValue = 0; // 0 means signup 1 means signout
   private static final int LOGOUT_REPSONSE_CODE = 100;
+  private static final int RESULT_CODE_UPGRADE = 101;
   private AppCompatTextView editTxt;
   private ProfileFragment profileFragment;
   private boolean isExit = false;
@@ -122,10 +129,16 @@ public class StudyActivity extends AppCompatActivity
   private RelativeLayout clearLayout;
   private String intentFrom = "";
   private BroadcastReceiver receiver;
+  private static AlertDialog alertDialog;
+  VersionReceiver versionReceiver;
+  private String latestVersion;
+  private boolean force = false;
+  AlertDialog.Builder alertDialogBuilder;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
       isExit = false;
       setContentView(R.layout.activity_study);
@@ -181,6 +194,11 @@ public class StudyActivity extends AppCompatActivity
         Logger.log(e);
       }
     }
+
+    IntentFilter filter = new IntentFilter();
+    filter.addAction(BuildConfig.APPLICATION_ID);
+    versionReceiver = new VersionReceiver();
+    registerReceiver(versionReceiver, filter);
   }
 
   @Override
@@ -190,6 +208,18 @@ public class StudyActivity extends AppCompatActivity
       this.unregisterReceiver(this.receiver);
     } catch (Exception e) {
       Logger.log(e);
+    }
+    try {
+      unregisterReceiver(versionReceiver);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      if (alertDialog != null) {
+        alertDialog.dismiss();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
@@ -225,7 +255,10 @@ public class StudyActivity extends AppCompatActivity
           .equalsIgnoreCase("")) {
         if (type != null) {
           if (type.equalsIgnoreCase("Gateway")) {
-            if (subType.equalsIgnoreCase("Study")) {
+            if (subType.equalsIgnoreCase("Study")
+                || subType.equalsIgnoreCase("Activity")
+                || subType.equalsIgnoreCase("Announcement")
+                || subType.equalsIgnoreCase("studyEvent")) {
               Study study = dbServiceSubscriber.getStudyListFromDB(realm);
               if (study != null) {
                 RealmList<StudyList> studyListArrayList = study.getStudies();
@@ -258,11 +291,6 @@ public class StudyActivity extends AppCompatActivity
                               StudyActivity.this,
                               getString(R.string.enroll),
                               "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StudyActivity.this,
-                              getString(R.string.rejoin),
-                              "" + studyListArrayList.get(i).getSetting().getRejoin());
                       AppController.getHelperSharedPreference()
                           .writePreference(
                               StudyActivity.this,
@@ -303,8 +331,6 @@ public class StudyActivity extends AppCompatActivity
                       intent.putExtra("position", "" + i);
                       intent.putExtra(
                           "enroll", "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      intent.putExtra(
-                          "rejoin", "" + studyListArrayList.get(i).getSetting().getRejoin());
                       startActivity(intent);
                     }
                     isStudyAvailable = true;
@@ -369,11 +395,6 @@ public class StudyActivity extends AppCompatActivity
                               StudyActivity.this,
                               getString(R.string.enroll),
                               "" + studyListArrayList.get(i).getSetting().isEnrolling());
-                      AppController.getHelperSharedPreference()
-                          .writePreference(
-                              StudyActivity.this,
-                              getString(R.string.rejoin),
-                              "" + studyListArrayList.get(i).getSetting().getRejoin());
                     } catch (Exception e) {
                       Logger.log(e);
                     }
@@ -476,6 +497,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_side_menu));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             checkSignOrSignOutScenario();
             openDrawer();
             try {
@@ -489,6 +516,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.filter_clicked));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(StudyActivity.this, FilterActivity.class);
             startActivityForResult(intent, 999);
           }
@@ -497,6 +530,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_search));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             toolBarLayout.setVisibility(View.GONE);
             searchToolBarLayout.setVisibility(View.VISIBLE);
             drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -564,6 +603,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_search_clear));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             searchEditText.setText("");
             clearLayout.setVisibility(View.INVISIBLE);
             studyFragment.setStudyFilteredStudyList();
@@ -574,6 +619,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_search_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             searchEditText.setText("");
             setToolBarEnable();
             hideKeyboard();
@@ -585,6 +636,12 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_notification));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(StudyActivity.this, NotificationActivity.class);
             startActivityForResult(intent, NOTIFICATION_RESULT);
           }
@@ -610,6 +667,11 @@ public class StudyActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.study_info));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             SetDialogHelper.setNeutralDialog(
                 StudyActivity.this,
                 getResources().getString(R.string.registration_message),
@@ -621,14 +683,7 @@ public class StudyActivity extends AppCompatActivity
   }
 
   public void setVersion(TextView version) {
-    try {
-      PackageInfo info =
-          getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
-      version.append("" + info.versionName);
-    } catch (PackageManager.NameNotFoundException e) {
-      Logger.log(e);
-      version.setText("");
-    }
+    version.append(BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
   }
 
   private void hideKeyboard() {
@@ -708,8 +763,12 @@ public class StudyActivity extends AppCompatActivity
 
   @Override
   public void onClick(View view) {
+    Bundle eventProperties = new Bundle();
     switch (view.getId()) {
       case R.id.mHomeLayout:
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.study_side_home));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         previousValue = R.id.mHomeLayout;
         titleFdaListens.setText(getResources().getString(R.string.app_name));
         title.setText("");
@@ -743,6 +802,10 @@ public class StudyActivity extends AppCompatActivity
         break;
 
       case R.id.mResourcesLayout:
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            getString(R.string.study_side_resources));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         if (previousValue == R.id.mResourcesLayout) {
           closeDrawer();
         } else {
@@ -762,6 +825,10 @@ public class StudyActivity extends AppCompatActivity
         break;
 
       case R.id.mReachoutLayout:
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            getString(R.string.study_side_reachout));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         reachoutMenuClicked();
         break;
 
@@ -769,6 +836,11 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.study_side_sign_in));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           closeDrawer();
           SharedPreferenceHelper.writePreference(
               StudyActivity.this, getString(R.string.loginflow), "SideMenu");
@@ -785,13 +857,24 @@ public class StudyActivity extends AppCompatActivity
                   .setExitAnimations(
                       StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
                   .build();
-          customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+          Apps apps = dbServiceSubscriber.getApps(realm);
+          customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+              .replace("$FromEmail", apps.getFromEmail())
+              .replace("$SupportEmail", apps.getSupportEmail())
+              .replace("$AppName", apps.getAppName())
+              .replace("$ContactEmail", apps.getContactUsEmail())));
+          dbServiceSubscriber.closeRealmObj(realm);
           startActivity(customTabsIntent.intent);
         } else {
           if (previousValue == R.id.mSignInProfileLayout) {
             closeDrawer();
           } else {
             previousValue = R.id.mSignInProfileLayout;
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_side_my_account));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             titleFdaListens.setText("");
             title.setText(getResources().getString(R.string.profile));
             editBtnLayout.setVisibility(View.VISIBLE);
@@ -805,6 +888,12 @@ public class StudyActivity extends AppCompatActivity
                 new View.OnClickListener() {
                   @Override
                   public void onClick(View view) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.study_edit));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     if (editTxt
                         .getText()
                         .toString()
@@ -833,6 +922,11 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.study_side_sign_up));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           titleFdaListens.setText("");
           title.setText(getResources().getString(R.string.signup));
           editBtnLayout.setVisibility(View.GONE);
@@ -847,10 +941,19 @@ public class StudyActivity extends AppCompatActivity
               .commit();
         } else {
           // SignOut Reach out menu click
+          eventProperties.putString(
+              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+              getString(R.string.study_side_reachout));
+          analyticsInstance.logEvent(
+              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           reachoutMenuClicked();
         }
         break;
       case R.id.mSignOutLayout:
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            getString(R.string.study_side_sign_out));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         closeDrawer();
         logout();
         break;
@@ -918,7 +1021,12 @@ public class StudyActivity extends AppCompatActivity
             getResources().getString(R.string.sign_out),
             new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int id) {
-
+                Bundle eventProperties = new Bundle();
+                eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.study_side_sign_out_ok));
+                analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 AppController.getHelperProgressDialog()
                     .showProgress(StudyActivity.this, "", "", false);
                 HashMap<String, String> params = new HashMap<>();
@@ -960,6 +1068,12 @@ public class StudyActivity extends AppCompatActivity
         getResources().getString(R.string.cancel),
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_side_sign_out_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             dialog.dismiss();
           }
         });
@@ -1003,8 +1117,7 @@ public class StudyActivity extends AppCompatActivity
     if (responseCode == LOGOUT_REPSONSE_CODE) {
       Toast.makeText(this, getResources().getString(R.string.signed_out), Toast.LENGTH_SHORT)
           .show();
-      SharedPreferences settings = SharedPreferenceHelper.getPreferences(StudyActivity.this);
-      settings.edit().clear().apply();
+      SharedPreferenceHelper.deletePreferences(this);
       // delete passcode from keystore
       String pass = AppController.refreshKeys("passcode");
       if (pass != null) {
@@ -1098,6 +1211,47 @@ public class StudyActivity extends AppCompatActivity
             .replace(R.id.frameLayoutContainer, new ResourcesFragment(), "fragment")
             .commit();
       }
+    } else if (requestCode == RESULT_CODE_UPGRADE) {
+      Version currVer = new Version(AppController.currentVersion());
+      Version latestVer = new Version(latestVersion);
+      if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
+        Logger.info(BuildConfig.APPLICATION_ID, "App Updated");
+      } else {
+        if (force) {
+          Toast.makeText(
+              StudyActivity.this,
+              "Please update the app to continue using",
+              Toast.LENGTH_SHORT)
+              .show();
+          moveTaskToBack(true);
+          if (Build.VERSION.SDK_INT < 21) {
+            finishAffinity();
+          } else {
+            finishAndRemoveTask();
+          }
+        } else {
+          AlertDialog.Builder alertDialogBuilder =
+              new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
+          alertDialogBuilder.setTitle("Upgrade");
+          alertDialogBuilder
+              .setMessage("Please consider updating app next time")
+              .setCancelable(false)
+              .setPositiveButton(
+                  "ok",
+                  new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                      Bundle eventProperties = new Bundle();
+                      eventProperties.putString(
+                          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          getString(R.string.app_update_next_time_ok));
+                      analyticsInstance.logEvent(
+                          CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                      dialog.dismiss();
+                    }
+                  })
+              .show();
+        }
+      }
     }
   }
 
@@ -1138,7 +1292,12 @@ public class StudyActivity extends AppCompatActivity
               .setStartAnimations(StudyActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
               .setExitAnimations(StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
               .build();
-      customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+      Apps apps = dbServiceSubscriber.getApps(realm);
+      customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+          .replace("$FromEmail", apps.getFromEmail())
+          .replace("$SupportEmail", apps.getSupportEmail())
+          .replace("$AppName", apps.getAppName())
+          .replace("$ContactEmail", apps.getContactUsEmail())));
       startActivity(customTabsIntent.intent);
     }
 
@@ -1200,5 +1359,103 @@ public class StudyActivity extends AppCompatActivity
       Logger.log(e);
     }
     return key;
+  }
+
+  public class VersionReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+      if (intent.getStringExtra("api").equalsIgnoreCase("success")) {
+        Version currVer = new Version(AppController.currentVersion());
+        Version latestVer = new Version(intent.getStringExtra("latestVersion"));
+
+        latestVersion = intent.getStringExtra("latestVersion");
+        force = Boolean.parseBoolean(intent.getStringExtra("force"));
+
+        if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
+          isUpgrade(false, latestVersion, force);
+        } else {
+          AppController.getHelperSharedPreference().writePreference(StudyActivity.this, "versionalert", "done");
+          isUpgrade(true, latestVersion, force);
+        }
+      } else {
+        Toast.makeText(StudyActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT < 21) {
+          finishAffinity();
+        } else {
+          finishAndRemoveTask();
+        }
+      }
+    }
+  }
+
+  public void isUpgrade(boolean b, String latestVersion, final boolean force) {
+    this.latestVersion = latestVersion;
+    this.force = force;
+    String msg;
+    String positiveButton;
+    String negativeButton;
+    if (b) {
+      if (force) {
+        msg = "Please upgrade the app to continue.";
+        positiveButton = "Ok";
+        negativeButton = "Cancel";
+      } else {
+        msg = "A new version of this app is available. Do you want to update it now?";
+        positiveButton = "Yes";
+        negativeButton = "Skip";
+      }
+      alertDialogBuilder =
+          new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder.setTitle("Upgrade");
+      alertDialogBuilder
+          .setMessage(msg)
+          .setCancelable(false)
+          .setPositiveButton(
+              positiveButton,
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_ok));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  startActivityForResult(
+                      new Intent(Intent.ACTION_VIEW, Uri.parse(VersionChecker.PLAY_STORE_URL)),
+                      RESULT_CODE_UPGRADE);
+                }
+              })
+          .setNegativeButton(
+              negativeButton,
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                  Bundle eventProperties = new Bundle();
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      getString(R.string.app_upgrade_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  dialog.dismiss();
+                  if (force) {
+                    Toast.makeText(
+                            StudyActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
+                        .show();
+                    moveTaskToBack(true);
+                    if (Build.VERSION.SDK_INT < 21) {
+                      finishAffinity();
+                    } else {
+                      finishAndRemoveTask();
+                    }
+                  } else {
+                    dialog.dismiss();
+                  }
+                }
+              });
+      alertDialog = alertDialogBuilder.create();
+      alertDialog.show();
+    }
   }
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -18,19 +18,24 @@ package com.harvard.studyappmodule;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.AppConfig;
 import com.harvard.R;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
+import com.harvard.usermodule.TermsPrivacyPolicyActivity;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import io.realm.Realm;
 import io.realm.RealmList;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +45,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
   private final Context context;
   private final ArrayList<Resource> items = new ArrayList<>();
   private Fragment fragment;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   ResourcesListAdapter(Context context, RealmList<Resource> items, Fragment fragment) {
     this.context = context;
@@ -52,6 +58,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
     View v =
         LayoutInflater.from(parent.getContext())
             .inflate(R.layout.resources_list_item, parent, false);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     return new Holder(v);
   }
 
@@ -92,13 +99,31 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
         @Override
         public int compare(final Resource o1, final Resource o2) {
           if (o1.getTitle().contains(context.getResources().getString(R.string.leave_study))
-                  && !o2.getTitle()
-                  .contains(context.getResources().getString(R.string.leave_study))) {
+              && !o2.getTitle()
+              .contains(context.getResources().getString(R.string.leave_study))) {
             return 1;
           } else if (!o1.getTitle()
-                  .contains(context.getResources().getString(R.string.leave_study))
-                  && o2.getTitle()
-                  .contains(context.getResources().getString(R.string.leave_study))) {
+              .contains(context.getResources().getString(R.string.leave_study))
+              && o2.getTitle()
+              .contains(context.getResources().getString(R.string.leave_study))) {
+            return -1;
+          } else if (o1.getTitle().contains(context.getResources().getString(R.string.resourcePolicy))
+              && !o2.getTitle()
+              .contains(context.getResources().getString(R.string.resourcePolicy))) {
+            return 1;
+          } else if (!o1.getTitle()
+              .contains(context.getResources().getString(R.string.resourcePolicy))
+              && o2.getTitle()
+              .contains(context.getResources().getString(R.string.resourcePolicy))) {
+            return -1;
+          } else if (o1.getTitle().contains(context.getResources().getString(R.string.resourceTerms))
+              && !o2.getTitle()
+              .contains(context.getResources().getString(R.string.resourceTerms))) {
+            return 1;
+          } else if (!o1.getTitle()
+              .contains(context.getResources().getString(R.string.resourceTerms))
+              && o2.getTitle()
+              .contains(context.getResources().getString(R.string.resourceTerms))) {
             return -1;
           }
           return 0;
@@ -111,18 +136,28 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
               && AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_standalone))) {
         holder.resourcesDesc.setVisibility(View.VISIBLE);
         holder.resourcesDesc.setText(context.getString(R.string.delete_account_msg));
+      } else {
+        holder.resourcesDesc.setVisibility(View.INVISIBLE);
       }
 
       holder.container.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.resources_list));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+              Realm realm = AppController.getRealmobj(context);
               if (items.get(i).getType() != null) {
                 Intent intent = new Intent(context, ResourcesWebViewActivity.class);
                 intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
                 intent.putExtra("title", "" + items.get(i).getTitle().toString());
                 intent.putExtra("type", "" + items.get(i).getType().toString());
-                intent.putExtra("content", "" + items.get(i).getContent().toString());
+                intent.putExtra("resourceId", "" + items.get(i).getResourcesId().toString());
                 context.startActivity(intent);
               } else if (items
                   .get(i)
@@ -136,7 +171,6 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 intent.putExtra("studyStatus", ((SurveyActivity) context).getStudyStatus());
                 intent.putExtra("position", "" + ((SurveyActivity) context).getPosition());
                 intent.putExtra("enroll", "" + ((SurveyActivity) context).getTitle1());
-                intent.putExtra("rejoin", "" + ((SurveyActivity) context).getTitle1());
                 intent.putExtra("about_this_study", true);
                 (context).startActivity(intent);
 
@@ -155,103 +189,87 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
               } else if (items
                   .get(i)
                   .getTitle()
+                  .equalsIgnoreCase(view.getResources().getString(R.string.resourceTerms))) {
+                try {
+                  Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
+                  termsIntent.putExtra(
+                      "title", context.getResources().getString(R.string.resourceTerms));
+                  termsIntent.putExtra("url", dbServiceSubscriber.getApps(realm).getTermsUrl());
+                  context.startActivity(termsIntent);
+                } catch (Exception e) {
+                  Logger.log(e);
+                }
+              } else if (items
+                  .get(i)
+                  .getTitle()
+                  .equalsIgnoreCase(view.getResources().getString(R.string.resourcePolicy))) {
+                try {
+                  Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
+                  termsIntent.putExtra(
+                      "title", context.getResources().getString(R.string.resourcePolicy));
+                  termsIntent.putExtra(
+                      "url", dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
+                  context.startActivity(termsIntent);
+                } catch (Exception e) {
+                  Logger.log(e);
+                }
+              } else if (items
+                  .get(i)
+                  .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.leave_study))) {
 
-                String message = ((SurveyResourcesFragment) fragment).getLeaveStudyMessage();
+                String message;
+                if (items
+                        .get(i)
+                        .getTitle()
+                        .equalsIgnoreCase(context.getResources().getString(R.string.leave_study))
+                    && AppConfig.AppType.equalsIgnoreCase(
+                        context.getString(R.string.app_standalone))) {
+                  message = context.getString(R.string.leaveStudyDeleteAccount);
+                } else {
+                  message = context.getString(R.string.leaveStudy);
+                }
                 AlertDialog.Builder builder =
                     new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
                 builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
                 builder.setMessage(message);
                 builder.setPositiveButton(
-                    context.getResources().getString(R.string.proceed_caps),
+                    context.getResources().getString(R.string.yes),
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
-                        typeUserShowDialog();
+                        Bundle eventProperties = new Bundle();
+                        eventProperties.putString(
+                            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                            context.getString(R.string.resources_list_leave_study_yes));
+                        analyticsInstance.logEvent(
+                            CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                        ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy();
                       }
                     });
 
                 builder.setNegativeButton(
-                    context.getResources().getString(R.string.cancel_caps),
+                    context.getResources().getString(R.string.cancel),
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
+                        Bundle eventProperties = new Bundle();
+                        eventProperties.putString(
+                            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                            context.getString(R.string.resources_list_leave_study_no));
+                        analyticsInstance.logEvent(
+                            CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                         dialog.cancel();
                       }
                     });
                 AlertDialog diag = builder.create();
                 diag.show();
               }
+              dbServiceSubscriber.closeRealmObj(realm);
             }
           });
     } catch (Exception e) {
       Logger.log(e);
-    }
-  }
-
-  private void typeUserShowDialog() {
-    try {
-      String withdrawalType = ((SurveyResourcesFragment) fragment).getType();
-      switch (withdrawalType) {
-        case "ask_user":
-          showDialog(3);
-          break;
-        case "delete_data":
-          showDialog(2);
-
-          break;
-        case "no_action":
-          showDialog(1);
-          break;
-      }
-    } catch (Exception e) {
-      Logger.log(e);
-    }
-  }
-
-  private void showDialog(int count) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
-    // withdrawalType ask_user
-    if (count == 3) {
-      builder.setMessage(
-          context.getResources().getString(R.string.leave_study_retained_or_deleted_message));
-
-      builder.setPositiveButton(
-          context.getResources().getString(R.string.retain_my_data_caps),
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("false");
-            }
-          });
-
-      builder.setNeutralButton(
-          context.getResources().getString(R.string.cancel_caps),
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              dialog.cancel();
-            }
-          });
-
-      builder.setNegativeButton(
-          context.getResources().getString(R.string.delete_my_data_caps),
-          new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("true");
-              dialog.cancel();
-            }
-          });
-
-      AlertDialog diag = builder.create();
-      diag.show();
-    } else if (count == 2) {
-      // withdrawalType delete_data
-      ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("true");
-    } else if (count == 1) {
-      // withdrawalType no_action
-      ((SurveyResourcesFragment) fragment).responseServerWithdrawFromStudy("false");
     }
   }
 }

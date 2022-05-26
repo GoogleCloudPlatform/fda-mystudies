@@ -1,26 +1,10 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Copyright 2020-2021 Google LLC
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
-
 package com.fdahpstudydesigner.util;
 
 public class FdahpStudyDesignerConstants {
@@ -67,7 +51,7 @@ public class FdahpStudyDesignerConstants {
       "The study must have at least one questionnaire or active task added before attempting this action.";
 
   public static final String ACTIVETASK_DATE_ERROR_MSG =
-      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again.";
+      "One or more of the study's activities are scheduled for dates that are in the past. Please configure activity schedules to have upcoming dates and try again.";
   public static final String ACTIVETASK_LIST = "activeTaskList";
   public static final String ACTIVITY_MESSAGE = "activityMsg";
   public static final String ACTIVITY_STUDY_ID = "activityStudyId";
@@ -244,7 +228,7 @@ public class FdahpStudyDesignerConstants {
   public static final String NOTIFICATION_DEACTIVATE_TEXT =
       "The study $customId has been closed. We thank you for your participation.";
   public static final String NOTIFICATION_ERROR_MSG =
-      "One or more of the study's notifications is scheduled for a date in the past. Please correct the same and try again.";
+      "One or more of the study's notifications are scheduled for dates that are in the past. Please configure notification schedules to have upcoming dates and try again.";
   public static final String NOTIFICATION_GT = "GT";
   public static final String NOTIFICATION_IMMEDIATE = "immediate";
 
@@ -302,14 +286,14 @@ public class FdahpStudyDesignerConstants {
       "This section has been marked as complete";
   public static final String QUESTIONNARIE_STUDY_ID = "questionnarieStudyId";
   public static final String QUESTIONNARIES_ERROR_MSG =
-      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again.";
+      "One or more of the study's activities are scheduled for dates that are in the past. Please configure activity schedules to have upcoming dates and try again.";
   public static final String QUESTIONSTEP_ACTIVITY = "Question step";
   public static final String QUESTIONSTEP_DELETED = "Question step deleted";
   public static final String QUESTIONSTEP_DONE = "Question step marked complete";
   public static final String QUESTIONSTEP_SAVED = "Question step saved";
   public static final String REDIRECT_SESSION_PARAM_NAME = "sessionUserId=";
   public static final String REFERENCE_TYPE_CATEGORIES = "Categories";
-  public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research Sponsors";
+  public static final String REFERENCE_TYPE_RESEARCH_SPONSORS = "Research sponsors";
   public static final String REQUIRED_DATE_TIME = "MM/dd/yyyy HH:mm";
   public static final String REQUIRED_DATE_TIME_FOR_DATE_DIFF = "MM/dd/yyyy HH:mm:ss";
   public static final String REQUIRED_TIME = "HH:mm";
@@ -333,8 +317,6 @@ public class FdahpStudyDesignerConstants {
   public static final Integer ROLE_MANAGE_USERS_EDIT = 5;
   public static final Integer ROLE_MANAGE_USERS_VIEW = 7;
   public static final Integer ROLE_SUPERADMIN = 1;
-  public static final Integer ROLE_MANAGE_APPS = 10;
-  public static final Integer ROLE_CREATE_MANAGE_APPS = 9;
   public static final String RUN_BASED = "Run-based";
   // Button Name
   public static final String SAVE_BUTTON = "save";
@@ -391,8 +373,9 @@ public class FdahpStudyDesignerConstants {
   // supported
   // android
   public static final String STUDY_PLATFORM_TYPE_IOS = "I"; // platform
-  // supported noth ios and android
-  public static final String STUDY_PLATFORM_TYPE_IOS_ANDROID = "I,A"; // platform
+
+  // supported both ios and android
+  public static final String STUDY_PLATFORM_TYPE_IOS_ANDROID = "I,A";
 
   // Study Status
   public static final String STUDY_PRE_LAUNCH = "Pre-launch";
@@ -456,18 +439,6 @@ public class FdahpStudyDesignerConstants {
   public static final String SUPER_ADMIN_PERMISSIONS =
       "ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW,ROLE_MANAGE_APPS,ROLE_CREATE_MANAGE_APPS";
 
-  public static final String FAILURE_EXPORT_STUDY_MESSAGE =
-      "Sorry, a technical error occurred and the study could not be exported.";
-
-  public static final String IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE =
-      "Import failed due to anomalies detected in the exported study file. Please try again with a new signed URL generated at the point of export in the origin Study Builder.";
-
-  public static final String IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION =
-      "Import failed. Studies can only be imported from compatible Study Builder applications (running a platform release version of 2.0.6 or higher, and lower than or equal to the destination platform version  which is";
-
-  public static final String IMPORT_FAILED_DUE_TO_ALREADY_USED_URL =
-      "The URL has already been used to import a study into this Study Builder. Use the copy-into-new action to replicate the study or use a new URL generated at the point of study export.";
-
   public static final String PATH_SEPARATOR = "/";
 
   public static final String STUDIES = "studies";
@@ -488,6 +459,18 @@ public class FdahpStudyDesignerConstants {
       "Study replication failed. Please try again later.";
 
   public static final String INVALID_URL = "Please enter a valid URL";
+
+  public static final String FAILURE_EXPORT_STUDY_MESSAGE =
+      "Sorry, a technical error occurred and the study could not be exported.";
+
+  public static final String IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE =
+      "Import failed due to anomalies detected in the exported study file. Please try again with a new signed URL generated at the point of export in the origin Study Builder.";
+
+  public static final String IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION =
+      "Import failed. Studies can only be imported from compatible Study Builder applications (running a platform release version of 2.0.6 or higher, and lower than or equal to the destination platform version  which is";
+
+  public static final String IMPORT_FAILED_DUE_TO_ALREADY_USED_URL =
+      "The URL has already been used to import a study into this Study Builder. Use the copy-into-new action to replicate the study or use a new URL generated at the point of study export.";
 
   public static final String STUDY_PRE_LUNCH_VERSION = "0.0";
 
@@ -513,6 +496,10 @@ public class FdahpStudyDesignerConstants {
 
   public static final String FAILURE_DEACTIVATE_APP_MESSAGE =
       "Sorry, a technical error occurred and App deactivation failed";
+
+  public static final Integer ROLE_MANAGE_APPS = 10;
+
+  public static final Integer ROLE_CREATE_MANAGE_APPS = 9;
 
   public static final String VIEW_ASSOCIATED_STUDIES_MESSAGE =
       "Studies seen in the list are based on the permissions you have in the Study Builder";

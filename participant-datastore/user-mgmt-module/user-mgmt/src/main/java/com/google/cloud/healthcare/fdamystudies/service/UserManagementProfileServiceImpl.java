@@ -48,7 +48,6 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -262,10 +261,6 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
     userDetailsId = commonDao.getUserInfoDetails(userId);
 
-    logger.info(
-        "deactivateAcctBean Request=" + ReflectionToStringBuilder.toString(deactivateAcctBean));
-    logger.info("deactivateAcctBean Request=" + deactivateAcctBean.toString());
-
     if (deactivateAcctBean != null
         && deactivateAcctBean.getStudyData() != null
         && !deactivateAcctBean.getStudyData().isEmpty()) {
@@ -360,9 +355,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             : appConfig.getFromEmail();
 
     templateArgs.put("appName", appName);
-    // TODO(#496): replace with actual study's org name.
-    /*templateArgs.put("orgName", optApp.get().getOrganizationName());*/
-    templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
+    templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(

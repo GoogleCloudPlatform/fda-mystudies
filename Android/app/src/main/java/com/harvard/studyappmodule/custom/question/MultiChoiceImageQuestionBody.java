@@ -15,7 +15,9 @@
 
 package com.harvard.studyappmodule.custom.question;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.BodyAnswer;
@@ -36,6 +39,8 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
   private StepResult<T> result;
   private ChoiceCustomImage<T>[] choices;
   private T currentSelected;
+  private CustomFirebaseAnalytics analyticsInstance;
+  private Context context;
 
   public MultiChoiceImageQuestionBody(Step step, StepResult result) {
     this.step = (QuestionStepCustom) step;
@@ -59,6 +64,7 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
     View view = getViewForType(viewType, inflater, parent);
 
     Resources res = parent.getResources();
+    this.context = inflater.getContext();
     LinearLayout.MarginLayoutParams layoutParams =
         new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -67,7 +73,7 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
     layoutParams.rightMargin =
         res.getDimensionPixelSize(org.researchstack.backbone.R.dimen.rsb_margin_right);
     view.setLayoutParams(layoutParams);
-
+    this.analyticsInstance = CustomFirebaseAnalytics.getInstance(context.getApplicationContext());
     return view;
   }
 
@@ -102,13 +108,13 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
       imageView.setLayoutParams(layoutParams);
 
       if (currentSelected != null && currentSelected.equals(item.getValue())) {
-        byte[] imageByteArray = Base64.decode(item.getSelectedImage(), Base64.DEFAULT);
+        byte[] imageByteArray = Base64.decode(item.getSelectedImage().split(",")[1], Base64.DEFAULT);
         Glide.with(inflater.getContext()).load(imageByteArray).into(imageView);
         currentSelected = item.getValue();
         pervioustxtview[0] = imageView;
         desc.setText(item.getText());
       } else {
-        byte[] imageByteArray = Base64.decode(item.getImage(), Base64.DEFAULT);
+        byte[] imageByteArray = Base64.decode(item.getImage().split(",")[1], Base64.DEFAULT);
         Glide.with(inflater.getContext()).load(imageByteArray).into(imageView);
       }
 
@@ -116,13 +122,22 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.image_view));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               if (pervioustxtview[0] != null) {
                 byte[] imageByteArray =
-                    Base64.decode(choices[pervioustxtview[0].getId()].getImage(), Base64.DEFAULT);
+                    Base64.decode(
+                        choices[pervioustxtview[0].getId()].getImage().split(",")[1],
+                        Base64.DEFAULT);
                 Glide.with(inflater.getContext()).load(imageByteArray).into(pervioustxtview[0]);
               }
               byte[] imageByteArray =
-                  Base64.decode(choices[imageView.getId()].getSelectedImage(), Base64.DEFAULT);
+                  Base64.decode(
+                      choices[imageView.getId()].getSelectedImage().split(",")[1], Base64.DEFAULT);
               Glide.with(inflater.getContext()).load(imageByteArray).into(imageView);
               imageView.setLayoutParams(layoutParams);
               pervioustxtview[0] = imageView;

@@ -15,16 +15,16 @@ buildscript {
     }
 }
 
-// plugins {
-    // id "org.sonarqube" version "2.6"
-// }
+plugins {
+    id "org.sonarqube" version "2.6"
+}
 
-// sonarqube {
-   // properties {
-        // property "sonar.projectName", "Android-FDA"
-        // property "sonar.projectKey", "android-fda"
-    // }
-// }
+sonarqube {
+    properties {
+        property "sonar.projectName", "Android-FDA"
+        property "sonar.projectKey", "android-fda"
+    }
+}
 
 
 allprojects {

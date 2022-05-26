@@ -1,30 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Update `app_name` with a user-facing name for your application, for example, "Demo App"-->
+<!-- Update `package_name` with the `ApplicationID` that you specified in `Android/app/build.gradle` -->
 <!DOCTYPE resources [
-    <!ENTITY app_name "FDA MyStudies">
-    <!ENTITY package_name "com.google.FDAMyStudies" >
+    <!ENTITY app_name "YOUR_APP_NAME">
+    <!ENTITY package_name "YOUR_PACKAGE_NAME">
     ]>
 
 <resources>
+    <!--The following strings must be updated-->
+    <!-- Update `google_maps_key` with your Google Maps API key (see https://developers.google.com/maps/documentation/android-sdk/get-api-key) -->
+    <string name="google_maps_Key">YOUR_MAPS_KEY</string>
+
+    <!-- Keeping deeplink host as package_name to make it unique across apps. This would establish "app://{package_name}/mystudies" as the deeplink URL -->
+    <string name="deeplink_host">&package_name;</string>
+
+    <!--The following strings may be customized as desired-->
     <string name="app_name">&app_name;</string>
     <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>
-    <string name="website"></string>
-    <string name="websitetxt">App Website</string>
+    <string name="websitetxt">App website</string>
     <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
     <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
     <string name="delete_account_content">You have chosen to delete your &app_name; account. This will result in automatic withdrawal from the studies you were enrolled in.</string>
-    <string name="delete_message">Are you sure you wish to permanently delete your &app_name; Gateway app account?  You will need to register again if you wish to join a study.</string>
-    <string name="studie_your_enrolled">It\'s been a while since you visited the &app_name; app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
-    <string name="termsurl"></string>
-    <string name="privacyurl"></string>
-    <string name="view_consent">View Consent</string>
-    <string name="visit_website">Visit Website</string>
+    <string name="delete_message">Are you sure you want to delete your app account? </string>
+    <string name="studie_your_enrolled">It\'s been a while since you visited the &app_name; app. Your participation in research studies is important. We encourage you to visit the app often and actively participate. </string>
+    <string name="view_consent">View consent</string>
+    <string name="visit_website">Visit website</string>
     <string name="join_study">Participate</string>
     <string name="clientToken">clientToken</string>
     <string name="account_type">&package_name;.offlineModule.auth.syncadapterexample</string>
     <string name="sync_provider">&package_name;.offlineModule.auth.syncadapterexample.provider</string>
     <string name="FileProvider_authorities">&package_name;.myfileprovider</string>
-
-    <!--must change strings-->
-    <string name="google_maps_Key">MAPS_KEY</string> <!-- replace this with google map key -->
-    <string name="deeplink_host">gcp</string> <!-- replace this with the deeplink host -->
 </resources>

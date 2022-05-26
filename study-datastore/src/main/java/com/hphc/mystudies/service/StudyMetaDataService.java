@@ -21,6 +21,7 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package com.hphc.mystudies.service;
 
 import com.hphc.mystudies.bean.ActiveTaskActivityMetaDataResponse;

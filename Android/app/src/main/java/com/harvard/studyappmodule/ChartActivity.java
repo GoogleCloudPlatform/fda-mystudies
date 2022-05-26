@@ -28,10 +28,6 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +36,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.harvard.R;
@@ -51,6 +51,7 @@ import com.harvard.studyappmodule.studymodel.ChartDataSource;
 import com.harvard.studyappmodule.studymodel.DashboardData;
 import com.harvard.studyappmodule.studymodel.RunChart;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.CustomMarkerView;
 import com.harvard.utils.Logger;
 import com.harvard.utils.TempGraphHelper;
@@ -96,6 +97,7 @@ public class ChartActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private static final int PERMISSION_REQUEST_CODE = 2000;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +105,7 @@ public class ChartActivity extends AppCompatActivity {
     setContentView(R.layout.activity_chart);
 
     dbServiceSubscriber = new DbServiceSubscriber();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     realm = AppController.getRealmobj(this);
     dashboardData =
         dbServiceSubscriber.getDashboardDataFromDB(getIntent().getStringExtra("studyId"), realm);
@@ -113,6 +116,12 @@ public class ChartActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.chart_actvity_share));
+            analyticsInstance.logEvent(
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             screenshotWritingPermission();
           }
         });
@@ -120,6 +129,12 @@ public class ChartActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.chart_actvity_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -569,7 +584,8 @@ public class ChartActivity extends AppCompatActivity {
     }
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
-    String fname = getIntent().getStringExtra("studyName") + "_Chart.png";
+    String fname = getIntent().getStringExtra("studyName")
+            .replace("/", "\u2215") + "_Chart.png";
     File file = new File(dir, fname);
     if (file.exists()) {
       file.delete();
@@ -690,6 +706,12 @@ public class ChartActivity extends AppCompatActivity {
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.chart_actvity_left_arrow));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               if (Integer.parseInt("" + textView1.getTag(R.string.runchartindex)) > 0) {
                 textView1.setTag(
                     R.string.runchartindex,
@@ -711,6 +733,12 @@ public class ChartActivity extends AppCompatActivity {
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.chart_actvity_right_arrow));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               if (Integer.parseInt("" + textView1.getTag(R.string.runchartindex))
                   < Integer.parseInt("" + textView1.getTag(R.string.runchartmaxindex))) {
                 textView1.setTag(
@@ -819,7 +847,12 @@ public class ChartActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.chart_actvity_left_arrow));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (dateTypeArray.get((int) leftArrow.getTag()).equalsIgnoreCase(DAY)) {
               try {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
@@ -968,7 +1001,12 @@ public class ChartActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.chart_actvity_right_arrow));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (dateTypeArray.get((int) rightArrow.getTag()).equalsIgnoreCase(DAY)) {
               try {
                 SimpleDateFormat simpleDateFormat =

@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 class ReachoutOptionsViewController: UIViewController {
 
@@ -26,12 +27,24 @@ class ReachoutOptionsViewController: UIViewController {
   // MARK: - Viewcontroller Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.navigationItem.title = NSLocalizedString("Reach Out", comment: "")
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Reach Out"
+    ])
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                           name: Notification.Name("Menu Clicked"), object: nil)
+
+    self.navigationItem.title = NSLocalizedString("Reach out", comment: "")
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.setNavigationBarItem()
+  }
+  
+  @objc func methodOfReceivedNotification(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
+    ])
   }
 
 }
@@ -51,11 +64,11 @@ extension ReachoutOptionsViewController: UITableViewDataSource {
 
     switch indexPath.row {
     case 0:
-      cell.labelTitle?.text = NSLocalizedString("Leave Anonymous Feedback", comment: "")
+      cell.labelTitle?.text = NSLocalizedString("Leave feedback anonymously", comment: "")
     case 1:
-      cell.labelTitle?.text = NSLocalizedString("Need Help? Contact Us", comment: "")
+      cell.labelTitle?.text = NSLocalizedString("Need help? Contact us.", comment: "")
     default:
-      cell.labelTitle?.text = NSLocalizedString("Need Help? Contact Us", comment: "")
+      cell.labelTitle?.text = NSLocalizedString("Need help? Contact us.", comment: "")
     }
 
     return cell

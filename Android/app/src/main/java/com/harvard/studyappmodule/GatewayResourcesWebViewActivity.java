@@ -24,20 +24,22 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import android.widget.Toast;
-import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 import com.harvard.R;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.PdfViewerView;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -50,16 +52,18 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   private RelativeLayout backBtn;
   private WebView webView;
   private RelativeLayout shareBtn;
-  private PDFView pdfView;
+  private PdfViewerView pdfView;
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private String intentTitle;
   private String intentType;
   private File finalSharingFile;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     initializeXmlId();
     intentTitle = getIntent().getStringExtra("title");
@@ -73,6 +77,12 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.gateway_resource_webview_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             finish();
           }
         });
@@ -80,6 +90,12 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.gateway_resource_webview_share));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
 
               Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -108,6 +124,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
 
   private void defaultPdfShow() {
     if (intentType.equalsIgnoreCase("pdf")) {
+      shareBtn.setVisibility(View.VISIBLE);
       webView.setVisibility(View.GONE);
       title.setText(intentTitle);
       // checking the permissions
@@ -132,6 +149,22 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         finalSharingFile = getAssetsPdfPath();
         displayPdfView(finalSharingFile.getAbsolutePath());
       }
+    } else if (intentType.equalsIgnoreCase("url")) {
+      AppController.getHelperProgressDialog().showProgress(GatewayResourcesWebViewActivity.this, "", "", false);
+      shareBtn.setVisibility(View.GONE);
+      pdfView.setVisibility(View.GONE);
+      webView.setVisibility(View.VISIBLE);
+      title.setText(intentTitle);
+      webView.getSettings().setLoadsImagesAutomatically(true);
+      webView.getSettings().setJavaScriptEnabled(true);
+      webView.setWebViewClient(new WebViewClient() {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+          AppController.getHelperProgressDialog().dismissDialog();
+        }
+      });
+      webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+      webView.loadUrl(getIntent().getStringExtra("content"));
     }
   }
 
@@ -163,7 +196,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
     title = (AppCompatTextView) findViewById(R.id.title);
     webView = (WebView) findViewById(R.id.webView);
     shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
-    pdfView = (PDFView) findViewById(R.id.pdfView);
+    pdfView = (PdfViewerView) findViewById(R.id.pdfViewer);
   }
 
   private void setFont() {
@@ -214,7 +247,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   protected void onDestroy() {
     super.onDestroy();
     try {
-      if (finalSharingFile.exists()) {
+      if (finalSharingFile != null && finalSharingFile.exists()) {
         finalSharingFile.delete();
       }
 
@@ -225,16 +258,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
 
   private void displayPdfView(String filePath) {
     pdfView.setVisibility(View.VISIBLE);
-    try {
-      pdfView
-          .fromFile(new File(filePath))
-          .defaultPage(0)
-          .enableAnnotationRendering(true)
-          .scrollHandle(new DefaultScrollHandle(GatewayResourcesWebViewActivity.this))
-          .load();
-    } catch (Exception e) {
-      Logger.log(e);
-    }
+    pdfView.setPdf(new File(filePath));
   }
 
   public File getAssetsPdfPath() {

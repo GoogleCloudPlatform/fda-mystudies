@@ -65,3 +65,4 @@ public class ActivityFrequencyAnchorRunsBean {
     this.endTime = endTime;
   }
 }
+

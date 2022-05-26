@@ -152,7 +152,6 @@ public class FDASchedulerService {
     String time;
     ObjectMapper objectMapper = new ObjectMapper();
     String responseString = "";
-
     try {
 
       date = FdahpStudyDesignerUtil.getCurrentDate();
@@ -164,7 +163,6 @@ public class FDASchedulerService {
       pushNotificationBeans =
           notificationDAO.getPushNotificationList(
               FdahpStudyDesignerUtil.getTimeStamp(date, time).toString());
-      // pushNotificationToSaveInHistory = pushNotificationBeans;
       if ((pushNotificationBeans != null) && !pushNotificationBeans.isEmpty()) {
         for (PushNotificationBean p : pushNotificationBeans) {
           if (p.getAppId() == null) {
@@ -192,7 +190,7 @@ public class FDASchedulerService {
             }
           }
         }
-        List<PushNotificationBean> pushNotification = new ArrayList<PushNotificationBean>();
+        List<PushNotificationBean> pushNotification = new ArrayList<>();
         for (PushNotificationBean finalPushNotificationBean : finalPushNotificationBeans) {
           StudyBo studyDetails =
               studyDAO.getStudyByLatestVersion(finalPushNotificationBean.getCustomStudyId());
@@ -252,36 +250,6 @@ public class FDASchedulerService {
     logger.exit("sendPushNotification() - Ends");
   }
 
-  private void updateNotification(PushNotificationBean pushNotificationBean) {
-    String sb = "";
-    Session session = hibernateTemplate.getSessionFactory().openSession();
-    Transaction trans = session.beginTransaction();
-    if (null != pushNotificationBean) {
-      if ((pushNotificationBean.getNotificationSubType() == null)
-          || ((pushNotificationBean.getNotificationSubType() != null)
-              && !FdahpStudyDesignerConstants.RESOURCE.equals(
-                  pushNotificationBean.getNotificationSubType())
-              && !FdahpStudyDesignerConstants.STUDY_EVENT.equals(
-                  pushNotificationBean.getNotificationSubType()))) {
-        NotificationHistoryBO historyBO = new NotificationHistoryBO();
-        historyBO.setNotificationId(pushNotificationBean.getNotificationId());
-        historyBO.setNotificationSentDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
-        session.save(historyBO);
-      }
-      sb =
-          "update NotificationBO NBO set NBO.notificationSent = true  where NBO.notificationId = :notificationId";
-      session
-          .createQuery(sb)
-          .setParameter("notificationId", pushNotificationBean.getNotificationId())
-          .executeUpdate();
-    }
-
-    trans.commit();
-    if (session.isOpen()) {
-      session.close();
-    }
-  }
-
   private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setSource(PlatformComponent.STUDY_BUILDER.getValue());
@@ -306,5 +274,34 @@ public class FDASchedulerService {
     StringEntity requestEntity = new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
     post.setEntity(requestEntity);
     return client.execute(post);
+  }
+
+  private void updateNotification(PushNotificationBean pushNotificationBean) {
+    String sb = "";
+    Session session = hibernateTemplate.getSessionFactory().openSession();
+    Transaction trans = session.beginTransaction();
+    if (null != pushNotificationBean) {
+      if ((pushNotificationBean.getNotificationSubType() == null)
+          || ((pushNotificationBean.getNotificationSubType() != null)
+              && !FdahpStudyDesignerConstants.RESOURCE.equals(
+                  pushNotificationBean.getNotificationSubType())
+              && !FdahpStudyDesignerConstants.STUDY_EVENT.equals(
+                  pushNotificationBean.getNotificationSubType()))) {
+        NotificationHistoryBO historyBO = new NotificationHistoryBO();
+        historyBO.setNotificationId(pushNotificationBean.getNotificationId());
+        historyBO.setNotificationSentDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+        session.save(historyBO);
+      }
+      sb =
+          "update NotificationBO NBO set NBO.notificationSent = true  where NBO.notificationId = :notificationId";
+      session
+          .createQuery(sb)
+          .setParameter("notificationId", pushNotificationBean.getNotificationId())
+          .executeUpdate();
+    }
+    trans.commit();
+    if (session.isOpen()) {
+      session.close();
+    }
   }
 }

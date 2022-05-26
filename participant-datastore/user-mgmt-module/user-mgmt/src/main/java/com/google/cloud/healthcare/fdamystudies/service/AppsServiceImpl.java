@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -75,6 +75,7 @@ public class AppsServiceImpl implements AppsService {
       if (appMetadataBean.getAppPlatform() != null) {
         app.setAppPlatform(appMetadataBean.getAppPlatform());
       }
+
       app = fromAppMetadataBean(appMetadataBean, app);
       app = appRepository.saveAndFlush(app);
     }

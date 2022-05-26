@@ -208,7 +208,7 @@ class Study: Hashable {
 class StudySettings {
 
   lazy var enrollingAllowed = true
-  lazy var rejoinStudyAfterWithdrawn = false
+  lazy var rejoinStudyAfterWithdrawn = true
   lazy var platform = "ios"
 
   init() {
@@ -340,6 +340,7 @@ struct StudyUpdates {
   static var studyActivitiesUpdated = false
   static var studyResourcesUpdated = false
   static var studyVersion: String?
+  static var studyEnrollAgain = false
   static var studyStatus: String?
 
   init() {
@@ -370,5 +371,6 @@ struct StudyUpdates {
       }
     }
     StudyUpdates.studyVersion = detail[kStudyCurrentVersion] as? String
+    StudyUpdates.studyEnrollAgain = detail[kEnrollAgain] as? Bool ?? true
   }
 }

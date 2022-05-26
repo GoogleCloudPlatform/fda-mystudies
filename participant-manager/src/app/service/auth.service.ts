@@ -8,6 +8,7 @@ import {AccessToken} from '../entity/access-token';
 import {environment} from '@environment';
 import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
+import getPkce from 'oauth-pkce';
 import {Observable} from 'rxjs';
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -27,22 +28,12 @@ export class AuthService {
 
   initSessionStorage(): void {
     sessionStorage.setItem('correlationId', uuidv4());
-    // getPkce(this.pkceLength, (error, {verifier, challenge}) => {
-    //   if (!error) {
-    //     sessionStorage.setItem('pkceVerifier', verifier);
-    //     sessionStorage.setItem('pkceChallenge', challenge);
-    //   }
-    // });
-    // TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
-
-    sessionStorage.setItem(
-      'pkceVerifier',
-      'IIZLcGtmuoCgXhazHneHoXVMmPRM1tkjfUs2yJ4uXvv3nVswiv',
-    );
-    sessionStorage.setItem(
-      'pkceChallenge',
-      'wR4RMz7BGMNNXf6H9lWjV-2l8OiUQ47UOU8wHWOxVC4',
-    );
+    getPkce(this.pkceLength, (error, {verifier, challenge}) => {
+      if (!error) {
+        sessionStorage.setItem('pkceVerifier', verifier);
+        sessionStorage.setItem('pkceChallenge', challenge);
+      }
+    });
   }
 
   beginLoginConsentFlow(): void {

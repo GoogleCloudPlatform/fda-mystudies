@@ -9,7 +9,7 @@
 /*
 
 Name: 			theme.css
-Written by: 	BTC - Maari Vanaraj
+Written by: 	BTC - Madhu D V
 Version: 		1.0
 
 */
@@ -29,7 +29,6 @@ body {
 	overflow-x: hidden;
 	min-height: 100vh !important;
     height: 100% !important;
-	
 }
 
 a:hover{
@@ -1120,14 +1119,4 @@ font-size: 12px;
 
 .switch-green > .deactivate_switch-input:checked ~ .deactivate_switch-label {
   background:  #c5c5c5;
-}
-
-.study-selected-item {
-  padding: 10px 0px;
-  border-bottom: 1px solid #cfd4d7;
-}
-
-.app-selected-item {
-  padding: 10px 0px !important;
-  border-bottom: 1px solid #cfd4d7 !important;
 }

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/surveyCompleted"
                 style="@style/TextType1"
                 android:layout_above="@+id/surveyCompletedThankyou"
@@ -27,7 +27,7 @@
                 android:text="@string/survey_completed"
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/surveyCompletedThankyou"
                 style="@style/TextType2"
                 android:layout_above="@+id/msg"
@@ -36,26 +36,26 @@
                 android:text="@string/thank_you_for_your_time"
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/msg"
                 style="@style/TextType2"
                 android:layout_above="@+id/success_img"
                 android:gravity="center"
                 android:layout_centerHorizontal="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="30dp"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="30dp"
                 android:text="@string/surveycompletedmsg"
                 android:textColor="@color/colorPrimaryBlack" />
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/success_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:background="@drawable/success_icn1" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/nextButton"
                 style="@style/TextType2"
                 android:layout_alignParentBottom="true"

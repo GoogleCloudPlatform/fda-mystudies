@@ -21,24 +21,28 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.browser.customtabs.CustomTabsIntent;
 import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.event.ResendEmailEvent;
 import com.harvard.usermodule.event.VerifyUserEvent;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 
 public class VerificationStepActivity extends AppCompatActivity
@@ -57,16 +61,20 @@ public class VerificationStepActivity extends AppCompatActivity
   private static final int CONFIRM_REGISTER_USER_RESPONSE = 100;
   private static final int RESEND_CONFIRMATION = 101;
   private static final int JOIN_STUDY_RESPONSE = 102;
+  private static final int FORGOT_PASSWORD_REPONSE = 103;
   private String from;
   private String userId;
   private String auth;
   private String emailId;
   private String type;
+  private LoginData loginData;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_verification_step);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     userId = getIntent().getStringExtra("userid");
     auth = getIntent().getStringExtra("auth");
     emailId = getIntent().getStringExtra("email");
@@ -140,9 +148,13 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            SharedPreferences settings =
-                SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-            settings.edit().clear().apply();
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.verification_step_back));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            SharedPreferenceHelper.deletePreferences(VerificationStepActivity.this);
             // delete passcode from keystore
             String pass = AppController.refreshKeys("passcode");
             if (pass != null) {
@@ -156,9 +168,13 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            SharedPreferences settings =
-                SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-            settings.edit().clear().apply();
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.verification_step_cancel));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            SharedPreferenceHelper.deletePreferences(VerificationStepActivity.this);
             // delete passcode from keystore
             String pass = AppController.refreshKeys("passcode");
             if (pass != null) {
@@ -172,7 +188,12 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.verification_step_submit));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             VerifyUserEvent verifyUserEvent = new VerifyUserEvent();
             HashMap<String, String> params = new HashMap<>();
             HashMap<String, String> header = new HashMap<String, String>();
@@ -211,6 +232,12 @@ public class VerificationStepActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.verification_step_resend));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             AppController.getHelperProgressDialog()
                 .showProgress(VerificationStepActivity.this, "", "", false);
             ResendEmailEvent resendEmailEvent = new ResendEmailEvent();
@@ -246,33 +273,51 @@ public class VerificationStepActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (responseCode == CONFIRM_REGISTER_USER_RESPONSE) {
-      LoginData loginData = (LoginData) response;
-      SharedPreferenceHelper.writePreference(
-          VerificationStepActivity.this, getString(R.string.logintype), "signUp");
-      CustomTabsIntent customTabsIntent =
-          new CustomTabsIntent.Builder()
-              .setToolbarColor(getResources().getColor(R.color.colorAccent))
-              .setShowTitle(true)
-              .setCloseButtonIcon(
-                  BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
-              .setStartAnimations(
-                  VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
-              .setExitAnimations(
-                  VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
-              .build();
-      StringBuilder loginUrl = new StringBuilder();
-      loginUrl.append(Urls.LOGIN_URL);
-      if (getIntent().getStringExtra("type") != null
-          && !getIntent().getStringExtra("type").equalsIgnoreCase("ForgotPasswordActivity")
-          && loginData.getTempRegId() != null) {
-        loginUrl.append("&tempRegId=").append(loginData.getTempRegId());
+      if (type.equalsIgnoreCase("ForgotPasswordActivity")) {
+        Intent intent = new Intent(this, ForgotPasswordActivity.class);
+        intent.putExtra("from", "verification");
+        startActivityForResult(intent, FORGOT_PASSWORD_REPONSE);
+      } else {
+        loginData = (LoginData) response;
+        signin();
       }
-      customTabsIntent.intent.setData(Uri.parse(loginUrl.toString()));
-      startActivity(customTabsIntent.intent);
     } else if (responseCode == RESEND_CONFIRMATION) {
       Toast.makeText(this, getResources().getString(R.string.resend_success), Toast.LENGTH_SHORT)
           .show();
     }
+  }
+
+  private void signin() {
+    SharedPreferenceHelper.writePreference(
+            VerificationStepActivity.this, getString(R.string.logintype), "signUp");
+    CustomTabsIntent customTabsIntent =
+            new CustomTabsIntent.Builder()
+                    .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                    .setShowTitle(true)
+                    .setCloseButtonIcon(
+                            BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                    .setStartAnimations(
+                            VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+                    .setExitAnimations(
+                            VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+                    .build();
+    StringBuilder loginUrl = new StringBuilder();
+    DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
+    Realm realm = AppController.getRealmobj(VerificationStepActivity.this);
+    Apps apps = dbServiceSubscriber.getApps(realm);
+    loginUrl.append(Urls.LOGIN_URL).toString()
+        .replace("$FromEmail", apps.getFromEmail())
+        .replace("$AppName", apps.getAppName())
+        .replace("$SupportEmail", apps.getSupportEmail())
+        .replace("$ContactEmail", apps.getContactUsEmail());
+    if (getIntent().getStringExtra("type") != null
+        && !getIntent().getStringExtra("type").equalsIgnoreCase("ForgotPasswordActivity")
+        && loginData.getTempRegId() != null) {
+      loginUrl.append("&tempRegId=").append(loginData.getTempRegId());
+    }
+    dbServiceSubscriber.closeRealmObj(realm);
+    customTabsIntent.intent.setData(Uri.parse(loginUrl.toString()));
+    startActivity(customTabsIntent.intent);
   }
 
   @Override
@@ -282,9 +327,7 @@ public class VerificationStepActivity extends AppCompatActivity
       if (statusCode.equalsIgnoreCase("401")) {
         Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
         if (from != null && from.equalsIgnoreCase("Activity")) {
-          SharedPreferences settings =
-              SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-          settings.edit().clear().apply();
+          SharedPreferenceHelper.deletePreferences(this);
           // delete passcode from keystore
           String pass = AppController.refreshKeys("passcode");
           if (pass != null) {
@@ -307,9 +350,7 @@ public class VerificationStepActivity extends AppCompatActivity
   @Override
   public void onBackPressed() {
     super.onBackPressed();
-    SharedPreferences settings =
-        SharedPreferenceHelper.getPreferences(VerificationStepActivity.this);
-    settings.edit().clear().apply();
+    SharedPreferenceHelper.deletePreferences(this);
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
     if (pass != null) {
@@ -324,6 +365,8 @@ public class VerificationStepActivity extends AppCompatActivity
       Intent intent = new Intent();
       setResult(RESULT_OK, intent);
       finish();
+    } else if (requestCode == FORGOT_PASSWORD_REPONSE && resultCode == RESULT_OK) {
+      signin();
     }
   }
 }

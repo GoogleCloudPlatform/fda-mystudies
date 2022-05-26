@@ -1175,7 +1175,6 @@ public class StudyMetaDataDao {
                             + propMap.get(StudyMetaDataConstants.FDA_SMD_STUDY_PAGE_PATH).trim()
                             + studyPageInfo.getImagePath(),
                         StudyMetaDataConstants.DATA_IMAGE));
-
             info.setText(
                 StringUtils.isEmpty(studyPageInfo.getDescription())
                     ? ""

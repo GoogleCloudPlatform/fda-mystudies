@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,15 +11,18 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule.custom.question;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.support.v7.view.ContextThemeWrapper;
+import android.os.Bundle;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +35,7 @@ import com.harvard.R;
 import com.harvard.studyappmodule.custom.AnswerFormatCustom;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -48,6 +52,8 @@ public class CustomDateQuestionBody implements StepBody {
   private DateAnswerformatCustom format;
   private Calendar calendar;
   private DateFormat dateformatter;
+  private CustomFirebaseAnalytics analyticsInstance;
+  Context context;
 
   private boolean hasChosenDate;
 
@@ -90,6 +96,8 @@ public class CustomDateQuestionBody implements StepBody {
     View view = inflater.inflate(R.layout.rsb_item_date_view, parent, false);
 
     TextView title = (TextView) view.findViewById(R.id.label);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(inflater.getContext());
+    this.context = inflater.getContext();
     if (viewType == VIEW_TYPE_COMPACT) {
       title.setText(step.getTitle());
     } else {
@@ -123,14 +131,21 @@ public class CustomDateQuestionBody implements StepBody {
       }
     });
 
-    textView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        if (v.isFocused()) {
-          CustomDateQuestionBody.this.showDialog(textView, inflater);
-        }
-      }
-    });
+    textView.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                context.getString(R.string.text_view));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            if (v.isFocused()) {
+              CustomDateQuestionBody.this.showDialog(textView, inflater);
+            }
+          }
+        });
 
     Resources res = parent.getResources();
     LinearLayout.MarginLayoutParams layoutParams =
@@ -168,7 +183,13 @@ public class CustomDateQuestionBody implements StepBody {
   @Override
   public BodyAnswer getBodyAnswerState() {
     if (!hasChosenDate) {
-      return new BodyAnswer(false, R.string.rsb_invalid_answer_date_none);
+      if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.Date) {
+        return new BodyAnswer(false, R.string.rsb_invalid_answer_date_none);
+      } else if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.TimeOfDay) {
+        return new BodyAnswer(false, R.string.rsb_invalid_answer_time_none);
+      } else {
+        return new BodyAnswer(false, R.string.rsb_invalid_answer_date_time_none);
+      }
     }
 
     return format.validateAnswer(calendar.getTime());
@@ -187,20 +208,38 @@ public class CustomDateQuestionBody implements StepBody {
               calendar.get(Calendar.YEAR),
               calendar.get(Calendar.MONTH),
               calendar.get(Calendar.DAY_OF_MONTH));
-      datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, inflater.getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          if (which == DialogInterface.BUTTON_NEGATIVE) {
-            dialog.dismiss();
-          }
-        }
-      });
-      datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, inflater.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          if (which == DialogInterface.BUTTON_POSITIVE) {
-            dialog.dismiss();
-            Calendar calendar1 = Calendar.getInstance();
-            calendar1.setTime(calendar.getTime());
-            calendar1.set(
+      datePickerDialog.setButton(
+          DialogInterface.BUTTON_NEGATIVE,
+          inflater.getContext().getString(R.string.cancel),
+          new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.custom_data_question_cancel));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              if (which == DialogInterface.BUTTON_NEGATIVE) {
+                dialog.dismiss();
+              }
+            }
+          });
+      datePickerDialog.setButton(
+          DialogInterface.BUTTON_POSITIVE,
+          inflater.getContext().getString(R.string.ok_2),
+          new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.custom_data_question_ok));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              if (which == DialogInterface.BUTTON_POSITIVE) {
+                dialog.dismiss();
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.setTime(calendar.getTime());
+                calendar1.set(
                     datePickerDialog.getDatePicker().getYear(),
                     datePickerDialog.getDatePicker().getMonth(),
                     datePickerDialog.getDatePicker().getDayOfMonth());
@@ -267,22 +306,40 @@ public class CustomDateQuestionBody implements StepBody {
                       calendar.get(Calendar.HOUR_OF_DAY),
                       calendar.get(Calendar.MINUTE),
                       true);
-      timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, inflater.getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          if (which == DialogInterface.BUTTON_NEGATIVE) {
-            dialog.dismiss();
-          }
-        }
-      });
-      timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, inflater.getContext().getString(R.string.clear), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          if (which == DialogInterface.BUTTON_NEUTRAL) {
-            dialog.dismiss();
-            tv.setText("");
-            hasChosenDate = false;
-          }
-        }
-      });
+      timePickerDialog.setButton(
+          DialogInterface.BUTTON_NEGATIVE,
+          inflater.getContext().getString(R.string.cancel),
+          new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.custom_data_question_cancel));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              if (which == DialogInterface.BUTTON_NEGATIVE) {
+                dialog.dismiss();
+              }
+            }
+          });
+      timePickerDialog.setButton(
+          DialogInterface.BUTTON_NEUTRAL,
+          inflater.getContext().getString(R.string.clear),
+          new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.custom_data_question_clear));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              if (which == DialogInterface.BUTTON_NEUTRAL) {
+                dialog.dismiss();
+                tv.setText("");
+                hasChosenDate = false;
+              }
+            }
+          });
 
       timePickerDialog.show();
 
@@ -296,83 +353,130 @@ public class CustomDateQuestionBody implements StepBody {
               calendar.get(Calendar.YEAR),
               calendar.get(Calendar.MONTH),
               calendar.get(Calendar.DAY_OF_MONTH));
-      datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, inflater.getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          if (which == DialogInterface.BUTTON_NEGATIVE) {
-            dialog.dismiss();
-          }
-        }
-      });
-      datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, inflater.getContext().getString(R.string.clear), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          if (which == DialogInterface.BUTTON_NEUTRAL) {
-            dialog.dismiss();
-            tv.setText("");
-            hasChosenDate = false;
-          }
-        }
-      });
-      datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, inflater.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          if (which == DialogInterface.BUTTON_POSITIVE) {
-            dialog.dismiss();
-            calendar.set(
+      datePickerDialog.setButton(
+          DialogInterface.BUTTON_NEGATIVE,
+          inflater.getContext().getString(R.string.cancel),
+          new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.custom_data_question_cancel));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              if (which == DialogInterface.BUTTON_NEGATIVE) {
+                dialog.dismiss();
+              }
+            }
+          });
+      datePickerDialog.setButton(
+          DialogInterface.BUTTON_NEUTRAL,
+          inflater.getContext().getString(R.string.clear),
+          new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.custom_data_question_clear));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              if (which == DialogInterface.BUTTON_NEUTRAL) {
+                dialog.dismiss();
+                tv.setText("");
+                hasChosenDate = false;
+              }
+            }
+          });
+      datePickerDialog.setButton(
+          DialogInterface.BUTTON_POSITIVE,
+          inflater.getContext().getString(R.string.ok_2),
+          new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.custom_data_question_ok));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              if (which == DialogInterface.BUTTON_POSITIVE) {
+                dialog.dismiss();
+                calendar.set(
                     datePickerDialog.getDatePicker().getYear(),
                     datePickerDialog.getDatePicker().getMonth(),
                     datePickerDialog.getDatePicker().getDayOfMonth());
 
-            TimePickerDialog timePickerDialog =
-                    new TimePickerDialog(contextWrapper, new TimePickerDialog.OnTimeSetListener() {
-                      @Override
-                      public void onTimeSet(TimePicker tview, int hourOfDay, int minute) {
+                TimePickerDialog timePickerDialog =
+                    new TimePickerDialog(
+                        contextWrapper,
+                        new TimePickerDialog.OnTimeSetListener() {
+                          @Override
+                          public void onTimeSet(TimePicker tview, int hourOfDay, int minute) {
 
-                        Calendar calendar1 = Calendar.getInstance();
-                        calendar1.setTime(calendar.getTime());
-                        calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar1.set(Calendar.MINUTE, minute);
-                        if (format.validateAnswer(calendar1.getTime()).isValid()) {
-                          calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                          calendar.set(Calendar.MINUTE, minute);
+                            Calendar calendar1 = Calendar.getInstance();
+                            calendar1.setTime(calendar.getTime());
+                            calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                            calendar1.set(Calendar.MINUTE, minute);
+                            if (format.validateAnswer(calendar1.getTime()).isValid()) {
+                              calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                              calendar.set(Calendar.MINUTE, minute);
 
-                          hasChosenDate = true;
-                          // Set result to our edit text
-                          String formattedResult =
+                              hasChosenDate = true;
+                              // Set result to our edit text
+                              String formattedResult =
                                   CustomDateQuestionBody.this.createFormattedResult();
-                          tv.setText(formattedResult);
-                        } else {
-                          Toast.makeText(
-                                  inflater.getContext(),
-                                  format
+                              tv.setText(formattedResult);
+                            } else {
+                              Toast.makeText(
+                                      inflater.getContext(),
+                                      format
                                           .validateAnswer(calendar1.getTime())
                                           .getString(inflater.getContext()),
-                                  Toast.LENGTH_LONG)
+                                      Toast.LENGTH_LONG)
                                   .show();
+                            }
+                          }
+                        },
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        true);
+                timePickerDialog.setButton(
+                    DialogInterface.BUTTON_NEGATIVE,
+                    inflater.getContext().getString(R.string.cancel),
+                    new DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int which) {
+                        Bundle eventProperties = new Bundle();
+                        eventProperties.putString(
+                            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                            context.getString(R.string.custom_data_question_cancel));
+                        analyticsInstance.logEvent(
+                            CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                        if (which == DialogInterface.BUTTON_NEGATIVE) {
+                          dialog.dismiss();
                         }
                       }
-                    },
-                            calendar.get(Calendar.HOUR_OF_DAY),
-                            calendar.get(Calendar.MINUTE),
-                            true);
-            timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, inflater.getContext().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_NEGATIVE) {
-                  dialog.dismiss();
-                }
+                    });
+                timePickerDialog.setButton(
+                    DialogInterface.BUTTON_NEUTRAL,
+                    inflater.getContext().getString(R.string.clear),
+                    new DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int which) {
+                        Bundle eventProperties = new Bundle();
+                        eventProperties.putString(
+                            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                            context.getString(R.string.custom_data_question_clear));
+                        analyticsInstance.logEvent(
+                            CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                        if (which == DialogInterface.BUTTON_NEUTRAL) {
+                          dialog.dismiss();
+                          tv.setText("");
+                          hasChosenDate = false;
+                        }
+                      }
+                    });
+                timePickerDialog.show();
               }
-            });
-            timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, inflater.getContext().getString(R.string.clear), new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_NEUTRAL) {
-                  dialog.dismiss();
-                  tv.setText("");
-                  hasChosenDate = false;
-                }
-              }
-            });
-            timePickerDialog.show();
-          }
-        }
-      });
+            }
+          });
       datePickerDialog.show();
     } else {
       throw new RuntimeException("DateAnswerStyle " + format.getStyle() + " is not recognised");

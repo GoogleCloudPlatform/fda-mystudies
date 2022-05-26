@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.utils;
@@ -18,6 +19,7 @@ package com.harvard.utils;
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
+import com.harvard.SplashActivity;
 
 public class Urls {
   public static String BASE_URL_STUDY_DATASTORE = BuildConfig.BASE_URL_STUDY_DATASTORE;
@@ -44,7 +46,7 @@ public class Urls {
           + "&scope=offline_access"
           + "&response_type=code"
           + "&appId=" + BuildConfig.APP_ID
-          + "&appName=" + FdaApplication.getInstance().getString(R.string.app_name)
+          + "&appName=" + "$AppName"
           + "&appVersion=" + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE
           + "&mobilePlatform=ANDROID"
           + "&source=MOBILE APPS"
@@ -52,7 +54,11 @@ public class Urls {
           + "&code_challenge=" + FdaApplication.getCodeChallenge(FdaApplication.getRandomString())
           + "&correlationId=" + FdaApplication.getRandomString()
           + "&redirect_uri=" + AUTH_SERVER_REDIRECT_URL
-          + "&state=" + FdaApplication.getRandomString();
+          + "&state=" + FdaApplication.getRandomString()
+          + "&fromEmail=" + "$FromEmail"
+          + "&contactEmail=" + "$ContactEmail"
+          + "&supportEmail=" + "$SupportEmail"
+          + "&deeplinkUrl=" + "app://" + FdaApplication.getInstance().getString(R.string.deeplink_host) + "/mystudies";
 
   // Deeplinks
   public static String DEEPLINK_CALLBACK="/mystudies/callback";
@@ -68,7 +74,8 @@ public class Urls {
   public static String WITHDRAW = "/withdrawfromstudy";
   public static String CONTACT_US = "/contactUs";
   public static String FEEDBACK = "/feedback";
-  
+  public static String APPS = "/apps";
+
   // participant-datastore Enrollment Server
   public static String UPDATE_STUDY_PREFERENCE = "/updateStudyState";
   public static String STUDY_STATE = "/studyState";

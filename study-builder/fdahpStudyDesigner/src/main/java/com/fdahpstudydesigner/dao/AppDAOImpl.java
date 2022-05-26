@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -301,10 +301,9 @@ public class AppDAOImpl implements AppDAO {
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       session = hibernateTemplate.getSessionFactory().openSession();
-
-      userId = appBo.getUserId();
       transaction = session.beginTransaction();
 
+      userId = appBo.getUserId();
       if (StringUtils.isEmpty(appBo.getId())) {
         appBo.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
         appBo.setAppStatus("Draft");
@@ -429,7 +428,6 @@ public class AppDAOImpl implements AppDAO {
           if (!dbappBo.getAppStatus().equals("Active")) {
             dbappBo.setAppPlatform(appBo.getAppPlatform());
           }
-
           dbappBo.setModifiedBy(appBo.getUserId());
           dbappBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           appSequenceBo =
@@ -1233,7 +1231,7 @@ public class AppDAOImpl implements AppDAO {
         session.close();
       }
     }
-    logger.exit("getAppById() - Ends");
+    logger.exit("getStudiesCountByAppId() - Ends");
     return count;
   }
 

@@ -40,7 +40,7 @@
     "glyphicons": "^0.2.0",
     "ini": "^1.3.6",
     "jquery": "^3.4.1",
-    "jszip": "^3.7.1",
+    "log4js": "^6.4.0",
     "ng-connection-service": "^1.0.4",
     "ngx-bootstrap": "^5.6.1",
     "ngx-cookie-service": "^3.1.1",

@@ -55,7 +55,7 @@
     <div class="tab-content pl-xlg pr-xlg">
       <!-- Content-->
       <div id="content" class="tab-pane fade in active mt-xlg">
-        <div class="mt-md blue-md-f text-uppercase">Select Active Task</div>
+        <div class="mt-md blue-md-f text-uppercase">Select Active task</div>
         <div class="gray-xs-f mt-md mb-sm">Choose from a list of pre-defined active tasks</div>
         <div class="col-md-4 p-none">
           <select class="selectpicker targetOption" id="targetOptionId" taskId="${activeTaskBo.id}"
@@ -94,14 +94,13 @@
     if (!activeTaskInfoId) {
       activeTaskInfoId = '${activeTaskInfoId}';
     }
-    
     var actionType = '${actionPage}';
+
     var selectedTask = $('.targetOption').find("option:selected").text();
     
-        if(actionType == 'view'){
-      		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
-        }
-     
+    if(actionType == 'view'){
+        $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+    }
 
     if (activeTaskInfoId) {
       $('.targetOption').prop('disabled', true);
@@ -137,9 +136,8 @@
       var activeTaskInfoId = $(this).attr('taskId');
       $('.changeContent').empty();
       $(document).find('#saveId').unbind();
-      //$(document).off('click', '#saveId');
       $(document).off('click', '#doneId');
-      loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType); 
+      loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType);
       $('.actBut').show();
       $('.scheduleTaskClass').prop('disabled', false);
       $('.scheduleTaskClass').removeClass('linkDis');
@@ -156,10 +154,9 @@
             typeOfActiveTask: typeOfActiveTask,
             activeTaskInfoId: activeTaskInfoId,
             actionType: actionType
-          } ,
+          },
           function () {
-            $(this).parents('form').attr('action',
-                '/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
+            
             resetValidation($(this).parents('form'));
             var dt = new Date();
             $('#inputClockId').datetimepicker({
@@ -170,7 +167,7 @@
             actionPageView();
             var currentPage = '${currentPage}';
             $('#currentPageId').val(currentPage);
-          } );
+          });
 
     }
 
@@ -258,7 +255,7 @@
     <c:if test="${actionPage ne 'view'}">
     $(item).prop('disabled', true);
     bootbox.confirm({
-      closeButton: true,
+      closeButton: false,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {
@@ -304,4 +301,5 @@
    		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
      }
   })
+ 
 </script>

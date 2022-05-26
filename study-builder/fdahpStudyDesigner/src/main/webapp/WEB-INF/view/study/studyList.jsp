@@ -14,9 +14,6 @@
 .mr-lg {
     margin-right: 15px !important;
 }
-/* .modal-footer { */
-/*     border-top: none !important; */
-/* } */
 .modal-header {
     border-bottom: none !important; 
 }
@@ -36,18 +33,18 @@
     line-height: 16px;
     color: #7c868d;
     font-weight: 500;
-    padding-left:6px;
+    padding-left:3%;
   }
   
-  .select-sub_text { padding-left:23px;}
+  .select-sub_text { padding-left:25px;}
   .select_drop_parent {
   	position: absolute;
     display: contents;
     }
-      .custom_checkbox_dropdown { 
+     .custom_checkbox_dropdown { 
    background: #fff!important;
     min-width: 200px !important;
-    width: 268px !important;
+     width: 268px !important;
     max-height: 300px;
     overflow-y: scroll;
       }
@@ -59,7 +56,6 @@
 .pl-7 {
 padding-left: 7px;
 }
- 
 </style>
 
 <div>
@@ -131,7 +127,6 @@ padding-left: 7px;
 						<c:when test="${not fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_STUDIES')}"> 
 						      cursor-none
 						</c:when>
-						
 			  </c:choose>"
              
                    permission="view" data-toggle="tooltip" data-placement="top" studyId="${study.customStudyId}"
@@ -143,10 +138,8 @@ padding-left: 7px;
                     studyId="${study.liveStudyId}"
                     permission="view" data-toggle="tooltip" data-placement="top"
                     title="View last published version"></span>
-                    
             </c:if>
-            
-            <c:if test="${empty study.liveStudyId}">
+              <c:if test="${empty study.liveStudyId}">
              <span class="sprites_icon delete  
              <c:choose>
 						<c:when test="${not study.viewPermission}">
@@ -159,7 +152,6 @@ padding-left: 7px;
                     title="Delete" onclick='validateStudy("${study.id}");'></span>  
                  
              </c:if>
-            
           </td>
         </tr>
       </c:forEach>
@@ -320,32 +312,27 @@ padding-left: 7px;
     document.body.appendChild(form);
     form.submit();
   });
-
-  //delete prelaunch study
-   function validateStudy(studyId) {
-    //var studyId = $("#studyId").val();
-  //  debugger;
-   // var delstudyID=studyId;
-    bootbox.confirm({
-      message: "Are you sure you wish to delete this study?",
-      buttons: {
-        confirm: {
-          label: 'Yes',
-        },
-        cancel: {
-          label: 'No',
-        }
-      },
-      callback: function (result) {
-    	  if (result) {
-    		  //var studyId= $("#studyId").val();
-    		  deleteStudy(studyId);
-          }
-        }
-      });}
   
-   function deleteStudy(studyId){
-	   debugger;
+  //delete prelaunch study
+  function validateStudy(studyId) {
+   bootbox.confirm({
+     message: "Are you sure you wish to delete this study?",
+     buttons: {
+       confirm: {
+         label: 'Yes',
+       },
+       cancel: {
+         label: 'No',
+       }
+     },
+     callback: function (result) {
+   	  if (result) {
+   		  deleteStudy(studyId);
+         }
+       }
+     });}
+ 
+  function deleteStudy(studyId){
 	      var studyId = studyId;
 	     var form = document.createElement('form');
 	      form.method = 'post';
@@ -364,7 +351,6 @@ padding-left: 7px;
 	     document.body.appendChild(form);
 	     form.submit();
 	  }
-      
   //datatable icon toggle
   $(".table thead tr th").click(function () {
     $(this).children().removeAttr('class')
@@ -483,24 +469,21 @@ padding-left: 7px;
 			        $(".select-text").html(' Select');
 			    }
 			  var total = $('input[name="options[]"]:checked').length;
-			    
-			 
 			  if(total == 0){
 				  $(".dropdown-text").html('Filter by apps');
 			  }else if(a.length == a.filter(":checked").length){
 				  $(".dropdown-text").html('All apps');
-				   }
+			   }
 			  else{
 				  $(".dropdown-text").html(total + ' app(s)');
 			  }
 			  
 			});
 		  
-			 
-		    <c:if test="${not empty appId}">
+			  <c:if test="${not empty appId}">
 		    	$(".dropdown-text").html(1 + ' app(s)');
 		    </c:if>
-		 
+		    
 		});
   
 </script>

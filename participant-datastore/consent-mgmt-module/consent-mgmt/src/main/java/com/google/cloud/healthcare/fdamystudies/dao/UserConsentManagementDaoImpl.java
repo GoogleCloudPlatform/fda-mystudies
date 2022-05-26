@@ -220,6 +220,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     if (!StringUtils.isEmpty(isSaved)) {
       addConsentMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
     }
+
     logger.exit("saveStudyConsent() - Ends ");
     return addConsentMessage;
   }
@@ -312,6 +313,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       userDetailsEntity = userDetailsBoList.get(0);
       userDetailsId = userDetailsEntity.getId();
     }
+
     logger.exit("getUserDetailsId() - Ends ");
     return userDetailsId;
   }

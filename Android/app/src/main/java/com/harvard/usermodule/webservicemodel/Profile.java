@@ -4,6 +4,7 @@ import io.realm.RealmObject;
 
 public class Profile extends RealmObject {
   private String emailId;
+  private String verificationTime;
   private String firstName;
   private String lastName;
 
@@ -29,5 +30,13 @@ public class Profile extends RealmObject {
 
   public void setLastName(String lastName) {
     this.lastName = lastName;
+  }
+
+  public String getVerificationTime() {
+    return verificationTime;
+  }
+
+  public void setVerificationTime(String verificationTime) {
+    this.verificationTime = verificationTime;
   }
 }

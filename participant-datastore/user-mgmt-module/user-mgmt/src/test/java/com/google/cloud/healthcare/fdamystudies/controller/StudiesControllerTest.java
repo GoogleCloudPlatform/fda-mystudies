@@ -89,9 +89,6 @@ public class StudiesControllerTest extends BaseMockIT {
         Constants.STUDY_VERSION,
         Constants.STUDY_TYPE,
         Constants.STUDY_STATUS,
-        //        Constants.STUDY_CATEGORY,
-        //        Constants.STUDY_TAGLINE,
-        //        Constants.STUDY_SPONSOR,
         Constants.STUDY_ENROLLING,
         Constants.APP_ID_VALUE,
         Constants.APP_NAME,
@@ -124,7 +121,6 @@ public class StudiesControllerTest extends BaseMockIT {
             .findFirst()
             .orElse(null);
     assertNotNull(studyInfoBo);
-
     assertEquals(Constants.LOGO_IMAGE_URL, studyInfoBo.getLogoImageUrl());
 
     verifyTokenIntrospectRequest(1);

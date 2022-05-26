@@ -19,6 +19,7 @@
 
 import IQKeyboardManagerSwift
 import UIKit
+import FirebaseAnalytics
 
 enum CPTextFeildTags: Int {
   case oldPassword = 100
@@ -55,7 +56,7 @@ class ChangePasswordViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+  
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -171,24 +172,50 @@ class ChangePasswordViewController: UIViewController {
   /// Validations after clicking on submit button
   /// If all the validations satisfy send user feedback request.
   @IBAction func submitButtonAction(_ sender: Any) {
-
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ChangePassword Submit"
+    ])
+  
+    self.view.endEditing(true)
     if self.oldPassword.isEmpty && self.newPassword.isEmpty && self.confirmPassword.isEmpty {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Fill all fields alert"
+      ])
     } else if self.oldPassword == "" {
       self.showAlertMessages(textMessage: kMessageCurrentPasswordBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Current Password Alert"
+      ])
 
     } else if self.newPassword == "" {
       self.showAlertMessages(textMessage: kMessageNewPasswordBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "New Password Alert"
+      ])
     } else if self.confirmPassword == "" {
       self.showAlertMessages(textMessage: kMessageProfileConfirmPasswordBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Confirm Password alert"
+      ])
     } else if Utilities.isPasswordValid(text: self.newPassword) == false {
       self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password criteria alert"
+      ])
 
     } else if self.newPassword == User.currentUser.emailId {
       self.showAlertMessages(textMessage: kMessagePasswordMatchingToOtherFeilds)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password+Email match alert"
+      ])
 
     } else if self.newPassword != self.confirmPassword {
       self.showAlertMessages(textMessage: kMessageProfileValidatePasswords)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password dont match alert"
+      ])
     } else {
       self.requestToChangePassword()
     }
@@ -278,16 +305,28 @@ extension ChangePasswordViewController: UITextFieldDelegate {
     case .oldPassword:
       self.oldPassword = textField.text!
     case .newPassword:
-      if let password = textField.text {
-        if !password.isEmpty,
-          !Utilities.isPasswordValid(text: password)
-        {
+      self.newPassword = textField.text ?? ""
+      if let password = textField.text, !password.isEmpty {
+        if !Utilities.isPasswordValid(text: password) {
           self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Password criteria alert"
+          ])
+        } else if password == User.currentUser.emailId {
+          self.showAlertMessages(textMessage: kMessagePasswordMatchingToOtherFeilds)
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Password+Email match alert"
+          ])
         }
-        self.newPassword = password
       }
     case .confirmPassword:
-      self.confirmPassword = textField.text!
+      self.confirmPassword = textField.text ?? ""
+      if self.confirmPassword != "" && self.newPassword != self.confirmPassword {
+        self.showAlertMessages(textMessage: kMessageProfileValidatePasswords)
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Password dont match alert"
+        ])
+      }
     }
   }
 }

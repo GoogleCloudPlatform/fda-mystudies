@@ -21,7 +21,7 @@ import UIKit
 
 let kConsentCompletionResultIdentifier = "ConsentCompletion"
 let kMainTitle = "Consent confirmed"
-let kSubTitle = "You can now start participating in the Study"
+let kSubTitle = "You can now start participating in the study"
 
 /// Consent Completion Step.
 class ConsentCompletionStep: ORKStep {

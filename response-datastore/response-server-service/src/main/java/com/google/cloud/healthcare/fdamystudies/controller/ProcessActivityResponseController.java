@@ -98,7 +98,8 @@ public class ProcessActivityResponseController {
   private XLogger logger =
       XLoggerFactory.getXLogger(ProcessActivityResponseController.class.getName());
 
-  @ApiOperation(value = "Process activity response for participant and store in cloud fire store")
+  @ApiOperation(
+      value = "Process activity response for participant and store in Google Cloud Firestore")
   @PostMapping("/participant/process-response")
   public ResponseEntity<?> processActivityResponseForParticipant(
       @RequestBody ActivityResponseBean questionnaireActivityResponseBean,
@@ -406,7 +407,7 @@ public class ProcessActivityResponseController {
     }
   }
 
-  @ApiOperation(value = "Get activity response data for participant from cloud fire store")
+  @ApiOperation(value = "Get activity response data for participant from Google Cloud Firestore")
   @GetMapping("/participant/getresponse")
   public ResponseEntity<?> getActivityResponseDataForParticipant(
       @RequestParam("appId") String applicationId,
@@ -514,10 +515,9 @@ public class ProcessActivityResponseController {
       @RequestParam(name = "participantId") String participantId,
       HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
-      logger.debug(
-          "ParticipantIdController withdrawParticipantFromStudy() - studyId or participantId is blank ");
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_701.code(),
@@ -551,9 +551,6 @@ public class ProcessActivityResponseController {
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
         if (responseDataUpdate) {
-          logger.debug(
-              "ParticipantIdController withdrawParticipantFromStudy() - Catch responseDataUpdate 1: "
-                  + responseDataUpdate);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_717.code(),
@@ -567,9 +564,6 @@ public class ProcessActivityResponseController {
                   + "\n Particpant Id");
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         } else {
-          logger.debug(
-              "ParticipantIdController withdrawParticipantFromStudy() - Catch responseDataUpdate 2: "
-                  + responseDataUpdate);
           responseServerAuditLogHelper.logEvent(WITHDRAWAL_INFORMATION_UPDATE_FAILED, auditRequest);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(

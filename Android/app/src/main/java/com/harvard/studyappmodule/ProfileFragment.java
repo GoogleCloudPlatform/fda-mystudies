@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -21,9 +22,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +30,9 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
@@ -52,6 +53,7 @@ import com.harvard.usermodule.webservicemodel.UpdateProfileRequestData;
 import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -103,6 +105,7 @@ public class ProfileFragment extends Fragment
   private int deleteIndexNumberDb;
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   @Override
   public void onAttach(Context context) {
@@ -115,6 +118,7 @@ public class ProfileFragment extends Fragment
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_profile, container, false);
     dbServiceSubscriber = new DbServiceSubscriber();
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     realm = AppController.getRealmobj(context);
     initializeXmlId(view);
     setFont();
@@ -213,6 +217,12 @@ public class ProfileFragment extends Fragment
             if (switchRecvStdyRemindr.isChecked()) {
               CustomDialogClass cdd =
                   new CustomDialogClass(((Activity) context), ProfileFragment.this);
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  getString(R.string.profile_fragment_reminders));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               cdd.show();
             } else {
               Toast.makeText(context, R.string.remainder_settings, Toast.LENGTH_SHORT).show();
@@ -224,6 +234,12 @@ public class ProfileFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.profile_fragment_password));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(context, ChangePasswordActivity.class);
             intent.putExtra("from", "ProfileFragment");
 
@@ -251,7 +267,12 @@ public class ProfileFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.profile_fragment_passcode_btn));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(context, PasscodeSetupActivity.class);
             intent.putExtra("from", "profile");
             startActivityForResult(intent, PASSCODE_CHANGE_REPSONSE);
@@ -262,7 +283,26 @@ public class ProfileFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.profile_fragment_notification));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             callUpdateUserProfileWebService(true, "mSwitchRecvPushNotifctn");
+          }
+        });
+
+    switchUsePasscode.setOnClickListener(
+        new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.profile_fragment_passcode));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           }
         });
 
@@ -270,6 +310,12 @@ public class ProfileFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.profile_fragment_reminder_sty));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             callUpdateUserProfileWebService(true, "mSwitchRecvStdyRemindr");
           }
         });
@@ -300,6 +346,12 @@ public class ProfileFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.profile_fragment_signout));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (signOutButton
                 .getText()
                 .toString()
@@ -318,6 +370,12 @@ public class ProfileFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
+            Bundle eventProperties = new Bundle();
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.profile_fragment_delete_acc));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             Intent intent = new Intent(context, DeleteAccountActivity.class);
             startActivityForResult(intent, DELETE_ACCOUNT);
           }
@@ -479,8 +537,7 @@ public class ProfileFragment extends Fragment
         NotificationModuleSubscriber notificationModuleSubscriber =
             new NotificationModuleSubscriber(dbServiceSubscriber, realm);
         notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
-        SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-        settings.edit().clear().apply();
+        SharedPreferenceHelper.deletePreferences(context);
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
         AppController.deleteKey("passcode_" + pass);
@@ -499,8 +556,7 @@ public class ProfileFragment extends Fragment
         Toast.makeText(
                 context, getResources().getString(R.string.account_deletion), Toast.LENGTH_SHORT)
             .show();
-        SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
-        settings.edit().clear().apply();
+        SharedPreferenceHelper.deletePreferences(context);
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
         if (pass != null) {

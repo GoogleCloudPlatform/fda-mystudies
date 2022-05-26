@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,11 +11,14 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.storagemodule;
 
 import android.content.Context;
+
+import com.harvard.AppConfig;
 import com.harvard.notificationmodule.PendingIntents;
 import com.harvard.notificationmodule.model.NotificationDb;
 import com.harvard.offlinemodule.model.OfflineData;
@@ -36,12 +39,14 @@ import com.harvard.studyappmodule.studymodel.MotivationalNotification;
 import com.harvard.studyappmodule.studymodel.NotificationData;
 import com.harvard.studyappmodule.studymodel.NotificationDbResources;
 import com.harvard.studyappmodule.studymodel.PendingIntentsResources;
+import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.studymodel.StudyResource;
 import com.harvard.studyappmodule.studymodel.StudyUpdate;
 import com.harvard.studyappmodule.studymodel.StudyUpdateListdata;
+import com.harvard.usermodule.model.Apps;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.ActivityData;
 import com.harvard.usermodule.webservicemodel.ActivityRunPreference;
@@ -1039,9 +1044,17 @@ public class DbServiceSubscriber {
   public void deleteDb(Context context) {
     try {
       realm = AppController.getRealmobj(context);
+      Apps apps = getApps(realm);
+      Apps tempApps = null;
       realm.beginTransaction();
+      if (apps != null) {
+        tempApps = realm.copyFromRealm(apps);
+      }
       realm.deleteAll();
       realm.commitTransaction();
+      if (tempApps != null) {
+        saveApps(context, tempApps);
+      }
       closeRealmObj(realm);
     } catch (Exception e) {
       Logger.log(e);
@@ -1449,6 +1462,18 @@ public class DbServiceSubscriber {
     closeRealmObj(realm);
   }
 
+  public void saveApps(Context context, Apps apps) {
+    realm = AppController.getRealmobj(context);
+    realm.beginTransaction();
+    realm.copyToRealmOrUpdate(apps);
+    realm.commitTransaction();
+    closeRealmObj(realm);
+  }
+
+  public Apps getApps(Realm realm) {
+    return realm.where(Apps.class).equalTo("appId", AppConfig.APP_ID_VALUE).findFirst();
+  }
+
   public void deleteUserProfileDataDuplicateRow(Context context) {
     try {
       realm = AppController.getRealmobj(context);
@@ -1484,6 +1509,10 @@ public class DbServiceSubscriber {
 
   public OfflineData getStudyIdOfflineData(String studyId, Realm realm) {
     return realm.where(OfflineData.class).equalTo("studyId", studyId).findFirst();
+  }
+
+  public Resource getResource(String resourceId, Realm realm) {
+    return realm.where(Resource.class).equalTo("resourcesId", resourceId).findFirst();
   }
 
   public OfflineData getActivityIdOfflineData(String activityId, Realm realm) {

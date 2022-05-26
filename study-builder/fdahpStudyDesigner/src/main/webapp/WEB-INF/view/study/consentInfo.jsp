@@ -112,7 +112,7 @@
         </div>
         <div class="form-group">
           <input autofocus="autofocus" type="text" id="displayTitle"
-                 class="form-control" name="displayTitle" required data-error="Please fill out this field"
+                 class="form-control" name="displayTitle" required data-error="Please fill out this field" 
                  value="${fn:escapeXml(consentInfoBo.displayTitle)}" maxlength="75">
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -127,7 +127,7 @@
         </div>
         <div class="form-group">
           <textarea class="form-control" rows="7" id="briefSummary"
-                    name="briefSummary" required data-error="Please fill out this field"
+                    name="briefSummary" required data-error="Please fill out this field" 
                     maxlength="500">${consentInfoBo.briefSummary}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -141,8 +141,8 @@
           </span>
         </div>
         <div class="form-group">
-          <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE" data-error="Please fill out this field"
-                    required>${consentInfoBo.elaborated}</textarea>
+          <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE"
+                    required data-error="Please fill out this field" >${consentInfoBo.elaborated}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -349,7 +349,6 @@
                 var elaboratedContent = $(
                     '#elaboratedRTE')
                     .summernote('code');
-                
                 var briefSummaryText = replaceSpecialCharacters($(
                     "#briefSummary")
                     .val());
@@ -491,7 +490,7 @@
     $(item).prop('disabled', true);
     bootbox
         .confirm({
-          closeButton: true,
+          closeButton: false,
           message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
           buttons: {
             'cancel': {
@@ -566,7 +565,7 @@
         if ('${consentInfo.consentItemTitleId}' != ''
             && '${consentInfo.consentItemTitleId}' != null) {
           if ('${consentInfo.consentItemTitleId}' == selectedTitle.options[i].value
-              && '${consentInfo.consentItemTitleId}' != '${consentInfoBo.consentItemTitleId}' && '${consentInfo.consentItemType}' != 'Custom') {
+        		  && '${consentInfo.consentItemTitleId}' != '${consentInfoBo.consentItemTitleId}' && '${consentInfo.consentItemType}' != 'Custom') {
             $(
                 "select option[value="
                 + selectedTitle.options[i].value + "]")
@@ -607,39 +606,39 @@
   </c:if>
 
   function maxLenValEditor() {
-    var isValid = true;
-    var value = $('#elaboratedRTE').summernote('code');
-    if (value == '<br>' || value == '<p><br></p>') {
-    	value = '';
-    }
-    
-    if (value != '') {
-      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
-        if (isValid) {
-          isValid = false;
-        }
-        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
-        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 15000 characters are allowed"));
+	    var isValid = true;
+	    var value = $('#elaboratedRTE').summernote('code');
+	    if (value == '<br>' || value == '<p><br></p>') {
+	    	value = '';
+	    }
+	    
+	    if (value != '') {
+	      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
+	        if (isValid) {
+	          isValid = false;
+	        }
+	        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
+	        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	            "Maximum 15000 characters are allowed"));
 
-      } else {
-        $('#elaboratedRTE').parent().removeClass("has-danger")
-            .removeClass("has-error");
-        $('#elaboratedRTE').parent().find(".help-block").empty();
-      }
-    } else {
-      isValid = false;
-      $('#elaboratedRTE')
-          .parent()
-          .addClass('has-error has-danger')
-          .find(".help-block")
-          .empty()
-          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-              "Please fill out this field"));
+	      } else {
+	        $('#elaboratedRTE').parent().removeClass("has-danger")
+	            .removeClass("has-error");
+	        $('#elaboratedRTE').parent().find(".help-block").empty();
+	      }
+	    } else {
+	      isValid = false;
+	      $('#elaboratedRTE')
+	          .parent()
+	          .addClass('has-error has-danger')
+	          .find(".help-block")
+	          .empty()
+	          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+	              "Please fill out this field"));
 
-    }
-    return isValid;
-  }
+	    }
+	    return isValid;
+	  }
 
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");

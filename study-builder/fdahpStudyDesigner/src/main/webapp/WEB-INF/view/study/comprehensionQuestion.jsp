@@ -58,7 +58,7 @@
           </span>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" name="questionText" id="questionText" required data-error="Please fill out this field"
+          <input type="text" class="form-control" name="questionText" id="questionText" required data-error="Please fill out this field" 
                  value="${comprehensionQuestionBo.questionText}" maxlength="300"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -96,8 +96,8 @@
             <div class="ans-opts col-md-12 p-none" id="0">
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
-                  <input type='text' class='form-control responseOptionClass'
-                         name="responseList[0].responseOption" id="responseOptionId0" required data-error="Please fill out this field"
+                  <input type='text' class='form-control responseOptionClass' 
+                         name="responseList[0].responseOption" id="responseOptionId0" required data-error="Please fill out this field" 
                          maxlength="150" onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -129,7 +129,7 @@
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control' name="responseList[1].responseOption"
-                         id="responseOptionId1" required maxlength="150" data-error="Please fill out this field"
+                         id="responseOptionId1" required data-error="Please fill out this field"  maxlength="150"
                          onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -186,7 +186,7 @@
                     <input type='text' class='form-control'
                            name="responseList[${responseBoVar.index}].responseOption"
                            id="responseOptionId${responseBoVar.index}"
-                           value="${responseBo.responseOption}" required maxlength="150"
+                           value="${responseBo.responseOption}" required data-error="Please fill out this field" maxlength="150"
                            onblur="validateForUniqueValue(this,function(){});"
                            onkeypress="resetValue(this);"/>
                     <div class='help-block with-errors red-txt'></div>
@@ -194,7 +194,7 @@
                 </div>
                 <div class='col-md-3'>
                   <div class="form-group">
-                    <select class='selectpicker wid100' required data-error="Please fill out this field"
+                    <select class='selectpicker wid100' required 
                             data-error='Please choose one option'
                             name="responseList[${responseBoVar.index}].correctAnswer"
                             id="correctAnswerId${responseBoVar.index}">
@@ -259,7 +259,7 @@
       <div class="clearfix"></div>
 
       <div>
-      <div class="gray-xs-f mb-sm">Consider the question to be correctly answered if the app user responds with
+      <div class="gray-xs-f mb-sm">The question can be considered correctly answered if the app user responds with
           <span
               class="requiredStar">*
           </span>
@@ -326,7 +326,7 @@
     var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
         + "'><div class='col-md-6 pl-none'>"
         + "<div class='form-group'>"
-        + "<input type='text' class='form-control' required data-error='Please fill out this field' name='responseList[" + ansCount
+        + "<input type='text' class='form-control' required data-error='Please fill out this field'  name='responseList[" + ansCount
         + "].responseOption' id='responseOptionId" + ansCount
         + "'  maxlength='150' onblur='validateForUniqueValue(this,function(){});' onkeypress='resetValue(this);'/>"
         + "<div class='help-block with-errors red-txt'></div>"
@@ -390,7 +390,7 @@
     <c:if test="${actionPage ne 'view'}">
     $(item).prop('disabled', true);
     bootbox.confirm({
-      closeButton: true,
+      closeButton: false,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {

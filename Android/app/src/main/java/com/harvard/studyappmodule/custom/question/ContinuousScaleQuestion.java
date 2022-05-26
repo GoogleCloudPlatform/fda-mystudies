@@ -17,6 +17,7 @@ package com.harvard.studyappmodule.custom.question;
 
 import android.content.res.Resources;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,10 @@ import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.utils.Logger;
 import com.harvard.utils.VerticalSeekBar;
+import com.jaygoo.widget.OnRangeChangedListener;
+import com.jaygoo.widget.RangeSeekBar;
+import com.jaygoo.widget.VerticalRangeSeekBar;
+
 import java.text.NumberFormat;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
@@ -41,7 +46,7 @@ public class ContinuousScaleQuestion<T> implements StepBody {
   private ContinousScaleAnswerFormat format;
   private TextView currentvalue;
   private Double currentSelected;
-  private SeekBar seekBar;
+  private RangeSeekBar seekBar;
   private int stepSection;
   private int min;
   private double value;
@@ -99,15 +104,15 @@ public class ContinuousScaleQuestion<T> implements StepBody {
 
     if (!format.isVertical()) {
       seekbarlayout = inflater.inflate(R.layout.seekbar_horizontal_layout, parent, false);
-      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar = (RangeSeekBar) seekbarlayout.findViewById(R.id.seekbar);
     } else {
       seekbarlayout = inflater.inflate(R.layout.seekbar_vertical_layout, parent, false);
-      seekBar = (VerticalSeekBar) seekbarlayout.findViewById(R.id.seekbar);
+      seekBar = (VerticalRangeSeekBar) seekbarlayout.findViewById(R.id.seekbar);
     }
     if (stepSection != 0) {
-      seekBar.setMax((max - min) * (stepSection * 10));
+      seekBar.setRange(0, (max - min) * (stepSection * 10));
     } else {
-      seekBar.setMax((max - min));
+      seekBar.setRange(0, (max - min));
     }
 
     TextView mindesc = (TextView) seekbarlayout.findViewById(R.id.mindesc);
@@ -126,32 +131,36 @@ public class ContinuousScaleQuestion<T> implements StepBody {
     maxtitle.setText(String.valueOf(max));
 
     if (!format.getMinImage().equalsIgnoreCase("")) {
-      byte[] imageByteArray = Base64.decode(format.getMinImage(), Base64.DEFAULT);
+      byte[] imageByteArray = Base64.decode(format.getMinImage().split(",")[1], Base64.DEFAULT);
       Glide.with(inflater.getContext()).load(imageByteArray).into(minimage);
     } else {
-      minimage.setVisibility(View.INVISIBLE);
+      minimage.setVisibility(View.GONE);
     }
     if (!format.getMaxImage().equalsIgnoreCase("")) {
-      byte[] imageByteArray = Base64.decode(format.getMaxImage(), Base64.DEFAULT);
+      byte[] imageByteArray = Base64.decode(format.getMaxImage().split(",")[1], Base64.DEFAULT);
       Glide.with(inflater.getContext()).load(imageByteArray).into(maximage);
     } else {
-      maximage.setVisibility(View.INVISIBLE);
+      maximage.setVisibility(View.GONE);
     }
 
     currentvalue.setText(String.valueOf(min));
-    seekBar.setOnSeekBarChangeListener(
-        new SeekBar.OnSeekBarChangeListener() {
-          @Override
-          public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-            setvaluetotext();
-          }
 
-          @Override
-          public void onStartTrackingTouch(SeekBar seekBar) {}
+    seekBar.setOnRangeChangedListener(new OnRangeChangedListener() {
+      @Override
+      public void onRangeChanged(RangeSeekBar rangeSeekBar, float v, float v1, boolean b) {
+        setvaluetotext();
+      }
 
-          @Override
-          public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+      @Override
+      public void onStartTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+      }
+
+      @Override
+      public void onStopTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+      }
+    });
 
     if (currentSelected != null) {
       double selected;
@@ -196,10 +205,10 @@ public class ContinuousScaleQuestion<T> implements StepBody {
     if (stepSection != 0) {
       value =
           Double.parseDouble("" + min)
-              + Double.parseDouble("" + seekBar.getProgress())
-                  / Double.parseDouble("" + (stepSection * 10));
+              + Double.parseDouble("" + (int) seekBar.getLeftSeekBar().getProgress())
+              / Double.parseDouble("" + (stepSection * 10));
     } else {
-      value = Double.parseDouble("" + min) + Double.parseDouble("" + seekBar.getProgress());
+      value = Double.parseDouble("" + min) + Double.parseDouble("" + (int) seekBar.getLeftSeekBar().getProgress());
     }
     NumberFormat nf = NumberFormat.getInstance();
     nf.setMaximumFractionDigits(stepSection);

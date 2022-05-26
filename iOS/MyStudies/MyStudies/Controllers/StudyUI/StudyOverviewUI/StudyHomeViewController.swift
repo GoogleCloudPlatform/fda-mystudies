@@ -20,6 +20,7 @@
 import Foundation
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 let kEligibilityConsentTask = "EligibilityConsentTask"
 let kEligibilityTokenStep = "EligibilityTokenStep"
@@ -113,6 +114,9 @@ class StudyHomeViewController: UIViewController {
 
     let viewConsent = Branding.viewConsentButtonTitle
     buttonViewConsent?.setTitle(viewConsent, for: .normal)
+    
+//    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+//                                               name: Notification.Name("ORKCancel"), object: nil)
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -158,6 +162,12 @@ class StudyHomeViewController: UIViewController {
     }
 
     configureStandaloneUI()
+  }
+  
+  @objc func methodOfReceivedNotification(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ORKCancel"
+    ])
   }
 
   // MARK: - UI Utils
@@ -543,6 +553,9 @@ class StudyHomeViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionJoinStudy(_: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Join Study Clicked"
+    ])
 
     if User.currentUser.userType == .anonymousUser {
       /// User not logged in yet.
@@ -581,19 +594,10 @@ class StudyHomeViewController: UIViewController {
             )
           }
         } else if participatedStatus == .withdrawn {
-          // check if rejoining is allowed after withrdrawn from study
-          if currentStudy.studySettings.rejoinStudyAfterWithdrawn {
-            WCPServices().getEligibilityConsentMetadata(
-              studyId: (Study.currentStudy?.studyId)!,
-              delegate: self as NMWebServiceDelegate
-            )
-          } else {
-            UIUtilities.showAlertWithTitleAndMessage(
-              title: "",
-              message: NSLocalizedString(kMessageForStudyWithdrawnState, comment: "")
-                as NSString
-            )
-          }
+          WCPServices().getEligibilityConsentMetadata(
+            studyId: (Study.currentStudy?.studyId)!,
+            delegate: self as NMWebServiceDelegate
+          )
         }
       case .paused:
         UIUtilities.showAlertWithTitleAndMessage(
@@ -610,6 +614,9 @@ class StudyHomeViewController: UIViewController {
   }
 
   @IBAction func backButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Home Button"
+    ])
     let button = sender as! UIButton
     if button.tag == 200 {
       slideMenuController()?.openLeft()
@@ -619,8 +626,12 @@ class StudyHomeViewController: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
+  
     if sender.tag == 1188 {
       // Visit Website
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Visit Website Clicked"
+      ])
 
       navigateToWebView(
         link: Study.currentStudy?.overview.websiteLink,
@@ -630,6 +641,9 @@ class StudyHomeViewController: UIViewController {
 
     } else {
       // View Consent
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "View Consent"
+      ])
 
       if Study.currentStudy?.studyId != nil {
         WCPServices().getConsentDocument(
@@ -765,6 +779,13 @@ class StudyHomeViewController: UIViewController {
     }
     if htmlText != nil {
       webView.htmlString = htmlText
+      let regex = "<[^>]+>"
+      let detailText = htmlText ?? ""
+      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) != nil {
+        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
+          webView.htmlString = "\(valReConversiontoHTMLfromHTML)"
+        }
+      }
     }
     navigationController?.present(webViewController, animated: true, completion: nil)
   }
@@ -1161,6 +1182,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       // Checking if Signature is consented after Review Step
 
       if consentSignatureResult?.didTapOnViewPdf == false {
+        NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
         // Directly moving to completion step by skipping Intermediate PDF viewer screen
         stepViewController.goForward()
       } else {
@@ -1247,9 +1270,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           let currentStatus = Study.currentStudy?.userParticipateState.status
           if currentStatus == .yetToEnroll
             || currentStatus == .notEligible
-            || (currentStatus == .withdrawn
-              && Study.currentStudy?.studySettings
-                .rejoinStudyAfterWithdrawn ?? false)
+            || currentStatus == .withdrawn
           {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 

@@ -17,6 +17,7 @@ package com.harvard.studyappmodule.custom.question;
 
 import android.content.res.Resources;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,10 @@ import com.bumptech.glide.Glide;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.utils.Logger;
+import com.jaygoo.widget.OnRangeChangedListener;
+import com.jaygoo.widget.RangeSeekBar;
+import com.jaygoo.widget.VerticalRangeSeekBar;
+
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.BodyAnswer;
@@ -39,7 +44,7 @@ public class ScaleQuestion implements StepBody {
   private ScaleAnswerFormat format;
   private TextView mcurrentvalue;
   private Double currentSelected;
-  private SeekBar seekBar;
+  private RangeSeekBar seekBar;
   private int min;
   private int stepSection;
   private double value;
@@ -96,14 +101,13 @@ public class ScaleQuestion implements StepBody {
     View seekbarlayout;
     if (!format.isVertical()) {
       seekbarlayout = inflater.inflate(R.layout.seekbar_horizontal_layout, parent, false);
-      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
-      seekBar.setMax((max - min) / stepSection);
+      seekBar = (RangeSeekBar) seekbarlayout.findViewById(R.id.seekbar);
     } else {
       seekbarlayout = inflater.inflate(R.layout.seekbar_vertical_layout, parent, false);
-      seekBar = (SeekBar) seekbarlayout.findViewById(R.id.seekbar);
-      seekBar.setMax((max - min) / stepSection);
+      seekBar = (VerticalRangeSeekBar) seekbarlayout.findViewById(R.id.seekbar);
     }
-
+    seekBar.setSteps(max / stepSection);
+    seekBar.setRange(0, ((max - min) / stepSection));
 
     TextView mindesc = (TextView) seekbarlayout.findViewById(R.id.mindesc);
     ImageView minimage = (ImageView) seekbarlayout.findViewById(R.id.minimage);
@@ -118,16 +122,16 @@ public class ScaleQuestion implements StepBody {
     maxdesc.setText(format.getMaxDesc());
 
     if (!format.getMinImage().equalsIgnoreCase("")) {
-      byte[] imageByteArray = Base64.decode(format.getMinImage(), Base64.DEFAULT);
+      byte[] imageByteArray = Base64.decode(format.getMinImage().split(",")[1], Base64.DEFAULT);
       Glide.with(inflater.getContext()).load(imageByteArray).into(minimage);
     } else {
-      minimage.setVisibility(View.INVISIBLE);
+      minimage.setVisibility(View.GONE);
     }
     if (!format.getMaxImage().equalsIgnoreCase("")) {
-      byte[] imageByteArray = Base64.decode(format.getMaxImage(), Base64.DEFAULT);
+      byte[] imageByteArray = Base64.decode(format.getMaxImage().split(",")[1], Base64.DEFAULT);
       Glide.with(inflater.getContext()).load(imageByteArray).into(maximage);
     } else {
-      maximage.setVisibility(View.INVISIBLE);
+      maximage.setVisibility(View.GONE);
     }
     TextView mintitle = (TextView) seekbarlayout.findViewById(R.id.mintitle);
     TextView maxtitle = (TextView) seekbarlayout.findViewById(R.id.maxtitle);
@@ -136,19 +140,22 @@ public class ScaleQuestion implements StepBody {
 
     mcurrentvalue.setText(String.valueOf(min));
 
-    seekBar.setOnSeekBarChangeListener(
-        new SeekBar.OnSeekBarChangeListener() {
-          @Override
-          public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-            setvaluetotxt();
-          }
+    seekBar.setOnRangeChangedListener(new OnRangeChangedListener() {
+      @Override
+      public void onRangeChanged(RangeSeekBar rangeSeekBar, float v, float v1, boolean b) {
+        setvaluetotxt();
+      }
 
-          @Override
-          public void onStartTrackingTouch(SeekBar seekBar) {}
+      @Override
+      public void onStartTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
 
-          @Override
-          public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+      }
+
+      @Override
+      public void onStopTrackingTouch(RangeSeekBar rangeSeekBar, boolean b) {
+
+      }
+    });
 
     if (currentSelected != null) {
       int selected = ((currentSelected.intValue() - min) / stepSection);
@@ -178,8 +185,8 @@ public class ScaleQuestion implements StepBody {
   }
 
   private void setvaluetotxt() {
-    value = min + (seekBar.getProgress() * stepSection);
-    mcurrentvalue.setText(String.valueOf(value));
+    value = min + (((int) seekBar.getLeftSeekBar().getProgress()) * stepSection);
+    mcurrentvalue.setText(String.valueOf((int) value));
   }
 
   private View initViewCompact(LayoutInflater inflater, ViewGroup parent) {

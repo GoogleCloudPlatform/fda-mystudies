@@ -59,13 +59,11 @@
 		.hover_text_white { color:#fff !important;}
 		.hover_text_white:hover { color:#fff !important;}
 		.hover_text_white:focus { color:#fff !important;}
-	/*  .arrowLeftSugg {
-    top: 82px; !important;
-    } */
-    .form-wrap{
+    	.form-wrap{
     position:relative;
     }
 	</style>
+
   </head>
   <body class="loading background__img">
     <div id="loader">
@@ -74,7 +72,7 @@
     <div id="lg-container" class="lg-container">
 
       <div class="logo__space">
-      	<a id="login" class="gray-link backToLogin white__text hover_text_white"
+        <a id="login" class="gray-link backToLogin white__text hover_text_white"
                  href="javascript:void(0)">
         	<img src="images/logo/logo_landing_welcome.png" alt=""/>
         </a>
@@ -95,20 +93,19 @@
               <div class="mb-lg form-group form-wrap">
                 <input type="password" class="input-field wow_input"
                        id="password" tabindex="2" maxlength="64" data-minlength="8"
-                       placeholder="New password*" required
+                       placeholder="New password*" required data-error="Please fill out this field" 
                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                        data-error="Password is invalid" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
-             <span class="arrowLeftSugg" id="arrowleftSugg"></span>
-
+                 <span class="arrowLeftSugg" id="arrowleftSugg"></span>
               </div>
 
               <div class="mb-lg form-group">
                 <input type="password" class="input-field wow_input"
                        id="cfnPassword" tabindex="3" name="" maxlength="64"
                        data-match="#password"
-                       data-match-error="Passwords do not match" data-error="Please fill out this field"
-                       placeholder="Confirm new password*" required autocomplete="off"/>
+                       data-match-error="Passwords do not match"
+                       placeholder="Confirm new password*" required data-error="Please fill out this field" autocomplete="off"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
               <div class="mb-lg form-group">
@@ -117,8 +114,7 @@
               </div>
             </c:if>
             <c:if test="${isInactiveUser}">
-                <jsp:forward page="errorPage.jsp" />
-
+              <jsp:forward page="errorPage.jsp" />
             </c:if>
             <c:if test="${not isInactiveUser && not isValidToken}">
               <jsp:forward page="errorPage.jsp" />
@@ -192,6 +188,7 @@
     <form:form action="/studybuilder/login.do" id="backToLoginForm"
                name="backToLoginForm" method="post">
     </form:form>
+
     <!-- Vendor -->
     <script src="vendor/jquery/jquery-3.1.1.min.js"></script>
     <script src="vendor/boostrap/bootstrap.min.js"></script>

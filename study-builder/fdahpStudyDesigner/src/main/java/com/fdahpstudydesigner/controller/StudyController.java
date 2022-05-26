@@ -1,22 +1,25 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"), to deal in the
- * Software without restriction, including without limitation the rights to use, copy, modify,
- * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
- * to whom the Software is furnished to do so, subject to the following conditions:
+ * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -146,11 +149,11 @@ public class StudyController {
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
-  @Autowired private OAuthService oauthService;
-
   @Autowired private StudyExportImportService studyExportImportService;
 
   @Autowired private StudyDAO studyDao;
+
+  @Autowired private OAuthService oauthService;
 
   @Autowired private AppService appService;
 
@@ -260,7 +263,7 @@ public class StudyController {
           map.addAttribute("liveStudyBo", liveStudyBo);
           map.addAttribute("studyPermissionBO", studyPermissionBO);
           map.addAttribute("markAsCompleted", markAsCompleted);
-          map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.expiration.in.hour"));
+          map.addAttribute("signedUrlExpiryTime", propMap.get("signed.url.duration.in.hours"));
           map.addAttribute("releaseVersion", propMap.get("release.version"));
           map.addAttribute(
               "exportSignedUrl",
@@ -277,146 +280,6 @@ public class StudyController {
       logger.error("StudyController - actionList - ERROR", e);
     }
     logger.exit("actionList() - Ends");
-    return mav;
-  }
-
-  @RequestMapping("/adminStudies/addOrEditResource.do")
-  public ModelAndView addOrEditResource(HttpServletRequest request) {
-    logger.entry("begin addOrEditResource()");
-    ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
-    ModelMap map = new ModelMap();
-    ResourceBO resourceBO = null;
-    StudyBo studyBo = null;
-    String sucMsg = "";
-    String errMsg = "";
-    List<AnchorDateTypeBo> anchorTypeList = new ArrayList<>();
-    try {
-      SessionObject sesObj =
-          (SessionObject)
-              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-      Integer sessionStudyCount =
-          StringUtils.isNumeric(request.getParameter("_S"))
-              ? Integer.parseInt(request.getParameter("_S"))
-              : 0;
-      if ((sesObj != null)
-          && (sesObj.getStudySession() != null)
-          && sesObj.getStudySession().contains(sessionStudyCount)) {
-        if (null
-            != request
-                .getSession()
-                .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG)) {
-          sucMsg =
-              (String)
-                  request
-                      .getSession()
-                      .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG);
-          map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
-          request
-              .getSession()
-              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG);
-        }
-        if (null
-            != request
-                .getSession()
-                .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG)) {
-          errMsg =
-              (String)
-                  request
-                      .getSession()
-                      .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG);
-          map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
-          request
-              .getSession()
-              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG);
-        }
-        String studyId =
-            (String)
-                request
-                    .getSession()
-                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
-        if (StringUtils.isEmpty(studyId)) {
-          studyId =
-              FdahpStudyDesignerUtil.isEmpty(
-                      request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
-                  ? ""
-                  : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
-        }
-        String resourceInfoId =
-            (String)
-                request
-                    .getSession()
-                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
-        if (StringUtils.isEmpty(resourceInfoId)) {
-          resourceInfoId =
-              FdahpStudyDesignerUtil.isEmpty(
-                      request.getParameter(FdahpStudyDesignerConstants.RESOURCE_INFO_ID))
-                  ? ""
-                  : request.getParameter(FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
-        }
-        String studyProtocol =
-            (String)
-                request
-                    .getSession()
-                    .getAttribute(
-                        sessionStudyCount + FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
-        if (StringUtils.isEmpty(studyProtocol)) {
-          studyProtocol =
-              FdahpStudyDesignerUtil.isEmpty(
-                      request.getParameter(FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL))
-                  ? ""
-                  : request.getParameter(FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
-        }
-        String action =
-            (String)
-                request
-                    .getSession()
-                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ACTION_ON);
-        if (StringUtils.isEmpty(action)) {
-          action =
-              FdahpStudyDesignerUtil.isEmpty(
-                      request.getParameter(FdahpStudyDesignerConstants.ACTION_ON))
-                  ? ""
-                  : request.getParameter(FdahpStudyDesignerConstants.ACTION_ON);
-        }
-        map.addAttribute("_S", sessionStudyCount);
-        if (!FdahpStudyDesignerUtil.isEmpty(action)) {
-          if (!("").equals(resourceInfoId)) {
-            resourceBO = studyService.getResourceInfo(resourceInfoId);
-            request
-                .getSession()
-                .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
-          }
-          if ((null != studyProtocol)
-              && !("").equals(studyProtocol)
-              && (FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL).equalsIgnoreCase(studyProtocol)) {
-            map.addAttribute(
-                FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL,
-                FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
-            request
-                .getSession()
-                .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
-          }
-          studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
-          map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
-          map.addAttribute("resourceBO", resourceBO);
-          map.addAttribute(FdahpStudyDesignerConstants.ACTION_ON, action);
-          if ((studyBo != null) && !studyBo.getCustomStudyId().isEmpty()) {
-            anchorTypeList =
-                studyQuestionnaireService.getAnchorTypesByStudyId(studyBo.getCustomStudyId());
-          }
-          map.addAttribute("anchorTypeList", anchorTypeList);
-          request
-              .getSession()
-              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ACTION_ON);
-          mav = new ModelAndView("addOrEditResourcePage", map);
-        } else {
-          mav = new ModelAndView("redirect:getResourceList.do", map);
-        }
-      }
-    } catch (Exception e) {
-      logger.error("StudyController - addOrEditResource() - ERROR", e);
-    }
-    logger.exit("addOrEditResource() - Ends");
     return mav;
   }
 
@@ -595,7 +458,6 @@ public class StudyController {
             studyService.markAsCompleted(
                 studyId, FdahpStudyDesignerConstants.CONESENT_REVIEW, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
-
         if (request.getParameter("isActive") != null
             && request.getParameter("isActive").equals("consentReview")) {
           map.addAttribute("isActive", "consentReview");
@@ -1932,7 +1794,6 @@ public class StudyController {
                   "sucMsgViewAssocStudies",
                   FdahpStudyDesignerConstants.VIEW_ASSOCIATED_STUDIES_MESSAGE);
         }
-        map.addAttribute("studyListId", "true");
         map.addAttribute("appBos", appList);
         auditLogEventHelper.logEvent(STUDY_LIST_VIEWED, auditRequest);
 
@@ -5410,6 +5271,146 @@ public class StudyController {
     logger.exit("submitResponseToResponseServer() - Ends ");
   }
 
+  @RequestMapping("/adminStudies/addOrEditResource.do")
+  public ModelAndView addOrEditResource(HttpServletRequest request) {
+    logger.entry("begin addOrEditResource()");
+    ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
+    ModelMap map = new ModelMap();
+    ResourceBO resourceBO = null;
+    StudyBo studyBo = null;
+    String sucMsg = "";
+    String errMsg = "";
+    List<AnchorDateTypeBo> anchorTypeList = new ArrayList<>();
+    try {
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      Integer sessionStudyCount =
+          StringUtils.isNumeric(request.getParameter("_S"))
+              ? Integer.parseInt(request.getParameter("_S"))
+              : 0;
+      if ((sesObj != null)
+          && (sesObj.getStudySession() != null)
+          && sesObj.getStudySession().contains(sessionStudyCount)) {
+        if (null
+            != request
+                .getSession()
+                .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG)) {
+          sucMsg =
+              (String)
+                  request
+                      .getSession()
+                      .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG);
+          map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
+          request
+              .getSession()
+              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG);
+        }
+        if (null
+            != request
+                .getSession()
+                .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG)) {
+          errMsg =
+              (String)
+                  request
+                      .getSession()
+                      .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG);
+          map.addAttribute(FdahpStudyDesignerConstants.ERR_MSG, errMsg);
+          request
+              .getSession()
+              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG);
+        }
+        String studyId =
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
+        if (StringUtils.isEmpty(studyId)) {
+          studyId =
+              FdahpStudyDesignerUtil.isEmpty(
+                      request.getParameter(FdahpStudyDesignerConstants.STUDY_ID))
+                  ? ""
+                  : request.getParameter(FdahpStudyDesignerConstants.STUDY_ID);
+        }
+        String resourceInfoId =
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
+        if (StringUtils.isEmpty(resourceInfoId)) {
+          resourceInfoId =
+              FdahpStudyDesignerUtil.isEmpty(
+                      request.getParameter(FdahpStudyDesignerConstants.RESOURCE_INFO_ID))
+                  ? ""
+                  : request.getParameter(FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
+        }
+        String studyProtocol =
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(
+                        sessionStudyCount + FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
+        if (StringUtils.isEmpty(studyProtocol)) {
+          studyProtocol =
+              FdahpStudyDesignerUtil.isEmpty(
+                      request.getParameter(FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL))
+                  ? ""
+                  : request.getParameter(FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
+        }
+        String action =
+            (String)
+                request
+                    .getSession()
+                    .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ACTION_ON);
+        if (StringUtils.isEmpty(action)) {
+          action =
+              FdahpStudyDesignerUtil.isEmpty(
+                      request.getParameter(FdahpStudyDesignerConstants.ACTION_ON))
+                  ? ""
+                  : request.getParameter(FdahpStudyDesignerConstants.ACTION_ON);
+        }
+        map.addAttribute("_S", sessionStudyCount);
+        if (!FdahpStudyDesignerUtil.isEmpty(action)) {
+          if (!("").equals(resourceInfoId)) {
+            resourceBO = studyService.getResourceInfo(resourceInfoId);
+            request
+                .getSession()
+                .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.RESOURCE_INFO_ID);
+          }
+          if ((null != studyProtocol)
+              && !("").equals(studyProtocol)
+              && (FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL).equalsIgnoreCase(studyProtocol)) {
+            map.addAttribute(
+                FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL,
+                FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
+            request
+                .getSession()
+                .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.IS_STUDY_PROTOCOL);
+          }
+          studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+          map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
+          map.addAttribute("resourceBO", resourceBO);
+          map.addAttribute(FdahpStudyDesignerConstants.ACTION_ON, action);
+          if ((studyBo != null) && !studyBo.getCustomStudyId().isEmpty()) {
+            anchorTypeList =
+                studyQuestionnaireService.getAnchorTypesByStudyId(studyBo.getCustomStudyId());
+          }
+          map.addAttribute("anchorTypeList", anchorTypeList);
+          request
+              .getSession()
+              .removeAttribute(sessionStudyCount + FdahpStudyDesignerConstants.ACTION_ON);
+          mav = new ModelAndView("addOrEditResourcePage", map);
+        } else {
+          mav = new ModelAndView("redirect:getResourceList.do", map);
+        }
+      }
+    } catch (Exception e) {
+      logger.error("StudyController - addOrEditResource() - ERROR", e);
+    }
+    logger.exit("addOrEditResource() - Ends");
+    return mav;
+  }
+
   @RequestMapping(value = "/studies/{studyId}/export.do", method = RequestMethod.POST)
   public void exportStudy(
       HttpServletRequest request, HttpServletResponse response, @PathVariable String studyId)
@@ -5428,9 +5429,10 @@ public class StudyController {
     String message = "";
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     if (StringUtils.isNotEmpty(studyId)) {
+      // export study to google cloud storage
       message =
           studyExportImportService.exportStudy(
-              studyId, sesObj.getUserId(), auditRequest, copyVersion);
+              studyId, copyVersion, sesObj.getUserId(), auditRequest);
     }
     JSONObject jsonobject = new JSONObject();
     if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {

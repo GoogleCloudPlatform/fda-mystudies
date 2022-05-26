@@ -68,22 +68,11 @@ public class StudiesDaoImpl implements StudiesDao {
 
     if (studyInfo != null) {
 
-      //      appInfo.setAppId(studyMetadataBean.getAppId());
-      //      appInfo.setAppName(studyMetadataBean.getAppName());
-      //      appInfo.setAppDescription(studyMetadataBean.getAppDescription());
-      //      appInfo.setModifiedBy(String.valueOf(0));
-      //      appInfo.setModified(Timestamp.from(Instant.now()));
-
-      //   studyInfo.setCustomId(studyMetadataBean.getStudyId());
       studyInfo.setName(studyMetadataBean.getStudyTitle());
       studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
       studyInfo.setType(studyMetadataBean.getStudyType());
       studyInfo.setStatus(studyMetadataBean.getStudyStatus());
-      //  studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-      //  studyInfo.setTagline(studyMetadataBean.getStudyTagline());
-      //  studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
       studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
-      //   studyInfo.setApp(appInfo);
       studyInfo.setModifiedBy(String.valueOf(0));
       studyInfo.setModified(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
@@ -98,15 +87,6 @@ public class StudiesDaoImpl implements StudiesDao {
       appInfo = session.createQuery(appCriteria).uniqueResult();
 
       List<AppPermissionEntity> appPermissionList = new ArrayList<>();
-      /* if (appInfo == null) {
-        appInfo = new AppEntity();
-        appInfo.setAppId(studyMetadataBean.getAppId());
-        appInfo.setAppName(studyMetadataBean.getAppName());
-        appInfo.setAppDescription(studyMetadataBean.getAppDescription());
-        appInfo.setCreatedBy(String.valueOf(0));
-        appInfo.setCreated(Timestamp.from(Instant.now()));
-        session.save(appInfo);
-      } else {*/
       CriteriaQuery<AppPermissionEntity> appPermissionCriteria =
           builder.createQuery(AppPermissionEntity.class);
       Root<AppPermissionEntity> appPermissionRoot =
@@ -115,7 +95,6 @@ public class StudiesDaoImpl implements StudiesDao {
       appPermissionPredicate[0] = builder.equal(appPermissionRoot.get("app"), appInfo);
       appPermissionCriteria.select(appPermissionRoot).where(appPermissionPredicate);
       appPermissionList = session.createQuery(appPermissionCriteria).getResultList();
-      /*}*/
 
       studyInfo = new StudyEntity();
       studyInfo.setCustomId(studyMetadataBean.getStudyId());
@@ -123,9 +102,6 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
       studyInfo.setType(studyMetadataBean.getStudyType());
       studyInfo.setStatus(studyMetadataBean.getStudyStatus());
-      //  studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-      //  studyInfo.setTagline(studyMetadataBean.getStudyTagline());
-      //  studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
       studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
       studyInfo.setApp(appInfo);
       studyInfo.setCreatedBy(String.valueOf(0));

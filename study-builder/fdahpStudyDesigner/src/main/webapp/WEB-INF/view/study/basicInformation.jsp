@@ -200,9 +200,8 @@ li.dropdown-header {
           </div>
           <div class="form-group" id="appName">
            <c:choose>
-           <c:when test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || 
+            <c:when test="${not empty studyBo.status && (studyBo.status == 'Active' || studyBo.status == 'Published' || studyBo.status == 'Paused' || 
                       studyBo.status == 'Deactivated' || permission == 'view' || empty appsList)}">
-         
             <input type="text" custAttType="cust" autofocus="autofocus"
                    class="form-control aq-inp " name="" id=""
                    maxlength="15" value="${appName}" disabled/>
@@ -212,10 +211,10 @@ li.dropdown-header {
            <c:otherwise>
            
             <select class="selectpicker" required data-error="Please fill out this field"> 
-               <c:if test="${not empty appPermission && not appPermission}">
+                <c:if test="${not empty appPermission && not appPermission}">
                <option value="${appName}" class="hidden" selected>${appName}</option></c:if>
                <option value="" class="hidden">Select app</option>
-               <c:if test="${empty appsList}">
+                 <c:if test="${empty appsList}">
                      <option value="" id="">No app records found
                      </option>
                       </c:if>

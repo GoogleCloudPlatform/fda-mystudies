@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(
     tags = "Enrollment",
     value = "enroll management",
-    description = "Operations pertaining to enroll flow in enrollment module")
+    description = "Operations pertaining to enroll flow in enrollment service")
 @RestController
 public class EnrollmentTokenController {
 
@@ -68,7 +68,7 @@ public class EnrollmentTokenController {
 
   @Autowired StudyStateService studyStateService;
 
-  @ApiOperation(value = "validates enrollment token of the participant ")
+  @ApiOperation(value = " Validates enrollment token of the participant ")
   @PostMapping(value = "/validateEnrollmentToken", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> validateEnrollmentToken(
       @RequestHeader("userId") String userId,
@@ -98,9 +98,16 @@ public class EnrollmentTokenController {
             ErrorResponseUtil.ErrorCodes.TOKEN_ALREADY_USE.getValue(),
             response);
         return null;
-      } else if (!enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())
-          || !enrollmentTokenfService.isValidStudyToken(
-              enrollmentBean.getToken(), enrollmentBean.getStudyId(), userId)) {
+      } else if (!enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())) {
+        ErrorResponseUtil.getFailureResponse(
+            ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
+            ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
+            response);
+        enrollAuditEventHelper.logEvent(ENROLLMENT_TOKEN_FOUND_INVALID, auditRequest);
+        return null;
+      } else if (!enrollmentTokenfService.isValidStudyToken(
+          enrollmentBean.getToken(), enrollmentBean.getStudyId(), userId)) {
         ErrorResponseUtil.getFailureResponse(
             ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -129,7 +136,7 @@ public class EnrollmentTokenController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
-  @ApiOperation(value = "enrolling into a study")
+  @ApiOperation(value = "Enrolls into a study")
   @PostMapping(
       value = "/enroll",
       consumes = MediaType.APPLICATION_JSON_VALUE,

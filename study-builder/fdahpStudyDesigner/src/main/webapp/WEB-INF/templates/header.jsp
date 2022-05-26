@@ -41,7 +41,7 @@
                    id="manageNotificationSection">Notifications
                 </a>
               </li>
-            </c:if>
+              </c:if>
             <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
               <li id="users">
                 <a href="javascript:void(0)" id="usersSection">Admins</a>
@@ -68,7 +68,7 @@
                   </a>
                   <hr align="left" width="100%">
                   <a href="/studybuilder/sessionOut.do"
-                     class="blue-link text-weight-normal text-uppercase" id="signOut">
+                     class="blue-link text-weight-normal text-uppercase">
                     <span>sign Out</span>
                     <span
                         class="ml-xs"><img src="/studybuilder/images/icons/logout.png"/></span>
@@ -139,15 +139,6 @@
       });
     
 
-    $('#signOut').on('click', function () {
-       firebase.auth().signOut()
-   	   .then(function() {
-   	      alert('Signout Succesfull');
-   	   }, function(error) {
-   		  alert('Signout Failed'  + error)  ;
-   	   });
-    });
-    
   });
 
   function formSubmit() {

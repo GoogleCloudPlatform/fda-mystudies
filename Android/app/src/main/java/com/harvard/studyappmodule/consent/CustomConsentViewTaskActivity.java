@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule.consent;
@@ -20,16 +21,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -38,6 +32,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
@@ -63,6 +62,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
@@ -70,17 +70,12 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantConsentDatastoreConfigEvent;
 import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
-import com.tom_roush.pdfbox.pdmodel.PDDocument;
-import com.tom_roush.pdfbox.pdmodel.PDPage;
-import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
-import com.tom_roush.pdfbox.pdmodel.graphics.image.LosslessFactory;
-import com.tom_roush.pdfbox.pdmodel.graphics.image.PDImageXObject;
+
+import io.github.lucasfsc.html2pdf.Html2Pdf;
 import io.realm.Realm;
 import io.realm.RealmList;
+
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
@@ -110,6 +105,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private static final String PDFTITLE = "ViewTaskActivity.pdfTitle";
   private static final String ELIGIBILITY = "ViewTaskActivity.eligibility";
   public static final String TYPE = "ViewTaskActivity.type";
+  private CustomFirebaseAnalytics analyticsInstance;
 
   private StepSwitcherCustom root;
   private static final String FILE_FOLDER = "FDA_PDF";
@@ -171,6 +167,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     super.setResult(RESULT_CANCELED);
     super.setContentView(R.layout.stepswitchercustom);
 
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     Toolbar toolbar = (Toolbar) findViewById(org.researchstack.backbone.R.id.toolbar);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -251,6 +248,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       if (nextStep == null) {
         saveAndFinish();
       } else {
+        Bundle eventProperties = new Bundle();
+        eventProperties.putString(
+            CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            getString(R.string.custom_consent_view_next));
+        analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
         String checkIdentifier;
         if (consent.getSharing().getTitle().equalsIgnoreCase("")
             && consent.getSharing().getText().equalsIgnoreCase("")
@@ -376,6 +378,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   protected void showPreviousStep() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getString(R.string.custom_consent_view_back));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     previousStep = task.getStepBeforeStep(currentStep, taskResult);
     if (previousStep == null) {
       finish();
@@ -645,8 +652,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             enrolledDate = studies.getStudies().get(i).getEnrolledDate();
           }
         }
-        updateEligibilityConsent();
-
+        genarateConsentPdf();
       } else {
         Toast.makeText(this, getResources().getString(R.string.unable_to_parse), Toast.LENGTH_SHORT)
             .show();
@@ -672,7 +678,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     }
   }
 
-  private String genarateConsentPdf() {
+  private void genarateConsentPdf() {
 
     String filepath = "";
     try {
@@ -694,14 +700,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           && eligibilityConsent.getConsent() != null
           && eligibilityConsent.getConsent().getReview() != null
           && eligibilityConsent.getConsent().getReview().getReviewHTML() != null
-          && !eligibilityConsent
-              .getConsent()
-              .getReview()
-              .getReviewHTML()
-              .equalsIgnoreCase("")) {
+          && !eligibilityConsent.getConsent().getReview().getReviewHTML().equalsIgnoreCase("")) {
         docBuilder.append(
-            Html.fromHtml(
-                    eligibilityConsent.getConsent().getReview().getReviewHTML().toString())
+            Html.fromHtml(eligibilityConsent.getConsent().getReview().getReviewHTML().toString())
                 .toString());
       } else if (eligibilityConsent != null
           && eligibilityConsent.getConsent() != null
@@ -723,13 +724,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 "<div>  <h4>"
                     + eligibilityConsent.getConsent().getVisualScreens().get(i).getTitle()
                     + "<h4> </div>");
-            docBuilder.append("<br>");
             docBuilder.append(
                 "<div>"
-                    + eligibilityConsent.getConsent().getVisualScreens().get(i).getHtml()
+                    + Html.fromHtml(
+                            eligibilityConsent.getConsent().getVisualScreens().get(i).getHtml())
+                        .toString()
                     + "</div>");
-            docBuilder.append("<br>");
-            docBuilder.append("<br>");
           }
         } else {
           docBuilder.append("");
@@ -743,32 +743,6 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       agreeBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", participant));
       String detail = getResources().getString(R.string.agree_participate_research_study);
       agreeBuilder.append(String.format("<p style=\"text-align: center\">%1$s</p>", detail));
-
-      String timeStamp = AppController.getDateFormatForConsentPdf();
-      PdfWriter pdfWriter = new PdfWriter("/data/data/" + getPackageName() + "/files/", timeStamp);
-      pdfWriter.createPdfFile(CustomConsentViewTaskActivity.this);
-
-      StringBuffer pageText = new StringBuffer();
-      String[] docString = docBuilder.toString().split("<br>");
-      if (docString.length > 0) {
-        for (String s : docString) {
-          pageText.append(Html.fromHtml(s).toString().replace("\n", ""));
-          pageText.append(System.getProperty("line.separator"));
-        }
-      }
-      pageText.append(System.getProperty("line.separator"));
-      String[] agreeString = agreeBuilder.toString().split("</p>");
-      if (agreeString.length > 0) {
-        for (String s : agreeString) {
-          pageText.append(Html.fromHtml(s).toString().replace("\n", ""));
-          pageText.append(System.getProperty("line.separator"));
-        }
-      }
-      pageText.append(System.getProperty("line.separator"));
-      pageText.append(System.getProperty("line.separator"));
-      pageText.append("------------------------------------");
-      pageText.append(System.getProperty("line.separator"));
-      pageText.append(System.getProperty("line.separator"));
 
       String formResult =
           new Gson()
@@ -784,21 +758,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       JSONObject lastNameResult = lastNameObj.getJSONObject("results");
       String firstName = fullNameResult.getString("answer");
       String lastName = lastNameResult.getString("answer");
-      pageText
-          .append(getResources().getString(R.string.participans_name))
-          .append(": ")
-          .append(firstName)
-          .append(" ")
-          .append(lastName);
-      pageText.append(System.getProperty("line.separator"));
       String signatureDate =
           (String)
               taskResult
                   .getStepResult("Signature")
                   .getResultForIdentifier(ConsentSignatureStepLayout.KEY_SIGNATURE_DATE);
-      pageText.append(getResources().getString(R.string.date)).append(": ").append(signatureDate);
-      pageText.append(System.getProperty("line.separator"));
-      pageText.append(getResources().getString(R.string.participants_signature));
 
       String signatureBase64 =
           (String)
@@ -806,74 +770,75 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                   .getStepResult("Signature")
                   .getResultForIdentifier(ConsentSignatureStepLayout.KEY_SIGNATURE);
 
-      Bitmap bitmap =
-          BitmapFactory.decodeByteArray(
-              Base64.decode(signatureBase64, Base64.DEFAULT),
-              0,
-              Base64.decode(signatureBase64, Base64.DEFAULT).length);
-      File sign = new File("/data/data/" + getPackageName() + "/files/" + "signature" + ".png");
-      saveBitmap(sign, bitmap);
-      String heading = "";
-      pdfWriter.addPage(heading, pageText, sign.getPath());
-      pdfWriter.saveAndClose();
-      sign.delete();
+      docBuilder.append("<div style=\"page-break-after: always\">&nbsp;</div> ");
+      docBuilder.append(String.format("<p>%1$s</p>", detail));
+      docBuilder.append("<table width=\"100%\"><tr>");
+      docBuilder.append("<td style=\"vertical-align:bottom\">");
+      docBuilder.append(firstName).append(" ").append(lastName);
+      docBuilder.append("</td>");
+      docBuilder.append("<td style=\"align:centre\">");
+      docBuilder
+          .append("<img src=\"data:image/png;base64,")
+          .append(signatureBase64)
+          .append("\" alt=\"Red dot\" width=\"100\" height=\"100\" />");
+      docBuilder.append("</td>");
+      docBuilder.append("<td style=\"vertical-align:bottom\">");
+      docBuilder.append(signatureDate);
+      docBuilder.append("</td>");
+      docBuilder.append("</tr>");
 
-      // encrypt the genarated pdf
-      File encryptFile =
-          AppController.generateEncryptedConsentPdf(
-              "/data/data/" + getPackageName() + "/files/", timeStamp);
-      filepath = encryptFile.getAbsolutePath();
-      // After encryption delete the pdf file
-      if (encryptFile != null) {
-        File file = new File("/data/data/" + getPackageName() + "/files/" + timeStamp + ".pdf");
-        file.delete();
-      }
+      docBuilder.append("<tr>");
+      docBuilder.append("<td>(");
+      docBuilder.append(getResources().getString(R.string.participans_name));
+      docBuilder.append(")</td>");
+      docBuilder.append("<td>(");
+      docBuilder.append(getResources().getString(R.string.participants_signature));
+      docBuilder.append(")</td>");
+      docBuilder.append("<td>(");
+      docBuilder.append(getResources().getString(R.string.date));
+      docBuilder.append(")</td>");
+      docBuilder.append("</tr>");
+      docBuilder.append("</table>");
+      docBuilder.append("<p><br/></p>");
 
+      final String timeStamp = AppController.getDateFormatForConsentPdf();
+      final File file = new File("/data/data/" + getPackageName() + "/files/", timeStamp + ".pdf");
+      Html2Pdf converter =
+          new Html2Pdf.Companion.Builder()
+              .context(this)
+              .html(docBuilder.toString())
+              .file(file)
+              .build();
+      converter.convertToPdf(
+          new Html2Pdf.OnCompleteConversion() {
+            @Override
+            public void onSuccess() {
+              // encrypt the genarated pdf
+              File encryptFile =
+                  AppController.generateEncryptedConsentPdf(
+                      "/data/data/" + getPackageName() + "/files/", timeStamp);
+
+              file.delete();
+              updateEligibilityConsent(encryptFile.getAbsolutePath());
+            }
+
+            @Override
+            public void onFailed() {
+              AppController.getHelperProgressDialog().dismissDialog();
+              Toast.makeText(
+                      CustomConsentViewTaskActivity.this,
+                      R.string.pdf_consent_error,
+                      Toast.LENGTH_SHORT)
+                  .show();
+            }
+          });
     } catch (Exception e) {
       Logger.log(e);
+      AppController.getHelperProgressDialog().dismissDialog();
+      Toast.makeText(
+              CustomConsentViewTaskActivity.this, R.string.pdf_consent_error, Toast.LENGTH_SHORT)
+          .show();
     }
-    return filepath;
-  }
-
-  public void saveBitmap(File f, Bitmap bitmap) {
-
-    FileOutputStream fileOut = null;
-    try {
-      fileOut = new FileOutputStream(f);
-    } catch (FileNotFoundException e) {
-      Logger.log(e);
-    }
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOut);
-    try {
-      fileOut.flush();
-    } catch (IOException e) {
-      Logger.log(e);
-    }
-    try {
-      fileOut.close();
-    } catch (IOException e) {
-      Logger.log(e);
-    }
-  }
-
-  private void insertSignature(
-      PDDocument pdfDocument,
-      String signatureBase64,
-      PDPageContentStream signStream,
-      PDPage signPage)
-      throws IOException {
-    Bitmap bitmap =
-        BitmapFactory.decodeByteArray(
-            Base64.decode(signatureBase64, Base64.DEFAULT),
-            0,
-            Base64.decode(signatureBase64, Base64.DEFAULT).length);
-    PDImageXObject pdImage = LosslessFactory.createFromImage(pdfDocument, bitmap);
-    pdImage.setWidth(200);
-    pdImage.setHeight(100);
-    signStream.drawImage(
-        pdImage,
-        10 + pdImage.getWidth() - 180,
-        signPage.getMediaBox().getUpperRightY() - 10 - pdImage.getHeight() - 130);
   }
 
   private void getStudyUpdateFomWS() {
@@ -907,72 +872,60 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
   }
 
-  private void updateEligibilityConsent() {
-    pdfPath = genarateConsentPdf();
-    if (pdfPath != null && !pdfPath.isEmpty()) {
+  private void updateEligibilityConsent(String pdfPath) {
+    this.pdfPath = pdfPath;
+    HashMap headerparams = new HashMap();
+    headerparams.put(
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
+    headerparams.put(
+        "userId",
+        AppController.getHelperSharedPreference()
+            .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
 
-      HashMap headerparams = new HashMap();
-      headerparams.put(
-          "Authorization",
-          "Bearer "
-              + AppController.getHelperSharedPreference()
-                  .readPreference(
-                      CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
-      headerparams.put(
-          "userId",
-          AppController.getHelperSharedPreference()
-              .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
+    EligibilityConsent eligibilityConsent =
+        dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra(STUDYID), realm);
+    JSONObject body = new JSONObject();
+    try {
+      body.put("studyId", getIntent().getStringExtra(STUDYID));
+      body.put("siteId", siteId);
+      body.put("eligibility", true);
 
-      EligibilityConsent eligibilityConsent =
-          dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra(STUDYID), realm);
-      JSONObject body = new JSONObject();
-      try {
-        body.put("studyId", getIntent().getStringExtra(STUDYID));
-        body.put("siteId", siteId);
-        body.put("eligibility", true);
+      JSONObject consentbody = new JSONObject();
+      consentbody.put("version", eligibilityConsent.getConsent().getVersion());
+      consentbody.put("status", "Completed");
+      consentbody.put("pdf", convertFileToString(pdfPath));
 
-        JSONObject consentbody = new JSONObject();
-        consentbody.put("version", eligibilityConsent.getConsent().getVersion());
-        consentbody.put("status", "Completed");
-        try {
-          consentbody.put("pdf", convertFileToString(pdfPath));
-        } catch (IOException e) {
-          Logger.log(e);
-          consentbody.put("pdf", "");
-        }
+      body.put("consent", consentbody);
 
-        body.put("consent", consentbody);
-
-        body.put("sharing", sharingConsent);
-      } catch (JSONException e) {
-        Logger.log(e);
-      }
-
-      ParticipantConsentDatastoreConfigEvent participantConsentDatastoreConfigEvent =
-          new ParticipantConsentDatastoreConfigEvent(
-              "post_object",
-              Urls.UPDATE_ELIGIBILITY_CONSENT,
-              UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
-              CustomConsentViewTaskActivity.this,
-              LoginData.class,
-              null,
-              headerparams,
-              body,
-              false,
-              CustomConsentViewTaskActivity.this);
-      UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
-          new UpdateEligibilityConsentStatusEvent();
-      updateEligibilityConsentStatusEvent.setParticipantConsentDatastoreConfigEvent(
-          participantConsentDatastoreConfigEvent);
-      StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
-      studyModulePresenter.performUpdateEligibilityConsent(updateEligibilityConsentStatusEvent);
-    } else {
-      AppController.getHelperProgressDialog().dismissDialog();
-      Toast.makeText(this, R.string.pdf_consent_error, Toast.LENGTH_SHORT).show();
+      body.put("sharing", sharingConsent);
+    } catch (JSONException e) {
+      Logger.log(e);
     }
+
+    ParticipantConsentDatastoreConfigEvent participantConsentDatastoreConfigEvent =
+        new ParticipantConsentDatastoreConfigEvent(
+            "post_object",
+            Urls.UPDATE_ELIGIBILITY_CONSENT,
+            UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
+            CustomConsentViewTaskActivity.this,
+            LoginData.class,
+            null,
+            headerparams,
+            body,
+            false,
+            CustomConsentViewTaskActivity.this);
+    UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
+        new UpdateEligibilityConsentStatusEvent();
+    updateEligibilityConsentStatusEvent.setParticipantConsentDatastoreConfigEvent(
+        participantConsentDatastoreConfigEvent);
+    StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
+    studyModulePresenter.performUpdateEligibilityConsent(updateEligibilityConsentStatusEvent);
   }
 
-  private String convertFileToString(String filepath) throws IOException {
+  private String convertFileToString(String filepath) {
     CipherInputStream cis = AppController.generateDecryptedConsentPdf(filepath);
     byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
     return Base64.encodeToString(byteArray, Base64.DEFAULT);
@@ -1039,6 +992,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       notifyStepOfBackPress();
       return true;
     } else if (item.getItemId() == R.id.action_settings) {
+      Bundle eventProperties = new Bundle();
+      eventProperties.putString(
+          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+          getString(R.string.custom_consent_view_exit));
+      analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
       finish();
       return true;
     }
@@ -1115,10 +1073,28 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_consent_view_end_task));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     CustomConsentViewTaskActivity.this.finish();
                   }
                 })
-            .setNegativeButton(getResources().getString(R.string.cancel), null)
+            .setNegativeButton(
+                getResources().getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_consent_view_cancel));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  }
+                })
             .create();
     alertDialog.show();
   }
@@ -1134,6 +1110,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_consent_view_ok));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     setResult(12345);
                     finish();
                   }
@@ -1143,6 +1125,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_consent_view_cancel));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     dialog.dismiss();
                   }
                 })

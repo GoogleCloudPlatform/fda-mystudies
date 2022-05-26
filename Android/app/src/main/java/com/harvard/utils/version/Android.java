@@ -14,12 +14,14 @@
 
 package com.harvard.utils.version;
 
-public class Android {
+import io.realm.RealmObject;
+
+public class Android extends RealmObject {
   private String latestVersion;
 
   private String forceUpdate;
 
-  String getLatestVersion() {
+  public String getLatestVersion() {
     return latestVersion;
   }
 
@@ -27,7 +29,7 @@ public class Android {
     this.latestVersion = latestVersion;
   }
 
-  String getForceUpdate() {
+  public String getForceUpdate() {
     return forceUpdate;
   }
 

@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2020-2021 Google LLC
+  ~
+  ~ Use of this source code is governed by an MIT-style
+  ~ license that can be found in the LICENSE file or at
+  ~ https://opensource.org/licenses/MIT.
+  -->
+
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate android:fromXDelta="-100%p" android:toXDelta="0"
         android:duration="@android:integer/config_mediumAnimTime"/>

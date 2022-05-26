@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -10,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.eligibilitymodule;
@@ -21,11 +23,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
@@ -36,6 +38,7 @@ import com.harvard.studyappmodule.activitybuilder.model.Eligibility;
 import com.harvard.studyappmodule.consent.model.CorrectAnswers;
 import com.harvard.studyappmodule.custom.StepSwitcherCustom;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -70,6 +73,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   private String pdfTitle;
   private TaskResult taskResult;
   private ArrayList<CorrectAnswers> correctAnswers;
+  private CustomFirebaseAnalytics analyticsInstance;
 
   public static Intent newIntent(
       Context context,
@@ -102,6 +106,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     super.setResult(RESULT_CANCELED);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     super.setContentView(R.layout.stepswitchercustom);
     Toolbar toolbar = findViewById(org.researchstack.backbone.R.id.toolbar);
     setSupportActionBar(toolbar);
@@ -148,6 +153,11 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   }
 
   protected void showNextStep() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getString(R.string.custom_view_task_next));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     boolean eligible = checkStepResult(currentStep, taskResult);
     Step nextStep;
     if (eligible || currentStep.getIdentifier().equalsIgnoreCase("Eligibility Test")) {
@@ -201,6 +211,11 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   }
 
   protected void showPreviousStep() {
+    Bundle eventProperties = new Bundle();
+    eventProperties.putString(
+        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+        getString(R.string.custom_view_task_back));
+    analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     Step previousStep = task.getStepBeforeStep(currentStep, taskResult);
     if (previousStep == null) {
       finish();
@@ -281,6 +296,11 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
       notifyStepOfBackPress();
       return true;
     } else if (item.getItemId() == R.id.action_settings) {
+      Bundle eventProperties = new Bundle();
+      eventProperties.putString(
+          CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+          getString(R.string.custom_view_task_exit));
+      analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
       finish();
       return true;
     }
@@ -357,10 +377,28 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_view_task_edit_task));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                     finish();
                   }
                 })
-            .setNegativeButton(R.string.cancel, null)
+            .setNegativeButton(
+                R.string.cancel,
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    eventProperties.putString(
+                        CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                        getString(R.string.custom_view_task_cancel));
+                    analyticsInstance.logEvent(
+                        CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  }
+                })
             .create();
     alertDialog.show();
   }

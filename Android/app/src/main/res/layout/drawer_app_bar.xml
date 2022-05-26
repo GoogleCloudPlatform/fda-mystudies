@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -34,14 +34,14 @@
                 android:paddingRight="15dp"
                 android:paddingTop="10dp">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/menu_icn" />
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/mTitleFDAListens"
                 style="@style/TextType2"
                 android:layout_centerVertical="true"
@@ -49,7 +49,7 @@
                 android:text=""
                 android:textColor="@color/colorPrimary" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/mTitle"
                 style="@style/TextType2"
                 android:layout_centerHorizontal="true"
@@ -66,7 +66,7 @@
                 android:visibility="gone">
 
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/editBtnLabel"
                     style="@style/TextType3"
                     android:layout_centerVertical="true"
@@ -84,7 +84,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/mNotificationIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:background="@drawable/notification_grey"
                     android:visibility="visible" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/notificatioStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                 android:layout_centerVertical="true"
                 android:visibility="gone">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/mInfoIconImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                 android:layout_toLeftOf="@id/mNotificationBtn"
                 android:visibility="visible">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/mFilterImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
                 android:layout_toLeftOf="@id/mFilter"
                 android:visibility="visible">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/mSearchImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
             android:layout_marginTop="12dp"
             android:visibility="gone">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/mCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -187,7 +187,7 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/rectangle_border_search_study">
 
-                    <android.support.v7.widget.AppCompatImageView
+                    <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/mSearchIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -205,7 +205,7 @@
                         android:paddingRight="10dp"
                         android:visibility="gone">
 
-                        <android.support.v7.widget.AppCompatImageView
+                        <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/mClearIcon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -213,7 +213,7 @@
                             android:background="@drawable/clear_text" />
                     </RelativeLayout>
 
-                    <android.support.v7.widget.AppCompatEditText
+                    <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/mSearchEditText"
                         style="@style/filterEditText"
                         android:layout_centerVertical="true"
@@ -229,7 +229,7 @@
             </RelativeLayout>
 
         </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
     <FrameLayout

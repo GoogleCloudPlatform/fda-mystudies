@@ -75,21 +75,24 @@
                 </div>
                 <div>
                   <div class="banner__label">
-                    {{ siteParticipants.participantRegistryDetail.customAppId }}-
+                    {{
+                      siteParticipants.participantRegistryDetail.customAppId
+                    }}-
                     <span
                       [ngClass]="
-                        siteParticipants.participantRegistryDetail.appStatus === 'Active'
+                        siteParticipants.participantRegistryDetail.appStatus ===
+                        'Active'
                           ? 'active_text'
                           : 'deactivated_text'
                       "
                     >
-
                       {{
-                        siteParticipants.participantRegistryDetail.appStatus  === 'Active'
+                        siteParticipants.participantRegistryDetail.appStatus ===
+                        "Active"
                           ? "ACTIVE"
                           : "DEACTIVATED"
                       }}
-                      </span>
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ siteParticipants.participantRegistryDetail.appName }}
@@ -246,7 +249,6 @@
                 </div>
               </div>
             </div> -->
-
             <div class="dropdown">
               <button
                 name="btnToggleParticipant"
@@ -533,7 +535,7 @@
             <thead class="custom__thead">
               <tr>
                 <span
-                  class="sort__by__text mobile__view mr-sm"
+                  class="sort__by__text mobile__view mr-sm pt-2"
                   style="background: transparent"
                 >
                   Sort by:
@@ -789,6 +791,7 @@
                 </td>
               </tr>
             </tfoot>
+
             <tfoot>
               <tr
                 *ngIf="

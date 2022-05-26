@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2020-2021 Google LLC
+  ~
+  ~ Use of this source code is governed by an MIT-style
+  ~ license that can be found in the LICENSE file or at
+  ~ https://opensource.org/licenses/MIT.
+  -->
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,6 +30,8 @@
         android:id="@+id/rsb_intruction_text"
         style="@style/Backbone.Survey.Summary"
         android:layout_width="match_parent"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
         tools:visibility="visible"

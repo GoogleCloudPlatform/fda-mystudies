@@ -69,5 +69,4 @@ class SessionService {
     let encryrpted = data.sha256()
     return encryrpted.base64EncodedString().base64ToBase64url()
   }
-
 }

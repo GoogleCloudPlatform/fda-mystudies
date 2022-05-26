@@ -20,6 +20,7 @@
 import Foundation
 import IQKeyboardManagerSwift
 import UIKit
+import FirebaseAnalytics
 
 // Contact us field description
 struct ContactUsFields {
@@ -53,7 +54,7 @@ class ContactUsViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    self.navigationItem.title = NSLocalizedString("Contact Us", comment: "")
+    self.navigationItem.title = NSLocalizedString("Contact us", comment: "")
 
     //  Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
@@ -97,7 +98,10 @@ class ContactUsViewController: UIViewController {
   /// Validations after clicking on submit button
   /// If all the validations satisfy send contact-us request
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
-
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ContactUs Submit"
+    ])
+    self.view.endEditing(true)
     if ContactUsFields.firstName.isEmpty && ContactUsFields.email.isEmpty
       && ContactUsFields
         .subject
@@ -108,26 +112,44 @@ class ContactUsViewController: UIViewController {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Fill all fields alert"
+      ])
     } else if ContactUsFields.firstName.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageFirstNameBlank, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter first name alert"
+      ])
     } else if ContactUsFields.email.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageEmailBlank, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter email alert"
+      ])
     } else if ContactUsFields.subject.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageSubjectBlankCheck, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter subject alert"
+      ])
     } else if ContactUsFields.message.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageMessageBlankCheck, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter message alert"
+      ])
     } else if !(Utilities.isValidEmail(testStr: ContactUsFields.email)) {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageValidEmail, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid email alert"
+      ])
     } else {
       UserServices().sendUserContactUsRequest(delegate: self)
     }

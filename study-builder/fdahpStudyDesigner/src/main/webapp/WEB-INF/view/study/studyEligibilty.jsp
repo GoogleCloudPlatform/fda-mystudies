@@ -33,7 +33,7 @@
         <c:if test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn submitEle"
-                    actType="save" id="saveBtn">Save
+                     actType="save" id="saveBtn">Save
             </button>
           </div>
 
@@ -66,7 +66,7 @@
         </div>
         <span class="radio radio-info radio-inline p-45"><input
             type="radio" id="inlineRadio1" value="1" class="eligibilityOptCls"
-            name="eligibilityMechanism" required data-error="Please fill out this field"
+            name="eligibilityMechanism" required data-error="Please fill out this field" 
             <c:if test="${eligibility.eligibilityMechanism eq 1}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
           <label for="inlineRadio1">Token validation</label>
@@ -74,7 +74,7 @@
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="2"
                                                      class="eligibilityOptCls"
-                                                     name="eligibilityMechanism" required data-error="Please fill out this field"
+                                                     name="eligibilityMechanism" required data-error="Please fill out this field" 
                                                      <c:if
                                                          test="${eligibility.eligibilityMechanism eq 2}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
@@ -83,7 +83,7 @@
         <span class="radio radio-inline"><input type="radio"
                                                 id="inlineRadio3" value="3"
                                                 class="eligibilityOptCls"
-                                                name="eligibilityMechanism" required data-error="Please fill out this field"
+                                                name="eligibilityMechanism" required data-error="Please fill out this field" 
                                                 <c:if
                                                     test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>> <label
@@ -110,14 +110,14 @@
           </div>
           <div class="form-group elaborateClass">
             <textarea class="form-control" rows="1" id="comment"
-                      maxlength="230" required data-error="Please fill out this field"
+                      maxlength="230" required data-error="Please fill out this field" 
                       name="instructionalText">${eligibility.instructionalText}</textarea>
             <div class="help-block with-errors red-txt"></div>
           </div>
         </div>
       </div>
     </div>
-    <div id="eligibilityQusDivId" 
+    <div id="eligibilityQusDivId"
          <c:if test="${eligibility.eligibilityMechanism eq 1}">style="display: none;"</c:if>>
       <div class="right-content-head">
         <div class="text-right">
@@ -131,7 +131,7 @@
           </div>
           <div class="dis-line form-group mb-none">
             <c:if test="${empty permission}">
-            <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"
+            <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"	
                   data-placement="bottom" data-original-title="">
               <button type="button" class="btn btn-primary blue-btn"
                       id="addQaId">+ Add question
@@ -216,13 +216,11 @@
 
             <c:if test="${empty eligibility.id}">
             $('#addQaId').prop('disabled', true);
-            $("#saveBtn").html("Next");
+            $("#saveBtn").html("Next");	
             $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
             $('.viewIcon, .editIcon, .deleteIcon').addClass('cursor-none');
             </c:if>
 
-           
-            
             if (!chkDone && eligibilityMechanism != "1") {
               $('#doneBut').prop('disabled', true);
               $('#spancomId')
@@ -232,12 +230,12 @@
               $('[data-toggle="tooltip"]').tooltip();
             }
 
-            if (emVal != "1") {
-                if (eligibilityTestSize === 0) {
-                  $("#doneBut").attr("disabled", true);
-                  $('#spancomId').attr('data-original-title',
-                      'Please add 1 or more questions to the test');
-                }
+            if (emVal != "1") {	
+                if (eligibilityTestSize === 0) {	
+                  $("#doneBut").attr("disabled", true);	
+                  $('#spancomId').attr('data-original-title',	
+                      'Please add 1 or more questions to the test');	
+                }	
              }
             initActions();
             $('.submitEle').click(
@@ -426,8 +424,8 @@
                           && eligibilityMechanism != $(
                               this).val()) {
                         $('#forceContinueMsgId').show();
-                        $('#addQaId').prop('disabled', true);
-                        $("#saveBtn").html("Next");
+                        $('#addQaId').prop('disabled', true);	
+                        $("#saveBtn").html("Next");	
                         $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
                         $(
                             '.viewIcon, .editIcon, .deleteIcon')
@@ -442,8 +440,8 @@
                         }
                       } else {
                         $('#forceContinueMsgId').hide();
-                        $('#doneBut, #addQaId').prop('disabled', false);
-                        $("#saveBtn").html("Save");
+                        $('#doneBut, #addQaId').prop('disabled', false);	
+                        $("#saveBtn").html("Save");	
                         $("#spanAddQaId").removeAttr("data-original-title");
                         $('#spancomId').attr(
                             'data-original-title',
@@ -466,7 +464,7 @@
                             .slideUp('fast');
                         $('#instructionTextDivId')
                             .slideDown('fast');
-                        $('#doneBut').prop('disabled',false);
+                        $('#doneBut').prop('disabled',false);	
                         $('#spancomId').removeAttr('data-original-title');
                       } else if ($('#inlineRadio3:checked').length > 0) {
                         $('#instructionTextDivId')
@@ -474,25 +472,23 @@
                         $('#eligibilityQusDivId')
                             .slideDown('fast');
                         if (!chkDone)
-                          $('#doneBut').prop(
-                              'disabled', true);
+                          $('#doneBut').prop('disabled', true);
                       } else {
                         $('#eligibilityQusDivId')
                             .slideDown('fast');
                         $('#instructionTextDivId')
                             .slideDown('fast');
                         if (!chkDone)
-                          $('#doneBut').prop(
-                              'disabled', true);
+                          $('#doneBut').prop('disabled', true);
                       }
 
                       emVal = $("input[name='eligibilityMechanism']:checked").val();
-                      if (emVal != "1") {
-                        if ($('#consent_list tbody tr').length == 1
-                                && $('#consent_list tbody tr td').length == 1) {
-                          $("#doneBut").attr("disabled", true);
-                          $('#spancomId').attr('data-original-title',
-                              'Please add 1 or more questions to the test');
+                      if (emVal != "1") {	
+                          if ($('#consent_list tbody tr').length == 1	
+                                  && $('#consent_list tbody tr td').length == 1) {	
+                            $("#doneBut").attr("disabled", true);	
+                            $('#spancomId').attr('data-original-title',	
+                                'Please add 1 or more questions to the test');
                         }
                       }
 
@@ -568,14 +564,12 @@
                             reloadEligibiltyTestDataTable(data.eligibiltyTestList);
                             if ($('#consent_list tbody tr').length == 1
                                 && $('#consent_list tbody tr td').length == 1) {
-                              eligibilityTestSize--;
+                            	eligibilityTestSize--;
                               chkDone = false;
-                              $('#doneBut').prop(
-                                  'disabled',
-                                  true);
-                            }else if(chkDone){
-                                $("#doneBut").attr("disabled", false);
-                                $('#spancomId').removeAttr('data-original-title');
+                              $('#doneBut').prop('disabled', true);
+                              }else if(chkDone){	
+                                $("#doneBut").attr("disabled", false);	
+                                $('#spancomId').removeAttr('data-original-title');	
                               }
                           } else {
                             $("#alertMsg")
@@ -630,8 +624,8 @@
                       .push("<span class='dis-ellipsis' title='" + DOMPurify.sanitize(obj.question) + "'>"
                           + DOMPurify.sanitize(obj.question) + "</span>");
                 }
-                if(!DOMPurify.sanitize(obj.status)){
-                    chkDone=false;
+                if(!DOMPurify.sanitize(obj.status)){	
+                    chkDone=false;	
                 }
                 var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="View" etId="'
                     + obj.id + '"></span> '
@@ -652,7 +646,7 @@
       $('#consent_list').DataTable().draw();
       $("#doneBut").attr("disabled", true);
       $('#spancomId').attr('data-original-title',
-          'Please add 1 or more questions to the test');
+      'Please add 1 or more questions to the test');
     }
     $('[data-toggle="tooltip"]').tooltip();
   }
@@ -676,7 +670,7 @@
     showSucMsg(sucMsg);
   }
 
-	function showSucMsg(message) {
+  function showSucMsg(message) {
 	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
 	  $('#alertMsg').show('5000');
 	  if('${param.buttonText}' == 'completed'){
@@ -686,5 +680,5 @@
 	  }else{
 	  	setTimeout(hideDisplayMessage, 5000);
 	  }
-	}
+   }
 </script>

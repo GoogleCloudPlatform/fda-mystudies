@@ -90,9 +90,8 @@
     <script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <script type="text/javascript" src="/studybuilder/vendor/dompurify/purify.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
     <script type="text/javascript" src="/studybuilder/js/summernote-bs4.js"></script>
-        
+    
     <script>
       $(window).on('keydown keypress mousedown', function (event) {
         event = (event || window.event);
@@ -108,7 +107,7 @@
 
   </head>
   <body class="loading" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="" id="body"
-  onLoad="noBack();" onpageshow="if (event.persisted) noBack();" onUnload="" >
+  onLoad="noBack();" onpageshow="if (event.persisted) noBack();" onUnload="">
     <div id="loader">
       <span></span>
     </div>
@@ -143,7 +142,6 @@
     <script src="/studybuilder/js/jquery.nicescroll.min.js"></script>
     <script src="/studybuilder/js/bootbox.min.js"></script>
     <script src="/studybuilder/js/common.js"></script>
-    
 
     <script>
       window.history.forward();
@@ -210,9 +208,8 @@
     	}
     </script>
     
-   
     
-    <script type="text/javascript">
+     <script type="text/javascript">
 
     
      $(document).ready(function() {
@@ -276,12 +273,12 @@ $(window).bind("load", function() {
             };
             
             
-//             $(document).load(function () {
-//  window.history.pushState(null, "", window.location.href);        
-//             window.onpopstate = function() {
-//                 window.history.pushState(null, "", window.location.href);
-//             };
-// });
+            $(document).load(function () {
+ window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+});
 
 
    
@@ -303,7 +300,7 @@ $(window).bind("load", function() {
 </script>
 
 
-
-
+    
+    
   </body>
 </html>

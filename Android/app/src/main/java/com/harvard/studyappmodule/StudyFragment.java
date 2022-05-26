@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,6 +11,7 @@
  * Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package com.harvard.studyappmodule;
@@ -19,15 +20,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -127,6 +128,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
   private int deleteIndexNumberDb;
   private String latestConsentVersion = "0";
+  private boolean enrollAgain;
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private boolean webserviceCall = false;
@@ -834,7 +836,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
       if (studyUpdate.getStudyUpdateData().isInfo()) {
         dbServiceSubscriber.deleteStudyInfoFromDb(context, studyId);
       }
-      if (studyUpdate.getStudyUpdateData().isConsent()) {
+      if (studyUpdate.getStudyUpdateData().isConsent() && studyUpdate.isEnrollAgain()) {
         callConsentMetaDataWebservice();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
@@ -849,10 +851,11 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     } else if (responseCode == GET_CONSENT_DOC) {
       ConsentDocumentData consentDocumentData = (ConsentDocumentData) response;
       latestConsentVersion = consentDocumentData.getConsent().getVersion();
+      enrollAgain = consentDocumentData.isEnrollAgain();
       callGetConsentPdfWebservice();
     } else if (responseCode == CONSENTPDF) {
       ConsentPDF consentPdfData = (ConsentPDF) response;
-      if (latestConsentVersion != null
+      if (enrollAgain && latestConsentVersion != null
           && consentPdfData != null
           && consentPdfData.getConsent() != null
           && consentPdfData.getConsent().getVersion() != null) {
