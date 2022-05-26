@@ -569,8 +569,6 @@ input::-webkit-calendar-picker-indicator {
 <form:form action="/studybuilder/adminUsersView/getUserList.do"
            id="backOrCancelBtnForm" name="backOrCancelBtnForm" method="post">
 </form:form>
-    
-<script src="/studybuilder/js/datalist-css-min.js"></script>
 
 <script>
 
