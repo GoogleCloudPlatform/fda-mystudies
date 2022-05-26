@@ -269,22 +269,7 @@ input::-webkit-calendar-picker-indicator {
 							</datalist>
                       <div class="help-block with-errors red-txt"></div>
 		       </div>
-		       
-		       <input type="text" id="favcolors" list="colors" placeholder="Pick a color">
-  <datalist id="colors">
-   <option value="Blue">
-   <option value="Brown">
-   <option value="Cyan">
-   <option value="Green">
-   <option value="Orange">
-   <option value="Pink">
-   <option value="Purple">
-   <option value="Red">
-   <option value="Yellow">
-  </datalist>
-  
-  
-		       </c:if>
+		      </c:if>
           </div>
           
           
