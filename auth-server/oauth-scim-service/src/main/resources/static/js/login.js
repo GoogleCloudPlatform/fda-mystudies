@@ -22,13 +22,26 @@ $(document).ready(function () {
 	$("#loginForm").submit(function (event) {
 		//stop submit the form, we will post it manually.
 		event.preventDefault();
+		preventDoubleClick();
 	    validateLoginForm();
 	});
   } else {
+	preventDoubleClick();
     $("#loginForm").submit();
   }
 });
 
+function preventDoubleClick() {
+  	var form = document.getElementById('loginForm');
+	var submitButton = document.getElementById('signInID');
+	
+	form.addEventListener('submit', function() {
+ 		submitButton.disabled = true;
+  		setTimeout(()=>{
+    	submitButton.disabled = false;
+   		}, 5000)
+	}, false);
+}
 
 function validateLoginForm() {
 
