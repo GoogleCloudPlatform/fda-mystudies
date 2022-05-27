@@ -99,6 +99,12 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-fcm-api-url",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
+      "manual-idp-auth-domain",
+      "manual-idp-api-key",
+      "manual-idp-enabled-pm",
+      "manual-idp-enabled-sb",
+      "manual-mfa-enabled-pm",
+      "manual-mfa-enabled-sb",
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -136,6 +142,12 @@ resource "kubernetes_secret" "shared_secrets" {
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
     privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
     fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
+    idp-auth-domain                   = data.google_secret_manager_secret_version.secrets["manual-idp-auth-domain"].secret_data
+    idp-api-key                       = data.google_secret_manager_secret_version.secrets["manual-idp-api-key"].secret_data
+    idp-enabled-pm                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-pm"].secret_data
+    idp-enabled-sb                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-sb"].secret_data
+    mfa-enabled-pm                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-pm"].secret_data
+    mfa-enabled-sb                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-sb"].secret_data
   }
 }
 
