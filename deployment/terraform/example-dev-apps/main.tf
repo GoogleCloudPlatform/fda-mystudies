@@ -224,6 +224,11 @@ module "project_iam_members" {
       "serviceAccount:${google_service_account.participant_manager_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
     ],
+    "roles/identitytoolkit.admin" = [
+      "serviceAccount:${google_service_account.auth_server_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_builder_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.participant_manager_gke_sa.account_id}@example-dev-apps.iam.gserviceaccount.com",
+    ],    
   }
 }
 
