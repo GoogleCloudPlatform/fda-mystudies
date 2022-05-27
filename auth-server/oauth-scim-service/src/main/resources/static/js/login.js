@@ -11,7 +11,8 @@ $(document).ready(function () {
   var idpEnabled = $('#idpEnabled').val();
   var idpApiKey = $('#idpApiKey').val();
   var idpAuthDomain = $('#idpAuthDomain').val();
-
+debugger
+  preventDoubleClick();
   if(idpEnabled) {
   	var config = {
       apiKey: idpApiKey,
@@ -22,11 +23,9 @@ $(document).ready(function () {
 	$("#loginForm").submit(function (event) {
 		//stop submit the form, we will post it manually.
 		event.preventDefault();
-		preventDoubleClick();
 	    validateLoginForm();
 	});
   } else {
-	preventDoubleClick();
     $("#loginForm").submit();
   }
 });
