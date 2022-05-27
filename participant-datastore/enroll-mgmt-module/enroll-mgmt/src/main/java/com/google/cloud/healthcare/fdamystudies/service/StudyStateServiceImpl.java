@@ -180,6 +180,7 @@ public class StudyStateServiceImpl implements StudyStateService {
         participantStudyEntity.setCompletion(studyBean.getCompletion());
         participantStudyEntity.setAdherence(studyBean.getAdherence());
         participantStudyEntity.setUserDetails(user);
+        participantStudyEntity.setUserStudyVersion(studyBean.getUserStudyVersion());
 
         placeHolder.put("study_state_value", participantStudyEntity.getStatus());
         participantStudies.add(participantStudyEntity);
@@ -236,6 +237,7 @@ public class StudyStateServiceImpl implements StudyStateService {
         studyStateBean.setCompletion(participantStudy.getCompletion());
         studyStateBean.setBookmarked(participantStudy.getBookmark());
         studyStateBean.setAdherence(participantStudy.getAdherence());
+        studyStateBean.setUserStudyVersion(participantStudy.getUserStudyVersion());
         if (participantStudy.getEnrolledDate() != null) {
           studyStateBean.setEnrolledDate(
               MyStudiesUserRegUtil.getIsoDateFormat(participantStudy.getEnrolledDate()));
