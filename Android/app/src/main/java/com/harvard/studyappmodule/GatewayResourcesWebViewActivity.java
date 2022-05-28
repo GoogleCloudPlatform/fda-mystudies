@@ -246,6 +246,7 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    pdfView.destroyPdfRender();
     try {
       if (finalSharingFile != null && finalSharingFile.exists()) {
         finalSharingFile.delete();

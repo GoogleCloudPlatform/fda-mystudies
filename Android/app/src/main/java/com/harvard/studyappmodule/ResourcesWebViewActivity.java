@@ -305,6 +305,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    pdfViewer.destroyPdfRender();
     try {
       File file = new File(CreateFilePath + fileName + ".pdf");
       if (file.exists()) {
@@ -323,6 +324,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     }
     dbServiceSubscriber.closeRealmObj(realm);
   }
+
 
   class CreateFileFromBase64 extends AsyncTask<String, String, String> {
 

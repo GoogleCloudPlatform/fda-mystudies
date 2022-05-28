@@ -65,6 +65,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private CustomFirebaseAnalytics analyticsInstance;
+  private PdfViewerView pdfView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -215,7 +216,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
     if (sharingFile != null && sharingFile.exists()) {
       LayoutInflater li = LayoutInflater.from(ConsentCompletedActivity.this);
       View promptsView = li.inflate(R.layout.pdfdisplayview, null);
-      PdfViewerView pdfView = (PdfViewerView) promptsView.findViewById(R.id.pdfViewer);
+      pdfView = (PdfViewerView) promptsView.findViewById(R.id.pdfViewer);
       TextView share = (TextView) promptsView.findViewById(R.id.share);
       AlertDialog.Builder db = new AlertDialog.Builder(ConsentCompletedActivity.this);
       db.setView(promptsView);
@@ -307,6 +308,11 @@ public class ConsentCompletedActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
+    try {
+    pdfView.destroyPdfRender();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     dbServiceSubscriber.closeRealmObj(realm);
     if (sharingFile != null && sharingFile.exists()) {
       sharingFile.delete();

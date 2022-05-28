@@ -360,6 +360,7 @@ public class PdfDisplayActivity extends AppCompatActivity
 
   @Override
   protected void onDestroy() {
+    pdfViewer.destroyPdfRender();
     db.closeRealmObj(realm);
     try {
       File file = new File(sharePdfFilePath);

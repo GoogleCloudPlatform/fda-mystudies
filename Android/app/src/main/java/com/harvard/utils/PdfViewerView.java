@@ -41,6 +41,8 @@ public class PdfViewerView extends ViewPager {
 
   private PdfRenderer pdfRender;
   Context context;
+  private ParcelFileDescriptor mFileDescriptor;
+  private PdfRenderer.Page currentPage;
 
   public PdfViewerView(Context context) {
     super(context);
@@ -80,7 +82,8 @@ public class PdfViewerView extends ViewPager {
    */
   public void setPdf(@NonNull File file) {
     try {
-      setPdf(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
+      mFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+      setPdf(mFileDescriptor);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -150,12 +153,12 @@ public class PdfViewerView extends ViewPager {
     return getCurrentItem();
   }
 
-  private static class PdfAdapter extends PagerAdapter {
+  private  class PdfAdapter extends PagerAdapter {
 
     @NonNull
     private final PdfRenderer renderer;
     private final int count;
-    private PdfRenderer.Page currentPage;
+//    private PdfRenderer.Page currentPage;
     @NonNull
     private final Context context;
 
@@ -240,5 +243,28 @@ public class PdfViewerView extends ViewPager {
       ex.printStackTrace();
     }
     return false;
+  }
+  public void destroyPdfRender() {
+    try {
+      if (currentPage != null) {
+        currentPage.close();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      if (pdfRender != null) {
+        pdfRender.close();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    try {
+      if(mFileDescriptor != null) {
+        mFileDescriptor.close();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
