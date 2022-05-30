@@ -114,9 +114,14 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
+            # GOOGLE IDENTITY PLATFORM
+            - name: IDP_ENABLED_PM
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: idp_enabled_pm                  
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
-
           ports:
           - containerPort: 8080
           readinessProbe:

@@ -142,12 +142,12 @@ resource "kubernetes_secret" "shared_secrets" {
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
     privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
     fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
-    idp-auth-domain                   = data.google_secret_manager_secret_version.secrets["manual-idp-auth-domain"].secret_data
-    idp-api-key                       = data.google_secret_manager_secret_version.secrets["manual-idp-api-key"].secret_data
-    idp-enabled-pm                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-pm"].secret_data
-    idp-enabled-sb                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-sb"].secret_data
-    mfa-enabled-pm                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-pm"].secret_data
-    mfa-enabled-sb                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-sb"].secret_data
+    idp_auth_domain                   = data.google_secret_manager_secret_version.secrets["manual-idp-auth-domain"].secret_data
+    idp_api_key                       = data.google_secret_manager_secret_version.secrets["manual-idp-api-key"].secret_data
+    idp_enabled_pm                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-pm"].secret_data
+    idp_enabled_sb                    = data.google_secret_manager_secret_version.secrets["manual-idp-enabled-sb"].secret_data
+    mfa_enabled_pm                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-pm"].secret_data
+    mfa_enabled_sb                    = data.google_secret_manager_secret_version.secrets["manual-mfa-enabled-sb"].secret_data
   }
 }
 
