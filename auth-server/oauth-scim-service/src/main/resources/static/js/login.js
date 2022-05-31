@@ -101,9 +101,6 @@ function validateLoginForm() {
 	  	      $("#loginForm").submit();
 	  		}
 	
-	    },
-	    error: function (e) {
-	        console.log("ERROR : ", e);
 	    }
 	});
 
