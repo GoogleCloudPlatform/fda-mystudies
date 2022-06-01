@@ -21,8 +21,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -104,6 +104,7 @@ public class StandaloneActivity extends AppCompatActivity
   private String localNotification;
   private String latestConsentVersion = "0";
   private boolean enrollAgain;
+  private RealmList<Studies> studiesArrayList = new RealmList<>();
   private ArrayList<CompletionAdherence> completionAdherenceCalcs = new ArrayList<>();
 
   private static final String FROM = "from";
@@ -243,25 +244,27 @@ public class StandaloneActivity extends AppCompatActivity
     } else if (responseCode == GET_PREFERENCES) {
       StudyData studies = (StudyData) response;
       boolean userAlreadyJoined = false;
+      studiesArrayList = studies.getStudies();
       if (studies != null) {
         studies.setUserId(
             AppController.getHelperSharedPreference()
                 .readPreference(StandaloneActivity.this, getString(R.string.userid), ""));
 
-        StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
-        if (studyData == null) {
-          int size = studies.getStudies().size();
-          for (int i = 0; i < size; i++) {
-            if (!studies.getStudies().get(i).getStudyId().equalsIgnoreCase(AppConfig.StudyId)) {
-              studies.getStudies().remove(i);
-              size = size - 1;
-              i--;
-            }
-          }
-          dbServiceSubscriber.saveStudyPreferencesToDB(this, studies);
-        } else {
-          studies = studyData;
-        }
+        //        StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
+        //        if (studyData == null) {
+        //          int size = studies.getStudies().size();
+        //          for (int i = 0; i < size; i++) {
+        //            if
+        // (!studies.getStudies().get(i).getStudyId().equalsIgnoreCase(AppConfig.StudyId)) {
+        //              studies.getStudies().remove(i);
+        //              size = size - 1;
+        //              i--;
+        //            }
+        //          }
+        dbServiceSubscriber.saveStudyPreferencesToDB(this, studies);
+        //        } else {
+        //          studies = studyData;
+        //        }
 
         AppController.getHelperSharedPreference()
             .writePreference(
@@ -391,17 +394,28 @@ public class StandaloneActivity extends AppCompatActivity
         intent.putExtra("activityId", activityId);
         intent.putExtra("localNotification", localNotification);
         startActivity(intent);
-        finish();
+        finish(); 
       }
     } else if (responseCode == GET_CONSENT_DOC) {
       ConsentDocumentData consentDocumentData = (ConsentDocumentData) response;
+      consentDocumentData.setStudyId(studyId);
+      dbServiceSubscriber.saveConsentDocumentToDB(this, consentDocumentData);
       latestConsentVersion = consentDocumentData.getConsent().getVersion();
       enrollAgain = consentDocumentData.isEnrollAgain();
       callGetConsentPdfWebservice();
 
     } else if (responseCode == CONSENTPDF) {
+      String version = "";
       ConsentPDF consentPdfData = (ConsentPDF) response;
-      if (enrollAgain && latestConsentVersion != null
+      StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
+      for (int i = 0; i < studyData.getStudies().size(); i++) {
+        if (studyData.getStudies().get(i).getStudyId().equalsIgnoreCase(studyId)) {
+          version = studyData.getStudies().get(i).getUserStudyVersion();
+        }
+      }
+      if (version != null && (!latestConsentVersion.equalsIgnoreCase(version))) {
+        callConsentMetaDataWebservice();
+      } else if (enrollAgain && latestConsentVersion != null
           && consentPdfData != null
           && consentPdfData.getConsent() != null
           && consentPdfData.getConsent().getVersion() != null) {

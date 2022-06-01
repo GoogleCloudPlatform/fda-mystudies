@@ -28,15 +28,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -47,6 +38,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.GravityCompat;
 import com.harvard.AppConfig;
 import com.harvard.AppFirebaseMessagingService;
 import com.harvard.BuildConfig;
@@ -518,6 +517,7 @@ public class StudyActivity extends AppCompatActivity
                 getString(R.string.filter_clicked));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            AppController.getHelperSharedPreference().writePreference(StudyActivity.this, "toolbarClicked", "true");
             Intent intent = new Intent(StudyActivity.this, FilterActivity.class);
             startActivityForResult(intent, 999);
           }
@@ -638,6 +638,7 @@ public class StudyActivity extends AppCompatActivity
                 getString(R.string.study_notification));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            AppController.getHelperSharedPreference().writePreference(StudyActivity.this, "toolbarClicked", "true");
             Intent intent = new Intent(StudyActivity.this, NotificationActivity.class);
             startActivityForResult(intent, NOTIFICATION_RESULT);
           }
@@ -679,7 +680,7 @@ public class StudyActivity extends AppCompatActivity
   }
 
   public void setVersion(TextView version) {
-      version.append(BuildConfig.VERSION_NAME +" ("+BuildConfig.VERSION_CODE+")");
+      version.append(BuildConfig.VERSION_NAME +" ("+BuildConfig.VERSION_CODE+ ")");
   }
 
   private void hideKeyboard() {
@@ -837,6 +838,8 @@ public class StudyActivity extends AppCompatActivity
               getString(R.string.study_side_sign_in));
           analyticsInstance.logEvent(
               CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+          AppController.getHelperSharedPreference()
+              .writePreference(StudyActivity.this, "toolbarClicked", "true");
           closeDrawer();
           SharedPreferenceHelper.writePreference(
               StudyActivity.this, getString(R.string.loginflow), "SideMenu");
@@ -1207,7 +1210,7 @@ public class StudyActivity extends AppCompatActivity
             .replace(R.id.frameLayoutContainer, new ResourcesFragment(), "fragment")
             .commit();
       }
-    }else if (requestCode == RESULT_CODE_UPGRADE) {
+    } else if (requestCode == RESULT_CODE_UPGRADE) {
       Version currVer = new Version(AppController.currentVersion());
       Version latestVer = new Version(latestVersion);
       if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
@@ -1370,7 +1373,8 @@ public class StudyActivity extends AppCompatActivity
         if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
           isUpgrade(false, latestVersion, force);
         } else {
-          AppController.getHelperSharedPreference().writePreference(StudyActivity.this, "versionalert", "done");
+          AppController.getHelperSharedPreference()
+              .writePreference(StudyActivity.this, "versionalert", "done");
           isUpgrade(true, latestVersion, force);
         }
       } else {

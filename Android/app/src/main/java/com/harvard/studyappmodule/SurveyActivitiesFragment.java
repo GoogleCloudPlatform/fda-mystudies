@@ -25,21 +25,19 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -79,6 +77,7 @@ import com.harvard.studyappmodule.events.GetActivityListEvent;
 import com.harvard.studyappmodule.events.GetResourceListEvent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
 import com.harvard.studyappmodule.events.GetUserStudyListEvent;
+import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.MotivationalNotification;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
@@ -119,6 +118,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -194,6 +195,7 @@ public class SurveyActivitiesFragment extends Fragment
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
   String title = "";
+  private String name = "";
   Intent calculateRunHoldServiceeintent;
 
   @Override
@@ -2086,6 +2088,14 @@ public class SurveyActivitiesFragment extends Fragment
           }
         }
       }
+      Collections.sort(
+          currentactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
 
       ArrayList<ActivitiesWS> yetToStartOrResumeList = new ArrayList<>();
       ArrayList<ActivitiesWS> otherList = new ArrayList<>();
@@ -2160,6 +2170,14 @@ public class SurveyActivitiesFragment extends Fragment
           }
         }
       }
+      Collections.sort(
+          upcomingactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
 
       for (int i = 0; i < completedactivityList.size(); i++) {
         for (int j = i; j < completedactivityList.size(); j++) {
@@ -2186,7 +2204,14 @@ public class SurveyActivitiesFragment extends Fragment
           }
         }
       }
-
+      Collections.sort(
+          completedactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
       // Checking the Empty values
       if (currentactivityList.isEmpty()) {
         ActivitiesWS w = new ActivitiesWS();
@@ -2499,6 +2524,8 @@ public class SurveyActivitiesFragment extends Fragment
   }
 
   public void updateStudyState(String completion, String adherence) {
+    ConsentDocumentData consentDocumentData = dbServiceSubscriber.getConsentDocumentFromDB(((SurveyActivity) context).getStudyId(), realm);
+
     HashMap<String, String> header = new HashMap();
     header.put(
         "Authorization",
@@ -2516,12 +2543,14 @@ public class SurveyActivitiesFragment extends Fragment
     JSONObject studiestatus = new JSONObject();
 
     Studies studies = dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
+
     try {
       studiestatus.put("studyId", ((SurveyActivity) context).getStudyId());
       studiestatus.put("siteId", studies.getSiteId());
       studiestatus.put("participantId", studies.getParticipantId());
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
+      studiestatus.put("userStudyVersion", consentDocumentData.getConsent().getVersion());
 
     } catch (JSONException e) {
       Logger.log(e);

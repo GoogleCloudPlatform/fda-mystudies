@@ -24,21 +24,20 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.MainThread;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.util.Base64;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.util.Base64;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
@@ -54,6 +53,7 @@ import com.harvard.studyappmodule.enroll.EnrollData;
 import com.harvard.studyappmodule.events.EnrollIdEvent;
 import com.harvard.studyappmodule.events.GetUserStudyListEvent;
 import com.harvard.studyappmodule.events.UpdateEligibilityConsentStatusEvent;
+import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.studyappmodule.studymodel.StudyUpdate;
@@ -72,11 +72,9 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantConsentDatastoreConfigEvent;
 import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
-
 import io.github.lucasfsc.html2pdf.Html2Pdf;
 import io.realm.Realm;
 import io.realm.RealmList;
-
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -520,7 +518,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
   public void updateuserpreference() {
     Studies studies = dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), realm);
-
+    ConsentDocumentData consentDocumentData =
+        dbServiceSubscriber.getConsentDocumentFromDB(getIntent().getStringExtra(STUDYID), realm);
     HashMap<String, String> header = new HashMap();
     header.put(
         "Authorization",
@@ -559,6 +558,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       } else {
         completionAdherenceStatus = true;
       }
+      studiestatus.put("userStudyVersion",consentDocumentData.getConsent().getVersion());
     } catch (JSONException e) {
       Logger.log(e);
     }
