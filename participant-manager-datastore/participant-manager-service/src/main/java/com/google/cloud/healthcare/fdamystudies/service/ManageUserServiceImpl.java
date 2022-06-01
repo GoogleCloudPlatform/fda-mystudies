@@ -615,6 +615,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     User user = UserMapper.prepareUserInfo(adminDetails);
+    user.setIdpUser(adminDetails.getIdpUser());
     user.setDeletedOrDisabledInIdp(
         isIdpDeletedOrDisabled(adminDetails.getIdpUser(), adminDetails.getEmail()));
     if (adminDetails.isSuperAdmin()) {
@@ -1042,7 +1043,9 @@ public class ManageUserServiceImpl implements ManageUserService {
               .stream()
               .filter(
                   user ->
-                      user.getIdpUser() && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
+                      user.getIdpUser()
+                          && (user.getStatus().equals(UserStatus.ACTIVE.getValue())
+                              || user.getStatus().equals(UserStatus.INVITED.getValue())))
               .map(UserRegAdminEntity::getEmail)
               .collect(Collectors.toList());
       if (appPropertyConfig.isIdpEnabled()) {
@@ -1057,7 +1060,8 @@ public class ManageUserServiceImpl implements ManageUserService {
                     user ->
                         idpDisbledUsers.contains(user.getEmail())
                             && user.getIdpUser()
-                            && user.getStatus().equals(UserStatus.ACTIVE.getValue()))
+                            && (user.getStatus().equals(UserStatus.ACTIVE.getValue())
+                                || user.getStatus().equals(UserStatus.INVITED.getValue())))
                 .map(UserRegAdminEntity::getEmail)
                 .collect(Collectors.toList());
         deactivateUsers.addAll(idpDisabledEmails);

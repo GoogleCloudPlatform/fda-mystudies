@@ -1045,7 +1045,9 @@ input::-webkit-calendar-picker-indicator {
                 	 var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
                else
             	     var msg = "You are inviting a person who is not listed in the organizational directory to be a Study Builder admin. Are you sure you wish to proceed?";
-                	bootbox.confirm(msg,
+                	bootbox.confirm(
+                			closeButton: false,
+                			msg,
                             function (result) {
                               if (result) {
           $("body").addClass("loading");
