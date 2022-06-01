@@ -1038,18 +1038,18 @@ input::-webkit-calendar-picker-indicator {
         $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if ('' !== email && '' !== roleId  && null !== roleId && '' !== lastName  && 
         		'' !== firstName && '' !== phoneNumber && isphone ) {
-        	const adminList = '${adminList}' 
-        	    var element = $("#roleId option:selected").text();
-                if(!adminList.includes(email) && adminList != null && ${idpEnabled}){
-                if(element == "Superadmin")
-                	 var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
-               else
-            	     var msg = "You are inviting a person who is not listed in the organizational directory to be a Study Builder admin. Are you sure you wish to proceed?";
-                	bootbox.confirm(
-                			closeButton: false,
-                			msg,
-                            function (result) {
-                              if (result) {
+        const adminList = '${adminList}' 
+        var element = $("#roleId option:selected").text();
+        if(!adminList.includes(email) && adminList != null && ${idpEnabled}){
+        if(element == "Superadmin")
+          var msg = "You are inviting a person who is not listed in the organizational directory, to be a Study Builder superadmin. Are you sure you wish to proceed?";
+        else
+    	  var msg = "You are inviting a person who is not listed in the organizational directory to be a Study Builder admin. Are you sure you wish to proceed?";
+     	bootbox.confirm({
+		closeButton: false,
+		message: msg,
+		callback: function (result) {
+        if (result) {
           $("body").addClass("loading");
           $.ajax({
             url: "/studybuilder/isEmailValid.do?" + csrfDetcsrfParamName + "=" + csrfToken,
@@ -1079,7 +1079,8 @@ input::-webkit-calendar-picker-indicator {
 	            }
 	          });
 	        }
-          });
+            } 
+     	});
    		}else {
            	$("body").addClass("loading");
                $.ajax({
