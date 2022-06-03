@@ -713,7 +713,7 @@ $(document)
                   });
 
 			function multiFactorAuth(fdaLink, email, password, passwordLength, userPhoneNumber) {
-			
+			debugger
 			 var userPhoneNumber = $.trim(userPhoneNumber);
 			 this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
 			 
@@ -785,6 +785,7 @@ $(document)
 				      })			
 						
 			          }).catch(function (error) {
+			          debugger
 			           $('#recaptcha-container').hide();
 			          
 			           if (error.code == 'auth/invalid-verification-code') {
