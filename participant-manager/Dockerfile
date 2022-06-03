@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/MIT.
 # Stage 1
 # Installing all the dependencies and creating Dist file or building angular application
-FROM node:14.17.1 AS compile-image
+FROM node:12.20 AS compile-image
 ARG BASE_HREF=/participant-manager
 WORKDIR /app
 COPY . ./
