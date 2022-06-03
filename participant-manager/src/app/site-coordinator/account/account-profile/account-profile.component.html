@@ -96,13 +96,13 @@
                 <label for="phoneNum" class="txt_style_unset">Phone number (+XXX XXXX XXXX)</label>
                 <input
                 type="text"
-                maxlength="14"
+                maxlength="16"
                 minlength="12"
                 class="form-control"
                 id="phoneNum"
                 placeholder="Enter phone number"
                 formControlName="phoneNum"
-                pattern="[+][0-9]{11,13}"
+                pattern="[+][0-9\s]{11,15}"
                 />
     
                 <div
@@ -118,8 +118,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.phoneNum.errors?.pattern"
                   >
-                    Please use characters from the following set only: 0-9
-                    ()+-
+                  Phone number is invalid
                   </span>
                 </div>
               </div>

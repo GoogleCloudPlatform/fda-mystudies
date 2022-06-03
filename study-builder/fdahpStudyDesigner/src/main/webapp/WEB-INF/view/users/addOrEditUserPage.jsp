@@ -276,13 +276,13 @@ input::-webkit-calendar-picker-indicator {
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-               Phone (+XXX XXXXXXXXXX) 
+               Phone (+XXX XXXXX XXXXX) 
               <c:if test="${mfaEnabled  eq true}"><span class="requiredStar"> *</span></c:if>
             </div>
             <div class="form-group">
               <input type="text" class="form-control" id="phoneNumber"
                      name="phoneNumber" value="${userBO.phoneNumber}" data-pattern-error="Phone number is invalid" data-error="Please fill out this field"
-                     data-minlength="12" maxlength="14" pattern="[+][0-9]{11,13}"
+                     data-minlength="12" maxlength="16" pattern="[+][0-9\s]{11,15}"
                      <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if> 
                      <c:if test="${mfaEnabled eq true}">required</c:if> />
               <div class="help-block with-errors red-txt"></div>

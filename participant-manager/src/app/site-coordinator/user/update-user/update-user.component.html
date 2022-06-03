@@ -204,13 +204,13 @@ Superadmins can manage users of the Participant Manager and in addition, can man
             <label for="phoneNum" class="txt_style_unset">Phone number (+XXX XXXX XXXX)</label>
             <input
               type="text"
-              maxlength="14"
+              maxlength="16"
               minlength="12"
               [(ngModel)]="user.phoneNum"
               name="phoneNum"
               #phoneNum="ngModel"
               required
-              pattern="[+][0-9]{11,13}"
+              pattern="[+][0-9\s]{11,15}"
               class="form-control"
               id="phoneNum"
               placeholder="Enter phone number"
@@ -229,8 +229,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                 class="help-block with-errors error__msg"
                 *ngIf="phoneNum.errors?.pattern"
               >
-                Please use characters from the following set only: 0-9
-                ()+-
+              Phone number is invalid
               </span>
             </div>
           </div>

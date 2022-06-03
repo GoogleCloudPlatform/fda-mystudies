@@ -162,7 +162,7 @@
                     <input type="text" class="input-field wow_input"
                            id="" name="phoneNumber" placeholder="Phone"
                            value="${userBO.phoneNumber}" data-minlength="13" 
-                           maxlength="14"  pattern="[+][0-9]{12,13}" data-pattern-error="Phone number is invalid" required data-error="Please fill out this field" 
+                           maxlength="16"  pattern="[+][0-9\s]{12,15}" data-pattern-error="Phone number is invalid" required data-error="Please fill out this field" 
                            <c:if test="${mfaEnabled eq true}">required</c:if> autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
