@@ -12,7 +12,6 @@ COPY . ./
 RUN npm set progress=false
 RUN npm install
 RUN npm install -g @angular/cli
-RUN npm install -g npm@latest
 RUN ng build --aot --prod --base-href=${BASE_HREF}/
 
 # Stage2
