@@ -9,4 +9,4 @@ steps:
     dir: "participant-manager"
 
 images: ["gcr.io/$PROJECT_ID/participant-manager"]
-timeout: 1020s
+timeout: 1110s
