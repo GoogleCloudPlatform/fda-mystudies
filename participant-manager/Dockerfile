@@ -12,7 +12,7 @@ COPY . ./
 RUN npm set progress=false
 RUN npm install
 RUN npm install -g @angular/cli:9.1.15
-RUN ng build --watch --aot -ec --prod --base-href=${BASE_HREF}/
+RUN ng build --watch --aot -ec --base-href=${BASE_HREF}/
 # Stage2
 # copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
 FROM nginx:latest
