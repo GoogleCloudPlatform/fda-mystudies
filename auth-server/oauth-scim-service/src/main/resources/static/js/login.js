@@ -85,7 +85,7 @@ function validateLoginForm() {
 		      	}).catch(function(error) {
 		      	
 		      	if (error.code == 'auth/too-many-requests') {
-		      	  errorDiv.innerHTML = "Access to this account has been temporarily disabled due to many failed login attempts. Please contact your IT admin to immediately restore it by resetting your password or you can try again later.";
+		      	  errorDiv.innerHTML = "Access to this account can be temporarily disabled if there is failed login attempts. Please use valid credentials.";
 			      errorDiv.style.display = "block";
 			      return false;
 		      	} else {

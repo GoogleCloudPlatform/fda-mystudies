@@ -1043,7 +1043,7 @@ $(document)
 							                    'hide');
 							            $("#errMsg")
 							                .text(
-							                    "Access to this account has been temporarily disabled due to many failed login attempts. Please contact your IT admin to immediately restore it by resetting your password or you can try again later.");
+							                    "Access to this account can be temporarily disabled if there is failed login attempts. Please use valid credentials.");
 							            $("#errMsg")
 							                .show(
 							                    "fast");
