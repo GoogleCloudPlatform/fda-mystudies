@@ -88,7 +88,7 @@
       <div class="b-bor mt-md">
         <div class="ed-user-layout row">
           <div class="col-md-4 p-none">
-            <div class="gray-xs-f line34">Phone (+XXX - XXXXXXXXXX)
+            <div class="gray-xs-f line34">Phone (+XXX XXXXX XXXXX)
             </div>
           </div>
           <div class="col-md-6 p-none">
@@ -96,7 +96,7 @@
               <input type="text"
                      class="form-control edit-field bor-trans resetVal linkDis"
                      name="phoneNumber" value="${userBO.phoneNumber}"
-                     oldVal="${userBO.phoneNumber}" maxlength="14" data-minlength="13"
+                     oldVal="${userBO.phoneNumber}" maxlength="16" data-minlength="11"
                      readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
