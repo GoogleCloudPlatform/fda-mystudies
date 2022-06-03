@@ -1029,7 +1029,7 @@ input::-webkit-calendar-picker-indicator {
       var regEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
       isEmail = regEX.test(email);
       var isphone;
-      var regexPh=/[+][0-9]{12,13}/;
+      var regexPh=/[+][0-9\s]{11,15}/;
       isphone=regexPh.test(phoneNumber);
       
       if (isEmail && ('' === oldEmail || ('' !== oldEmail && oldEmail !== email))) {
