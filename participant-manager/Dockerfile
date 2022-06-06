@@ -9,7 +9,7 @@ FROM node:14.17.1 AS compile-image
 ARG BASE_HREF=/participant-manager
 WORKDIR /app
 COPY . ./
-RUN npm set progress=false
+#RUN npm set progress=false
 RUN npm install
 RUN npm install -g @angular/cli@13.3.7
 RUN ng build --watch --aot --prod --base-href=${BASE_HREF}/
