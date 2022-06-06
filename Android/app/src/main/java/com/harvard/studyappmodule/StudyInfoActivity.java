@@ -708,6 +708,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
       AppController.getHelperProgressDialog().dismissDialog();
       StudyData studies = (StudyData) response;
+      String studyStatusCheck = "";
       if (studies != null) {
         studies.setUserId(
             AppController.getHelperSharedPreference()
@@ -716,8 +717,14 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
         userPreferenceStudies = studies.getStudies();
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, realm);
-
-        if (!studyList.getSetting().isEnrolling()) {
+        for (int i = 0; i < userPreferenceStudies.size(); i++) {
+          if (userPreferenceStudies.get(i).getStudyId().equalsIgnoreCase(studyId)) {
+            studyStatusCheck = userPreferenceStudies.get(i).getStatus();
+          }
+        }
+        if (studyStatusCheck.equalsIgnoreCase("enrolled")) {
+          new CallConsentMetaData(false).execute();
+        } else if (!studyList.getSetting().isEnrolling()) {
           Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
         } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
           Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();

@@ -21,16 +21,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.harvard.AppConfig;
@@ -844,13 +844,13 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     ArrayList<Resource> tempResourceArrayList = new ArrayList<>();
     tempResourceArrayList.addAll(resourceArrayList);
     resourceArrayList.clear();
-    labelArray.add(getContext().getResources().getString(R.string.about_study));
-    labelArray.add(getContext().getResources().getString(R.string.consent_pdf));
-    if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_standalone))) {
-      labelArray.add(getContext().getResources().getString(R.string.resourceTerms));
-      labelArray.add(getContext().getResources().getString(R.string.resourcePolicy));
+    labelArray.add(getResources().getString(R.string.about_study));
+    labelArray.add(getResources().getString(R.string.consent_pdf));
+    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
+      labelArray.add(getResources().getString(R.string.resourceTerms));
+      labelArray.add(getResources().getString(R.string.resourcePolicy));
     }
-    labelArray.add(getContext().getResources().getString(R.string.leave_study));
+    labelArray.add(getResources().getString(R.string.leave_study));
 
     for (int i = 0; i < labelArray.size(); i++) {
       Resource r = new Resource();

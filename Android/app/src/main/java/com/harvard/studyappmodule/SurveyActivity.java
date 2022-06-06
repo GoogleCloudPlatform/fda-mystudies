@@ -27,25 +27,23 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
+;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
@@ -66,16 +64,14 @@ import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
-
 import java.util.HashMap;
 
 public class SurveyActivity extends AppCompatActivity
     implements View.OnClickListener,
-    ActivityCompat.OnRequestPermissionsResultCallback,
-    ApiCall.OnAsyncRequestComplete {
+        ActivityCompat.OnRequestPermissionsResultCallback,
+        ApiCall.OnAsyncRequestComplete {
   private RelativeLayout dashboardButtonLayout;
   private AppCompatImageView dashboardButton;
   private AppCompatTextView dashboardButtonLabel;
@@ -207,10 +203,10 @@ public class SurveyActivity extends AppCompatActivity
           public void onDrawerOpened(View drawerView) {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
-                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getString(R.string.survey_side_menu));
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_menu));
             analyticsInstance.logEvent(
-                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             checkSignOrSignOutScenario();
           }
 
@@ -521,7 +517,7 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   public void setVersion(TextView version) {
-    version.append(BuildConfig.VERSION_NAME +" ("+BuildConfig.VERSION_CODE+")");
+    version.append(BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
   }
 
   private void bindEvents() {
@@ -729,8 +725,7 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   @Override
-  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
-  }
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {}
 
   private class ClearNotification extends AsyncTask<String, Void, String> {
 
@@ -756,7 +751,7 @@ public class SurveyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(SurveyActivity.this);
       notificationManager.cancelAll();
-      Toast.makeText(SurveyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(SurveyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
       signout();
     }
 
@@ -774,17 +769,17 @@ public class SurveyActivity extends AppCompatActivity
     finish();
   }
 
-//  @Override
-//  protected void onResume() {
-//    super.onResume();
-//
-//    if(AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-//      IntentFilter filter = new IntentFilter();
-//      filter.addAction(BuildConfig.APPLICATION_ID);
-//      versionReceiver = new VersionReceiver();
-//      registerReceiver(versionReceiver, filter);
-//    }
-//  }
+  //  @Override
+  //  protected void onResume() {
+  //    super.onResume();
+  //
+  //    if(AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
+  //      IntentFilter filter = new IntentFilter();
+  //      filter.addAction(BuildConfig.APPLICATION_ID);
+  //      versionReceiver = new VersionReceiver();
+  //      registerReceiver(versionReceiver, filter);
+  //    }
+  //  }
 
   @Override
   protected void onStart() {
@@ -806,28 +801,27 @@ public class SurveyActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null)
-        alertDialog.dismiss();
+      if (alertDialog != null) alertDialog.dismiss();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-//  @Override
-//  protected void onPause() {
-//    super.onPause();
-//
-//    try {
-//      unregisterReceiver(versionReceiver);
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//    try {
-//      alertDialog.dismiss();
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//  }
+  //  @Override
+  //  protected void onPause() {
+  //    super.onPause();
+  //
+  //    try {
+  //      unregisterReceiver(versionReceiver);
+  //    } catch (Exception e) {
+  //      e.printStackTrace();
+  //    }
+  //    try {
+  //      alertDialog.dismiss();
+  //    } catch (Exception e) {
+  //      e.printStackTrace();
+  //    }
+  //  }
 
   public class VersionReceiver extends BroadcastReceiver {
     @Override
@@ -842,7 +836,8 @@ public class SurveyActivity extends AppCompatActivity
         if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
           isUpgrade(false, latestVersion, force);
         } else {
-          AppController.getHelperSharedPreference().writePreference(SurveyActivity.this, "versionalert", "done");
+          AppController.getHelperSharedPreference()
+              .writePreference(SurveyActivity.this, "versionalert", "done");
           isUpgrade(true, latestVersion, force);
         }
       } else {
@@ -872,8 +867,7 @@ public class SurveyActivity extends AppCompatActivity
         positiveButton = "Yes";
         negativeButton = "Skip";
       }
-      alertDialogBuilder =
-          new AlertDialog.Builder(SurveyActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder = new AlertDialog.Builder(SurveyActivity.this, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle("Upgrade");
       alertDialogBuilder
           .setMessage(msg)
@@ -938,9 +932,9 @@ public class SurveyActivity extends AppCompatActivity
       } else {
         if (force) {
           Toast.makeText(
-              SurveyActivity.this,
-              "Please update the app to continue using",
-              Toast.LENGTH_SHORT)
+                  SurveyActivity.this,
+                  "Please update the app to continue using",
+                  Toast.LENGTH_SHORT)
               .show();
           moveTaskToBack(true);
           if (Build.VERSION.SDK_INT < 21) {

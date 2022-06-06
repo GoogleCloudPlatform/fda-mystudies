@@ -33,16 +33,9 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,6 +45,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -684,7 +683,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           public void onClick(View view) {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
-                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getContext().getString(R.string.trends));
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getContext().getString(R.string.trends));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (dashboardData != null && dashboardData.getDashboard().getCharts().size() > 0) {
@@ -694,9 +694,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               startActivity(intent);
             } else {
               Toast.makeText(
-                  context,
-                  getContext().getResources().getString(R.string.no_charts_display),
-                  Toast.LENGTH_SHORT)
+                      context,
+                      getContext().getResources().getString(R.string.no_charts_display),
+                      Toast.LENGTH_SHORT)
                   .show();
             }
           }
@@ -706,12 +706,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   private void screenshotWritingPermission(View view) {
     // checking the permissions
     if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED)
+            != PackageManager.PERMISSION_GRANTED)
         || (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED)) {
+            != PackageManager.PERMISSION_GRANTED)) {
       String[] permission =
-          new String[]{
-              Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+          new String[] {
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
           };
       if (!hasPermissions(permission)) {
         ActivityCompat.requestPermissions((Activity) context, permission, PERMISSION_REQUEST_CODE);
@@ -743,9 +743,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     if (requestCode == PERMISSION_REQUEST_CODE) {
       if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
         Toast.makeText(
-            context,
+                context,
             getContext().getResources().getString(R.string.permission_enable_message_screenshot),
-            Toast.LENGTH_LONG)
+                Toast.LENGTH_LONG)
             .show();
       } else {
         shareFunctionality(view);
@@ -1069,22 +1069,20 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
+    AppController.getHelperProgressDialog().dismissDialog();
     if (responseCode == DASHBOARD_INFO) {
       dashboardData = (DashboardData) response;
       if (dashboardData != null) {
-//        AppController.getHelperProgressDialog().dismissDialog();
         dashboardData.setStudyId(((SurveyActivity) context).getStudyId());
         if (dashboardData.getDashboard().getCharts().isEmpty()) {
           trendLayout.setVisibility(View.GONE);
         }
         scrollView.setVisibility(View.VISIBLE);
         dbServiceSubscriber.saveStudyDashboardToDB(context, dashboardData);
-//        AppController.getHelperProgressDialog().showProgress(context, "", "", false);
         new ProcessData().execute();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
         scrollView.setVisibility(View.VISIBLE);
-//        AppController.getHelperProgressDialog().showProgress(context, "", "", false);
         new ProcessData().execute();
         Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
@@ -1104,7 +1102,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             dbServiceSubscriber.getDashboardDataFromDB(
                 ((SurveyActivity) context).getStudyId(), realm);
         if (dashboardData != null) {
-//          AppController.getHelperProgressDialog().showProgress(context, "", "", false);
           new ProcessData().execute();
         } else {
           Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
@@ -1124,6 +1121,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
     @Override
     protected void onPostExecute(String result) {
+      AppController.getHelperProgressDialog().dismissDialog();
       SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
       completionAdherenceCalc =
           survayScheduler.completionAndAdherenceCalculation(
@@ -1150,12 +1148,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
               dashboardData
-                  .getDashboard()
-                  .getStatistics()
-                  .get(i)
-                  .getDataSource()
-                  .getActivity()
-                  .getActivityId()
+                      .getDashboard()
+                      .getStatistics()
+                      .get(i)
+                      .getDataSource()
+                      .getActivity()
+                      .getActivityId()
                   + ","
                   + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
@@ -1179,12 +1177,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
                 dashboardData
-                    .getDashboard()
-                    .getStatistics()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId()
+                        .getDashboard()
+                        .getStatistics()
+                        .get(i)
+                        .getDataSource()
+                        .getActivity()
+                        .getActivityId()
                     + ","
                     + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
           }
@@ -1194,12 +1192,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
               dashboardData
-                  .getDashboard()
-                  .getCharts()
-                  .get(i)
-                  .getDataSource()
-                  .getActivity()
-                  .getActivityId()
+                      .getDashboard()
+                      .getCharts()
+                      .get(i)
+                      .getDataSource()
+                      .getActivity()
+                      .getActivityId()
                   + ","
                   + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
@@ -1223,12 +1221,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
                 dashboardData
-                    .getDashboard()
-                    .getCharts()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId()
+                        .getDashboard()
+                        .getCharts()
+                        .get(i)
+                        .getDataSource()
+                        .getActivity()
+                        .getActivityId()
                     + ","
                     + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey());
           }
@@ -1238,10 +1236,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       studies = dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
       if (arrayList.size() > 0) {
         new ResponseData(
-            ((SurveyActivity) context).getStudyId(),
-            arrayList.get(0),
-            studies.getParticipantId(),
-            0)
+                ((SurveyActivity) context).getStudyId(),
+                arrayList.get(0),
+                studies.getParticipantId(),
+                0)
             .execute();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
@@ -1250,7 +1248,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     }
 
     @Override
-    protected void onPreExecute() {}
+    protected void onPreExecute() {
+      AppController.getHelperProgressDialog().showProgress(context, "", "", false);
+    }
   }
 
   private void setDay() {
@@ -1473,9 +1473,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           addViewStatisticsValues();
           AppController.getHelperProgressDialog().dismissDialog();
           Toast.makeText(
-              context,
-              getContext().getResources().getString(R.string.connection_timeout),
-              Toast.LENGTH_SHORT)
+                  context,
+                  getContext().getResources().getString(R.string.connection_timeout),
+                  Toast.LENGTH_SHORT)
               .show();
         } else if (Integer.parseInt(responseCode) == 500) {
           try {
@@ -1484,10 +1484,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             if (exception.contains("Query or table not found")) {
               if (arrayList.size() > (position + 1)) {
                 new ResponseData(
-                    ((SurveyActivity) context).getStudyId(),
-                    arrayList.get((position + 1)),
-                    studies.getParticipantId(),
-                    position + 1)
+                        ((SurveyActivity) context).getStudyId(),
+                        arrayList.get((position + 1)),
+                        studies.getParticipantId(),
+                        position + 1)
                     .execute();
               } else {
                 addViewStatisticsValues();
@@ -1675,10 +1675,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             }
             if (arrayList.size() > (position + 1)) {
               new ResponseData(
-                  ((SurveyActivity) context).getStudyId(),
-                  arrayList.get((position + 1)),
-                  studies.getParticipantId(),
-                  position + 1)
+                      ((SurveyActivity) context).getStudyId(),
+                      arrayList.get((position + 1)),
+                      studies.getParticipantId(),
+                      position + 1)
                   .execute();
             } else {
               addViewStatisticsValues();
@@ -1688,10 +1688,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             Logger.log(e);
             if (arrayList.size() > (position + 1)) {
               new ResponseData(
-                  ((SurveyActivity) context).getStudyId(),
-                  arrayList.get((position + 1)),
-                  studies.getParticipantId(),
-                  position + 1)
+                      ((SurveyActivity) context).getStudyId(),
+                      arrayList.get((position + 1)),
+                      studies.getParticipantId(),
+                      position + 1)
                   .execute();
             } else {
               addViewStatisticsValues();
@@ -1701,10 +1701,10 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         } else {
           if (arrayList.size() > (position + 1)) {
             new ResponseData(
-                ((SurveyActivity) context).getStudyId(),
-                arrayList.get((position + 1)),
-                studies.getParticipantId(),
-                position + 1)
+                    ((SurveyActivity) context).getStudyId(),
+                    arrayList.get((position + 1)),
+                    studies.getParticipantId(),
+                    position + 1)
                 .execute();
           } else {
             addViewStatisticsValues();

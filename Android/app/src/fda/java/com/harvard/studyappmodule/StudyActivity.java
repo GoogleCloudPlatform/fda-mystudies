@@ -46,6 +46,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.harvard.AppConfig;
 import com.harvard.AppFirebaseMessagingService;
 import com.harvard.BuildConfig;
@@ -211,8 +212,7 @@ public class StudyActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null)
-        alertDialog.dismiss();
+      if (alertDialog != null) alertDialog.dismiss();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -517,7 +517,8 @@ public class StudyActivity extends AppCompatActivity
                 getString(R.string.filter_clicked));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-            AppController.getHelperSharedPreference().writePreference(StudyActivity.this, "toolbarClicked", "true");
+            AppController.getHelperSharedPreference()
+                .writePreference(StudyActivity.this, "toolbarClicked", "true");
             Intent intent = new Intent(StudyActivity.this, FilterActivity.class);
             startActivityForResult(intent, 999);
           }
@@ -638,7 +639,8 @@ public class StudyActivity extends AppCompatActivity
                 getString(R.string.study_notification));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-            AppController.getHelperSharedPreference().writePreference(StudyActivity.this, "toolbarClicked", "true");
+            AppController.getHelperSharedPreference()
+                .writePreference(StudyActivity.this, "toolbarClicked", "true");
             Intent intent = new Intent(StudyActivity.this, NotificationActivity.class);
             startActivityForResult(intent, NOTIFICATION_RESULT);
           }
@@ -680,7 +682,7 @@ public class StudyActivity extends AppCompatActivity
   }
 
   public void setVersion(TextView version) {
-      version.append(BuildConfig.VERSION_NAME +" ("+BuildConfig.VERSION_CODE+ ")");
+    version.append(BuildConfig.VERSION_NAME + " (" + BuildConfig.VERSION_CODE + ")");
   }
 
   private void hideKeyboard() {
@@ -857,11 +859,13 @@ public class StudyActivity extends AppCompatActivity
                       StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
                   .build();
           Apps apps = dbServiceSubscriber.getApps(realm);
-          customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
-              .replace("$FromEmail", apps.getFromEmail())
-              .replace("$SupportEmail", apps.getSupportEmail())
-              .replace("$AppName", apps.getAppName())
-              .replace("$ContactEmail", apps.getContactUsEmail())));
+          customTabsIntent.intent.setData(
+              Uri.parse(
+                  Urls.LOGIN_URL
+                      .replace("$FromEmail", apps.getFromEmail())
+                      .replace("$SupportEmail", apps.getSupportEmail())
+                      .replace("$AppName", apps.getAppName())
+                      .replace("$ContactEmail", apps.getContactUsEmail())));
           dbServiceSubscriber.closeRealmObj(realm);
           startActivity(customTabsIntent.intent);
         } else {
@@ -1218,9 +1222,7 @@ public class StudyActivity extends AppCompatActivity
       } else {
         if (force) {
           Toast.makeText(
-              StudyActivity.this,
-              "Please update the app to continue using",
-              Toast.LENGTH_SHORT)
+                  StudyActivity.this, "Please update the app to continue using", Toast.LENGTH_SHORT)
               .show();
           moveTaskToBack(true);
           if (Build.VERSION.SDK_INT < 21) {
@@ -1292,11 +1294,13 @@ public class StudyActivity extends AppCompatActivity
               .setExitAnimations(StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
               .build();
       Apps apps = dbServiceSubscriber.getApps(realm);
-      customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
-          .replace("$FromEmail", apps.getFromEmail())
-          .replace("$SupportEmail", apps.getSupportEmail())
-          .replace("$AppName", apps.getAppName())
-          .replace("$ContactEmail", apps.getContactUsEmail())));
+      customTabsIntent.intent.setData(
+          Uri.parse(
+              Urls.LOGIN_URL
+                  .replace("$FromEmail", apps.getFromEmail())
+                  .replace("$SupportEmail", apps.getSupportEmail())
+                  .replace("$AppName", apps.getAppName())
+                  .replace("$ContactEmail", apps.getContactUsEmail())));
       startActivity(customTabsIntent.intent);
     }
 
@@ -1330,7 +1334,7 @@ public class StudyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(StudyActivity.this);
       notificationManager.cancelAll();
-      Toast.makeText(StudyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(StudyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
       AppController.signout(StudyActivity.this);
     }
 
@@ -1404,8 +1408,7 @@ public class StudyActivity extends AppCompatActivity
         positiveButton = "Yes";
         negativeButton = "Skip";
       }
-      alertDialogBuilder =
-          new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder = new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle("Upgrade");
       alertDialogBuilder
           .setMessage(msg)
