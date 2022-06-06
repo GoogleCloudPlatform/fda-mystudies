@@ -1304,8 +1304,12 @@ input::-webkit-calendar-picker-indicator {
       $('#inlineCheckbox6').attr('disabled', true);
     } else {
       $('#inlineCheckbox1').attr('disabled', false);
-      $('#inlineCheckbox5').attr('disabled', false);
-      $('#inlineCheckbox6').attr('disabled', false);
+      if($('#inlineCheckbox5').prop('checked', false)){
+	  $('.dis-checkbox-app').removeClass('disabled', 'disabled');
+ 	  }
+ 	  else{
+ 	  $('.dis-checkbox-app').addClass('disabled', 'disabled');
+ 	  }
     }
 
   }
@@ -1323,10 +1327,12 @@ input::-webkit-calendar-picker-indicator {
       	 $('.perm-assign').show();
       	 $('.pull-right').show();
       	 $('#inlineCheckbox5').val('');
-	     $('#inlineCheckbox5').prop('checked', false);
-	     $('.dis-checkbox-st').addClass('disabled', 'disabled');
-	     $('#inlineCheckbox5').prop('checked', false);
-	     $('.dis-checkbox-app').addClass('disabled', 'disabled');
+	     if($('#inlineCheckbox5').prop('checked', false)){
+		 $('.dis-checkbox-app').removeClass('disabled', 'disabled');
+		 }
+ 		else{
+ 		$('.dis-checkbox-app').addClass('disabled', 'disabled');
+		 }
 	     if(actionPage == 'EDIT_PAGE' && "${userBO.accessLevel}"== "SUPERADMIN"){
 	    	 $('#inlineCheckbox5').prop('checked', true);
 		     $('.dis-checkbox-st').removeClass('disabled', 'disabled');
