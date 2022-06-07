@@ -5,14 +5,14 @@
 # https://opensource.org/licenses/MIT.
 # Stage 1
 # Installing all the dependencies and creating Dist file or building angular application
-FROM node:14.19.1 AS compile-image
+FROM node:16.15.1 AS compile-image
 ARG BASE_HREF=/participant-manager
 WORKDIR /app
 COPY . ./
 #RUN npm set progress=false
 RUN npm install
 RUN npm install -g @angular/cli
-RUN ng build --watch --aot --prod --base-href=${BASE_HREF}/
+RUN npm build --watch --aot --prod --base-href=${BASE_HREF}/
 # Stage2
 # copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
 FROM nginx:latest
