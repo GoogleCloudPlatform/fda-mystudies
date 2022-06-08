@@ -36,10 +36,9 @@ export class UpdateUserComponent
   permission = Permission;
   adminId = '';
   userStatus = Status;
-  idpUser=true;
-  deletedOrDisabledInIdp=true;
-  
- 
+  idpUser = true;
+  deletedOrDisabledInIdp = true;
+
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
     '=1': '1 site',
@@ -58,7 +57,6 @@ export class UpdateUserComponent
     super();
   }
 
-  
   ngOnInit(): void {
     this.subs.add(
       this.route.params.subscribe((params) => {
@@ -91,7 +89,6 @@ export class UpdateUserComponent
           this.getAllApps();
         }),
     );
-    
   }
   add(event: unknown | App): void {
     this.selectedApps.push(event as App);
@@ -100,7 +97,7 @@ export class UpdateUserComponent
     this.subs.add(
       this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
         this.appDetails = data;
-        
+
         this.appDetailsBackup = JSON.parse(
           JSON.stringify(this.appDetails),
         ) as AppDetails;
@@ -301,5 +298,4 @@ export class UpdateUserComponent
       this.user.manageLocations = null;
     }
   }
- 
 }

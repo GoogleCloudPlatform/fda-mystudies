@@ -29,7 +29,7 @@ export class SetUpAccountComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   user = {} as SetUpUser;
-  
+
   setUpCode = '';
   tempRegId = '';
   setupAccountForm: FormGroup;
@@ -88,7 +88,7 @@ export class SetUpAccountComponent
       {
         validator: [
           mustMatch('password', 'confirmPassword'),
-          newPasswordValidator('firstName', 'lastName', 'password' , 'phoneNum'),
+          newPasswordValidator('firstName', 'lastName', 'password', 'phoneNum'),
         ],
       },
     );
@@ -131,7 +131,6 @@ special characters.`;
       email: String(this.setupAccountForm.controls['email'].value),
       password: String(this.setupAccountForm.controls['password'].value),
       phoneNum: String(this.setupAccountForm.controls['phoneNum'].value),
-
     };
     this.subs.add(
       this.setUpAccountService

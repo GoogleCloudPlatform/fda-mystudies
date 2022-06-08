@@ -18,7 +18,6 @@ import {AppsService} from '../../apps/shared/apps.service';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 
-
 @Component({
   selector: 'user-new',
   templateUrl: './new-user.component.html',
@@ -32,7 +31,6 @@ export class AddNewUserComponent
   selectedApps: App[] = [];
   user = {} as User;
 
-  
   permission = Permission;
   sitesMessageMapping: {[k: string]: string} = {
     '=0': '0 sites',
@@ -52,35 +50,23 @@ export class AddNewUserComponent
   ) {
     super();
   }
-  userEmail:any=[]
+  userEmail: any = [];
 
   ngOnInit(): void {
     this.getAllApps();
-    
+
     this.getIdpUsersDetails();
-    
   }
 
-  getIdpUsersDetails():void 
-  {
-    this.userService.getIdpUsers().subscribe((data)=>
-    {
-     
-      
-      this.userEmail=data.email
-    
-      
-    }
-    )
+  getIdpUsersDetails(): void {
+    this.userService.getIdpUsers().subscribe((data) => {
+      this.userEmail = data.email;
+    });
   }
-  idpUserStatus():void
-  {
-   
+  idpUserStatus(): void {
     {
-      this.user.idpUser=true;
-      
+      this.user.idpUser = true;
     }
-    
   }
   getAllApps(): void {
     this.subs.add(
@@ -96,7 +82,7 @@ export class AddNewUserComponent
   deleteAppFromList(appId: string): void {
     this.selectedApps = this.selectedApps.filter((obj) => obj.id !== appId);
   }
- 
+
   appCheckBoxChange(app: App): void {
     if (app.selected) {
       app.permission = this.permission.View;
@@ -220,7 +206,6 @@ export class AddNewUserComponent
       return;
     }
     this.modalRef.hide();
-    
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.manageLocationsSelected;
@@ -233,28 +218,21 @@ export class AddNewUserComponent
       this.user.manageLocations = null;
     }
   }
-  openModal( template: TemplateRef<any>): void {
+  openModal(template: TemplateRef<any>): void {
+    let idpUser = false;
 
-  let idpUser=false;
-  
-  let userEmail = this.userEmail;
-  userEmail.forEach((element: any) => {
-  
-    if(this.user.email === element){
-       idpUser=true;
-       
-      this.idpUserStatus();
-       this.add();
+    let userEmail = this.userEmail;
+    userEmail.forEach((element: any) => {
+      if (this.user.email === element) {
+        idpUser = true;
+
+        this.idpUserStatus();
+        this.add();
+      }
+    });
+
+    if (!idpUser) {
+      this.modalRef = this.modalService.show(template);
     }
-  });
-  
-  if(!idpUser)
-   {
-    this.modalRef = this.modalService.show( template);
-   }
-
-
   }
- 
-
 }

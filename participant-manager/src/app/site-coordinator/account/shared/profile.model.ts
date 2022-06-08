@@ -11,8 +11,7 @@ export interface Profile {
   status: 200;
   message: string;
   code: string;
-  idpUser:boolean;
-  
+  idpUser: boolean;
 }
 export interface UpdateProfile {
   firstName: string;

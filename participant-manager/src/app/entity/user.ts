@@ -4,9 +4,8 @@ import {Status} from '../shared/enums';
 import {ApiResponse} from './api.response.model';
 
 export interface User extends ApiResponse {
-  
   idpUser: any;
-  deletedOrDisabledInIdp:boolean;
+  deletedOrDisabledInIdp: boolean;
 
   id: string;
 
@@ -64,5 +63,4 @@ export interface SetUpUser {
 }
 export interface idpUser {
   idpUser: boolean;
-  
 }

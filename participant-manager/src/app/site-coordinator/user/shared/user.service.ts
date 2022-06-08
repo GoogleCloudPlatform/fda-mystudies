@@ -11,9 +11,7 @@ import {ManageUsers} from './manage-user';
   providedIn: 'root',
 })
 export class UserService {
-  
   constructor(private readonly http: HttpClient) {}
-
 
   add(user: User): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(
@@ -21,7 +19,6 @@ export class UserService {
       user,
     );
   }
-  
 
   update(user: User, adminId: string): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
@@ -67,14 +64,12 @@ export class UserService {
       `${environment.participantManagerDatastoreUrl}/users/${adminId}/`,
     );
   }
-  
-  getIdpUsers():Observable<any>
-  {
+
+  getIdpUsers(): Observable<any> {
     return this.http.get<any>(
       `${environment.participantManagerDatastoreUrl}/users/idpAdmins`,
     );
   }
-
 
   getUsers(
     offset: number,
@@ -96,5 +91,4 @@ export class UserService {
       },
     );
   }
-  
 }

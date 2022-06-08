@@ -13,7 +13,6 @@ export class UserService {
       `${environment.participantManagerDatastoreUrl}/users/profile`,
     );
   }
- 
 
   getUserProfile(): Profile {
     const userObject = sessionStorage.getItem('user');

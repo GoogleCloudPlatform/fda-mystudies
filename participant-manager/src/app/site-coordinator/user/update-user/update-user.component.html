@@ -16,8 +16,7 @@
         </span>
       </div>
 
-      <div class="col-xs-12 col-md-6 pl-none text-right pr-none ">
-        
+      <div class="col-xs-12 col-md-6 pl-none text-right pr-none">
         <button
           (click)="changeStatus(user.status)"
           class="btn banner__default__btn pad__5__13 bt__font12__pad113 ml-sm"
@@ -30,20 +29,16 @@
               ? "Delete admin"
               : "Deactivate admin"
           }}
-
         </button>
-        <span style="line-height: 15px;" *ngIf="user.idpUser && user.deletedOrDisabledInIdp"
-                  class="tool " 
-
-                  data-tip="This user may be deleted from the organization directory or user whitelist for the Participant Manager. Please contact your IT admin to have them added back and try again."
-                    tabindex="1"
-
-                >
-                  <i
-                    class="fa fa-info-circle ml-xs info_i"
-                    aria-hidden="true"
-                  ></i>
-                </span>
+        <span
+          style="line-height: 15px"
+          *ngIf="user.idpUser && user.deletedOrDisabledInIdp"
+          class="tool"
+          data-tip="This user may be deleted from the organization directory or user whitelist for the Participant Manager. Please contact your IT admin to have them added back and try again."
+          tabindex="1"
+        >
+          <i class="fa fa-info-circle ml-xs info_i" aria-hidden="true"></i>
+        </span>
         <button
           *ngIf="user.status === userStatus.Invited"
           (click)="resendInvitation()"
@@ -199,9 +194,11 @@ Superadmins can manage users of the Participant Manager and in addition, can man
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6" >
+        <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
           <div class="form-group">
-            <label for="phoneNum" class="txt_style_unset">Phone number (+XXX XXXX XXXX)</label>
+            <label for="phoneNum" class="txt_style_unset">
+              Phone number (+XXX XXXX XXXX)
+            </label>
             <input
               type="text"
               maxlength="16"
@@ -229,7 +226,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                 class="help-block with-errors error__msg"
                 *ngIf="phoneNum.errors?.pattern"
               >
-              Phone number is invalid
+                Phone number is invalid
               </span>
             </div>
           </div>
