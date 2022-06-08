@@ -12,11 +12,15 @@ COPY . ./
 #RUN npm set progress=false
 RUN npm install
 RUN npm install -g @angular/cli
-RUN ng build --watch --aot --prod --base-href=${BASE_HREF}/
+#RUN ng build --watch --aot --prod --base-href=${BASE_HREF}/
+COPY . /app/participant-manager
+CMD ng serve
 
 # Stage2
 # copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
-FROM nginx
-ARG BASE_HREF=/participant-manager
-COPY --from=compile-image /app/dist/userRegistrationWeb /usr/share/nginx/html${BASE_HREF}
+#FROM nginx
+#ARG BASE_HREF=/participant-manager
+#COPY --from=compile-image /app/dist/userRegistrationWeb /usr/share/nginx/html${BASE_HREF}
+#COPY   /usr/share/nginx/html${BASE_HREF}
+
 
