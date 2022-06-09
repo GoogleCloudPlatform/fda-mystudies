@@ -12,7 +12,8 @@ COPY . ./
 RUN npm set progress=false
 RUN npm install
 RUN npm install -g @angular/cli
-RUN ng build --watch --aot --prod --base-href=${BASE_HREF}/
+#RUN ng build --watch --aot --prod --base-href=${BASE_HREF}/
+RUN ng build --prod --base-href=${BASE_HREF}/
 #COPY . /app/participant-manager
 #CMD ng serve
 
