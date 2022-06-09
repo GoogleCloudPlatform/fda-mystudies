@@ -21,6 +21,6 @@ RUN ng build --skipTests --watch --aot --prod --base-href=${BASE_HREF}/
 #FROM nginx
 ARG BASE_HREF=/participant-manager
 COPY --from=compile-image /app/dist/userRegistrationWeb /usr/share/nginx/html${BASE_HREF}
-COPY   /usr/share/nginx/html${BASE_HREF}
+#COPY   /usr/share/nginx/html${BASE_HREF}
 
 
