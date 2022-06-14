@@ -67,7 +67,7 @@ public final class UserMapper {
       UserRequest userRequest, UserRegAdminEntity adminDetails) {
     adminDetails.setFirstName(userRequest.getFirstName());
     adminDetails.setLastName(userRequest.getLastName());
-    adminDetails.setPhoneNumber(userRequest.getPhoneNumber());
+    adminDetails.setPhoneNumber(userRequest.getPhoneNum());
     adminDetails.setSuperAdmin(userRequest.isSuperAdmin());
     Integer manageLocation =
         userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
