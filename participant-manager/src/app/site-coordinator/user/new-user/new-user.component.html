@@ -575,15 +575,16 @@ Superadmins can manage users of the Participant Manager and in addition, can man
   </form>
 </section>
 <ng-template #template>
-  <div class="modal-body" *ngIf="!user.superAdmin == true">
+  <div class="modal-body p-4 text-center" *ngIf="!user.superAdmin == true">
     You are inviting a person who is not listed in the organizational directory
     to be a Participant Manager admin. Are you sure you wish to proceed?
   </div>
-  <div class="modal-body" *ngIf="user.superAdmin == true">
+  <div class="modal-body p-4" *ngIf="user.superAdmin == true">
     You are inviting a person who is not listed in the organizational directory,
     to be a Participant Manager superadmin. Are you sure you wish to proceed?
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer flex__justify__space-between">
+    <div class="float-left text-left">
     <button type="submit" name="add" class="btn bt__add mr-sm" (click)="add()">
       Confirm
     </button>
@@ -594,5 +595,6 @@ Superadmins can manage users of the Participant Manager and in addition, can man
     >
       Cancel
     </button>
+    </div>
   </div>
 </ng-template>
