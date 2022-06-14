@@ -9,7 +9,7 @@ export interface AppDetails {
   message: string;
   code: string;
   totalParticipantCount: number;
-  appStatus: Status;
+  appStatus?: Status;
 }
 
 export interface Participant {
