@@ -151,7 +151,7 @@ li.dropdown-header {
             </small>   
            </div>
           <div class="form-group">
-            <input type="text" class="form-control" id="studyWebsiteId"
+            <input type="url" class="form-control" id="studyWebsiteId"
                    name="studyWebsite" value="${studyBo.studyWebsite}"
                    pattern="^(http:\/\/|https:\/\/)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$"
                    title="Include http://" maxlength="100"
