@@ -51,10 +51,9 @@ $(document).ready(
 			$(".login-box").css("margin-top", bth).css("margin-bottom", bth);
 
 			// Password Reset Form section
-			var prfs = $("#passwordResetForm").height();
-			bth = (wht - prfs) / 2;
-			$("#passwordResetForm").css("margin-top", bth).css("margin-bottom",
-					bth);
+			// var prfs = $("#passwordResetForm").height();
+			// bth = (wht - prfs) / 2;
+			// $("#passwordResetForm").css("margin-top", bth).css("margin-bottom", bth);
 
 			// Register page
 			var rlbox = $(".lg-register-center").height();
