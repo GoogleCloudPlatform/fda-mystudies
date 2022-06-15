@@ -58,7 +58,7 @@ public class UserRequest {
 
   private String signedInUserId;
 
-  @Size(min = 12, max = 14)
+  @Size(min = 12, max = 16)
   @ToString.Exclude
   private String phoneNum;
 }
