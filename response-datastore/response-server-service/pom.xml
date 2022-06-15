@@ -199,6 +199,11 @@
       <artifactId>spring-security-crypto</artifactId>
       <!-- <version>3.1.0.RELEASE</version> $NO-MVN-MAN-VER$ -->
     </dependency>
+	<dependency>
+		<groupId>com.google.apis</groupId>
+		<artifactId>google-api-services-healthcare</artifactId>
+		<version>v1-rev20210414-1.31.0</version>
+	</dependency>
   </dependencies>
   <reporting>
     <plugins>
