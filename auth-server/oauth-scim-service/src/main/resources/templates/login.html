@@ -194,10 +194,11 @@ display: block;
                       <div class="clearfix"></div>
                     </div>
                   </div>
-                </div>
+                
                 <div class="cmn__error"
                   th:if="${!#strings.isEmpty(error_description)}"
-                  th:text="${error_description}" />
+                  th:text="${error_description}" >
+                  </div>
               </form>
             </div>
           </div>
