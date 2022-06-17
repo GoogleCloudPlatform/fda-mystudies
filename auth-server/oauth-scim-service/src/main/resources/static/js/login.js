@@ -43,7 +43,7 @@ function preventDoubleClick() {
 }
 
 function validateLoginForm() {
-
+debugger
 	var email = $(document.getElementById("email")).val();
 	var password = $(document.getElementById("password")).val();
 	var errorDiv = document.getElementById("password_error");
@@ -57,7 +57,7 @@ function validateLoginForm() {
 	    data: {
 	          email: email
 	        },
-	    success: function getResponse(data) {
+	    success: function(data) {
 	    
 	        var isIdpUser = data.isIdpUser;
 	        var phoneNumber = data.phoneNumber;
