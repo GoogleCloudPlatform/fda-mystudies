@@ -43,7 +43,7 @@ function preventDoubleClick() {
 }
 
 function validateLoginForm() {
-
+  debugger
 	var email = $(document.getElementById("email")).val();
 	var password = $(document.getElementById("password")).val();
 	var errorDiv = document.getElementById("password_error");
@@ -58,7 +58,7 @@ function validateLoginForm() {
 	          email: email
 	        },
 	    success: function getResponse(data) {
-	    
+	    debugger
 	        var isIdpUser = data.isIdpUser;
 	        var phoneNumber = data.phoneNumber;
 	        if(isIdpUser == 'true') {
@@ -95,12 +95,14 @@ function validateLoginForm() {
 		        }
 		      });
 			} else {
+			debugger
 			  errorDiv.innerHTML = '';
 			  errorDiv.style.display = "none";
 			  $("#loginForm").unbind();
 	  	      $("#loginForm").submit();
 	  		}
-	
+	debugger
+	data.clear();
 	    }
 	});
 
