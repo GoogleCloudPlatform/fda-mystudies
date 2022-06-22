@@ -38,6 +38,7 @@ export class AddNewUserComponent
     'other': '# sites',
   };
   disableButton = false;
+  mfaEnabledForPM = false;
   @ViewChildren('permissionCheckBox')
   selectedPermission: QueryList<ElementRef> = new QueryList();
   constructor(
@@ -61,6 +62,7 @@ export class AddNewUserComponent
   getIdpUsersDetails(): void {
     this.userService.getIdpUsers().subscribe((data) => {
       this.userEmail = data.email;
+      this.mfaEnabledForPM = data.mfaEnabledForPM;
     });
   }
   idpUserStatus(): void {

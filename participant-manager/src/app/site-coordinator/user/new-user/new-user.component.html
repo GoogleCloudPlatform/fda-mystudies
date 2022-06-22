@@ -176,7 +176,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
               [(ngModel)]="user.phoneNum"
               name="phoneNum"
               #phoneNum="ngModel"
-              [attr.required]="user.mfaEnabledForPM"
+              [attr.required]="mfaEnabledForPM"
               pattern="[+][0-9\s]{11,15}"
               class="form-control"
               id="phoneNum"

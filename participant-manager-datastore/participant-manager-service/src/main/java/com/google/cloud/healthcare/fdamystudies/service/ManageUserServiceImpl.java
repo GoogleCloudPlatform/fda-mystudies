@@ -1030,7 +1030,8 @@ public class ManageUserServiceImpl implements ManageUserService {
           idpEmail.stream().filter(e -> !usersEmail.contains(e)).collect(Collectors.toList());
     }
 
-    return new IDPAdminDetailsResponse(MessageCode.GET_IDP_USERS_SUCCESS, idpEmails);
+    return new IDPAdminDetailsResponse(
+        MessageCode.GET_IDP_USERS_SUCCESS, idpEmails, appConfig.isMfaEnabled());
   }
 
   @Override

@@ -5,7 +5,10 @@ import {ApiResponse} from './api.response.model';
 
 export interface User extends ApiResponse {
   idpUser: any;
+
   deletedOrDisabledInIdp: boolean;
+
+  mfaEnabledForPM: any;
 
   id: string;
 
