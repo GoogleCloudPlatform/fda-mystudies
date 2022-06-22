@@ -62,6 +62,6 @@ public class UserRequest {
   private Boolean idpUser = false;
 
   @ToString.Exclude
-  @Size(min = 12, max = 14)
+  @Size(min = 12, max = 16)
   private String phoneNumber;
 }
