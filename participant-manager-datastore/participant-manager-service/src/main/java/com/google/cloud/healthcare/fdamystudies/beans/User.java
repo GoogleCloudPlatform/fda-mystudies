@@ -39,5 +39,7 @@ public class User {
 
   private boolean deletedOrDisabledInIdp;
 
+  private boolean mfaEnabledForPM;
+
   private List<UserAppDetails> apps = new ArrayList<>();
 }

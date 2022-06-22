@@ -77,4 +77,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${idpEnabledForPM}")
   private boolean idpEnabled;
+
+  @Value("${mfaEnabledForPM}")
+  private boolean mfaEnabled;
 }

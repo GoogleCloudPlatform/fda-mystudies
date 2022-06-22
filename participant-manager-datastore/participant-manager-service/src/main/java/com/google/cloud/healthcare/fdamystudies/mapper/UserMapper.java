@@ -21,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.common.EmailTemplate;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
+import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppStudySiteInfo;
@@ -37,10 +38,13 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public final class UserMapper {
 
   private UserMapper() {}
+
+  @Autowired private static AppPropertyConfig appConfig;
 
   public static UserRegAdminEntity fromUserRequest(
       UserRequest userRequest, long securityCodeExpireTime) {
@@ -221,6 +225,7 @@ public final class UserMapper {
     UserStatus userStatus = UserStatus.fromValue(admin.getStatus());
     user.setStatus(userStatus.getDescription());
     user.setPhoneNum(admin.getPhoneNumber());
+    user.setMfaEnabledForPM(appConfig.isMfaEnabled());
     return user;
   }
 
