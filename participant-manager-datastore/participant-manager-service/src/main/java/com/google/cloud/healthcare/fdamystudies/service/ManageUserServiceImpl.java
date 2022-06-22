@@ -618,6 +618,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     user.setIdpUser(adminDetails.getIdpUser());
     user.setDeletedOrDisabledInIdp(
         isIdpDeletedOrDisabled(adminDetails.getIdpUser(), adminDetails.getEmail()));
+    user.setMfaEnabledForPM(appConfig.isMfaEnabled());
     if (adminDetails.isSuperAdmin()) {
       logger.exit(String.format("superadmin=%b, status=%s", user.isSuperAdmin(), user.getStatus()));
       return new GetAdminDetailsResponse(MessageCode.GET_ADMIN_DETAILS_SUCCESS, user);
@@ -1017,6 +1018,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     if (!(optUserRegAdminEntity.isPresent() && optUserRegAdminEntity.get().isSuperAdmin())) {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
+
     if (appPropertyConfig.isIdpEnabled()) {
       List<UserRegAdminEntity> users = userAdminRepository.findAll();
       List<String> usersEmail =
