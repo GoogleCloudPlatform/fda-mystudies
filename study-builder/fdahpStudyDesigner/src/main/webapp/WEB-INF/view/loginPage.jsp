@@ -83,7 +83,7 @@
 		    -webkit-transition: none;
 		    resize: none;
 		    background-color: #fff;
-		    width: 90%;
+		    width: 384px;
 		    height: 34px;
 		    border-radius: 4px;
 		    display: inline-block;
