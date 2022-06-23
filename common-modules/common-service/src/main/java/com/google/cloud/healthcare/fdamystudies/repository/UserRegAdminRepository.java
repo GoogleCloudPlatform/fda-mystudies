@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +52,7 @@ public interface UserRegAdminRepository extends JpaRepository<UserRegAdminEntity
               + "LIMIT :limit OFFSET :offset",
       nativeQuery = true)
   public List<UserRegAdminEntity> findByLimitAndOffset(
-      Integer limit, Integer offset, String orderByCondition, @Param("searchTerm") String searchTerm);
+      Integer limit, Integer offset, String orderByCondition, String searchTerm);
 
   @Query(
       value =
