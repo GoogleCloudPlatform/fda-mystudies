@@ -831,7 +831,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     List<User> users = new ArrayList<>();
     List<UserRegAdminEntity> adminList =
         userAdminRepository.findByLimitAndOffset(
-            limit, offset, orderByCondition, searchTerm);
+            limit, offset, orderByCondition, StringUtils.defaultString(searchTerm));
 
     adminList
         .stream()
