@@ -22,7 +22,7 @@ export class AccountProfileComponent
   profileForm: FormGroup;
   user = {} as Profile;
   idpUser = true;
-  
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -42,6 +42,11 @@ export class AccountProfileComponent
         [Validators.required],
       ],
       lastName: [
+        '',
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        [Validators.required],
+      ],
+      phoneNum: [
         '',
         // eslint-disable-next-line @typescript-eslint/unbound-method
         [Validators.required],
