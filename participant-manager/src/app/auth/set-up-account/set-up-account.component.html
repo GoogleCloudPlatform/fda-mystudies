@@ -131,7 +131,7 @@
                 <div
                   *ngIf="
                     f.phoneNum.invalid &&
-                    (f.phoneNum.dirty || f.phoneNum.touched)
+                    (f.phoneNum.dirty || f.phoneNum.touched)  && mfaEnabledForPM
                   "
                 >
                   <span

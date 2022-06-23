@@ -23,6 +23,7 @@ public class UserProfileResponse extends BaseResponse {
   private boolean superAdmin;
   private boolean idpUser;
   private String phoneNum;
+  private boolean mfaEnabledForPM;
 
   public UserProfileResponse(MessageCode messageCode) {
     super(messageCode);

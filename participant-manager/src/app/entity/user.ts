@@ -67,3 +67,6 @@ export interface SetUpUser {
 export interface idpUser {
   idpUser: boolean;
 }
+export interface mfaEnabledForPM {
+  mfaEnabledForPM: boolean;
+}
