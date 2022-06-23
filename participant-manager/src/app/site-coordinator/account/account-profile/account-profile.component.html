@@ -101,6 +101,7 @@
                   maxlength="16"
                   minlength="12"
                   class="form-control"
+                  [attr.required]="user.mfaEnabledForPM"
                   id="phoneNum"
                   placeholder="Enter phone number"
                   formControlName="phoneNum"
