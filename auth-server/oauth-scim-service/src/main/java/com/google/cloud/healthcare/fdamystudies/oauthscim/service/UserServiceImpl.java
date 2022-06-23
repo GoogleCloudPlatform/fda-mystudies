@@ -160,7 +160,10 @@ public class UserServiceImpl implements UserService {
         logger.info("Successfully updated IDP user data: ", userRecordUpdated.getEmail());
 
         userEntity.setIdpUser(true);
-        userEntity.setPhoneNumber(userRequest.getPhoneNumber());
+        userEntity.setPhoneNumber(
+            StringUtils.isNotEmpty(userEntity.getPhoneNumber())
+                ? userEntity.getPhoneNumber().toString()
+                : "");
       } catch (FirebaseAuthException e) {
         logger.error("UserServiceImpl.createUser firebase error: ", e);
       }
