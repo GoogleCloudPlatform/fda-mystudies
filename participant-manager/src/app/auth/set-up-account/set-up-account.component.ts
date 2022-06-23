@@ -46,6 +46,7 @@ export class SetUpAccountComponent
   consecutiveCharacter = '';
   passwordLength = '';
   userName = '';
+  mfaEnabledForPM = false;
   constructor(
     private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,

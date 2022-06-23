@@ -92,6 +92,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     UserProfileResponse userProfileResponse =
         UserProfileMapper.toUserProfileResponse(adminUser, MessageCode.GET_USER_PROFILE_SUCCESS);
+    userProfileResponse.setMfaEnabledForPM(appPropertyConfig.isMfaEnabled());
+
     logger.exit(userProfileResponse.getMessage());
     return userProfileResponse;
   }
@@ -123,6 +125,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     UserProfileResponse userProfileResponse =
         UserProfileMapper.toUserProfileResponse(
             user, MessageCode.GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS);
+    userProfileResponse.setMfaEnabledForPM(appPropertyConfig.isMfaEnabled());
+
     logger.exit(String.format("message=%s", userProfileResponse.getMessage()));
     return userProfileResponse;
   }

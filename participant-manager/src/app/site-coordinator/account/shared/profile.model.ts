@@ -12,6 +12,7 @@ export interface Profile {
   message: string;
   code: string;
   idpUser: boolean;
+  mfaEnabledForPM: any;
 }
 export interface UpdateProfile {
   firstName: string;
