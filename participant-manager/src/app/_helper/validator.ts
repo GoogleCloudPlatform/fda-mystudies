@@ -84,7 +84,6 @@ export function newPasswordValidator(
   firstname: string,
   lastname: string,
   password: string,
-  phoneNum: string,
 ) {
   return (formGroup: FormGroup) => {
     const control = formGroup.controls[password];

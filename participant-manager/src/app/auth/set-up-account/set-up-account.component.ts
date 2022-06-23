@@ -70,11 +70,6 @@ export class SetUpAccountComponent
           // eslint-disable-next-line @typescript-eslint/unbound-method
           [Validators.required],
         ],
-        phoneNum: [
-          '',
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          [Validators.required],
-        ],
         password: [
           '',
           // eslint-disable-next-line @typescript-eslint/unbound-method
@@ -89,7 +84,7 @@ export class SetUpAccountComponent
       {
         validator: [
           mustMatch('password', 'confirmPassword'),
-          newPasswordValidator('firstName', 'lastName', 'password', 'phoneNum'),
+          newPasswordValidator('firstName', 'lastName', 'password'),
         ],
       },
     );
