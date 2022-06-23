@@ -70,11 +70,6 @@ export class SetUpAccountComponent
           // eslint-disable-next-line @typescript-eslint/unbound-method
           [Validators.required],
         ],
-        phoneNum: [
-          '',
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          [Validators.required],
-        ],
         password: [
           '',
           // eslint-disable-next-line @typescript-eslint/unbound-method

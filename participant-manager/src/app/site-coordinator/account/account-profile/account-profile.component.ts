@@ -46,11 +46,6 @@ export class AccountProfileComponent
         // eslint-disable-next-line @typescript-eslint/unbound-method
         [Validators.required],
       ],
-      phoneNum: [
-        '',
-        // eslint-disable-next-line @typescript-eslint/unbound-method
-        [Validators.required],
-      ],
     });
   }
 
