@@ -48,7 +48,5 @@ public class SetUpAccountRequest {
   @Size(max = 320)
   private String lastName;
 
-  @ToString.Exclude
-  @Size(min = 12, max = 16)
-  private String phoneNum;
+  @ToString.Exclude private String phoneNum;
 }

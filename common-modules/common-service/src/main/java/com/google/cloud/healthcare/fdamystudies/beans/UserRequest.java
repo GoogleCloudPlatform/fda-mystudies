@@ -61,7 +61,5 @@ public class UserRequest {
   @Type(type = "yes_no")
   private Boolean idpUser = false;
 
-  @ToString.Exclude
-  @Size(min = 12, max = 16)
-  private String phoneNumber;
+  @ToString.Exclude private String phoneNumber;
 }
