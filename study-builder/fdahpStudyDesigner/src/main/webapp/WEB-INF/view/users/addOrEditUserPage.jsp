@@ -67,7 +67,7 @@ input::-webkit-calendar-picker-indicator {
 
 .myarrow:after {
   content: "";
-    width: 466px;
+    maxlength="100";
     position: absolute;
     top: 36px;
     right: 25px;
