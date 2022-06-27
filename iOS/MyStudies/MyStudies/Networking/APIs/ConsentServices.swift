@@ -76,6 +76,18 @@ class ConsentServices: NSObject {
     
     let base64data2 = convertImageToBase64String(img: img)
     
+    
+    
+    var pdfURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).last! as URL
+    pdfURL = pdfURL.appendingPathComponent("ConsentpdfSharingImage.pdf") as URL
+
+    let database64pdfdataImage = try? Data(contentsOf: pdfURL)
+    
+    
+    let base64dataPdfImage =
+    database64pdfdataImage?
+      .base64EncodedString() ?? ""
+    print("database64dataImage---\(base64dataPdfImage)")
 
     let consent =
       [
@@ -91,7 +103,7 @@ class ConsentServices: NSObject {
         "siteId": Study.currentStudy?.userParticipateState.siteID ?? "",
         kConsent: consent,
         kConsentSharing: userDataSharing,
-        "dataSharingScreenShot": base64data2,
+        "dataSharingScreenShot": base64dataPdfImage,// base64dataImage,
       ] as [String: Any]
     let method = ConsentServerMethods.updateEligibilityConsentStatus.method
 

@@ -1545,7 +1545,15 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     UIGraphicsEndImageContext()
     let image2 = image
      let imageURl = saveImageInDocumentDirectory(image: image2, fileName: "ConsentSharingImage")
-      print("imageURl---\(imageURl)")
+      print("ConsentSharingImageimageURl---\(imageURl)")
+      
+      
+      
+      let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+              let docURL = documentDirectory.appendingPathComponent("ConsentpdfSharingImage.pdf")
+
+      createPDFForSnapShot(image: image2)?.write(to: docURL, atomically: true)
+      print("ConsentpdfSharingImage---\(docURL)")
     }
   }
   
@@ -1560,7 +1568,20 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           return nil
       }
 
+  func createPDFForSnapShot(image: UIImage) -> NSData? {
 
-  
+          let pdfData = NSMutableData()
+          let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)!
+
+          var mediaBox = CGRect.init(x: 0, y: 0, width: image.size.width, height: image.size.height)
+
+          let pdfContext = CGContext(consumer: pdfConsumer, mediaBox: &mediaBox, nil)!
+
+          pdfContext.beginPage(mediaBox: &mediaBox)
+          pdfContext.draw(image.cgImage!, in: mediaBox)
+          pdfContext.endPage()
+
+          return pdfData
+      }
   
 }
