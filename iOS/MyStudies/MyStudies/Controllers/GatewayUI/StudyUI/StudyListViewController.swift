@@ -78,6 +78,7 @@ class StudyListViewController: UIViewController {
     }
     setNavigationBarColor()
     Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
+    Utilities.removeImageLocalPath(localPathName: "ConsentpdfSharingImage")
   }
 
   override func viewDidAppear(_ animated: Bool) {

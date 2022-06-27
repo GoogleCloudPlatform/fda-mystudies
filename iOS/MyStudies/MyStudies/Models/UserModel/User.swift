@@ -445,7 +445,8 @@ class UserStudyStatus {
 
   lazy var completion: Int = 0
   lazy var adherence: Int = 0
-
+  
+  var dataSharingPermission: String = "Not Applicable"
   var participantId: String?
   var siteID: String!
   var tokenIdentifier: String!
@@ -466,6 +467,9 @@ class UserStudyStatus {
       }
       if Utilities.isValidValue(someObject: detail[kAdherence] as AnyObject) {
         self.adherence = (detail[kAdherence] as? Int)!
+      }
+      if Utilities.isValidValue(someObject: detail[kDataSharingPermission] as AnyObject) {
+        self.dataSharingPermission = detail[kDataSharingPermission] as? String ?? "Not Applicable"
       }
       if Utilities.isValidValue(someObject: detail[kStudyParticipantId] as AnyObject) {
         self.participantId = detail[kStudyParticipantId] as? String

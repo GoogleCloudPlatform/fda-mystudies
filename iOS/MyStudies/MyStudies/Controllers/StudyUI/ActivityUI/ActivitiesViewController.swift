@@ -134,6 +134,7 @@ class ActivitiesViewController: UIViewController {
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     setNavigationBarColor()
     Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
+    Utilities.removeImageLocalPath(localPathName: "ConsentpdfSharingImage")
     
     if Utilities.isStandaloneApp() {
       self.setNavigationBarItem()
