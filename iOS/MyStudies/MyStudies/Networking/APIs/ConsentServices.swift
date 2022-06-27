@@ -50,7 +50,13 @@ class ConsentServices: NSObject {
     if let isShareData = consentResult?.isShareDataWithPublic {
       userDataSharing = isShareData ? "Provided" : "Not Provided"
     } else {
-      userDataSharing = "Not Applicable"
+      print("7dataSharingPermissiondataSharingPermission---\(Study.currentStudy?.userParticipateState.dataSharingPermission)")
+      let valDataSharing = Study.currentStudy?.userParticipateState.dataSharingPermission ?? ""
+      if valDataSharing != "" {
+      userDataSharing = valDataSharing
+      } else {
+        userDataSharing = "Not Applicable"
+      }
     }
 
     let base64data =

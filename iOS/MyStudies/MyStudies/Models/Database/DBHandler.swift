@@ -169,6 +169,7 @@ class DBHandler: NSObject {
             dbStudy?.participatedId = studyStatus.participantId
             dbStudy?.siteID = studyStatus.siteID
             dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+            dbStudy?.dataSharingPermission = studyStatus.dataSharingPermission
             dbStudy?.joiningDate = studyStatus.joiningDate
             dbStudy?.completion = studyStatus.completion
             dbStudy?.adherence = studyStatus.adherence
@@ -216,6 +217,7 @@ class DBHandler: NSObject {
       dbStudy.participatedId = userStudyStatus.participantId
       dbStudy.siteID = userStudyStatus.siteID
       dbStudy.tokenIdentifier = userStudyStatus.tokenIdentifier
+      dbStudy.dataSharingPermission = userStudyStatus.dataSharingPermission
       dbStudy.joiningDate = userStudyStatus.joiningDate
       dbStudy.completion = userStudyStatus.completion
       dbStudy.adherence = userStudyStatus.adherence
@@ -249,6 +251,7 @@ class DBHandler: NSObject {
       study.status = StudyStatus(rawValue: dbStudy.status!)!
       study.signedConsentVersion = dbStudy.signedConsentVersion
       study.signedConsentFilePath = dbStudy.signedConsentFilePath
+      study.signedConsentDataSPdfFilePath = dbStudy.signedConsentDataSPdfFilePath
       study.activitiesLocalNotificationUpdated = dbStudy.activitiesLocalNotificationUpdated
 
       // Settings
@@ -267,6 +270,7 @@ class DBHandler: NSObject {
       participatedStatus.participantId = dbStudy.participatedId
       participatedStatus.siteID = dbStudy.siteID ?? ""
       participatedStatus.tokenIdentifier = dbStudy.tokenIdentifier ?? ""
+      participatedStatus.dataSharingPermission = dbStudy.dataSharingPermission
       participatedStatus.adherence = dbStudy.adherence
       participatedStatus.completion = dbStudy.completion
       participatedStatus.joiningDate = dbStudy.joiningDate
@@ -472,6 +476,7 @@ class DBHandler: NSObject {
         dbStudy?.participatedId = studyStatus.participantId
         dbStudy?.siteID = studyStatus.siteID
         dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+        dbStudy?.dataSharingPermission = studyStatus.dataSharingPermission
         dbStudy?.joiningDate = studyStatus.joiningDate
         dbStudy?.completion = studyStatus.completion
         dbStudy?.adherence = studyStatus.adherence
@@ -512,6 +517,19 @@ class DBHandler: NSObject {
     try? realm.write {
       dbStudy?.signedConsentFilePath = study.signedConsentFilePath
       dbStudy?.signedConsentVersion = study.signedConsentVersion
+    }
+  }
+  
+  ///  Saves study consent screenshot Info to DB.
+  /// - Parameter study: Instance of the study for which consent information to be saved.
+  class func saveConsentScreenShotInformation(study: Study) {
+
+    let realm = DBHandler.getRealmObject()!
+    let studies = realm.objects(DBStudy.self).filter("studyId == %@", study.studyId ?? "")
+    let dbStudy = studies.last
+
+    try? realm.write {
+      dbStudy?.signedConsentDataSPdfFilePath = study.signedConsentDataSPdfFilePath
     }
   }
 

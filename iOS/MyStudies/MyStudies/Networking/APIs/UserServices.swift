@@ -75,6 +75,7 @@ let kActivityVersion = "activityVersion"
 let kActivityRunId = "activityRunId"
 let kCompletion = "completion"
 let kAdherence = "adherence"
+let kDataSharingPermission = "dataSharingPermission"
 
 // MARK: - Logout Api constants
 let kLogoutReason = "reason"
