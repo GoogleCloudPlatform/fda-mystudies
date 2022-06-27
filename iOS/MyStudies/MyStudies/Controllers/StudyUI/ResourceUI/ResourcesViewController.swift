@@ -27,7 +27,7 @@ let kUnwindToStudyListIdentifier = "unwindeToStudyListResourcesIdentifier"
 
 private enum TableRow: ResourceRow {
 
-  case about, consent, terms, privacy, leave
+  case about, consent, dataSharingImage, terms, privacy, leave
 
   var title: String {
     switch self {
@@ -35,6 +35,8 @@ private enum TableRow: ResourceRow {
       return LocalizableString.aboutStudy.localizedString
     case .consent:
       return Branding.consentPDFTitle
+    case .dataSharingImage:
+      return "Data sharing image"
     case .terms:
       return LocalizableString.resourceTerms.localizedString
     case .privacy:
@@ -150,16 +152,16 @@ class ResourcesViewController: UIViewController {
       let linkTerm: String = Branding.termsAndConditionURL
       let linkPrivacy: String = Branding.privacyPolicyURL
       if linkTerm != "" && linkPrivacy != "" {
-        return [TableRow.about, TableRow.consent, TableRow.terms, TableRow.privacy, TableRow.leave]
+        return [TableRow.about, TableRow.consent, TableRow.dataSharingImage, TableRow.terms, TableRow.privacy, TableRow.leave]
       } else if linkTerm != "" {
-        return [TableRow.about, TableRow.consent, TableRow.terms, TableRow.leave]
+        return [TableRow.about, TableRow.consent, TableRow.dataSharingImage, TableRow.terms, TableRow.leave]
       } else if linkPrivacy != "" {
-        return [TableRow.about, TableRow.consent, TableRow.privacy, TableRow.leave]
+        return [TableRow.about, TableRow.consent, TableRow.dataSharingImage, TableRow.privacy, TableRow.leave]
       }
       
-      return [TableRow.about, TableRow.consent, TableRow.leave]
+      return [TableRow.about, TableRow.consent, TableRow.dataSharingImage, TableRow.leave]
     }
-    return [TableRow.about, TableRow.consent, TableRow.leave]
+    return [TableRow.about, TableRow.consent, TableRow.dataSharingImage, TableRow.leave]
   }
 
   func checkForResourceUpdate() {
@@ -284,7 +286,7 @@ class ResourcesViewController: UIViewController {
       }
 
     }
-    tableRows = [TableRow.about, TableRow.consent] + resources
+    tableRows = [TableRow.about, TableRow.consent, TableRow.dataSharingImage] + resources
     if Utilities.isStandaloneApp() {
       let linkTerm: String = Branding.termsAndConditionURL
       let linkPrivacy: String = Branding.privacyPolicyURL
@@ -712,6 +714,16 @@ extension ResourcesViewController: UITableViewDelegate {
         handelTerms()
       case .privacy:
         handelPrivacy()
+      case .dataSharingImage:
+        if let consentPath = Study.currentStudy?.signedConsentFilePath, !consentPath.isEmpty {
+          self.pushToResourceDetails(with: consentPath)
+        } else {
+          ConsentServices().getConsentPDFForStudy(
+            studyId: currentStudy.studyId ?? "",
+            consentVersion: currentStudy.signedConsentVersion ?? "",
+            delegate: self
+          )
+        }
       }
     } else if let resource = self.tableRows[indexPath.row] as? Resource {
       resourceLink = resource.file?.getFileLink()
