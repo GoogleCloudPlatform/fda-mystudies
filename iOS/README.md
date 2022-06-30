@@ -35,8 +35,8 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Update `HYDRA_CLIENT_ID` with the `client_id` you configured during [`Hydra`](/hydra/) deployment (the mobile applications share a `client_id` with each other, the `Auth server` and the `Participant manager`) 
     -    Update `API_KEY` with the `bundle_id` and `app_token` that you configured [`study-datastore/src/main/resources/authorizationResource.properties`](../study-datastore/src/main/resources/authorizationResource.properties) during [`Study datastore`](/study-datastore/) deployment with format `<value of ios.bundleid>:<value of ios.apptoken>`
     -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
-    -    Set `APP_TYPE` to either “gateway” or “standalone”
-    -    Update `STUDY_ID` key with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
+    -    Set `IsStandaloneStudyApp` bool value to either “gateway” or “standalone” in [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist)
+    -    Update `StandaloneStudyId` key in [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
 1. Enable push notifications by creating [push notification certificates](https://help.apple.com/developer-account/#/dev82a71386a) in encrypted `.p12` format (for more information, visit [Establishing a Certificate-Based Connection to APNs](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_certificate-based_connection_to_apns))
 1. Configure your [`Participant datastore`](/participant-datastore/) instance to interface with your mobile application (skip this step if following the semi-automated [deployment guide](/deployment/README.md) - you will complete an automated version of this task when you return to that guide)
     -    Make a copy of the [`participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql`](../participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql) and update the values to match your iOS configuration
@@ -47,9 +47,6 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Update user-facing text in the [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) file, fields to consider include:
          -    `ProductTitleName` - Application name that is shown to the user
          -    `WebsiteButtonTitle` - Text of the link that is shown on the overview screen
-         -    `WebsiteLink` - Destination of the link that is shown on the overview screen
-         -    `TermsAndConditionURL` - Destination for the terms and conditions link
-         -    `PrivacyPolicyURL` - Destination for the privacy policy link
          -    `NavigationTitleName` - The navigation bar title that is shown to users
     -    Update introductory information presented to users in the [`iOS/MyStudies/MyStudies/Utils/Resources/Plists/UI/GatewayOverview.plist`](MyStudies/MyStudies/Utils/Resources/Plists/UI/GatewayOverview.plist) file
     -    Additional resource documents can be made available to users by adding PDF files to [`iOS/MyStudies/MyStudies/Assets/OtherAssets/`](MyStudies/MyStudies/Assets/OtherAssets/) and creating a corresponding entry in [`iOS/MyStudies/MyStudies/Models/Resource/Resources.plist`](MyStudies/MyStudies/Models/Resource/Resources.plist)
