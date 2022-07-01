@@ -22,6 +22,7 @@ export class AccountProfileComponent
   profileForm: FormGroup;
   user = {} as Profile;
   idpUser = true;
+  isMfa?: boolean;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -49,7 +50,7 @@ export class AccountProfileComponent
       phoneNum: [
         '',
         // eslint-disable-next-line @typescript-eslint/unbound-method
-        [Validators.required],
+       
       ],
     });
   }
@@ -60,14 +61,26 @@ export class AccountProfileComponent
 
   ngOnInit(): void {
     this.getProfileDetails();
+    this.changeValidation();
   }
 
   getProfileDetails(): void {
     this.accountService.fetchUserProfile().subscribe((data) => {
       this.profileForm.patchValue(data);
       this.user = data;
-      console.log(data);
+      this.isMfa = data.mfaEnabledForPM;
+      console.log(this.isMfa);
     });
+  }
+
+  changeValidation(): void{
+    if(this.isMfa) {
+     // console.log(1);
+      this.profileForm.get('phoneNum')?.setValidators((Validators.required))
+    } else {
+      //console.log(2);
+      this.profileForm.get('phoneNum')?.clearValidators();
+    }
   }
 
   updateProfile(): void {
