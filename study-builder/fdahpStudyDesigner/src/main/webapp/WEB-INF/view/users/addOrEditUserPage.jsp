@@ -1037,7 +1037,7 @@ input::-webkit-calendar-picker-indicator {
         var csrfToken = $('#csrfDet').attr('csrfToken');
         $('#emailId').parent().find(".help-block").append($("<ul <li></li></ul>").attr("class","list-unstyled"));
         if ('' !== email && '' !== roleId  && null !== roleId && '' !== lastName  && 
-        		'' !== firstName && '' !== phoneNumber && isphone ) {
+        		'' !== firstName ) {
         const adminList = '${adminList}' 
         var element = $("#roleId option:selected").text();
         if(!adminList.includes(email) && adminList != null && ${idpEnabled}){
