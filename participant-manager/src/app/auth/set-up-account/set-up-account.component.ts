@@ -46,7 +46,8 @@ export class SetUpAccountComponent
   consecutiveCharacter = '';
   passwordLength = '';
   userName = '';
-  mfaEnabledForPM = false;
+  isMfa = [];
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,
@@ -73,7 +74,7 @@ export class SetUpAccountComponent
         phoneNum: [
           '',
           // eslint-disable-next-line @typescript-eslint/unbound-method
-          [Validators.required],
+         
         ],
         password: [
           '',
@@ -113,8 +114,10 @@ export class SetUpAccountComponent
     this.passCriteria = `Your password must be at least 8 characters long    
 and contain lower case, upper case, numeric and
 special characters.`;
+this.changeValidation();
   }
 
+  
   getError(err: ErrorCode): string {
     return getErrorMessage(err);
   }
@@ -122,9 +125,20 @@ special characters.`;
   getPreStoredDetails(): void {
     this.setUpAccountService.get(this.setUpCode).subscribe((user) => {
       this.setupAccountForm.patchValue(user);
+      this.isMfa = user.mfaEnabledForPM;
+      console.log(this.isMfa);
     });
   }
 
+  changeValidation(): void{
+    if(this.isMfa) {
+       console.log(1);
+      this.setupAccountForm.get('phoneNum')?.setValidators((Validators.required))
+    } else {
+      console.log(2);
+      this.setupAccountForm.get('phoneNum')?.clearValidators();
+    }
+  }
   registerUser(): void {
     const updatedUser: SetUpUser = {
       firstName: String(this.setupAccountForm.controls['firstName'].value),

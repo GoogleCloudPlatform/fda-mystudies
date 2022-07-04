@@ -22,7 +22,7 @@ export class AccountProfileComponent
   profileForm: FormGroup;
   user = {} as Profile;
   idpUser = true;
-  isMfa?: boolean;
+  isMfa = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -75,10 +75,10 @@ export class AccountProfileComponent
 
   changeValidation(): void{
     if(this.isMfa) {
-     // console.log(1);
+    console.log(1);
       this.profileForm.get('phoneNum')?.setValidators((Validators.required))
     } else {
-      //console.log(2);
+     console.log(2);
       this.profileForm.get('phoneNum')?.clearValidators();
     }
   }
