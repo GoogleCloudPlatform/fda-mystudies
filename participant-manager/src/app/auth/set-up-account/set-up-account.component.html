@@ -122,7 +122,7 @@
                   maxlength="16"
                   minlength="12"
                   class="form-control"
-                  [attr.required]="mfaEnabledForPM"
+                 
                   id="phoneNum"
                   placeholder="Enter phone number"
                   formControlName="phoneNum"
@@ -132,7 +132,7 @@
                 <div
                   *ngIf="
                     f.phoneNum.invalid &&
-                    (f.phoneNum.dirty || f.phoneNum.touched) && mfaEnabledForPM
+                    (f.phoneNum.dirty || f.phoneNum.touched) 
                   "
                 >
                   <span
