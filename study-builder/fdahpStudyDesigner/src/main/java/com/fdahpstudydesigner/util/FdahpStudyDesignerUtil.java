@@ -21,12 +21,14 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package com.fdahpstudydesigner.util;
 
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
+import com.google.cloud.WriteChannel;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -40,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -91,9 +94,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class FdahpStudyDesignerUtil {
 
   /* Read Properties file */
-  private static Map<String, String> appProperties = null;
-
   private static XLogger logger = XLoggerFactory.getXLogger(FdahpStudyDesignerUtil.class.getName());
+
+  private static Map<String, String> appProperties = null;
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
 
@@ -772,6 +775,7 @@ public class FdahpStudyDesignerUtil {
             except.append("^(?:" + escapeSplChar.trim().replace(" ", "") + ")$");
 
             regEx = except + regEx;
+
           } else {
             regEx += "[.]";
           }
@@ -1083,6 +1087,17 @@ public class FdahpStudyDesignerUtil {
     return fileNameWithExtension;
   }
 
+  public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+    } catch (Exception e) {
+      logger.error("Unable to generate signed url", e);
+    }
+    return null;
+  }
+
   public static void saveDefaultImageToCloudStorage(
       MultipartFile fileStream, String fileName, String underDirectory) {
     String absoluteFileName = underDirectory + PATH_SEPARATOR + fileName;
@@ -1315,6 +1330,20 @@ public class FdahpStudyDesignerUtil {
     return destFile;
   }
 
+  public static String getStudyPlatform(StudyBo studyBo) {
+    String platform = null;
+    if (studyBo != null
+        && FdahpStudyDesignerConstants.IOS.equalsIgnoreCase(studyBo.getPlatform())) {
+      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS;
+    } else if (studyBo != null
+        && FdahpStudyDesignerConstants.ANDROID.equalsIgnoreCase(studyBo.getPlatform())) {
+      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_ANDROID;
+    } else {
+      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS_ANDROID;
+    }
+    return platform;
+  }
+
   public static String getImageResources(String filepath) {
     try {
       if (StringUtils.isNotBlank(filepath)) {
@@ -1332,17 +1361,54 @@ public class FdahpStudyDesignerUtil {
     return null;
   }
 
-  public static String getStudyPlatform(StudyBo studyBo) {
-    String platform = null;
-    if (studyBo != null
-        && FdahpStudyDesignerConstants.IOS.equalsIgnoreCase(studyBo.getPlatform())) {
-      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS;
-    } else if (studyBo != null
-        && FdahpStudyDesignerConstants.ANDROID.equalsIgnoreCase(studyBo.getPlatform())) {
-      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_ANDROID;
-    } else {
-      platform = FdahpStudyDesignerConstants.STUDY_PLATFORM_TYPE_IOS_ANDROID;
+  /**
+   * Saves file in cloud storage
+   *
+   * @param fileName
+   * @param bytes
+   * @param underDirectory
+   * @return
+   */
+  public static String saveFile(String fileName, byte[] bytes, String underDirectory) {
+
+    String absoluteFileName = underDirectory == null ? fileName : underDirectory + "/" + fileName;
+    BlobInfo blobInfo =
+        BlobInfo.newBuilder(configMap.get("cloud.bucket.name.consent.document"), absoluteFileName)
+            .build();
+    Storage storage = StorageOptions.getDefaultInstance().getService();
+    try (WriteChannel writer = storage.writer(blobInfo)) {
+
+      writer.write(ByteBuffer.wrap(bytes, 0, bytes.length));
+    } catch (IOException e) {
+      logger.error("Save file in cloud storage failed", e);
     }
-    return platform;
+    return "gs://" + blobInfo.getBucket() + "/" + blobInfo.getName();
+  }
+
+  public static String getFormattedDateTimeZone(
+      String input, String inputFormat, String outputFormat) {
+    String output = "";
+    try {
+      if (StringUtils.isNotEmpty(input)) {
+        SimpleDateFormat inputSDF = new SimpleDateFormat(inputFormat);
+        Date inputDate = inputSDF.parse(input);
+        SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat);
+        output = outputSDF.format(inputDate);
+      }
+    } catch (Exception e) {
+      logger.error("AuthenticationService - getFormattedDateTimeZone() :: ERROR", e);
+    }
+    logger.exit("StudyMetaDataUtil: getFormattedDateTimeZone() - Ends ");
+    return output;
+  }
+
+  public static String convertDateToOtherFormat(
+      String dateString, String inputFormat, String outputFormat) throws ParseException {
+    DateFormat sdf = new SimpleDateFormat(inputFormat);
+    DateFormat sdf1 = new SimpleDateFormat(outputFormat);
+
+    sdf1.setTimeZone(TimeZone.getTimeZone("GMT" + dateString.substring(dateString.length() - 5)));
+
+    return sdf1.format(sdf.parse(dateString));
   }
 }

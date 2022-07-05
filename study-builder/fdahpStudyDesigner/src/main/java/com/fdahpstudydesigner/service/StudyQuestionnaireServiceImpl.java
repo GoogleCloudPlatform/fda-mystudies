@@ -1124,4 +1124,10 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
     logger.entry("begin getQuestionById");
     return studyQuestionnaireDAO.getQuestionById(questionId);
   }
+
+  @Override
+  public QuestionnairesStepsBo getenabledValues(QuestionsBo questionBo) {
+
+    return studyQuestionnaireDAO.getenabledValues(questionBo);
+  }
 }

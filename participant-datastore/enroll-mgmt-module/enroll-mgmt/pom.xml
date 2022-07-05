@@ -42,7 +42,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
-	<dependency>
+     <dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-log4j2</artifactId>
 		<exclusions>
@@ -52,6 +52,7 @@
 			</exclusion>
 		</exclusions>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 	<dependency>
 		<groupId>org.apache.logging.log4j</groupId>
 		<artifactId>log4j-core</artifactId>
@@ -208,6 +209,21 @@
       <artifactId>junit-vintage-engine</artifactId>
       <scope>test</scope>
     </dependency>
+       <dependency>
+   <groupId>com.google.apis</groupId>
+   <artifactId>google-api-services-healthcare</artifactId>
+   <version>v1-rev20210806-1.32.1</version>
+   </dependency>
+ <dependency>
+    <groupId>com.google.http-client</groupId>
+    <artifactId>google-http-client</artifactId>
+    <version>1.39.1</version>
+</dependency>
+<dependency>
+    <groupId>com.google.api-client</groupId>
+    <artifactId>google-api-client</artifactId>
+    <version>1.31.2</version>
+</dependency>
   </dependencies>
 
   <build>
@@ -285,7 +301,7 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
-      </plugin>	 
+      </plugin>
     </plugins>
   </build>
   <reporting>

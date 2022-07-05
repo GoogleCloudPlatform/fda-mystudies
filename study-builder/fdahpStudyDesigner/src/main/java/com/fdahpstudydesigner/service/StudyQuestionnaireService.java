@@ -155,4 +155,6 @@ public interface StudyQuestionnaireService {
   public QuestionnaireBo getQuestionnaireById(String questionnaireId);
 
   public QuestionsBo getQuestionById(String valueOf);
+
+  public QuestionnairesStepsBo getenabledValues(QuestionsBo questionBo);
 }

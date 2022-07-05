@@ -124,11 +124,11 @@ public class BaseMockIT {
 
   @Autowired protected JavaMailSender emailSender;
 
-  @Autowired private TestRestTemplate restTemplate;
-
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   @LocalServerPort int randomServerPort;
+
+  @Autowired private TestRestTemplate restTemplate;
 
   @PostConstruct
   public void logServerPort() {
@@ -361,7 +361,6 @@ public class BaseMockIT {
     }
     documentPath += servletContext.getContextPath() + "/openapi.json";
     documentPath = documentPath.replace(" ", "_");
-
     // write api-docs json to a file
     FileUtils.write(new File(documentPath), jsonObjNode.toPrettyString(), Charset.defaultCharset());
     logger.info(String.format("Open API documentation created at %s", documentPath));

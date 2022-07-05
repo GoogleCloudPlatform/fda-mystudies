@@ -37,4 +37,6 @@ public class ConsentStatusBean {
 
   @Size(max = SMALL_LENGTH)
   private String sharing;
+
+  private String dataSharingScreenShot;
 }

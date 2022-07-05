@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -77,4 +77,5 @@ public class AppConstants {
 
   public static final String PATIENT_TYPE = "Patient";
   public static final String QUESTIONNAIRE_RESPONSE_TYPE = "QuestionnaireResponse";
+  public static final String QUESTIONNAIRE_TYPE_FHIR = "Questionnaire";
 }

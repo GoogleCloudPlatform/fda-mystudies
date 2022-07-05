@@ -162,18 +162,6 @@ public class UserManagementUtil {
     return emailContentName;
   }
 
-  public static String getCurrentDate() {
-    Calendar currentDate = Calendar.getInstance();
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-    return formatter.format(currentDate.getTime());
-  }
-
-  public static String getCurrentTime() {
-    Calendar currentDate = Calendar.getInstance();
-    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-    return formatter.format(currentDate.getTime());
-  }
-
   public void deleteUserInfoInAuthServer(String userId, boolean isappDeactivate) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -188,5 +176,17 @@ public class UserManagementUtil {
       url = appConfig.getAuthServerDeleteStatusUrl();
     }
     restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class, userId);
+  }
+
+  public static String getCurrentDate() {
+    Calendar currentDate = Calendar.getInstance();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    return formatter.format(currentDate.getTime());
+  }
+
+  public static String getCurrentTime() {
+    Calendar currentDate = Calendar.getInstance();
+    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+    return formatter.format(currentDate.getTime());
   }
 }

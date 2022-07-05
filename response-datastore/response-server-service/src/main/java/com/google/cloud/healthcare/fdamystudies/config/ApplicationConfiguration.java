@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -66,14 +66,14 @@ public class ApplicationConfiguration {
   @Value("${regionId}")
   private String regionId;
 
-  @Value("${fhirDatasetId}")
-  private String fhirDatasetId;
-
   @Value("${enableFHIRManagementAPI}")
   private String enableFHIRManagementAPI;
 
-  @Value("${didDatasetId}")
-  private String didDatasetId;
+  @Value("${enableBigQuery}")
+  private String enableBigQuery;
+
+  @Value("${enableConsentManagementAPI}")
+  private String enableConsentManagementAPI;
 
   @Value("${discardFHIRAfterDID}")
   private String discardFHIRAfterDID;

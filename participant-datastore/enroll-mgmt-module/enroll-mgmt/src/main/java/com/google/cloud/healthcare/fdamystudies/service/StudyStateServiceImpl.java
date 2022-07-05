@@ -13,7 +13,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -150,6 +149,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                     ParticipantStudyEntity::getStudyId,
                     Function.identity(),
                     (existing, replacement) -> existing));
+
     try {
       for (StudiesBean studyBean : studiesBeenList) {
         String participantId =
@@ -227,6 +227,7 @@ public class StudyStateServiceImpl implements StudyStateService {
           studyStateBean.setHashedToken(
               EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
         }
+
         if (participantStudy.getStudy() != null) {
           studyStateBean.setStudyId(participantStudy.getStudy().getCustomId());
         }
@@ -236,6 +237,7 @@ public class StudyStateServiceImpl implements StudyStateService {
         studyStateBean.setCompletion(participantStudy.getCompletion());
         studyStateBean.setBookmarked(participantStudy.getBookmark());
         studyStateBean.setAdherence(participantStudy.getAdherence());
+        studyStateBean.setDataSharingPermission(participantStudy.getSharing());
         if (participantStudy.getEnrolledDate() != null) {
           studyStateBean.setEnrolledDate(
               MyStudiesUserRegUtil.getIsoDateFormat(participantStudy.getEnrolledDate()));

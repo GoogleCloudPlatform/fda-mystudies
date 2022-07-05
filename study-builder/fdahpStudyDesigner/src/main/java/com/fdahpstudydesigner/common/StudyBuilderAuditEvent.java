@@ -335,7 +335,7 @@ public enum StudyBuilderAuditEvent {
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
-      "Settings section marked complete with enrollment setting '${enrollment_setting}'.",
+      "Settings section marked complete with enrollment setting '${enrollment_setting}'. ",
       "STUDY_SETTINGS_MARKED_COMPLETE"),
 
   STUDY_DEACTIVATED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_DEACTIVATED"),
@@ -580,8 +580,12 @@ public enum StudyBuilderAuditEvent {
       "App record deactivated. App record status: '${app_record_status}'",
       "APP_RECORD_VIEWED"),
 
-  STUDY_DELETED(
-      STUDY_BUILDER, STUDY_DATASTORE, null, "Study deleted before Publishing", "STUDY_DELETED");
+  STUDY_DELETED	(
+		      STUDY_BUILDER,
+		      STUDY_DATASTORE,
+		      null,	
+		      "Study deleted before Publishing",
+		      "STUDY_DELETED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

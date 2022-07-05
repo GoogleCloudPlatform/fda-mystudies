@@ -83,7 +83,7 @@ public class MoveCloudStorageSchedulerService {
         List<StudyBo> studyBoList =
             session
                 .createQuery(
-                    "FROM StudyBo SBO WHERE SBO.live = 0 and SBO.isCloudStorageMoved=0 order by SBO.createdOn desc")
+                    "FROM StudyBo SBO WHERE SBO.live = 0 and SBO.isCloudStorageMoved=0 and SBO.customStudyId IS NOT NULL order by SBO.createdOn desc")
                 .list();
 
         for (StudyBo studyBo : studyBoList) {

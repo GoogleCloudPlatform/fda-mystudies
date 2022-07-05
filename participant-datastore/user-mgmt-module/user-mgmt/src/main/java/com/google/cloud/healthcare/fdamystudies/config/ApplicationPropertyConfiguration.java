@@ -54,8 +54,15 @@ public class ApplicationPropertyConfiguration {
   @Value("${mail.from-email}")
   private String fromEmail;
 
-  // Feedback & Contactus mail content ends
-
   @Value("${auth.server.deleteStatusUrl}")
   private String authServerDeleteStatusUrl;
+
+  @Value("${projectId}")
+  private String projectId;
+
+  @Value("${regionId}")
+  private String regionId;
+
+  @Value("${enableConsentManagementAPI}")
+  private String enableConsentManagementAPI;
 }

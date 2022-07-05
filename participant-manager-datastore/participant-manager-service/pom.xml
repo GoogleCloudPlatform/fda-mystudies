@@ -16,14 +16,14 @@
   <name>participant-manager-datastore</name>
   <description>Paricipant Manager Datastore</description>
 
-  <properties>
-    <start-class>com.google.cloud.healthcare.fdamystudies.Application</start-class>
-    <java.version>1.8</java.version>
-    <hibernate.version>5.4.2.Final</hibernate.version>
-    <clover.version>4.4.1</clover.version>
-    <common.text.version>1.8</common.text.version>
-    <wiremock.version>2.26.3</wiremock.version>
-  </properties>
+	<properties>
+		<start-class>com.google.cloud.healthcare.fdamystudies.Application</start-class>
+		<java.version>1.8</java.version>
+		<hibernate.version>5.4.2.Final</hibernate.version>
+		<clover.version>4.4.1</clover.version>
+		<common.text.version>1.8</common.text.version>
+		<wiremock.version>2.26.3</wiremock.version>
+	</properties>
 
   <dependencies>
     <dependency>
@@ -126,6 +126,31 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-healthcare</artifactId>
+      <version>v1-rev20210806-1.32.1</version>
+   </dependency>
+   <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client</artifactId>
+      <version>1.39.1</version>
+   </dependency>
+   <dependency>
+      <groupId>com.google.api-client</groupId>
+      <artifactId>google-api-client</artifactId>
+      <version>1.31.2</version>
+   </dependency>
+     <dependency>
+	  <groupId>com.google.firebase</groupId>
+	  <artifactId>firebase-admin</artifactId>
+	  <version>6.11.0</version>
+	</dependency>
+	<dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-bigquery</artifactId>
+      <version>2.6.2</version>
+	</dependency>
   </dependencies>
   <dependencyManagement>
     <dependencies>
@@ -215,18 +240,18 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
-      </plugin>	  
+      </plugin>
     </plugins>
   </build>
 
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.openclover</groupId>
-        <artifactId>clover-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </reporting>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.openclover</groupId>
+				<artifactId>clover-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 
   <profiles>
     <profile>

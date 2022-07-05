@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,4 +27,5 @@ public class Answer {
   private String valueDate;
   private String valueTime;
   private String valueString;
+  private List<ItemsQuestionnaireResponse> item = new LinkedList<>();
 }
