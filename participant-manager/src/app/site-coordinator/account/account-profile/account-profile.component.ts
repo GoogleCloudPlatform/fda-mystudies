@@ -22,7 +22,7 @@ export class AccountProfileComponent
   profileForm: FormGroup;
   user = {} as Profile;
   idpUser = true;
-  isMfa = [];
+  isMfa?:boolean;
 
   constructor(
     private readonly fb: FormBuilder,

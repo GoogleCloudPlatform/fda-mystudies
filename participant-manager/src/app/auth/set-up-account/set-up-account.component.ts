@@ -46,7 +46,7 @@ export class SetUpAccountComponent
   consecutiveCharacter = '';
   passwordLength = '';
   userName = '';
-  isMfa = [];
+  isMfa?:boolean;
 
   constructor(
     private readonly fb: FormBuilder,
