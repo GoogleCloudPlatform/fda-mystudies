@@ -20,6 +20,7 @@
 import IQKeyboardManagerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 enum CPTextFeildTags: Int {
   case oldPassword = 100
@@ -47,7 +48,7 @@ class ChangePasswordViewController: UIViewController {
   lazy var confirmPassword = ""
   lazy var temporaryPassword: String = ""
   lazy var viewLoadFrom: ChangePasswordLoadFrom = .profile
-
+  private var reachability: Reachability!
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
   }
@@ -57,6 +58,7 @@ class ChangePasswordViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
   
+      setupNotifiers()
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -93,7 +95,48 @@ class ChangePasswordViewController: UIViewController {
       self.title = NSLocalizedString(kChangePasswordTitleText, comment: "")
     }
   }
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            buttonSubmit?.isEnabled = true
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            buttonSubmit?.isEnabled = true
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            buttonSubmit?.isEnabled = false
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            buttonSubmit?.isEnabled = false
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.setNavigationBarHidden(false, animated: true)

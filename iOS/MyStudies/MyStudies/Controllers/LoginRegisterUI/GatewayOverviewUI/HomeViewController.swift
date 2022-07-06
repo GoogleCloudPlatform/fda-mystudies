@@ -21,6 +21,7 @@ import Foundation
 import SlideMenuControllerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 class HomeViewController: UIViewController {
 
@@ -34,6 +35,7 @@ class HomeViewController: UIViewController {
   @IBOutlet var buttonGetStarted: UIButton?
 
   var websiteName: String!
+  private var reachability: Reachability!
 
   // MARK: - ViewController Lifecycle
 
@@ -45,6 +47,7 @@ class HomeViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+      setupNotifiers()
     /// Added to change next screen
     pageControlView?.addTarget(
       self,
@@ -57,7 +60,45 @@ class HomeViewController: UIViewController {
 
     buttonLink.setTitle(title, for: .normal)
   }
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 

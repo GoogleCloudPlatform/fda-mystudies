@@ -21,6 +21,7 @@ import Foundation
 import ResearchKit
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kEligibilityConsentTask = "EligibilityConsentTask"
 let kEligibilityTokenStep = "EligibilityTokenStep"
@@ -68,7 +69,7 @@ class StudyHomeViewController: UIViewController {
   lazy var hideViewConsentAfterJoining = false
   lazy var loadViewFrom: StudyHomeLoadFrom = .home
   var isUpdatingIneligibility: Bool = false
-
+  private var reachability: Reachability!
   var consentRestorationData: Data?
   var isStudyActivitiesPresented = false
 
@@ -86,7 +87,7 @@ class StudyHomeViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+      setupNotifiers()
     // Added to change next screen
     pageControlView?.addTarget(
       self,
@@ -118,7 +119,45 @@ class StudyHomeViewController: UIViewController {
 //    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
 //                                               name: Notification.Name("ORKCancel"), object: nil)
   }
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     // hide navigationbar

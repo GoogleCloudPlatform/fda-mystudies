@@ -21,6 +21,7 @@ import Foundation
 import IQKeyboardManagerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 struct FeedbackDetail {
 
@@ -42,13 +43,14 @@ class FeedBackViewController: UIViewController {
 
   // MARK: - Properties
   var feedbackText: String = ""
+    private var reachability: Reachability!
 
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
     self.navigationItem.title = NSLocalizedString("Leave us your feedback", comment: "")
-
+    setupNotifiers()
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -59,7 +61,45 @@ class FeedBackViewController: UIViewController {
 
     _ = FeedbackDetail.init()
   }
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   // MARK: - Button Actions
 
   /// Validations after clicking on submit button

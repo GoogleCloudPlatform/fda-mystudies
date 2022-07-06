@@ -148,6 +148,12 @@
 		6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */; };
 		6FEE495F2521CFE500DD9696 /* AuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEE495D2521CFE500DD9696 /* AuthTests.swift */; };
 		6FEFEEB82510DE7A007BF1CE /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */; };
+		775D67102873EB4300DDE402 /* ReachabilityIndicatorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D670D2873EB4300DDE402 /* ReachabilityIndicatorManager.swift */; };
+		775D67122873EB7500DDE402 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D67112873EB7500DDE402 /* UIView+Extensions.swift */; };
+		775D67152873EBB500DDE402 /* OfflineIndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 775D67132873EBB500DDE402 /* OfflineIndicatorView.xib */; };
+		775D67162873EBB500DDE402 /* OfflineIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D67142873EBB500DDE402 /* OfflineIndicatorView.swift */; };
+		775D67192873ECBD00DDE402 /* TestNew1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 775D67182873ECBD00DDE402 /* TestNew1.xcconfig */; };
+		775D671B2873FF5B00DDE402 /* Dev21-5-01.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */; };
 		7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
 		7878B31D2216C6E20052FC23 /* HPHCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B31C2216C6E20052FC23 /* HPHCTests.swift */; };
 		84249C9D268DFDB400CE5E87 /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84249C9C268DFDB400CE5E87 /* UITableView+Extensions.swift */; };
@@ -449,6 +455,12 @@
 		6FEE495D2521CFE500DD9696 /* AuthTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthTests.swift; sourceTree = "<group>"; };
 		6FEE495E2521CFE500DD9696 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
+		775D670D2873EB4300DDE402 /* ReachabilityIndicatorManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachabilityIndicatorManager.swift; sourceTree = "<group>"; };
+		775D67112873EB7500DDE402 /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		775D67132873EBB500DDE402 /* OfflineIndicatorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OfflineIndicatorView.xib; sourceTree = "<group>"; };
+		775D67142873EBB500DDE402 /* OfflineIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineIndicatorView.swift; sourceTree = "<group>"; };
+		775D67182873ECBD00DDE402 /* TestNew1.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TestNew1.xcconfig; sourceTree = "<group>"; };
+		775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Dev21-5-01.xcconfig"; sourceTree = "<group>"; };
 		782AF87B221D247D000025CF /* StudyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTest.swift; sourceTree = "<group>"; };
 		7878B30E221574D80052FC23 /* StandaloneStudy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandaloneStudy.swift; sourceTree = "<group>"; };
 		7878B31A2216C6E10052FC23 /* MyStudiesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyStudiesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -685,6 +697,8 @@
 			isa = PBXGroup;
 			children = (
 				84D1E78327BFBE5B00619384 /* Default.xcconfig */,
+				775D67182873ECBD00DDE402 /* TestNew1.xcconfig */,
+				775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */,
 				84F9E38026FC27A1004A9FE8 /* GoogleService-Info.plist */,
 				6F10BB15234DDFDA006388E2 /* Branding */,
 				6FE00CD5238FEDE80067A7B8 /* Utils */,
@@ -1440,6 +1454,7 @@
 		6FE00CF4239004C30067A7B8 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				775D670D2873EB4300DDE402 /* ReachabilityIndicatorManager.swift */,
 				94B5F2F31ECA354800BC0336 /* LocalNotification.swift */,
 			);
 			path = Managers;
@@ -1458,6 +1473,7 @@
 		6FE00CF6239009FA0067A7B8 /* UIViews+Additions */ = {
 			isa = PBXGroup;
 			children = (
+				775D67172873EBBD00DDE402 /* OfflineIndicator */,
 				6FE00CEE238FFE7A0067A7B8 /* Activity */,
 				6FE00CE8238FF0700067A7B8 /* SearchBar */,
 				6E91D67F1ECD662E0012F49F /* JailbrokeBlocker */,
@@ -1503,6 +1519,15 @@
 				6FEE495D2521CFE500DD9696 /* AuthTests.swift */,
 			);
 			path = MyStudiesUITests;
+			sourceTree = "<group>";
+		};
+		775D67172873EBBD00DDE402 /* OfflineIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				775D67142873EBB500DDE402 /* OfflineIndicatorView.swift */,
+				775D67132873EBB500DDE402 /* OfflineIndicatorView.xib */,
+			);
+			path = OfflineIndicator;
 			sourceTree = "<group>";
 		};
 		7878B31B2216C6E20052FC23 /* MyStudiesTests */ = {
@@ -1580,6 +1605,7 @@
 		94334F821E70054100755444 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				775D67112873EB7500DDE402 /* UIView+Extensions.swift */,
 				84249C9C268DFDB400CE5E87 /* UITableView+Extensions.swift */,
 				6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */,
 				94334F851E70055A00755444 /* UIViewController+Extensions.swift */,
@@ -1960,6 +1986,7 @@
 				89893F0622B1125300A846CE /* Assets.xcassets in Resources */,
 				89893F0722B112A000A846CE /* LaunchScreen.storyboard in Resources */,
 				6E7D2D8E1E43445600763D4C /* UserPreferences.plist in Resources */,
+				775D67192873ECBD00DDE402 /* TestNew1.xcconfig in Resources */,
 				9450598F1F29FA2C007906A7 /* AppGlossary.pdf in Resources */,
 				6ED593731F011D5B00AC3636 /* Verdana Italic.ttf in Resources */,
 				6F83039D24864D6B009409A5 /* Localizable.strings.txt in Resources */,
@@ -1973,6 +2000,7 @@
 				6EBC2E811E94FB5300828CA1 /* StudyDashboard.plist in Resources */,
 				6F02217A2264729E00A2DBC8 /* OtherTextChoiceCell.xib in Resources */,
 				6EAB39A91E4B0B4A003442B8 /* Resources.plist in Resources */,
+				775D67152873EBB500DDE402 /* OfflineIndicatorView.xib in Resources */,
 				6E91D6831ECD662E0012F49F /* JailbrokeBlocker.xib in Resources */,
 				6EF05A991E4DC36400CD7661 /* StepProvider.plist in Resources */,
 				946CA5ED1E72DCA300CC8535 /* ProgressView.xib in Resources */,
@@ -1991,6 +2019,7 @@
 				6E14F2031F0224AD00EA8D1E /* Notification.json in Resources */,
 				6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */,
 				89893F0522B1115300A846CE /* Main.storyboard in Resources */,
+				775D671B2873FF5B00DDE402 /* Dev21-5-01.xcconfig in Resources */,
 				6F04F526254C7B4500F4E74A /* TemporaryPasswordData.plist in Resources */,
 				6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */,
 				484ACBFC1F28A82B00BCC819 /* FilterData.plist in Resources */,
@@ -2227,6 +2256,7 @@
 				6E91D6821ECD662E0012F49F /* JailbrokeBlocker.swift in Sources */,
 				94B3DD4E1E6ED8E500327AE5 /* HomeViewController.swift in Sources */,
 				6E183AB31E966230005D7A27 /* FileDownloadManager.swift in Sources */,
+				775D67162873EBB500DDE402 /* OfflineIndicatorView.swift in Sources */,
 				9487102A1E546C3800246109 /* AppNotification.swift in Sources */,
 				94B3DD421E6ED8E500327AE5 /* NotificationTableViewCell.swift in Sources */,
 				484ACBF61F2896A500BCC819 /* FilterListCollectionViewCell.swift in Sources */,
@@ -2286,6 +2316,7 @@
 				6EF0466B1ED1C943008098BB /* DBNotification.swift in Sources */,
 				6EE93DCB1E93C8850027A5DC /* ActivitiesViewController.swift in Sources */,
 				6ED1B2211E54253800BF463F /* Activity.swift in Sources */,
+				775D67122873EB7500DDE402 /* UIView+Extensions.swift in Sources */,
 				6E4D86E01F38A740003DBDD8 /* SearchBarView.swift in Sources */,
 				94C6BD441EB8513300D4AA72 /* AppUpdateBlocker.swift in Sources */,
 				6EB740261E9D028000A4C773 /* FetalKickIntroStepViewController.swift in Sources */,
@@ -2320,6 +2351,7 @@
 				6ED1B2311E54256700BF463F /* ActivityFormStep.swift in Sources */,
 				6F9463F62498B4480085987F /* NewProgressView.swift in Sources */,
 				6EBC2E861E94FB5300828CA1 /* StudyDashboardStudyActivitiesTableViewCell.swift in Sources */,
+				775D67102873EB4300DDE402 /* ReachabilityIndicatorManager.swift in Sources */,
 				94B3DD551E6ED8E500327AE5 /* SignInTableViewCell.swift in Sources */,
 				6ECA92821E49B3BB00DA6287 /* Resource.swift in Sources */,
 				4884E3581E827E5B002DA0B9 /* ContactUsViewController.swift in Sources */,
@@ -2390,7 +2422,7 @@
 /* Begin XCBuildConfiguration section */
 		6E7D2D7C1E433E8800763D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 84D1E78327BFBE5B00619384 /* Default.xcconfig */;
+			baseConfigurationReference = 775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2453,7 +2485,7 @@
 		};
 		6E7D2D7D1E433E8800763D4C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 84D1E78327BFBE5B00619384 /* Default.xcconfig */;
+			baseConfigurationReference = 775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2516,14 +2548,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 225;
+				CURRENT_PROJECT_VERSION = 76;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = MyStudies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 3.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
 				PRODUCT_NAME = "FDA MyStudies";
@@ -2548,14 +2580,14 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 225;
+				CURRENT_PROJECT_VERSION = 76;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = MyStudies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
 				PRODUCT_NAME = "FDA MyStudies";
 				PROVISIONING_PROFILE_SPECIFIER = "";

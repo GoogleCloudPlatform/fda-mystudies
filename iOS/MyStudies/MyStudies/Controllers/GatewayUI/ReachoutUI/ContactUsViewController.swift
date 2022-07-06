@@ -21,6 +21,7 @@ import Foundation
 import IQKeyboardManagerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 // Contact us field description
 struct ContactUsFields {
@@ -49,13 +50,14 @@ class ContactUsViewController: UIViewController {
 
   var tableViewRowDetails: NSMutableArray?
   var previousContentHeight: Double = 0.0
-
+  private var reachability: Reachability!
   // MARK: - ViewController LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
     self.navigationItem.title = NSLocalizedString("Contact us", comment: "")
 
+      setupNotifiers()
     //  Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -80,7 +82,45 @@ class ContactUsViewController: UIViewController {
     self.tableView?.addGestureRecognizer(tapGestureRecognizer)
     _ = ContactUsFields.init()
   }
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   @objc func handleTapGesture(gesture: UIGestureRecognizer) {
 
     let location = gesture.location(in: gesture.view)

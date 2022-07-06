@@ -22,6 +22,7 @@ import LocalAuthentication
 import SlideMenuControllerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kProfileTableViewCellIdentifier = "ProfileTableViewCell"
 
@@ -76,7 +77,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   lazy var isPasscodeViewPresented: Bool = false
   lazy var passcodeStateIsEditing: Bool = false
   lazy var isProfileEdited = false
-
+    private var reachability: Reachability!
   /// A Boolean indicates the user changing the App password.
   private var isChangePasswordEditing = false
 
@@ -91,6 +92,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+      setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "LeftMenu MyAccount"
     ])
@@ -112,7 +114,45 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
     self.fdaSlideMenuController()?.delegate = self
   }
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return false
+    }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     user = User.currentUser
