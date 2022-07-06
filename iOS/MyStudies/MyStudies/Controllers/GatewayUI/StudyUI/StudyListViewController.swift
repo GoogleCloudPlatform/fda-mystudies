@@ -20,6 +20,7 @@
 import IQKeyboardManagerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kHelperTextForFilteredStudiesNotFound = "No studies found for the filters applied."
 
@@ -44,6 +45,7 @@ class StudyListViewController: UIViewController {
   lazy var isComingFromFilterScreen: Bool = false
   lazy var studiesList: [Study] = []
   lazy var previousStudyList: [Study] = []
+  private var reachability: Reachability!
 
   /// Gatewaystudylist
   lazy var allStudyList: [Study] = []
@@ -56,6 +58,7 @@ class StudyListViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+      setupNotifiers()
     NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
                                            name: Notification.Name("Menu Clicked"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
@@ -70,7 +73,45 @@ class StudyListViewController: UIViewController {
       UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
     }
   }
-  
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   override func viewWillAppear(_ animated: Bool) {
     if !isComingFromFilterScreen {
       self.addProgressIndicator()

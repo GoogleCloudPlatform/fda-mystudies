@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kConfirmationSegueIdentifier = "confirmationSegue"
 let kHeaderDescription =
@@ -79,12 +80,12 @@ class ConfirmationViewController: UIViewController {
   lazy var joinedStudies: [Study]! = []
   var studyWithoutWCData: Study?
   lazy var studiesToWithdraw: [StudyToDelete] = []
-
+  private var reachability: Reachability!
   // MARK: - View Controller LifeCycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    setupNotifiers()
     let navTitle = Branding.productTitle
     var descriptionText =
       Utilities.isStandaloneApp()
@@ -105,7 +106,48 @@ class ConfirmationViewController: UIViewController {
     self.checkWithdrawlConfigurationForNextStudy()
 
   }
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            buttonDeleteAccount?.isEnabled = true
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            buttonDeleteAccount?.isEnabled = true
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            buttonDeleteAccount?.isEnabled = false
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            buttonDeleteAccount?.isEnabled = false
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.addBackBarButton()

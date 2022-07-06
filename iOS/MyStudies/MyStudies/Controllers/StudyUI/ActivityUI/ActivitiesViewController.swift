@@ -22,6 +22,7 @@ import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kActivities = "activities"
 
@@ -57,7 +58,7 @@ class ActivitiesViewController: UIViewController {
 
   private lazy var isAnchorDateSet: Bool = false
   private lazy var taskControllerPresented = false
-
+  private var reachability: Reachability!
   /// To fetch the updated Activities.
   var refreshControl: UIRefreshControl?
 
@@ -83,6 +84,7 @@ class ActivitiesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+      setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "Activities"
     ])
@@ -128,7 +130,45 @@ class ActivitiesViewController: UIViewController {
     UserDefaults.standard.synchronize()
    
   }
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .none:
+            print("Network is not available.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
