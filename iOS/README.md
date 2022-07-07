@@ -52,4 +52,4 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
 Instructions for building and deploying iOS applications can be found [here](https://help.apple.com/xcode/mac/current/#/devdc0193470).
 
 ***
-<p align="center">Copyright 2020 Google LLC</p>
+<p align="center">Copyright 2022 Google LLC</p>
