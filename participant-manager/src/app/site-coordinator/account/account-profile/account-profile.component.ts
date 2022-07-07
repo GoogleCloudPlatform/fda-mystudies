@@ -76,10 +76,14 @@ export class AccountProfileComponent
   changeValidation(): void{
     if(this.isMfa) {
     console.log(1);
-      this.profileForm.get('phoneNum')?.setValidators((Validators.required))
+    console.log('true');
+      // this.profileForm.get('phoneNum')?.setValidators((Validators.required));
+      this.profileForm.get('phoneNum')?.clearValidators();
     } else {
      console.log(2);
-      this.profileForm.get('phoneNum')?.clearValidators();
+     console.log('true');
+     this.profileForm.get('phoneNum')?.setValidators((Validators.required));
+     // this.profileForm.get('phoneNum')?.clearValidators();
     }
   }
 

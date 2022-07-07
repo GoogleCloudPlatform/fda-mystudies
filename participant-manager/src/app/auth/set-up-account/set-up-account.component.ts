@@ -132,13 +132,18 @@ this.changeValidation();
 
   changeValidation(): void{
     if(this.isMfa) {
-       console.log(1);
-      this.setupAccountForm.get('phoneNum')?.setValidators((Validators.required))
-    } else {
-      console.log(2);
+    console.log(1);
+    console.log('true');
+      // this.setupAccountForm.get('phoneNum')?.setValidators((Validators.required));
       this.setupAccountForm.get('phoneNum')?.clearValidators();
+    } else {
+     console.log(2);
+     console.log('true');
+     this.setupAccountForm.get('phoneNum')?.setValidators((Validators.required));
+     // this.setupAccountForm.get('phoneNum')?.clearValidators();
     }
   }
+
   registerUser(): void {
     const updatedUser: SetUpUser = {
       firstName: String(this.setupAccountForm.controls['firstName'].value),
