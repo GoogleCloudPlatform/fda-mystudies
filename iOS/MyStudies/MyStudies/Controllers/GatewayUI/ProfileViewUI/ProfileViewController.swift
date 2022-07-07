@@ -132,20 +132,24 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         switch reachability.connection {
         case .cellular:
             print("Network available via Cellular Data.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            self.view.hideAllToasts()
             break
         case .wifi:
             print("Network available via WiFi.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            self.view.hideAllToasts()
             break
         case .none:
             print("Network is not available.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
             
             break
         case .unavailable:
             print("Network is  unavailable.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
             break
         }
     }

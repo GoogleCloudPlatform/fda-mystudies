@@ -124,27 +124,36 @@ class ConfirmationViewController: UIViewController {
         switch reachability.connection {
         case .cellular:
             print("Network available via Cellular Data.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            buttonDeleteAccount?.isEnabled = true
+//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            setOnline()
             break
         case .wifi:
             print("Network available via WiFi.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            buttonDeleteAccount?.isEnabled = true
+//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            setOnline()
             break
         case .none:
             print("Network is not available.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            buttonDeleteAccount?.isEnabled = false
+//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            setOffline()
             break
         case .unavailable:
             print("Network is  unavailable.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            buttonDeleteAccount?.isEnabled = false
+//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            setOffline()
             break
         }
     }
-    
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonDoNotDeleteAccount?.isEnabled = true
+        buttonDoNotDeleteAccount?.layer.opacity = 1
+    }
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+        buttonDoNotDeleteAccount?.isEnabled = false
+        buttonDoNotDeleteAccount?.layer.opacity = 0.5
+    }
     override func showOfflineIndicator() -> Bool {
         return true
     }
