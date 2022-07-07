@@ -628,8 +628,6 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       String datasetPathforFHIR =
           String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
 
-      createFhirStore(datasetPathforFHIR, "FHIR_" + studyId);
-
       String identifierValue =
           questionnaireActivityResponseBean.getMetadata().getStudyId()
               + "@"
@@ -746,7 +744,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       }
 
       getPatientReference(
-          "FHIR_" + questionnaireActivityResponseBean.getMetadata().getStudyId(),
+          questionnaireActivityResponseBean.getMetadata().getStudyId(),
           questionnaireActivityResponseBean.getParticipantId(),
           datasetPathforFHIR,
           questFHIResponseBean);
