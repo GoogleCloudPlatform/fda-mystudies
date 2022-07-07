@@ -114,7 +114,7 @@ export class SetUpAccountComponent
     this.passCriteria = `Your password must be at least 8 characters long    
 and contain lower case, upper case, numeric and
 special characters.`;
-this.changeValidation();
+
   }
 
   
@@ -127,10 +127,11 @@ this.changeValidation();
       this.setupAccountForm.patchValue(user);
       this.isMfa = user.mfaEnabledForPM;
       console.log(this.isMfa);
+      this.changeValidation(this.isMfa);
     });
   }
 
-  changeValidation(): void{
+  /*changeValidation(): void{
     if(this.isMfa) {
     console.log(1);
     console.log('true');
@@ -143,6 +144,20 @@ this.changeValidation();
      // this.setupAccountForm.get('phoneNum')?.clearValidators();
     }
   }
+*/
+
+changeValidation(IsMfa: any): void{
+  if(IsMfa) {
+  console.log(1);
+  console.log('true');
+    this.setupAccountForm.controls['phoneNum'].setValidators([Validators.required ,Validators.pattern('[+][0-9\s]{11,15}')]);
+        this.setupAccountForm.controls['phoneNum'].updateValueAndValidity();
+  } else {
+   console.log(2);
+   console.log('false');
+   this.setupAccountForm.controls['phoneNum'].clearValidators();
+  }
+}
 
   registerUser(): void {
     const updatedUser: SetUpUser = {

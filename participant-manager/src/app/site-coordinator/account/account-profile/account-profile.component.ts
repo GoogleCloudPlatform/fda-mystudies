@@ -61,7 +61,7 @@ export class AccountProfileComponent
 
   ngOnInit(): void {
     this.getProfileDetails();
-    this.changeValidation();
+    
   }
 
   getProfileDetails(): void {
@@ -70,20 +70,20 @@ export class AccountProfileComponent
       this.user = data;
       this.isMfa = data.mfaEnabledForPM;
       console.log(this.isMfa);
+      this.changeValidation(this.isMfa);
     });
   }
 
-  changeValidation(): void{
-    if(this.isMfa) {
+  changeValidation(IsMfa: any): void{
+    if(IsMfa) {
     console.log(1);
     console.log('true');
-      // this.profileForm.get('phoneNum')?.setValidators((Validators.required));
-      this.profileForm.get('phoneNum')?.clearValidators();
+      this.profileForm.controls['phoneNum'].setValidators([Validators.required ,Validators.pattern('[+][0-9\s]{11,15}')]);
+          this.profileForm.controls['phoneNum'].updateValueAndValidity();
     } else {
      console.log(2);
-     console.log('true');
-     this.profileForm.get('phoneNum')?.setValidators((Validators.required));
-     // this.profileForm.get('phoneNum')?.clearValidators();
+     console.log('false');
+     this.profileForm.controls['phoneNum'].clearValidators();
     }
   }
 
