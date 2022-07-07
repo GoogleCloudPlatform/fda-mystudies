@@ -105,20 +105,23 @@ class SignInViewController: UIViewController {
         switch reachability.connection {
         case .cellular:
             print("Network available via Cellular Data.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            self.view.hideAllToasts()
             break
         case .wifi:
             print("Network available via WiFi.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            self.view.hideAllToasts()
             break
         case .none:
             print("Network is not available.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            
+//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
             break
         case .unavailable:
             print("Network is  unavailable.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
             break
         }
     }
@@ -492,7 +495,10 @@ extension SignInViewController: WKNavigationDelegate {
     didFail navigation: WKNavigation!,
     withError error: Error
   ) {
-    self.view.makeToast(error.localizedDescription)
+      if reachability.connection != .unavailable {
+          self.view.makeToast(error.localizedDescription)
+      }
+    
   }
 
   func webView(
@@ -501,7 +507,9 @@ extension SignInViewController: WKNavigationDelegate {
     withError error: Error
   ) {
     if (error as NSError).code != 102 {  // Ignore frame load error
-      self.view.makeToast(error.localizedDescription)
+        if reachability.connection != .unavailable {
+            self.view.makeToast(error.localizedDescription)
+        }
     }
     UIView.animate(
       withDuration: 0.33,

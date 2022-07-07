@@ -34,8 +34,10 @@ class OfflineIndicatorView: UIView {
     func isOffline(status: Bool) {
         if status == true {
             detailedMessage.isHidden = false
+            closeButton.isHidden = false
         } else {
             detailedMessage.isHidden = true
+            closeButton.isHidden = true
         }
     }
     @IBAction func closeButtonPressed(_ sender: Any) {
