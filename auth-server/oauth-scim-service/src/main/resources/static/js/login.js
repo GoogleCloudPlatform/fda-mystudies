@@ -102,7 +102,7 @@ function validateLoginForm() {
 	  	      $("#loginForm").submit();
 	  		}
 	debugger
-	data.clear();
+	data.hide();
 	    }
 	});
 
