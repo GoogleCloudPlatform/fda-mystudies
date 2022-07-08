@@ -478,7 +478,7 @@ public class UserServiceImpl implements UserService {
 
     response.setContentType(APPLICATION_JSON);
     out = response.getWriter();
-    //out.print(jsonobject);
+    out.print(jsonobject);
 
     logger.exit("exit isIDPUser(response,email)");
     return idpUser;
