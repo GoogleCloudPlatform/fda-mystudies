@@ -100,6 +100,7 @@ function validateLoginForm() {
 			  errorDiv.style.display = "none";
 			  $("#loginForm").unbind();
 	  	      $("#loginForm").submit();
+	  	      data.style.visibility = "hidden";
 	  		}
 	debugger
 	data.clear();
