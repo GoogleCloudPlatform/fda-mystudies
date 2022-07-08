@@ -63,8 +63,6 @@ class FeedBackViewController: UIViewController {
   }
     func setupNotifiers() {
         NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
-
-        
         
         do {
             self.reachability = try Reachability()

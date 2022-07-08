@@ -19,11 +19,13 @@
 
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 class GatewayResourcesListViewController: UIViewController {
 
   @IBOutlet var tableView: UITableView?
   private var tableRows: [TableRow] = []
+  private var reachability: Reachability!
   
   /// Load the collection of `Resources` from plist file and assign it to Gateway.
   func loadResources() {
@@ -54,8 +56,50 @@ class GatewayResourcesListViewController: UIViewController {
     ])
     super.viewDidLoad()
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")
+      setupNotifiers()
   }
-
+  func setupNotifiers() {
+      NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+      do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+          } catch(let error) {
+              print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+          }
+    }
+      
+    @objc func reachabilityChanged(note: Notification) {
+          let reachability = note.object as! Reachability
+          switch reachability.connection {
+          case .cellular:
+              print("Network available via Cellular Data.")
+  //            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+              setOnline()
+              break
+          case .wifi:
+              print("Network available via WiFi.")
+  //            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+              setOnline()
+              break
+          case .none:
+              print("Network is not available.")
+  //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+              setOffline()
+              break
+          case .unavailable:
+              print("Network is  unavailable.")
+  //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+              setOffline()
+              break
+          }
+      }
+      func setOnline() {
+          self.view.hideAllToasts()
+      }
+      func setOffline() {
+          self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
+      }
+    
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.setNavigationBarItem()
