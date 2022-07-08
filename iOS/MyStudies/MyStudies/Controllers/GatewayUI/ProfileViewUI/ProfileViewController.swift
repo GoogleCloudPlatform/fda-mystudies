@@ -143,13 +143,13 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         case .none:
             print("Network is not available.")
 //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
             
             break
         case .unavailable:
             print("Network is  unavailable.")
 //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
             break
         }
     }

@@ -148,11 +148,15 @@ class ConfirmationViewController: UIViewController {
         self.view.hideAllToasts()
         buttonDoNotDeleteAccount?.isEnabled = true
         buttonDoNotDeleteAccount?.layer.opacity = 1
+        buttonDeleteAccount?.isEnabled = true
+        buttonDeleteAccount?.layer.opacity = 1
     }
     func setOffline() {
         self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
         buttonDoNotDeleteAccount?.isEnabled = false
         buttonDoNotDeleteAccount?.layer.opacity = 0.5
+        buttonDeleteAccount?.isEnabled = false
+        buttonDeleteAccount?.layer.opacity = 0.5
     }
     override func showOfflineIndicator() -> Bool {
         return true
