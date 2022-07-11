@@ -39,6 +39,7 @@ export class AddNewUserComponent
   };
   disableButton = false;
   mfaEnabledForPM = false;
+
   @ViewChildren('permissionCheckBox')
   selectedPermission: QueryList<ElementRef> = new QueryList();
   constructor(
@@ -60,9 +61,11 @@ export class AddNewUserComponent
   }
 
   getIdpUsersDetails(): void {
+    // console.log('working')
     this.userService.getIdpUsers().subscribe((data) => {
       this.userEmail = data.email;
       this.mfaEnabledForPM = data.mfaEnabledForPM;
+      console.log(this.mfaEnabledForPM)
     });
   }
   idpUserStatus(): void {
