@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-$(document).ready(function () {
+function validateUser() {
 
   var idpEnabled = $('#idpEnabled').val();
   var idpApiKey = $('#idpApiKey').val();
@@ -28,7 +28,7 @@ debugger
   } else {
     $("#loginForm").submit();
   }
-});
+}
 
 function preventDoubleClick() {
   	var form = document.getElementById('loginForm');
@@ -50,12 +50,10 @@ function validateLoginForm() {
 	var serverContextPath = $('#serverContextPath').val(); 
 	var mfaEnabled = $('#mfaEnabled').val();
 
-    var isIdpUser = false;
-    var phoneNumber = "";
-	        
 	$.ajax({
 	    url: serverContextPath + "/isIDPUser",
 	    type: "POST",
+	    async: true,
 	    dataType: 'json',
 	    data: {
 	          email: email
@@ -63,53 +61,51 @@ function validateLoginForm() {
 	    cache: false,
 	    success: function getResponse(data) {
 	    debugger
-        isIdpUser = data.isIdpUser;
-        phoneNumber = data.phoneNumber;
+	        var isIdpUser = data.isIdpUser;
+	        var phoneNumber = data.phoneNumber;
+	        if(isIdpUser == 'true') {
+	
+			  firebase.auth().onAuthStateChanged(function(user) {
+		   	    if (user) {
+		   	    console.log("success  " + email);
+		   	    } else {
+		   	    console.log("No user signed in " + email);
+		   	    }
+		   	  });
+		   	  firebase.auth().signInWithEmailAndPassword(email, password)
+		   	  	.then(function(firebaseUser) {
+	   	  		  if(mfaEnabled == 'true'){
+			   	    $('#recaptcha-container').show();
+			   	   	multiFactorAuth(email, password, phoneNumber);
+			   	  } else {
+		        	errorDiv.innerHTML = '';
+				    errorDiv.style.display = "none";
+		        	$("#loginForm").unbind();
+	 				$("#loginForm").submit();
+			   	  }
+								   	  
+		      	}).catch(function(error) {
+		      	
+		      	if (error.code == 'auth/too-many-requests') {
+		      	  errorDiv.innerHTML = "Access to this account can be temporarily disabled if there is failed login attempts. Please use valid credentials.";
+			      errorDiv.style.display = "block";
+			      return false;
+		      	} else {
+			      errorDiv.innerHTML = error;
+			      errorDiv.style.display = "block";
+			      return false;
+		        }
+		      });
+			} else {
+			debugger
+			  errorDiv.innerHTML = '';
+			  errorDiv.style.display = "none";
+			  $("#loginForm").unbind();
+	  	      $("#loginForm").submit();
+	  		}
 	    }
 	});
-	
-	debugger
-	if(isIdpUser == 'true') {
-	
-	  firebase.auth().onAuthStateChanged(function(user) {
-   	    if (user) {
-   	    console.log("success  " + email);
-   	    } else {
-   	    console.log("No user signed in " + email);
-   	    }
-   	  });
-   	  firebase.auth().signInWithEmailAndPassword(email, password)
-   	  	.then(function(firebaseUser) {
-  		  if(mfaEnabled == 'true'){
-	   	    $('#recaptcha-container').show();
-	   	   	multiFactorAuth(email, password, phoneNumber);
-	   	  } else {
-        	errorDiv.innerHTML = '';
-		    errorDiv.style.display = "none";
-        	$("#loginForm").unbind();
-			$("#loginForm").submit();
-	   	  }
-						   	  
-      	}).catch(function(error) {
-      	
-      	if (error.code == 'auth/too-many-requests') {
-      	  errorDiv.innerHTML = "Access to this account can be temporarily disabled if there is failed login attempts. Please use valid credentials.";
-	      errorDiv.style.display = "block";
-	      return false;
-      	} else {
-	      errorDiv.innerHTML = error;
-	      errorDiv.style.display = "block";
-	      return false;
-        }
-      });
-	} else {
-	debugger
-	  errorDiv.innerHTML = '';
-	  errorDiv.style.display = "none";
-	  $("#loginForm").unbind();
-      $("#loginForm").submit();
-	}
-	
+
 }
 
 
@@ -199,8 +195,7 @@ function multiFactorAuth(email, password, phoneNumber) {
   }, 3000);
   
 }
-  
-  
+
   
 var fieldErrors = {
   "email": {
@@ -218,6 +213,7 @@ function validateField(elementId) {
   var isValid = element.checkValidity();
   var errorDiv = document.getElementById(elementId + "_error");
 
+  validateUser();
   if (element.value === '') {
 	errorDiv.innerHTML = fieldErrors[elementId].required;
 	errorDiv.style.display = "block";
