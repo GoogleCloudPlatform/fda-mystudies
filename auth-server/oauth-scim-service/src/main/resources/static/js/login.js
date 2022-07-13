@@ -112,6 +112,7 @@ function validateLoginForm() {
 $(document).ready(function () {
 debugger
   document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
+  document.body.innerHTML = document.body.innerHTML.replace('{"phoneNumber":"","isIdpUser":"false"}', '');
 });
 
 function multiFactorAuth(email, password, phoneNumber) {
