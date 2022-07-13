@@ -102,12 +102,16 @@ function validateLoginForm() {
 			  errorDiv.style.display = "none";
 			  $("#loginForm").unbind();
 	  	      $("#loginForm").submit();
+	  	      document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
 	  		}
 	    }
 	});
 
 }
 
+$(document).ready(function () {
+  document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
+});
 
 function multiFactorAuth(email, password, phoneNumber) {
 			
