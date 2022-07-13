@@ -50,6 +50,9 @@ function validateLoginForm() {
 	var serverContextPath = $('#serverContextPath').val(); 
 	var mfaEnabled = $('#mfaEnabled').val();
 
+    var isIdpUser = false;
+    var phoneNumber = "";
+	        
 	$.ajax({
 	    url: serverContextPath + "/isIDPUser",
 	    type: "POST",
@@ -57,55 +60,56 @@ function validateLoginForm() {
 	    data: {
 	          email: email
 	        },
+	    cache: false,
 	    success: function getResponse(data) {
 	    debugger
-	        var isIdpUser = data.isIdpUser;
-	        var phoneNumber = data.phoneNumber;
-	        if(isIdpUser == 'true') {
-	
-			  firebase.auth().onAuthStateChanged(function(user) {
-		   	    if (user) {
-		   	    console.log("success  " + email);
-		   	    } else {
-		   	    console.log("No user signed in " + email);
-		   	    }
-		   	  });
-		   	  firebase.auth().signInWithEmailAndPassword(email, password)
-		   	  	.then(function(firebaseUser) {
-	   	  		  if(mfaEnabled == 'true'){
-			   	    $('#recaptcha-container').show();
-			   	   	multiFactorAuth(email, password, phoneNumber);
-			   	  } else {
-		        	errorDiv.innerHTML = '';
-				    errorDiv.style.display = "none";
-		        	$("#loginForm").unbind();
-	 				$("#loginForm").submit();
-			   	  }
-								   	  
-		      	}).catch(function(error) {
-		      	
-		      	if (error.code == 'auth/too-many-requests') {
-		      	  errorDiv.innerHTML = "Access to this account can be temporarily disabled if there is failed login attempts. Please use valid credentials.";
-			      errorDiv.style.display = "block";
-			      return false;
-		      	} else {
-			      errorDiv.innerHTML = error;
-			      errorDiv.style.display = "block";
-			      return false;
-		        }
-		      });
-			} else {
-			debugger
-			  errorDiv.innerHTML = '';
-			  errorDiv.style.display = "none";
-			  $("#loginForm").unbind();
-	  	      $("#loginForm").submit();
-	  		}
-	debugger
-	data.clear();
+        isIdpUser = data.isIdpUser;
+        phoneNumber = data.phoneNumber;
 	    }
 	});
-
+	
+	debugger
+	if(isIdpUser == 'true') {
+	
+	  firebase.auth().onAuthStateChanged(function(user) {
+   	    if (user) {
+   	    console.log("success  " + email);
+   	    } else {
+   	    console.log("No user signed in " + email);
+   	    }
+   	  });
+   	  firebase.auth().signInWithEmailAndPassword(email, password)
+   	  	.then(function(firebaseUser) {
+  		  if(mfaEnabled == 'true'){
+	   	    $('#recaptcha-container').show();
+	   	   	multiFactorAuth(email, password, phoneNumber);
+	   	  } else {
+        	errorDiv.innerHTML = '';
+		    errorDiv.style.display = "none";
+        	$("#loginForm").unbind();
+			$("#loginForm").submit();
+	   	  }
+						   	  
+      	}).catch(function(error) {
+      	
+      	if (error.code == 'auth/too-many-requests') {
+      	  errorDiv.innerHTML = "Access to this account can be temporarily disabled if there is failed login attempts. Please use valid credentials.";
+	      errorDiv.style.display = "block";
+	      return false;
+      	} else {
+	      errorDiv.innerHTML = error;
+	      errorDiv.style.display = "block";
+	      return false;
+        }
+      });
+	} else {
+	debugger
+	  errorDiv.innerHTML = '';
+	  errorDiv.style.display = "none";
+	  $("#loginForm").unbind();
+      $("#loginForm").submit();
+	}
+	
 }
 
 
