@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-function validateUser() {
+function validateform() {
 
   var idpEnabled = $('#idpEnabled').val();
   var idpApiKey = $('#idpApiKey').val();
@@ -195,7 +195,8 @@ function multiFactorAuth(email, password, phoneNumber) {
   }, 3000);
   
 }
-
+  
+  
   
 var fieldErrors = {
   "email": {
@@ -213,7 +214,6 @@ function validateField(elementId) {
   var isValid = element.checkValidity();
   var errorDiv = document.getElementById(elementId + "_error");
 
-  validateUser();
   if (element.value === '') {
 	errorDiv.innerHTML = fieldErrors[elementId].required;
 	errorDiv.style.display = "block";
@@ -228,6 +228,6 @@ function validateField(elementId) {
   return isValid;
 }
 
-function validateform() {
-  return validateField("email") && validateField("password");
-}
+//function validateform() {
+  //return validateField("email") && validateField("password");
+//}

@@ -123,7 +123,7 @@ display: block;
           <div class="card fat">
             <div class="card-body bg__aqua-gray">
               <form th:action="@{/login}" method="POST" id="loginForm"
-                novalidate onsubmit="return validateform();"
+                novalidate onsubmit="validateform();"
                 th:object="${loginRequest}">
                  <input type="hidden" id="idpEnabled" th:value="${idpEnabledForPM}" name="idpEnabled"/>
                  <input type="hidden" id="mfaEnabled" th:value="${mfaEnabledForPM}" name="mfaEnabled"/>
