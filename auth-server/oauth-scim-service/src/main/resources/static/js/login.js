@@ -153,9 +153,18 @@ function multiFactorAuth(email, password, phoneNumber) {
  				$("#loginForm").submit();
 			  })
 			  .catch(function(error) {
-   	          errorDiv.innerHTML = error;
-  			  errorDiv.style.display = "block";
-    		  return false;
+			  
+			  if (error.code == 'auth/invalid-verification-code') {
+		          errorDiv.innerHTML = "The SMS verification code used to create the phone auth credential is invalid."
+							+ "Please login again and use the correct verification code sent to your registered phone number.";
+	  			  errorDiv.style.display = "block";
+	    		  return false;
+              } else {
+           
+	   	          errorDiv.innerHTML = error;
+	  			  errorDiv.style.display = "block";
+	    		  return false;
+    		  }
            });
            
             box.find(".btn-primary").removeClass("btn-primary").addClass("btn-add");
