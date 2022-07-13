@@ -110,6 +110,7 @@ function validateLoginForm() {
 }
 
 $(document).ready(function () {
+debugger
   document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
 });
 
