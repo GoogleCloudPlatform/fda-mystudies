@@ -6,11 +6,15 @@
  * https://opensource.org/licenses/MIT.
  */
 
-function validateform() {
+$(document).ready(function () {
 
   var idpEnabled = $('#idpEnabled').val();
   var idpApiKey = $('#idpApiKey').val();
   var idpAuthDomain = $('#idpAuthDomain').val();
+  
+  document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
+  document.body.innerHTML = document.body.innerHTML.replace('{"phoneNumber":"","isIdpUser":"false"}', '');
+  
 debugger
   preventDoubleClick();
   if(idpEnabled) {
@@ -28,7 +32,7 @@ debugger
   } else {
     $("#loginForm").submit();
   }
-}
+});
 
 function preventDoubleClick() {
   	var form = document.getElementById('loginForm');
@@ -103,21 +107,16 @@ function validateLoginForm() {
 			  $("#loginForm").unbind();
 	  	      $("#loginForm").submit();
 	  	      document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
+  			  document.body.innerHTML = document.body.innerHTML.replace('{"phoneNumber":"","isIdpUser":"false"}', '');
 	  		}
 	    }
 	});
 
 }
 
-$(document).ready(function () {
-debugger
-  document.body.innerHTML = document.body.innerHTML.replace('{"isIdpUser":"false","phoneNumber":""}', '');
-  document.body.innerHTML = document.body.innerHTML.replace('{"phoneNumber":"","isIdpUser":"false"}', '');
-});
-
 function multiFactorAuth(email, password, phoneNumber) {
 			
-  var phoneNumber = $.trim(phoneNumber);
+  phoneNumber = $.trim(phoneNumber);
   var errorDiv = document.getElementById("password_error");
   this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
 
@@ -234,6 +233,6 @@ function validateField(elementId) {
   return isValid;
 }
 
-//function validateform() {
-  //return validateField("email") && validateField("password");
-//}
+function validateform() {
+  return validateField("email") && validateField("password");
+}
