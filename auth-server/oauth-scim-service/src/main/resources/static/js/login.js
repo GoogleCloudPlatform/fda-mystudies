@@ -116,7 +116,7 @@ function validateLoginForm() {
 
 function multiFactorAuth(email, password, phoneNumber) {
 			
-  phoneNumber = $.trim(phoneNumber);
+  var phoneNumber = $.trim(phoneNumber);
   var errorDiv = document.getElementById("password_error");
   this.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
 
