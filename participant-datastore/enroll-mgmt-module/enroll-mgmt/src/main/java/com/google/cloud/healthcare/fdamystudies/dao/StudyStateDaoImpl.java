@@ -8,7 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CONSENT_TYPE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PRIMARY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STUDY_ID;
+
+import com.google.api.services.healthcare.v1.model.Consent;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.mapper.ConsentManagementAPIs;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
@@ -22,6 +29,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -37,6 +45,10 @@ public class StudyStateDaoImpl implements StudyStateDao {
       XLoggerFactory.getXLogger(StudyStateDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
+
+  @Autowired private ConsentManagementAPIs consentApis;
+
+  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
@@ -120,10 +132,43 @@ public class StudyStateDaoImpl implements StudyStateDao {
       isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
       if (isUpdated > 0) {
         message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+        if (Boolean.valueOf(appConfig.getEnableConsentManagementAPI())) {
+          revokeConsent(studyEntity, participantId);
+        }
       }
     }
 
     logger.exit("withdrawFromStudy() - Ends ");
     return message;
+  }
+
+  /**
+   * revoke the consent
+   *
+   * @param studyEntity
+   * @param participantId
+   */
+  private void revokeConsent(StudyEntity studyEntity, String participantId) {
+    logger.entry("Begin revokeConsent()");
+    String parentName =
+        String.format(
+            "projects/%s/locations/%s/datasets/%s/consentStores/%s",
+            appConfig.getProjectId(),
+            appConfig.getRegionId(),
+            studyEntity.getCustomId(),
+            "CONSENT_" + studyEntity.getCustomId());
+
+    String filter1 = "Metadata(\"" + STUDY_ID + "\")=\"" + studyEntity.getCustomId() + "\"";
+    String filter2 = "user_id=\"" + participantId + "\"";
+    String filter3 = "Metadata(\"" + CONSENT_TYPE + "\")=\"" + PRIMARY + "\"";
+    String consentFilter = filter1 + " AND " + filter2 + " AND " + filter3;
+
+    List<Consent> list = consentApis.getListOfConsents(consentFilter, parentName);
+    if (CollectionUtils.isNotEmpty(list)) {
+      Consent consent = list.get(0);
+      // updating consent state to REVOKED
+      consentApis.revokeConsent(consent.getName());
+    }
+    logger.exit("revokeConsent() - Ends ");
   }
 }

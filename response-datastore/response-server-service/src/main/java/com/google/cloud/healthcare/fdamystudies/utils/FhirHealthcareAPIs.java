@@ -179,6 +179,46 @@ public class FhirHealthcareAPIs {
     return responseJson;
   }
 
+  public String fhirResourceGetHistory(String resourceName) throws ProcessResponseException {
+    logger.entry("begin fhirResourceGetHistory()");
+    String responseJson = null;
+    try {
+      // Initialize the client, which will be used to interact with the service.
+      CloudHealthcare client = AppUtil.createClient();
+
+      HttpClient httpClient = HttpClients.createDefault();
+      String uri = String.format("%sv1/%s/_history", client.getRootUrl(), resourceName);
+      URIBuilder uriBuilder = new URIBuilder(uri).setParameter("access_token", getAccessToken());
+
+      HttpUriRequest request =
+          RequestBuilder.get()
+              .setUri(uriBuilder.build())
+              .addHeader("Content-Type", "application/fhir+json")
+              .addHeader("Accept-Charset", "utf-8")
+              .addHeader("Accept", "application/fhir+json; charset=utf-8")
+              .build();
+
+      // Execute the request and process the results.
+      HttpResponse response = httpClient.execute(request);
+      HttpEntity responseEntity = response.getEntity();
+      if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+        logger.debug(
+            "Exception while fetching FHIR resource history version: "
+                + response.getStatusLine().toString());
+        throw new Exception();
+      } else {
+        if (response.getEntity() != null) {
+          responseJson = EntityUtils.toString(responseEntity);
+        }
+      }
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new ProcessResponseException(e.getMessage());
+    }
+    logger.exit("fhirResourceGetHistory() - Ends ");
+    return responseJson;
+  }
+
   public void fhirResourcePatch(String resourceName, String data) throws ProcessResponseException {
 
     logger.entry("begin fhirResourcePatch()");

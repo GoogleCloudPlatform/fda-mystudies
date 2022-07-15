@@ -295,6 +295,102 @@ resource "google_secret_manager_secret" "manual_fcm_api_url" {
 }
 
 
+resource "google_secret_manager_secret" "manual_mobile_app_appid" {
+  provider = google-beta
+
+  secret_id = "manual-mobile-app-appid"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_android_bundle_id" {
+  provider = google-beta
+
+  secret_id = "manual-android-bundle-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_android_server_key" {
+  provider = google-beta
+
+  secret_id = "manual-android-server-key"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_ios_bundle_id" {
+  provider = google-beta
+
+  secret_id = "manual-ios-bundle-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_ios_certificate" {
+  provider = google-beta
+
+  secret_id = "manual-ios-certificate"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_ios_certificate_password" {
+  provider = google-beta
+
+  secret_id = "manual-ios-certificate-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
 resource "google_secret_manager_secret" "manual_ios_deeplink_url" {
   provider = google-beta
 
@@ -326,6 +422,109 @@ resource "google_secret_manager_secret" "manual_android_deeplink_url" {
   }
 }
 
+resource "google_secret_manager_secret" "manual_project_id" {
+  provider = google-beta
+
+  secret_id = "manual-project-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_region_id" {
+  provider = google-beta
+
+  secret_id = "manual-region-id"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_consent_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-consent-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_fhir_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-fhir-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_bigquery_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-bigquery-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+resource "google_secret_manager_secret" "manual_did_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-did-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret" "manual_discard_fhir_response_enabled" {
+  provider = google-beta
+
+  secret_id = "manual-discard-fhir-response-enabled"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
 
 resource "google_secret_manager_secret" "auto_mystudies_sql_default_user_password" {
   provider = google-beta

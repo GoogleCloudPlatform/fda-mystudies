@@ -109,6 +109,7 @@ public class DeIdentifyHealthcareAPIs {
         final String RESOURCE_NAME =
             datasetPathforDID
                 + FHIR_STORES
+                + "DID_"
                 + studyId
                 + "/fhir/"
                 + QUESTIONNAIRE_RESPONSE_TYPE

@@ -23,4 +23,6 @@ public class ConsentHistory {
   private String consentDocumentPath;
 
   private String dataSharingPermissions;
+
+  private String createTimeStamp;
 }

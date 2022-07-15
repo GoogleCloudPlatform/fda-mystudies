@@ -97,8 +97,21 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-terms-url",
       "manual-privacy-url",
       "manual-fcm-api-url",
+      "manual-mobile-app-appid",
+      "manual-android-bundle-id",
+      "manual-android-server-key",
+      "manual-ios-bundle-id",
+      "manual-ios-certificate",
+      "manual-ios-certificate-password",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
+      "manual-project-id",
+      "manual-region-id",
+      "manual-consent-enabled",
+      "manual-fhir-enabled",
+	  "manual-bigquery-enabled",
+      "manual-did-enabled",
+	  "manual-discard-fhir-response-enabled",
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -136,6 +149,13 @@ resource "kubernetes_secret" "shared_secrets" {
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
     privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
     fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
+    project_id                        = data.google_secret_manager_secret_version.secrets["manual-project-id"].secret_data
+    region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
+    consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
+    did_enabled                       = data.google_secret_manager_secret_version.secrets["manual-did-enabled"].secret_data
+    fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
+	bigquery_enabled                  = data.google_secret_manager_secret_version.secrets["manual-bigquery-enabled"].secret_data
+	discard_fhir_response             = data.google_secret_manager_secret_version.secrets["manual-discard-fhir-response-enabled"].secret_data
   }
 }
 

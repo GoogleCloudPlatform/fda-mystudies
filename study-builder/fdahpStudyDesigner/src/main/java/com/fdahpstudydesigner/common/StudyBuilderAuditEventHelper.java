@@ -29,15 +29,17 @@ public class StudyBuilderAuditEventHelper {
       StudyBuilderAuditEvent eventEnum,
       AuditLogEventRequest auditRequest,
       Map<String, String> values) {
-    String description = eventEnum.getDescription();
-    if (values != null) {
-      description = PlaceholderReplacer.replaceNamedPlaceholders(description, values);
-    }
-    auditRequest.setDescription(description);
+    if (eventEnum != null) {
+      String description = eventEnum.getDescription();
+      if (values != null) {
+        description = PlaceholderReplacer.replaceNamedPlaceholders(description, values);
+      }
+      auditRequest.setDescription(description);
 
-    auditRequest =
-        AuditEventMapper.fromAuditLogEventEnumAndCommonPropConfig(eventEnum, auditRequest);
-    auditService.postAuditLogEvent(auditRequest);
+      auditRequest =
+          AuditEventMapper.fromAuditLogEventEnumAndCommonPropConfig(eventEnum, auditRequest);
+      auditService.postAuditLogEvent(auditRequest);
+    }
   }
 
   public void logEvent(

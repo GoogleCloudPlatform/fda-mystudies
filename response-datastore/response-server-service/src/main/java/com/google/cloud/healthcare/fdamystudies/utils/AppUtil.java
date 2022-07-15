@@ -71,6 +71,16 @@ public class AppUtil {
     return null;
   }
 
+  public static String convertDateToOtherFormat(
+      String dateString, String inputFormat, String outputFormat) throws ParseException {
+    DateFormat sdf = new SimpleDateFormat(inputFormat);
+    DateFormat sdf1 = new SimpleDateFormat(outputFormat);
+
+    sdf1.setTimeZone(TimeZone.getTimeZone("GMT" + dateString.substring(dateString.length() - 5)));
+
+    return sdf1.format(sdf.parse(dateString));
+  }
+
   public static CloudHealthcare createClient() throws ProcessResponseException {
     try {
       // Use Application Default Credentials (ADC) to authenticate the requests
@@ -95,15 +105,5 @@ public class AppUtil {
       logger.error(e.getMessage(), e);
       throw new ProcessResponseException(e.getMessage());
     }
-  }
-
-  public static String convertDateToOtherFormat(
-      String dateString, String inputFormat, String outputFormat) throws ParseException {
-    DateFormat sdf = new SimpleDateFormat(inputFormat);
-    DateFormat sdf1 = new SimpleDateFormat(outputFormat);
-
-    sdf1.setTimeZone(TimeZone.getTimeZone("GMT" + dateString.substring(dateString.length() - 5)));
-
-    return sdf1.format(sdf.parse(dateString));
   }
 }

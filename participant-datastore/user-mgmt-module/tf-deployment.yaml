@@ -131,6 +131,21 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: institution_resources_bucket_name
+            - name: PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: project_id
+            - name: REGION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: region_id
+            - name: CONSENT_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: consent_enabled                  
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:

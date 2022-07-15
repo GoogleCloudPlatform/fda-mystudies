@@ -8,8 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CONSENT_DATE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DATA_SHARING;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
-
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PDF_PATH;
+import com.google.api.services.healthcare.v1.model.ConsentArtifact;
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
@@ -29,6 +32,27 @@ public final class ConsentMapper {
     consentHistory.setConsentedDate(StringUtils.defaultIfEmpty(consentDate, NOT_APPLICABLE));
 
     consentHistory.setDataSharingPermissions(studyConsent.getSharing());
+    return consentHistory;
+  }
+
+  public static ConsentHistory toConsentHistory(
+      ConsentArtifact consentArtifact, String consentStoreId) {
+    ConsentHistory consentHistory = new ConsentHistory();
+    String name = consentArtifact.getName();
+    consentHistory.setId(
+        consentStoreId + "@" + name.substring(name.lastIndexOf("/") + 1, name.length()));
+    String pdfPath = consentArtifact.getMetadata().get(PDF_PATH);
+    consentHistory.setConsentDocumentPath(pdfPath);
+
+    consentHistory.setCreateTimeStamp(
+        pdfPath.substring(pdfPath.lastIndexOf("_") + 1, pdfPath.indexOf(".pdf")));
+
+    consentHistory.setConsentVersion(consentArtifact.getConsentContentVersion());
+
+    String consentDate = consentArtifact.getMetadata().get(CONSENT_DATE);
+    consentHistory.setConsentedDate(StringUtils.defaultIfEmpty(consentDate, NOT_APPLICABLE));
+
+    consentHistory.setDataSharingPermissions(consentArtifact.getMetadata().get(DATA_SHARING));
     return consentHistory;
   }
 }
