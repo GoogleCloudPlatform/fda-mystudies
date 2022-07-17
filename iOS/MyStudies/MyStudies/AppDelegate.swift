@@ -746,6 +746,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         
       case .activity:  // Activity Notifications
         
+        NotificationHandler.instance.appOpenFromNotification = true
         if !(initialVC is UITabBarController) {
           (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
 

@@ -175,6 +175,7 @@ class NotificationViewController: UIViewController {
 
       switch type! as AppNotification.NotificationSubType {
       case .study:
+        NotificationHandler.instance.appOpenFromNotification = true
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
 
@@ -183,10 +184,12 @@ class NotificationViewController: UIViewController {
         self.navigationController?.pushViewController(viewController!, animated: true)
 
       case .activity:
+        NotificationHandler.instance.appOpenFromNotification = true
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
         
       case .announcement:
+        NotificationHandler.instance.appOpenFromNotification = true
         viewController?.selectedIndex = 0
         self.navigationController?.pushViewController(viewController!, animated: true)
 

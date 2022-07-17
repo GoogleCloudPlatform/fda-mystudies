@@ -1031,7 +1031,7 @@ extension StudyListViewController: NMWebServiceDelegate {
 
     } else if requestName as String == RegistrationMethods.userProfile.description {
       appdelegate.window?.removeProgressIndicatorFromWindow()
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
 
       } else {

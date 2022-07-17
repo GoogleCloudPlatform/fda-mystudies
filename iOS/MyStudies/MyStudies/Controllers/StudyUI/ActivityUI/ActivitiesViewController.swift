@@ -157,6 +157,10 @@ class ActivitiesViewController: UIViewController {
     }
     checkBlockerScreen()
 
+    if NotificationHandler.instance.appOpenFromNotification == true {
+        NotificationHandler.instance.appOpenFromNotification = false
+        self.refresh(sender: self)
+    }
   }
 
   // MARK: - Helper Methods
