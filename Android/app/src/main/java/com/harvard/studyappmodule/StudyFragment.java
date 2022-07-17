@@ -17,10 +17,12 @@
 package com.harvard.studyappmodule;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +67,7 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
+import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -1065,6 +1068,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
   private void startConsent(Consent consent, String type) {
     eligibilityType = type;
+    AppController.getHelperSharedPreference()
+        .writePreference(context, "DataSharingScreen" + title, "false");
     Toast.makeText(
             context,
             context.getResources().getString(R.string.please_review_the_updated_consent),
@@ -1320,11 +1325,67 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
 
         study = dbServiceSubscriber.getStudyListFromDB(realm);
         if (study != null) {
+          if (AppController.getHelperSharedPreference()
+              .readPreference(context, context.getString(R.string.userid), "")
+              .equalsIgnoreCase("")) {
+            androidx.appcompat.app.AlertDialog.Builder alertDialog =
+                new androidx.appcompat.app.AlertDialog.Builder(
+                    context, R.style.Style_Dialog_Rounded_Corner);
+            alertDialog.setTitle("              You are offline");
+            alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+            alertDialog.setCancelable(false);
+            alertDialog.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    //          eventProperties.putString(
+                    //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    //              getString(R.string.app_update_next_time_ok));
+                    //          analyticsInstance.logEvent(
+                    //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    // eventProperties);
+                    dialogInterface.dismiss();
+                  }
+                });
+            final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+            dialog.show();
+          } else {
+            if (!AppController.isNetworkAvailable(context)) {
+              AppController.offlineAlart(context);
+            }
+          }
           studyListArrayList = study.getStudies();
           studyListArrayList =
               dbServiceSubscriber.saveStudyStatusToStudyList(studyListArrayList, realm);
           setStudyList(true);
         } else {
+          if (study == null) {
+            androidx.appcompat.app.AlertDialog.Builder alertDialog =
+                new androidx.appcompat.app.AlertDialog.Builder(
+                    context, R.style.Style_Dialog_Rounded_Corner);
+            alertDialog.setTitle("              You are offline");
+            alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+            alertDialog.setCancelable(false);
+            alertDialog.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    //          eventProperties.putString(
+                    //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    //              getString(R.string.app_update_next_time_ok));
+                    //          analyticsInstance.logEvent(
+                    //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    // eventProperties);
+                    dialogInterface.dismiss();
+                  }
+                });
+            final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+            dialog.show();
+          }
           Toast.makeText(getActivity(), errormsg, Toast.LENGTH_LONG).show();
         }
       }

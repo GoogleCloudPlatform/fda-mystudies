@@ -16,13 +16,16 @@
 package com.harvard.usermodule;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 import com.harvard.AppConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
@@ -33,15 +36,15 @@ import com.harvard.usermodule.webservicemodel.ForgotPasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 
-import io.realm.Realm;
-
 public class ForgotPasswordActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
 
   private static final int FORGOT_PASSWORD_REQUEST = 10;
   private RelativeLayout backBtn;
@@ -54,12 +57,15 @@ public class ForgotPasswordActivity extends AppCompatActivity
   public static String FROM = "ForgotPasswordActivity";
   private static final int GO_TO_SIGNIN = 111;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_forgot_password);
-    analyticsInstance =CustomFirebaseAnalytics.getInstance(this);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     initializeXmlId();
     setTextForView();
     setFont();
@@ -73,6 +79,7 @@ public class ForgotPasswordActivity extends AppCompatActivity
     cancelTxt = (AppCompatTextView) findViewById(R.id.cancelTxt);
     email = (AppCompatEditText) findViewById(R.id.edittxt_email);
     submitButton = (AppCompatTextView) findViewById(R.id.submitButton);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setTextForView() {
@@ -209,9 +216,9 @@ public class ForgotPasswordActivity extends AppCompatActivity
       }
       Toast.makeText(
               this, getResources().getString(R.string.forgot_password_error), Toast.LENGTH_SHORT)
-              .show();
+          .show();
       if (getIntent().getStringExtra("from") != null
-              && getIntent().getStringExtra("from").equalsIgnoreCase("verification")) {
+          && getIntent().getStringExtra("from").equalsIgnoreCase("verification")) {
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
@@ -254,6 +261,34 @@ public class ForgotPasswordActivity extends AppCompatActivity
         }
         finish();
       }
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      submitButton.setClickable(false);
+      submitButton.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      submitButton.setClickable(true);
+      submitButton.setAlpha(1F);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 }

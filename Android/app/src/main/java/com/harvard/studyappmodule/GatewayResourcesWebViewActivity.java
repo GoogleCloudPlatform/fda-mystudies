@@ -18,28 +18,30 @@ package com.harvard.studyappmodule;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import com.harvard.R;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.PdfViewerView;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -47,7 +49,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class GatewayResourcesWebViewActivity extends AppCompatActivity {
+public class GatewayResourcesWebViewActivity extends AppCompatActivity
+    implements NetworkChangeReceiver.NetworkChangeCallback {
   private AppCompatTextView title;
   private RelativeLayout backBtn;
   private WebView webView;
@@ -58,12 +61,14 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
   private String intentType;
   private File finalSharingFile;
   private CustomFirebaseAnalytics analyticsInstance;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
 
     initializeXmlId();
     intentTitle = getIntent().getStringExtra("title");
@@ -150,19 +155,21 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
         displayPdfView(finalSharingFile.getAbsolutePath());
       }
     } else if (intentType.equalsIgnoreCase("url")) {
-      AppController.getHelperProgressDialog().showProgress(GatewayResourcesWebViewActivity.this,"","",false);
+      AppController.getHelperProgressDialog()
+          .showProgress(GatewayResourcesWebViewActivity.this, "", "", false);
       shareBtn.setVisibility(View.GONE);
       pdfView.setVisibility(View.GONE);
       webView.setVisibility(View.VISIBLE);
       title.setText(intentTitle);
       webView.getSettings().setLoadsImagesAutomatically(true);
       webView.getSettings().setJavaScriptEnabled(true);
-      webView.setWebViewClient(new WebViewClient() {
-        @Override
-        public void onPageFinished(WebView view, String url) {
-          AppController.getHelperProgressDialog().dismissDialog();
-        }
-      });
+      webView.setWebViewClient(
+          new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+              AppController.getHelperProgressDialog().dismissDialog();
+            }
+          });
       webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
       webView.loadUrl(getIntent().getStringExtra("content"));
     }
@@ -287,5 +294,31 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity {
     }
 
     return destinationFile;
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      shareBtn.setClickable(false);
+      shareBtn.setAlpha(0.3F);
+    } else {
+      shareBtn.setClickable(true);
+      shareBtn.setAlpha(1F);
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
   }
 }

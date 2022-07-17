@@ -19,7 +19,9 @@ package com.harvard.studyappmodule;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -68,6 +71,7 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -90,7 +94,8 @@ import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
 
-public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
+public class StudyInfoActivity extends AppCompatActivity
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
   private static final int STUDY_INFO = 10;
   private static final int UPDATE_PREFERENCES = 11;
   private static final int GET_CONSENT_DOC = 12;
@@ -121,6 +126,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private EligibilityConsent eligibilityConsent;
   private RealmList<Studies> userPreferenceStudies;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +136,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
 
     initializeXmlId();
     setFont();
@@ -167,6 +175,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     bottomBar = (LinearLayout) findViewById(R.id.bottom_bar);
     bottomBar1 = (LinearLayout) findViewById(R.id.bottom_bar1);
     consentLay = (RelativeLayout) findViewById(R.id.consentLay);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setFont() {
@@ -381,6 +390,19 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     }
   }
 
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      joinButton.setClickable(false);
+      joinButton.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      joinButton.setClickable(true);
+      joinButton.setAlpha(1F);
+    }
+  }
+
   private class CallConsentMetaData extends AsyncTask<String, Void, String> {
     String response = null;
     String responseCode = null;
@@ -397,7 +419,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
       String url = Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
+        responseModel =
+            HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -592,7 +615,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       if (resultCode == RESULT_OK) {
         loginCallback();
       }
-    }  else if (requestCode == 12345) {
+    } else if (requestCode == 12345) {
       if (resultCode == RESULT_OK) {
         if (eligibilityConsent != null) {
           RealmList<Steps> stepsRealmList = eligibilityConsent.getEligibility().getTest();
@@ -932,6 +955,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
   private void startConsent(Consent consent, String type) {
     eligibilityType = type;
+    AppController.getHelperSharedPreference()
+        .writePreference(this, "DataSharingScreen" + title, "false");
     Toast.makeText(
             this,
             getResources().getString(R.string.please_review_the_updated_consent),
@@ -980,6 +1005,21 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     if (getIntent().getStringExtra("flow") != null
         && getIntent().getStringExtra("flow").equalsIgnoreCase("login_callback")) {
       loginCallback();
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 

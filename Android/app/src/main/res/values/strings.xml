@@ -332,6 +332,7 @@
     <string name="notification">notification</string>
     <string name="charttag">activityId</string>
     <string name="signed_consent">SignedConsent</string>
+    <string name="dataShared">DataShared</string>
     <string name="permission_enable_message">Please enable sharing permission from phone settings to continue.</string>
     <string name="leave_study_retained_message">Are you sure? Tap OK to confirm.</string>
     <string name="leave_study_deleted_message">Are you sure? Tap OK to confirm.</string>
@@ -717,4 +718,6 @@
     <string name="preview">Preview</string>
     <string name="side_menu_my_account_in">My account</string>
 
+<!--&lt;!&ndash;    // data sharing 15-06-2022-->
+    <string name="data_sharing">Data sharing image</string>
 </resources>

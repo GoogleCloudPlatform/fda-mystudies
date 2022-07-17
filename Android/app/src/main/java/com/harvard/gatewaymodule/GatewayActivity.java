@@ -21,19 +21,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.viewpager.widget.ViewPager;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
-
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.viewpager.widget.ViewPager;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
@@ -46,14 +46,15 @@ import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
-
 import io.realm.Realm;
 
-public class GatewayActivity extends AppCompatActivity {
+public class GatewayActivity extends AppCompatActivity
+    implements NetworkChangeReceiver.NetworkChangeCallback {
   private static final int UPGRADE = 100;
   private static final int RESULT_CODE_UPGRADE = 101;
   private AppCompatTextView getStarted;
@@ -67,30 +68,47 @@ public class GatewayActivity extends AppCompatActivity {
   private static AlertDialog alertDialog;
   VersionReceiver versionReceiver;
   private String latestVersion;
+  private TextView offlineIndicatior;
   private boolean force = false;
   AlertDialog.Builder alertDialogBuilder;
   private CustomFirebaseAnalytics analyticsInstance;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_gateway);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     initializeXmlId();
     setFont();
     bindEvents();
     setViewPagerView();
 
     if (getIntent().getStringExtra("action") != null
-            && getIntent().getStringExtra("action").equalsIgnoreCase(AppController.loginCallback)) {
+        && getIntent().getStringExtra("action").equalsIgnoreCase(AppController.loginCallback)) {
       loadLogin();
+    }
+    if (!AppController.isNetworkAvailable(this)) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      //      signInButtonLayout.setClickable(false);
+      //      signInButtonLayout.setAlpha(0.5F);
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
     }
   }
 
   public class VersionReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-      if(intent.getStringExtra("api").equalsIgnoreCase("success")){
+      if (intent.getStringExtra("api").equalsIgnoreCase("success")) {
         Version currVer = new Version(AppController.currentVersion());
         Version latestVer = new Version(intent.getStringExtra("latestVersion"));
 
@@ -100,20 +118,25 @@ public class GatewayActivity extends AppCompatActivity {
         if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
           isUpgrade(false, latestVersion, force);
         } else {
-          AppController.getHelperSharedPreference().writePreference(GatewayActivity.this, "versionalert", "done");
+          AppController.getHelperSharedPreference()
+              .writePreference(GatewayActivity.this, "versionalert", "done");
           isUpgrade(true, latestVersion, force);
         }
       } else {
-        Toast.makeText(GatewayActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
-        if (Build.VERSION.SDK_INT < 21) {
-          finishAffinity();
-        } else {
-          finishAndRemoveTask();
-        }
+        //        Toast.makeText(GatewayActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
+        //        if (Build.VERSION.SDK_INT < 21) {
+        //          finishAffinity();
+        //        } else {
+        //          finishAndRemoveTask();
+        //        }
+        //        if(!AppController.isNetworkAvailable(GatewayActivity.this)) {
+        //          offlineIndicatior.setVisibility(View.VISIBLE);
+        ////          signInButtonLayout.setClickable(false);
+        ////          signInButtonLayout.setAlpha(0.5F);
+        //        }
       }
     }
   }
-
 
   @Override
   protected void onResume() {
@@ -126,6 +149,9 @@ public class GatewayActivity extends AppCompatActivity {
     filter.addAction(BuildConfig.APPLICATION_ID);
     versionReceiver = new VersionReceiver();
     registerReceiver(versionReceiver, filter);
+
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
   }
 
   @Override
@@ -138,10 +164,12 @@ public class GatewayActivity extends AppCompatActivity {
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null)
-        alertDialog.dismiss();
+      if (alertDialog != null) alertDialog.dismiss();
     } catch (Exception e) {
       e.printStackTrace();
+    }
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 
@@ -151,6 +179,7 @@ public class GatewayActivity extends AppCompatActivity {
     newUserButton = (AppCompatTextView) findViewById(R.id.mNewUserButton);
     signInButtonLayout = (RelativeLayout) findViewById(R.id.mSignInButtonLayout);
     signInButton = (AppCompatTextView) findViewById(R.id.mSignInButton);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setFont() {
@@ -168,14 +197,40 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Bundle eventProperties = new Bundle();
-            eventProperties.putString(
-                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.new_user));
-            analyticsInstance.logEvent(
-                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            if (!AppController.isNetworkAvailable(GatewayActivity.this)) {
+              androidx.appcompat.app.AlertDialog.Builder alertDialog =
+                  new androidx.appcompat.app.AlertDialog.Builder(
+                      GatewayActivity.this, R.style.Style_Dialog_Rounded_Corner);
+              alertDialog.setTitle("              You are offline");
+              alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+              alertDialog.setCancelable(false);
+              alertDialog.setPositiveButton(
+                  "OK",
+                  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                      Bundle eventProperties = new Bundle();
+                      //          eventProperties.putString(
+                      //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      //              getString(R.string.app_update_next_time_ok));
+                      //          analyticsInstance.logEvent(
+                      //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                      // eventProperties);
+                      dialogInterface.dismiss();
+                    }
+                  });
+              final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+              dialog.show();
+            } else {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.new_user));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
 
-            Intent intent = new Intent(GatewayActivity.this, SignupActivity.class);
-            startActivity(intent);
+              Intent intent = new Intent(GatewayActivity.this, SignupActivity.class);
+              startActivity(intent);
+            }
           }
         });
 
@@ -188,8 +243,33 @@ public class GatewayActivity extends AppCompatActivity {
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.sign_in_btn));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-
-            loadLogin();
+            if (!AppController.isNetworkAvailable(GatewayActivity.this)) {
+              androidx.appcompat.app.AlertDialog.Builder alertDialog =
+                  new androidx.appcompat.app.AlertDialog.Builder(
+                      GatewayActivity.this, R.style.Style_Dialog_Rounded_Corner);
+              alertDialog.setTitle("              You are offline");
+              alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+              alertDialog.setCancelable(false);
+              alertDialog.setPositiveButton(
+                  "OK",
+                  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                      Bundle eventProperties = new Bundle();
+                      //          eventProperties.putString(
+                      //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      //              getString(R.string.app_update_next_time_ok));
+                      //          analyticsInstance.logEvent(
+                      //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                      // eventProperties);
+                      dialogInterface.dismiss();
+                    }
+                  });
+              final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+              dialog.show();
+            } else {
+              loadLogin();
+            }
           }
         });
 
@@ -269,9 +349,9 @@ public class GatewayActivity extends AppCompatActivity {
       } else {
         if (force) {
           Toast.makeText(
-              GatewayActivity.this,
-              "Please update the app to continue using",
-              Toast.LENGTH_SHORT)
+                  GatewayActivity.this,
+                  "Please update the app to continue using",
+                  Toast.LENGTH_SHORT)
               .show();
           moveTaskToBack(true);
           if (Build.VERSION.SDK_INT < 21) {
@@ -323,11 +403,13 @@ public class GatewayActivity extends AppCompatActivity {
     DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = AppController.getRealmobj(GatewayActivity.this);
     Apps apps = dbServiceSubscriber.getApps(realm);
-    customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
-        .replace("$FromEmail", apps.getFromEmail())
-        .replace("$SupportEmail", apps.getSupportEmail())
-        .replace("$AppName", apps.getAppName())
-        .replace("$ContactEmail", apps.getContactUsEmail())));
+    customTabsIntent.intent.setData(
+        Uri.parse(
+            Urls.LOGIN_URL
+                .replace("$FromEmail", apps.getFromEmail())
+                .replace("$SupportEmail", apps.getSupportEmail())
+                .replace("$AppName", apps.getAppName())
+                .replace("$ContactEmail", apps.getContactUsEmail())));
     dbServiceSubscriber.closeRealmObj(realm);
     startActivity(customTabsIntent.intent);
   }

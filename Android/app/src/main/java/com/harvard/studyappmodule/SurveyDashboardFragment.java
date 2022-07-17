@@ -21,12 +21,14 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -71,6 +73,7 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -97,7 +100,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsyncRequestComplete {
+public class SurveyDashboardFragment extends Fragment
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
   private static final int DASHBOARD_INFO = 111;
   private Context context;
   private RelativeLayout backBtn;
@@ -156,6 +160,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   private ArrayList<ResponseInfoActiveTaskModel> arrayList;
   private ArrayList<String> arrayListDup;
   private CustomFirebaseAnalytics analyticsInstance;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   // NOTE: Regarding Day, Week and Month functionality
   //  currently day functionality next, previous are working
@@ -308,6 +313,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     rightArrow = (AppCompatImageView) view.findViewById(R.id.mRightArrow);
     previousArrow = (AppCompatImageView) view.findViewById(R.id.mPreviousArrow);
     noStatsAvailable = (AppCompatTextView) view.findViewById(R.id.mNoStatsAvailable);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
 
     AppCompatImageView backBtnimg = view.findViewById(R.id.backBtnimg);
     AppCompatImageView menubtnimg = view.findViewById(R.id.menubtnimg);
@@ -744,7 +750,9 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
         Toast.makeText(
                 context,
-            getContext().getResources().getString(R.string.permission_enable_message_screenshot),
+                getContext()
+                    .getResources()
+                    .getString(R.string.permission_enable_message_screenshot),
                 Toast.LENGTH_LONG)
             .show();
       } else {
@@ -765,12 +773,14 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
       root = Environment.getExternalStorageDirectory().getAbsolutePath();
     } else {
-      root = getActivity().getExternalFilesDir(getContext().getString(R.string.app_name)).getAbsolutePath();
+      root =
+          getActivity()
+              .getExternalFilesDir(getContext().getString(R.string.app_name))
+              .getAbsolutePath();
     }
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
-    String fname = ((SurveyActivity) context).getTitle1()
-        .replace("/", "\u2215") + "_Dashboard.png";
+    String fname = ((SurveyActivity) context).getTitle1().replace("/", "\u2215") + "_Dashboard.png";
     File file = new File(dir, fname);
     if (file.exists()) {
       file.delete();
@@ -792,7 +802,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
     shareIntent.setType("text/plain");
     Uri fileUri =
-        FileProvider.getUriForFile(context, getContext().getString(R.string.FileProvider_authorities), file);
+        FileProvider.getUriForFile(
+            context, getContext().getString(R.string.FileProvider_authorities), file);
     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
     shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
     startActivity(shareIntent);
@@ -962,28 +973,35 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
     switch (statistics.getStatType()) {
       case "Activity":
-        statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_activity));
+        statsIcon.setBackground(
+            getContext().getResources().getDrawable(R.drawable.stat_icn_activity));
         break;
       case "Sleep":
         statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_sleep));
         break;
       case "Weight":
-        statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_weight));
+        statsIcon.setBackground(
+            getContext().getResources().getDrawable(R.drawable.stat_icn_weight));
         break;
       case "Heart Rate":
-        statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_heart_rate));
+        statsIcon.setBackground(
+            getContext().getResources().getDrawable(R.drawable.stat_icn_heart_rate));
         break;
       case "Nutrition":
-        statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_nutrition));
+        statsIcon.setBackground(
+            getContext().getResources().getDrawable(R.drawable.stat_icn_nutrition));
         break;
       case "Blood Glucose":
-        statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_glucose));
+        statsIcon.setBackground(
+            getContext().getResources().getDrawable(R.drawable.stat_icn_glucose));
         break;
       case "Active Task":
-        statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_active_task));
+        statsIcon.setBackground(
+            getContext().getResources().getDrawable(R.drawable.stat_icn_active_task));
         break;
       case "Baby Kicks":
-        statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_baby_kicks));
+        statsIcon.setBackground(
+            getContext().getResources().getDrawable(R.drawable.stat_icn_baby_kicks));
         break;
       case "Other":
         statsIcon.setBackground(getContext().getResources().getDrawable(R.drawable.stat_icn_other));
@@ -1107,6 +1125,17 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
           Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
         }
       }
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      shareBtn.setClickable(false);
+      shareBtn.setAlpha(0.3F);
+    } else {
+      shareBtn.setClickable(true);
+      shareBtn.setAlpha(1F);
     }
   }
 
@@ -1298,7 +1327,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     calendar.set(Calendar.MILLISECOND, 999);
     toDayVal = dateFormatForApi.format(calendar.getTime());
 
-
     setColorForSelectedDayMonthYear(weekLayout);
     dateType = WEEK;
   }
@@ -1373,14 +1401,17 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         HashMap<String, String> header = new HashMap<>();
         header.put(
             getContext().getString(R.string.clientToken),
-            SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.clientToken), ""));
+            SharedPreferenceHelper.readPreference(
+                context, getContext().getString(R.string.clientToken), ""));
         header.put(
             "Authorization",
             "Bearer "
-                + SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.auth), ""));
+                + SharedPreferenceHelper.readPreference(
+                    context, getContext().getString(R.string.auth), ""));
         header.put(
             "userId",
-            SharedPreferenceHelper.readPreference(context, getContext().getString(R.string.userid), ""));
+            SharedPreferenceHelper.readPreference(
+                context, getContext().getString(R.string.userid), ""));
         Studies studies = realm.where(Studies.class).equalTo("studyId", studyId).findFirst();
         responseModel =
             HttpRequest.getRequest(
@@ -1714,8 +1745,24 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       } else {
         addViewStatisticsValues();
         AppController.getHelperProgressDialog().dismissDialog();
-        Toast.makeText(context, getContext().getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getContext().getString(R.string.unknown_error), Toast.LENGTH_SHORT)
+            .show();
       }
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    context.registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      context.unregisterReceiver(networkChangeReceiver);
     }
   }
 }

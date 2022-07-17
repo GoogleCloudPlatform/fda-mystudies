@@ -21,9 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +29,9 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
@@ -124,6 +124,9 @@ public class ProfileFragment extends Fragment
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     callUserProfileWebService();
     bindEvents();
+    if (!AppController.isNetworkAvailable(context)) {
+      AppController.offlineAlart(context);
+    }
     return view;
   }
 

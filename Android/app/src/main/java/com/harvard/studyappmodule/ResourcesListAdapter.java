@@ -18,25 +18,24 @@ package com.harvard.studyappmodule;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
+import com.harvard.studyappmodule.studymodel.StudyList;
 import com.harvard.usermodule.TermsPrivacyPolicyActivity;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
-
 import io.realm.Realm;
 import io.realm.RealmList;
 import java.util.ArrayList;
@@ -127,6 +126,15 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
               && o2.getTitle()
               .contains(context.getResources().getString(R.string.resourceTerms))) {
             return -1;
+          } else if (o1.getTitle().contains(context.getResources().getString(R.string.data_sharing))
+              && !o2.getTitle()
+              .contains(context.getResources().getString(R.string.data_sharing))) {
+            return 1;
+          } else if (!o1.getTitle()
+              .contains(context.getResources().getString(R.string.data_sharing))
+              && o2.getTitle()
+              .contains(context.getResources().getString(R.string.data_sharing))) {
+            return -1;
           }
           return 0;
         }
@@ -191,6 +199,19 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
               } else if (items
                   .get(i)
                   .getTitle()
+                  .equalsIgnoreCase(view.getResources().getString(R.string.data_sharing))) {
+                try {
+                  Intent intent = new Intent(context, PdfDisplayActivity.class);
+                  intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
+                  intent.putExtra("title", ((SurveyActivity) context).getTitle1());
+                  intent.putExtra("datasharingscreen", "datasharingscreen");
+                  (context).startActivity(intent);
+                } catch (Exception e) {
+                  Logger.log(e);
+                }
+              } else if (items
+                  .get(i)
+                  .getTitle()
                   .equalsIgnoreCase(view.getResources().getString(R.string.resourceTerms))) {
                 try {
                   Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
@@ -231,6 +252,9 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 } else {
                   message = context.getString(R.string.leaveStudy);
                 }
+                StudyList studyList =
+                    dbServiceSubscriber.getStudiesDetails(
+                        ((SurveyActivity) context).getStudyId(), realm);
                 AlertDialog.Builder builder =
                     new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
                 builder.setTitle(context.getResources().getString(R.string.leave_study) + "?");
@@ -240,6 +264,9 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                     new DialogInterface.OnClickListener() {
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
+                        AppController.getHelperSharedPreference()
+                            .writePreference(
+                                context, "DataSharingScreen" + studyList.getTitle(), "true");
                         Bundle eventProperties = new Bundle();
                         eventProperties.putString(
                             CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,

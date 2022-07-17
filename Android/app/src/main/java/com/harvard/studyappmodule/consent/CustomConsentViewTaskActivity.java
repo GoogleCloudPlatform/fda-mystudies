@@ -21,8 +21,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Html;
 import android.text.SpannableString;
@@ -76,6 +81,9 @@ import io.github.lucasfsc.html2pdf.Html2Pdf;
 import io.realm.Realm;
 import io.realm.RealmList;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
@@ -138,10 +146,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private static final int GET_PREFERENCES = 2016;
   private static final int UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE = 101;
   private String enrolledDate;
+  private String dataShared;
   private EligibilityConsent eligibilityConsent;
   private StudyList studyList;
   private String pdfPath;
   String sharingConsent = "Not Applicable";
+  private String encode;
 
   public static Intent newIntent(
       Context context,
@@ -558,7 +568,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       } else {
         completionAdherenceStatus = true;
       }
-      studiestatus.put("userStudyVersion",consentDocumentData.getConsent().getVersion());
+      studiestatus.put("userStudyVersion", consentDocumentData.getConsent().getVersion());
     } catch (JSONException e) {
       Logger.log(e);
     }
@@ -652,6 +662,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               .getStringExtra(STUDYID)
               .equalsIgnoreCase(studies.getStudies().get(i).getStudyId())) {
             enrolledDate = studies.getStudies().get(i).getEnrolledDate();
+            if (studies.getStudies().get(i).getDataSharingPermission() != null) {
+              dataShared = studies.getStudies().get(i).getDataSharingPermission();
+            }
           }
         }
         genarateConsentPdf();
@@ -894,6 +907,10 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       body.put("studyId", getIntent().getStringExtra(STUDYID));
       body.put("siteId", siteId);
       body.put("eligibility", true);
+      if (encode != null && !encode.isEmpty()) {
+        Log.e("check", "updateEligibilityConsent: " + encode.length());
+        body.put("dataSharingScreenShot", convertFileToString(encode));
+      }
 
       JSONObject consentbody = new JSONObject();
       consentbody.put("version", eligibilityConsent.getConsent().getVersion());
@@ -902,6 +919,17 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       body.put("consent", consentbody);
 
+      String dataSharing =
+          AppController.getHelperSharedPreference()
+              .readPreference(this, "DataSharingScreen" + studyList.getTitle(), "");
+      if (dataSharing.equalsIgnoreCase("false")) {
+        if (!((consent.getSharing().getTitle().equalsIgnoreCase("")
+            && consent.getSharing().getText().equalsIgnoreCase("")
+            && consent.getSharing().getShortDesc().equalsIgnoreCase("")
+            && consent.getSharing().getLongDesc().equalsIgnoreCase("")))) {
+          sharingConsent = dataShared;
+        }
+      }
       body.put("sharing", sharingConsent);
     } catch (JSONException e) {
       Logger.log(e);
@@ -979,6 +1007,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
     } else if (responseCode == ENROLL_ID_RESPONSECODE) {
       Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
+    } else if (responseCode == GET_PREFERENCES) {
+      Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
     }
   }
 
@@ -1032,12 +1062,15 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   @Override
   public void onSaveStep(int action, Step step, StepResult result) {
     onSaveStepResult(step.getIdentifier(), result);
-
     onExecuteStepAction(action);
   }
 
   protected void onSaveStepResult(String id, StepResult result) {
     taskResult.setStepResultForStepIdentifier(id, result);
+    if (id.equalsIgnoreCase("sharing")) {
+      Log.e("HTTPRequest", "onSaveStepResult: sharing");
+      shareFunctionality();
+    }
   }
 
   protected void onExecuteStepAction(int action) {
@@ -1144,6 +1177,65 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     ActionBar actionBar = getSupportActionBar();
     if (actionBar != null) {
       actionBar.setTitle(title);
+    }
+  }
+
+  private void shareFunctionality() {
+
+    Bitmap returnedBitmap =
+        Bitmap.createBitmap(root.getWidth(), root.getHeight(), Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(returnedBitmap);
+    Drawable bgDrawable = root.getBackground();
+    if (bgDrawable != null) {
+      bgDrawable.draw(canvas);
+    } else {
+      canvas.drawColor(Color.WHITE);
+    }
+    root.draw(canvas);
+    encode = AppController.getStringBase64(returnedBitmap);
+    try {
+      StringBuilder docBuilder = new StringBuilder();
+      final String timeStamp = AppController.getDateFormatForConsentPdf();
+      final File file = new File("/data/data/" + getPackageName() + "/files/", timeStamp + ".pdf");
+      docBuilder
+          .append("<img src=\"data:image/png;base64,")
+          .append(encode)
+          .append("\" alt=\"Red dot\" width=\"700\" height=\"1000\" />");
+      Html2Pdf converter =
+          new Html2Pdf.Companion.Builder()
+              .context(this)
+              .html(docBuilder.toString())
+              .file(file)
+              .build();
+      converter.convertToPdf(
+          new Html2Pdf.OnCompleteConversion() {
+            @Override
+            public void onSuccess() {
+              // encrypt the genarated pdf
+              File encryptFile =
+                  AppController.generateEncryptedConsentPdf(
+                      "/data/data/" + getPackageName() + "/files/", timeStamp);
+
+              file.delete();
+              encode = encryptFile.getAbsolutePath();
+            }
+
+            @Override
+            public void onFailed() {
+              AppController.getHelperProgressDialog().dismissDialog();
+              Toast.makeText(
+                      CustomConsentViewTaskActivity.this,
+                      R.string.pdf_consent_error,
+                      Toast.LENGTH_SHORT)
+                  .show();
+            }
+          });
+    } catch (Exception e) {
+      Logger.log(e);
+      AppController.getHelperProgressDialog().dismissDialog();
+      Toast.makeText(
+              CustomConsentViewTaskActivity.this, R.string.pdf_consent_error, Toast.LENGTH_SHORT)
+          .show();
     }
   }
 }

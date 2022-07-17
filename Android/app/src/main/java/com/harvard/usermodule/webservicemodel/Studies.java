@@ -40,6 +40,8 @@ public class Studies extends RealmObject {
 
   private String userStudyVersion;
 
+  private String dataSharingPermission;
+
   public String getHashedToken() {
     return hashedToken;
   }
@@ -118,5 +120,13 @@ public class Studies extends RealmObject {
 
   public void setUserStudyVersion(String userStudyVersion) {
     this.userStudyVersion = userStudyVersion;
+  }
+
+  public String getDataSharingPermission() {
+    return dataSharingPermission;
+  }
+
+  public void setDataSharingPermission(String dataSharingPermission) {
+    this.dataSharingPermission = dataSharingPermission;
   }
 }

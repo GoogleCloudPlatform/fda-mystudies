@@ -16,13 +16,13 @@
 package com.harvard.studyappmodule;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.notificationmodule.model.NotificationDb;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -69,6 +69,9 @@ public class NotificationActivity extends AppCompatActivity
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     AppController.getHelperSharedPreference()
         .writePreference(this, getString(R.string.notification), "false");
+    if (!AppController.isNetworkAvailable(this)) {
+      AppController.offlineAlart(this);
+    }
     initializeXmlId();
     setTextForView();
     setFont();
@@ -190,7 +193,8 @@ public class NotificationActivity extends AppCompatActivity
           notification1.setStudyId(notificationsDbResources.get(i).getStudyId());
           notification1.setMessage(notificationsDbResources.get(i).getDescription());
           notification1.setDate(
-              AppController.getDateFormatForApi().format(notificationsDbResources.get(i).getDateTime()));
+              AppController.getDateFormatForApi()
+                  .format(notificationsDbResources.get(i).getDateTime()));
           notification1.setType("Study");
           notification1.setAudience("");
           notifications.add(notification1);
@@ -290,7 +294,8 @@ public class NotificationActivity extends AppCompatActivity
           notification1.setStudyId(notificationsDbResources.get(i).getStudyId());
           notification1.setMessage(notificationsDbResources.get(i).getDescription());
           notification1.setDate(
-              AppController.getDateFormatForApi().format(notificationsDbResources.get(i).getDateTime()));
+              AppController.getDateFormatForApi()
+                  .format(notificationsDbResources.get(i).getDateTime()));
           notification1.setType("Study");
           notification1.setAudience("");
           notifications.add(notification1);

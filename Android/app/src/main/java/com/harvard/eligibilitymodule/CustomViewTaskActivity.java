@@ -32,7 +32,10 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
+
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.Eligibility;
 import com.harvard.studyappmodule.consent.model.CorrectAnswers;
@@ -74,6 +77,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   private TaskResult taskResult;
   private ArrayList<CorrectAnswers> correctAnswers;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
 
   public static Intent newIntent(
       Context context,
@@ -109,6 +113,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     super.setContentView(R.layout.stepswitchercustom);
     Toolbar toolbar = findViewById(org.researchstack.backbone.R.id.toolbar);
+//    offlineIndicatior = findViewById(R.id.offlineIndicatior);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     pdfTitle = getIntent().getStringExtra(PDF_TITLE);
@@ -159,6 +164,9 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
         getString(R.string.custom_view_task_next));
     analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     boolean eligible = checkStepResult(currentStep, taskResult);
+//    if(!AppController.isNetworkAvailable(this)) {
+//      offlineIndicatior.setVisibility(View.VISIBLE);
+//    }
     Step nextStep;
     if (eligible || currentStep.getIdentifier().equalsIgnoreCase("Eligibility Test")) {
       nextStep = task.getStepAfterStep(currentStep, taskResult);

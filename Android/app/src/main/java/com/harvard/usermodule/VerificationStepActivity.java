@@ -17,16 +17,19 @@ package com.harvard.usermodule;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.browser.customtabs.CustomTabsIntent;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import androidx.browser.customtabs.CustomTabsIntent;
 import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -37,16 +40,16 @@ import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 
-import io.realm.Realm;
-
 public class VerificationStepActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
   private AppCompatTextView verificationStepsLabel;
   private AppCompatTextView verificationEmailMsgLabel;
   private AppCompatTextView tapBelowTxtLabel;
@@ -69,12 +72,15 @@ public class VerificationStepActivity extends AppCompatActivity
   private String type;
   private LoginData loginData;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_verification_step);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     userId = getIntent().getStringExtra("userid");
     auth = getIntent().getStringExtra("auth");
     emailId = getIntent().getStringExtra("email");
@@ -102,6 +108,7 @@ public class VerificationStepActivity extends AppCompatActivity
     verificationEmailMsgLabel = (AppCompatTextView) findViewById(R.id.verification_email_msg_label);
     tapBelowTxtLabel = (AppCompatTextView) findViewById(R.id.tap_below_txt_label);
     submitBtn = (AppCompatTextView) findViewById(R.id.submitButton);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setTextForView() {
@@ -289,23 +296,25 @@ public class VerificationStepActivity extends AppCompatActivity
 
   private void signin() {
     SharedPreferenceHelper.writePreference(
-            VerificationStepActivity.this, getString(R.string.logintype), "signUp");
+        VerificationStepActivity.this, getString(R.string.logintype), "signUp");
     CustomTabsIntent customTabsIntent =
-            new CustomTabsIntent.Builder()
-                    .setToolbarColor(getResources().getColor(R.color.colorAccent))
-                    .setShowTitle(true)
-                    .setCloseButtonIcon(
-                            BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
-                    .setStartAnimations(
-                            VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
-                    .setExitAnimations(
-                            VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
-                    .build();
+        new CustomTabsIntent.Builder()
+            .setToolbarColor(getResources().getColor(R.color.colorAccent))
+            .setShowTitle(true)
+            .setCloseButtonIcon(
+                BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+            .setStartAnimations(
+                VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+            .setExitAnimations(
+                VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+            .build();
     StringBuilder loginUrl = new StringBuilder();
     DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = AppController.getRealmobj(VerificationStepActivity.this);
     Apps apps = dbServiceSubscriber.getApps(realm);
-    loginUrl.append(Urls.LOGIN_URL).toString()
+    loginUrl
+        .append(Urls.LOGIN_URL)
+        .toString()
         .replace("$FromEmail", apps.getFromEmail())
         .replace("$AppName", apps.getAppName())
         .replace("$SupportEmail", apps.getSupportEmail())
@@ -367,6 +376,38 @@ public class VerificationStepActivity extends AppCompatActivity
       finish();
     } else if (requestCode == FORGOT_PASSWORD_REPONSE && resultCode == RESULT_OK) {
       signin();
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      submitBtn.setClickable(false);
+      submitBtn.setAlpha(0.5F);
+      resend.setClickable(false);
+      resend.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      submitBtn.setClickable(true);
+      submitBtn.setAlpha(1F);
+      resend.setClickable(true);
+      resend.setAlpha(1F);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 }

@@ -18,14 +18,12 @@ package com.harvard.usermodule;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
@@ -36,6 +34,12 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
@@ -51,17 +55,18 @@ import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.realm.Realm;
-
-public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
+public class SignupActivity extends AppCompatActivity
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
   private static final int UPDATE_USER_PROFILE = 101;
   private RelativeLayout backBtn;
   private AppCompatTextView title;
@@ -82,6 +87,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   private AppCompatTextView agreeLabel;
   private AppCompatCheckBox agree;
   private AppCompatTextView submitBtn;
+  private TextView offlineIndicatior;
   private static final int REGISTRATION_REQUEST = 2;
   private static final int GET_TERMS_AND_CONDITION = 3;
   private static final int STUDYINFO_REQUEST = 100;
@@ -91,7 +97,9 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   private String userAuth;
   private String userID;
   private CustomFirebaseAnalytics analyticsInstance;
+  private NetworkChangeReceiver networkChangeReceiver;
 
+  @RequiresApi(api = Build.VERSION_CODES.S)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -104,6 +112,12 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     bindEvents();
     DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = AppController.getRealmobj(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
+    if (!AppController.isNetworkAvailable(this)) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      submitBtn.setClickable(false);
+      submitBtn.setAlpha(0.5F);
+    }
     termsAndConditionData = new TermsAndConditionData();
     termsAndConditionData.setPrivacy(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
     termsAndConditionData.setTerms(dbServiceSubscriber.getApps(realm).getTermsUrl());
@@ -131,6 +145,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     agreeLabel = (AppCompatTextView) findViewById(R.id.agree_label);
     agree = (AppCompatCheckBox) findViewById(R.id.agreeButton);
     submitBtn = (AppCompatTextView) findViewById(R.id.submitButton);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setTextForView() {
@@ -325,35 +340,39 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
           }
         });
 
-    password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      @Override
-      public void onFocusChange(View v, boolean hasFocus) {
-        if (!hasFocus) {
-          if (!password.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
-            password.setError(getResources().getString(R.string.password_validation));
+    password.setOnFocusChangeListener(
+        new View.OnFocusChangeListener() {
+          @Override
+          public void onFocusChange(View v, boolean hasFocus) {
+            if (!hasFocus) {
+              if (!password.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
+                password.setError(getResources().getString(R.string.password_validation));
+              }
+            }
           }
-        }
-      }
-    });
+        });
 
-    confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      @Override
-      public void onFocusChange(View v, boolean hasFocus) {
-        if (!hasFocus) {
-          if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
-            confirmPassword.setError(getResources().getString(R.string.password_mismatch_error));
+    confirmPassword.setOnFocusChangeListener(
+        new View.OnFocusChangeListener() {
+          @Override
+          public void onFocusChange(View v, boolean hasFocus) {
+            if (!hasFocus) {
+              if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
+                confirmPassword.setError(
+                    getResources().getString(R.string.password_mismatch_error));
+              }
+            }
           }
-        }
-      }
-    });
+        });
 
-    agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override
-      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        password.clearFocus();
-        confirmPassword.clearFocus();
-      }
-    });
+    agree.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            password.clearFocus();
+            confirmPassword.clearFocus();
+          }
+        });
   }
 
   private void callRegisterUserWebService() {
@@ -648,6 +667,34 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     @Override
     protected void onPreExecute() {
       AppController.getHelperProgressDialog().showProgress(SignupActivity.this, "", "", false);
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      submitBtn.setClickable(false);
+      submitBtn.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      submitBtn.setClickable(true);
+      submitBtn.setAlpha(1F);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 }

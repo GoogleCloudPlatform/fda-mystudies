@@ -17,14 +17,16 @@
 package com.harvard.studyappmodule;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -36,11 +38,11 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.ArrayList;
@@ -50,7 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class DeleteAccountActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
   private RelativeLayout backBtn;
   private AppCompatTextView title;
   private View hrLine;
@@ -63,6 +65,8 @@ public class DeleteAccountActivity extends AppCompatActivity
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +75,7 @@ public class DeleteAccountActivity extends AppCompatActivity
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     initializeXmlId();
     setTextForView();
     setFont();
@@ -86,6 +91,7 @@ public class DeleteAccountActivity extends AppCompatActivity
     iagree = (AppCompatTextView) findViewById(R.id.mIAgree);
     idisagree = (AppCompatTextView) findViewById(R.id.mIDisagree);
     middleLayaout = (LinearLayout) findViewById(R.id.middleLayaout);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setTextForView() {
@@ -266,5 +272,37 @@ public class DeleteAccountActivity extends AppCompatActivity
   protected void onDestroy() {
     dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      iagree.setClickable(false);
+      iagree.setAlpha(0.5F);
+      idisagree.setAlpha(0.5F);
+      idisagree.setClickable(false);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      iagree.setClickable(true);
+      iagree.setAlpha(1F);
+      idisagree.setAlpha(1F);
+      idisagree.setClickable(true);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
   }
 }

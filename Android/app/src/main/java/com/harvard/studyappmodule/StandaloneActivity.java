@@ -394,7 +394,7 @@ public class StandaloneActivity extends AppCompatActivity
         intent.putExtra("activityId", activityId);
         intent.putExtra("localNotification", localNotification);
         startActivity(intent);
-        finish(); 
+        finish();
       }
     } else if (responseCode == GET_CONSENT_DOC) {
       ConsentDocumentData consentDocumentData = (ConsentDocumentData) response;
@@ -415,7 +415,8 @@ public class StandaloneActivity extends AppCompatActivity
       }
       if (version != null && (!latestConsentVersion.equalsIgnoreCase(version))) {
         callConsentMetaDataWebservice();
-      } else if (enrollAgain && latestConsentVersion != null
+      } else if (enrollAgain
+          && latestConsentVersion != null
           && consentPdfData != null
           && consentPdfData.getConsent() != null
           && consentPdfData.getConsent().getVersion() != null) {
@@ -841,7 +842,8 @@ public class StandaloneActivity extends AppCompatActivity
             null,
             false,
             StandaloneActivity.this);
-    consentPdfEvent.setParticipantConsentDatastoreConfigEvent(participantConsentDatastoreConfigEvent);
+    consentPdfEvent.setParticipantConsentDatastoreConfigEvent(
+        participantConsentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPdf(consentPdfEvent);
   }
@@ -862,7 +864,8 @@ public class StandaloneActivity extends AppCompatActivity
 
       String url = Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
+        responseModel =
+            HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -998,6 +1001,8 @@ public class StandaloneActivity extends AppCompatActivity
 
   private void startConsent(Consent consent, String type) {
     eligibilityType = type;
+    AppController.getHelperSharedPreference()
+        .writePreference(this, "DataSharingScreen" + title, "false");
     Toast.makeText(
             StandaloneActivity.this,
             getResources().getString(R.string.please_review_the_updated_consent),
