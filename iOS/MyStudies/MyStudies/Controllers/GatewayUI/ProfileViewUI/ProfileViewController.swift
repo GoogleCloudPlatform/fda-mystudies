@@ -115,7 +115,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     self.fdaSlideMenuController()?.delegate = self
   }
     func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
 
         
         
@@ -143,13 +144,15 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         case .none:
             print("Network is not available.")
 //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
+            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
             
             break
         case .unavailable:
             print("Network is  unavailable.")
 //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
+            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
             break
         }
     }

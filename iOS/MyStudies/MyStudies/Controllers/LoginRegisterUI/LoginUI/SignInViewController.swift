@@ -91,7 +91,8 @@ class SignInViewController: UIViewController {
     }
 
     func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
 
         
         

@@ -73,7 +73,8 @@ class StudyListViewController: UIViewController {
                                                name: Notification.Name("Menu Clicked"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
                                                name: Notification.Name("LeftMenu Home"), object: nil)
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
 
         
         

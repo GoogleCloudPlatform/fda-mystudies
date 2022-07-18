@@ -38,9 +38,9 @@ id RLMCreateManagedAccessor(Class cls, RLMClassInfo *info) NS_RETURNS_RETAINED;
 
 // throw an exception if the object is invalidated or on the wrong thread
 static inline void RLMVerifyAttached(__unsafe_unretained RLMObjectBase *const obj) {
-    if (!obj->_row.is_valid()) {
-        @throw RLMException(@"Object has been deleted or invalidated.");
-    }
+//    if (!obj->_row.is_valid()) {
+//        @throw RLMException(@"Object has been deleted or invalidated.");
+//    }
     [obj->_realm verifyThread];
 }
 

@@ -56,7 +56,9 @@ extension UIView {
         return [constraint]
     }
     @discardableResult
-    func align(_ attributes: [NSLayoutConstraint.Attribute]!, _ relation: NSLayoutConstraint.Relation, to view:UIView!, _ toAttributes: [NSLayoutConstraint.Attribute]!, padding: CGFloat, priority: UILayoutPriority = UILayoutPriority(1000.0)) -> [NSLayoutConstraint] {
+    func align(_ attributes: [NSLayoutConstraint.Attribute]!, _ relation: NSLayoutConstraint.Relation,
+               to view:UIView!, _ toAttributes: [NSLayoutConstraint.Attribute]!, padding: CGFloat,
+               priority: UILayoutPriority = UILayoutPriority(1000.0)) -> [NSLayoutConstraint] {
         
         guard let superview = self.superview else {
             assertionFailure("Trying to set constraints without first setting superview")
@@ -93,7 +95,8 @@ extension UIView {
         return constraints
     }
     @discardableResult
-    func makeWidth(_ relation: NSLayoutConstraint.Relation, _ width : CGFloat, priority: UILayoutPriority = UILayoutPriority(1000.0)) -> [NSLayoutConstraint] {
+    func makeWidth(_ relation: NSLayoutConstraint.Relation, _ width : CGFloat,
+                   priority: UILayoutPriority = UILayoutPriority(1000.0)) -> [NSLayoutConstraint] {
         let constraint = NSLayoutConstraint(item: self,
                                               attribute: .width,
                                               relatedBy: relation,
@@ -106,7 +109,8 @@ extension UIView {
     }
     
     @discardableResult
-    func makeHeight(_ relation: NSLayoutConstraint.Relation, _ height : CGFloat, priority: UILayoutPriority = UILayoutPriority(1000.0)) -> [NSLayoutConstraint] {
+    func makeHeight(_ relation: NSLayoutConstraint.Relation, _ height : CGFloat,
+                    priority: UILayoutPriority = UILayoutPriority(1000.0)) -> [NSLayoutConstraint] {
         let constraint = NSLayoutConstraint(item: self,
                                               attribute: .height,
                                               relatedBy: relation,
