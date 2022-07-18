@@ -66,13 +66,10 @@ void RLMRealmCreateAccessors(RLMSchema *schema) {
 }
 
 static inline void RLMVerifyRealmRead(__unsafe_unretained RLMRealm *const realm) {
-//    if (!realm) {
-//        @throw RLMException(@"Realm must not be nil");
-//    }
-    if (realm != nil) {
-        [realm verifyThread];
+    if (!realm) {
+        @throw RLMException(@"Realm must not be nil");
     }
-//    [realm verifyThread];
+    [realm verifyThread];
     if (realm->_realm->is_closed()) {
         // This message may seem overly specific, but frozen Realms are currently
         // the only ones which we outright close.
@@ -199,9 +196,9 @@ RLMObjectBase *RLMCreateObjectInRealmWithValue(RLMRealm *realm, NSString *classN
 
 void RLMDeleteObjectFromRealm(__unsafe_unretained RLMObjectBase *const object,
                               __unsafe_unretained RLMRealm *const realm) {
-//    if (realm != object->_realm) {
-//        @throw RLMException(@"Can only delete an object from the Realm it belongs to.");
-//    }
+    if (realm != object->_realm) {
+        @throw RLMException(@"Can only delete an object from the Realm it belongs to.");
+    }
 
     RLMVerifyInWriteTransaction(object->_realm);
 
