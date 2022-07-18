@@ -126,6 +126,7 @@ class Study: Hashable {
   var signedConsentVersion: String?
 
   var signedConsentFilePath: String?
+  var signedConsentDataSPdfFilePath: String?
   var anchorDate: StudyAnchorDate?
   var activitiesLocalNotificationUpdated = false
   var totalIncompleteRuns = 0

@@ -71,7 +71,7 @@ class ResponseServices: NSObject {
 
       let studyId = currentStudy?.studyId ?? ""
       let activiyId = Study.currentActivity?.actvityId ?? ""
-      let activityName = Study.currentActivity?.shortName ?? ""
+      let activityName = Study.currentActivity?.name ?? ""
       let activityVersion = Study.currentActivity?.version ?? ""
       let currentRunId = Study.currentActivity?.currentRunId ?? 0
       let studyVersion = currentStudy?.version ?? ""
@@ -122,7 +122,7 @@ class ResponseServices: NSObject {
       
       let studyId = currentStudy?.studyId ?? ""
       let activiyId = Study.currentActivity?.actvityId ?? ""
-      let activityName = Study.currentActivity?.shortName ?? ""
+      let activityName = Study.currentActivity?.name ?? ""
       let activityVersion = Study.currentActivity?.version ?? ""
       let currentRunId = Study.currentActivity?.currentRunId ?? 0
       let studyVersion = currentStudy?.version ?? ""

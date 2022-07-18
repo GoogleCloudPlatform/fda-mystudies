@@ -107,6 +107,7 @@ class Resource: ResourceRow {
     self.endTime = dbResource.endTime
 
     let file = File()
+//    print("3self.link---\(dbResource.serverUrl)---\(dbResource.title)")
     file.link = dbResource.serverUrl
     file.localPath = dbResource.localPath
     file.mimeType = MimeType(rawValue: dbResource.type!)

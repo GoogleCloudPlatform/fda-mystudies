@@ -119,11 +119,14 @@ class StudyListViewController: UIViewController {
         return true
     }
   override func viewWillAppear(_ animated: Bool) {
-      setupNotifiers()
-    if !isComingFromFilterScreen {
+    setupNotifiers()
+    print("self.slideMenuController()?.isLeftOpen()---\(self.slideMenuController()?.isLeftOpen())")
+    if !isComingFromFilterScreen && !(self.slideMenuController()?.isLeftOpen() ?? true) {
       self.addProgressIndicator()
     }
     setNavigationBarColor()
+    Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
+    Utilities.removeImageLocalPath(localPathName: "ConsentpdfSharingImage")
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -1080,7 +1083,7 @@ extension StudyListViewController: NMWebServiceDelegate {
 
     } else if requestName as String == RegistrationMethods.userProfile.description {
       appdelegate.window?.removeProgressIndicatorFromWindow()
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
 
       } else {
@@ -1176,9 +1179,7 @@ extension StudyListViewController: ORKTaskViewControllerDelegate {
   func taskViewController(
     _: ORKTaskViewController,
     stepViewControllerWillAppear _: ORKStepViewController
-  ) {
-      
-  }
+  ) {}
 }
 
 extension Array {

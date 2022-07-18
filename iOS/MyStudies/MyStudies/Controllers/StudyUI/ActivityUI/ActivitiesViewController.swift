@@ -173,6 +173,8 @@ class ActivitiesViewController: UIViewController {
     super.viewWillAppear(animated)
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     setNavigationBarColor()
+    Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
+    Utilities.removeImageLocalPath(localPathName: "ConsentpdfSharingImage")
     
     if Utilities.isStandaloneApp() {
       self.setNavigationBarItem()
@@ -195,6 +197,10 @@ class ActivitiesViewController: UIViewController {
     }
     checkBlockerScreen()
 
+    if NotificationHandler.instance.appOpenFromNotification == true {
+        NotificationHandler.instance.appOpenFromNotification = false
+        self.refresh(sender: self)
+    }
   }
 
   // MARK: - Helper Methods
@@ -1283,6 +1289,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
   /// This method will update the result for other choices for each step
   fileprivate func updateResultForChoiceQuestions(_ taskViewController: ORKTaskViewController) {
+    print("updateResultForChoiceQuestions---")
     if let results = taskViewController.result.results as? [ORKStepResult] {
 
       for result in results {
@@ -1684,24 +1691,25 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection
   ) {
-
+    print("didFinishWith direction---")
   }
 
   public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
-
+    print("stepViewControllerResultDidChange---")
   }
 
   public func stepViewControllerDidFail(
     _ stepViewController: ORKStepViewController,
     withError error: Error?
   ) {
-
+    print("stepViewControllerDidFail---")
   }
 
   func taskViewController(
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
+    print("viewControllerFor---")
 
     if let step = step as? QuestionStep,
       step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false

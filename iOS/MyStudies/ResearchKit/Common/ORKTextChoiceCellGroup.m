@@ -109,7 +109,7 @@
 - (void)didSelectCellAtIndex:(NSUInteger)index {
     ORKChoiceViewCell *touchedCell = [self cellAtIndex:index withReuseIdentifier:nil];
         
-    if (_singleChoice) {
+    if (!_singleChoice) {
         touchedCell.selectedItem = YES;
         for (ORKChoiceViewCell *cell in _cells.allValues) {
             if (cell != touchedCell) {

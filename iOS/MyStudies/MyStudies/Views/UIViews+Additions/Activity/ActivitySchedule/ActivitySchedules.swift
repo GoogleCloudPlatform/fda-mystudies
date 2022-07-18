@@ -380,7 +380,7 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
 
 static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd, yyyy"
+    formatter.dateFormat = "hh:mm a, MMM dd, yyyy"
     return formatter
   }()
 }
