@@ -42,10 +42,14 @@ class ReachabilityIndicatorManager: NSObject {
         }
     }
     func setLayoutContraints(view: UIView) {
-        let leadingConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 0)
-                let trailingConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: 0)
-                let topConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0)
-                let bottomConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
+        let leadingConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .leading, relatedBy: .equal,
+                                                   toItem: view, attribute: .leading, multiplier: 1, constant: 0)
+                let trailingConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .trailing, relatedBy: .equal,
+                                                            toItem: view, attribute: .trailing, multiplier: 1, constant: 0)
+                let topConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .top, relatedBy: .equal,
+                                                       toItem: view, attribute: .top, multiplier: 1, constant: 0)
+                let bottomConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .bottom, relatedBy: .equal,
+                                                          toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
         view.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
     }
     

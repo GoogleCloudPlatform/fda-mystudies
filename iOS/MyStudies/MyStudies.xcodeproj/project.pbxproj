@@ -152,8 +152,6 @@
 		775D67122873EB7500DDE402 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D67112873EB7500DDE402 /* UIView+Extensions.swift */; };
 		775D67152873EBB500DDE402 /* OfflineIndicatorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 775D67132873EBB500DDE402 /* OfflineIndicatorView.xib */; };
 		775D67162873EBB500DDE402 /* OfflineIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775D67142873EBB500DDE402 /* OfflineIndicatorView.swift */; };
-		775D67192873ECBD00DDE402 /* TestNew1.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 775D67182873ECBD00DDE402 /* TestNew1.xcconfig */; };
-		775D671B2873FF5B00DDE402 /* Dev21-5-01.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */; };
 		7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
 		7878B31D2216C6E20052FC23 /* HPHCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B31C2216C6E20052FC23 /* HPHCTests.swift */; };
 		84249C9D268DFDB400CE5E87 /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84249C9C268DFDB400CE5E87 /* UITableView+Extensions.swift */; };
@@ -459,8 +457,6 @@
 		775D67112873EB7500DDE402 /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		775D67132873EBB500DDE402 /* OfflineIndicatorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OfflineIndicatorView.xib; sourceTree = "<group>"; };
 		775D67142873EBB500DDE402 /* OfflineIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OfflineIndicatorView.swift; sourceTree = "<group>"; };
-		775D67182873ECBD00DDE402 /* TestNew1.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = TestNew1.xcconfig; sourceTree = "<group>"; };
-		775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Dev21-5-01.xcconfig"; sourceTree = "<group>"; };
 		782AF87B221D247D000025CF /* StudyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTest.swift; sourceTree = "<group>"; };
 		7878B30E221574D80052FC23 /* StandaloneStudy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandaloneStudy.swift; sourceTree = "<group>"; };
 		7878B31A2216C6E10052FC23 /* MyStudiesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyStudiesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -697,8 +693,6 @@
 			isa = PBXGroup;
 			children = (
 				84D1E78327BFBE5B00619384 /* Default.xcconfig */,
-				775D67182873ECBD00DDE402 /* TestNew1.xcconfig */,
-				775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */,
 				84F9E38026FC27A1004A9FE8 /* GoogleService-Info.plist */,
 				6F10BB15234DDFDA006388E2 /* Branding */,
 				6FE00CD5238FEDE80067A7B8 /* Utils */,
@@ -1864,9 +1858,8 @@
 				TargetAttributes = {
 					6E7D2D551E433E8700763D4C = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 3485DDCN2M;
 						LastSwiftMigration = 1010;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -1986,7 +1979,6 @@
 				89893F0622B1125300A846CE /* Assets.xcassets in Resources */,
 				89893F0722B112A000A846CE /* LaunchScreen.storyboard in Resources */,
 				6E7D2D8E1E43445600763D4C /* UserPreferences.plist in Resources */,
-				775D67192873ECBD00DDE402 /* TestNew1.xcconfig in Resources */,
 				9450598F1F29FA2C007906A7 /* AppGlossary.pdf in Resources */,
 				6ED593731F011D5B00AC3636 /* Verdana Italic.ttf in Resources */,
 				6F83039D24864D6B009409A5 /* Localizable.strings.txt in Resources */,
@@ -2019,7 +2011,6 @@
 				6E14F2031F0224AD00EA8D1E /* Notification.json in Resources */,
 				6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */,
 				89893F0522B1115300A846CE /* Main.storyboard in Resources */,
-				775D671B2873FF5B00DDE402 /* Dev21-5-01.xcconfig in Resources */,
 				6F04F526254C7B4500F4E74A /* TemporaryPasswordData.plist in Resources */,
 				6F0221792264729E00A2DBC8 /* TextChoiceCell.xib in Resources */,
 				484ACBFC1F28A82B00BCC819 /* FilterData.plist in Resources */,
@@ -2422,7 +2413,7 @@
 /* Begin XCBuildConfiguration section */
 		6E7D2D7C1E433E8800763D4C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */;
+			baseConfigurationReference = 84D1E78327BFBE5B00619384 /* Default.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2485,7 +2476,7 @@
 		};
 		6E7D2D7D1E433E8800763D4C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 775D671A2873FF5B00DDE402 /* Dev21-5-01.xcconfig */;
+			baseConfigurationReference = 84D1E78327BFBE5B00619384 /* Default.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -2547,17 +2538,16 @@
 				CODE_SIGN_ENTITLEMENTS = MyStudies/FDA.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 77;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 82;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 3485DDCN2M;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = MyStudies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 3.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
 				PRODUCT_NAME = "FDA MyStudies";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MyStudies/Utils/Helpers/FDA-Bridging-Header.h";
@@ -2579,16 +2569,15 @@
 				CODE_SIGN_ENTITLEMENTS = MyStudies/FDA.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 77;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 82;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 3485DDCN2M;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = MyStudies/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.btc.mystudiesgcp;
 				PRODUCT_NAME = "FDA MyStudies";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MyStudies/Utils/Helpers/FDA-Bridging-Header.h";
