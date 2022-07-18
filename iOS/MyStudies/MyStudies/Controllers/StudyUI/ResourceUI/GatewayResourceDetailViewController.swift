@@ -21,6 +21,7 @@ import MessageUI
 import UIKit
 import WebKit
 import FirebaseAnalytics
+import Reachability
 
 let resourcesDownloadPath = AKUtility.baseFilePath + "/Resources"
 
@@ -29,6 +30,7 @@ class GatewayResourceDetailViewController: UIViewController {
   // MARK: - Outlets
   @IBOutlet weak var webView: WKWebView!
   @IBOutlet weak var progressBar: UIProgressView?
+  @IBOutlet weak var shareButton: UIBarButtonItem!
 
   // MARK: - Properties
   var activityIndicator: UIActivityIndicatorView!
@@ -37,6 +39,7 @@ class GatewayResourceDetailViewController: UIViewController {
   var htmlString: String?
   var resource: Resource?
   var isEmailComposerPresented: Bool?
+  private var reachability: Reachability!
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
@@ -49,8 +52,46 @@ class GatewayResourceDetailViewController: UIViewController {
     self.addBackBarButton()
     self.isEmailComposerPresented = false
     self.title = resource?.title
+      setupNotifiers()
   }
-
+  func setupNotifiers() {
+      NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+        
+      do {
+          self.reachability = try Reachability()
+          try self.reachability.startNotifier()
+          } catch(let error) {
+            print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+          }
+  }
+    
+  @objc func reachabilityChanged(note: Notification) {
+      let reachability = note.object as! Reachability
+      switch reachability.connection {
+      case .cellular:
+            print("Network available via Cellular Data.")
+            setOnline()
+            break
+      case .wifi:
+            print("Network available via WiFi.")
+            setOnline()
+            break
+      case .none:
+            print("Network is not available.")
+            setOffline()
+            break
+      case .unavailable:
+            print("Network is  unavailable.")
+            setOffline()
+            break
+      }
+  }
+  func setOffline() {
+      shareButton.isEnabled = false
+  }
+  func setOnline() {
+      shareButton.isEnabled = true
+  }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 

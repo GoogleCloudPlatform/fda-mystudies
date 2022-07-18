@@ -91,7 +91,7 @@ class NotificationViewController: UIViewController {
 //          buttonLink.layer.opacity = 1
       }
       func setOffline() {
-          self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .top, title: nil, image: nil, completion: nil)
+          self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .bottom, title: nil, image: nil, completion: nil)
 //          buttonSignin.isEnabled = false
 //          buttonSignin.layer.opacity = 0.5
 //          buttonLink.isEnabled = false

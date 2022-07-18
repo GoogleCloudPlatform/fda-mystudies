@@ -22,6 +22,7 @@ import MessageUI
 import UIKit
 import WebKit
 import FirebaseAnalytics
+import Reachability
 
 class WebViewController: UIViewController {
 
@@ -39,6 +40,7 @@ class WebViewController: UIViewController {
   var pdfData: Data?
   var isEmailAvailable: Bool? = false
   var htmlString: String?
+  private var reachability: Reachability!
 
   var tempfileURL: URL?
 
@@ -48,6 +50,7 @@ class WebViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupNotifiers()
     setNavigationBarColor()
   }
 
@@ -71,6 +74,44 @@ class WebViewController: UIViewController {
     setNeedsStatusBarAppearanceUpdate()
   }
 
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+          
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+              print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+      
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+              print("Network available via Cellular Data.")
+              setOnline()
+              break
+        case .wifi:
+              print("Network available via WiFi.")
+              setOnline()
+              break
+        case .none:
+              print("Network is not available.")
+              setOffline()
+              break
+        case .unavailable:
+              print("Network is  unavailable.")
+              setOffline()
+              break
+        }
+    }
+    func setOffline() {
+        barItemShare?.isEnabled = false
+    }
+    func setOnline() {
+        barItemShare?.isEnabled = true
+    }
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     if let tempURL = self.tempfileURL {

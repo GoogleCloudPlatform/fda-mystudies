@@ -20,6 +20,7 @@
 import Foundation
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kMessageForSharingDashboard =
   "This action will create a shareable image file of the dashboard currently seen in this section. Proceed?"
@@ -36,11 +37,13 @@ class StudyDashboardViewController: UIViewController {
 
   @IBOutlet var labelStudyTitle: UILabel?
   @IBOutlet var buttonHome: UIButton!
+  @IBOutlet var shareButton: UIButton!
 
   var dataSourceKeysForResponse: [[String: String]] = []
   lazy var tableViewRowDetails = NSMutableArray()
   lazy var todayActivitiesArray = NSMutableArray()
   lazy var statisticsArray = NSMutableArray()
+    private var reachability: Reachability!
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .lightContent
@@ -71,7 +74,7 @@ class StudyDashboardViewController: UIViewController {
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-
+      setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "StudyDashboard"
     ])
@@ -98,6 +101,46 @@ class StudyDashboardViewController: UIViewController {
     }
   }
 
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+          
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+              print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+      
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+              print("Network available via Cellular Data.")
+              setOnline()
+              break
+        case .wifi:
+              print("Network available via WiFi.")
+              setOnline()
+              break
+        case .none:
+              print("Network is not available.")
+              setOffline()
+              break
+        case .unavailable:
+              print("Network is  unavailable.")
+              setOffline()
+              break
+        }
+    }
+    func setOffline() {
+        shareButton.isEnabled = false
+        shareButton.layer.opacity = 0.5
+    }
+    func setOnline() {
+        shareButton.isEnabled = true
+        shareButton.layer.opacity = 1
+    }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
