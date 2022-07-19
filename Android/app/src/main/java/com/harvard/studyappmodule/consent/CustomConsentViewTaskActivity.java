@@ -21,10 +21,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,6 +49,7 @@ import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.eligibilitymodule.ComprehensionFailureActivity;
 import com.harvard.eligibilitymodule.ComprehensionSuccessActivity;
+import com.harvard.eligibilitymodule.CustomViewTaskActivity;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StudyFragment;
 import com.harvard.studyappmodule.StudyModulePresenter;
@@ -71,6 +74,7 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -104,7 +108,9 @@ import org.researchstack.backbone.ui.step.layout.ConsentSignatureStepLayout;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 
 public class CustomConsentViewTaskActivity extends AppCompatActivity
-    implements StepCallbacks, ApiCall.OnAsyncRequestComplete {
+    implements StepCallbacks,
+        ApiCall.OnAsyncRequestComplete,
+        NetworkChangeReceiver.NetworkChangeCallback {
   private static final String EXTRA_TASK = "ViewTaskActivity.ExtraTask";
   private static final String EXTRA_TASK_RESULT = "ViewTaskActivity.ExtraTaskResult";
   private static final String EXTRA_STEP = "ViewTaskActivity.ExtraStep";
@@ -114,6 +120,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private static final String ELIGIBILITY = "ViewTaskActivity.eligibility";
   public static final String TYPE = "ViewTaskActivity.type";
   private CustomFirebaseAnalytics analyticsInstance;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   private StepSwitcherCustom root;
   private static final String FILE_FOLDER = "FDA_PDF";
@@ -194,6 +201,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       eligibilityConsent = dbServiceSubscriber.getConsentMetadata(studyId, realm);
       consent = eligibilityConsent.getConsent();
+      networkChangeReceiver = new NetworkChangeReceiver(this);
       ConsentBuilder consentBuilder = new ConsentBuilder();
       List<Step> consentstep =
           consentBuilder.createsurveyquestion(
@@ -1016,6 +1024,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   protected void onPause() {
     hideKeyboard();
     super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
   }
 
   @Override
@@ -1237,5 +1248,43 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               CustomConsentViewTaskActivity.this, R.string.pdf_consent_error, Toast.LENGTH_SHORT)
           .show();
     }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      if (!AppController.isNetworkAvailable(this)) {
+        androidx.appcompat.app.AlertDialog.Builder alertDialog =
+            new androidx.appcompat.app.AlertDialog.Builder(
+                CustomConsentViewTaskActivity.this, R.style.Style_Dialog_Rounded_Corner);
+        alertDialog.setTitle("              You are offline");
+        alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton(
+            "OK",
+            new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialogInterface, int i) {
+                Bundle eventProperties = new Bundle();
+                //          eventProperties.putString(
+                //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                //              getString(R.string.app_update_next_time_ok));
+                //          analyticsInstance.logEvent(
+                //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                // eventProperties);
+                dialogInterface.dismiss();
+              }
+            });
+        final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+        dialog.show();
+      }
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
   }
 }

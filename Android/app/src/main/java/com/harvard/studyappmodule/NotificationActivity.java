@@ -15,6 +15,7 @@
 
 package com.harvard.studyappmodule;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -69,9 +70,6 @@ public class NotificationActivity extends AppCompatActivity
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     AppController.getHelperSharedPreference()
         .writePreference(this, getString(R.string.notification), "false");
-    if (!AppController.isNetworkAvailable(this)) {
-      AppController.offlineAlart(this);
-    }
     initializeXmlId();
     setTextForView();
     setFont();
@@ -303,6 +301,37 @@ public class NotificationActivity extends AppCompatActivity
       }
       NotificationData notification = dbServiceSubscriber.getNotificationFromDB(realm);
       if (notification != null) {
+        if (!AppController.getHelperSharedPreference()
+            .readPreference(this, getString(R.string.userid), "")
+            .equalsIgnoreCase("")) {
+          if (!AppController.isNetworkAvailable(this)) {
+            AppController.offlineAlart(this);
+          }
+        } else {
+          androidx.appcompat.app.AlertDialog.Builder alertDialog =
+              new androidx.appcompat.app.AlertDialog.Builder(
+                  NotificationActivity.this, R.style.Style_Dialog_Rounded_Corner);
+          alertDialog.setTitle("              You are offline");
+          alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+          alertDialog.setCancelable(false);
+          alertDialog.setPositiveButton(
+              "OK",
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                  Bundle eventProperties = new Bundle();
+                  //          eventProperties.putString(
+                  //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  //              getString(R.string.app_update_next_time_ok));
+                  //          analyticsInstance.logEvent(
+                  //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                  // eventProperties);
+                  dialogInterface.dismiss();
+                }
+              });
+          final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+          dialog.show();
+        }
         for (int i = 0; i < notification.getNotifications().size(); i++) {
           if (notification.getNotifications().get(i).getType().equalsIgnoreCase("Study")) {
             Study study = dbServiceSubscriber.getStudyListFromDB(realm);
@@ -343,6 +372,31 @@ public class NotificationActivity extends AppCompatActivity
             });
         setRecyclearView(notifications);
       } else {
+        if (!AppController.isNetworkAvailable(this)) {
+          androidx.appcompat.app.AlertDialog.Builder alertDialog =
+              new androidx.appcompat.app.AlertDialog.Builder(
+                  NotificationActivity.this, R.style.Style_Dialog_Rounded_Corner);
+          alertDialog.setTitle("              You are offline");
+          alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+          alertDialog.setCancelable(false);
+          alertDialog.setPositiveButton(
+              "OK",
+              new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                  Bundle eventProperties = new Bundle();
+                  //          eventProperties.putString(
+                  //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  //              getString(R.string.app_update_next_time_ok));
+                  //          analyticsInstance.logEvent(
+                  //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                  // eventProperties);
+                  dialogInterface.dismiss();
+                }
+              });
+          final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+          dialog.show();
+        }
         Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
       }
     }

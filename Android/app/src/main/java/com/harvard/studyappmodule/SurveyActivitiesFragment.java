@@ -811,7 +811,6 @@ public class SurveyActivitiesFragment extends Fragment
           dbServiceSubscriber.deleteStudyResourceDuplicateRow(context, studyId);
           dbServiceSubscriber.saveResourceList(context, studyResource);
           onItemsLoadComplete();
-          AppController.getHelperProgressDialog().dismissDialog();
         }
       }
     } else {

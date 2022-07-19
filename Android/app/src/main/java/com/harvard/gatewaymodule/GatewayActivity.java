@@ -42,6 +42,8 @@ import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
 import com.harvard.usermodule.SignupActivity;
+import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.event.RegisterUserEvent;
 import com.harvard.usermodule.model.Apps;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
@@ -51,10 +53,14 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
+import com.harvard.webservicemodule.apihelper.ApiCall;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import io.realm.Realm;
+import java.util.HashMap;
+
 
 public class GatewayActivity extends AppCompatActivity
-    implements NetworkChangeReceiver.NetworkChangeCallback {
+    implements NetworkChangeReceiver.NetworkChangeCallback, ApiCall.OnAsyncRequestComplete {
   private static final int UPGRADE = 100;
   private static final int RESULT_CODE_UPGRADE = 101;
   private AppCompatTextView getStarted;
@@ -73,6 +79,7 @@ public class GatewayActivity extends AppCompatActivity
   AlertDialog.Builder alertDialogBuilder;
   private CustomFirebaseAnalytics analyticsInstance;
   private NetworkChangeReceiver networkChangeReceiver;
+  private static final int APPS_RESPONSE = 103;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +110,33 @@ public class GatewayActivity extends AppCompatActivity
     } else {
       offlineIndicatior.setVisibility(View.GONE);
     }
+  }
+
+  @Override
+  public <T> void asyncResponse(T response, int responseCode) {
+    AppController.getHelperProgressDialog().dismissDialog();
+    if (responseCode == APPS_RESPONSE) {
+      Apps apps = (Apps) response;
+      CustomTabsIntent.Builder builder =
+          new CustomTabsIntent.Builder()
+              .setToolbarColor(getResources().getColor(R.color.colorAccent))
+              .setShowTitle(true)
+              .setCloseButtonIcon(
+                  BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+              .setStartAnimations(GatewayActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+              .setExitAnimations(GatewayActivity.this, R.anim.slide_in_left, R.anim.slide_out_right);
+      CustomTabsIntent customTabsIntent = builder.build();
+      customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+          .replace("$FromEmail", apps.getFromEmail())
+          .replace("$SupportEmail", apps.getSupportEmail())
+          .replace("$AppName", apps.getAppName())
+          .replace("$ContactEmail", apps.getContactUsEmail())));
+      startActivity(customTabsIntent.intent);
+    }
+  }
+
+  @Override
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
   }
 
   public class VersionReceiver extends BroadcastReceiver {
@@ -403,15 +437,19 @@ public class GatewayActivity extends AppCompatActivity
     DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = AppController.getRealmobj(GatewayActivity.this);
     Apps apps = dbServiceSubscriber.getApps(realm);
-    customTabsIntent.intent.setData(
-        Uri.parse(
-            Urls.LOGIN_URL
-                .replace("$FromEmail", apps.getFromEmail())
-                .replace("$SupportEmail", apps.getSupportEmail())
-                .replace("$AppName", apps.getAppName())
-                .replace("$ContactEmail", apps.getContactUsEmail())));
-    dbServiceSubscriber.closeRealmObj(realm);
-    startActivity(customTabsIntent.intent);
+    if (apps != null) {
+      customTabsIntent.intent.setData(
+          Uri.parse(
+              Urls.LOGIN_URL
+                  .replace("$FromEmail", apps.getFromEmail())
+                  .replace("$SupportEmail", apps.getSupportEmail())
+                  .replace("$AppName", apps.getAppName())
+                  .replace("$ContactEmail", apps.getContactUsEmail())));
+      dbServiceSubscriber.closeRealmObj(realm);
+      startActivity(customTabsIntent.intent);
+    } else {
+      getAppsInfo();
+    }
   }
 
   public void isUpgrade(boolean b, String latestVersion, final boolean force) {
@@ -483,5 +521,25 @@ public class GatewayActivity extends AppCompatActivity
       alertDialog = alertDialogBuilder.create();
       alertDialog.show();
     }
+  }
+
+  private void getAppsInfo() {
+    AppController.getHelperProgressDialog().showProgress(GatewayActivity.this, "", "", false);
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
+            "get",
+            Urls.APPS + "?appId=" + AppConfig.APP_ID_VALUE,
+            APPS_RESPONSE,
+            this,
+            Apps.class,
+            new HashMap<String, String>(),
+            null,
+            null,
+            false,
+            this);
+    RegisterUserEvent registerUserEvent = new RegisterUserEvent();
+    registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performRegistration(registerUserEvent);
   }
 }

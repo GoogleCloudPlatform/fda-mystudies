@@ -21,21 +21,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
-
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.Eligibility;
 import com.harvard.studyappmodule.consent.model.CorrectAnswers;
@@ -43,6 +42,7 @@ import com.harvard.studyappmodule.custom.StepSwitcherCustom;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,7 +54,8 @@ import org.researchstack.backbone.task.Task;
 import org.researchstack.backbone.ui.callbacks.StepCallbacks;
 import org.researchstack.backbone.ui.step.layout.StepLayout;
 
-public class CustomViewTaskActivity extends AppCompatActivity implements StepCallbacks {
+public class CustomViewTaskActivity extends AppCompatActivity
+    implements StepCallbacks, NetworkChangeReceiver.NetworkChangeCallback {
   private static final String EXTRA_TASK = "ViewTaskActivity.ExtraTask";
   private static final String EXTRA_STUDYID = "ViewTaskActivity.ExtraStudyId";
   private static final String STUDYID = "ViewTaskActivity.StudyId";
@@ -77,7 +78,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   private TaskResult taskResult;
   private ArrayList<CorrectAnswers> correctAnswers;
   private CustomFirebaseAnalytics analyticsInstance;
-  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   public static Intent newIntent(
       Context context,
@@ -113,7 +114,7 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     super.setContentView(R.layout.stepswitchercustom);
     Toolbar toolbar = findViewById(org.researchstack.backbone.R.id.toolbar);
-//    offlineIndicatior = findViewById(R.id.offlineIndicatior);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     setSupportActionBar(toolbar);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     pdfTitle = getIntent().getStringExtra(PDF_TITLE);
@@ -164,9 +165,6 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
         getString(R.string.custom_view_task_next));
     analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     boolean eligible = checkStepResult(currentStep, taskResult);
-//    if(!AppController.isNetworkAvailable(this)) {
-//      offlineIndicatior.setVisibility(View.VISIBLE);
-//    }
     Step nextStep;
     if (eligible || currentStep.getIdentifier().equalsIgnoreCase("Eligibility Test")) {
       nextStep = task.getStepAfterStep(currentStep, taskResult);
@@ -296,6 +294,9 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
   protected void onPause() {
     hideKeyboard();
     super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
   }
 
   @Override
@@ -422,5 +423,43 @@ public class CustomViewTaskActivity extends AppCompatActivity implements StepCal
     if (actionBar != null) {
       actionBar.setTitle(title);
     }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      if (!AppController.isNetworkAvailable(this)) {
+        androidx.appcompat.app.AlertDialog.Builder alertDialog =
+            new androidx.appcompat.app.AlertDialog.Builder(
+                CustomViewTaskActivity.this, R.style.Style_Dialog_Rounded_Corner);
+        alertDialog.setTitle("              You are offline");
+        alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton(
+            "OK",
+            new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialogInterface, int i) {
+                Bundle eventProperties = new Bundle();
+                //          eventProperties.putString(
+                //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                //              getString(R.string.app_update_next_time_ok));
+                //          analyticsInstance.logEvent(
+                //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                // eventProperties);
+                dialogInterface.dismiss();
+              }
+            });
+        final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+        dialog.show();
+      }
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
   }
 }
