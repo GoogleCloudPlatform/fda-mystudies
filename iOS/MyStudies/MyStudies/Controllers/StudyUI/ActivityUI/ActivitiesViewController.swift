@@ -1017,6 +1017,9 @@ extension ActivitiesViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
 
+      if reachability.connection == .unavailable {
+          return
+      }
     let availabilityStatus = ActivityAvailabilityStatus(rawValue: indexPath.section)!
 
     switch availabilityStatus {
