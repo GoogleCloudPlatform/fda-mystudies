@@ -134,29 +134,41 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
         case .cellular:
             print("Network available via Cellular Data.")
 //            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            self.view.hideAllToasts()
+            setOnline()
             break
         case .wifi:
             print("Network available via WiFi.")
 //            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            self.view.hideAllToasts()
+            setOnline()
             break
         case .none:
             print("Network is not available.")
 //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
-                                position: .center, title: nil, image: nil, completion: nil)
-            
+            setOffline()
             break
         case .unavailable:
             print("Network is  unavailable.")
 //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
-                                position: .center, title: nil, image: nil, completion: nil)
+            setOffline()
             break
         }
     }
-    
+    func setOnline() {
+        self.view.hideAllToasts()
+        setToggleButtonsEnable(status: true)
+    }
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
+        setToggleButtonsEnable(status: false)
+        
+    }
+    func setToggleButtonsEnable(status: Bool) {
+        if let cells = self.tableViewProfile?.visibleCells {
+            for cell in cells where cell.isKind(of: ProfileTableViewCell.self) {
+                (cell as! ProfileTableViewCell).switchToggle?.isEnabled = status
+            }
+        }
+    }
     override func showOfflineIndicator() -> Bool {
         return false
     }

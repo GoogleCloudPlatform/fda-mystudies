@@ -41,6 +41,33 @@ class ReachabilityIndicatorManager: NSObject {
             indicatorView?.alignTop(view: viewController.view, padding: 0)
         }
     }
+    func shouldPresentIndicator(viewController: UIViewController, isOffline: Bool) {
+        
+        print("Indicator view should be presented")
+        if let indicatorView = self.indicatorView {
+            viewController.view.addSubview(indicatorView)
+            print("Indicator view already allocated")
+        } else {
+            print("Indicator view needs to be created")
+            self.indicatorView = self.setIndicatorView()
+            viewController.view.addSubview(indicatorView!)
+        }
+        
+        indicatorView?.frame = CGRect.init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        indicatorView?.isHidden = false
+        indicatorView?.translatesAutoresizingMaskIntoConstraints = false
+        indicatorView?.makeWidth(.equal, UIScreen.main.bounds.width)
+        if isOffline == false {
+            indicatorView?.isOffline(status: false)
+//                indicatorView?.makeHeight(.equal, 200)
+        } else {
+            indicatorView?.isOffline(status: true)
+//                indicatorView?.makeHeight(.equal, 275)
+        }
+        
+        indicatorView?.alignCenterHorizontal(padding: 0)
+        indicatorView?.alignTop(view: viewController.view, padding: 0)
+    }
     func setLayoutContraints(view: UIView) {
         let leadingConstraint = NSLayoutConstraint(item: indicatorView!, attribute: .leading, relatedBy: .equal,
                                                    toItem: view, attribute: .leading, multiplier: 1, constant: 0)

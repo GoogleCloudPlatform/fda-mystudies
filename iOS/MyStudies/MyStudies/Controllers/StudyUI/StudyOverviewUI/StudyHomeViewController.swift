@@ -139,27 +139,52 @@ class StudyHomeViewController: UIViewController {
         case .cellular:
             print("Network available via Cellular Data.")
 //            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            self.view.hideAllToasts()
+            setOnline()
             break
         case .wifi:
             print("Network available via WiFi.")
 //            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            self.view.hideAllToasts()
+            setOnline()
             break
         case .none:
             print("Network is not available.")
 //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
-            
+            setOffline()
             break
         case .unavailable:
             print("Network is  unavailable.")
 //            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+            setOffline()
             break
         }
     }
-    
+    func setOnline() {
+        if let viewController = self.presentedViewController {
+//            viewController.view.hideAllToasts()
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+            self.view.hideAllToasts()
+        } else {
+            self.view.hideAllToasts()
+        }
+        
+        buttonJoinStudy?.isEnabled = true
+        buttonJoinStudy?.layer.opacity = 1
+        
+    }
+    func setOffline() {
+        if let viewController = self.presentedViewController {
+//            self.view.hideAllToasts()
+//            viewController.view.hideAllToasts()
+//            viewController.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
+//
+            ReachabilityIndicatorManager.shared.shouldPresentIndicator(viewController: viewController, isOffline: true)
+        } else {
+            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
+        }
+        buttonJoinStudy?.isEnabled = false
+        buttonJoinStudy?.layer.opacity = 0.5
+    }
     override func showOfflineIndicator() -> Bool {
         return true
     }
@@ -1189,6 +1214,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
     print("stepViewControllerWillAppear stepViewController---")
+      
     if (taskViewController.result.results?.count)! > 1 {
       if activityBuilder?.actvityResult?.result?.count
         == taskViewController.result.results?

@@ -135,10 +135,12 @@ class StudyDashboardViewController: UIViewController {
         }
     }
     func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .bottom, title: nil, image: nil, completion: nil)
         shareButton.isEnabled = false
         shareButton.layer.opacity = 0.5
     }
     func setOnline() {
+        self.view.hideAllToasts()
         shareButton.isEnabled = true
         shareButton.layer.opacity = 1
     }
