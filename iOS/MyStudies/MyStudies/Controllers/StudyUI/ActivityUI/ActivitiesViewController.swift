@@ -641,7 +641,9 @@ class ActivitiesViewController: UIViewController {
     )
 
     /// Update to server
-    EnrollServices().updateCompletionAdherence(studyStatus: status, delegate: self)
+      if reachability.connection != .unavailable {
+          EnrollServices().updateCompletionAdherence(studyStatus: status, delegate: self)
+      }
     /// Update Local DB
     DBHandler.updateStudyParticipationStatus(study: currentStudy)
 

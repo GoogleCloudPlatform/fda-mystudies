@@ -190,15 +190,16 @@ class StudyDashboardViewController: UIViewController {
     if !(UserDefaults.standard.bool(forKey: key)) {
       DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
       StudyDashboard.instance.dashboardResponse = []
-      
-      self.addProgressIndicator(with: kDashSetupMessage)
-      responseDataFetch?.checkUpdates { [unowned self] in
-        
-        DispatchQueue.main.async {
-          self.loadStatsFromDB(for: study)
-          self.removeProgressIndicator()
+        if reachability.connection != .unavailable {
+            self.addProgressIndicator(with: kDashSetupMessage)
+            responseDataFetch?.checkUpdates { [unowned self] in
+              
+              DispatchQueue.main.async {
+                self.loadStatsFromDB(for: study)
+                self.removeProgressIndicator()
+              }
+            }
         }
-      }
     } else {
       loadStatsFromDB(for: study)
     }
