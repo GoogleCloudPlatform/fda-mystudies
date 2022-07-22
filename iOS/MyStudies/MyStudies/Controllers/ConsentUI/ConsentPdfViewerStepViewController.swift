@@ -21,6 +21,7 @@ import ResearchKit
 import UIKit
 import WebKit
 import FirebaseAnalytics
+import Reachability
 
 let kPdfMimeType = "application/pdf"
 let kUTF8Encoding = "UTF-8"
@@ -44,7 +45,7 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   @IBOutlet weak var webView: WKWebView!
   @IBOutlet weak var buttonEmailPdf: UIBarButtonItem?
   @IBOutlet weak var buttonNext: UIButton?
-
+  private var reachability: Reachability!
   var pdfData: Data?
   var consentTempURL: URL?
 
@@ -74,8 +75,56 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     super.viewDidLoad()
     webView.navigationDelegate = self
     webView.contentScaleFactor = 1.0
+      setupNotifiers()
   }
-
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            print("Network available via Cellular Data.")
+//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            setOnline()
+            break
+        case .wifi:
+            print("Network available via WiFi.")
+//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            setOnline()
+            break
+        case .none:
+            print("Network is not available.")
+//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            setOffline()
+            break
+        case .unavailable:
+            print("Network is  unavailable.")
+//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
+            setOffline()
+            break
+        }
+    }
+    func setOnline() {
+        buttonEmailPdf?.isEnabled = true
+        ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+        self.view.hideAllToasts()
+    }
+    func setOffline() {
+        ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                            position: .center, title: nil, image: nil, completion: nil)
+        buttonEmailPdf?.isEnabled = false
+    }
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     loadPDF()
