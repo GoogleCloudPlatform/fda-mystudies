@@ -849,15 +849,15 @@ extension ResourcesViewController: UITableViewDelegate {
         UserDefaults.standard.set("DataSPdf", forKey: "consent")
         UserDefaults.standard.synchronize()
         print("Study.currentStudy?.signedConsentDataSPdfFilePath---\(Study.currentStudy?.signedConsentDataSPdfFilePath)")
-        if let consentPath = Study.currentStudy?.signedConsentDataSPdfFilePath, !consentPath.isEmpty {
-          self.pushToResourceDetails(with: consentPath)
-        } else {
+//        if let consentPath = Study.currentStudy?.signedConsentDataSPdfFilePath, !consentPath.isEmpty {
+//          self.pushToResourceDetails(with: consentPath)
+//        } else {
           ConsentServices().getConsentPDFForStudy(
             studyId: currentStudy.studyId ?? "",
             consentVersion: currentStudy.signedConsentVersion ?? "",
             delegate: self
           )
-        }
+//        }
       }
     } else if let resource = self.tableRows[indexPath.row] as? Resource {
       resourceLink = resource.file?.getFileLink()

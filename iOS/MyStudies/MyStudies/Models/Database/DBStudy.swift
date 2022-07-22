@@ -61,6 +61,7 @@ class DBStudy: Object {
   @objc dynamic var joiningDate: Date?
   @objc dynamic var completion: Int = 0
   @objc dynamic var adherence: Int = 0
+  @objc dynamic var userStudyVersion: String = ""
 
   /// Anchor date value
   @objc dynamic var anchorDate: Date?

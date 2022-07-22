@@ -543,34 +543,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   /// Check the  current Consent Status for Updated Version
   /// - Parameter controller: Instance of `UIVIewController`
   func checkConsentStatus(controller: UIViewController) {
-
+    
     self.selectedController = controller
-
+    
     if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       // Study consent is updated: Please Present Consent UI.
-      guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
-      var topController: UIViewController = navigationController
-      if navigationController.viewControllers.count > 0 {
-        topController = navigationController.viewControllers.first!
+      //      guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
+      //      var topController: UIViewController = navigationController
+      //      if navigationController.viewControllers.count > 0 {
+      //        topController = navigationController.viewControllers.first!
+      //      }
+      
+      var topController: UIViewController?
+      if let navigationController = self.window?.rootViewController as? UINavigationController {
+        print("111---")
+        topController = navigationController
+        if navigationController.viewControllers.count > 0 {
+          topController = navigationController.viewControllers.first!
+        }
+      } else {
+        print("222---")
+        let navigationController = self.window?.rootViewController as? UIViewController
+        topController = navigationController
+        //        topController = (self.window?.topMostController())!
       }
-
-      UIUtilities.showAlertMessageWithTwoActionsAndHandler(
-        NSLocalizedString(kConsentUpdatedTitle, comment: ""),
-        errorMessage: NSLocalizedString(kMessageConsentUpdated, comment: ""),
-        errorAlertActionTitle: NSLocalizedString(kReviewTitle, comment: ""),
-        errorAlertActionTitle2: nil,
-        viewControllerUsed: topController,
-        action1: {
-
-          self.addAndRemoveProgress(add: true)
-          WCPServices().getEligibilityConsentMetadata(
-            studyId: (Study.currentStudy?.studyId)!,
-            delegate: self as NMWebServiceDelegate
-          )
-
-        },
-        action2: {}
-      )
+      
+      if let topController2 = topController {
+        
+        UIUtilities.showAlertMessageWithTwoActionsAndHandler(
+          NSLocalizedString(kConsentUpdatedTitle, comment: ""),
+          errorMessage: NSLocalizedString(kMessageConsentUpdated, comment: ""),
+          errorAlertActionTitle: NSLocalizedString(kReviewTitle, comment: ""),
+          errorAlertActionTitle2: nil,
+          viewControllerUsed: topController2,
+          action1: {
+            
+            self.addAndRemoveProgress(add: true)
+            WCPServices().getEligibilityConsentMetadata(
+              studyId: (Study.currentStudy?.studyId)!,
+              delegate: self as NMWebServiceDelegate
+            )
+            
+          },
+          action2: {}
+        )
+      }
     }
   }
 

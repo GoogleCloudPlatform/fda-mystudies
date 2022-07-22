@@ -173,6 +173,7 @@ class DBHandler: NSObject {
             dbStudy?.joiningDate = studyStatus.joiningDate
             dbStudy?.completion = studyStatus.completion
             dbStudy?.adherence = studyStatus.adherence
+            dbStudy?.userStudyVersion = studyStatus.userStudyVersion
           }
           if dbStudy?.participatedStatus
             == UserStudyStatus.StudyStatus.enrolled
@@ -221,6 +222,7 @@ class DBHandler: NSObject {
       dbStudy.joiningDate = userStudyStatus.joiningDate
       dbStudy.completion = userStudyStatus.completion
       dbStudy.adherence = userStudyStatus.adherence
+      dbStudy.userStudyVersion = userStudyStatus.userStudyVersion
     }
     dbStudy.withdrawalConfigrationMessage = study.withdrawalConfigration?.message
     dbStudy.withdrawalConfigrationType = study.withdrawalConfigration?.type?.rawValue
@@ -272,6 +274,7 @@ class DBHandler: NSObject {
       participatedStatus.tokenIdentifier = dbStudy.tokenIdentifier ?? ""
       participatedStatus.dataSharingPermission = dbStudy.dataSharingPermission
       participatedStatus.adherence = dbStudy.adherence
+      participatedStatus.userStudyVersion = dbStudy.userStudyVersion
       participatedStatus.completion = dbStudy.completion
       participatedStatus.joiningDate = dbStudy.joiningDate
 
@@ -480,6 +483,7 @@ class DBHandler: NSObject {
         dbStudy?.joiningDate = studyStatus.joiningDate
         dbStudy?.completion = studyStatus.completion
         dbStudy?.adherence = studyStatus.adherence
+        dbStudy?.userStudyVersion = studyStatus.userStudyVersion
       }
     }
   }
