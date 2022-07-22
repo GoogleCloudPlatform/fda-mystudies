@@ -19,6 +19,7 @@
 
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 // MARK: - ActivitySchedules Class
 class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
@@ -442,7 +443,16 @@ class ResponseDataFetch: NMWebServiceDelegate {
   }
 
   func sendRequestToGetDashboardInfo() {
-    WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
+      do {
+          let reachability = try Reachability()
+          if reachability.connection != .unavailable {
+              WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
+          }
+      } catch(let error) {
+              print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+          }
+      
+//    WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
   }
 
   func getDataKeysForCurrentStudy() {
