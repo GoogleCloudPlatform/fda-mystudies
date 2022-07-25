@@ -65,6 +65,7 @@ class ActivitiesViewController: UIViewController {
   private lazy var allActivityList: [[String: Any]]! = []
 
   private var lastActivityResponse: JSONDictionary?
+  var fromConsentViewDidload = true
 
   /// Holds the applied FilterTypes.
   var selectedFilter: ActivityFilterType?
@@ -84,6 +85,7 @@ class ActivitiesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    fromConsentViewDidload = true
       setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "Activities"
@@ -172,6 +174,31 @@ class ActivitiesViewController: UIViewController {
     }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    
+    if !fromConsentViewDidload && Utilities.isStandaloneApp() {
+      print("fromConsentViewDidload---")
+      if (Study.currentStudy?.studyId) != nil {
+        if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+          NotificationHandler.instance.activityId = ""
+          if StudyUpdates.studyVersion != nil {
+            Study.currentStudy?.newVersion = StudyUpdates.studyVersion
+          }
+          presentUpdatedConsent()
+        } else {
+          print("55cfromConsentViewDidload---")
+          WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
+        }
+        
+      } else {
+        print("55afromConsentViewDidload---")
+        WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
+      }
+    } else {
+      print("55bfromConsentViewDidload---")
+      WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
+    }
+    fromConsentViewDidload = false
+    
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     setNavigationBarColor()
     Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
@@ -1193,7 +1220,9 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
 
       // Handle response for study updates.
-      if Study.currentStudy?.version == StudyUpdates.studyVersion {
+//      if Study.currentStudy?.version == StudyUpdates.studyVersion {
+      if Study.currentStudy?.version == StudyUpdates.studyVersion &&
+                Study.currentStudy?.userParticipateState.userStudyVersion == Study.currentStudy?.version {
 
         self.loadActivitiesFromDatabase()
         self.removeProgressIndicator()
