@@ -617,7 +617,9 @@ public class ManageUserServiceImpl implements ManageUserService {
     User user = UserMapper.prepareUserInfo(adminDetails);
     user.setIdpUser((null != adminDetails.getIdpUser()) ? adminDetails.getIdpUser() : false);
     user.setDeletedOrDisabledInIdp(
-        isIdpDeletedOrDisabled(adminDetails.getIdpUser(), adminDetails.getEmail()));
+        isIdpDeletedOrDisabled(
+            (null != adminDetails.getIdpUser()) ? adminDetails.getIdpUser() : false,
+            adminDetails.getEmail()));
     user.setMfaEnabledForPM(appConfig.isMfaEnabled());
     if (adminDetails.isSuperAdmin()) {
       logger.exit(String.format("superadmin=%b, status=%s", user.isSuperAdmin(), user.getStatus()));
