@@ -65,18 +65,7 @@ input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
 
-.myarrow:after {
-  content: "";
-    maxlength="100";
-    position: absolute;
-    top: 36px;
-    right: 25px;
-    border-width: 4px 4px;
-    border-style: solid;
-    pointer-events: none;
-    border-color: #2d2926 transparent transparent transparent;
 
-}
 
 </style>
 
@@ -241,7 +230,7 @@ input::-webkit-calendar-picker-indicator {
             <c:set var="idpEnabled" value="${idpEnabled}"/>
             <c:set var="mfaEnabled" value="${mfaEnabled}"/>
             <c:if test="${idpEnabled eq false }">
-            <div class="form-group myarrow">
+            <div class="form-group">
               <input type="text" class="form-control" id="emailId"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
@@ -254,7 +243,7 @@ input::-webkit-calendar-picker-indicator {
             </div>
             </c:if>
             <c:if test="${idpEnabled eq true }">
-		     <div class="form-group myarrow">
+		     <div class="form-group">
 		         <input type="text" class="form-control" id="emailId" list="mine"
                      name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" 
