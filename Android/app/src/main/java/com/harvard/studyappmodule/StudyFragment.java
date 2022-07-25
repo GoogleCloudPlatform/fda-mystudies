@@ -1487,6 +1487,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         // get the encrypted file path
         intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
         startActivity(intent);
+        getActivity().finish();
       }
     }
   }

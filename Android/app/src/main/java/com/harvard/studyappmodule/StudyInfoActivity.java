@@ -309,6 +309,7 @@ public class StudyInfoActivity extends AppCompatActivity
             try {
               Intent intent = new Intent(StudyInfoActivity.this, WebViewActivity.class);
               intent.putExtra("consent", consentDocumentData.getConsent().getContent());
+              intent.putExtra("type","text");
               startActivity(intent);
             } catch (Exception e) {
               Logger.log(e);

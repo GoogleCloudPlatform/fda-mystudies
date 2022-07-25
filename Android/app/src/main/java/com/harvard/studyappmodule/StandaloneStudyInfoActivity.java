@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -72,6 +73,7 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
@@ -94,7 +96,7 @@ import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
 
 public class StandaloneStudyInfoActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
 
   private static final int JOIN_ACTION_SIGIN = 100;
   private static final int SPECIFIC_STUDY = 103;
@@ -125,12 +127,14 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   AlertDialog.Builder alertDialogBuilder;
   private CustomFirebaseAnalytics analyticsInstance;
   private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_standalone_study_info);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
 
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
@@ -428,6 +432,19 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                 StandaloneStudyInfoActivity.this, R.string.unable_to_parse, Toast.LENGTH_SHORT)
             .show();
       }
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      joinButton.setClickable(false);
+      joinButton.setAlpha(.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      joinButton.setClickable(true);
+      joinButton.setAlpha(1F);
     }
   }
 
@@ -927,15 +944,13 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   @Override
   protected void onResume() {
     super.onResume();
-    if (!AppController.isNetworkAvailable(this)) {
-      offlineIndicatior.setVisibility(View.VISIBLE);
-      joinButton.setClickable(false);
-      joinButton.setAlpha(0.5F);
-    }
     IntentFilter filter = new IntentFilter();
     filter.addAction(BuildConfig.APPLICATION_ID);
     versionReceiver = new VersionReceiver();
     registerReceiver(versionReceiver, filter);
+
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
   }
 
   @Override
@@ -951,6 +966,9 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       if (alertDialog != null) alertDialog.dismiss();
     } catch (Exception e) {
       e.printStackTrace();
+    }
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 

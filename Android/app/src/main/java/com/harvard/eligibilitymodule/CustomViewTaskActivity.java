@@ -36,6 +36,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import com.harvard.R;
+import com.harvard.studyappmodule.StandaloneStudyInfoActivity;
 import com.harvard.studyappmodule.activitybuilder.model.Eligibility;
 import com.harvard.studyappmodule.consent.model.CorrectAnswers;
 import com.harvard.studyappmodule.custom.StepSwitcherCustom;
@@ -43,6 +44,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
 import com.harvard.utils.NetworkChangeReceiver;
+import com.harvard.utils.SharedPreferenceHelper;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
@@ -428,7 +430,8 @@ public class CustomViewTaskActivity extends AppCompatActivity
   @Override
   public void onNetworkChanged(boolean status) {
     if (!status) {
-      if (!AppController.isNetworkAvailable(this)) {
+      if (SharedPreferenceHelper.readPreference(CustomViewTaskActivity.this, "offlineEnroll", "")
+          .equalsIgnoreCase("")) {
         androidx.appcompat.app.AlertDialog.Builder alertDialog =
             new androidx.appcompat.app.AlertDialog.Builder(
                 CustomViewTaskActivity.this, R.style.Style_Dialog_Rounded_Corner);
@@ -447,12 +450,17 @@ public class CustomViewTaskActivity extends AppCompatActivity
                 //          analyticsInstance.logEvent(
                 //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
                 // eventProperties);
+                SharedPreferenceHelper.writePreference(
+                    CustomViewTaskActivity.this, "offlineEnroll", "occured");
                 dialogInterface.dismiss();
               }
             });
         final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
         dialog.show();
       }
+    } else {
+      SharedPreferenceHelper.writePreference(
+          CustomViewTaskActivity.this, "offlineEnroll", "");
     }
   }
 

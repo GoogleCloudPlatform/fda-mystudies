@@ -1253,7 +1253,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   @Override
   public void onNetworkChanged(boolean status) {
     if (!status) {
-      if (!AppController.isNetworkAvailable(this)) {
+      if (SharedPreferenceHelper.readPreference(
+              CustomConsentViewTaskActivity.this, "offlineEnroll", "")
+          .equalsIgnoreCase("")) {
         androidx.appcompat.app.AlertDialog.Builder alertDialog =
             new androidx.appcompat.app.AlertDialog.Builder(
                 CustomConsentViewTaskActivity.this, R.style.Style_Dialog_Rounded_Corner);
@@ -1272,12 +1274,17 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 //          analyticsInstance.logEvent(
                 //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
                 // eventProperties);
+                SharedPreferenceHelper.writePreference(
+                    CustomConsentViewTaskActivity.this, "offlineEnroll", "occured");
                 dialogInterface.dismiss();
               }
             });
         final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
         dialog.show();
       }
+    } else {
+      SharedPreferenceHelper.writePreference(
+          CustomConsentViewTaskActivity.this, "offlineEnroll", "");
     }
   }
 

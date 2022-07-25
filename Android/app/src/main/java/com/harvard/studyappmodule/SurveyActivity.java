@@ -27,7 +27,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -725,7 +724,12 @@ public class SurveyActivity extends AppCompatActivity
   }
 
   @Override
-  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {}
+  public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
+    if (responseCode == LOGOUT_REPSONSECODE) {
+      AppController.getHelperProgressDialog().dismissDialog();
+      Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
+    }
+  }
 
   private class ClearNotification extends AsyncTask<String, Void, String> {
 
