@@ -615,7 +615,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND));
 
     User user = UserMapper.prepareUserInfo(adminDetails);
-    user.setIdpUser(adminDetails.getIdpUser());
+    user.setIdpUser((null != adminDetails.getIdpUser()) ? adminDetails.getIdpUser() : false);
     user.setDeletedOrDisabledInIdp(
         isIdpDeletedOrDisabled(adminDetails.getIdpUser(), adminDetails.getEmail()));
     user.setMfaEnabledForPM(appConfig.isMfaEnabled());
@@ -1046,7 +1046,7 @@ public class ManageUserServiceImpl implements ManageUserService {
               .stream()
               .filter(
                   user ->
-                      user.getIdpUser()
+                      ((null != user.getIdpUser()) ? user.getIdpUser() : false)
                           && (user.getStatus().equals(UserStatus.ACTIVE.getValue())
                               || user.getStatus().equals(UserStatus.INVITED.getValue())))
               .map(UserRegAdminEntity::getEmail)
