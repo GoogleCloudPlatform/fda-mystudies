@@ -24,6 +24,7 @@ import UIKit
 import UserNotifications
 import Firebase
 import FirebaseAnalytics
+import Reachability
 
 @UIApplicationMain
 
@@ -61,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   var blockerScreen: AppUpdateBlocker?
   var passcodeParentControllerWhileSetup: UIViewController?
+    
+  private var reachability: Reachability!
 
   /// to be used in case of ineligible
   var consentToken: String? = ""
@@ -205,7 +208,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    
+    setupReachability()
     // Check if Database needs migration
     self.checkForRealmMigration()
     blockerScreen?.isHidden = true
@@ -376,6 +379,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     blockerScreen?.removeFromSuperview()
   }
 
+  func setupReachability() {
+      do {
+          self.reachability = try Reachability()
+          } catch(let error) {
+            print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+          }
+  }
   // MARK: - NOTIFICATION
 
   func application(
@@ -578,11 +588,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
           viewControllerUsed: topController2,
           action1: {
             
-            self.addAndRemoveProgress(add: true)
-            WCPServices().getEligibilityConsentMetadata(
-              studyId: (Study.currentStudy?.studyId)!,
-              delegate: self as NMWebServiceDelegate
-            )
+              if self.reachability.connection != .unavailable {
+                  self.addAndRemoveProgress(add: true)
+                  WCPServices().getEligibilityConsentMetadata(
+                    studyId: (Study.currentStudy?.studyId)!,
+                    delegate: self as NMWebServiceDelegate
+                  )
+              } else {
+                  if controller.isKind(of: ActivitiesViewController.self) {
+                      ReachabilityIndicatorManager.shared.presentIndicator(viewController: controller, isOffline: true)
+                  }
+              }
             
           },
           action2: {}
