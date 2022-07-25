@@ -289,6 +289,9 @@ public class StudyStateServiceImpl implements StudyStateService {
       participantRegistrySite.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
 
+      participantStudiesInfoDao.deleteParticipantFromStudyConsentEntity(
+          participantStudy.get().getId());
+      
       participantEnrollmentHistoryRepository.updateWithdrawalDateAndStatus(
           participantStudy.get().getUserDetails().getId(),
           participantStudy.get().getStudy().getId(),

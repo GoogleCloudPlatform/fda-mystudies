@@ -4849,7 +4849,8 @@ public class StudyDAOImpl implements StudyDAO {
             newstudyVersionBo = SerializationUtils.clone(studyVersionBo);
             newstudyVersionBo.setStudyVersion(studyVersionBo.getStudyVersion() + 0.1f);
             if (studyBo.getHasConsentDraft().equals(1)) {
-              newstudyVersionBo.setConsentVersion(studyVersionBo.getConsentVersion() + 0.1f);
+              newstudyVersionBo.setConsentVersion(
+                  Float.valueOf(String.format("%.02f", studyVersionBo.getConsentVersion() + 0.1f)));
             }
             newstudyVersionBo.setVersionId(null);
             session.save(newstudyVersionBo);
@@ -9085,7 +9086,7 @@ public class StudyDAOImpl implements StudyDAO {
     EffectivePeriod effectivePeriod = new EffectivePeriod();
     try {
       startDateTime =
-          activeTask.getActiveTaskLifetimeStart()
+          StringUtils.isEmpty(activeTask.getActiveTaskLifetimeStart())
               + " "
               + FdahpStudyDesignerConstants.DEFAULT_MIN_TIME;
       endDateTime =
@@ -9886,12 +9887,12 @@ public class StudyDAOImpl implements StudyDAO {
     EffectivePeriod effectivePeriod = new EffectivePeriod();
     effectivePeriod = getTimeDetailsOfQuestionnaire(session, questionnaireBo);
     effectivePeriod.setStart(
-        effectivePeriod.getStart() != null
+        StringUtils.isNotBlank(effectivePeriod.getStart())
             ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
                 effectivePeriod.getStart(), DATE_FORMAT_RESPONSE_MOBILE, DATE_FORMAT_RESPONSE_FHIR)
             : null);
     effectivePeriod.setEnd(
-        effectivePeriod.getEnd() != null
+        StringUtils.isNotBlank(effectivePeriod.getEnd())
             ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
                 effectivePeriod.getEnd(), DATE_FORMAT_RESPONSE_MOBILE, DATE_FORMAT_RESPONSE_FHIR)
             : null);
