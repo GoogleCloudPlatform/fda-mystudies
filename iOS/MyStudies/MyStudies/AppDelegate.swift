@@ -1084,7 +1084,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Handler for User Signout response, resets all user related data from local database
   func handleSignoutResponse() {
-
     if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
       ORKPasscodeViewController.removePasscodeFromKeychain()
     }
@@ -1122,7 +1121,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Handler for updating User defaults
   func handleSignoutAfterLogoutResponse() {
-
     if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
       ORKPasscodeViewController.removePasscodeFromKeychain()
     }
@@ -2024,6 +2022,7 @@ extension AppDelegate: ORKPasscodeDelegate {
         Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
           buttonClickReasonsKey: "ForgotPasscodeAlert OK"
         ])
+        self.iscomingFromForgotPasscode = true
         self.window?.addProgressIndicatorOnWindowFromTop()
 
         viewController.dismiss(

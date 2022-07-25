@@ -175,27 +175,32 @@ class ActivitiesViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    if !fromConsentViewDidload && Utilities.isStandaloneApp() {
-      print("fromConsentViewDidload---")
-      if (Study.currentStudy?.studyId) != nil {
-        if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
-          NotificationHandler.instance.activityId = ""
-          if StudyUpdates.studyVersion != nil {
-            Study.currentStudy?.newVersion = StudyUpdates.studyVersion
+    let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    appDelegate.iscomingFromForgotPasscode
+    print("1appDelegate.iscomingFromForgotPasscode---\(appDelegate.iscomingFromForgotPasscode)")
+    if !appDelegate.iscomingFromForgotPasscode {
+      if !fromConsentViewDidload && Utilities.isStandaloneApp() {
+        print("fromConsentViewDidload---")
+        if (Study.currentStudy?.studyId) != nil {
+          if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+            NotificationHandler.instance.activityId = ""
+            if StudyUpdates.studyVersion != nil {
+              Study.currentStudy?.newVersion = StudyUpdates.studyVersion
+            }
+            presentUpdatedConsent()
+          } else {
+            print("55cfromConsentViewDidload---")
+            WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
           }
-          presentUpdatedConsent()
+          
         } else {
-          print("55cfromConsentViewDidload---")
+          print("55afromConsentViewDidload---")
           WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
         }
-        
       } else {
-        print("55afromConsentViewDidload---")
+        print("55bfromConsentViewDidload---")
         WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
       }
-    } else {
-      print("55bfromConsentViewDidload---")
-      WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
     }
     fromConsentViewDidload = false
     
