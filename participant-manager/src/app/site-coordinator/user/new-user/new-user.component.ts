@@ -236,7 +236,10 @@ export class AddNewUserComponent
       }
     });
 
-    if (!idpUser) {
+    if (!idpUser == true) {
+      this.modalRef.hide();
+    }
+    else{
       this.modalRef = this.modalService.show(template);
     }
   }
