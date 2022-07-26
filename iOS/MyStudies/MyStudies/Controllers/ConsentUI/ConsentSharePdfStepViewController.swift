@@ -154,6 +154,9 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
     labelTitle.isHidden = false
     lableDescription.isHidden = false
     print("1enrollmentCompleted---")
+    UserDefaults.standard.setValue("\(Study.currentStudy?.studyId ?? "")", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
+    
     if (Study.currentStudy?.studyId) != nil {
       print("2enrollmentCompleted---")
       StudyUpdates.studyConsentUpdated = false

@@ -889,9 +889,23 @@ class ActivitiesViewController: UIViewController {
   /// Handler for studyUpdateResponse.
   func handleStudyUpdatesResponse() {
     guard let currentStudy = Study.currentStudy else { return }
+    print("50enrollmentCompleted---\(StudyUpdates.studyVersion)")
     Study.currentStudy?.newVersion = StudyUpdates.studyVersion
-    DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
+    
 
+    if UserDefaults.standard.value(forKey: "enrollmentCompleted") as? String ?? "" == "\(Study.currentStudy?.studyId ?? "")" {
+      print("57enrollmentCompleted---")
+      UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+      UserDefaults.standard.synchronize()
+      DBHandler.updateMetaDataEnrolledToUpdateForStudy(study: currentStudy, updateDetails: nil)
+      self.removeProgressIndicator()
+      
+      UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+      UserDefaults.standard.synchronize()
+    } else {
+      print("60enrollmentCompleted---\(StudyUpdates.studyVersion)")
+      
+      DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
     //Consent Updated
     if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       presentUpdatedConsent()
@@ -904,6 +918,7 @@ class ActivitiesViewController: UIViewController {
 
     } else {
       self.checkForActivitiesUpdates()
+    }
     }
 
   }

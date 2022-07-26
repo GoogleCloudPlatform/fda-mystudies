@@ -464,6 +464,27 @@ class DBHandler: NSObject {
     }
 
   }
+  
+  class func updateMetaDataEnrolledToUpdateForStudy(study: Study, updateDetails: StudyUpdates?) {
+
+    let realm = DBHandler.getRealmObject()!
+    let studies = realm.objects(DBStudy.self).filter("studyId == %@", study.studyId ?? "")
+    let dbStudy = studies.last
+
+    try? realm.write {
+//      dbStudy?.updateResources = StudyUpdates.studyResourcesUpdated
+//      dbStudy?.updateConsent = StudyUpdates.studyConsentUpdated
+//      dbStudy?.updateStudyEnrollAgain = StudyUpdates.studyEnrollAgain
+//      dbStudy?.updateActivities = StudyUpdates.studyActivitiesUpdated
+//      dbStudy?.updateInfo = StudyUpdates.studyInfoUpdated
+      if StudyUpdates.studyVersion != nil {
+        dbStudy?.version = StudyUpdates.studyVersion
+      } else {
+        dbStudy?.version = dbStudy?.updatedVersion
+      }
+    }
+
+  }
 
   /// This method will update the participation status of the study.
   /// - Parameter study: Instance of the study participated.
