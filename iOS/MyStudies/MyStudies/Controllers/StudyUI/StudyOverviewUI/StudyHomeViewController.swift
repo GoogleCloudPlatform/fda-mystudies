@@ -253,7 +253,7 @@ class StudyHomeViewController: UIViewController {
     for subview in view.subviews {
       subview.isHidden = false
       let val = subview.alpha
-      if val == 0.6499999761581421 {
+      if val == 0.6499999761581421 && subview != viewBottombarBg && subview != viewBottombarTopBg {
         subview.alpha = 0
       }
     }
@@ -1033,7 +1033,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
     }
 
     if requestName as String == RegistrationMethods.userProfile.description {
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
       } else {
         EnrollServices().getStudyStates(self)
