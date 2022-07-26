@@ -350,7 +350,28 @@ struct StudyUpdates {
   /// Initializes all properties
   /// - Parameter detail: JSONDictionary` contains all proeprties of `StudyUpdates`
   init(detail: [String: Any]) {
+    
+    if UserDefaults.standard.value(forKey: "enrollmentCompleted") as? String ?? "" == "\(Study.currentStudy?.studyId ?? "")" {
+      print("20enrollmentCompleted---")
+    }
 
+    if (Study.currentStudy?.studyId) != nil && UserDefaults.standard.value(forKey: "enrollmentCompleted") as? String ?? "" == "\(Study.currentStudy?.studyId ?? "")" {
+      print("27enrollmentCompleted---")
+//      UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+//      UserDefaults.standard.synchronize()
+      StudyUpdates.studyConsentUpdated = false
+      StudyUpdates.studyVersion = detail[kStudyCurrentVersion] as? String
+      guard let currentStudy = Study.currentStudy else { return }
+      let status = User.currentUser.udpateUserStudyVersion(
+        studyId: currentStudy.studyId,
+        userStudyVersion: detail[kStudyCurrentVersion] as? String ?? ""
+      )
+      print("23enrollmentCompleted---")
+      DBHandler.updateStudyParticipationStatus(study: currentStudy)
+      print("24enrollmentCompleted---")
+    }
+    else {
+      print("29enrollmentCompleted---")
     if Utilities.isValidObject(someObject: detail[kStudyUpdates] as AnyObject?) {
 
       let updates = detail[kStudyUpdates] as! [String: Any]
@@ -373,5 +394,6 @@ struct StudyUpdates {
     }
     StudyUpdates.studyVersion = detail[kStudyCurrentVersion] as? String
     StudyUpdates.studyEnrollAgain = detail[kEnrollAgain] as? Bool ?? true
+    }
   }
 }
