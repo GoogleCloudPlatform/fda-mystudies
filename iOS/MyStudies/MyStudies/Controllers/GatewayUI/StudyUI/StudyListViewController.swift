@@ -128,6 +128,8 @@ class StudyListViewController: UIViewController {
     setNavigationBarColor()
     Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
     Utilities.removeImageLocalPath(localPathName: "ConsentpdfSharingImage")
+    UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
   }
 
   override func viewDidAppear(_ animated: Bool) {
