@@ -1033,7 +1033,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
     }
 
     if requestName as String == RegistrationMethods.userProfile.description {
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
       } else {
         EnrollServices().getStudyStates(self)
