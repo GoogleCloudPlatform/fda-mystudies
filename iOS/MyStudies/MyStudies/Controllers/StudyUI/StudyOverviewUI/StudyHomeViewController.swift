@@ -340,6 +340,11 @@ class StudyHomeViewController: UIViewController {
       consentResult?.token = appdelegate.consentToken
     }
 
+    print("2StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain---\(StudyUpdates.studyEnrollAgain)---\(StudyUpdates.studyConsentUpdated)---\(Study.currentStudy?.userParticipateState.status == .enrolled)---\(Study.currentStudy?.userParticipateState.status)")
+    
+    UserDefaults.standard.setValue("\(Study.currentStudy?.userParticipateState.status.description ?? "")", forKey: "consentEnrolledStatus")
+    UserDefaults.standard.synchronize()
+    
     EnrollServices().enrollForStudy(
       studyId: (Study.currentStudy?.studyId)!,
       token: (ConsentBuilder.currentConsent?.consentResult?.token)!,
