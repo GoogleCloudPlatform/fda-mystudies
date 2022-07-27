@@ -132,7 +132,17 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       participantStudiesBoList = session.createQuery(participantStudiesBoCriteria).getResultList();
 
       if (!participantStudiesBoList.isEmpty()) {
-        participantStudiesEntity = participantStudiesBoList.get(0);
+        if (!StringUtils.isEmpty(appConfig.getEnableConsentManagementAPI())
+            && Boolean.valueOf(appConfig.getEnableConsentManagementAPI())) {
+          for (ParticipantStudyEntity participantStudiesentity : participantStudiesBoList) {
+            if (participantStudiesentity.getParticipantId() != null) {
+              participantStudiesEntity = participantStudiesentity;
+              break;
+            }
+          }
+        } else {
+          participantStudiesEntity = participantStudiesBoList.get(0);
+        }
       }
     }
     logger.exit("getParticipantStudies() - Ends ");

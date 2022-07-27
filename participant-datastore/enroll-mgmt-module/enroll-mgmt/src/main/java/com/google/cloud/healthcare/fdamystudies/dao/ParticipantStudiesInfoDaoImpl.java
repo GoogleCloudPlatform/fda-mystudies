@@ -66,13 +66,14 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
       return null;
     }
   }
+
   @Override
   public void deleteParticipantFromStudyConsentEntity(String participantStudy) {
     logger.entry("begin deleteParticipantFromStudyConsentEntity()");
     try {
       Session session = this.sessionFactory.getCurrentSession();
       String hql =
-          "delete from StudyConsentEntity where participantStudy= :participantStudy and DataSharingConsentArtifactPath IS NOT NULL";
+          "Update StudyConsentEntity set DataSharingConsentArtifactPath=null where participantStudy= :participantStudy and DataSharingConsentArtifactPath IS NOT NULL";
       session.createQuery(hql).setString("participantStudy", participantStudy).executeUpdate();
     } catch (Exception e) {
       logger.error(
