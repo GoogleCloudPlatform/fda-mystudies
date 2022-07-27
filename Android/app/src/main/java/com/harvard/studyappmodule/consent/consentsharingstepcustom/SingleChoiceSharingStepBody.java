@@ -17,9 +17,6 @@ package com.harvard.studyappmodule.consent.consentsharingstepcustom;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import androidx.annotation.IdRes;
-import androidx.core.content.ContextCompat;
-
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,9 +26,10 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import androidx.annotation.IdRes;
+import androidx.core.content.ContextCompat;
 import com.harvard.R;
 import com.harvard.utils.CustomFirebaseAnalytics;
-
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.result.StepResult;
@@ -149,6 +147,7 @@ public class SingleChoiceSharingStepBody<T> implements StepBody {
           public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
             Choice<T> choice = choices[checkedId];
             currentSelected = choice.getValue();
+            radioGroup.jumpDrawablesToCurrentState();
           }
         });
 
