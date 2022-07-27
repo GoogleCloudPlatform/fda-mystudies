@@ -93,7 +93,7 @@ class ConsentServices: NSObject {
     let base64dataPdfImage =
     database64pdfdataImage?
       .base64EncodedString() ?? ""
-    print("database64dataImage---\(base64dataPdfImage)")
+//    print("database64dataImage---\(base64dataPdfImage)")
 
     let consent =
       [
@@ -102,7 +102,25 @@ class ConsentServices: NSObject {
         kConsentpdf: base64data,
       ] as [String: Any]
 
-    let params =
+    var params: [String : Any] = [:]
+    let val = UserDefaults.standard.value(forKey: "consentEnrolledStatus") as? String ?? ""
+    print("1StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain---\(StudyUpdates.studyEnrollAgain)---\(StudyUpdates.studyConsentUpdated)---\(Study.currentStudy?.userParticipateState.status == .enrolled)---\(Study.currentStudy?.userParticipateState.status)---\(val)+++")
+    
+    UserDefaults.standard.setValue("", forKey: "consentEnrolledStatus")
+    UserDefaults.standard.synchronize()
+    
+    if val != "Yet to enroll" {
+      params =
+        [
+          kStudyId: Study.currentStudy?.studyId ?? "",
+          kEligibility: eligibilityStatus,
+          "siteId": Study.currentStudy?.userParticipateState.siteID ?? "",
+          kConsent: consent,
+          kConsentSharing: userDataSharing,
+//          "dataSharingScreenShot": base64dataPdfImage,// base64dataImage,
+        ] as [String: Any]
+    } else {
+    params =
       [
         kStudyId: Study.currentStudy?.studyId ?? "",
         kEligibility: eligibilityStatus,
@@ -111,6 +129,7 @@ class ConsentServices: NSObject {
         kConsentSharing: userDataSharing,
         "dataSharingScreenShot": base64dataPdfImage,// base64dataImage,
       ] as [String: Any]
+    }
     let method = ConsentServerMethods.updateEligibilityConsentStatus.method
 
     self.sendRequestWith(method: method, params: params, headers: headerParams)

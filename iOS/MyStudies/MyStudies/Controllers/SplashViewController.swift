@@ -41,6 +41,7 @@ class SplashViewController: UIViewController {
     ud.set(false, forKey: kIsShowUpdateAppVersion)
     ud.set("", forKey: "pausedNotification")
     ud.removeObject(forKey: "isAlertShown")
+    ud.setValue("", forKey: "consentEnrolledStatus")
     ud.synchronize()
   }
 

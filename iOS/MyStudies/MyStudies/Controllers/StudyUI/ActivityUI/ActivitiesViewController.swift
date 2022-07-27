@@ -129,6 +129,7 @@ class ActivitiesViewController: UIViewController {
     }
     
     UserDefaults.standard.removeObject(forKey: "isAlertShown")
+    UserDefaults.standard.setValue("", forKey: "consentEnrolledStatus")
     UserDefaults.standard.synchronize()
    
   }
@@ -260,7 +261,7 @@ class ActivitiesViewController: UIViewController {
   @objc private func refreshActivities() {
     loadActivitiesFromDatabase()
   }
-
+  
   /// Checks for Activity updates from WCP.
   func checkForActivitiesUpdates() {
 
@@ -329,6 +330,8 @@ class ActivitiesViewController: UIViewController {
   }
 
   @objc func refresh(sender: AnyObject) {
+    UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
     WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
   }
 

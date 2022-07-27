@@ -31,6 +31,7 @@ class StudyDashboardTabbarViewController: UITabBarController {
     if #available(iOS 13.0, *) {
       self.tabBar.layer.borderColor = UIColor.systemGray4.cgColor
     }
+    self.delegate = self
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -87,5 +88,14 @@ extension StudyDashboardTabbarViewController: MFMailComposeViewControllerDelegat
     error: Error?
   ) {
     controller.dismiss(animated: true, completion: nil)
+  }
+}
+
+extension StudyDashboardTabbarViewController: UITabBarControllerDelegate {
+  
+  override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+    print("itemitem---\(item)")
+    UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
   }
 }
