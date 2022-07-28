@@ -109,49 +109,10 @@ class ResourcesViewController: UIViewController {
       StudyUpdates.studyResourcesUpdated = true
     }
   }
-    func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                               name: Notification.Name.reachabilityChanged, object: nil);
-          
-        do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-            } catch(let error) {
-              print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
-    }
-      
-    @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-              print("Network available via Cellular Data.")
-              setOnline()
-              break
-        case .wifi:
-              print("Network available via WiFi.")
-              setOnline()
-              break
-        case .none:
-              print("Network is not available.")
-              setOffline()
-              break
-        case .unavailable:
-              print("Network is  unavailable.")
-              setOffline()
-              break
-        }
-    }
-    func setOffline() {
-        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .bottom, title: nil, image: nil, completion: nil)
-    }
-    func setOnline() {
-        self.view.hideAllToasts()
-    }
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
-    print("viewWillAppearviewWillAppear---")
     self.tableView?.estimatedRowHeight = 65
     self.tableView?.rowHeight = UITableView.automaticDimension
     self.tableView?.tableFooterView = UIView()
@@ -192,7 +153,42 @@ class ResourcesViewController: UIViewController {
     super.viewDidAppear(animated)
   }
 
-  // MARK: - Utils
+    // MARK: - Utils
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .bottom, title: nil, image: nil, completion: nil)
+    }
+    
+    func setOnline() {
+        self.view.hideAllToasts()
+    }
 
   private func getStaticResources() -> [ResourceRow] {
     if Utilities.isStandaloneApp() {
@@ -201,7 +197,6 @@ class ResourcesViewController: UIViewController {
       
       var mainResource: [ResourceRow] = [TableRow.about, TableRow.consent]
       
-      print("1dataSharingPermissiondataSharingPermission---\(Study.currentStudy?.userParticipateState.dataSharingPermission)")
       let valDataSharing = Study.currentStudy?.userParticipateState.dataSharingPermission ?? ""
       if (valDataSharing == "Provided" || valDataSharing == "Not Provided") {
         mainResource.append(TableRow.dataSharingImage)
@@ -225,7 +220,6 @@ class ResourcesViewController: UIViewController {
       return mainResource
     }
     var mainResourceGateway: [ResourceRow] = [TableRow.about, TableRow.consent]
-    print("2dataSharingPermissiondataSharingPermission---\(Study.currentStudy?.userParticipateState.dataSharingPermission)")
     let valDataSharing = Study.currentStudy?.userParticipateState.dataSharingPermission ?? ""
     if (valDataSharing == "Provided" || valDataSharing == "Not Provided") {
       mainResourceGateway.append(TableRow.dataSharingImage)
@@ -302,7 +296,6 @@ class ResourcesViewController: UIViewController {
       resourceDetail.resource = (sender as? Resource)!
       if self.resourceLink != nil {
         resourceDetail.requestLink = self.resourceLink!
-        print("22pdfNameFromUrl---\(resourceDetail)")
       }
       if self.fileType != nil {
         resourceDetail.type = self.fileType!
@@ -848,16 +841,11 @@ extension ResourcesViewController: UITableViewDelegate {
       case .dataSharingImage:
         UserDefaults.standard.set("DataSPdf", forKey: "consent")
         UserDefaults.standard.synchronize()
-        print("Study.currentStudy?.signedConsentDataSPdfFilePath---\(Study.currentStudy?.signedConsentDataSPdfFilePath)")
-//        if let consentPath = Study.currentStudy?.signedConsentDataSPdfFilePath, !consentPath.isEmpty {
-//          self.pushToResourceDetails(with: consentPath)
-//        } else {
-          ConsentServices().getConsentPDFForStudy(
-            studyId: currentStudy.studyId ?? "",
-            consentVersion: currentStudy.signedConsentVersion ?? "",
-            delegate: self
-          )
-//        }
+        ConsentServices().getConsentPDFForStudy(
+          studyId: currentStudy.studyId ?? "",
+          consentVersion: currentStudy.signedConsentVersion ?? "",
+          delegate: self
+        )
       }
     } else if let resource = self.tableRows[indexPath.row] as? Resource {
       resourceLink = resource.file?.getFileLink()

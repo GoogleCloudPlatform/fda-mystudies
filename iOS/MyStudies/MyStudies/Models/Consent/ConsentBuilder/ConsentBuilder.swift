@@ -148,7 +148,6 @@ class ConsentBuilder {
 
       let consentSharingDict = (metaDataDict[kConsentSharing] as? [String: Any])!
 
-      print("1StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain ---\(StudyUpdates.studyConsentUpdated)---\( StudyUpdates.studyEnrollAgain )")
       if !StudyUpdates.studyConsentUpdated {
         if Utilities.isValidObject(someObject: consentSharingDict as AnyObject?) {
           sharingConsent?.initWithSharingDict(dict: consentSharingDict)

@@ -70,61 +70,13 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   }
 
   // MARK: - View controller Lifecycle
-
   override func viewDidLoad() {
     super.viewDidLoad()
     webView.navigationDelegate = self
     webView.contentScaleFactor = 1.0
       setupNotifiers()
   }
-    func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                               name: Notification.Name.reachabilityChanged, object: nil);
-        
-        do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-            } catch(let error) {
-                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
-    }
-    
-    @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-            print("Network available via Cellular Data.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            setOnline()
-            break
-        case .wifi:
-            print("Network available via WiFi.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            setOnline()
-            break
-        case .none:
-            print("Network is not available.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            setOffline()
-            break
-        case .unavailable:
-            print("Network is  unavailable.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            setOffline()
-            break
-        }
-    }
-    func setOnline() {
-        buttonEmailPdf?.isEnabled = true
-        ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-        self.view.hideAllToasts()
-    }
-    func setOffline() {
-        ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
-                            position: .center, title: nil, image: nil, completion: nil)
-        buttonEmailPdf?.isEnabled = false
-    }
+  
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     loadPDF()
@@ -137,6 +89,50 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     }
   }
 
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+      
+    }
+  }
+    
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    buttonEmailPdf?.isEnabled = true
+    ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+    self.view.hideAllToasts()
+  }
+  
+  func setOffline() {
+    ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+    self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                        position: .center, title: nil, image: nil, completion: nil)
+    buttonEmailPdf?.isEnabled = false
+  }
+  
   /// Load PDF from the Data on WebView.
   private func loadPDF() {
     self.title = kConsent.uppercased()

@@ -73,52 +73,50 @@ class WebViewController: UIViewController {
     loadContentOnWebView()
     setNeedsStatusBarAppearanceUpdate()
   }
-
-    func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                               name: Notification.Name.reachabilityChanged, object: nil);
-          
-        do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-            } catch(let error) {
-              print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
-    }
-      
-    @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-              print("Network available via Cellular Data.")
-              setOnline()
-              break
-        case .wifi:
-              print("Network available via WiFi.")
-              setOnline()
-              break
-        case .none:
-              print("Network is not available.")
-              setOffline()
-              break
-        case .unavailable:
-              print("Network is  unavailable.")
-              setOffline()
-              break
-        }
-    }
-    func setOffline() {
-        barItemShare?.isEnabled = false
-    }
-    func setOnline() {
-        barItemShare?.isEnabled = true
-    }
+    
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     if let tempURL = self.tempfileURL {
       AKUtility.deleteFile(from: tempURL)
     }
   }
+    
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOffline() {
+        barItemShare?.isEnabled = false
+    }
+    
+    func setOnline() {
+        barItemShare?.isEnabled = true
+    }
 
   final private func loadContentOnWebView() {
 

@@ -37,6 +37,8 @@ let kActivityAbondonedAlertMessage =
   The next run of this activity is not available yet. Please try again later.
   """
 
+let kConsentpdfSharingImage = "ConsentpdfSharingImage"
+
 enum ActivityAvailabilityStatus: Int {
   case current
   case upcoming
@@ -133,55 +135,14 @@ class ActivitiesViewController: UIViewController {
     UserDefaults.standard.synchronize()
    
   }
-    func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                               name: Notification.Name.reachabilityChanged, object: nil);
-
-        
-        
-        do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-            } catch(let error) {
-                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
-    }
-    
-    @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-            print("Network available via Cellular Data.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            break
-        case .wifi:
-            print("Network available via WiFi.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            break
-        case .none:
-            print("Network is not available.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
-            
-            break
-        case .unavailable:
-            print("Network is  unavailable.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
-            break
-        }
-    }
-    
-    override func showOfflineIndicator() -> Bool {
-        return true
-    }
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
     let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appDelegate.iscomingFromForgotPasscode
-    print("1appDelegate.iscomingFromForgotPasscode---\(appDelegate.iscomingFromForgotPasscode)")
     if !appDelegate.iscomingFromForgotPasscode {
       if !fromConsentViewDidload && Utilities.isStandaloneApp() {
-        print("fromConsentViewDidload---")
         if (Study.currentStudy?.studyId) != nil {
           if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
             NotificationHandler.instance.activityId = ""
@@ -190,16 +151,13 @@ class ActivitiesViewController: UIViewController {
             }
             presentUpdatedConsent()
           } else {
-            print("55cfromConsentViewDidload---")
             WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
           }
           
         } else {
-          print("55afromConsentViewDidload---")
           WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
         }
       } else {
-        print("55bfromConsentViewDidload---")
         WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
       }
     }
@@ -207,8 +165,8 @@ class ActivitiesViewController: UIViewController {
     
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     setNavigationBarColor()
-    Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
-    Utilities.removeImageLocalPath(localPathName: "ConsentpdfSharingImage")
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImage)
+    Utilities.removeImageLocalPath(localPathName: kConsentpdfSharingImage)
     
     if Utilities.isStandaloneApp() {
       self.setNavigationBarItem()
@@ -237,6 +195,42 @@ class ActivitiesViewController: UIViewController {
     }
   }
 
+  // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .wifi:
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            break
+        case .none:
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            
+            break
+        case .unavailable:
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
+  
   // MARK: - Helper Methods
 
   private func setupStandaloneNotifications() {
@@ -892,12 +886,10 @@ class ActivitiesViewController: UIViewController {
   /// Handler for studyUpdateResponse.
   func handleStudyUpdatesResponse() {
     guard let currentStudy = Study.currentStudy else { return }
-    print("50enrollmentCompleted---\(StudyUpdates.studyVersion)")
     Study.currentStudy?.newVersion = StudyUpdates.studyVersion
     
 
     if UserDefaults.standard.value(forKey: "enrollmentCompleted") as? String ?? "" == "\(Study.currentStudy?.studyId ?? "")" {
-      print("57enrollmentCompleted---")
       UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
       UserDefaults.standard.synchronize()
       DBHandler.updateMetaDataEnrolledToUpdateForStudy(study: currentStudy, updateDetails: nil)
@@ -906,8 +898,6 @@ class ActivitiesViewController: UIViewController {
       UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
       UserDefaults.standard.synchronize()
     } else {
-      print("60enrollmentCompleted---\(StudyUpdates.studyVersion)")
-      
       DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
     //Consent Updated
     if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
@@ -1347,7 +1337,6 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
   /// This method will update the result for other choices for each step
   fileprivate func updateResultForChoiceQuestions(_ taskViewController: ORKTaskViewController) {
-    print("updateResultForChoiceQuestions---")
     if let results = taskViewController.result.results as? [ORKStepResult] {
 
       for result in results {
@@ -1748,26 +1737,19 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection
-  ) {
-    print("didFinishWith direction---")
-  }
+  ) { }
 
-  public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
-    print("stepViewControllerResultDidChange---")
-  }
+  public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) { }
 
   public func stepViewControllerDidFail(
     _ stepViewController: ORKStepViewController,
     withError error: Error?
-  ) {
-    print("stepViewControllerDidFail---")
-  }
+  ) { }
 
   func taskViewController(
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
-    print("viewControllerFor---")
 
     if let step = step as? QuestionStep,
       step.answerFormat?.isKind(of: ORKTextChoiceAnswerFormat.self) ?? false

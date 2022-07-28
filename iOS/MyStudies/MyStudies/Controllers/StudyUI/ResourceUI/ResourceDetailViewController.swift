@@ -60,45 +60,7 @@ class ResourceDetailViewController: UIViewController {
     self.title = resource?.title
     setNavigationBarColor()
   }
-  func setupNotifiers() {
-    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                           name: Notification.Name.reachabilityChanged, object: nil);
-          
-    do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-        } catch(let error) {
-            print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-        }
-  }
-      
-  @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-              print("Network available via Cellular Data.")
-              setOnline()
-              break
-        case .wifi:
-              print("Network available via WiFi.")
-              setOnline()
-              break
-        case .none:
-              print("Network is not available.")
-              setOffline()
-              break
-        case .unavailable:
-              print("Network is  unavailable.")
-              setOffline()
-              break
-        }
-    }
-    func setOffline() {
-        shareButton.isEnabled = false
-    }
-    func setOnline() {
-        shareButton.isEnabled = true
-    }
+    
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     webView.navigationDelegate = self
@@ -115,6 +77,43 @@ class ResourceDetailViewController: UIViewController {
     }
     webView.navigationDelegate = nil
   }
+    
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOffline() {
+        shareButton.isEnabled = false
+    }
+    
+    func setOnline() {
+        shareButton.isEnabled = true
+    }
 
   // MARK: - UI
   fileprivate func loadWebView() {

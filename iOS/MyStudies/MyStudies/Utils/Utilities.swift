@@ -139,10 +139,7 @@ class Utilities: NSObject {
     let destinationPath = documentsPath.appendingPathComponent(localPathName)
     do {
       try filemanager.removeItem(atPath: destinationPath)
-      print("Local path removed successfully")
-    } catch let error as NSError {
-      print("------Error",error.debugDescription)
-    }
+    } catch let error as NSError { }
   }
 
   // MARK: - Validation Methods

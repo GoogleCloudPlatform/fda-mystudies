@@ -114,64 +114,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
     self.fdaSlideMenuController()?.delegate = self
   }
-    func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                               name: Notification.Name.reachabilityChanged, object: nil);
-
-        
-        
-        do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-            } catch(let error) {
-                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
-    }
-    
-    @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-            print("Network available via Cellular Data.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            setOnline()
-            break
-        case .wifi:
-            print("Network available via WiFi.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            setOnline()
-            break
-        case .none:
-            print("Network is not available.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            setOffline()
-            break
-        case .unavailable:
-            print("Network is  unavailable.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            setOffline()
-            break
-        }
-    }
-    func setOnline() {
-        self.view.hideAllToasts()
-        setToggleButtonsEnable(status: true)
-    }
-    func setOffline() {
-        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
-        setToggleButtonsEnable(status: false)
-        
-    }
-    func setToggleButtonsEnable(status: Bool) {
-        if let cells = self.tableViewProfile?.visibleCells {
-            for cell in cells where cell.isKind(of: ProfileTableViewCell.self) {
-                (cell as! ProfileTableViewCell).switchToggle?.isEnabled = status
-            }
-        }
-    }
-    override func showOfflineIndicator() -> Bool {
-        return false
-    }
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     user = User.currentUser
@@ -183,8 +126,59 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     self.tableViewProfile?.reloadData()
   }
 
-  func leftDidClose() {
-    // Left menu is closed
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+    }
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    self.view.hideAllToasts()
+    setToggleButtonsEnable(status: true)
+  }
+  
+  func setOffline() {
+    self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
+    setToggleButtonsEnable(status: false)
+    
+  }
+  
+  func setToggleButtonsEnable(status: Bool) {
+    if let cells = self.tableViewProfile?.visibleCells {
+      for cell in cells where cell.isKind(of: ProfileTableViewCell.self) {
+        (cell as! ProfileTableViewCell).switchToggle?.isEnabled = status
+      }
+    }
+  }
+  
+  override func showOfflineIndicator() -> Bool {
+    return false
   }
 
   // MARK: - Button Actions
