@@ -25,12 +25,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.harvard.AppConfig;
@@ -177,11 +177,11 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+            if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
               Bundle eventProperties = new Bundle();
               eventProperties.putString(
                   CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                  getString(R.string.survey_resource_home));
+                  getContext().getString(R.string.survey_resource_home));
               analyticsInstance.logEvent(
                   CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               Intent intent = new Intent(context, StudyActivity.class);
@@ -198,7 +198,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     AppCompatImageView backBtnimg = view.findViewById(R.id.backBtnimg);
     AppCompatImageView menubtnimg = view.findViewById(R.id.menubtnimg);
 
-    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+    if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
       backBtnimg.setVisibility(View.VISIBLE);
       menubtnimg.setVisibility(View.GONE);
     } else {
@@ -243,7 +243,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       dbServiceSubscriber.deleteActivityDataRow(context, studyId);
       dbServiceSubscriber.deleteActivityWsData(context, studyId);
 
-      if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+      if (AppConfig.AppType.equalsIgnoreCase(getContext().getString(R.string.app_gateway))) {
         Intent intent = new Intent(context, StudyActivity.class);
         ComponentName cn = intent.getComponent();
         Intent mainIntent = Intent.makeRestartActivityTask(cn);
@@ -427,8 +427,8 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     dbServiceSubscriber.getSurveyResponseFromDB(
                         ((SurveyActivity) context).getStudyId()
                             + "_STUDYID_"
-                                + AppController.getSourceActivityId(resourceArrayList.get(i)),
-                            AppController.getSourceKey(resourceArrayList.get(i)),
+                            + AppController.getSourceActivityId(resourceArrayList.get(i)),
+                        AppController.getSourceKey(resourceArrayList.get(i)),
                         realm);
                 if (stepRecordCustom != null) {
                   Calendar startCalender = Calendar.getInstance();
@@ -629,8 +629,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     }
     studyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     studyRecyclerView.setNestedScrollingEnabled(false);
-    ResourcesListAdapter resourcesListAdapter =
-        new ResourcesListAdapter(context, resources, this);
+    ResourcesListAdapter resourcesListAdapter = new ResourcesListAdapter(context, resources, this);
     studyRecyclerView.setAdapter(resourcesListAdapter);
   }
 
@@ -661,15 +660,18 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         Realm realm = AppController.getRealmobj(context);
         HashMap<String, String> header = new HashMap<>();
         header.put(
-            context.getString(R.string.clientToken),
-            SharedPreferenceHelper.readPreference(context, context.getString(R.string.clientToken), ""));
+            getContext().getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(
+                context, getContext().getString(R.string.clientToken), ""));
         header.put(
             "Authorization",
             "Bearer "
-                + SharedPreferenceHelper.readPreference(context, context.getString(R.string.auth), ""));
+                + SharedPreferenceHelper.readPreference(
+                    context, getContext().getString(R.string.auth), ""));
         header.put(
             "userId",
-            SharedPreferenceHelper.readPreference(context, context.getString(R.string.userid), ""));
+            SharedPreferenceHelper.readPreference(
+                context, getContext().getString(R.string.userid), ""));
         Studies studies =
             realm
                 .where(Studies.class)
@@ -741,7 +743,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
           metadataProcess();
           Toast.makeText(
                   context,
-                  context.getResources().getString(R.string.connection_timeout),
+                  getContext().getResources().getString(R.string.connection_timeout),
                   Toast.LENGTH_SHORT)
               .show();
         } else if (Integer.parseInt(responseCode) == 500) {
@@ -844,13 +846,16 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     ArrayList<Resource> tempResourceArrayList = new ArrayList<>();
     tempResourceArrayList.addAll(resourceArrayList);
     resourceArrayList.clear();
-    labelArray.add(context.getResources().getString(R.string.about_study));
-    labelArray.add(context.getResources().getString(R.string.consent_pdf));
-    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_standalone))) {
-      labelArray.add(context.getResources().getString(R.string.resourceTerms));
-      labelArray.add(context.getResources().getString(R.string.resourcePolicy));
+    labelArray.add(getContext().getResources().getString(R.string.about_study));
+    labelArray.add(getContext().getResources().getString(R.string.consent_pdf));
+    if (studyResource.isShareDataPermissions()) {
+      labelArray.add(getContext().getResources().getString(R.string.data_sharing));
     }
-    labelArray.add(context.getResources().getString(R.string.leave_study));
+    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
+      labelArray.add(getContext().getResources().getString(R.string.resourceTerms));
+      labelArray.add(getContext().getResources().getString(R.string.resourcePolicy));
+    }
+    labelArray.add(getResources().getString(R.string.leave_study));
 
     for (int i = 0; i < labelArray.size(); i++) {
       Resource r = new Resource();
@@ -899,11 +904,11 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(context, context.getResources().getString(R.string.auth), ""));
+                .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.userid), ""));
+            .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -992,11 +997,11 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(context, context.getResources().getString(R.string.auth), ""));
+                .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.userid), ""));
+            .readPreference(context, getContext().getResources().getString(R.string.userid), ""));
     DeleteAccountEvent deleteAccountEvent = new DeleteAccountEvent();
     Gson gson = new Gson();
     DeleteAccountData deleteAccountData = new DeleteAccountData();

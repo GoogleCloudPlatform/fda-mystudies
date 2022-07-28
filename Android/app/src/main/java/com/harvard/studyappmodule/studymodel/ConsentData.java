@@ -33,8 +33,4 @@ public class ConsentData extends RealmObject {
     this.version = version;
   }
 
-  @Override
-  public String toString() {
-    return "ClassPojo [content = " + content + ", type = " + type + ", version = " + version + "]";
-  }
 }

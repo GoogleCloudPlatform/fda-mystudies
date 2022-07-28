@@ -19,13 +19,16 @@ package com.harvard.studyappmodule;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -48,6 +51,9 @@ import com.harvard.gatewaymodule.CircleIndicator;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
+import com.harvard.studyappmodule.consent.ConsentBuilder;
+import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
+import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.CorrectAnswerString;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
@@ -64,6 +70,7 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -78,17 +85,22 @@ import io.realm.RealmObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
+import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
+import org.researchstack.backbone.task.Task;
 
-public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
+public class StudyInfoActivity extends AppCompatActivity
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
   private static final int STUDY_INFO = 10;
   private static final int UPDATE_PREFERENCES = 11;
   private static final int GET_CONSENT_DOC = 12;
   private static final int JOIN_ACTION_SIGIN = 100;
   private static final int GET_PREFERENCES = 101;
+  private static final int CONSENT_RESPONSECODE = 115;
   private RelativeLayout backBtn;
   private String studyId = "";
   private String status = "";
@@ -108,10 +120,13 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private boolean aboutThisStudy;
   private int deleteIndexNumberDb;
   private DbServiceSubscriber dbServiceSubscriber;
+  private String eligibilityType = "";
   private Realm realm;
   private EligibilityConsent eligibilityConsent;
   private RealmList<Studies> userPreferenceStudies;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +135,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
 
     initializeXmlId();
     setFont();
@@ -158,6 +174,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     bottomBar = (LinearLayout) findViewById(R.id.bottom_bar);
     bottomBar1 = (LinearLayout) findViewById(R.id.bottom_bar1);
     consentLay = (RelativeLayout) findViewById(R.id.consentLay);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setFont() {
@@ -291,6 +308,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             try {
               Intent intent = new Intent(StudyInfoActivity.this, WebViewActivity.class);
               intent.putExtra("consent", consentDocumentData.getConsent().getContent());
+              intent.putExtra("type","text");
               startActivity(intent);
             } catch (Exception e) {
               Logger.log(e);
@@ -372,6 +390,19 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     }
   }
 
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      joinButton.setClickable(false);
+      joinButton.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      joinButton.setClickable(true);
+      joinButton.setAlpha(1F);
+    }
+  }
+
   private class CallConsentMetaData extends AsyncTask<String, Void, String> {
     String response = null;
     String responseCode = null;
@@ -388,7 +419,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
       String url = Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
+        responseModel =
+            HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -488,6 +520,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             } else {
               if (userPreferenceStudies != null) {
                 if (userPreferenceStudies.size() != 0) {
+                  ConsentDocumentData consentDocumentData =
+                      dbServiceSubscriber.getConsentDocumentFromDB(studyId, realm);
                   boolean studyIdPresent = false;
                   for (int i = 0; i < userPreferenceStudies.size(); i++) {
                     if (userPreferenceStudies.get(i).getStudyId().equalsIgnoreCase(studyId)) {
@@ -496,9 +530,18 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                           .get(i)
                           .getStatus()
                           .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
-                        Intent intent = new Intent(StudyInfoActivity.this, SurveyActivity.class);
-                        intent.putExtra("studyId", studyId);
-                        startActivity(intent);
+                        if (!consentDocumentData
+                            .getConsent()
+                            .getVersion()
+                            .equalsIgnoreCase(userPreferenceStudies.get(i).getUserStudyVersion())) {
+                          startConsent(
+                              eligibilityConsent.getConsent(),
+                              eligibilityConsent.getEligibility().getType());
+                        } else {
+                          Intent intent = new Intent(StudyInfoActivity.this, SurveyActivity.class);
+                          intent.putExtra("studyId", studyId);
+                          startActivity(intent);
+                        }
                       } else {
                         joinStudy();
                       }
@@ -557,7 +600,18 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == JOIN_ACTION_SIGIN) {
+    if (requestCode == CONSENT_RESPONSECODE) {
+      if (resultCode == RESULT_OK) {
+        Intent intent = new Intent(this, ConsentCompletedActivity.class);
+        intent.putExtra("studyId", studyId);
+        intent.putExtra("title", title);
+        intent.putExtra("eligibility", eligibilityType);
+        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
+        // get the encrypted file path
+        intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
+        startActivity(intent);
+      }
+    } else if (requestCode == JOIN_ACTION_SIGIN) {
       if (resultCode == RESULT_OK) {
         loginCallback();
       }
@@ -677,6 +731,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
       AppController.getHelperProgressDialog().dismissDialog();
       StudyData studies = (StudyData) response;
+      String studyStatusCheck = "";
       if (studies != null) {
         studies.setUserId(
             AppController.getHelperSharedPreference()
@@ -685,7 +740,14 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
         userPreferenceStudies = studies.getStudies();
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, realm);
-        if (!studyList.getSetting().isEnrolling()) {
+        for (int i = 0; i < userPreferenceStudies.size(); i++) {
+          if (userPreferenceStudies.get(i).getStudyId().equalsIgnoreCase(studyId)) {
+            studyStatusCheck = userPreferenceStudies.get(i).getStatus();
+          }
+        }
+        if (studyStatusCheck.equalsIgnoreCase("enrolled")) {
+          new CallConsentMetaData(false).execute();
+        } else if (!studyList.getSetting().isEnrolling()) {
           Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
         } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
           Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -891,6 +953,24 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
 
+  private void startConsent(Consent consent, String type) {
+    eligibilityType = type;
+    AppController.getHelperSharedPreference()
+        .writePreference(this, "DataSharingScreen" + title, "false");
+    Toast.makeText(
+            this,
+            getResources().getString(R.string.please_review_the_updated_consent),
+            Toast.LENGTH_SHORT)
+        .show();
+    ConsentBuilder consentBuilder = new ConsentBuilder();
+    List<Step> consentstep = consentBuilder.createsurveyquestion(this, consent, title);
+    Task consentTask = new OrderedTask(StudyFragment.CONSENT, consentstep);
+    Intent intent =
+        CustomConsentViewTaskActivity.newIntent(
+            this, consentTask, studyId, "", title, eligibilityType, "update");
+    startActivityForResult(intent, CONSENT_RESPONSECODE);
+  }
+
   private void setViewPagerView(final StudyHome studyHome) {
 
     ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
@@ -925,6 +1005,21 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     if (getIntent().getStringExtra("flow") != null
         && getIntent().getStringExtra("flow").equalsIgnoreCase("login_callback")) {
       loginCallback();
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 

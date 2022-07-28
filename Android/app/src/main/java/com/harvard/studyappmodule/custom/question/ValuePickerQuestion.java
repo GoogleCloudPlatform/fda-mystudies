@@ -46,6 +46,7 @@ public class ValuePickerQuestion<T> implements StepBody {
   private TextView textView;
   private String resultValue;
   private CustomFirebaseAnalytics analyticsInstance;
+  private Context context;
 
   public ValuePickerQuestion(Step step, StepResult result) {
     if (step instanceof QuestionStepCustom) {
@@ -68,6 +69,7 @@ public class ValuePickerQuestion<T> implements StepBody {
   @Override
   public View getBodyView(int viewType, LayoutInflater inflater, ViewGroup parent) {
     View view = getViewForType(viewType, inflater, parent);
+    this.context = inflater.getContext();
     Resources res = parent.getResources();
     LinearLayout.MarginLayoutParams layoutParams =
         new LinearLayout.LayoutParams(
@@ -77,7 +79,7 @@ public class ValuePickerQuestion<T> implements StepBody {
     layoutParams.rightMargin =
         res.getDimensionPixelSize(org.researchstack.backbone.R.dimen.rsb_margin_right);
     view.setLayoutParams(layoutParams);
-    analyticsInstance = CustomFirebaseAnalytics.getInstance(inflater.getContext().getApplicationContext());
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context.getApplicationContext());
     return view;
   }
 
@@ -199,10 +201,9 @@ public class ValuePickerQuestion<T> implements StepBody {
 
   @Override
   public BodyAnswer getBodyAnswerState() {
-    if (resultValue != null) {
+    if (resultValue != null)
       return BodyAnswer.VALID;
-    } else {
+    else
       return BodyAnswer.INVALID;
-    }
   }
 }

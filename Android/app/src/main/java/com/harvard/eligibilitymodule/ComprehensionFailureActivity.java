@@ -20,9 +20,9 @@ import static com.harvard.studyappmodule.StudyFragment.CONSENT;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -35,7 +35,6 @@ import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
-
 import io.realm.Realm;
 import java.util.List;
 import org.researchstack.backbone.step.Step;
@@ -56,6 +55,7 @@ public class ComprehensionFailureActivity extends AppCompatActivity {
     setContentView(R.layout.activity_comprehension_failure);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     TextView retrybutton = findViewById(R.id.retrybutton);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);

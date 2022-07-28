@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -29,6 +30,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -52,6 +54,9 @@ import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.gatewaymodule.CircleIndicator;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
+import com.harvard.studyappmodule.consent.ConsentBuilder;
+import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
+import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.CorrectAnswerString;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
@@ -68,6 +73,7 @@ import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.utils.version.Version;
@@ -84,10 +90,13 @@ import io.realm.RealmObject;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
+import java.util.List;
+import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
+import org.researchstack.backbone.task.Task;
 
 public class StandaloneStudyInfoActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
 
   private static final int JOIN_ACTION_SIGIN = 100;
   private static final int SPECIFIC_STUDY = 103;
@@ -95,6 +104,9 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   private static final int GET_CONSENT_DOC = 102;
   private static final int GET_PREFERENCES = 101;
   private static final int RESULT_CODE_UPGRADE = 105;
+  private static final int CONSENT_RESPONSECODE = 203;
+  private static final String CONSENT = "consent";
+  private String eligibilityType = "";
 
   private RelativeLayout backBtn;
   private AppCompatTextView consentLayButton;
@@ -114,12 +126,15 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   private boolean force = false;
   AlertDialog.Builder alertDialogBuilder;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_standalone_study_info);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
 
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
@@ -161,6 +176,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     consentLayButton = (AppCompatTextView) findViewById(R.id.consentLayButton);
     bottombar1 = (LinearLayout) findViewById(R.id.bottom_bar1);
     consentLay = (RelativeLayout) findViewById(R.id.consentLay);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setFont() {
@@ -260,10 +276,10 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           if (study.getStudies().get(0).getStatus().equalsIgnoreCase("active")) {
             callGetStudyInfoWebservice();
             if (study
-                    .getStudies()
-                    .get(0)
-                    .getStatus()
-                    .equalsIgnoreCase(getString(R.string.closed))) {
+                .getStudies()
+                .get(0)
+                .getStatus()
+                .equalsIgnoreCase(getString(R.string.closed))) {
               joinButton.setVisibility(View.GONE);
             }
           } else {
@@ -335,6 +351,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
 
       AppController.getHelperProgressDialog().dismissDialog();
       StudyData studies = (StudyData) response;
+      String studyStatusCheck = "";
       if (studies != null) {
         studies.setUserId(
             AppController.getHelperSharedPreference()
@@ -392,8 +409,15 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
 
         userPreferenceStudies = studies.getStudies();
         StudyList studyList = dbServiceSubscriber.getStudiesDetails(AppConfig.StudyId, realm);
+        for (int i = 0; i < userPreferenceStudies.size(); i++) {
+          if (userPreferenceStudies.get(i).getStudyId().equalsIgnoreCase(AppConfig.StudyId)) {
+            studyStatusCheck = userPreferenceStudies.get(i).getStatus();
+          }
+        }
         if (studyList != null) {
-          if (!studyList.getSetting().isEnrolling()) {
+          if (studyStatusCheck.equalsIgnoreCase("enrolled")) {
+            new CallConsentMetaData(false).execute();
+          } else if (!studyList.getSetting().isEnrolling()) {
             Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
           } else if (studyList.getStatus().equalsIgnoreCase(StudyFragment.PAUSED)) {
             Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
@@ -408,6 +432,19 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                 StandaloneStudyInfoActivity.this, R.string.unable_to_parse, Toast.LENGTH_SHORT)
             .show();
       }
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      joinButton.setClickable(false);
+      joinButton.setAlpha(.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      joinButton.setClickable(true);
+      joinButton.setAlpha(1F);
     }
   }
 
@@ -429,7 +466,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       String url =
           Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + AppConfig.StudyId;
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
+        responseModel =
+            HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -541,11 +579,20 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                           .get(i)
                           .getStatus()
                           .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
-                        Intent intent =
-                            new Intent(StandaloneStudyInfoActivity.this, SurveyActivity.class);
-                        intent.putExtra("studyId", AppConfig.StudyId);
-                        startActivity(intent);
-                        finish();
+                        if (!consentDocumentData
+                            .getConsent()
+                            .getVersion()
+                            .equalsIgnoreCase(userPreferenceStudies.get(i).getUserStudyVersion())) {
+                          startConsent(
+                              eligibilityConsent.getConsent(),
+                              eligibilityConsent.getEligibility().getType());
+                        } else {
+                          Intent intent =
+                              new Intent(StandaloneStudyInfoActivity.this, SurveyActivity.class);
+                          intent.putExtra("studyId", AppConfig.StudyId);
+                          startActivity(intent);
+                          finish();
+                        }
                       } else {
                         joinStudy();
                       }
@@ -651,6 +698,32 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     realm.commitTransaction();
   }
 
+  private void startConsent(Consent consent, String type) {
+    eligibilityType = type;
+    AppController.getHelperSharedPreference()
+        .writePreference(this, "DataSharingScreen" + study.getStudies().get(0).getTitle(), "false");
+    Toast.makeText(
+            StandaloneStudyInfoActivity.this,
+            getResources().getString(R.string.please_review_the_updated_consent),
+            Toast.LENGTH_SHORT)
+        .show();
+    ConsentBuilder consentBuilder = new ConsentBuilder();
+    List<Step> consentstep =
+        consentBuilder.createsurveyquestion(
+            StandaloneStudyInfoActivity.this, consent, study.getStudies().get(0).getTitle());
+    Task consentTask = new OrderedTask(CONSENT, consentstep);
+    Intent intent =
+        CustomConsentViewTaskActivity.newIntent(
+            StandaloneStudyInfoActivity.this,
+            consentTask,
+            AppConfig.StudyId,
+            "",
+            study.getStudies().get(0).getTitle(),
+            eligibilityType,
+            "update");
+    startActivityForResult(intent, CONSENT_RESPONSECODE);
+  }
+
   @Override
   protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -679,6 +752,23 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
                   "join");
           startActivity(intent);
         }
+      }
+
+    } else if (requestCode == CONSENT_RESPONSECODE) {
+      if (resultCode == RESULT_OK) {
+        Intent intent =
+            new Intent(StandaloneStudyInfoActivity.this, ConsentCompletedActivity.class);
+        intent.putExtra("studyId", AppConfig.StudyId);
+        intent.putExtra("title", study.getStudies().get(0).getTitle());
+        intent.putExtra("eligibility", eligibilityType);
+        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
+        // get the encrypted file path
+        intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
+        startActivity(intent);
+        finish();
+      } else {
+        Toast.makeText(this, "Please complete the consent to continue", Toast.LENGTH_SHORT).show();
+        finish();
       }
     } else if (requestCode == RESULT_CODE_UPGRADE) {
       Version currVer = new Version(AppController.currentVersion());
@@ -846,7 +936,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             false,
             this);
     GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-    getPreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(participantDatastoreConfigEvent);
+    getPreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }
@@ -854,11 +945,13 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
   @Override
   protected void onResume() {
     super.onResume();
-
     IntentFilter filter = new IntentFilter();
     filter.addAction(BuildConfig.APPLICATION_ID);
     versionReceiver = new VersionReceiver();
     registerReceiver(versionReceiver, filter);
+
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
   }
 
   @Override
@@ -892,16 +985,18 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
           isUpgrade(false, latestVersion, force);
         } else {
-          AppController.getHelperSharedPreference().writePreference(StandaloneStudyInfoActivity.this, "versionalert", "done");
+          AppController.getHelperSharedPreference()
+              .writePreference(StandaloneStudyInfoActivity.this, "versionalert", "done");
           isUpgrade(true, latestVersion, force);
         }
       } else {
-        Toast.makeText(StandaloneStudyInfoActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
-        if (Build.VERSION.SDK_INT < 21) {
-          finishAffinity();
-        } else {
-          finishAndRemoveTask();
-        }
+        //        Toast.makeText(StandaloneStudyInfoActivity.this, "Error detected",
+        // Toast.LENGTH_SHORT).show();
+        //        if (Build.VERSION.SDK_INT < 21) {
+        //          finishAffinity();
+        //        } else {
+        //          finishAndRemoveTask();
+        //        }
       }
     }
   }
@@ -976,5 +1071,4 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       alertDialog.show();
     }
   }
-
 }

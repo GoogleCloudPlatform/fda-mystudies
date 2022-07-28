@@ -18,7 +18,9 @@ package com.harvard.studyappmodule;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
@@ -42,6 +44,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.PdfViewerView;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -54,7 +57,7 @@ import java.util.HashMap;
 import javax.crypto.CipherInputStream;
 
 public class PdfDisplayActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
   private static final int CONSENTPDF = 7;
   private String studyId;
   private String sharePdfFilePath;
@@ -65,6 +68,9 @@ public class PdfDisplayActivity extends AppCompatActivity
   private String title;
   private CustomFirebaseAnalytics analyticsInstance;
   PdfViewerView pdfViewer;
+  private String dataShare;
+  private NetworkChangeReceiver networkChangeReceiver;
+  RelativeLayout shareBtn;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +78,10 @@ public class PdfDisplayActivity extends AppCompatActivity
     setContentView(R.layout.activity_pdfdisplay);
     db = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
+    pdfViewer = findViewById(R.id.pdfViewer);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
-
-
-    pdfViewer = findViewById(R.id.pdfViewer);
 
     AppCompatTextView titletxt = (AppCompatTextView) findViewById(R.id.title);
     titletxt.setText(getResources().getString(R.string.consent_pdf1));
@@ -84,27 +89,33 @@ public class PdfDisplayActivity extends AppCompatActivity
 
     studyId = getIntent().getStringExtra("studyId");
     title = getIntent().getStringExtra("title");
-    ConsentPdfData studies = db.getPdfPath(studyId, realm);
-    try {
-      if (studies == null) {
-        callGetConsentPdfWebservice();
-      } else {
-        File file = new File(studies.getPdfPath().toString());
-        if (file.exists()) {
-          CipherInputStream cis =
-              AppController.generateDecryptedConsentPdf(studies.getPdfPath().toString());
-          // we will get byte array pass to pdf view
-          bytesArray = AppController.cipherInputStreamConvertToByte(cis);
-          setPdfView(bytesArray, file.getName());
-        } else {
+    dataShare = getIntent().getStringExtra("datasharingscreen");
+    if (dataShare != null && dataShare.equalsIgnoreCase("datasharingscreen")) {
+      titletxt.setText(getResources().getString(R.string.data_sharing));
+      callGetConsentPdfWebservice();
+    } else {
+      ConsentPdfData studies = db.getPdfPath(studyId, realm);
+      try {
+        if (studies == null) {
           callGetConsentPdfWebservice();
+        } else {
+          File file = new File(studies.getPdfPath().toString());
+          if (file.exists()) {
+            CipherInputStream cis =
+                AppController.generateDecryptedConsentPdf(studies.getPdfPath().toString());
+            // we will get byte array pass to pdf view
+            bytesArray = AppController.cipherInputStreamConvertToByte(cis);
+            setPdfView(bytesArray, file.getName());
+          } else {
+            callGetConsentPdfWebservice();
+          }
         }
+      } catch (Exception e) {
+        Logger.log(e);
       }
-    } catch (Exception e) {
-      Logger.log(e);
     }
     RelativeLayout backBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    RelativeLayout shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
+    shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
     backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
@@ -204,7 +215,8 @@ public class PdfDisplayActivity extends AppCompatActivity
             false,
             PdfDisplayActivity.this);
     ConsentPdfEvent consentPdfEvent = new ConsentPdfEvent();
-    consentPdfEvent.setParticipantConsentDatastoreConfigEvent(participantConsentDatastoreConfigEvent);
+    consentPdfEvent.setParticipantConsentDatastoreConfigEvent(
+        participantConsentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPdf(consentPdfEvent);
   }
@@ -279,16 +291,31 @@ public class PdfDisplayActivity extends AppCompatActivity
       } else {
         root = getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
       }
-      String temPdfPath =
-          root
-              + "/"
-              + title.replace("/", "\u2215")
-              + "_"
-              + getString(R.string.signed_consent)
-              + ".pdf";
-      File file = new File(temPdfPath);
-      if (!file.exists()) {
-        file.createNewFile();
+      File file = null;
+      if (dataShare != null && dataShare.equalsIgnoreCase("datasharingscreen")) {
+        String temPdfPath =
+            root
+                + "/"
+                + title.replace("/", "\u2215")
+                + "_"
+                + getString(R.string.dataShared)
+                + ".pdf";
+        file = new File(temPdfPath);
+        if (!file.exists()) {
+          file.createNewFile();
+        }
+      } else {
+        String temPdfPath =
+            root
+                + "/"
+                + title.replace("/", "\u2215")
+                + "_"
+                + getString(R.string.signed_consent)
+                + ".pdf";
+        file = new File(temPdfPath);
+        if (!file.exists()) {
+          file.createNewFile();
+        }
       }
       FileOutputStream fos = new FileOutputStream(file);
       fos.write(bytesArray);
@@ -305,18 +332,27 @@ public class PdfDisplayActivity extends AppCompatActivity
       AppController.getHelperProgressDialog().dismissDialog();
       ConsentPDF consentPdfData = (ConsentPDF) response;
       if (consentPdfData != null) {
-
-        try {
-          bytesArray = Base64.decode(consentPdfData.getConsent().getContent(), Base64.DEFAULT);
-        } catch (Exception e) {
-          Logger.log(e);
+        if (dataShare != null && dataShare.equalsIgnoreCase("datasharingscreen")) {
+          try {
+            bytesArray = Base64.decode(consentPdfData.getDataSharingScreenShot(), Base64.DEFAULT);
+          } catch (Exception e) {
+            Logger.log(e);
+          }
+        } else {
+          try {
+            bytesArray = Base64.decode(consentPdfData.getConsent().getContent(), Base64.DEFAULT);
+          } catch (Exception e) {
+            Logger.log(e);
+          }
         }
         setPdfView(bytesArray, consentPdfData.getStudyId());
-        try {
-          consentPdfData.setStudyId(studyId);
-          db.saveConsentPdf(PdfDisplayActivity.this, consentPdfData);
-        } catch (Exception e) {
-          Logger.log(e);
+        if (dataShare == null) {
+          try {
+            consentPdfData.setStudyId(studyId);
+            db.saveConsentPdf(PdfDisplayActivity.this, consentPdfData);
+          } catch (Exception e) {
+            Logger.log(e);
+          }
         }
       }
     } catch (Exception e) {
@@ -353,6 +389,7 @@ public class PdfDisplayActivity extends AppCompatActivity
 
   @Override
   protected void onDestroy() {
+    pdfViewer.destroyPdfRender();
     db.closeRealmObj(realm);
     try {
       File file = new File(sharePdfFilePath);
@@ -363,5 +400,31 @@ public class PdfDisplayActivity extends AppCompatActivity
       Logger.log(e);
     }
     super.onDestroy();
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      shareBtn.setClickable(false);
+      shareBtn.setAlpha(0.3F);
+    } else {
+      shareBtn.setClickable(true);
+      shareBtn.setAlpha(1F);
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
   }
 }

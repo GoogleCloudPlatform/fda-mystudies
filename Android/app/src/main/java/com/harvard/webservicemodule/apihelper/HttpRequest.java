@@ -240,11 +240,11 @@ public class HttpRequest {
           }
         }
       } catch (ConnectTimeoutException | SocketTimeoutException e) {
-        responseModel.setServermsg("No internet connection/cannot connect to server");
+        responseModel.setServermsg("No internet connection or the server cannot be connected.");
         responseData = "timeout";
         Logger.log(e);
       } catch (Exception e) {
-        responseModel.setServermsg("No internet connection/cannot connect to server");
+        responseModel.setServermsg("No internet connection or the server cannot be connected.");
         responseData = "";
         Logger.log(e);
       }
@@ -399,11 +399,11 @@ public class HttpRequest {
         }
       }
     } catch (ConnectException e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
+      responseModel.setServermsg("No internet connection or the server cannot be connected.");
       responseData = "timeout";
       Logger.log(e);
     } catch (Exception e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
+      responseModel.setServermsg("No internet connection or the server cannot be connected.");
       responseData = "";
       Logger.log(e);
     }

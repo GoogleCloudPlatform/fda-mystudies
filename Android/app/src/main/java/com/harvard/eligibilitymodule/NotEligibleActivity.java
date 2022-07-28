@@ -17,9 +17,10 @@
 package com.harvard.eligibilitymodule;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StudyFragment;
@@ -50,6 +51,10 @@ public class NotEligibleActivity extends AppCompatActivity
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     dbServiceSubscriber = new DbServiceSubscriber();
     TextView textView = (TextView) findViewById(R.id.notEligibleOK);
+    TextView textView1 = findViewById(R.id.notEligibleDesc);
+    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
+      textView1.setText(getString(R.string.noeligibleStandalonemsg));
+    }
     textView.setOnClickListener(
         new View.OnClickListener() {
           @Override

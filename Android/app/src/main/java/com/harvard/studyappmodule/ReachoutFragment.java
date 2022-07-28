@@ -16,20 +16,27 @@
 package com.harvard.studyappmodule;
 
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.R;
+import com.harvard.utils.NetworkChangeReceiver;
 import java.util.ArrayList;
 
-public class ReachoutFragment<T> extends Fragment {
+public class ReachoutFragment<T> extends Fragment
+    implements NetworkChangeReceiver.NetworkChangeCallback {
 
   private RecyclerView reachoutRecyclerView;
   private Context context;
+  private NetworkChangeReceiver networkChangeReceiver;
+  private TextView offlineIndicatior;
 
   @Override
   public void onAttach(Context context) {
@@ -42,6 +49,7 @@ public class ReachoutFragment<T> extends Fragment {
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_reachout, container, false);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     initializeXmlId(view);
     setRecyclearView();
     return view;
@@ -49,6 +57,7 @@ public class ReachoutFragment<T> extends Fragment {
 
   private void initializeXmlId(View view) {
     reachoutRecyclerView = (RecyclerView) view.findViewById(R.id.reachoutRecyclerView);
+    offlineIndicatior = view.findViewById(R.id.offlineIndicatior);
   }
 
   private void setRecyclearView() {
@@ -59,5 +68,29 @@ public class ReachoutFragment<T> extends Fragment {
     reachoutList.add(getString(R.string.need_help));
     ReachoutListAdapter reachoutListAdapter = new ReachoutListAdapter(getActivity(), reachoutList);
     reachoutRecyclerView.setAdapter(reachoutListAdapter);
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    context.registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      context.unregisterReceiver(networkChangeReceiver);
+    }
   }
 }

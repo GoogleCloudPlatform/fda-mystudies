@@ -21,29 +21,29 @@
     <string name="first_name">First Name</string>
     <string name="first_name_2">First name</string>
     <string name="account_deletion">Your account has been deleted.</string>
-    <string name="enter_first_name">enter first name</string>
-    <string name="enter_last_name">enter last name</string>
+    <string name="enter_first_name">Enter first name</string>
+    <string name="enter_last_name">Enter last name</string>
     <string name="last_name">Last Name</string>
     <string name="last_name_2">Last name</string>
     <string name="email_id">Email</string>
     <string name="username">Username</string>
     <string name="enter_email">Enter email</string>
-    <string name="enter_new_password">enter new password</string>
-    <string name="enter_old_password">enter current password</string>
-    <string name="enter_temp_password">enter temporary password</string>
+    <string name="enter_new_password">Enter new password</string>
+    <string name="enter_old_password">Enter current password</string>
+    <string name="enter_temp_password">Enter temporary password</string>
     <string name="password">Password</string>
     <string name="passcode">Passcode</string>
-    <string name="enter_password">enter password</string>
-    <string name="add_password">add password</string>
+    <string name="enter_password">Enter password</string>
+    <string name="add_password">Add password</string>
     <string name="confirm_password">Confirm password</string>
     <string name="subject">Subject</string>
-    <string name="enter_subject">enter subject</string>
+    <string name="enter_subject">Enter subject</string>
     <string name="message">Message</string>
     <string name="enter_feedback">Enter your feedback here</string>
     <string name="contact_us">CONTACT US</string>
     <string name="feedback">LEAVE US YOUR FEEDBACK</string>
     <string name="feedback_text">We\'d love to hear from you! Please share your thoughts on how we can improve your experience of participating in health studies and contributing to a healthier world! Your feedback will be anonymous.</string>
-    <string name="enter_confirm_password">confirm password</string>
+    <string name="enter_confirm_password">Confirm password</string>
     <string name="enter_contact_us">Please let us know what you need help with. We will get back to you at the earliest.</string>
     <string name="agree">I Agree to the Terms and Privacy Policy</string>
     <string name="submit">Submit</string>
@@ -59,7 +59,7 @@
     <string name="next">Next</string>
     <string name="setup_passcode">Create passcode</string>
     <string name="sign_in">SIGN IN</string>
-    <string name="sign_in_btn">Sign In</string>
+    <string name="sign_in_btn">Sign in</string>
     <string name="usr_pwd">with username and\n password</string>
     <string name="email">Email</string>
     <string name="new_password">New password</string>
@@ -332,6 +332,7 @@
     <string name="notification">notification</string>
     <string name="charttag">activityId</string>
     <string name="signed_consent">SignedConsent</string>
+    <string name="dataShared">DataShared</string>
     <string name="permission_enable_message">Please enable sharing permission from phone settings to continue.</string>
     <string name="leave_study_retained_message">Are you sure? Tap OK to confirm.</string>
     <string name="leave_study_deleted_message">Are you sure? Tap OK to confirm.</string>
@@ -542,6 +543,8 @@
 
     <string name="rsb_invalid_answer_time_none">Please choose a time.</string>
     <string name="rsb_invalid_answer_date_time_none">Please choose a date and time.</string>
+    
+    <string name="noeligibleStandalonemsg">Sorry, you are not eligible for participation in this study. We thank you for your interest and time, and encourage you to explore other studies in the future.</string>
 
     <!--google analytics implementation 13/12/2021 -->
     <string name="eligibility_sucess_message">Eligible</string>
@@ -715,4 +718,6 @@
     <string name="preview">Preview</string>
     <string name="side_menu_my_account_in">My account</string>
 
+<!--&lt;!&ndash;    // data sharing 15-06-2022-->
+    <string name="data_sharing">Data sharing image</string>
 </resources>
