@@ -22,9 +22,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -119,7 +116,7 @@ public class StudyActivity extends AppCompatActivity
   private ProfileFragment profileFragment;
   private boolean isExit = false;
   private StudyFragment studyFragment;
-  public static String FROM = "from";
+  public static final String FROM = "from";
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private RelativeLayout searchToolBarLayout;
@@ -522,6 +519,8 @@ public class StudyActivity extends AppCompatActivity
                 getString(R.string.filter_clicked));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            AppController.getHelperSharedPreference()
+                .writePreference(StudyActivity.this, "toolbarClicked", "true");
             Intent intent = new Intent(StudyActivity.this, FilterActivity.class);
             startActivityForResult(intent, 999);
           }
@@ -642,6 +641,8 @@ public class StudyActivity extends AppCompatActivity
                 getString(R.string.study_notification));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            AppController.getHelperSharedPreference()
+                .writePreference(StudyActivity.this, "toolbarClicked", "true");
             Intent intent = new Intent(StudyActivity.this, NotificationActivity.class);
             startActivityForResult(intent, NOTIFICATION_RESULT);
           }
@@ -836,35 +837,65 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
-          eventProperties.putString(
-              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-              getString(R.string.study_side_sign_in));
-          analyticsInstance.logEvent(
-              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-          closeDrawer();
-          SharedPreferenceHelper.writePreference(
-              StudyActivity.this, getString(R.string.loginflow), "SideMenu");
-          SharedPreferenceHelper.writePreference(
-              StudyActivity.this, getString(R.string.logintype), "signIn");
-          CustomTabsIntent customTabsIntent =
-              new CustomTabsIntent.Builder()
-                  .setToolbarColor(getResources().getColor(R.color.colorAccent))
-                  .setShowTitle(true)
-                  .setCloseButtonIcon(
-                      BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
-                  .setStartAnimations(
-                      StudyActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
-                  .setExitAnimations(
-                      StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
-                  .build();
-          Apps apps = dbServiceSubscriber.getApps(realm);
-          customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
-              .replace("$FromEmail", apps.getFromEmail())
-              .replace("$SupportEmail", apps.getSupportEmail())
-              .replace("$AppName", apps.getAppName())
-              .replace("$ContactEmail", apps.getContactUsEmail())));
-          dbServiceSubscriber.closeRealmObj(realm);
-          startActivity(customTabsIntent.intent);
+          if (!AppController.isNetworkAvailable(StudyActivity.this)) {
+            androidx.appcompat.app.AlertDialog.Builder alertDialog =
+                new androidx.appcompat.app.AlertDialog.Builder(
+                    StudyActivity.this, R.style.Style_Dialog_Rounded_Corner);
+            alertDialog.setTitle("              You are offline");
+            alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+            alertDialog.setCancelable(false);
+            alertDialog.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    //          eventProperties.putString(
+                    //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    //              getString(R.string.app_update_next_time_ok));
+                    //          analyticsInstance.logEvent(
+                    //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    // eventProperties);
+                    dialogInterface.dismiss();
+                  }
+                });
+            final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+            dialog.show();
+          } else {
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_side_sign_in));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            AppController.getHelperSharedPreference()
+                .writePreference(StudyActivity.this, "toolbarClicked", "true");
+            closeDrawer();
+            SharedPreferenceHelper.writePreference(
+                StudyActivity.this, getString(R.string.loginflow), "SideMenu");
+            SharedPreferenceHelper.writePreference(
+                StudyActivity.this, getString(R.string.logintype), "signIn");
+            CustomTabsIntent customTabsIntent =
+                new CustomTabsIntent.Builder()
+                    .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                    .setShowTitle(true)
+                    .setCloseButtonIcon(
+                        BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                    .setStartAnimations(
+                        StudyActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+                    .setExitAnimations(
+                        StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+                    .build();
+            Apps apps = dbServiceSubscriber.getApps(realm);
+            customTabsIntent.intent.setData(
+                Uri.parse(
+                    Urls.LOGIN_URL
+                        .replace("$FromEmail", apps.getFromEmail())
+                        .replace("$SupportEmail", apps.getSupportEmail())
+                        .replace("$AppName", apps.getAppName())
+                        .replace("$ContactEmail", apps.getContactUsEmail())));
+            dbServiceSubscriber.closeRealmObj(realm);
+            startActivity(customTabsIntent.intent);
+          }
         } else {
           if (previousValue == R.id.mSignInProfileLayout) {
             closeDrawer();
@@ -922,23 +953,49 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
-          eventProperties.putString(
-              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-              getString(R.string.study_side_sign_up));
-          analyticsInstance.logEvent(
-              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-          titleFdaListens.setText("");
-          title.setText(getResources().getString(R.string.signup));
-          editBtnLayout.setVisibility(View.GONE);
-          notificationBtn.setVisibility(View.GONE);
-          filter.setVisibility(View.GONE);
-          searchBtn.setVisibility(View.GONE);
-          infoIcon.setVisibility(View.GONE);
-          closeDrawer();
-          getSupportFragmentManager()
-              .beginTransaction()
-              .replace(R.id.frameLayoutContainer, new SignupFragment(), "fragment")
-              .commit();
+          if (!AppController.isNetworkAvailable(StudyActivity.this)) {
+            androidx.appcompat.app.AlertDialog.Builder alertDialog =
+                new androidx.appcompat.app.AlertDialog.Builder(
+                    StudyActivity.this, R.style.Style_Dialog_Rounded_Corner);
+            alertDialog.setTitle("              You are offline");
+            alertDialog.setMessage("You are offline. Kindly check the internet connection.");
+            alertDialog.setCancelable(false);
+            alertDialog.setPositiveButton(
+                "OK",
+                new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialogInterface, int i) {
+                    Bundle eventProperties = new Bundle();
+                    //          eventProperties.putString(
+                    //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    //              getString(R.string.app_update_next_time_ok));
+                    //          analyticsInstance.logEvent(
+                    //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                    // eventProperties);
+                    dialogInterface.dismiss();
+                  }
+                });
+            final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+            dialog.show();
+          } else {
+            eventProperties.putString(
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.study_side_sign_up));
+            analyticsInstance.logEvent(
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            titleFdaListens.setText("");
+            title.setText(getResources().getString(R.string.signup));
+            editBtnLayout.setVisibility(View.GONE);
+            notificationBtn.setVisibility(View.GONE);
+            filter.setVisibility(View.GONE);
+            searchBtn.setVisibility(View.GONE);
+            infoIcon.setVisibility(View.GONE);
+            closeDrawer();
+            getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameLayoutContainer, new SignupFragment(), "fragment")
+                .commit();
+          }
         } else {
           // SignOut Reach out menu click
           eventProperties.putString(
@@ -1219,16 +1276,17 @@ public class StudyActivity extends AppCompatActivity
       } else {
         if (force) {
           Toast.makeText(
-              StudyActivity.this,
-              "Please update the app to continue using",
-              Toast.LENGTH_SHORT)
+                  StudyActivity.this, "Please update the app to continue using", Toast.LENGTH_SHORT)
               .show();
           moveTaskToBack(true);
-          if (Build.VERSION.SDK_INT < 21) {
-            finishAffinity();
-          } else {
-            finishAndRemoveTask();
-          }
+          //          if (Build.VERSION.SDK_INT < 21) {
+          //            finishAffinity();
+          //          } else {
+          //            finishAndRemoveTask();
+          //          }
+          //          if (!AppController.isNetworkAvailable(StudyActivity.this)) {
+          //            AppController.offlineAlart(StudyActivity.this);
+          //          }
         } else {
           AlertDialog.Builder alertDialogBuilder =
               new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
@@ -1331,7 +1389,7 @@ public class StudyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(StudyActivity.this);
       notificationManager.cancelAll();
-      Toast.makeText(StudyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(StudyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
       AppController.signout(StudyActivity.this);
     }
 
@@ -1374,16 +1432,20 @@ public class StudyActivity extends AppCompatActivity
         if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
           isUpgrade(false, latestVersion, force);
         } else {
-          AppController.getHelperSharedPreference().writePreference(StudyActivity.this, "versionalert", "done");
+          AppController.getHelperSharedPreference()
+              .writePreference(StudyActivity.this, "versionalert", "done");
           isUpgrade(true, latestVersion, force);
         }
       } else {
-        Toast.makeText(StudyActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
-        if (Build.VERSION.SDK_INT < 21) {
-          finishAffinity();
-        } else {
-          finishAndRemoveTask();
-        }
+        //        Toast.makeText(StudyActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
+        //        if (Build.VERSION.SDK_INT < 21) {
+        //          finishAffinity();
+        //        } else {
+        //          finishAndRemoveTask();
+        //        }
+        //        if (!AppController.isNetworkAvailable(StudyActivity.this)) {
+        //          AppController.offlineAlart(StudyActivity.this);
+        //        }
       }
     }
   }

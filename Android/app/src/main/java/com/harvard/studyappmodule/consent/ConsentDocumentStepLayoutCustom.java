@@ -37,17 +37,21 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
   private ConsentDocumentStep step;
   private StepResult<Boolean> stepResult;
   private CustomFirebaseAnalytics analyticsInstance;
+  private Context context;
 
   public ConsentDocumentStepLayoutCustom(Context context) {
     super(context);
+    this.context = context;
   }
 
   public ConsentDocumentStepLayoutCustom(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.context = context;
   }
 
   public ConsentDocumentStepLayoutCustom(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    this.context = context;
   }
 
   @Override
@@ -150,6 +154,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
                 eventProperties.putString(
                     CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
                     getContext().getString(R.string.consent_agree_cancel));
+                submitBar.getPositiveActionView().setEnabled(true);
                 analyticsInstance.logEvent(
                     CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               }

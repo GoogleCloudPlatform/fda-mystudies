@@ -12,8 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -21,10 +19,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import com.harvard.R;
 import com.harvard.utils.CustomFirebaseAnalytics;
-
 import java.lang.reflect.Constructor;
 import org.researchstack.backbone.ResourcePathManager;
 import org.researchstack.backbone.result.StepResult;
@@ -47,17 +45,21 @@ public class SurveyStepLayoutCustom extends FixedSubmitBarLayoutCustom implement
   private LinearLayout container;
   private StepBody stepBody;
   private CustomFirebaseAnalytics analyticsInstance;
+  private Context context;
 
   public SurveyStepLayoutCustom(Context context) {
     super(context);
+    this.context = context;
   }
 
   public SurveyStepLayoutCustom(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.context = context;
   }
 
   public SurveyStepLayoutCustom(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    this.context = context;
   }
 
   public SurveyStepLayoutCustom(
@@ -77,8 +79,8 @@ public class SurveyStepLayoutCustom extends FixedSubmitBarLayoutCustom implement
 
     this.questionStep = (QuestionStep) step;
     this.stepResult = result;
-
     analyticsInstance = CustomFirebaseAnalytics.getInstance(getContext());
+
     initializeStep();
   }
 

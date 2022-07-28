@@ -44,6 +44,7 @@
             android:layout_below="@id/maxlayout"
             android:layout_height="wrap_content">
 
+
             <com.jaygoo.widget.VerticalRangeSeekBar
                 android:id="@+id/seekbar"
                 android:layout_width="match_parent"
@@ -66,6 +67,7 @@
                 app:rsb_tick_mark_text_margin="-25dp"
                 />
 
+
             <LinearLayout
                 android:id="@+id/scaleValue"
                 android:layout_width="wrap_content"
@@ -76,6 +78,7 @@
                 android:orientation="vertical">
 
             </LinearLayout>
+
 
             <TextView
                 android:id="@+id/currentvalue"
@@ -112,6 +115,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-
 </RelativeLayout>
+
