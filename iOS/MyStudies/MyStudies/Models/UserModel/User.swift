@@ -185,6 +185,14 @@ class User {
       return studyStatus
     }
   }
+  
+  func udpateUserStudyVersion(studyId: String, userStudyVersion: String) {
+
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
+      study.userStudyVersion = userStudyVersion
+    }
+  }
 
   // MARK: Study Status
 
@@ -445,7 +453,9 @@ class UserStudyStatus {
 
   lazy var completion: Int = 0
   lazy var adherence: Int = 0
-
+  lazy var userStudyVersion: String = ""
+  
+  var dataSharingPermission: String = "Not Applicable"
   var participantId: String?
   var siteID: String!
   var tokenIdentifier: String!
@@ -466,6 +476,12 @@ class UserStudyStatus {
       }
       if Utilities.isValidValue(someObject: detail[kAdherence] as AnyObject) {
         self.adherence = (detail[kAdherence] as? Int)!
+      }
+      if Utilities.isValidValue(someObject: detail["userStudyVersion"] as AnyObject) {
+        self.userStudyVersion = (detail["userStudyVersion"] as? String) ?? ""
+      }
+      if Utilities.isValidValue(someObject: detail[kDataSharingPermission] as AnyObject) {
+        self.dataSharingPermission = detail[kDataSharingPermission] as? String ?? "Not Applicable"
       }
       if Utilities.isValidValue(someObject: detail[kStudyParticipantId] as AnyObject) {
         self.participantId = detail[kStudyParticipantId] as? String
@@ -507,10 +523,19 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getParticipatedUserStudyStatus() -> [String: Any] {
 
-    let id = self.participantId ?? ""
+    let id = self.participantId ?? (Study.currentStudy?.userParticipateState.participantId ?? "")
+    var valUserStudyVersion = Study.currentStudy?.newVersion ?? ""
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+      if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&
+          Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "0") {
+        valUserStudyVersion = Study.currentStudy?.userParticipateState.userStudyVersion ?? ""
+      }
+    }
+    
     var studyDetail =
       [
         kStudyId: self.studyId,
+        "userStudyVersion": valUserStudyVersion,
         kStudyStatus: self.status.paramValue,
       ] as [String: Any]
     if let siteID = siteID {
@@ -528,10 +553,21 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getCompletionAdherence() -> [String: Any] {
     let id = self.participantId ?? ""
+    var valUserStudyVersion = Study.currentStudy?.newVersion ?? ""
+    
+    if StudyUpdates.studyConsentUpdated &&
+        StudyUpdates.studyEnrollAgain {
+      if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&
+          Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "0") {
+        valUserStudyVersion = Study.currentStudy?.userParticipateState.userStudyVersion ?? ""
+      }
+    }
+    
     var studyDetail =
       [
         kStudyId: self.studyId,
         "completion": completion,
+        "userStudyVersion": valUserStudyVersion,
         "adherence": adherence,
       ] as [String: Any]
     if let siteID = siteID {

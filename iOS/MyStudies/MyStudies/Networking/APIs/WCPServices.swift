@@ -234,9 +234,16 @@ class WCPServices: NSObject {
   func getStudyUpdates(study: Study, delegate: NMWebServiceDelegate) {
     self.delegate = delegate
     let method = WCPMethods.studyUpdates.method
+    
+    var valUserStudyVersion = study.version ?? "0"
+      if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&
+          Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "0") {
+        valUserStudyVersion = Study.currentStudy?.userParticipateState.userStudyVersion ?? ""
+      }
+    
     let headerParams = [
       kStudyId: study.studyId!,
-      kStudyVersion: study.version ?? "0",
+      kStudyVersion: valUserStudyVersion ,
     ]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }

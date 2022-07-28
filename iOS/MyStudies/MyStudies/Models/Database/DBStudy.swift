@@ -48,6 +48,7 @@ class DBStudy: Object {
 
   @objc dynamic var signedConsentVersion: String?
   @objc dynamic var signedConsentFilePath: String?
+  @objc dynamic var signedConsentDataSPdfFilePath: String?
 
   // Study state info
 
@@ -56,9 +57,11 @@ class DBStudy: Object {
   @objc dynamic var participatedId: String?
   @objc dynamic var siteID: String?
   @objc dynamic var tokenIdentifier: String?
+  @objc dynamic var dataSharingPermission: String = "Not Applicable"
   @objc dynamic var joiningDate: Date?
   @objc dynamic var completion: Int = 0
   @objc dynamic var adherence: Int = 0
+  @objc dynamic var userStudyVersion: String = ""
 
   /// Anchor date value
   @objc dynamic var anchorDate: Date?

@@ -323,7 +323,7 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
   // MARK: - FORMATERS
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "dd, MMM yyyy"
+    formatter.dateFormat = "MMM dd, yyyy"
     formatter.timeZone = TimeZone.current
     return formatter
   }()

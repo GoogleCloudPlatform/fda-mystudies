@@ -22,6 +22,7 @@ import LocalAuthentication
 import SlideMenuControllerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kProfileTableViewCellIdentifier = "ProfileTableViewCell"
 
@@ -76,7 +77,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   lazy var isPasscodeViewPresented: Bool = false
   lazy var passcodeStateIsEditing: Bool = false
   lazy var isProfileEdited = false
-
+    private var reachability: Reachability!
   /// A Boolean indicates the user changing the App password.
   private var isChangePasswordEditing = false
 
@@ -91,6 +92,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+      setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "LeftMenu MyAccount"
     ])
@@ -112,20 +114,71 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
 
     self.fdaSlideMenuController()?.delegate = self
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     user = User.currentUser
 
-    if !isPasscodeViewPresented {
+    if !isPasscodeViewPresented && reachability.connection != .unavailable {
       UserServices().getUserProfile(self as NMWebServiceDelegate)
     }
     self.setNavigationBarItem()
     self.tableViewProfile?.reloadData()
   }
 
-  func leftDidClose() {
-    // Left menu is closed
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+    }
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    self.view.hideAllToasts()
+    setToggleButtonsEnable(status: true)
+  }
+  
+  func setOffline() {
+    self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
+    setToggleButtonsEnable(status: false)
+    
+  }
+  
+  func setToggleButtonsEnable(status: Bool) {
+    if let cells = self.tableViewProfile?.visibleCells {
+      for cell in cells where cell.isKind(of: ProfileTableViewCell.self) {
+        (cell as! ProfileTableViewCell).switchToggle?.isEnabled = status
+      }
+    }
+  }
+  
+  override func showOfflineIndicator() -> Bool {
+    return false
   }
 
   // MARK: - Button Actions

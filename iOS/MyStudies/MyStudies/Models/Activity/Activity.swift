@@ -275,7 +275,7 @@ class Activity {
         ) {
           self.frequencyType = Frequency(
             rawValue: (frequencyDict[kActivityFrequencyType] as? String)!
-          )!
+          ) ?? .oneTime
         }
 
       }
@@ -352,17 +352,17 @@ class Activity {
 
     self.anchorDate = AnchorDate.init(availability)
     if self.anchorDate?.sourceType == "EnrollmentDate" {
-      var enrollmentDate = Study.currentStudy?.userParticipateState.joiningDate
+      var enrollmentDate = Study.currentStudy?.userParticipateState.joiningDate ?? Date()
 
       // update start date
-      var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate!)
+      var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate)
       let startTimeEnrollment = "00:00:00"
       startDateStringEnrollment =
         (startDateStringEnrollment ?? "") + " "
         + startTimeEnrollment
       enrollmentDate = Utilities.findDateFromString(
         dateString: startDateStringEnrollment ?? ""
-      )
+      ) ?? Date()
 
       self.anchorDate?.anchorDateValue = enrollmentDate
       let lifeTime = self.updateLifeTime(self.anchorDate!, frequency: self.frequencyType)

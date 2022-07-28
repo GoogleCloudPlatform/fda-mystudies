@@ -169,9 +169,11 @@ class DBHandler: NSObject {
             dbStudy?.participatedId = studyStatus.participantId
             dbStudy?.siteID = studyStatus.siteID
             dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+            dbStudy?.dataSharingPermission = studyStatus.dataSharingPermission
             dbStudy?.joiningDate = studyStatus.joiningDate
             dbStudy?.completion = studyStatus.completion
             dbStudy?.adherence = studyStatus.adherence
+            dbStudy?.userStudyVersion = studyStatus.userStudyVersion
           }
           if dbStudy?.participatedStatus
             == UserStudyStatus.StudyStatus.enrolled
@@ -216,9 +218,11 @@ class DBHandler: NSObject {
       dbStudy.participatedId = userStudyStatus.participantId
       dbStudy.siteID = userStudyStatus.siteID
       dbStudy.tokenIdentifier = userStudyStatus.tokenIdentifier
+      dbStudy.dataSharingPermission = userStudyStatus.dataSharingPermission
       dbStudy.joiningDate = userStudyStatus.joiningDate
       dbStudy.completion = userStudyStatus.completion
       dbStudy.adherence = userStudyStatus.adherence
+      dbStudy.userStudyVersion = userStudyStatus.userStudyVersion
     }
     dbStudy.withdrawalConfigrationMessage = study.withdrawalConfigration?.message
     dbStudy.withdrawalConfigrationType = study.withdrawalConfigration?.type?.rawValue
@@ -249,6 +253,7 @@ class DBHandler: NSObject {
       study.status = StudyStatus(rawValue: dbStudy.status!)!
       study.signedConsentVersion = dbStudy.signedConsentVersion
       study.signedConsentFilePath = dbStudy.signedConsentFilePath
+      study.signedConsentDataSPdfFilePath = dbStudy.signedConsentDataSPdfFilePath
       study.activitiesLocalNotificationUpdated = dbStudy.activitiesLocalNotificationUpdated
 
       // Settings
@@ -267,7 +272,9 @@ class DBHandler: NSObject {
       participatedStatus.participantId = dbStudy.participatedId
       participatedStatus.siteID = dbStudy.siteID ?? ""
       participatedStatus.tokenIdentifier = dbStudy.tokenIdentifier ?? ""
+      participatedStatus.dataSharingPermission = dbStudy.dataSharingPermission
       participatedStatus.adherence = dbStudy.adherence
+      participatedStatus.userStudyVersion = dbStudy.userStudyVersion
       participatedStatus.completion = dbStudy.completion
       participatedStatus.joiningDate = dbStudy.joiningDate
 
@@ -457,6 +464,27 @@ class DBHandler: NSObject {
     }
 
   }
+  
+  class func updateMetaDataEnrolledToUpdateForStudy(study: Study, updateDetails: StudyUpdates?) {
+
+    let realm = DBHandler.getRealmObject()!
+    let studies = realm.objects(DBStudy.self).filter("studyId == %@", study.studyId ?? "")
+    let dbStudy = studies.last
+
+    try? realm.write {
+//      dbStudy?.updateResources = StudyUpdates.studyResourcesUpdated
+//      dbStudy?.updateConsent = StudyUpdates.studyConsentUpdated
+//      dbStudy?.updateStudyEnrollAgain = StudyUpdates.studyEnrollAgain
+//      dbStudy?.updateActivities = StudyUpdates.studyActivitiesUpdated
+//      dbStudy?.updateInfo = StudyUpdates.studyInfoUpdated
+      if StudyUpdates.studyVersion != nil {
+        dbStudy?.version = StudyUpdates.studyVersion
+      } else {
+        dbStudy?.version = dbStudy?.updatedVersion
+      }
+    }
+
+  }
 
   /// This method will update the participation status of the study.
   /// - Parameter study: Instance of the study participated.
@@ -472,9 +500,11 @@ class DBHandler: NSObject {
         dbStudy?.participatedId = studyStatus.participantId
         dbStudy?.siteID = studyStatus.siteID
         dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+        dbStudy?.dataSharingPermission = studyStatus.dataSharingPermission
         dbStudy?.joiningDate = studyStatus.joiningDate
         dbStudy?.completion = studyStatus.completion
         dbStudy?.adherence = studyStatus.adherence
+        dbStudy?.userStudyVersion = studyStatus.userStudyVersion
       }
     }
   }
@@ -512,6 +542,19 @@ class DBHandler: NSObject {
     try? realm.write {
       dbStudy?.signedConsentFilePath = study.signedConsentFilePath
       dbStudy?.signedConsentVersion = study.signedConsentVersion
+    }
+  }
+  
+  ///  Saves study consent screenshot Info to DB.
+  /// - Parameter study: Instance of the study for which consent information to be saved.
+  class func saveConsentScreenShotInformation(study: Study) {
+
+    let realm = DBHandler.getRealmObject()!
+    let studies = realm.objects(DBStudy.self).filter("studyId == %@", study.studyId ?? "")
+    let dbStudy = studies.last
+
+    try? realm.write {
+      dbStudy?.signedConsentDataSPdfFilePath = study.signedConsentDataSPdfFilePath
     }
   }
 

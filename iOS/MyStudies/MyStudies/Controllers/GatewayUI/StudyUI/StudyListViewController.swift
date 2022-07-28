@@ -20,6 +20,7 @@
 import IQKeyboardManagerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kHelperTextForFilteredStudiesNotFound = "No studies found for the filters applied."
 
@@ -44,6 +45,7 @@ class StudyListViewController: UIViewController {
   lazy var isComingFromFilterScreen: Bool = false
   lazy var studiesList: [Study] = []
   lazy var previousStudyList: [Study] = []
+  private var reachability: Reachability!
 
   /// Gatewaystudylist
   lazy var allStudyList: [Study] = []
@@ -56,10 +58,6 @@ class StudyListViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
-                                           name: Notification.Name("Menu Clicked"), object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
-                                           name: Notification.Name("LeftMenu Home"), object: nil)
     
     addNavigationTitle()
     isComingFromFilterScreen = false
@@ -71,11 +69,22 @@ class StudyListViewController: UIViewController {
     }
   }
   
+    override func viewWillDisappear(_ animated: Bool) {
+        removeNotifier()
+    }
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   override func viewWillAppear(_ animated: Bool) {
-    if !isComingFromFilterScreen {
+    setupNotifiers()
+    if !isComingFromFilterScreen && !(self.slideMenuController()?.isLeftOpen() ?? true) {
       self.addProgressIndicator()
     }
     setNavigationBarColor()
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImage)
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImagePDF)
+    UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -143,6 +152,49 @@ class StudyListViewController: UIViewController {
     let ud = UserDefaults.standard
     ud.set(false, forKey: kIsStudylistGeneral)
     ud.synchronize()
+  }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                           name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
+                                           name: Notification.Name("LeftMenu Home"), object: nil)
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+    }
+  }
+  
+  func removeNotifier() {
+    NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: nil)
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("LeftMenu Home"), object: nil)
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+      break
+    case .wifi:
+      ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+      break
+    case .none:
+      ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+      
+      break
+    case .unavailable:
+      ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+      break
+    }
   }
 
   // MARK: - UI Utils
@@ -1032,7 +1084,7 @@ extension StudyListViewController: NMWebServiceDelegate {
 
     } else if requestName as String == RegistrationMethods.userProfile.description {
       appdelegate.window?.removeProgressIndicatorFromWindow()
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
 
       } else {
