@@ -106,45 +106,44 @@ class ConfirmationViewController: UIViewController {
     self.checkWithdrawlConfigurationForNextStudy()
 
   }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    self.addBackBarButton()
+  }
+  
+    // MARK: - Utility functions
     func setupNotifiers() {
         NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
                                                name: Notification.Name.reachabilityChanged, object: nil);
-
+        
         
         
         do {
             self.reachability = try Reachability()
             try self.reachability.startNotifier()
-            } catch(let error) {
-                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
+        } catch(let error) {
+        }
     }
     
     @objc func reachabilityChanged(note: Notification) {
         let reachability = note.object as! Reachability
         switch reachability.connection {
         case .cellular:
-            print("Network available via Cellular Data.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
             setOnline()
             break
         case .wifi:
-            print("Network available via WiFi.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
             setOnline()
             break
         case .none:
-            print("Network is not available.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
             setOffline()
             break
         case .unavailable:
-            print("Network is  unavailable.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
             setOffline()
             break
         }
     }
+    
     func setOnline() {
         self.view.hideAllToasts()
         buttonDoNotDeleteAccount?.isEnabled = true
@@ -152,6 +151,7 @@ class ConfirmationViewController: UIViewController {
         buttonDeleteAccount?.isEnabled = true
         buttonDeleteAccount?.layer.opacity = 1
     }
+    
     func setOffline() {
         self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
         buttonDoNotDeleteAccount?.isEnabled = false
@@ -159,13 +159,10 @@ class ConfirmationViewController: UIViewController {
         buttonDeleteAccount?.isEnabled = false
         buttonDeleteAccount?.layer.opacity = 0.5
     }
+    
     override func showOfflineIndicator() -> Bool {
         return true
     }
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    self.addBackBarButton()
-  }
 
   // MARK: - Utils
 

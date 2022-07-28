@@ -14,6 +14,9 @@ class ConsentServices: NSObject {
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
   var method: Method!
+  
+  let kConsentSharingImagePDF = "ConsentpdfSharingImage.pdf"
+  let kConsentSharingImage = "ConsentSharingImage"
 
   // MARK: Requests
 
@@ -50,7 +53,6 @@ class ConsentServices: NSObject {
     if let isShareData = consentResult?.isShareDataWithPublic {
       userDataSharing = isShareData ? "Provided" : "Not Provided"
     } else {
-      print("7dataSharingPermissiondataSharingPermission---\(Study.currentStudy?.userParticipateState.dataSharingPermission)")
       let valDataSharing = Study.currentStudy?.userParticipateState.dataSharingPermission ?? ""
       if valDataSharing != "" {
       userDataSharing = valDataSharing
@@ -78,14 +80,14 @@ class ConsentServices: NSObject {
 
     
 //    let img = UIImage(named:"leftIconBlue2") ?? UIImage()
-    let img = loadImageFromDocumentDirectory(fileName: "ConsentSharingImage") ?? UIImage()
+    let img = loadImageFromDocumentDirectory(fileName: kConsentSharingImage) ?? UIImage()
     
     let base64data2 = convertImageToBase64String(img: img)
     
     
     
     var pdfURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).last! as URL
-    pdfURL = pdfURL.appendingPathComponent("ConsentpdfSharingImage.pdf") as URL
+    pdfURL = pdfURL.appendingPathComponent(kConsentSharingImagePDF) as URL
 
     let database64pdfdataImage = try? Data(contentsOf: pdfURL)
     
@@ -93,7 +95,6 @@ class ConsentServices: NSObject {
     let base64dataPdfImage =
     database64pdfdataImage?
       .base64EncodedString() ?? ""
-//    print("database64dataImage---\(base64dataPdfImage)")
 
     let consent =
       [
@@ -104,7 +105,6 @@ class ConsentServices: NSObject {
 
     var params: [String : Any] = [:]
     let val = UserDefaults.standard.value(forKey: "consentEnrolledStatus") as? String ?? ""
-    print("1StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain---\(StudyUpdates.studyEnrollAgain)---\(StudyUpdates.studyConsentUpdated)---\(Study.currentStudy?.userParticipateState.status == .enrolled)---\(Study.currentStudy?.userParticipateState.status)---\(val)+++\(userDataSharing)")
     
     UserDefaults.standard.setValue("", forKey: "consentEnrolledStatus")
     UserDefaults.standard.synchronize()
@@ -118,7 +118,7 @@ class ConsentServices: NSObject {
           "siteId": Study.currentStudy?.userParticipateState.siteID ?? "",
           kConsent: consent,
           kConsentSharing: userDataSharing,
-//          "dataSharingScreenShot": base64dataPdfImage,// base64dataImage,
+//          "dataSharingScreenShot": base64dataPdfImage,
         ] as [String: Any]
     } else {
     params =

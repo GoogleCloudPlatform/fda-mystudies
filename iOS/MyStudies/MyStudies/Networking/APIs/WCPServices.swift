@@ -236,10 +236,8 @@ class WCPServices: NSObject {
     let method = WCPMethods.studyUpdates.method
     
     var valUserStudyVersion = study.version ?? "0"
-    print("2StudyUpdates.studyConsentUpdated---\(Study.currentStudy?.userParticipateState.userStudyVersion)---\(Study.currentStudy?.userParticipateState.userStudyVersion)")
       if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&
           Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "0") {
-        print("3StudyUpdates.studyConsentUpdated---")
         valUserStudyVersion = Study.currentStudy?.userParticipateState.userStudyVersion ?? ""
       }
     
@@ -336,7 +334,6 @@ class WCPServices: NSObject {
       listOfResources.append(resourceObj)
     }
 
-    print("7self.link---\(Study.currentStudy?.studyId)---\(listOfResources)")
     // save in database
     DBHandler.saveResourcesForStudy(
       studyId: (Study.currentStudy?.studyId)!,

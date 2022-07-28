@@ -38,6 +38,9 @@ let kStudyDashboardTabbarControllerIdentifier = "StudyDashboardTabbarViewControl
 
 let kShareConsentFailureAlert = "You can't join study without sharing your data"
 
+let kConsentSharingImagePDF = "ConsentpdfSharingImage.pdf"
+let kConsentSharingImage = "ConsentSharingImage"
+
 protocol StudyHomeViewDontrollerDelegate: class {
   func studyHomeJoinStudy()
 }
@@ -115,79 +118,8 @@ class StudyHomeViewController: UIViewController {
 
     let viewConsent = Branding.viewConsentButtonTitle
     buttonViewConsent?.setTitle(viewConsent, for: .normal)
-    
-//    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
-//                                               name: Notification.Name("ORKCancel"), object: nil)
   }
-    func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                               name: Notification.Name.reachabilityChanged, object: nil);
-
-        
-        
-        do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-            } catch(let error) {
-                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
-    }
-    
-    @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-            print("Network available via Cellular Data.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            setOnline()
-            break
-        case .wifi:
-            print("Network available via WiFi.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            setOnline()
-            break
-        case .none:
-            print("Network is not available.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            setOffline()
-            break
-        case .unavailable:
-            print("Network is  unavailable.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            setOffline()
-            break
-        }
-    }
-    func setOnline() {
-        if let viewController = self.presentedViewController {
-//            viewController.view.hideAllToasts()
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
-            self.view.hideAllToasts()
-        } else {
-            self.view.hideAllToasts()
-        }
-        
-        buttonJoinStudy?.isEnabled = true
-        buttonJoinStudy?.layer.opacity = 1
-        
-    }
-    func setOffline() {
-        if let viewController = self.presentedViewController {
-//            self.view.hideAllToasts()
-//            viewController.view.hideAllToasts()
-//            viewController.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
-//
-            ReachabilityIndicatorManager.shared.shouldPresentIndicator(viewController: viewController, isOffline: true)
-        } else {
-            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
-                                position: .center, title: nil, image: nil, completion: nil)
-        }
-        buttonJoinStudy?.isEnabled = false
-        buttonJoinStudy?.layer.opacity = 0.5
-    }
-    override func showOfflineIndicator() -> Bool {
-        return true
-    }
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     // hide navigationbar
@@ -232,6 +164,65 @@ class StudyHomeViewController: UIViewController {
 
     configureStandaloneUI()
   }
+  
+  // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+  
+    func setOnline() {
+        if let viewController = self.presentedViewController {
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+            self.view.hideAllToasts()
+        } else {
+            self.view.hideAllToasts()
+        }
+        
+        buttonJoinStudy?.isEnabled = true
+        buttonJoinStudy?.layer.opacity = 1
+        
+    }
+  
+    func setOffline() {
+        if let viewController = self.presentedViewController {
+            ReachabilityIndicatorManager.shared.shouldPresentIndicator(viewController: viewController, isOffline: true)
+        } else {
+            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
+        }
+        buttonJoinStudy?.isEnabled = false
+        buttonJoinStudy?.layer.opacity = 0.5
+    }
+  
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   
   @objc func methodOfReceivedNotification(notification: Notification) {
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
@@ -339,8 +330,6 @@ class StudyHomeViewController: UIViewController {
       let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       consentResult?.token = appdelegate.consentToken
     }
-
-    print("2StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain---\(StudyUpdates.studyEnrollAgain)---\(StudyUpdates.studyConsentUpdated)---\(Study.currentStudy?.userParticipateState.status == .enrolled)---\(Study.currentStudy?.userParticipateState.status)")
     
     UserDefaults.standard.setValue("\(Study.currentStudy?.userParticipateState.status.description ?? "")", forKey: "consentEnrolledStatus")
     UserDefaults.standard.synchronize()
@@ -1103,14 +1092,12 @@ extension StudyHomeViewController: NMWebServiceDelegate {
 extension StudyHomeViewController: ORKTaskViewControllerDelegate {
 
   func taskViewControllerSupportsSaveAndRestore(_: ORKTaskViewController) -> Bool {
-    print("taskViewControllerSupportsSaveAndRestore---")
     return true
   }
 
   /// This method updates the study status to DB and Server.
   /// - Parameter status: `UserStudyStatus.StudyStatus` to be updated.
   fileprivate func updateStudyStatus(status: UserStudyStatus.StudyStatus) {
-    print("taskViewControllerSupportsSaveAndRestore---")
     guard let currentStudy = Study.currentStudy,
       let studyID = currentStudy.studyId
     else { return }
@@ -1135,7 +1122,6 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
-    print("didFinishWith reason---")
     consentRestorationData = nil
 
     if taskViewController.task?.identifier == kPasscodeTaskIdentifier {
@@ -1218,7 +1204,6 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
-    print("stepViewControllerWillAppear stepViewController---")
       
     if (taskViewController.result.results?.count)! > 1 {
       if activityBuilder?.actvityResult?.result?.count
@@ -1318,13 +1303,9 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _: ORKStepViewController,
     didFinishWith _: ORKStepViewControllerNavigationDirection
-  ) {
-    print("didFinishWith direction---")
-  }
+  ) { }
 
-  public func stepViewControllerResultDidChange(_: ORKStepViewController) {
-    print("stepViewControllerResultDidChange---")
-  }
+  public func stepViewControllerResultDidChange(_: ORKStepViewController) { }
 
   public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {}
   
@@ -1346,7 +1327,6 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
     // CurrentStep is TokenStep
-    print("viewControllerFor step---")
     let val = captureScreen()
     
     UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0);
@@ -1592,43 +1572,23 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     }
   }
   
-//  func taskViewController(_ taskViewController: ORKTaskViewController,
-//                          stepViewControllerWillDisappear stepViewController: ORKStepViewController,
-//                          navigationDirection direction: ORKStepViewControllerNavigationDirection) {
-//
-//    print("stepViewControllerWillDisappear---")
-//    if let val = stepViewController.step?.identifier, val == kConsentSharing {
-//    UIGraphicsBeginImageContextWithOptions(stepViewController.view.bounds.size, false, 0)
-//    stepViewController.view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
-//    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
-//    UIGraphicsEndImageContext()
-//    let image2 = image
-//     let imageURl = saveImageInDocumentDirectory(image: image2, fileName: "ConsentSharingImage")
-//      print("imageURl---\(imageURl)")
-//    }
-//  }
-  
   func taskViewController(_ taskViewController: ORKTaskViewController,
                           stepViewControllerWillDisappear stepViewController: ORKStepViewController,
                           navigationDirection direction: ORKStepViewControllerNavigationDirection) {
     
-    print("stepViewControllerWillDisappear---")
     if let val = stepViewController.step?.identifier, val == kConsentSharing {
-    UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0)
+      UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0)
       taskViewController.view.drawHierarchy(in: taskViewController.view.bounds, afterScreenUpdates: true)
-    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
-    UIGraphicsEndImageContext()
-    let image2 = image
-     let imageURl = saveImageInDocumentDirectory(image: image2, fileName: "ConsentSharingImage")
-      print("ConsentSharingImageimageURl---\(imageURl)")
-      
-      
+      let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+      UIGraphicsEndImageContext()
+      let image2 = image
+      let imageURl = saveImageInDocumentDirectory(image: image2, fileName: kConsentSharingImage)
       
       let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-              let docURL = documentDirectory.appendingPathComponent("ConsentpdfSharingImage.pdf")
-
+      
+      let docURL = documentDirectory.appendingPathComponent(kConsentSharingImagePDF)
+      
       createPDFForSnapShot(image: image2)?.write(to: docURL, atomically: true)
-      print("ConsentpdfSharingImage---\(docURL)")
     }
   }
   

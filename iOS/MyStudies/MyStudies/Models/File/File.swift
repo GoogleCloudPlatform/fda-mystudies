@@ -89,7 +89,6 @@ class File {
       if Utilities.isValidValue(someObject: dict[kFileName] as AnyObject) {
         self.name = dict[kFileName] as? String
       }
-      print("1self.link---\(dict[kFileLink])")
       if Utilities.isValidValue(someObject: dict[kFileLink] as AnyObject) {
         self.link = dict[kFileLink] as? String
       }
@@ -108,7 +107,7 @@ class File {
       if Utilities.isValidValue(someObject: dict[kFileTitleForStudy] as AnyObject) {
         self.name = dict[kFileTitleForStudy] as? String
       }
-      print("2self.link---\(dict[kFileLink])")
+      
       if Utilities.isValidValue(someObject: dict[kFileLinkForStudy] as AnyObject) {
 
         self.link = dict[kFileLinkForStudy] as? String
