@@ -69,7 +69,7 @@
             @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"localizedLearnMoreHTMLContent should not be empty." userInfo:nil];
         }
         
-        self.answerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice textChoices:
+        self.answerFormat = [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleMultipleChoice textChoices:
                              @[[ORKTextChoice choiceWithText:[NSString localizedStringWithFormat:ORKLocalizedString(@"CONSENT_SHARE_WIDELY_%@",nil), investigatorShortDescription] value:@(YES)],
                                [ORKTextChoice choiceWithText:[NSString localizedStringWithFormat:ORKLocalizedString(@"CONSENT_SHARE_ONLY_%@",nil), investigatorLongDescription] value:@(NO)],
                                ]];

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cD3-IQ-4Md">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cD3-IQ-4Md">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -62,7 +62,7 @@
                                 </connections>
                             </button>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="1" translatesAutoresizingMaskIntoConstraints="NO" id="spx-SF-bV8">
-                                <rect key="frame" x="127.33333333333331" y="484" width="120.66666666666669" height="37"/>
+                                <rect key="frame" x="147.66666666666666" y="484" width="79.666666666666657" height="37"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="37" id="aSs-tP-fty"/>
                                 </constraints>
@@ -1218,6 +1218,7 @@
                     <connections>
                         <outlet property="buttonHome" destination="LYX-5F-scC" id="svD-79-Aof"/>
                         <outlet property="labelStudyTitle" destination="TFh-y2-sZW" id="nVn-F1-dWU"/>
+                        <outlet property="shareButton" destination="MYG-14-Lp0" id="5bu-Eo-HZe"/>
                         <outlet property="tableView" destination="CGF-M8-TqW" id="cLn-VA-rfv"/>
                         <segue destination="ulG-kV-I7n" kind="unwind" identifier="unwindToStudyListDashboardIdentifier" unwindAction="unwindToStudyList:" id="Xcl-BD-lVy"/>
                         <segue destination="RJ6-Ms-tMk" kind="show" identifier="chartSegue" id="BlB-8h-Lt2"/>
@@ -1888,6 +1889,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="progressBar" destination="Opj-CP-tJy" id="zav-j2-6pd"/>
+                        <outlet property="shareButton" destination="Nq6-cD-rtG" id="ZfK-Q8-a9i"/>
                         <outlet property="webView" destination="tp6-2r-Hiw" id="A7N-4D-1Hy"/>
                     </connections>
                 </viewController>
@@ -1962,6 +1964,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="hlc-4z-PM3" id="sOV-4m-MVC"/>
                         <outlet property="bottomToolBar" destination="woR-0K-eTs" id="UMD-HW-mnE"/>
+                        <outlet property="shareButton" destination="TRZ-NT-2WW" id="U1j-C6-J9D"/>
                         <outlet property="webView" destination="6Ew-kY-7eH" id="l3c-OQ-YMK"/>
                     </connections>
                 </viewController>

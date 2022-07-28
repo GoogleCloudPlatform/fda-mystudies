@@ -307,7 +307,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     if httpHeaders != nil && (httpHeaders?.count)! > 0 {
       request.allHTTPHeaderFields = httpHeaders as? [String: String]
     }
-
     self.fireRequest(request, requestName: requestName)
   }
 
@@ -365,7 +364,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
   ///   - request: instance of URLRequest
   ///   - requestName: name of the request of type String
   fileprivate func fireRequest(_ request: URLRequest?, requestName: NSString?) {
-
     if NetworkManager.isNetworkAvailable() {
 
       let config = URLSessionConfiguration.default
@@ -424,7 +422,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     requestName: NSString?,
     error: NSError?
   ) {
-    
     if error != nil {
       if shouldRetryRequest && maxRequestRetryCount > 0 {
         maxRequestRetryCount -= 1

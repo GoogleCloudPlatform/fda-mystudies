@@ -214,12 +214,20 @@ class ActivityStepResult {
           var j: Int! = 0
           var isAddMore: Bool? = false
 
-          if (stepResult.results?.count)!
-            > (self.step as? ActivityFormStep)!.itemsArray
-            .count
-          {
-            isAddMore = true
+          if self.step as? ActivityFormStep != nil {
+            if (stepResult.results?.count)!
+                > (self.step as? ActivityFormStep)!.itemsArray
+                .count
+            {
+              isAddMore = true
+            }
           }
+//          else if (stepResult.results?.count)!
+//                      > (self.step as? ActivityStep)!.itemsArray
+//                      .count
+//          {
+//            isAddMore = true
+//          }
           var localArray: [[String: Any]] = [[String: Any]]()
 
           for (i, result) in stepResult.results!.enumerated() {

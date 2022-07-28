@@ -82,20 +82,20 @@ class LineChartCell: GraphChartTableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringStartDate
     )
-    attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedStartDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringEndDate
     )
-    attributedEndDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedEndDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     attributedStartDate.append(attributedEndDate)
 
@@ -113,20 +113,20 @@ class LineChartCell: GraphChartTableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringStartDate2
     )
-    attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedStartDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringEndDate
     )
-    attributedEndDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedEndDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     attributedStartDate.append(attributedEndDate)
 
@@ -807,7 +807,7 @@ class LineChartCell: GraphChartTableViewCell {
   // MARK: - FORMATERS
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "dd, MMM yyyy"
+    formatter.dateFormat = "MMM dd, yyyy"
     formatter.timeZone = TimeZone.init(abbreviation: "GMT")
     return formatter
   }()

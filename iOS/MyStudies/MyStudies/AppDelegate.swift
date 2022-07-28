@@ -24,6 +24,7 @@ import UIKit
 import UserNotifications
 import Firebase
 import FirebaseAnalytics
+import Reachability
 
 @UIApplicationMain
 
@@ -61,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   var blockerScreen: AppUpdateBlocker?
   var passcodeParentControllerWhileSetup: UIViewController?
+    
+  private var reachability: Reachability!
 
   /// to be used in case of ineligible
   var consentToken: String? = ""
@@ -205,7 +208,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    
+    setupReachability()
     // Check if Database needs migration
     self.checkForRealmMigration()
     blockerScreen?.isHidden = true
@@ -376,6 +379,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     blockerScreen?.removeFromSuperview()
   }
 
+  func setupReachability() {
+      do {
+          self.reachability = try Reachability()
+          } catch(let error) { }
+  }
   // MARK: - NOTIFICATION
 
   func application(
@@ -543,34 +551,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   /// Check the  current Consent Status for Updated Version
   /// - Parameter controller: Instance of `UIVIewController`
   func checkConsentStatus(controller: UIViewController) {
-
+    
     self.selectedController = controller
-
+    
     if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       // Study consent is updated: Please Present Consent UI.
-      guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
-      var topController: UIViewController = navigationController
-      if navigationController.viewControllers.count > 0 {
-        topController = navigationController.viewControllers.first!
+      //      guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
+      //      var topController: UIViewController = navigationController
+      //      if navigationController.viewControllers.count > 0 {
+      //        topController = navigationController.viewControllers.first!
+      //      }
+      
+      var topController: UIViewController?
+      if let navigationController = self.window?.rootViewController as? UINavigationController {
+        topController = navigationController
+        if navigationController.viewControllers.count > 0 {
+          topController = navigationController.viewControllers.first!
+        }
+      } else {
+        let navigationController = self.window?.rootViewController as? UIViewController
+        topController = navigationController
+        //        topController = (self.window?.topMostController())!
       }
-
-      UIUtilities.showAlertMessageWithTwoActionsAndHandler(
-        NSLocalizedString(kConsentUpdatedTitle, comment: ""),
-        errorMessage: NSLocalizedString(kMessageConsentUpdated, comment: ""),
-        errorAlertActionTitle: NSLocalizedString(kReviewTitle, comment: ""),
-        errorAlertActionTitle2: nil,
-        viewControllerUsed: topController,
-        action1: {
-
-          self.addAndRemoveProgress(add: true)
-          WCPServices().getEligibilityConsentMetadata(
-            studyId: (Study.currentStudy?.studyId)!,
-            delegate: self as NMWebServiceDelegate
-          )
-
-        },
-        action2: {}
-      )
+      
+      if let topController2 = topController {
+        
+        UIUtilities.showAlertMessageWithTwoActionsAndHandler(
+          NSLocalizedString(kConsentUpdatedTitle, comment: ""),
+          errorMessage: NSLocalizedString(kMessageConsentUpdated, comment: ""),
+          errorAlertActionTitle: NSLocalizedString(kReviewTitle, comment: ""),
+          errorAlertActionTitle2: nil,
+          viewControllerUsed: topController2,
+          action1: {
+            
+              if self.reachability.connection != .unavailable {
+                  self.addAndRemoveProgress(add: true)
+                  WCPServices().getEligibilityConsentMetadata(
+                    studyId: (Study.currentStudy?.studyId)!,
+                    delegate: self as NMWebServiceDelegate
+                  )
+              } else {
+                  if controller.isKind(of: ActivitiesViewController.self) {
+                      ReachabilityIndicatorManager.shared.presentIndicator(viewController: controller, isOffline: true)
+                  }
+              }
+            
+          },
+          action2: {}
+        )
+      }
     }
   }
 
@@ -749,6 +778,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         
       case .activity:  // Activity Notifications
         
+        NotificationHandler.instance.appOpenFromNotification = true
         if !(initialVC is UITabBarController) {
           (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
 
@@ -1066,7 +1096,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Handler for User Signout response, resets all user related data from local database
   func handleSignoutResponse() {
-
     if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
       ORKPasscodeViewController.removePasscodeFromKeychain()
     }
@@ -1104,7 +1133,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Handler for updating User defaults
   func handleSignoutAfterLogoutResponse() {
-
     if ORKPasscodeViewController.isPasscodeStoredInKeychain() {
       ORKPasscodeViewController.removePasscodeFromKeychain()
     }
@@ -2006,6 +2034,7 @@ extension AppDelegate: ORKPasscodeDelegate {
         Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
           buttonClickReasonsKey: "ForgotPasscodeAlert OK"
         ])
+        self.iscomingFromForgotPasscode = true
         self.window?.addProgressIndicatorOnWindowFromTop()
 
         viewController.dismiss(
