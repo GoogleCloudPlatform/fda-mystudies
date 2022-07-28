@@ -104,12 +104,13 @@ class ConsentServices: NSObject {
 
     var params: [String : Any] = [:]
     let val = UserDefaults.standard.value(forKey: "consentEnrolledStatus") as? String ?? ""
-    print("1StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain---\(StudyUpdates.studyEnrollAgain)---\(StudyUpdates.studyConsentUpdated)---\(Study.currentStudy?.userParticipateState.status == .enrolled)---\(Study.currentStudy?.userParticipateState.status)---\(val)+++")
+    print("1StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain---\(StudyUpdates.studyEnrollAgain)---\(StudyUpdates.studyConsentUpdated)---\(Study.currentStudy?.userParticipateState.status == .enrolled)---\(Study.currentStudy?.userParticipateState.status)---\(val)+++\(userDataSharing)")
     
     UserDefaults.standard.setValue("", forKey: "consentEnrolledStatus")
     UserDefaults.standard.synchronize()
     
-    if val != "Yet to enroll" {
+    if val != "Yet to enroll" || userDataSharing == "Not Applicable"  ||
+        userDataSharing.caseInsensitiveCompare("Not Applicable") == ComparisonResult.orderedSame {
       params =
         [
           kStudyId: Study.currentStudy?.studyId ?? "",
