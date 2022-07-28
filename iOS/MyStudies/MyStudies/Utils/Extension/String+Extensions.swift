@@ -202,7 +202,6 @@ extension NSAttributedString {
                                    documentAttributes:[.documentType: NSAttributedString.DocumentType.html])
       return String.init(data: htmlData, encoding: String.Encoding.utf8)
     } catch {
-      print("error:", error)
       return nil
     }
   }
