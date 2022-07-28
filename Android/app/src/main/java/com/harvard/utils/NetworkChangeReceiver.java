@@ -1,10 +1,4 @@
 /*
- * Copyright 2020 Google LLC
- *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
-
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
@@ -20,42 +14,40 @@
 
 package com.harvard.utils;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.os.Bundle;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
-public class CustomFirebaseAnalytics {
+public class NetworkChangeReceiver<T, V> extends BroadcastReceiver {
 
-  private static volatile CustomFirebaseAnalytics instance;
-  private static FirebaseAnalytics firebaseAnalytics;
+  private NetworkChangeCallback callback;
 
-  public static CustomFirebaseAnalytics getInstance(Context context) {
-    if (instance == null) {
-      synchronized (CustomFirebaseAnalytics.class) {
-        if (instance == null) {
-          instance = new CustomFirebaseAnalytics();
-        }
-      }
+  public NetworkChangeReceiver(V v) {
+    this.callback = (NetworkChangeCallback) v;
+  }
+
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    boolean status = isNetworkAvailable(context);
+    if (callback != null) {
+      callback.onNetworkChanged(status);
     }
-    firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-    return instance;
   }
 
-  public static class Param {
-
-    public static final String BUTTON_CLICK_REASON = "button_click_reason";
-
-    protected Param() {}
+  private boolean isNetworkAvailable(Context context) {
+    try {
+      ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+      return (activeNetworkInfo != null && ((NetworkInfo) activeNetworkInfo).isConnectedOrConnecting());
+    } catch (NullPointerException e) {
+      return false;
+    }
   }
 
-  public static class Event {
-
-    public static final String ADD_BUTTON_CLICK = "add_button_click";
-
-    protected Event() {}
-  }
-
-  public void logEvent(String eventName, Bundle eventProperties) {
-    firebaseAnalytics.logEvent(eventName, eventProperties);
+  public interface NetworkChangeCallback {
+    void onNetworkChanged(boolean status);
   }
 }
+

@@ -32,7 +32,6 @@ import com.harvard.utils.Logger;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
-
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.BodyAnswer;

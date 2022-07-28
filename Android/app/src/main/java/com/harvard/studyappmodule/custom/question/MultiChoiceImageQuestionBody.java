@@ -45,7 +45,8 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
   public MultiChoiceImageQuestionBody(Step step, StepResult result) {
     this.step = (QuestionStepCustom) step;
     this.result = result == null ? new StepResult<>(step) : result;
-    MultiChoiceImageAnswerFormat format = (MultiChoiceImageAnswerFormat) this.step.getAnswerFormat1();
+    MultiChoiceImageAnswerFormat format =
+        (MultiChoiceImageAnswerFormat) this.step.getAnswerFormat1();
     this.choices = format.getChoicechoices();
 
     // Restore results
@@ -108,7 +109,8 @@ public class MultiChoiceImageQuestionBody<T> implements StepBody {
       imageView.setLayoutParams(layoutParams);
 
       if (currentSelected != null && currentSelected.equals(item.getValue())) {
-        byte[] imageByteArray = Base64.decode(item.getSelectedImage().split(",")[1], Base64.DEFAULT);
+        byte[] imageByteArray =
+            Base64.decode(item.getSelectedImage().split(",")[1], Base64.DEFAULT);
         Glide.with(inflater.getContext()).load(imageByteArray).into(imageView);
         currentSelected = item.getValue();
         pervioustxtview[0] = imageView;

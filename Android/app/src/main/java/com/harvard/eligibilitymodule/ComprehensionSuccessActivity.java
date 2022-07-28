@@ -17,9 +17,9 @@ package com.harvard.eligibilitymodule;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 import com.harvard.R;
 import com.harvard.utils.CustomFirebaseAnalytics;
 
@@ -32,6 +32,7 @@ public class ComprehensionSuccessActivity extends AppCompatActivity {
     setContentView(R.layout.activity_comprehension_success);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     TextView continueButton = findViewById(R.id.continueButton);
     continueButton.setOnClickListener(
         new View.OnClickListener() {

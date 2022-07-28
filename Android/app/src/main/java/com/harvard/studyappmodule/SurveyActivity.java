@@ -206,10 +206,10 @@ public class SurveyActivity extends AppCompatActivity
           public void onDrawerOpened(View drawerView) {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
-                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getString(R.string.survey_side_menu));
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                getString(R.string.survey_side_menu));
             analyticsInstance.logEvent(
-                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             checkSignOrSignOutScenario();
           }
 
@@ -731,6 +731,10 @@ public class SurveyActivity extends AppCompatActivity
 
   @Override
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
+    if (responseCode == LOGOUT_REPSONSECODE) {
+      AppController.getHelperProgressDialog().dismissDialog();
+      Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
+    }
   }
 
   private class ClearNotification extends AsyncTask<String, Void, String> {
@@ -757,7 +761,7 @@ public class SurveyActivity extends AppCompatActivity
       NotificationManagerCompat notificationManager =
           NotificationManagerCompat.from(SurveyActivity.this);
       notificationManager.cancelAll();
-      Toast.makeText(SurveyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(SurveyActivity.this, R.string.signed_out, Toast.LENGTH_SHORT).show();
       signout();
     }
 
@@ -795,9 +799,7 @@ public class SurveyActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null) {
-        alertDialog.dismiss();
-      }
+      if (alertDialog != null) alertDialog.dismiss();
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -816,7 +818,8 @@ public class SurveyActivity extends AppCompatActivity
         if (currVer.equals(latestVer) || currVer.compareTo(latestVer) > 0) {
           isUpgrade(false, latestVersion, force);
         } else {
-          AppController.getHelperSharedPreference().writePreference(SurveyActivity.this, "versionalert", "done");
+          AppController.getHelperSharedPreference()
+              .writePreference(SurveyActivity.this, "versionalert", "done");
           isUpgrade(true, latestVersion, force);
         }
       } else {
@@ -846,8 +849,7 @@ public class SurveyActivity extends AppCompatActivity
         positiveButton = "Yes";
         negativeButton = "Skip";
       }
-      alertDialogBuilder =
-          new AlertDialog.Builder(SurveyActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder = new AlertDialog.Builder(SurveyActivity.this, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle("Upgrade");
       alertDialogBuilder
           .setMessage(msg)
@@ -881,9 +883,9 @@ public class SurveyActivity extends AppCompatActivity
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                        SurveyActivity.this,
-                        "Please update the app to continue using",
-                        Toast.LENGTH_SHORT)
+                            SurveyActivity.this,
+                            "Please update the app to continue using",
+                            Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {
@@ -912,9 +914,9 @@ public class SurveyActivity extends AppCompatActivity
       } else {
         if (force) {
           Toast.makeText(
-              SurveyActivity.this,
-              "Please update the app to continue using",
-              Toast.LENGTH_SHORT)
+                  SurveyActivity.this,
+                  "Please update the app to continue using",
+                  Toast.LENGTH_SHORT)
               .show();
           moveTaskToBack(true);
           if (Build.VERSION.SDK_INT < 21) {
