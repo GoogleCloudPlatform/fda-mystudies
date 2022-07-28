@@ -114,11 +114,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private static final String EXTRA_TASK = "ViewTaskActivity.ExtraTask";
   private static final String EXTRA_TASK_RESULT = "ViewTaskActivity.ExtraTaskResult";
   private static final String EXTRA_STEP = "ViewTaskActivity.ExtraStep";
-  private static final String STUDYID = "ViewTaskActivity.studyID";
-  private static final String ENROLLID = "ViewTaskActivity.enrollID";
-  private static final String PDFTITLE = "ViewTaskActivity.pdfTitle";
-  private static final String ELIGIBILITY = "ViewTaskActivity.eligibility";
-  public static final String TYPE = "ViewTaskActivity.type";
+  private static final String STUDYIDS = "ViewTaskActivity.studyID";
+  private static final String ENROLLIDS = "ViewTaskActivity.enrollID";
+  private static final String PDFTITLES = "ViewTaskActivity.pdfTitle";
+  private static final String ELIGIBILITYS = "ViewTaskActivity.eligibility";
+  public static final String TYPES = "ViewTaskActivity.type";
   private CustomFirebaseAnalytics analyticsInstance;
   private NetworkChangeReceiver networkChangeReceiver;
 
@@ -137,7 +137,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private String enrollId;
   private String pdfTitle;
   private String eligibility;
-  public static final String CONSENT = "consent";
+  public static final String CONSENTS = "consent";
   private String type;
   private String participantId = "";
   private String hashToken = "";
@@ -169,11 +169,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       String eligibility,
       String type) {
     Intent intent = new Intent(context, CustomConsentViewTaskActivity.class);
-    intent.putExtra(STUDYID, studyId);
-    intent.putExtra(ENROLLID, enrollId);
-    intent.putExtra(PDFTITLE, pdfTitle);
-    intent.putExtra(ELIGIBILITY, eligibility);
-    intent.putExtra(TYPE, type);
+    intent.putExtra(STUDYIDS, studyId);
+    intent.putExtra(ENROLLIDS, enrollId);
+    intent.putExtra(PDFTITLES, pdfTitle);
+    intent.putExtra(ELIGIBILITYS, eligibility);
+    intent.putExtra(TYPES, type);
     return intent;
   }
 
@@ -192,12 +192,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     root = (StepSwitcherCustom) findViewById(R.id.container);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
-    studyList = dbServiceSubscriber.getStudiesDetails(getIntent().getStringExtra(STUDYID), realm);
+    studyList = dbServiceSubscriber.getStudiesDetails(getIntent().getStringExtra(STUDYIDS), realm);
 
     if (savedInstanceState == null) {
 
-      studyId = getIntent().getStringExtra(STUDYID);
-      pdfTitle = getIntent().getStringExtra(PDFTITLE);
+      studyId = getIntent().getStringExtra(STUDYIDS);
+      pdfTitle = getIntent().getStringExtra(PDFTITLES);
 
       eligibilityConsent = dbServiceSubscriber.getConsentMetadata(studyId, realm);
       consent = eligibilityConsent.getConsent();
@@ -207,16 +207,16 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           consentBuilder.createsurveyquestion(
               CustomConsentViewTaskActivity.this, consent, pdfTitle);
 
-      task = new OrderedTask(CONSENT, consentstep);
-      enrollId = getIntent().getStringExtra(ENROLLID);
+      task = new OrderedTask(CONSENTS, consentstep);
+      enrollId = getIntent().getStringExtra(ENROLLIDS);
 
-      eligibility = getIntent().getStringExtra(ELIGIBILITY);
-      type = getIntent().getStringExtra(TYPE);
+      eligibility = getIntent().getStringExtra(ELIGIBILITYS);
+      type = getIntent().getStringExtra(TYPES);
       taskResult = new TaskResult(task.getIdentifier());
       taskResult.setStartDate(new Date());
     } else {
-      studyId = (String) savedInstanceState.getSerializable(STUDYID);
-      pdfTitle = (String) savedInstanceState.getSerializable(PDFTITLE);
+      studyId = (String) savedInstanceState.getSerializable(STUDYIDS);
+      pdfTitle = (String) savedInstanceState.getSerializable(PDFTITLES);
 
       eligibilityConsent = dbServiceSubscriber.getConsentMetadata(studyId, realm);
       consent = eligibilityConsent.getConsent();
@@ -224,12 +224,12 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       List<Step> consentstep =
           consentBuilder.createsurveyquestion(
               CustomConsentViewTaskActivity.this, consent, pdfTitle);
-      task = new OrderedTask(CONSENT, consentstep);
+      task = new OrderedTask(CONSENTS, consentstep);
 
-      enrollId = (String) savedInstanceState.getSerializable(ENROLLID);
+      enrollId = (String) savedInstanceState.getSerializable(ENROLLIDS);
 
-      eligibility = (String) savedInstanceState.getSerializable(ELIGIBILITY);
-      type = (String) savedInstanceState.getSerializable(TYPE);
+      eligibility = (String) savedInstanceState.getSerializable(ELIGIBILITYS);
+      type = (String) savedInstanceState.getSerializable(TYPES);
       taskResult = (TaskResult) savedInstanceState.getSerializable(EXTRA_TASK_RESULT);
       currentStep = (Step) savedInstanceState.getSerializable(EXTRA_STEP);
     }
@@ -480,10 +480,10 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               3000);
       AppController.getHelperProgressDialog()
           .showProgress(CustomConsentViewTaskActivity.this, "", "", false);
-      if (getIntent().getStringExtra(TYPE) != null
-          && getIntent().getStringExtra(TYPE).equalsIgnoreCase("update")) {
+      if (getIntent().getStringExtra(TYPES) != null
+          && getIntent().getStringExtra(TYPES).equalsIgnoreCase("update")) {
         Studies studies =
-            dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), realm);
+            dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYIDS), realm);
         if (studies != null) {
           participantId = studies.getParticipantId();
           hashToken = studies.getHashedToken();
@@ -501,8 +501,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private void enrollId() {
 
     HashMap<String, String> params = new HashMap<>();
-    params.put("studyId", getIntent().getStringExtra(STUDYID));
-    params.put("token", getIntent().getStringExtra(ENROLLID));
+    params.put("studyId", getIntent().getStringExtra(STUDYIDS));
+    params.put("token", getIntent().getStringExtra(ENROLLIDS));
 
     HashMap<String, String> header = new HashMap<>();
     header.put(
@@ -535,9 +535,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   }
 
   public void updateuserpreference() {
-    Studies studies = dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYID), realm);
+    Studies studies = dbServiceSubscriber.getStudies(getIntent().getStringExtra(STUDYIDS), realm);
     ConsentDocumentData consentDocumentData =
-        dbServiceSubscriber.getConsentDocumentFromDB(getIntent().getStringExtra(STUDYID), realm);
+        dbServiceSubscriber.getConsentDocumentFromDB(getIntent().getStringExtra(STUDYIDS), realm);
     HashMap<String, String> header = new HashMap();
     header.put(
         "Authorization",
@@ -558,7 +558,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         studiestatus.put("studyId", studies.getStudyId());
         studiestatus.put("status", StudyFragment.IN_PROGRESS);
       } else {
-        studiestatus.put("studyId", getIntent().getStringExtra(STUDYID));
+        studiestatus.put("studyId", getIntent().getStringExtra(STUDYIDS));
         studiestatus.put("status", StudyFragment.IN_PROGRESS);
       }
       if (participantId != null && !participantId.equalsIgnoreCase("")) {
@@ -629,13 +629,13 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       Study study = dbServiceSubscriber.getStudyListFromDB(realm);
       dbServiceSubscriber.updateStudyWithStudyId(
-          this, getIntent().getStringExtra(STUDYID), study, studyUpdate.getCurrentVersion());
+          this, getIntent().getStringExtra(STUDYIDS), study, studyUpdate.getCurrentVersion());
       dbServiceSubscriber.updateStudyPreferenceVersionDB(
-          this, getIntent().getStringExtra(STUDYID), studyUpdate.getCurrentVersion());
+          this, getIntent().getStringExtra(STUDYIDS), studyUpdate.getCurrentVersion());
 
       dbServiceSubscriber.updateStudyPreferenceDB(
           this,
-          getIntent().getStringExtra(STUDYID),
+          getIntent().getStringExtra(STUDYIDS),
           StudyFragment.IN_PROGRESS,
           enrolledDate,
           participantId,
@@ -646,10 +646,10 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                   CustomConsentViewTaskActivity.this,
                   getResources().getString(R.string.studyVersion),
                   ""));
-      dbServiceSubscriber.savePdfData(this, getIntent().getStringExtra(STUDYID), pdfPath);
+      dbServiceSubscriber.savePdfData(this, getIntent().getStringExtra(STUDYIDS), pdfPath);
       Intent resultIntent = new Intent();
       resultIntent.putExtra(EXTRA_TASK_RESULT, taskResult);
-      resultIntent.putExtra(TYPE, type);
+      resultIntent.putExtra(TYPES, type);
       resultIntent.putExtra("PdfPath", pdfPath);
       setResult(RESULT_OK, resultIntent);
       finish();
@@ -667,7 +667,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       if (studies != null) {
         for (int i = 0; i < studies.getStudies().size(); i++) {
           if (getIntent()
-              .getStringExtra(STUDYID)
+              .getStringExtra(STUDYIDS)
               .equalsIgnoreCase(studies.getStudies().get(i).getStudyId())) {
             enrolledDate = studies.getStudies().get(i).getEnrolledDate();
             if (studies.getStudies().get(i).getDataSharingPermission() != null) {
@@ -874,7 +874,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     String url =
         Urls.STUDY_UPDATES
             + "?studyId="
-            + getIntent().getStringExtra(STUDYID)
+            + getIntent().getStringExtra(STUDYIDS)
             + "&studyVersion="
             + studyList.getStudyVersion();
     StudyDatastoreConfigEvent studyDatastoreConfigEvent =
@@ -909,10 +909,10 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
 
     EligibilityConsent eligibilityConsent =
-        dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra(STUDYID), realm);
+        dbServiceSubscriber.getConsentMetadata(getIntent().getStringExtra(STUDYIDS), realm);
     JSONObject body = new JSONObject();
     try {
-      body.put("studyId", getIntent().getStringExtra(STUDYID));
+      body.put("studyId", getIntent().getStringExtra(STUDYIDS));
       body.put("siteId", siteId);
       body.put("eligibility", true);
       if (encode != null && !encode.isEmpty()) {
@@ -1057,11 +1057,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     outState.putSerializable(EXTRA_TASK, task);
     outState.putSerializable(EXTRA_TASK_RESULT, taskResult);
     outState.putSerializable(EXTRA_STEP, currentStep);
-    outState.putSerializable(STUDYID, studyId);
-    outState.putSerializable(ENROLLID, enrollId);
-    outState.putSerializable(PDFTITLE, pdfTitle);
-    outState.putSerializable(ELIGIBILITY, eligibility);
-    outState.putSerializable(TYPE, type);
+    outState.putSerializable(STUDYIDS, studyId);
+    outState.putSerializable(ENROLLIDS, enrollId);
+    outState.putSerializable(PDFTITLES, pdfTitle);
+    outState.putSerializable(ELIGIBILITYS, eligibility);
+    outState.putSerializable(TYPES, type);
   }
 
   private void notifyStepOfBackPress() {

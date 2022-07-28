@@ -126,7 +126,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
         intent.putExtra("studyId", getIntent().getStringExtra("studyId"));
         intent.putExtra("title", getIntent().getStringExtra("title"));
         intent.putExtra("eligibility", getIntent().getStringExtra("eligibility"));
-        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
+        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPES));
         // get the encrypted file path
         intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
         startActivity(intent);

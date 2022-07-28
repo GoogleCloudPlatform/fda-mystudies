@@ -24,17 +24,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.harvard.R;
@@ -78,8 +78,8 @@ import org.researchstack.backbone.utils.FormatHelper;
 
 public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implements StepCallbacks {
   public static final String EXTRA_STUDYID = "ViewTaskActivity.ExtraStudyId";
-  private static final String ACTIVITYID = "ViewTaskActivity.ActivityId";
-  public static final String STUDYID = "ViewTaskActivity.StudyId";
+  private static final String ACTIVITYIDS = "ViewTaskActivity.ActivityId";
+  public static final String STUDYIDS = "ViewTaskActivity.StudyId";
   public static final String RUNID = "ViewTaskActivity.RunId";
   private static final String ACTIVITY_STATUS = "ViewTaskActivity.Status";
   private static final String MISSED_RUN = "ViewTaskActivity.MissedRun";
@@ -126,7 +126,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
       boolean branching) {
     Intent intent = new Intent(context, CustomSurveyViewTaskActivity.class);
     intent.putExtra(EXTRA_STUDYID, surveyId);
-    intent.putExtra(STUDYID, studyId);
+    intent.putExtra(STUDYIDS, studyId);
     intent.putExtra(RUNID, currentRunId);
     intent.putExtra(ACTIVITY_STATUS, activityStatus);
     intent.putExtra(MISSED_RUN, missedRun);
@@ -137,7 +137,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
     intent.putExtra(RUN_START_DATE, currentRunStartDate);
     intent.putExtra(RUN_END_DATE, currentRunEndDate);
     intent.putExtra(ACTIVITY_VERSION, activityVersion);
-    intent.putExtra(ACTIVITYID, activityId);
+    intent.putExtra(ACTIVITYIDS, activityId);
     intent.putExtra(BRANCHING, branching);
     return intent;
   }
@@ -154,14 +154,14 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
-    activityId = getIntent().getStringExtra(ACTIVITYID);
+    activityId = getIntent().getStringExtra(ACTIVITYIDS);
     currentRunStartDate = (Date) getIntent().getSerializableExtra(RUN_START_DATE);
     currentRunEndDate = (Date) getIntent().getSerializableExtra(RUN_END_DATE);
     root = (StepSwitcherCustom) findViewById(R.id.container);
 
     activityObject =
         dbServiceSubscriber.getActivityBySurveyId(
-            (String) getIntent().getSerializableExtra(STUDYID), activityId, realm);
+            (String) getIntent().getSerializableExtra(STUDYIDS), activityId, realm);
     StepsBuilder stepsBuilder =
         new StepsBuilder(
             CustomSurveyViewTaskActivity.this,
@@ -279,7 +279,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
         stepRecord.completed = stepResult.getEndDate();
         stepRecord.runStartDate = currentRunStartDate;
         stepRecord.runEndDate = currentRunEndDate;
-        stepRecord.studyId = "" + getIntent().getStringExtra(STUDYID);
+        stepRecord.studyId = "" + getIntent().getStringExtra(STUDYIDS);
 
         try {
           if (stepResult.getAnswerFormat() == null) {
@@ -315,23 +315,23 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
 
         dbServiceSubscriber.updateStepRecord(this, stepRecord);
 
-        if (dbServiceSubscriber.getStudyResource(getIntent().getStringExtra(STUDYID), realm)
+        if (dbServiceSubscriber.getStudyResource(getIntent().getStringExtra(STUDYIDS), realm)
             == null) {
         } else if (dbServiceSubscriber
-                .getStudyResource(getIntent().getStringExtra(STUDYID), realm)
+                .getStudyResource(getIntent().getStringExtra(STUDYIDS), realm)
                 .getResources()
             == null) {
         } else {
           StudyHome studyHome = null;
           try {
             studyHome =
-                dbServiceSubscriber.getWithdrawalType(getIntent().getStringExtra(STUDYID), realm);
+                dbServiceSubscriber.getWithdrawalType(getIntent().getStringExtra(STUDYIDS), realm);
           } catch (Exception e) {
             Logger.log(e);
           }
           RealmList<Resource> resourceArrayList =
               dbServiceSubscriber
-                  .getStudyResource(getIntent().getStringExtra(STUDYID), realm)
+                  .getStudyResource(getIntent().getStringExtra(STUDYIDS), realm)
                   .getResources();
 
           if (studyHome != null && resourceArrayList != null) {
@@ -349,7 +349,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
         if (resourceArrayList.get(i).getAvailability().getAvailableDate().equalsIgnoreCase("")) {
           StepRecordCustom stepRecordCustom =
               dbServiceSubscriber.getSurveyResponseFromDB(
-                  getIntent().getStringExtra(STUDYID)
+                  getIntent().getStringExtra(STUDYIDS)
                       + "_STUDYID_"
                       + AppController.getSourceActivityId(resourceArrayList.get(i)),
                   AppController.getSourceKey(resourceArrayList.get(i)),
@@ -373,7 +373,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
               NotificationDbResources notificationsDb = null;
               RealmResults<NotificationDbResources> notificationsDbs =
                   dbServiceSubscriber.getNotificationDbResources(
-                      activityId, getIntent().getStringExtra(STUDYID), RESOURCES, realm);
+                      activityId, getIntent().getStringExtra(STUDYIDS), RESOURCES, realm);
               if (notificationsDbs != null && notificationsDbs.size() > 0) {
                 for (int j = 0; j < notificationsDbs.size(); j++) {
                   if (notificationsDbs
@@ -389,7 +389,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
                 setRemainder(
                     startCalender,
                     activityId,
-                    getIntent().getStringExtra(STUDYID),
+                    getIntent().getStringExtra(STUDYIDS),
                     resourceArrayList.get(i).getNotificationText(),
                     resourceArrayList.get(i).getResourcesId());
               }
@@ -500,7 +500,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
 
     Intent intent = new Intent(CustomSurveyViewTaskActivity.this, SurveyCompleteActivity.class);
     intent.putExtra(EXTRA_TASK_RESULT, taskResult);
-    intent.putExtra(STUDYID, getIntent().getStringExtra(STUDYID));
+    intent.putExtra(STUDYIDS, getIntent().getStringExtra(STUDYIDS));
     intent.putExtra(EXTRA_STUDYID, getIntent().getStringExtra(EXTRA_STUDYID));
     intent.putExtra(RUNID, getIntent().getIntExtra(RUNID, 0));
     intent.putExtra(MISSED_RUN, getIntent().getStringExtra(MISSED_RUN));
@@ -694,7 +694,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
     String[] survayId = studyId.split("_STUDYID_");
     ActivityObj surveyObject =
         dbServiceSubscriber.getActivityBySurveyId(
-            getIntent().getStringExtra(STUDYID),
+            getIntent().getStringExtra(STUDYIDS),
             survayId[1].substring(0, survayId[1].lastIndexOf("_")),
             realm);
     Steps step = dbServiceSubscriber.getSteps(identifier, realm);

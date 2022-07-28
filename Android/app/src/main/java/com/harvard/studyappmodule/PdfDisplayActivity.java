@@ -285,6 +285,7 @@ public class PdfDisplayActivity extends AppCompatActivity
   }
 
   public void sharePdfCreation() {
+    FileOutputStream fos = null;
     try {
       String root;
       if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
@@ -318,12 +319,18 @@ public class PdfDisplayActivity extends AppCompatActivity
           file.createNewFile();
         }
       }
-      FileOutputStream fos = new FileOutputStream(file);
+      fos = new FileOutputStream(file);
       fos.write(bytesArray);
       fos.close();
       sharePdfFilePath = file.getAbsolutePath();
     } catch (IOException e) {
       Logger.log(e);
+    } finally {
+      try {
+        fos.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 

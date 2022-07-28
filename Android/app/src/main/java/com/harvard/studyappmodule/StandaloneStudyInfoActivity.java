@@ -760,7 +760,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         intent.putExtra("studyId", AppConfig.StudyId);
         intent.putExtra("title", study.getStudies().get(0).getTitle());
         intent.putExtra("eligibility", eligibilityType);
-        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
+        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPES));
         // get the encrypted file path
         intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
         startActivity(intent);

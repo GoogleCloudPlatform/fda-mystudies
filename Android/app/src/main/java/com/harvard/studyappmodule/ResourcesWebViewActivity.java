@@ -282,6 +282,8 @@ public class ResourcesWebViewActivity extends AppCompatActivity
   }
 
   public File copy(File src) throws IOException {
+    InputStream in = null;
+    OutputStream out = null;
     String filePath;
     if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
       filePath =
@@ -294,16 +296,23 @@ public class ResourcesWebViewActivity extends AppCompatActivity
       file.createNewFile();
     }
 
-    InputStream in = new FileInputStream(src);
-    OutputStream out = new FileOutputStream(file);
-    // Transfer bytes from in to out
-    byte[] buf = new byte[1024];
-    int len;
-    while ((len = in.read(buf)) > 0) {
-      out.write(buf, 0, len);
+    try {
+      in = new FileInputStream(src);
+      out = new FileOutputStream(file);
+      // Transfer bytes from in to out
+      byte[] buf = new byte[1024];
+      int len;
+      while ((len = in.read(buf)) > 0) {
+        out.write(buf, 0, len);
+      }
+      in.close();
+      out.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      in.close();
+      out.close();
     }
-    in.close();
-    out.close();
 
     return file;
   }
@@ -381,9 +390,10 @@ public class ResourcesWebViewActivity extends AppCompatActivity
     /** Downloading file in background thread. */
     @Override
     protected String doInBackground(String... url1) {
+      FileOutputStream fos = null;
       int count;
       try {
-        FileOutputStream fos = new FileOutputStream(filePath + fileName + ".pdf");
+        fos = new FileOutputStream(filePath + fileName + ".pdf");
         fos.write(Base64.decode(downloadUrl.split(",")[1], Base64.NO_WRAP));
         fos.close();
 
@@ -393,6 +403,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity
           new File(filePath + fileName + ".pdf").delete();
         } catch (Exception e1) {
           Logger.log(e1);
+        }
+      } finally {
+        try {
+          fos.close();
+        } catch (IOException e) {
+          e.printStackTrace();
         }
       }
       AppController.generateEncryptedConsentPdf(filePath, fileName);
@@ -445,6 +461,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity
   }
 
   private File getEncryptedFilePath(String filePath) {
+    OutputStream output = null;
     try {
       CipherInputStream cis = AppController.generateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
@@ -452,12 +469,18 @@ public class ResourcesWebViewActivity extends AppCompatActivity
       if (!file.exists() && file == null) {
         file.createNewFile();
       }
-      OutputStream output = new FileOutputStream(file);
+      output = new FileOutputStream(file);
       output.write(byteArray);
       output.close();
       return file;
     } catch (IOException e) {
       Logger.log(e);
+    } finally {
+      try {
+        output.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     return null;
   }

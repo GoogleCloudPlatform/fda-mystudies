@@ -115,7 +115,7 @@ public class ChoiceAnswerFormatCustom extends AnswerFormatCustom {
     return choices.clone();
   }
 
-  public QuestionStep getquestiontype() {
+  public QuestionStep getquestiontypes() {
     return questionStep;
   }
 

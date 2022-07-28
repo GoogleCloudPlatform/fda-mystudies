@@ -600,7 +600,7 @@ public class SurveyActivitiesFragment extends Fragment
         intent.putExtra("studyId", ((SurveyActivity) context).getStudyId());
         intent.putExtra("title", title);
         intent.putExtra("eligibility", eligibilityType);
-        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
+        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPES));
         // get the encrypted file path
         intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
         startActivityForResult(intent, CONSENT_COMPLETE);

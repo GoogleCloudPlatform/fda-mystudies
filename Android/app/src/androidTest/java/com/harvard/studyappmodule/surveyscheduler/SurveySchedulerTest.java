@@ -160,7 +160,7 @@ public class SurveySchedulerTest {
 
   @Before
   public void setUp() {
-    realm = AppController.getRealmobj(InstrumentationRegistry.getTargetContext());
+    realm = AppController.getRealmobj(InstrumentationRegistry.getInstrumentation().getContext());
     dbServiceSubscriber = new DbServiceSubscriber();
     gson = new Gson();
   }
@@ -177,7 +177,7 @@ public class SurveySchedulerTest {
     calendarCurrentTime.setTime(currentDate);
     calendarCurrentTime.setTimeInMillis(
         calendarCurrentTime.getTimeInMillis()
-            - getOffset(InstrumentationRegistry.getTargetContext()));
+            - getOffset(InstrumentationRegistry.getInstrumentation().getContext()));
     StringBuilder schedulerresponse = new StringBuilder();
     schedulerresponse.append(SCHEDULE_RESPONSE);
     schedulerresponse.append(ONETIME);
@@ -198,7 +198,7 @@ public class SurveySchedulerTest {
       Runs runs = oneTimeRuns.getOnetime().get(i);
       ActivityRun activityRun = getActivityRun(runs);
       insertAndUpdateToDB(
-          InstrumentationRegistry.getTargetContext().getApplicationContext(), activityRun);
+          InstrumentationRegistry.getInstrumentation().getContext().getApplicationContext(), activityRun);
     }
     ActivityListData activityListData =
         getActivityListData(activitiesWS, activityData.getStudyId());
@@ -247,7 +247,7 @@ public class SurveySchedulerTest {
     calendarCurrentTime.setTime(currentDate);
     calendarCurrentTime.setTimeInMillis(
         calendarCurrentTime.getTimeInMillis()
-            - getOffset(InstrumentationRegistry.getTargetContext()));
+            - getOffset(InstrumentationRegistry.getInstrumentation().getContext()));
     StringBuilder schedulerresponse = new StringBuilder();
     schedulerresponse.append(SCHEDULE_RESPONSE);
     schedulerresponse.append(DAILY);
@@ -268,7 +268,7 @@ public class SurveySchedulerTest {
       Runs runs = dailyRuns.getDailyruns().get(i);
       ActivityRun activityRun = getActivityRun(runs);
       insertAndUpdateToDB(
-          InstrumentationRegistry.getTargetContext().getApplicationContext(), activityRun);
+          InstrumentationRegistry.getInstrumentation().getContext().getApplicationContext(), activityRun);
     }
     ActivityListData activityListData =
         getActivityListData(activitiesWS, activityData.getStudyId());
@@ -317,7 +317,7 @@ public class SurveySchedulerTest {
     calendarCurrentTime.setTime(currentDate);
     calendarCurrentTime.setTimeInMillis(
         calendarCurrentTime.getTimeInMillis()
-            - getOffset(InstrumentationRegistry.getTargetContext()));
+            - getOffset(InstrumentationRegistry.getInstrumentation().getContext()));
     StringBuilder schedulerresponse = new StringBuilder();
     schedulerresponse.append(SCHEDULE_RESPONSE);
     schedulerresponse.append(WEEKLY);
@@ -338,7 +338,7 @@ public class SurveySchedulerTest {
       Runs runs = weeklyRuns.getWeekly().get(i);
       ActivityRun activityRun = getActivityRun(runs);
       insertAndUpdateToDB(
-          InstrumentationRegistry.getTargetContext().getApplicationContext(), activityRun);
+          InstrumentationRegistry.getInstrumentation().getContext().getApplicationContext(), activityRun);
     }
     ActivityListData activityListData =
         getActivityListData(activitiesWS, activityData.getStudyId());
@@ -387,7 +387,7 @@ public class SurveySchedulerTest {
     calendarCurrentTime.setTime(currentDate);
     calendarCurrentTime.setTimeInMillis(
         calendarCurrentTime.getTimeInMillis()
-            - getOffset(InstrumentationRegistry.getTargetContext()));
+            - getOffset(InstrumentationRegistry.getInstrumentation().getContext()));
     StringBuilder schedulerresponse = new StringBuilder();
     schedulerresponse.append(SCHEDULE_RESPONSE);
     schedulerresponse.append(MONTHLY);
@@ -408,7 +408,7 @@ public class SurveySchedulerTest {
       Runs runs = monthlyRuns.getMonthly().get(i);
       ActivityRun activityRun = getActivityRun(runs);
       insertAndUpdateToDB(
-          InstrumentationRegistry.getTargetContext().getApplicationContext(), activityRun);
+          InstrumentationRegistry.getInstrumentation().getContext().getApplicationContext(), activityRun);
     }
     ActivityListData activityListData =
         getActivityListData(activitiesWS, activityData.getStudyId());
@@ -457,7 +457,7 @@ public class SurveySchedulerTest {
     calendarCurrentTime.setTime(currentDate);
     calendarCurrentTime.setTimeInMillis(
         calendarCurrentTime.getTimeInMillis()
-            - getOffset(InstrumentationRegistry.getTargetContext()));
+            - getOffset(InstrumentationRegistry.getInstrumentation().getContext()));
     StringBuilder schedulerresponse = new StringBuilder();
     schedulerresponse.append(SCHEDULE_RESPONSE);
     schedulerresponse.append(MANUALLSCHEDULE);
@@ -481,7 +481,7 @@ public class SurveySchedulerTest {
       Runs runs = manuallScheduleRuns.getManuallschedule().get(i);
       ActivityRun activityRun = getActivityRun(runs);
       insertAndUpdateToDB(
-          InstrumentationRegistry.getTargetContext().getApplicationContext(), activityRun);
+          InstrumentationRegistry.getInstrumentation().getContext().getApplicationContext(), activityRun);
     }
     ActivityListData activityListData =
         getActivityListData(activitiesWS, activityData.getStudyId());
@@ -530,7 +530,7 @@ public class SurveySchedulerTest {
     calendarCurrentTime.setTime(currentDate);
     calendarCurrentTime.setTimeInMillis(
         calendarCurrentTime.getTimeInMillis()
-            - getOffset(InstrumentationRegistry.getTargetContext()));
+            - getOffset(InstrumentationRegistry.getInstrumentation().getContext()));
     StringBuilder schedulerresponse = new StringBuilder();
     schedulerresponse.append(SCHEDULE_RESPONSE);
     schedulerresponse.append(DAILY_WITHINA_DAY);
@@ -554,7 +554,7 @@ public class SurveySchedulerTest {
       Runs runs = dailyWithinADayRuns.getDailywithinadayruns().get(i);
       ActivityRun activityRun = getActivityRun(runs);
       insertAndUpdateToDB(
-          InstrumentationRegistry.getTargetContext().getApplicationContext(), activityRun);
+          InstrumentationRegistry.getInstrumentation().getContext().getApplicationContext(), activityRun);
     }
     ActivityListData activityListData =
         getActivityListData(activitiesWS, activityData.getStudyId());
@@ -646,7 +646,7 @@ public class SurveySchedulerTest {
     AnchorRuns anchorRuns = new AnchorRuns();
     anchorRuns.setEndDays(TEST_END_DAYS);
     anchorRuns.setStartDays(TEST_START_DAYS);
-    anchorRuns.setTime(TEST_TIME);
+    anchorRuns.setStartTime(TEST_TIME);
     RealmList<FrequencyRuns> runslist = new RealmList<>();
     runslist.add(frequencyRuns);
     RealmList<AnchorRuns> anchorRunslist = new RealmList<>();
@@ -740,9 +740,9 @@ public class SurveySchedulerTest {
               "" + currentTimeZone.getOffset(calendarCurrent.getTimeInMillis()));
     }
     return Integer.parseInt(
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    context, context.getResources().getString(R.string.startOffset), ""))
+        AppController.getHelperSharedPreference()
+            .readPreference(
+                context, context.getResources().getString(R.string.startOffset), ""))
         - currentOffset;
   }
 

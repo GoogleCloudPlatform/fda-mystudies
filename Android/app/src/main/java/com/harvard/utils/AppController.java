@@ -856,14 +856,16 @@ public class AppController {
 
   // encrypt the pdf file and return File
   public static File generateEncryptedConsentPdf(String filePath, String timeStamp) {
+    FileOutputStream fos = null;
+    FileInputStream fis = null;
+    CipherInputStream cis = null;
     try {
-      FileInputStream fis = new FileInputStream(new File(filePath + timeStamp + ".pdf"));
+      fis = new FileInputStream(new File(filePath + timeStamp + ".pdf"));
       File encryptFile = new File(filePath + File.separator + timeStamp + ".txt");
       int read;
       if (!encryptFile.exists()) {
         encryptFile.createNewFile();
       }
-      FileOutputStream fos = new FileOutputStream(encryptFile);
       Cipher encipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
       String val = AppController.refreshKeys("key");
@@ -878,10 +880,17 @@ public class AppController {
       } catch (InvalidAlgorithmParameterException e) {
         Logger.log(e);
       }
-      CipherInputStream cis = new CipherInputStream(fis, encipher);
-      while ((read = cis.read()) != -1) {
-        fos.write((char) read);
-        fos.flush();
+      try {
+        cis = new CipherInputStream(fis, encipher);
+        fos = new FileOutputStream(encryptFile);
+        while ((read = cis.read()) != -1) {
+          fos.write((char) read);
+          fos.flush();
+        }
+      } catch (IOException e) {
+        Logger.log(e);
+      } finally {
+        cis.close();
       }
       fos.close();
       return encryptFile;
@@ -896,14 +905,22 @@ public class AppController {
       Logger.log(e);
     } catch (InvalidKeyException e) {
       Logger.log(e);
+    } finally {
+      try {
+        fis.close();
+        fos.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     return null;
   }
 
   // decrypt the pdf file and return CipherInputStream
   public static CipherInputStream generateDecryptedConsentPdf(String filePath) {
+    FileInputStream fis = null;
     try {
-      FileInputStream fis = new FileInputStream(new File(filePath));
+      fis = new FileInputStream(new File(filePath));
       Cipher encipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
       String getStringTypeKey = AppController.refreshKeys("key");
       SecretKey skey = AppController.stringToSecretKey(getStringTypeKey);
@@ -922,6 +939,12 @@ public class AppController {
         | NoSuchAlgorithmException
         | InvalidKeyException e) {
       Logger.log(e);
+    } finally {
+      try {
+        fis.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     return null;
   }

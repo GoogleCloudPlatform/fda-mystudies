@@ -99,7 +99,7 @@ public class StandaloneActivity extends AppCompatActivity
   private static final String CLOSED = "closed";
   private String eligibilityType = "";
   private String calledFor = "";
-  private String from = "";
+  private String froms = "";
   private String activityId;
   private String localNotification;
   private String latestConsentVersion = "0";
@@ -390,7 +390,7 @@ public class StandaloneActivity extends AppCompatActivity
         addClearTopFlag(intent);
         intent.putExtra("studyId", studyId);
         intent.putExtra("to", calledFor);
-        intent.putExtra("from", from);
+        intent.putExtra("from", froms);
         intent.putExtra("activityId", activityId);
         intent.putExtra("localNotification", localNotification);
         startActivity(intent);
@@ -428,7 +428,7 @@ public class StandaloneActivity extends AppCompatActivity
           addClearTopFlag(intent);
           intent.putExtra("studyId", studyId);
           intent.putExtra("to", calledFor);
-          intent.putExtra("from", from);
+          intent.putExtra("from", froms);
           intent.putExtra("activityId", activityId);
           intent.putExtra("localNotification", localNotification);
           startActivity(intent);
@@ -440,7 +440,7 @@ public class StandaloneActivity extends AppCompatActivity
         addClearTopFlag(intent);
         intent.putExtra("studyId", studyId);
         intent.putExtra("to", calledFor);
-        intent.putExtra("from", from);
+        intent.putExtra("from", froms);
         intent.putExtra("activityId", activityId);
         intent.putExtra("localNotification", localNotification);
         startActivity(intent);
@@ -462,7 +462,7 @@ public class StandaloneActivity extends AppCompatActivity
       addClearTopFlag(intent);
       intent.putExtra("studyId", studyId);
       intent.putExtra("to", calledFor);
-      intent.putExtra("from", from);
+      intent.putExtra("from", froms);
       intent.putExtra("activityId", activityId);
       intent.putExtra("localNotification", localNotification);
       startActivity(intent);
@@ -740,7 +740,7 @@ public class StandaloneActivity extends AppCompatActivity
       String activityId,
       String localNotification) {
 
-    this.from = from;
+    this.froms = from;
     this.title = title;
     this.studyId = studyId;
     this.activityId = activityId;
@@ -1027,7 +1027,7 @@ public class StandaloneActivity extends AppCompatActivity
         intent.putExtra("studyId", studyId);
         intent.putExtra("title", title);
         intent.putExtra("eligibility", eligibilityType);
-        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
+        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPES));
         // get the encrypted file path
         intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
         startActivity(intent);

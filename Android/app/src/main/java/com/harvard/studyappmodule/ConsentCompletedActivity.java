@@ -268,24 +268,33 @@ public class ConsentCompletedActivity extends AppCompatActivity
   }
 
   private File getEncryptedFilePath(String filePath) {
+    OutputStream output = null;
+    File file = new File("/data/data/" + getPackageName() + "/files/" + "temp" + ".pdf");
     try {
       CipherInputStream cis = AppController.generateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
-      File file = new File("/data/data/" + getPackageName() + "/files/" + "temp" + ".pdf");
       if (!file.exists() && file == null) {
         file.createNewFile();
       }
-      OutputStream output = new FileOutputStream(file);
+      output = new FileOutputStream(file);
       output.write(byteArray);
       output.close();
       return file;
     } catch (IOException e) {
       Logger.log(e);
+    } finally {
+      try {
+        output.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     return null;
   }
 
   public File copy(File src) throws IOException {
+    InputStream in = null;
+    OutputStream out = null;
     String root;
     if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
       root = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -306,16 +315,27 @@ public class ConsentCompletedActivity extends AppCompatActivity
       file.createNewFile();
     }
 
-    InputStream in = new FileInputStream(src);
-    OutputStream out = new FileOutputStream(file);
     // Transfer bytes from in to out
-    byte[] buf = new byte[1024];
-    int len;
-    while ((len = in.read(buf)) > 0) {
-      out.write(buf, 0, len);
+    try {
+      in = new FileInputStream(src);
+      out = new FileOutputStream(file);
+      byte[] buf = new byte[1024];
+      int len;
+      while ((len = in.read(buf)) > 0) {
+        out.write(buf, 0, len);
+      }
+      in.close();
+      out.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        in.close();
+        out.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
-    in.close();
-    out.close();
 
     return file;
   }

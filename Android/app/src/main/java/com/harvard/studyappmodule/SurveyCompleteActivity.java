@@ -17,10 +17,10 @@ package com.harvard.studyappmodule;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -35,7 +35,6 @@ import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
 import com.harvard.studyappmodule.events.ProcessResponseEvent;
 import com.harvard.usermodule.UserModulePresenter;
-import com.harvard.usermodule.event.ActivityStateEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.LoginData;
@@ -51,10 +50,7 @@ import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigE
 import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
-
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -627,7 +623,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
     Realm realm = AppController.getRealmobj(SurveyCompleteActivity.this);
     Studies studies =
         dbServiceSubscriber.getStudies(
-            getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID), realm);
+            getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYIDS), realm);
 
     try {
       jsonObject.put("studyId", getIntent().getStringExtra(STUDYID));
@@ -660,7 +656,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
       dbServiceSubscriber.updateActivityPreferenceDB(
           this,
           activityId[1],
-          getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID),
+          getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYIDS),
           getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0),
           SurveyActivitiesFragment.COMPLETED,
           getIntent().getIntExtra(CustomSurveyViewTaskActivity.TOTAL_RUN, 0),
@@ -675,7 +671,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
               .getStudies()
               .get(i)
               .getStudyId()
-              .equalsIgnoreCase(getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID))) {
+              .equalsIgnoreCase(getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYIDS))) {
             studies = studyData.getStudies().get(i);
           }
         }
@@ -686,7 +682,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
       dbServiceSubscriber.updateActivityRunToDB(
           this,
           activityId[1],
-          getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID),
+          getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYIDS),
           getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0));
       Intent intent = new Intent();
       setResult(RESULT_OK, intent);
@@ -855,7 +851,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
       dbServiceSubscriber.updateActivityPreferenceDB(
           this,
           activityId[1],
-          getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID),
+          getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYIDS),
           getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0),
           SurveyActivitiesFragment.COMPLETED,
           getIntent().getIntExtra(CustomSurveyViewTaskActivity.TOTAL_RUN, 0),
@@ -865,7 +861,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
       dbServiceSubscriber.updateActivityRunToDB(
           this,
           activityId[1],
-          getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID),
+          getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYIDS),
           getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0));
       Intent intent = new Intent();
       setResult(RESULT_OK, intent);
@@ -939,7 +935,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
         dbServiceSubscriber.updateActivityPreferenceDB(
             this,
             activityId[1],
-            getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID),
+            getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYIDS),
             getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0),
             SurveyActivitiesFragment.COMPLETED,
             getIntent().getIntExtra(CustomSurveyViewTaskActivity.TOTAL_RUN, 0),
@@ -949,7 +945,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
         dbServiceSubscriber.updateActivityRunToDB(
             this,
             activityId[1],
-            getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID),
+            getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYIDS),
             getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0));
       } catch (Exception e) {
         Logger.log(e);

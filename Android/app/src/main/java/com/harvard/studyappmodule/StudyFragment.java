@@ -1483,7 +1483,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         intent.putExtra("studyId", studyId);
         intent.putExtra("title", title);
         intent.putExtra("eligibility", eligibilityType);
-        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPE));
+        intent.putExtra("type", data.getStringExtra(CustomConsentViewTaskActivity.TYPES));
         // get the encrypted file path
         intent.putExtra("PdfPath", data.getStringExtra("PdfPath"));
         startActivity(intent);

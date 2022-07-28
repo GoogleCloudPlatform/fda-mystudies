@@ -224,6 +224,8 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity
 
   public File copy(File src) throws IOException {
     String primaryStoragePath;
+    InputStream in = null;
+    OutputStream out = null;
     if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
       primaryStoragePath =
           Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + intentTitle + ".pdf";
@@ -236,18 +238,30 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity
       file.createNewFile();
     }
 
-    InputStream in = new FileInputStream(src);
-    OutputStream out = new FileOutputStream(file);
     // Transfer bytes from in to out
-    byte[] buf = new byte[1024];
-    int len;
-    while ((len = in.read(buf)) > 0) {
-      out.write(buf, 0, len);
+    try {
+      in = new FileInputStream(src);
+      out = new FileOutputStream(file);
+      byte[] buf = new byte[1024];
+      int len;
+      while ((len = in.read(buf)) > 0) {
+        out.write(buf, 0, len);
+      }
+      in.close();
+      out.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        in.close();
+        out.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
-    in.close();
-    out.close();
 
     return file;
+
   }
 
   @Override
@@ -270,6 +284,8 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity
   }
 
   public File getAssetsPdfPath() {
+    FileOutputStream outputStream = null;
+    InputStream inputStream = null;
     String filePath;
     if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
       filePath =
@@ -280,8 +296,8 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity
     File destinationFile = new File(filePath);
 
     try {
-      FileOutputStream outputStream = new FileOutputStream(destinationFile);
-      InputStream inputStream = getAssets().open("pdf/appglossary.pdf");
+      outputStream = new FileOutputStream(destinationFile);
+      inputStream = getAssets().open("pdf/appglossary.pdf");
       byte[] buffer = new byte[1024];
       int length = 0;
       while ((length = inputStream.read(buffer)) != -1) {
@@ -291,6 +307,13 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity
       inputStream.close();
     } catch (IOException e) {
       Logger.log(e);
+    } finally {
+      try {
+        outputStream.close();
+        inputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
 
     return destinationFile;

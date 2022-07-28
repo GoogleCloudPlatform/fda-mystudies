@@ -60,14 +60,14 @@ public class CustomViewTaskActivity extends AppCompatActivity
     implements StepCallbacks, NetworkChangeReceiver.NetworkChangeCallback {
   private static final String EXTRA_TASK = "ViewTaskActivity.ExtraTask";
   private static final String EXTRA_STUDYID = "ViewTaskActivity.ExtraStudyId";
-  private static final String STUDYID = "ViewTaskActivity.StudyId";
-  private static final String ENROLLID = "ViewTaskActivity.EnrollId";
-  private static final String SITEID = "ViewTaskActivity.siteId";
+  private static final String STUDYIDS = "ViewTaskActivity.StudyId";
+  private static final String ENROLLIDS = "ViewTaskActivity.EnrollId";
+  private static final String SITEIDS = "ViewTaskActivity.siteId";
   private static final String PDF_TITLE = "ViewTaskActivity.pdfTitle";
   private static final String EXTRA_TASK_RESULT = "ViewTaskActivity.ExtraTaskResult";
   private static final String EXTRA_STEP = "ViewTaskActivity.ExtraStep";
-  private static final String ELIGIBILITY = "ViewTaskActivity.eligibility";
-  private static final String TYPE = "ViewTaskActivity.type";
+  private static final String ELIGIBILITYS = "ViewTaskActivity.eligibility";
+  private static final String TYPES = "ViewTaskActivity.type";
   private StepSwitcherCustom root;
   private Step currentStep;
   private Task task;
@@ -97,11 +97,11 @@ public class CustomViewTaskActivity extends AppCompatActivity
     intent.putExtra(EXTRA_TASK, task);
     intent.putExtra(EXTRA_STUDYID, surveyId);
     intent.putExtra(PDF_TITLE, title);
-    intent.putExtra(STUDYID, studyId);
-    intent.putExtra(SITEID, siteId);
-    intent.putExtra(ENROLLID, enrollId);
-    intent.putExtra(ELIGIBILITY, eligibility);
-    intent.putExtra(TYPE, type);
+    intent.putExtra(STUDYIDS, studyId);
+    intent.putExtra(SITEIDS, siteId);
+    intent.putExtra(ENROLLIDS, enrollId);
+    intent.putExtra(ELIGIBILITYS, eligibility);
+    intent.putExtra(TYPES, type);
     ArrayList<CorrectAnswers> correctAnswersArrayList = new ArrayList<>();
     correctAnswersArrayList.addAll(correctAnswers.getCorrectAnswers());
     intent.putExtra("correctanswer", correctAnswersArrayList);
@@ -124,20 +124,20 @@ public class CustomViewTaskActivity extends AppCompatActivity
     root = findViewById(R.id.container);
     if (savedInstanceState == null) {
       task = (Task) getIntent().getSerializableExtra(EXTRA_TASK);
-      studyId = (String) getIntent().getSerializableExtra(STUDYID);
-      siteId = (String) getIntent().getSerializableExtra(SITEID);
-      enrollId = (String) getIntent().getSerializableExtra(ENROLLID);
-      eligibility = (String) getIntent().getSerializableExtra(ELIGIBILITY);
-      type = (String) getIntent().getSerializableExtra(TYPE);
+      studyId = (String) getIntent().getSerializableExtra(STUDYIDS);
+      siteId = (String) getIntent().getSerializableExtra(SITEIDS);
+      enrollId = (String) getIntent().getSerializableExtra(ENROLLIDS);
+      eligibility = (String) getIntent().getSerializableExtra(ELIGIBILITYS);
+      type = (String) getIntent().getSerializableExtra(TYPES);
       taskResult = new TaskResult(task.getIdentifier());
       taskResult.setStartDate(new Date());
     } else {
       task = (Task) savedInstanceState.getSerializable(EXTRA_TASK);
-      studyId = (String) savedInstanceState.getSerializable(STUDYID);
-      siteId = (String) savedInstanceState.getSerializable(SITEID);
-      enrollId = (String) savedInstanceState.getSerializable(ENROLLID);
-      eligibility = (String) savedInstanceState.getSerializable(ELIGIBILITY);
-      type = (String) savedInstanceState.getSerializable(TYPE);
+      studyId = (String) savedInstanceState.getSerializable(STUDYIDS);
+      siteId = (String) savedInstanceState.getSerializable(SITEIDS);
+      enrollId = (String) savedInstanceState.getSerializable(ENROLLIDS);
+      eligibility = (String) savedInstanceState.getSerializable(ELIGIBILITYS);
+      type = (String) savedInstanceState.getSerializable(TYPES);
       taskResult = (TaskResult) savedInstanceState.getSerializable(EXTRA_TASK_RESULT);
       currentStep = (Step) savedInstanceState.getSerializable(EXTRA_STEP);
     }
@@ -329,10 +329,10 @@ public class CustomViewTaskActivity extends AppCompatActivity
     super.onSaveInstanceState(outState);
     outState.putSerializable(EXTRA_TASK, task);
     outState.putSerializable(EXTRA_TASK_RESULT, taskResult);
-    outState.putSerializable(STUDYID, studyId);
-    outState.putSerializable(ENROLLID, enrollId);
-    outState.putSerializable(ELIGIBILITY, eligibility);
-    outState.putSerializable(TYPE, type);
+    outState.putSerializable(STUDYIDS, studyId);
+    outState.putSerializable(ENROLLIDS, enrollId);
+    outState.putSerializable(ELIGIBILITYS, eligibility);
+    outState.putSerializable(TYPES, type);
     outState.putSerializable(EXTRA_STEP, currentStep);
   }
 

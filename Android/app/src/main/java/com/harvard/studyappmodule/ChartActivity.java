@@ -75,11 +75,11 @@ import org.json.JSONObject;
 public class ChartActivity extends AppCompatActivity
     implements NetworkChangeReceiver.NetworkChangeCallback {
   private LinearLayout chartlayout;
-  private String[] day = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
+  private String[] days = {"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
   private String[] monthfull = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   };
-  private String[] month = {"JAN", ".", ".", "APR", ".", ".", "JUL", ".", ".", "OCT", ".", "DEC"};
+  private String[] months = {"JAN", ".", ".", "APR", ".", ".", "JUL", ".", ".", "OCT", ".", "DEC"};
 
   private LinearLayout linearLayout1;
   private LinearLayout.LayoutParams layoutParams;
@@ -258,12 +258,12 @@ public class ChartActivity extends AppCompatActivity
               if (chartDataSource.getTimeRangeType().equalsIgnoreCase("days_of_week")) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE");
                 filteredXValues.clear();
-                for (int k = 0; k < day.length; k++) {
+                for (int k = 0; k < days.length; k++) {
                   String s = simpleDateFormat.format(stepRecordCustomList.get(j).getCompleted());
-                  if (s.equalsIgnoreCase(day[k])) {
+                  if (s.equalsIgnoreCase(days[k])) {
                     entryList.add(new Entry(Float.parseFloat(answer), k, data));
                   }
-                  filteredXValues.add(day[k]);
+                  filteredXValues.add(days[k]);
                 }
               } else if (chartDataSource.getTimeRangeType().equalsIgnoreCase("days_of_month")) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d");
@@ -298,12 +298,12 @@ public class ChartActivity extends AppCompatActivity
               } else if (chartDataSource.getTimeRangeType().equalsIgnoreCase("months_of_year")) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
                 filteredXValues.clear();
-                for (int k = 0; k < month.length; k++) {
+                for (int k = 0; k < months.length; k++) {
                   String s = simpleDateFormat.format(stepRecordCustomList.get(j).getCompleted());
                   if (s.equalsIgnoreCase(monthfull[k])) {
                     entryList.add(new Entry(Float.parseFloat(answer), k, data));
                   }
-                  filteredXValues.add(month[k]);
+                  filteredXValues.add(months[k]);
                 }
               }
             }
@@ -1207,7 +1207,7 @@ public class ChartActivity extends AppCompatActivity
     if (!tag.equalsIgnoreCase("hours_of_day")) {
       if (tag.equalsIgnoreCase("days_of_week")) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE");
-        for (int k = 0; k < day.length; k++) {
+        for (int k = 0; k < days.length; k++) {
           for (int j = 0, size = stepRecordCustomList.size(); j < size; j++) {
             if (stepRecordCustomList.get(j).getCompleted().before(endtime)
                 && stepRecordCustomList.get(j).getCompleted().after(startTime)) {
@@ -1232,12 +1232,12 @@ public class ChartActivity extends AppCompatActivity
               }
               String s = simpleDateFormat.format(stepRecordCustomList.get(j).getCompleted());
 
-              if (s.equalsIgnoreCase(day[k])) {
+              if (s.equalsIgnoreCase(days[k])) {
                 entryList.add(new Entry(Float.parseFloat(answer), k, data));
               }
             }
           }
-          filteredXValues.add(day[k]);
+          filteredXValues.add(days[k]);
         }
       } else if (tag.equalsIgnoreCase("days_of_month")) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d");
@@ -1317,7 +1317,7 @@ public class ChartActivity extends AppCompatActivity
         }
       } else if (tag.equalsIgnoreCase("months_of_year")) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMM");
-        for (int k = 0; k < month.length; k++) {
+        for (int k = 0; k < months.length; k++) {
           for (int j = 0, size = stepRecordCustomList.size(); j < size; j++) {
             if (stepRecordCustomList.get(j).getCompleted().before(endtime)
                 && stepRecordCustomList.get(j).getCompleted().after(startTime)) {
@@ -1346,7 +1346,7 @@ public class ChartActivity extends AppCompatActivity
               }
             }
           }
-          filteredXValues.add(month[k]);
+          filteredXValues.add(months[k]);
         }
       }
     } else if (tag.equalsIgnoreCase("hours_of_day")) {
