@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +119,8 @@ public class UserController {
       @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    
+    String searchValue = StringUtils.replace(searchTerm, " ", "+");
     String[] allowedSortByValues = {"firstName", "lastName", "email", "status"};
 
     if (!ArrayUtils.contains(allowedSortByValues, sortBy)) {
@@ -139,7 +142,7 @@ public class UserController {
             offset,
             auditRequest,
             sortBy + "_" + sortDirection,
-            searchTerm);
+            searchValue);
 
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
