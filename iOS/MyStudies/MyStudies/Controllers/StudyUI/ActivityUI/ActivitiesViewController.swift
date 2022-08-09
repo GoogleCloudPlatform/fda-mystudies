@@ -132,6 +132,7 @@ class ActivitiesViewController: UIViewController {
     
     UserDefaults.standard.removeObject(forKey: "isAlertShown")
     UserDefaults.standard.setValue("", forKey: "consentEnrolledStatus")
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
     UserDefaults.standard.synchronize()
    
   }
@@ -139,6 +140,9 @@ class ActivitiesViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+      UserDefaults.standard.synchronize()
+
     let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appDelegate.iscomingFromForgotPasscode
     if !appDelegate.iscomingFromForgotPasscode {
@@ -350,6 +354,8 @@ class ActivitiesViewController: UIViewController {
           self.handleActivityListResponse()
         }
       }
+      print("10removeProgressIndicator---")
+      self.removeProgressIndicator()
     }
   }
 
@@ -893,6 +899,7 @@ class ActivitiesViewController: UIViewController {
       UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
       UserDefaults.standard.synchronize()
       DBHandler.updateMetaDataEnrolledToUpdateForStudy(study: currentStudy, updateDetails: nil)
+      print("3removeProgressIndicator---")
       self.removeProgressIndicator()
       
       UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
@@ -1219,14 +1226,17 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
 
     } else if requestName as String == WCPMethods.activity.method.methodName {
+      print("4removeProgressIndicator---")
       self.removeProgressIndicator()
       self.createActivity()
 
     } else if requestName as String == WCPMethods.studyDashboard.method.methodName {
+      print("5removeProgressIndicator---")
       self.removeProgressIndicator()
       self.sendRequestToGetResourcesInfo()
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
+      print("6removeProgressIndicator---")
       self.removeProgressIndicator()
       self.checkForActivitiesUpdates()
 
@@ -1238,7 +1248,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
                 Study.currentStudy?.userParticipateState.userStudyVersion == Study.currentStudy?.version {
 
         self.loadActivitiesFromDatabase()
-        self.removeProgressIndicator()
+        print("7removeProgressIndicator---")
+//        self.removeProgressIndicator()
         if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
           self.refreshControl?.endRefreshing()
         }
@@ -1258,11 +1269,13 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         ResourcesViewController.refreshNotifications()
       }
     } else if requestName as String == EnrollmentMethods.updateStudyState.method.methodName {
+      print("8removeProgressIndicator---")
       self.removeProgressIndicator()
     }
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
+    print("9removeProgressIndicator---")
     self.removeProgressIndicator()
 
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
@@ -1308,6 +1321,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         self.lastActivityResponse = nil
       }
       self.loadActivitiesFromDatabase()
+      print("1removeProgressIndicator---")
       self.removeProgressIndicator()
       if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
         self.refreshControl?.endRefreshing()
@@ -1316,6 +1330,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
         self.tableView?.beginUpdates()
         self.tableView?.reloadData()
+        print("2removeProgressIndicator---")
         self.removeProgressIndicator()
         self.tableView?.endUpdates()
       }

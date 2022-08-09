@@ -119,10 +119,12 @@ class EligibilityStepViewController: ORKStepViewController {
     footerView.skipEnabled = false
     self.view.addSubview(footerView)
 
+    print("UIScreen.main.bounds.height---\(UIScreen.main.bounds.height)")
+    let valHeight = (UIScreen.main.bounds.height * 100) / 870
     NSLayoutConstraint.activate(
       [
         footerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0),
-        footerView.heightAnchor.constraint(equalToConstant: 100),
+        footerView.heightAnchor.constraint(equalToConstant: valHeight),
         footerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
         footerView.trailingAnchor.constraint(
           equalTo: self.view.trailingAnchor,

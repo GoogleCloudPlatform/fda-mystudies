@@ -67,6 +67,9 @@ class StudyListViewController: UIViewController {
     if #available(iOS 15, *) {
       UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
     }
+      print("1stAugtestDev---")
+//      UserDefaults.standard.set("1stAugtestDev 2", forKey: "performTaskBasedOnStudyStatus")
+//      UserDefaults.standard.synchronize()
   }
   
     override func viewWillDisappear(_ animated: Bool) {
@@ -85,6 +88,7 @@ class StudyListViewController: UIViewController {
     Utilities.removeImageLocalPath(localPathName: kConsentSharingImagePDF)
     UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
     UserDefaults.standard.synchronize()
+      
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -146,6 +150,53 @@ class StudyListViewController: UIViewController {
       ud.synchronize()
     }
     checkBlockerScreen()
+      
+      DispatchQueue.main.async {
+          
+          self.performTaskBasedOnStudyStatus()
+          
+      let val1 = UserDefaults.standard.value(forKey: "performTaskBasedOnStudyStatus") as? String ?? ""
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+      UserDefaults.standard.synchronize()
+      print("valvalval---\(val1)")
+      let val = val1.components(separatedBy: " ")
+//      var initialVC: UIViewController?
+          
+          UserDefaults.standard.set("325---\(val[0])---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          
+      if !(val[0] == "" || val[0] == nil) {
+          if let study = Gateway.instance.studies?.filter { $0.studyId == val[0] }.last {
+              UserDefaults.standard.set("525,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+              UserDefaults.standard.synchronize()
+              
+          print("study--\(study)")
+          Study.updateCurrentStudy(study: study)
+              let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+              appdelegate.notificationDetails = nil
+        self.performTaskBasedOnStudyStatus()
+      print("181userInfoDetails---")
+      
+      // push tabbar and switch to activty tab
+//      if let initialVC = initialVC {
+//        print("23userInfoDetails---")
+        UserDefaults.standard.set("323,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+          
+          
+          
+//          let tabVal = Int(val[1]) ?? 0
+//          if tabVal != 0 {
+//        self.pushToTabbar(
+//          viewController: self,
+//          selectedTab: tabVal ?? 0
+//        )
+//      }
+              
+          }
+      }
+      }
+      
   }
   
   override func viewDidDisappear(_ animated: Bool) {
@@ -367,6 +418,8 @@ class StudyListViewController: UIViewController {
         let studyId = NotificationHandler.instance.studyId
         let study = Gateway.instance.studies?.filter { $0.studyId == studyId }.first
         Study.updateCurrentStudy(study: study!)
+          UserDefaults.standard.set("326---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
         performTaskBasedOnStudyStatus()
       }
     }
@@ -653,9 +706,19 @@ class StudyListViewController: UIViewController {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
 
       if appDelegate.notificationDetails != nil, User.currentUser.userType == .loggedInUser {
+          
+          
+          UserDefaults.standard.set("545,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          
+          UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
         appDelegate.handleLocalAndRemoteNotification(
           userInfoDetails: appDelegate.notificationDetails!
         )
+          UserDefaults.standard.set("546,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          appDelegate.notificationDetails = nil
       }
     } else {
       tableView?.isHidden = true
@@ -722,6 +785,8 @@ class StudyListViewController: UIViewController {
 
   /// Checks `Study` status and do the action.
   func performTaskBasedOnStudyStatus(studyID: String? = nil) {
+      UserDefaults.standard.set("527,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
     // Study ID from notification
     if let studyID = studyID,
         let study = studiesList.filter({ $0.studyId == studyID }).first {
@@ -774,6 +839,22 @@ class StudyListViewController: UIViewController {
       checkForStudyUpdate(study: study)
     }
   }
+    
+    func pushToTabbar(viewController: UIViewController, selectedTab: Int, studyID: String? = nil) {
+      DispatchQueue.main.async {
+      let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
+
+      let studyDashboard =
+        (studyStoryBoard.instantiateViewController(
+          withIdentifier: kStudyDashboardTabbarControllerIdentifier
+        )
+        as? StudyDashboardTabbarViewController)!
+
+      studyDashboard.selectedIndex = selectedTab
+      viewController.navigationController?.navigationBar.isHidden = true
+      viewController.navigationController?.pushViewController(studyDashboard, animated: true)
+      }
+    }
 
   @objc func loadStudyDetails() {
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
@@ -941,7 +1022,8 @@ extension StudyListViewController: UITableViewDelegate {
 
     let study = studiesList[indexPath.row]
     Study.updateCurrentStudy(study: study)
-
+      UserDefaults.standard.set("327---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
     performTaskBasedOnStudyStatus()
   }
 }

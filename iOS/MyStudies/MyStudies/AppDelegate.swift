@@ -564,11 +564,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
       
       var topController: UIViewController?
       if let navigationController = self.window?.rootViewController as? UINavigationController {
+        print("111---")
         topController = navigationController
         if navigationController.viewControllers.count > 0 {
           topController = navigationController.viewControllers.first!
         }
       } else {
+        print("222---")
         let navigationController = self.window?.rootViewController as? UIViewController
         topController = navigationController
         //        topController = (self.window?.topMostController())!
@@ -690,10 +692,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   func handleLocalAndRemoteNotification(userInfoDetails: JSONDictionary?) {
     var initialVC: UIViewController?
     
+    UserDefaults.standard.set("30,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    print("30userInfoDetails---")
     if let dashboardTabBar = initialVC as? UITabBarController {
+      UserDefaults.standard.set("31,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      print("31userInfoDetails---")
       dashboardTabBar.selectedIndex = 2 // Go to resources screen.
       if let resourcesVC = (dashboardTabBar.viewControllers?.first as? UINavigationController)?.topViewController as? ResourcesViewController
       {
+        print("32userInfoDetails---")
+        UserDefaults.standard.set("32,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         resourcesVC.userDidNavigateFromNotification()
       }
     }
@@ -701,16 +712,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     if let studyId = userInfoDetails?[kStudyId] as? String,
        !studyId.isEmpty
     {
+      print("33userInfoDetails---")
+      UserDefaults.standard.set("33,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       let notificationType = userInfoDetails![kNotificationType] as? String ?? ""
       let subType = AppNotification.NotificationSubType(rawValue: (userInfoDetails![kNotificationSubType] as? String ?? "")) ?? .announcement
       
       switch AppNotification.NotificationType(rawValue: notificationType) {
       case .gateway:
+        print("34userInfoDetails---")
+        UserDefaults.standard.set("34,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         hanldeGatewayNotificationType(userInfoDetails: userInfoDetails!, subType: subType)
         break
       case .study:
+        print("35userInfoDetails---")
+        UserDefaults.standard.set("35,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         handleStudyNotificationType(userInfoDetails: userInfoDetails!, subType: subType)
       default:
+        print("36userInfoDetails---")
+        UserDefaults.standard.set("36,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         print(notificationType)
         
       }
@@ -718,39 +741,78 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   }
   
   private func handleStudyNotificationType(userInfoDetails: [String: Any], subType: AppNotification.NotificationSubType) {
+    
+    print("1userInfoDetails---\(userInfoDetails)")
+    UserDefaults.standard.set("1,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
     if let studyId = userInfoDetails[kStudyId] as? String,
        !studyId.isEmpty
     {
+      print("2userInfoDetails---")
+      UserDefaults.standard.set("2,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       var initialVC: UIViewController?
       
       // fetch the visible view controller
       let navigationController = self.window?.rootViewController as? UINavigationController
       let menuVC = navigationController?.viewControllers.last
       if menuVC is FDASlideMenuViewController {
+        print("3userInfoDetails---")
+        UserDefaults.standard.set("3,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         let mainController = (menuVC as? FDASlideMenuViewController)?
           .mainViewController
         if mainController is UINavigationController {
           let nav = mainController as? UINavigationController
           initialVC = nav?.viewControllers.last
+          print("4userInfoDetails---")
+          UserDefaults.standard.set("4,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
         }
       }
       // Handling Notifications based on SubType
       switch subType {
         
       case .study, .studyEvent:  // Study Notifications
+        print("6userInfoDetails---")
+        UserDefaults.standard.set("6,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         let leftController =
                   (menuVC as? FDASlideMenuViewController)?.leftViewController
                   as? LeftMenuViewController
         
         if (initialVC is StudyListViewController) {
+          print("7userInfoDetails---")
+          UserDefaults.standard.set("7,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           let val = userInfoDetails["message"] as? String ?? ""
           if val.containsIgnoringCase("has been paused") {
+            print("8userInfoDetails---")
+            UserDefaults.standard.set("8,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             UserDefaults.standard.set("paused", forKey: "pausedNotification")
             UserDefaults.standard.synchronize()
           }
+            if val.containsIgnoringCase("has been resumed") && subType == .studyEvent {
+                print("700userInfoDetails---")
+                UserDefaults.standard.set("700,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                UserDefaults.standard.synchronize()
+                self.notificationDetails = nil
+                leftController?.changeViewController(.studyList)
+                leftController?.createLeftmenuItems()
+                
+            } else {
           (initialVC as? StudyListViewController)!.addRightNavigationItem()
+            
+            UserDefaults.standard.set("528,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
+            
           (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
+            }
         } else if !(initialVC is StudyListViewController) {
+          print("9userInfoDetails---")
+          UserDefaults.standard.set("9,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           if initialVC is ProfileViewController
               || initialVC
               is ReachoutOptionsViewController
@@ -758,7 +820,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
               initialVC is StudyDashboardViewController || initialVC is StudyDashboardTabbarViewController ||
               initialVC is NotificationViewController || initialVC is LeftMenuViewController
           {
-            
+            print("10userInfoDetails---")
+            UserDefaults.standard.set("10,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             NotificationHandler.instance.appOpenFromNotification = true
             NotificationHandler.instance.studyId = studyId
             
@@ -767,7 +831,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
             
            }
         } else {
-          
+          print("11userInfoDetails---")
+          UserDefaults.standard.set("11,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           NotificationHandler.instance.appOpenFromNotification = true
           NotificationHandler.instance.studyId = studyId
     
@@ -777,36 +843,83 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         }
         
       case .activity:  // Activity Notifications
-        
+        print("12userInfoDetails---")
+        UserDefaults.standard.set("12,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         NotificationHandler.instance.appOpenFromNotification = true
-        if !(initialVC is UITabBarController) {
-          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
-
-          // push tabbar and switch to activty tab
-          if let initialVC = initialVC {
-            self.pushToTabbar(
-              viewController: initialVC,
-              selectedTab: subType == .activity ? 0 : 2
-            )
-          }
-        } else {
+          if let initialVC1 = initialVC as? StudyListViewController {
+              
+              UserDefaults.standard.set("529,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+              UserDefaults.standard.synchronize()
+              if let initialVC2 = (initialVC as? StudyListViewController)?.performTaskBasedOnStudyStatus(studyID: studyId) {
+                  
+                  
+                  
+                  print("13userInfoDetails---")
+                  UserDefaults.standard.set("133,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                  UserDefaults.standard.synchronize()
+//                  (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
+                  
+                  // push tabbar and switch to activty tab
+                  if let initialVC = initialVC {
+                      print("14userInfoDetails---")
+                      UserDefaults.standard.set("134,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                      UserDefaults.standard.synchronize()
+                      self.pushToTabbar(
+                        viewController: initialVC,
+                        selectedTab: subType == .activity ? 0 : 2
+                      )
+                  }
+              } else {
+                  print("120userInfoDetails---")
+                  UserDefaults.standard.set("135,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                  
+                  UserDefaults.standard.set("\(studyId) 0", forKey: "performTaskBasedOnStudyStatus")
+                  UserDefaults.standard.synchronize()
+                  
+              }
+          } else if initialVC is UITabBarController {
+          print("15userInfoDetails---")
+          UserDefaults.standard.set("15,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           // switch to activity tab
           (initialVC as? UITabBarController)?.selectedIndex =
           subType == .activity ? 0 : 2
-        }
+        } else {
+            print("110userInfoDetails---")
+            UserDefaults.standard.set("136,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                
+                UserDefaults.standard.set("\(studyId)", forKey: "performTaskBasedOnStudyStatus")
+            UserDefaults.standard.synchronize()
+            // switch to activity tab
+            (initialVC as? UITabBarController)?.selectedIndex =
+            subType == .announcement ? 0 : 2
+          }
         
       case .resource:
+        print("16userInfoDetails---")
+        UserDefaults.standard.set("16,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         if !(initialVC is UITabBarController) {
-          
+          print("17userInfoDetails---")
+          UserDefaults.standard.set("17,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           if Gateway.instance.studies?.isEmpty == false {
             guard let study = Gateway.instance.studies?.filter({ $0.studyId == studyId })
                 .first
-            else { return }
+            else {
+              print("19userInfoDetails---")
+              UserDefaults.standard.set("19,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+              UserDefaults.standard.synchronize()
+              return }
             Study.updateCurrentStudy(study: study)
           }
           
           // push tabbar and switch to resource tab
           if let initialVC = initialVC {
+            print("18userInfoDetails---")
+            UserDefaults.standard.set("18,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             self.pushToTabbar(
               viewController: initialVC,
               selectedTab: 2
@@ -814,42 +927,100 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
           }
         }
         else {
+          print("20userInfoDetails---")
+          UserDefaults.standard.set("20,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           (initialVC as? UITabBarController)?.selectedIndex = 2
         }
         
       case .announcement:
-        if !(initialVC is UITabBarController) {
-          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
-
+        print("21userInfoDetails---")
+        UserDefaults.standard.set("21,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+        if let initialVC1 = initialVC as? StudyListViewController {
+          print("22userInfoDetails---")
+          UserDefaults.standard.set("22---\(initialVC),\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+            
+            UserDefaults.standard.set("530,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
+            
+            if let initialVC2 = (initialVC as? StudyListViewController)?.performTaskBasedOnStudyStatus(studyID: studyId) {
+                
+//          (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
+          print("81userInfoDetails---")
+          UserDefaults.standard.set("81,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
           // push tabbar and switch to activty tab
           if let initialVC = initialVC {
+            print("23userInfoDetails---")
+            UserDefaults.standard.set("23,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             self.pushToTabbar(
               viewController: initialVC,
               selectedTab: subType == .announcement ? 0 : 2
             )
           }
-        } else {
+          print("80userInfoDetails---")
+          UserDefaults.standard.set("80,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                
+            } else {
+                print("120userInfoDetails---")
+                UserDefaults.standard.set("121,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                    
+                    UserDefaults.standard.set("\(studyId) 0", forKey: "performTaskBasedOnStudyStatus")
+                UserDefaults.standard.synchronize()
+              
+              }
+        } else if initialVC is UITabBarController {
+            print("24userInfoDetails---")
+            UserDefaults.standard.set("24,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
+            // switch to activity tab
+            (initialVC as? UITabBarController)?.selectedIndex =
+            subType == .announcement ? 0 : 2
+          }
+          else {
+          print("110userInfoDetails---")
+          UserDefaults.standard.set("111,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+              
+              UserDefaults.standard.set("\(studyId)", forKey: "performTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
           // switch to activity tab
           (initialVC as? UITabBarController)?.selectedIndex =
           subType == .announcement ? 0 : 2
         }
       }
     }
+    print("25userInfoDetails---")
+    UserDefaults.standard.set("25,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
   }
   
   private func hanldeGatewayNotificationType(userInfoDetails: [String: Any], subType: AppNotification.NotificationSubType) {
+    print("40userInfoDetails---")
+    UserDefaults.standard.set("40,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
     if let studyId = userInfoDetails[kStudyId] as? String,
        !studyId.isEmpty
     {
+      print("41userInfoDetails---")
+      UserDefaults.standard.set("41,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       var initialVC: UIViewController?
       
       // fetch the visible view controller
       let navigationController = self.window?.rootViewController as? UINavigationController
       let menuVC = navigationController?.viewControllers.last
       if menuVC is FDASlideMenuViewController {
+        print("42userInfoDetails---")
+        UserDefaults.standard.set("42,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         let mainController = (menuVC as? FDASlideMenuViewController)?
           .mainViewController
         if mainController is UINavigationController {
+          print("43userInfoDetails---")
+          UserDefaults.standard.set("43,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           let nav = mainController as? UINavigationController
           initialVC = nav?.viewControllers.last
         }
@@ -858,20 +1029,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
       switch subType {
         
       case .study, .studyEvent:  // Study Notifications
+        print("44userInfoDetails---")
+        UserDefaults.standard.set("44,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         let leftController =
                   (menuVC as? FDASlideMenuViewController)?.leftViewController
                   as? LeftMenuViewController
         
         if (initialVC is StudyListViewController) {
+          print("45userInfoDetails---")
+          UserDefaults.standard.set("45,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           (initialVC as? StudyListViewController)!.addRightNavigationItem()
+            UserDefaults.standard.set("531,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
           (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
         } else if !(initialVC is StudyListViewController) {
+          print("46userInfoDetails---")
+          UserDefaults.standard.set("46,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           if initialVC is ProfileViewController || initialVC is ReachoutOptionsViewController || initialVC is GatewayResourcesListViewController ||
               initialVC is ActivitiesViewController || initialVC is ResourcesViewController ||
               initialVC is StudyDashboardViewController || initialVC is StudyDashboardTabbarViewController ||
               initialVC is NotificationViewController || initialVC is LeftMenuViewController
           {
-            
+            print("47userInfoDetails---")
+            UserDefaults.standard.set("47,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             NotificationHandler.instance.appOpenFromNotification = true
             NotificationHandler.instance.studyId = studyId
             
@@ -880,7 +1064,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
           }
         } else {
-          
+          print("48userInfoDetails---")
+          UserDefaults.standard.set("48,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           NotificationHandler.instance.appOpenFromNotification = true
           NotificationHandler.instance.studyId = studyId
           
@@ -889,54 +1075,105 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
         }
         
       case .activity:  // Activity Notifications
-        
+        print("49userInfoDetails---")
+        UserDefaults.standard.set("49,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         if !(initialVC is UITabBarController) {
+          print("50userInfoDetails---")
+          UserDefaults.standard.set("50,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+            
+            UserDefaults.standard.set("532,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
           (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
         
           // push tabbar and switch to activty tab
           if let initialVC = initialVC {
+            print("51userInfoDetails---")
+            UserDefaults.standard.set("51,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             self.pushToTabbar(
               viewController: initialVC,
               selectedTab: subType == .activity ? 0 : 2
             )
           }
         } else {
+          print("52userInfoDetails---")
+          UserDefaults.standard.set("52,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           (initialVC as? UITabBarController)?.selectedIndex =
           subType == .activity ? 0 : 2
         }
         
       case .resource:  // Resource Notifications
+        print("53userInfoDetails---")
+        UserDefaults.standard.set("53,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         if !(initialVC is UITabBarController) {
+          print("54userInfoDetails---")
+          UserDefaults.standard.set("54,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           if Gateway.instance.studies?.isEmpty == false {
+            print("55userInfoDetails---")
+            UserDefaults.standard.set("55,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             guard let study = Gateway.instance.studies?.filter({ $0.studyId == studyId })
                     .first
-            else { return }
+            else {
+              print("56userInfoDetails---")
+              UserDefaults.standard.set("56,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+              UserDefaults.standard.synchronize()
+              return }
+            print("57userInfoDetails---")
+            UserDefaults.standard.set("57,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             Study.updateCurrentStudy(study: study)
           }
           
           // push tabbar and switch to resource tab
           if let initialVC = initialVC {
+            print("58userInfoDetails---")
+            UserDefaults.standard.set("58,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             self.pushToTabbar(
               viewController: initialVC,
               selectedTab: 2
             )
           }
         } else {
+          print("59userInfoDetails---")
+          UserDefaults.standard.set("59,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           (initialVC as? UITabBarController)?.selectedIndex = 2
         }
         
       case .announcement:
+        print("60userInfoDetails---")
+        UserDefaults.standard.set("60,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         if !(initialVC is UITabBarController) {
+          print("61userInfoDetails---")
+          UserDefaults.standard.set("61,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+            
+            UserDefaults.standard.set("533,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
           (initialVC as? StudyListViewController)!.performTaskBasedOnStudyStatus(studyID: studyId)
           
           // push tabbar and switch to activty tab
           if let initialVC = initialVC {
+            print("62userInfoDetails---")
+            UserDefaults.standard.set("62,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             self.pushToTabbar(
               viewController: initialVC,
               selectedTab: subType == .announcement ? 0 : 2
             )
           }
         } else {
+          print("63userInfoDetails---")
+          UserDefaults.standard.set("63,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           (initialVC as? UITabBarController)?.selectedIndex =
           subType == .announcement ? 0 : 2
         }
@@ -945,6 +1182,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   }
   
   func navigateToStudyHome(viewController: UIViewController, studyID: String? = nil) {
+    print("70userInfoDetails---")
+    UserDefaults.standard.set("70,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
     let studyStoryBoard = UIStoryboard(name: kStudyStoryboard, bundle: Bundle.main)
     let studyHomeController =
       (studyStoryBoard.instantiateViewController(
@@ -1166,6 +1406,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Checks for `StudyListViewController` and adds right navigation item
   func updateNotification(userInfoDetails: [String:Any]?) {
+      
+      UserDefaults.standard.set("223,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      
     let ud = UserDefaults.standard
     ud.set(true, forKey: kShowNotification)
     ud.synchronize()
@@ -2126,7 +2370,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 
     // UserInfo is valid & contains Type for Notification
-    if userInfo.count > 0 && userInfo.keys.contains(kType) {
+   else if userInfo.count > 0 && userInfo.keys.contains(kType) {
       self.handleLocalAndRemoteNotification(userInfoDetails: (userInfo as? JSONDictionary ?? [:]))
     }
     completionHandler()
