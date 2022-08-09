@@ -42,6 +42,10 @@ class SplashViewController: UIViewController {
     ud.set("", forKey: "pausedNotification")
     ud.removeObject(forKey: "isAlertShown")
     ud.setValue("", forKey: "consentEnrolledStatus")
+    
+    print("999userInfoDetails---\(UserDefaults.standard.value(forKey: "userInfoDetails"))")
+    ud.set("", forKey: "userInfoDetails")
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
     ud.synchronize()
   }
 
