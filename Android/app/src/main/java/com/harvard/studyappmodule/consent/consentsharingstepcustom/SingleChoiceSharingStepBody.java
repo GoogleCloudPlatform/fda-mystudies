@@ -122,7 +122,7 @@ public class SingleChoiceSharingStepBody<T> implements StepBody {
 
     linearLayout.addView(label);
 
-    RadioGroup radioGroup = new RadioGroup(parent.getContext());
+    final RadioGroup radioGroup = new RadioGroup(parent.getContext());
     radioGroup.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
     radioGroup.setDividerDrawable(
         ContextCompat.getDrawable(parent.getContext(), R.drawable.rsb_divider_empty_8dp));

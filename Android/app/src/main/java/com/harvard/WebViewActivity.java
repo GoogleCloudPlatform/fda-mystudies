@@ -52,7 +52,7 @@ public class WebViewActivity extends AppCompatActivity implements
     webView.getSettings().setDefaultTextEncodingName("utf-8");
 
     webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-    String webData = getIntent().getStringExtra("consent");
+    final String webData = getIntent().getStringExtra("consent");
     if (Build.VERSION.SDK_INT >= 24) {
       webView.loadDataWithBaseURL(null,
               Html.fromHtml((webData), Html.FROM_HTML_MODE_LEGACY).toString(), "text/html", "UTF-8", null);

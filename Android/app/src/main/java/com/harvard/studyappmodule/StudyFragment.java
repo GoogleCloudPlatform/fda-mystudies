@@ -186,7 +186,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     }
     if (!webserviceCall) {
       count = count + 1;
-      //      Log.e("check","count is "+ count);
       webserviceCall = true;
       callGetStudyListWebservice();
     }

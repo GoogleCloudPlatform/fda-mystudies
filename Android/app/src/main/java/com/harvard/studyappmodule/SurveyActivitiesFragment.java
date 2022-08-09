@@ -2111,14 +2111,6 @@ public class SurveyActivitiesFragment extends Fragment
           }
         }
       }
-      Collections.sort(
-          currentactivityList,
-          new Comparator<ActivitiesWS>() {
-            @Override
-            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
-              return studyList.getTitle().compareTo(t1.getTitle());
-            }
-          });
 
       ArrayList<ActivitiesWS> yetToStartOrResumeList = new ArrayList<>();
       ArrayList<ActivitiesWS> otherList = new ArrayList<>();
@@ -2193,14 +2185,6 @@ public class SurveyActivitiesFragment extends Fragment
           }
         }
       }
-      Collections.sort(
-          upcomingactivityList,
-          new Comparator<ActivitiesWS>() {
-            @Override
-            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
-              return studyList.getTitle().compareTo(t1.getTitle());
-            }
-          });
 
       for (int i = 0; i < completedactivityList.size(); i++) {
         for (int j = i; j < completedactivityList.size(); j++) {
@@ -2227,14 +2211,7 @@ public class SurveyActivitiesFragment extends Fragment
           }
         }
       }
-      Collections.sort(
-          completedactivityList,
-          new Comparator<ActivitiesWS>() {
-            @Override
-            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
-              return studyList.getTitle().compareTo(t1.getTitle());
-            }
-          });
+
       // Checking the Empty values
       if (currentactivityList.isEmpty()) {
         ActivitiesWS w = new ActivitiesWS();
@@ -2352,6 +2329,34 @@ public class SurveyActivitiesFragment extends Fragment
       if (completedActivityStatus.isEmpty()) {
         completedActivityStatus.add(new ActivityStatus());
       }
+
+      Collections.sort(
+          currentactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
+
+      Collections.sort(
+          upcomingactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
+
+      Collections.sort(
+          completedactivityList,
+          new Comparator<ActivitiesWS>() {
+            @Override
+            public int compare(ActivitiesWS studyList, ActivitiesWS t1) {
+              return studyList.getTitle().compareTo(t1.getTitle());
+            }
+          });
+
       currentRunStatusForActivities.addAll(currentActivityStatus);
       currentRunStatusForActivities.addAll(upcomingActivityStatus);
       currentRunStatusForActivities.addAll(completedActivityStatus);

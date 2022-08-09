@@ -252,7 +252,7 @@ public class ResourcesListAdapter extends RecyclerView.Adapter<ResourcesListAdap
                 } else {
                   message = context.getString(R.string.leaveStudy);
                 }
-                StudyList studyList =
+                final StudyList studyList =
                     dbServiceSubscriber.getStudiesDetails(
                         ((SurveyActivity) context).getStudyId(), realm);
                 AlertDialog.Builder builder =
