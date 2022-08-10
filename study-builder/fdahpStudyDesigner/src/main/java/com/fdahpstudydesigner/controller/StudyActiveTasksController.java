@@ -27,6 +27,8 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_ACTIVE_TASK_CREATED;
+import static com.fdahpstudydesigner.util.FdahpStudyDesignerConstants.ADD;
 
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
@@ -37,6 +39,7 @@ import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.StatisticImageListBo;
 import com.fdahpstudydesigner.bo.StudyBo;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.StudyActiveTasksService;
@@ -55,11 +58,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -70,7 +74,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class StudyActiveTasksController {
 
-  private static Logger logger = Logger.getLogger(StudyActiveTasksController.class.getName());
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(StudyActiveTasksController.class.getName());
 
   @Autowired private StudyActiveTasksService studyActiveTasksService;
 
@@ -82,7 +87,7 @@ public class StudyActiveTasksController {
 
   @RequestMapping("/adminStudies/activeTAskMarkAsCompleted.do")
   public ModelAndView activeTAskMarkAsCompleted(HttpServletRequest request) {
-    logger.info("StudyActiveTasksController - activeTAskMarkAsCompleted() - Starts");
+    logger.entry("begin activeTAskMarkAsCompleted()");
     ModelAndView mav = new ModelAndView("redirect:viewStudyActiveTasks.do");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -119,10 +124,7 @@ public class StudyActiveTasksController {
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
         message =
             studyService.markAsCompleted(
-                Integer.parseInt(studyId),
-                FdahpStudyDesignerConstants.ACTIVETASK_LIST,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.ACTIVETASK_LIST, sesObj, customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         auditRequest.setStudyId(customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
@@ -130,11 +132,12 @@ public class StudyActiveTasksController {
           auditRequest.setStudyVersion(studyBo.getVersion().toString());
           auditRequest.setAppId(studyBo.getAppId());
           auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
+          map.addAttribute("buttonText", FdahpStudyDesignerConstants.COMPLETED_BUTTON);
           request
               .getSession()
               .setAttribute(
                   sessionStudyCount + "sucMsg", propMap.get("complete.study.success.message"));
-          mav = new ModelAndView("redirect:/adminStudies/getResourceList.do", map);
+          mav = new ModelAndView("redirect:viewStudyActiveTasks.do", map);
         } else {
           request
               .getSession()
@@ -145,13 +148,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - consentMarkAsCompleted() - ERROR", e);
     }
-    logger.info("StudyActiveTasksController - consentMarkAsCompleted() - Ends");
+    logger.exit("consentMarkAsCompleted() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/deleteActiveTask.do", method = RequestMethod.POST)
   public void deleteActiveTask(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyActiveTasksController - deleteActiveTask - Starts");
+    logger.entry("begin deleteActiveTask()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -185,10 +188,7 @@ public class StudyActiveTasksController {
         if (!activeTaskInfoId.isEmpty() && !studyId.isEmpty()) {
           message =
               studyActiveTasksService.deleteActiveTask(
-                  Integer.valueOf(activeTaskInfoId),
-                  Integer.valueOf(studyId),
-                  sesObj,
-                  customStudyId);
+                  activeTaskInfoId, studyId, sesObj, customStudyId);
         }
         boolean markAsComplete = true;
         actMsg =
@@ -207,7 +207,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - deleteActiveTask - ERROR", e);
     }
-    logger.info("StudyActiveTasksController - deleteActiveTask - Ends");
+    logger.exit("deleteActiveTask() - Ends");
   }
 
   public List<String> getTimeRangeList(ActiveTaskBo activeTaskBo) {
@@ -257,7 +257,7 @@ public class StudyActiveTasksController {
 
   @RequestMapping("/adminStudies/navigateContentActiveTask.do")
   public ModelAndView navigateContentActiveTask(HttpServletRequest request) {
-    logger.info("StudyActiveTasksController - navigateContentActiveTask() - Starts");
+    logger.entry("begin navigateContentActiveTask()");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
@@ -315,12 +315,12 @@ public class StudyActiveTasksController {
         if (StringUtils.isNotEmpty(activeTaskInfoId)) {
           activeTaskBo =
               studyActiveTasksService.getActiveTaskById(
-                  Integer.parseInt(activeTaskInfoId), studyBo.getCustomStudyId());
+                  activeTaskInfoId, studyBo.getCustomStudyId());
           typeOfActiveTask = activeTaskBo.getTaskTypeId().toString();
         } else {
           activeTaskBo = new ActiveTaskBo();
-          activeTaskBo.setStudyId(Integer.parseInt(studyId));
-          activeTaskBo.setTaskTypeId(Integer.parseInt(typeOfActiveTask));
+          activeTaskBo.setStudyId(studyId);
+          activeTaskBo.setTaskTypeId(typeOfActiveTask);
         }
         if (StringUtils.isNotEmpty(actionType)) {
           activeTaskBo.setActionPage(actionType);
@@ -344,7 +344,7 @@ public class StudyActiveTasksController {
           map.addAttribute("_S", sessionStudyCount);
           for (ActiveTaskListBo activeTaskListBo : activeTaskListBos) {
             if (StringUtils.isNotEmpty(activeTaskListBo.getTaskName())
-                && (activeTaskListBo.getActiveTaskListId() == Integer.parseInt(typeOfActiveTask))) {
+                && (activeTaskListBo.getActiveTaskListId().equals(typeOfActiveTask))) {
               switch (activeTaskListBo.getTaskName()) {
                 case FdahpStudyDesignerConstants.FETAL_KICK_COUNTER:
                   mav = new ModelAndView("viewFetalStudyActiveTask", map);
@@ -365,13 +365,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - navigateContentActiveTask() - ERROR", e);
     }
-    logger.info("StudyActiveTasksController - navigateContentActiveTask() - Ends");
+    logger.exit("navigateContentActiveTask() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/saveActiveTaskSchedule.do", method = RequestMethod.POST)
   public void saveActiveTaskSchedule(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyActiveTasksController - saveQuestionnaireSchedule - Starts");
+    logger.entry("begin saveActiveTaskSchedule()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -402,6 +402,7 @@ public class StudyActiveTasksController {
               activeTaskBo.setModifiedBy(sesObj.getUserId());
               activeTaskBo.setModifiedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
             } else {
+              jsonobject.put("activeTaskCreated", "true");
               activeTaskBo.setCreatedBy(sesObj.getUserId());
               activeTaskBo.setCreatedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
               if ((activeTaskBo.getScheduleType() == null)
@@ -436,19 +437,19 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - saveQuestionnaireSchedule - Error", e);
     }
-    logger.info("StudyActiveTasksController - saveQuestionnaireSchedule - Ends");
+    logger.exit("saveActiveTaskSchedule() - Ends");
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateActiveTaskContent.do")
   public ModelAndView saveOrUpdateActiveTaskContent(
       HttpServletRequest request, ActiveTaskBo activeTaskBo) {
-    logger.info("StudyActiveTasksController - saveOrUpdateActiveTaskContent - Starts");
+    logger.entry("begin saveOrUpdateActiveTaskContent()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     ActiveTaskBo addActiveTaskBo = null;
     List<ActiveTaskMasterAttributeBo> taskMasterAttributeBos = new ArrayList<>();
     String buttonText = "";
-    Integer activeTaskInfoId = 0;
+    String activeTaskInfoId = null;
     String currentPage = null;
     String customStudyId = "";
     ModelMap map = new ModelMap();
@@ -514,14 +515,24 @@ public class StudyActiveTasksController {
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
-              request
-                  .getSession()
-                  .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully.");
-              return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
+              if (ADD.equalsIgnoreCase(activeTaskBo.getActionPage())
+                  && activeTaskBo.getActiveTaskCreated().equals("true")) {
+                request
+                    .getSession()
+                    .setAttribute(sessionStudyCount + "sucMsg", "Active task created successfully");
+              } else {
+                request
+                    .getSession()
+                    .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully");
+              }
 
+              return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
             } else {
-              auditLogEventHelper.logEvent(
-                  STUDY_ACTIVE_TASK_SAVED_OR_UPDATED, auditRequest, values);
+              StudyBuilderAuditEvent event =
+                  ADD.equalsIgnoreCase(activeTaskBo.getActionPage())
+                      ? STUDY_NEW_ACTIVE_TASK_CREATED
+                      : STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
+              auditLogEventHelper.logEvent(event, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(
@@ -535,7 +546,7 @@ public class StudyActiveTasksController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Task not added successfully.");
+                    "Task not added successfully");
             mav =
                 new ModelAndView(
                     "redirect:/adminStudies/viewStudyActiveTasks.do" + "#" + currentPage, map);
@@ -545,7 +556,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - saveOrUpdateActiveTaskContent - ERROR", e);
     }
-    logger.info("StudyActiveTasksController - saveOrUpdateActiveTaskContent - Ends");
+    logger.exit("saveOrUpdateActiveTaskContent() - Ends");
     return mav;
   }
 
@@ -554,7 +565,7 @@ public class StudyActiveTasksController {
       method = RequestMethod.POST)
   public ModelAndView saveorUpdateActiveTaskSchedule(
       HttpServletRequest request, ActiveTaskBo activeTaskBo) {
-    logger.info("StudyActiveTaskController - saveorUpdateActiveTaskSchedule - Starts");
+    logger.entry("begin saveorUpdateActiveTaskSchedule()");
     ModelAndView mav = new ModelAndView("questionnairePage");
     new ArrayList<>();
     StudyBo studyBo = null;
@@ -578,7 +589,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTaskController - saveorUpdateActiveTaskSchedule - Error", e);
     }
-    logger.info("StudyActiveTaskController - saveorUpdateActiveTaskSchedule - Ends");
+    logger.exit("saveorUpdateActiveTaskSchedule() - Ends");
     return mav;
   }
 
@@ -587,7 +598,7 @@ public class StudyActiveTasksController {
       method = RequestMethod.POST)
   public void validateActiveTaskShortTitleId(
       HttpServletRequest request, HttpServletResponse response) throws IOException {
-    logger.info("StudyActiveTasksController - validateActiveTaskShortTitleId() - Starts ");
+    logger.entry("begin validateActiveTaskShortTitleId()");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -641,11 +652,7 @@ public class StudyActiveTasksController {
                 : request.getParameter("activeTaskAttIdName");
         flag =
             studyActiveTasksService.validateActiveTaskAttrById(
-                Integer.parseInt(studyId),
-                activeTaskAttName,
-                activeTaskAttIdVal,
-                activeTaskAttIdName,
-                customStudyId);
+                studyId, activeTaskAttName, activeTaskAttIdVal, activeTaskAttIdName, customStudyId);
         if (flag) {
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
@@ -653,7 +660,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - validateActiveTaskShortTitleId() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksController - validateActiveTaskShortTitleId() - Ends ");
+    logger.exit("validateActiveTaskShortTitleId() - Ends ");
     jsonobject.put("message", message);
     response.setContentType("application/json");
     out = response.getWriter();
@@ -665,7 +672,7 @@ public class StudyActiveTasksController {
       method = RequestMethod.POST)
   public void validateActiveTaskStatShortTitleId(
       HttpServletRequest request, HttpServletResponse response) throws IOException {
-    logger.info("StudyActiveTasksController - validateActiveTaskShortTitleId() - Starts ");
+    logger.entry("begin validateActiveTaskShortTitleId()");
     JSONObject jsonobject = new JSONObject();
     JSONArray statJsonArray = null;
     PrintWriter out;
@@ -721,7 +728,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - validateActiveTaskShortTitleId() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksController - validateActiveTaskShortTitleId() - Ends ");
+    logger.exit("validateActiveTaskShortTitleId() - Ends ");
     jsonobject.put("message", message);
     response.setContentType("application/json");
     out = response.getWriter();
@@ -730,7 +737,7 @@ public class StudyActiveTasksController {
 
   @RequestMapping("/adminStudies/viewActiveTask.do")
   public ModelAndView viewActiveTask(HttpServletRequest request) {
-    logger.info("StudyActiveTasksController - viewActiveTask() - Starts");
+    logger.entry("begin viewActiveTask()");
     ModelAndView mav = new ModelAndView();
     ModelMap map = new ModelMap();
     ActiveTaskBo activeTaskBo = null;
@@ -844,7 +851,7 @@ public class StudyActiveTasksController {
           if (StringUtils.isNotEmpty(activeTaskInfoId)) {
             activeTaskBo =
                 studyActiveTasksService.getActiveTaskById(
-                    Integer.parseInt(activeTaskInfoId), studyBo.getCustomStudyId());
+                    activeTaskInfoId, studyBo.getCustomStudyId());
             map.addAttribute("activeTaskBo", activeTaskBo);
           }
           mav = new ModelAndView("viewStudyActiveTask", map);
@@ -855,13 +862,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - viewActiveTask() - ERROR", e);
     }
-    logger.info("StudyActiveTasksController - viewActiveTask() - Ends");
+    logger.exit("viewActiveTask() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/viewScheduledActiveTask.do")
   public ModelAndView viewScheduledActiveTask(HttpServletRequest request) {
-    logger.info("StudyActiveTaskController - viewScheduledActiveTask - Starts");
+    logger.entry("begin viewScheduledActiveTask()");
     ModelAndView mav = new ModelAndView("questionnairePage");
     ModelMap map = new ModelMap();
     String sucMsg = "";
@@ -943,8 +950,7 @@ public class StudyActiveTasksController {
         }
         if ((null != activeTaskId) && !activeTaskId.isEmpty() && (null != studyBo)) {
           activeTaskBo =
-              studyActiveTasksService.getActiveTaskById(
-                  Integer.valueOf(activeTaskId), studyBo.getCustomStudyId());
+              studyActiveTasksService.getActiveTaskById(activeTaskId, studyBo.getCustomStudyId());
           if (activeTaskBo != null) {
             map.addAttribute("customCount", activeTaskBo.getActiveTaskCustomScheduleBo().size());
             map.addAttribute("count", activeTaskBo.getActiveTaskFrequenciesList().size());
@@ -957,13 +963,13 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTaskController - viewScheduledActiveTask - Error", e);
     }
-    logger.info("StudyActiveTaskController - viewScheduledActiveTask - Ends");
+    logger.exit("viewScheduledActiveTask() - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/viewStudyActiveTasks.do")
   public ModelAndView viewStudyActiveTasks(HttpServletRequest request) {
-    logger.info("StudyActiveTasksController - viewStudyActiveTasks - Starts");
+    logger.entry("begin viewStudyActiveTasks()");
     ModelAndView mav = new ModelAndView("redirect:/adminStudies/studyList.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
@@ -1075,7 +1081,7 @@ public class StudyActiveTasksController {
     } catch (Exception e) {
       logger.error("StudyActiveTasksController - viewStudyActiveTasks - ERROR", e);
     }
-    logger.info("StudyActiveTasksController - viewStudyActiveTasks - Ends");
+    logger.exit("viewStudyActiveTasks() - Ends");
     return mav;
   }
 }

@@ -91,7 +91,11 @@
 
     <script src="/studybuilder/js/underscore-min.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
-
+	<style>
+	  .arrowLeftSugg {
+	    left: 95.5%; !important;
+	    }
+  	</style>
   </head>
   <body class="loading background__img">
     <div id="loader">
@@ -122,7 +126,7 @@
                     <input type="text" class="input-field wow_input" id=""
                            name="firstName" placeholder="First Name"
                            value="${fn:escapeXml(userBO.firstName)}" maxlength="50"
-                           required autocomplete="off"/>
+                           required data-error="Please fill out this field" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -132,7 +136,7 @@
                     <input type="text" class="input-field wow_input" id=""
                            name="lastName" placeholder="Last Name"
                            value="${fn:escapeXml(userBO.lastName)}" maxlength="50"
-                           required autocomplete="off"/>
+                           required data-error="Please fill out this field" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -142,9 +146,9 @@
                            class="input-field wow_input validateUserEmail"
                            name="userEmail" placeholder="Email Address"
                            value="${userBO.userEmail}" oldVal="${userBO.userEmail}"
-                           pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                           pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
                            data-pattern-error="Email address is invalid" maxlength="100"
-                           required readonly="readonly" autocomplete="off"/>
+                           required data-error="Please fill out this field" readonly="readonly" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
@@ -161,9 +165,9 @@
                   <div class="mb-lg form-group">
                     <input type="password" class="input-field wow_input"
                            id="password" maxlength="64" data-minlength="8"
-                           placeholder="Password*" required
+                           placeholder="Password*" required data-error="Please fill out this field" 
                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
-                           autocomplete="off" data-error="Password is invalid"/>
+                           autocomplete="off" data-pattern-error="Password is invalid"/>
                     <div class="help-block with-errors red-txt"></div>
                     <span class="arrowLeftSugg"></span>
 
@@ -174,16 +178,16 @@
                     <input type="password" class="input-field wow_input"
                            id="cfnPassword" name="" maxlength="64"
                            data-match="#password"
-                           data-match-error="Whoops, these don't match"
-                           placeholder="Confirm password*" required autocomplete="off"/>
+                           data-match-error="Passwords do not match"
+                           placeholder="Confirm password*" required data-error="Please fill out this field" autocomplete="off"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-xs-12">
-                  <div class="mb-lg form-group">
+                <div class="col-xs-12 text-center">
+                  <div class="mb-lg form-group text-center">
                     <span class="checkbox checkbox-inline"><input
                         type="checkbox" id="inlineCheckbox" value="option1"
-                        required="required"> <label for="inlineCheckbox">
+                        required="required" data-error="Please check this box if you want to proceed" > <label for="inlineCheckbox">
                       <span class="white__text">I agree to the
                         <a
                             href="/studybuilder/terms.do"
@@ -196,9 +200,10 @@
                         </a>
                         associated with using this portal
                       </span>
+                       <div class="help-block with-errors red-txt"></div>
                     </label>
                     </span>
-                    <div class="help-block with-errors red-txt"></div>
+                   
                   </div>
                 </div>
                 <div class="clearfix"></div>
@@ -206,7 +211,9 @@
                     class="mb-lg form-group text-center col-md-4 col-lg-4 boxcenter">
                   <button type="button" class="btn lg-btn" id="signPasswordBut">Submit</button>
                 </div>
+             
               </c:if>
+             
               <c:if test="${not isValidToken}">
                 <p class="passwordExp text-center">
                   <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
@@ -218,7 +225,7 @@
               <input type="hidden" name="securityToken" value="${securityToken}"/>
               <input type="password" name="password" id="hidePass"
                      style="display: none;"/>
-            </form:form>
+                      </form:form>
           </div>
           <!--container-->
           <jsp:include page="../templates/copyright.jsp">
@@ -306,14 +313,14 @@
           if (errMsg.length > 0) {
             $("#errMsg").text(errMsg);
             $("#errMsg").show("fast");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
           var sucMsg = '${sucMsg}';
           if (sucMsg.length > 0) {
             $("#sucMsg").text(sucMsg);
             $("#sucMsg").show("fast");
             $("#errMsg").hide("fast");
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
 

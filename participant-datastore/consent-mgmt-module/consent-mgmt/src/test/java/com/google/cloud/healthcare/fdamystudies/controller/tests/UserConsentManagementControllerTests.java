@@ -102,7 +102,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.VERSION_1_0, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_0);
     ConsentStatusBean consentStatus =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE, null);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
 
     // Invoke /updateEligibilityConsentStatus to save study consent first time
@@ -209,7 +209,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.ENCODED_CONTENT_1_0_UPDATED);
     ConsentStatusBean consentStatus =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE, null);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
 
     // Invoke http api endpoint to Update study consent pdf content value
@@ -314,7 +314,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.VERSION_1_2, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
     ConsentStatusBean consentStatus =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE, null);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
 
     // Invoke http api endpoint to Add new study consent pdf version
@@ -499,7 +499,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentReqBean(null, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_0);
     consentRequest =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, IdGenerator.id(), true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH,
+            IdGenerator.id(),
+            true,
+            consent,
+            Constants.SHARING_VALUE,
+            null);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
@@ -517,7 +522,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     consent = new ConsentReqBean(Constants.VERSION_1_0, Constants.STATUS_COMPLETE, null);
     consentRequest =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, IdGenerator.id(), true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH,
+            IdGenerator.id(),
+            true,
+            consent,
+            Constants.SHARING_VALUE,
+            null);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
@@ -535,7 +545,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     consent = new ConsentReqBean(Constants.VERSION_1_0, null, Constants.ENCODED_CONTENT_1_0);
     consentRequest =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, IdGenerator.id(), true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH,
+            IdGenerator.id(),
+            true,
+            consent,
+            Constants.SHARING_VALUE,
+            null);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
@@ -554,7 +569,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentReqBean(
             Constants.VERSION_1_0, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_0);
     consentRequest =
-        new ConsentStatusBean(null, IdGenerator.id(), true, consent, Constants.SHARING_VALUE);
+        new ConsentStatusBean(null, IdGenerator.id(), true, consent, Constants.SHARING_VALUE, null);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
@@ -574,7 +589,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.VERSION_1_0, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_0);
     consentRequest =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, IdGenerator.id(), true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH,
+            IdGenerator.id(),
+            true,
+            consent,
+            Constants.SHARING_VALUE,
+            null);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     headers.remove(Constants.USER_ID_HEADER);
@@ -595,7 +615,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.VERSION_1_0, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_0);
     consentRequest =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, IdGenerator.id(), true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH,
+            IdGenerator.id(),
+            true,
+            consent,
+            Constants.SHARING_VALUE,
+            null);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     headers.remove(Constants.USER_ID_HEADER);
@@ -616,7 +641,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     consent = new ConsentReqBean("", Constants.STATUS_COMPLETE, Constants.CONTENT_1_0);
     consentRequest =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, IdGenerator.id(), false, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH,
+            IdGenerator.id(),
+            false,
+            consent,
+            Constants.SHARING_VALUE,
+            null);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     headers.remove(Constants.USER_ID_HEADER);
@@ -644,7 +674,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentReqBean(Constants.VERSION_1_2, Constants.STATUS_COMPLETE, Constants.CONTENT_1_0);
     ConsentStatusBean consentRequest =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE, null);
     String requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
@@ -663,7 +693,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentReqBean(Constants.VERSION_1_3, Constants.STATUS_COMPLETE, Constants.CONTENT_1_0);
     consentRequest =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH, SITE_ID, true, consent, Constants.SHARING_VALUE, null);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
@@ -690,7 +720,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.VERSION_VERY_LONG, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
     ConsentStatusBean consentStatus =
         new ConsentStatusBean(
-            Constants.STUDYOF_HEALTH, IdGenerator.id(), true, consent, Constants.SHARING_VALUE);
+            Constants.STUDYOF_HEALTH,
+            IdGenerator.id(),
+            true,
+            consent,
+            Constants.SHARING_VALUE,
+            null);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
     mockMvc
         .perform(

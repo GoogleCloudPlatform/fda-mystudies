@@ -973,7 +973,7 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
 + (BOOL)supportsSecureCoding {
     return YES;
 }
-
+//new
 - (ORKQuestionType)questionType {
     return (_style == ORKChoiceAnswerStyleSingleChoice) ? ORKQuestionTypeSingleChoice : ORKQuestionTypeMultipleChoice;
 }
@@ -1194,16 +1194,18 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
 }
 
 - (ORKAnswerFormat *)impliedAnswerFormat {
-    if (!_yes.length) {
-        _yes = ORKLocalizedString(@"BOOL_YES", nil);
-    }
-    if (!_no.length) {
-        _no = ORKLocalizedString(@"BOOL_NO", nil);
-    }
-    
-    return [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice
-                                            textChoices:@[[ORKTextChoice choiceWithText:_yes value:@(YES)],
-                                                          [ORKTextChoice choiceWithText:_no value:@(NO)]]];
+  if (!_yes.length) {
+      _yes = ORKLocalizedString(@"BOOL_YES", nil);
+  }
+  if (!_no.length) {
+      _no = ORKLocalizedString(@"BOOL_NO", nil);
+  }
+  
+  return [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleMultipleChoice
+                                          textChoices:@[
+    [ORKTextChoice choiceWithText:_yes detailText:@("") value:@(YES) exclusive:(YES)],
+    [ORKTextChoice choiceWithText:_no detailText:@("") value:@(NO) exclusive:(YES)]
+                                                        ]];
 }
 
 - (Class)questionResultClass {
@@ -2416,10 +2418,14 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
 - (BOOL)isTextRegularExpressionValidWithString:(NSString *)text {
     BOOL isValid = YES;
     if (self.validationRegularExpression) {
-        NSUInteger regularExpressionMatches = [_validationRegularExpression numberOfMatchesInString:text
-                                                                                            options:(NSMatchingOptions)0
-                                                                                              range:NSMakeRange(0, [text length])];
-        isValid = (regularExpressionMatches != 0);
+        NSString *someRegexp = self.validationRegularExpression.pattern;
+        NSPredicate *myTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", someRegexp];
+
+        if ([myTest evaluateWithObject: text]) {
+            return YES;
+        } else {
+            return NO;
+        }
     }
     return isValid;
 }

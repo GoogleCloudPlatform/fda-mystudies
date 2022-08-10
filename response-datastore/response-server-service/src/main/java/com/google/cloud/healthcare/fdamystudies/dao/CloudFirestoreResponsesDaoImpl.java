@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Backoff;
@@ -46,8 +46,8 @@ import org.springframework.stereotype.Repository;
 public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
   @Autowired private ApplicationConfiguration appConfig;
   private Firestore responsesDb;
-  private static final Logger logger =
-      LoggerFactory.getLogger(CloudFirestoreResponsesDaoImpl.class);
+  private XLogger logger =
+      XLoggerFactory.getXLogger(CloudFirestoreResponsesDaoImpl.class.getName());
 
   @Override
   @Retryable(
@@ -57,6 +57,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
   public void saveStudyMetadata(
       String studyCollectionName, String studyId, Map<String, Object> dataToStore)
       throws ProcessResponseException {
+    logger.entry("begin saveStudyMetadata()");
     if (studyCollectionName != null && studyId != null && dataToStore != null) {
       try {
 
@@ -93,7 +94,22 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       Map<String, Object> dataToStoreActivityResults)
       throws ProcessResponseException {
     try {
+      logger.entry("begin saveActivityResponseData()");
       initializeFirestore();
+
+      // Check if data already exists before updating it. This is to account for discrepancies
+      // created on loss of
+      // connectivity where there is a potential of data getting created twice
+      String participantId =
+          (String) dataToStoreActivityResults.get(AppConstants.PARTICIPANT_ID_KEY);
+      String activityId = (String) dataToStoreActivityResults.get(AppConstants.ACTIVITY_ID_KEY);
+      String activityRunId =
+          (String) dataToStoreActivityResults.get(AppConstants.ACTIVITY_RUN_ID_KEY);
+      if (isResponseExists(
+          studyCollectionName, studyId, participantId, activityId, activityRunId)) {
+        logger.info("Response exists. Returning without saving. Study ID " + studyId);
+        return;
+      }
 
       Map<String, Object> studyVersionMap = new HashMap<>();
       studyVersionMap.put("studyVersion", dataToStoreActivityResults.get("studyVersion"));
@@ -126,6 +142,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       String questionKey)
       throws ProcessResponseException {
     try {
+      logger.entry("begin getActivityResponseDataForParticipant()");
       initializeFirestore();
       // Firestore does not allow compound queries without creating an index. Indexes can be created
       // only through the console or CLI, not programmatically. So this method will not depend on
@@ -178,6 +195,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       String participantId)
       throws ProcessResponseException {
     try {
+      logger.entry("begin deleteActivityResponseDataForParticipant()");
       initializeFirestore();
       final Query activitiesQueryByParticipantId =
           this.responsesDb
@@ -216,6 +234,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
   public void updateWithdrawalStatusForParticipant(
       String studyCollectionName, String studyId, String participantId)
       throws ProcessResponseException {
+    logger.entry("begin updateWithdrawalStatusForParticipant()");
     try {
       initializeFirestore();
       final Query activitiesQueryByParticipantId =
@@ -258,6 +277,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       String participantId,
       String activityId)
       throws ProcessResponseException {
+    logger.entry("begin getResponseDataScenarios()");
     initializeFirestore();
     // Sample queries
     // This is example code, to retrieve the response.
@@ -353,6 +373,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       String participantId,
       List<Map<String, Object>> activityResponseMapList,
       StoredResponseBean storedResponseBean) {
+    logger.entry("begin convertResponseDataToBean()");
     List<ResponseRows> responsesList = new ArrayList<>();
     for (Map<String, Object> activityResponseMap : activityResponseMapList) {
       ResponseRows responsesRow = new ResponseRows();
@@ -400,6 +421,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
   }
 
   private void addResponsesToMap(ResponseRows responsesRow, List<Object> results) {
+    logger.entry("begin addResponsesToMap()");
     if (results != null) {
       for (Object result : results) {
         if (result instanceof Map) {
@@ -476,5 +498,35 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
     retStoredResponseBean.setSchemaName(schemaNameList);
     retStoredResponseBean.setQueryName(AppConstants.RESPONSE_DATA_QUERY_NAME_LEGACY);
     return retStoredResponseBean;
+  }
+
+  private boolean isResponseExists(
+      String studyCollectionName,
+      String studyId,
+      String participantId,
+      String activityId,
+      String activityRunId) {
+    initializeFirestore();
+    // 1. Check if the
+    try {
+      final Query queryByActivityRuns =
+          this.responsesDb
+              .collection(studyCollectionName)
+              .document(studyId)
+              .collection(AppConstants.ACTIVITIES_COLLECTION_NAME)
+              .whereEqualTo(AppConstants.PARTICIPANT_ID_KEY, participantId)
+              .whereEqualTo(AppConstants.ACTIVITY_ID_KEY, activityId)
+              .whereEqualTo(AppConstants.ACTIVITY_RUN_ID_KEY, activityRunId);
+      final ApiFuture<QuerySnapshot> querySnapshot = queryByActivityRuns.get();
+      List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+      if (!documents.isEmpty()) {
+        return true;
+      }
+      // if
+    } catch (Exception e) {
+      logger.error("isResponseExists() method. Exception is: " + e.getMessage(), e);
+      return false;
+    }
+    return false;
   }
 }

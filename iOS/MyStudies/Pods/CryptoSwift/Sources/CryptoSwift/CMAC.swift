@@ -1,7 +1,7 @@
 //
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2021 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -25,18 +25,20 @@ public class CMAC: Authenticator {
   private static let Rb: Array<UInt8> = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x87]
 
   public init(key: Array<UInt8>) throws {
-    if key.count != 16 {
-      throw Error.wrongKeyLength
-    }
     self.key = SecureBytes(bytes: key)
   }
 
   // MARK: Authenticator
 
+  // AES-CMAC
   public func authenticate(_ bytes: Array<UInt8>) throws -> Array<UInt8> {
-    let aes = try AES(key: Array(key), blockMode: CBC(iv: CMAC.Zero), padding: .noPadding)
+    let cipher = try AES(key: Array(key), blockMode: CBC(iv: CMAC.Zero), padding: .noPadding)
+    return try self.authenticate(bytes, cipher: cipher)
+  }
 
-    let l = try aes.encrypt(CMAC.Zero)
+  // CMAC using a Cipher
+  public func authenticate(_ bytes: Array<UInt8>, cipher: Cipher) throws -> Array<UInt8> {
+    let l = try cipher.encrypt(CMAC.Zero)
     var subKey1 = self.leftShiftOneBit(l)
     if (l[0] & 0x80) != 0 {
       subKey1 = xor(CMAC.Rb, subKey1)
@@ -70,11 +72,11 @@ public class CMAC: Authenticator {
     var y = Array<UInt8>(repeating: 0x00, count: CMAC.BlockSize)
     for block in blocks {
       y = xor(block, x)
-      x = try aes.encrypt(y)
+      x = try cipher.encrypt(y)
     }
     // the difference between CMAC and CBC-MAC is that CMAC xors the final block with a secret value
     y = self.process(lastBlock: lastBlock, with: x)
-    return try aes.encrypt(y)
+    return try cipher.encrypt(y)
   }
 
   func process(lastBlock: ArraySlice<UInt8>, with x: [UInt8]) -> [UInt8] {

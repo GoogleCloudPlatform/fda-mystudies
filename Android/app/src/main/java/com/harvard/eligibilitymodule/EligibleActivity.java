@@ -61,8 +61,8 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
   private EligibilityConsent eligibilityConsent;
   private DbServiceSubscriber dbServiceSubscriber;
   private static final int UPDATE_USER_PREFERENCE_RESPONSE_CODE = 200;
-  private Realm realm;
   private CustomFirebaseAnalytics analyticsInstance;
+  private Realm realm;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,7 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
     setContentView(R.layout.activity_eligible);
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
 
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     TextView button = (TextView) findViewById(R.id.continueButton);
@@ -83,7 +84,6 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
                 getString(R.string.eligiblity_confirmation_message));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-
             eligibilityConsent =
                 dbServiceSubscriber.getConsentMetadata(
                     getIntent().getStringExtra("studyId"), realm);

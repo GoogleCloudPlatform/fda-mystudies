@@ -4,7 +4,7 @@
       <div class="max__w__1280 m-none">
         <div class="flex__justify__space-between">
           <div
-            class="subheader__title flex__justify__space-between align__items__baseline"
+            class="subheader__title flex__justify__space-between align__items__baseline scrollable-element"
           >
             <div>
               <a
@@ -75,7 +75,24 @@
                 </div>
                 <div>
                   <div class="banner__label">
-                    {{ siteParticipants.participantRegistryDetail.customAppId }}
+                    {{
+                      siteParticipants.participantRegistryDetail.customAppId
+                    }}-
+                    <span
+                      [ngClass]="
+                        siteParticipants.participantRegistryDetail.appStatus ===
+                        'Active'
+                          ? 'active_text'
+                          : 'deactivated_text'
+                      "
+                    >
+                      {{
+                        siteParticipants.participantRegistryDetail.appStatus ===
+                        "Active"
+                          ? "ACTIVE"
+                          : "DEACTIVATED"
+                      }}
+                    </span>
                   </div>
                   <div class="banner__text">
                     {{ siteParticipants.participantRegistryDetail.appName }}
@@ -189,7 +206,7 @@
               siteParticipants.participantRegistryDetail.siteStatus === 0
             "
           >
-            <div class="dropdown">
+            <!-- <div class="dropdown">
               <button
                 name="btnToggleParticipant"
                 class="dropbtn btn banner__primary__btn mr-sm font12"
@@ -221,6 +238,49 @@
                   </div>
                 </div>
                 <div class="flex__row__reverse">
+                  <a
+                    download="Email_Import_Template"
+                    target="_blank"
+                    href="assets/Email_Import_Template.xlsx"
+                    class="p-none"
+                  >
+                    <div class="download__text">Download template</div>
+                  </a>
+                </div>
+              </div>
+            </div> -->
+            <div class="dropdown">
+              <button
+                name="btnToggleParticipant"
+                class="dropbtn btn banner__primary__btn mr-sm tnsb"
+                (click)="toggleParticipant($event)"
+              >
+                Add participants
+                <i class="fa fa-caret-down arrow_clr__white"></i>
+              </button>
+              <div
+                [ngClass]="toggleDisplay ? 'show' : ''"
+                class="dropdown-content participantSlideDown"
+              >
+                <div class="flex__justify__space-between mb-xs">
+                  <div class="mr-sm">
+                    <button
+                      class="primary__btn font__bold"
+                      (click)="openModal(addEmail)"
+                    >
+                      Add email
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      class="primary__btn font__bold"
+                      (click)="openModal(importEmaillist)"
+                    >
+                      Import email list
+                    </button>
+                  </div>
+                </div>
+                <div class="flex__row__reverse pr-3">
                   <a
                     download="Email_Import_Template"
                     target="_blank"
@@ -465,7 +525,7 @@
       <div class="tab-content site__table">
         <div>
           <table
-            class="table table-striped custom__table"
+            class="table table-striped custom__table custom-table-css"
             [mfData]="
               siteParticipants.participantRegistryDetail.registryParticipants
             "
@@ -475,7 +535,7 @@
             <thead class="custom__thead">
               <tr>
                 <span
-                  class="sort__by__text mobile__view mr-sm"
+                  class="sort__by__text mobile__view mr-sm pt-2"
                   style="background: transparent"
                 >
                   Sort by:
@@ -643,8 +703,16 @@
                             enrollmentStatus.NotEligile
                         "
                       >
+                        <label
+                          [ngClass]="
+                            siteParticipants.participantRegistryDetail
+                              .sitePermission === permission.ViewAndEdit
+                              ? 'chk_box_hidden'
+                              : 'chk_box_hidden2'
+                          "
+                          for="{{ participant.id }}"
+                        ></label>
                         <span
-                          [ngClass]="{'ml-4 pl-3': invitedYetToEnrollCount > 0}"
                           class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
@@ -714,21 +782,28 @@
                   {{ participant.enrollmentDate }}
                 </td>
               </tr>
+            </tbody>
 
+            <tfoot class="custom__tfoot">
+              <tr>
+                <td colspan="4" class="mob_tbl_footer_text_center">
+                  <mfBootstrapPaginator></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+
+            <tfoot>
               <tr
                 *ngIf="
                   siteParticipants.participantRegistryDetail
                     .registryParticipants.length === 0
                 "
               >
-                <td colspan="4" class="text-center">No records found</td>
-              </tr>
-            </tbody>
-
-            <tfoot class="custom__tfoot">
-              <tr>
-                <td colspan="4">
-                  <mfBootstrapPaginator></mfBootstrapPaginator>
+                <td
+                  colspan="4"
+                  class="text-center font12 txt__light-gray mob_tbl_footer_text_center"
+                >
+                  No records found
                 </td>
               </tr>
             </tfoot>

@@ -109,6 +109,8 @@ public final class AuthScimConstants {
 
   public static final String SOURCE = "source";
 
+  public static final String DEEPLINK_URL = "deeplinkUrl";
+
   public static final String MOBILE_PLATFORM_COOKIE = "mystudies_mobilePlatform";
 
   public static final String SOURCE_COOKIE = "mystudies_source";
@@ -120,6 +122,12 @@ public final class AuthScimConstants {
   public static final String APP_ID_COOKIE = "mystudies_appId";
 
   public static final String APP_NAME_COOKIE = "mystudies_appName";
+
+  public static final String FROM_EMAIL_COOKIE = "mystudies_fromEmail";
+
+  public static final String SUPPORT_EMAIL_COOKIE = "mystudies_supportEmail";
+
+  public static final String DEEPLINK_URL_COOKIE = "mystudies_deeplinkUrl";
 
   public static final String LOGIN_CHALLENGE_COOKIE = "mystudies_login_challenge";
 

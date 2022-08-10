@@ -9,9 +9,7 @@
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_QUESTIONNAIRE_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_DELETED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_IN_FORM_DELETED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -21,6 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fdahpstudydesigner.bo.QuestionnaireBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.SessionObject;
+import java.util.HashMap;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -66,34 +67,23 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldCreateNewStudyActiveTask() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-
-    mockMvc
-        .perform(
-            post(PathMappingUri.SAVE_OR_UPDATE_QUETIONNAIR_SCHEDULE.getPath())
-                .headers(headers)
-                .sessionAttr(CUSTOM_STUDY_ID_ATTR_NAME, "customStudyId")
-                .sessionAttrs(getSessionAttributes()))
-        .andDo(print())
-        .andExpect(status().isFound())
-        .andExpect(view().name("redirect:/adminStudies/viewStudyQuestionnaires.do"));
-
-    verifyAuditEventCall(STUDY_NEW_QUESTIONNAIRE_CREATED);
-  }
-
-  @Test
   public void shouldSaveOrUpdateStudyActiveTask() throws Exception {
     HttpHeaders headers = getCommonHeaders();
+
+    SessionObject sessionObj = getSessionObject();
+    sessionObj.setUserId("1");
+    HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, sessionObj);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_QUETIONNAIR_SCHEDULE.getPath())
             .headers(headers)
             .sessionAttr(CUSTOM_STUDY_ID_ATTR_NAME, "OpenStudy003")
-            .sessionAttrs(getSessionAttributes());
+            .sessionAttr(STUDY_ID_ATTR_NAME, "678599")
+            .sessionAttrs(sessionAttributes);
 
     QuestionnaireBo questionnaireBo = new QuestionnaireBo();
-    questionnaireBo.setId(2);
+    questionnaireBo.setId("2");
     questionnaireBo.setQuestionnaireCustomScheduleBo(null);
     questionnaireBo.setQuestionnairesFrequenciesBo(null);
     questionnaireBo.setQuestionnairesFrequenciesList(null);
@@ -106,7 +96,7 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewStudyQuestionnaires.do"));
 
-    verifyAuditEventCall(STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED);
+    verifyAuditEventCall(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE);
   }
 
   @Test

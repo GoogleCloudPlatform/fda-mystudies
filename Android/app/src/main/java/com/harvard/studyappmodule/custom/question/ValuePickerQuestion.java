@@ -31,7 +31,6 @@ import com.harvard.R;
 import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.utils.CustomFirebaseAnalytics;
-
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.result.StepResult;
@@ -112,7 +111,7 @@ public class ValuePickerQuestion<T> implements StepBody {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                context.getString(R.string.text_view));
+                inflater.getContext().getString(R.string.text_view));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             showDialog(inflater.getContext());

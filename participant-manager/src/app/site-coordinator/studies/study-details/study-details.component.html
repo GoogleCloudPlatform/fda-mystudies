@@ -1,10 +1,12 @@
 <ng-container *ngIf="studyDetail$ | async as studyDetails">
   <div *ngIf="studyDetails && studyDetails.participantRegistryDetail">
-    <div class="subheader p-none p-3 study-participant-registry">
-      <div class="max__w__1280 m-none flex__justify__space-between">
+    <div class="subheader p-none cust_p-3 study-participant-registry">
+      <div
+        class="max__w__1280 m-none flex__justify__space-between scrollable-element tab_sub_menu"
+      >
         <div class="flex__justify__space-between">
           <div
-            class="subheader__title flex__justify__space-between align__items__baseline"
+            class="subheader__title flex__justify__space-between align__items__baseline overflow__auto"
           >
             <div>
               <a (click)="backClicked()" class="cursor__pointer">
@@ -38,14 +40,15 @@
                   "
                   class="pr-xlg"
                 >
-                  <div class="banner__label">Site</div>
-                  <div class="banner__text">NA (Open study)</div>
+                  <div class="banner__label mob_textpre">Site</div>
+                  <div class="banner__text mob_textpre">NA (Open study)</div>
                 </div>
                 <div class="pr-xlg">
-                  <div class="banner__label">
+                  <div class="banner__label mob_textpre">
                     {{ studyDetails.participantRegistryDetail.customStudyId }}
                     -
                     <span
+                      class="mob_textpre"
                       [ngClass]="{
                         active_text:
                           studyDetails.participantRegistryDetail.studyStatus ===
@@ -61,15 +64,32 @@
                       {{ studyDetails.participantRegistryDetail.studyStatus }}
                     </span>
                   </div>
-                  <div class="banner__text">
+                  <div class="banner__text mob_textpre">
                     {{ studyDetails.participantRegistryDetail.studyName }}
                   </div>
                 </div>
                 <div class="pr-xlg">
-                  <div class="banner__label">
-                    {{ studyDetails.participantRegistryDetail.customAppId }}
+                  <div class="banner__label mob_textpre">
+                    {{ studyDetails.participantRegistryDetail.customAppId }} -
+                    <!-- appStatus -->
+                    <span
+                      class="mob_textpre"
+                      [ngClass]="{
+                        active_text:
+                          studyDetails.participantRegistryDetail.appStatus ===
+                          appStatus.Active,
+                        paused_text:
+                          studyDetails.participantRegistryDetail.appStatus ===
+                          appStatus.Paused,
+                        deactivated_text:
+                          studyDetails.participantRegistryDetail.appStatus ===
+                          appStatus.Deactivated
+                      }"
+                    >
+                      {{ studyDetails.participantRegistryDetail.appStatus }}
+                    </span>
                   </div>
-                  <div class="banner__text">
+                  <div class="banner__text mob_textpre">
                     {{ studyDetails.participantRegistryDetail.appName }}
                   </div>
                 </div>
@@ -83,7 +103,7 @@
           "
           class="pt-1"
         >
-          <div class="enrollment-label mt-4">
+          <div class="enrollment-label mt-4 mob_textpre">
             <span class="btn mt-2 enrol_btn p-none cursor__text">
               Enrollment target:
               {{ studyDetails.participantRegistryDetail.targetEnrollment }}
@@ -108,7 +128,7 @@
     <div class="max__w__1280 m-none site__participant">
       <div class="cards1 m-none">
         <table
-          class="table table-striped custom__table"
+          class="table table-striped custom__table custom-table-css"
           [mfData]="
             studyDetails.participantRegistryDetail.registryParticipants
               | paginate
@@ -207,19 +227,11 @@
               </td>
               <td>{{ lists.enrollmentDate }}</td>
             </tr>
-            <tr
-              *ngIf="
-                studyDetails.participantRegistryDetail.registryParticipants
-                  .length === 0
-              "
-            >
-              <td colspan="5" class="text-center">No records found</td>
-            </tr>
           </tbody>
 
           <tfoot class="custom__tfoot">
             <tr>
-              <td colspan="5">
+              <td colspan="5" class="mob_tbl_footer_text_center">
                 <div class="text-center">
                   <pagination-controls
                     pagination-template
@@ -227,6 +239,22 @@
                     (pageChange)="pageChange($event)"
                   ></pagination-controls>
                 </div>
+              </td>
+            </tr>
+          </tfoot>
+
+          <tfoot>
+            <tr
+              *ngIf="
+                studyDetails.participantRegistryDetail.registryParticipants
+                  .length === 0
+              "
+            >
+              <td
+                colspan="5"
+                class="text-center font12 txt__light-gray mob_tbl_footer_text_center"
+              >
+                No records found
               </td>
             </tr>
           </tfoot>

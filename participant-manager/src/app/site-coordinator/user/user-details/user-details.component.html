@@ -1,7 +1,7 @@
 <section class="subheader p-none pl-none">
   <div class="max__w__850 m-none">
     <div class="flex__justify__space-between">
-      <div>
+      <div class="col-xs-12 col-md-6 pl-none pr-none">
         <a
           routerLink="/coordinator/users"
           class="subheader__title cursor__pointer"
@@ -10,7 +10,7 @@
         </a>
         <span>Admin details</span>
       </div>
-      <div>
+      <div class="col-xs-12 col-md-6 pl-none text-right pr-none">
         <button
           class="btn font12__light-grey p-none"
           [routerLink]="['/coordinator/users', adminId, 'edit']"
@@ -117,7 +117,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
     <section class="bg__white card__inside__pad box__shadow-cmn m-none">
       <div class="form-group pb-0">
         <div class="user__card__title pb-lg">Sites, studies and apps</div>
-        <div class="col-md-6 mb-4 p-0">
+        <div *ngIf="user.apps?.length !== 0" class="col-md-6 mb-4 p-0">
           <input
             type="text"
             autocomplete="off"
@@ -321,7 +321,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
             </div>
           </div>
           <div class="bg__white card__inside__pad box__shadow-cmn m-none p-lg">
-            <div class="text-center p-2" *ngIf="user.apps.length === 0">
+            <div
+              class="text-center p-2 font12 txt__light-gray mob_tbl_footer_text_center"
+              *ngIf="user.apps?.length === 0"
+            >
               No records found
             </div>
           </div>

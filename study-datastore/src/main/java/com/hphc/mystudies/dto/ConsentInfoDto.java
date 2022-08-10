@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,9 +27,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
@@ -51,12 +52,13 @@ public class ConsentInfoDto implements Serializable {
   private static final long serialVersionUID = 7398906510250618397L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "study_id")
-  private Integer studyId;
+  private String studyId;
 
   @Column(name = "consent_item_type")
   private String consentItemType;
@@ -92,10 +94,10 @@ public class ConsentInfoDto implements Serializable {
   private String modifiedOn;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "display_title")
   private String displayTitle;
@@ -107,7 +109,7 @@ public class ConsentInfoDto implements Serializable {
   private Boolean active = true;
 
   @Column(name = "consent_item_title_id")
-  private Integer consentItemTitleId;
+  private String consentItemTitleId;
 
   @Column(name = "version")
   private Float version = 0f;
@@ -118,19 +120,19 @@ public class ConsentInfoDto implements Serializable {
   @Column(name = "is_live")
   private Integer live = 0;
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
-  public Integer getStudyId() {
+  public String getStudyId() {
     return studyId;
   }
 
-  public void setStudyId(Integer studyId) {
+  public void setStudyId(String studyId) {
     this.studyId = studyId;
   }
 
@@ -222,19 +224,19 @@ public class ConsentInfoDto implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 
@@ -254,11 +256,11 @@ public class ConsentInfoDto implements Serializable {
     this.status = status;
   }
 
-  public Integer getConsentItemTitleId() {
+  public String getConsentItemTitleId() {
     return consentItemTitleId;
   }
 
-  public void setConsentItemTitleId(Integer consentItemTitleId) {
+  public void setConsentItemTitleId(String consentItemTitleId) {
     this.consentItemTitleId = consentItemTitleId;
   }
 

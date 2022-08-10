@@ -31,7 +31,7 @@ export class StudyDetailsComponent
   enrollmentStatus = EnrollmentStatus;
   permission = Permission;
   studyStatus = Status;
-
+  appStatus = Status;
   // pagination
   limit = 10;
   currentPage = 0;
@@ -77,7 +77,8 @@ export class StudyDetailsComponent
     ).pipe(
       map(([studyDetails]) => {
         if (
-          studyDetails.participantRegistryDetail.studyType === StudyType.Open
+          studyDetails.participantRegistryDetail.studyType === StudyType.Open &&
+          this.searchTerm === ''
         ) {
           this.sharedService.updateSearchPlaceHolder(
             'Search participant email',

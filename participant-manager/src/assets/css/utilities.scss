@@ -129,6 +129,9 @@
     align-items: center;
     outline: none;
   }
+  .flex__text {
+    width: 330px !important;
+  }
   .flex__justify__center {
     justify-content: center;
   }
@@ -196,7 +199,7 @@
     align-items: center;
   }
   .error__msg {
-    color: var(--orange-red);
+    color: var(--light-red);
     font-size: 75%;
     text-align: right;
     visibility: visible;

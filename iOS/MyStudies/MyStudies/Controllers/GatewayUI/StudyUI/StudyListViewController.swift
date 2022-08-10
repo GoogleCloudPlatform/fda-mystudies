@@ -19,6 +19,8 @@
 
 import IQKeyboardManagerSwift
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 let kHelperTextForFilteredStudiesNotFound = "No studies found for the filters applied."
 
@@ -43,6 +45,7 @@ class StudyListViewController: UIViewController {
   lazy var isComingFromFilterScreen: Bool = false
   lazy var studiesList: [Study] = []
   lazy var previousStudyList: [Study] = []
+  private var reachability: Reachability!
 
   /// Gatewaystudylist
   lazy var allStudyList: [Study] = []
@@ -55,11 +58,37 @@ class StudyListViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
     addNavigationTitle()
     isComingFromFilterScreen = false
     DispatchQueue.main.async { [weak self] in
       self?.setupStudyListTableView()
     }
+    if #available(iOS 15, *) {
+      UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
+    }
+      print("1stAugtestDev---")
+//      UserDefaults.standard.set("1stAugtestDev 2", forKey: "performTaskBasedOnStudyStatus")
+//      UserDefaults.standard.synchronize()
+  }
+  
+    override func viewWillDisappear(_ animated: Bool) {
+        removeNotifier()
+    }
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
+  override func viewWillAppear(_ animated: Bool) {
+    setupNotifiers()
+    if !isComingFromFilterScreen && !(self.slideMenuController()?.isLeftOpen() ?? true) {
+      self.addProgressIndicator()
+    }
+    setNavigationBarColor()
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImage)
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImagePDF)
+    UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
+      
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -111,6 +140,111 @@ class StudyListViewController: UIViewController {
     if studyListRequestFailed {
       labelHelperText.isHidden = false
       labelHelperText.text = kHelperTextForOffline
+    }
+    
+    if User.currentUser.userType != .loggedInUser {
+      ud.set(true, forKey: kIsStudylistGeneral)
+      ud.synchronize()
+    } else {
+      ud.set(false, forKey: kIsStudylistGeneral)
+      ud.synchronize()
+    }
+    checkBlockerScreen()
+      
+      DispatchQueue.main.async {
+          
+          self.performTaskBasedOnStudyStatus()
+          
+      let val1 = UserDefaults.standard.value(forKey: "performTaskBasedOnStudyStatus") as? String ?? ""
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+      UserDefaults.standard.synchronize()
+      print("valvalval---\(val1)")
+      let val = val1.components(separatedBy: " ")
+//      var initialVC: UIViewController?
+          
+          UserDefaults.standard.set("325---\(val[0])---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          
+      if !(val[0] == "" || val[0] == nil) {
+          if let study = Gateway.instance.studies?.filter { $0.studyId == val[0] }.last {
+              UserDefaults.standard.set("525,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+              UserDefaults.standard.synchronize()
+              
+          print("study--\(study)")
+          Study.updateCurrentStudy(study: study)
+              let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+              appdelegate.notificationDetails = nil
+        self.performTaskBasedOnStudyStatus()
+      print("181userInfoDetails---")
+      
+      // push tabbar and switch to activty tab
+//      if let initialVC = initialVC {
+//        print("23userInfoDetails---")
+        UserDefaults.standard.set("323,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+          
+          
+          
+//          let tabVal = Int(val[1]) ?? 0
+//          if tabVal != 0 {
+//        self.pushToTabbar(
+//          viewController: self,
+//          selectedTab: tabVal ?? 0
+//        )
+//      }
+              
+          }
+      }
+      }
+      
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    let ud = UserDefaults.standard
+    ud.set(false, forKey: kIsStudylistGeneral)
+    ud.synchronize()
+  }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                           name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
+                                           name: Notification.Name("LeftMenu Home"), object: nil)
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+    }
+  }
+  
+  func removeNotifier() {
+    NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: nil)
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("LeftMenu Home"), object: nil)
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+      break
+    case .wifi:
+      ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+      break
+    case .none:
+      ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+      
+      break
+    case .unavailable:
+      ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+      break
     }
   }
 
@@ -215,7 +349,18 @@ class StudyListViewController: UIViewController {
     refresher.attributedTitle = NSAttributedString(string: "Pull to refresh")
     tableView.refreshControl = refresher
   }
-
+  
+  @objc func methodOfReceivedNotification(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
+    ])
+  }
+  
+  @objc func methodOfReceivedNotification1(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Home"
+    ])
+  }
   // MARK: - Utils
   func checkIfNotificationEnabled() {
 
@@ -245,7 +390,7 @@ class StudyListViewController: UIViewController {
       if daysLastSeen >= 7 {  // Notification is disabled for 7 or more Days
         UIUtilities.showAlertWithTitleAndMessage(
           title: NSLocalizedString(Branding.productTitle, comment: "") as NSString,
-          message: NSLocalizedString(kMessageAppNotificationOffRemainder, comment: "")
+          message: kMessageAppNotificationOffStayup + kMessageAppNotificationOffRemainder
             as NSString
         )
 
@@ -273,6 +418,8 @@ class StudyListViewController: UIViewController {
         let studyId = NotificationHandler.instance.studyId
         let study = Gateway.instance.studies?.filter { $0.studyId == studyId }.first
         Study.updateCurrentStudy(study: study!)
+          UserDefaults.standard.set("326---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
         performTaskBasedOnStudyStatus()
       }
     }
@@ -401,6 +548,10 @@ class StudyListViewController: UIViewController {
         }
       }
     }
+    let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+      self.removeProgressIndicator()
+      appdelegate.window?.removeProgressIndicatorFromWindow()
+
   }
 
   /// Sort Studies based on the Study Status.
@@ -427,15 +578,17 @@ class StudyListViewController: UIViewController {
   static func configureNotifications() {
     // Checking if registering notification is pending.
     if UserDefaults.standard.bool(forKey: kNotificationRegistrationIsPending),
-      let appDelegate = UIApplication.shared.delegate as? AppDelegate
-    {
-      appDelegate.askForNotification()
+       let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+      appDelegate.askForFCMNotification()
     }
   }
   // MARK: - Button Actions
 
   /// Navigate to notification screen on button clicked.
   @IBAction func buttonActionNotification(_: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Notification icon clicked"
+    ])
     navigateToNotifications()
   }
 
@@ -446,11 +599,17 @@ class StudyListViewController: UIViewController {
 
   /// Navigate to StudyFilter screen on button clicked.
   @IBAction func filterAction(_: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Filter icon clicked"
+    ])
     isComingFromFilterScreen = true
     performSegue(withIdentifier: filterListSegue, sender: nil)
   }
 
   @IBAction func searchButtonAction(_: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Search icon clicked"
+    ])
 
     searchView = SearchBarView.instanceFromNib(
       frame: CGRect(x: 0, y: -200, width: view.frame.size.width, height: 64.0),
@@ -547,9 +706,19 @@ class StudyListViewController: UIViewController {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
 
       if appDelegate.notificationDetails != nil, User.currentUser.userType == .loggedInUser {
+          
+          
+          UserDefaults.standard.set("545,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          
+          UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
         appDelegate.handleLocalAndRemoteNotification(
           userInfoDetails: appDelegate.notificationDetails!
         )
+          UserDefaults.standard.set("546,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          appDelegate.notificationDetails = nil
       }
     } else {
       tableView?.isHidden = true
@@ -577,6 +746,7 @@ class StudyListViewController: UIViewController {
       StudyUpdates.studyConsentUpdated = false
       StudyUpdates.studyActivitiesUpdated = false
       StudyUpdates.studyResourcesUpdated = false
+      StudyUpdates.studyEnrollAgain = false
 
       currentStudy.version = StudyUpdates.studyVersion
       currentStudy.newVersion = StudyUpdates.studyVersion
@@ -600,6 +770,8 @@ class StudyListViewController: UIViewController {
 
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
           pushToStudyDashboard()
+        } else if userStudyStatus == .yetToEnroll {
+          checkDatabaseForStudyInfo(study: currentStudy)
         } else {
           checkDatabaseForStudyInfo(study: currentStudy)
         }
@@ -612,11 +784,41 @@ class StudyListViewController: UIViewController {
   }
 
   /// Checks `Study` status and do the action.
-  func performTaskBasedOnStudyStatus() {
+  func performTaskBasedOnStudyStatus(studyID: String? = nil) {
+      UserDefaults.standard.set("527,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+    // Study ID from notification
+    if let studyID = studyID,
+        let study = studiesList.filter({ $0.studyId == studyID }).first {
+      Study.updateCurrentStudy(study: study)
+    }
+    
     guard let study = Study.currentStudy else { return }
 
     if User.currentUser.userType == UserType.loggedInUser {
-      if study.status == .active {
+      let val = UserDefaults.standard.value(forKey: "pausedNotification") as? String ?? ""
+      if Study.currentStudy?.status == .paused || val == "paused" {
+        UserDefaults.standard.set("", forKey: "pausedNotification")
+        UserDefaults.standard.synchronize()
+        let userStudyStatus = study.userParticipateState.status
+        
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
+          DispatchQueue.main.async {
+            if (studyID == nil) {
+              UIUtilities.showAlertWithTitleAndMessage(
+                title: "",
+                message: NSLocalizedString(
+                  kMessageForStudyPausedAfterJoiningState,
+                  comment: ""
+                )
+                as NSString
+              )
+            }
+          }
+        } else {
+          checkForStudyUpdate(study: study)
+        }
+      } else if study.status == .active {
         let userStudyStatus = study.userParticipateState.status
 
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
@@ -627,36 +829,39 @@ class StudyListViewController: UIViewController {
             addProgressIndicator()
             perform(#selector(loadStudyDetails), with: self, afterDelay: 1)
           }
+        } else if userStudyStatus == .yetToEnroll {
+          checkDatabaseForStudyInfo(study: study)
         } else {
           checkForStudyUpdate(study: study)
         }
-      } else if Study.currentStudy?.status == .paused {
-        let userStudyStatus = study.userParticipateState.status
-
-        if userStudyStatus == .completed || userStudyStatus == .enrolled {
-          UIUtilities.showAlertWithTitleAndMessage(
-            title: "",
-            message: NSLocalizedString(
-              kMessageForStudyPausedAfterJoiningState,
-              comment: ""
-            )
-              as NSString
-          )
-        } else {
-          checkForStudyUpdate(study: study)
-        }
-      } else {
-        checkForStudyUpdate(study: study)
       }
     } else {
       checkForStudyUpdate(study: study)
     }
   }
+    
+    func pushToTabbar(viewController: UIViewController, selectedTab: Int, studyID: String? = nil) {
+      DispatchQueue.main.async {
+      let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
+
+      let studyDashboard =
+        (studyStoryBoard.instantiateViewController(
+          withIdentifier: kStudyDashboardTabbarControllerIdentifier
+        )
+        as? StudyDashboardTabbarViewController)!
+
+      studyDashboard.selectedIndex = selectedTab
+      viewController.navigationController?.navigationBar.isHidden = true
+      viewController.navigationController?.pushViewController(studyDashboard, animated: true)
+      }
+    }
 
   @objc func loadStudyDetails() {
+    let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
     guard let study = Study.currentStudy
     else {
       self.removeProgressIndicator()
+      appdelegate.window?.removeProgressIndicatorFromWindow()
       return
     }
     DBHandler.loadStudyDetailsToUpdate(
@@ -665,6 +870,7 @@ class StudyListViewController: UIViewController {
 
         self.pushToStudyDashboard()
         self.removeProgressIndicator()
+        appdelegate.window?.removeProgressIndicatorFromWindow()
       }
     )
   }
@@ -816,7 +1022,8 @@ extension StudyListViewController: UITableViewDelegate {
 
     let study = studiesList[indexPath.row]
     Study.updateCurrentStudy(study: study)
-
+      UserDefaults.standard.set("327---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
     performTaskBasedOnStudyStatus()
   }
 }
@@ -959,7 +1166,7 @@ extension StudyListViewController: NMWebServiceDelegate {
 
     } else if requestName as String == RegistrationMethods.userProfile.description {
       appdelegate.window?.removeProgressIndicatorFromWindow()
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
 
       } else {

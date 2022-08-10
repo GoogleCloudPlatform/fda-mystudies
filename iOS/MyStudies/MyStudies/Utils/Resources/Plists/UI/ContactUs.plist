@@ -4,7 +4,7 @@
 <array>
 	<dict>
 		<key>helpText</key>
-		<string>First Name</string>
+		<string>First name</string>
 		<key>placeHolder</key>
 		<string>enter first name</string>
 	</dict>

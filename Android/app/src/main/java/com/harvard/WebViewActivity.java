@@ -32,6 +32,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.NetworkChangeReceiver;
 
 
+
 public class WebViewActivity extends AppCompatActivity implements
     NetworkChangeReceiver.NetworkChangeCallback {
 
@@ -82,7 +83,6 @@ public class WebViewActivity extends AppCompatActivity implements
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, "Study overview share");
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-            Log.e("check", "webData is " + Html.fromHtml(webData).toString());
             try {
               Intent shareIntent = new Intent(Intent.ACTION_SEND);
               shareIntent.setData(Uri.parse("mailto:"));

@@ -21,7 +21,7 @@ import UIKit
 
 let kConsentCompletionResultIdentifier = "ConsentCompletion"
 let kMainTitle = "Consent confirmed"
-let kSubTitle = "You can now start participating in the Study"
+let kSubTitle = "You can now start participating in the study"
 
 /// Consent Completion Step.
 class ConsentCompletionStep: ORKStep {
@@ -153,6 +153,19 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
     buttonViewPdf?.isHidden = false
     labelTitle.isHidden = false
     lableDescription.isHidden = false
+    UserDefaults.standard.setValue("\(Study.currentStudy?.studyId ?? "")", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
+    
+    if (Study.currentStudy?.studyId) != nil {
+      StudyUpdates.studyConsentUpdated = false
+      
+      guard let currentStudy = Study.currentStudy else { return }
+      let status = User.currentUser.udpateUserStudyVersion(
+        studyId: currentStudy.studyId,
+        userStudyVersion: (currentStudy.newVersion ?? currentStudy.version) ?? ""
+      )
+      DBHandler.updateStudyParticipationStatus(study: currentStudy)
+    }
   }
 
   @objc func enrollmentFailed(notification: NSNotification) {

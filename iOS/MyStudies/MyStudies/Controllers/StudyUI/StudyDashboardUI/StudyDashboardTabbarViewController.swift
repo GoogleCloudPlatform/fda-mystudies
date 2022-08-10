@@ -19,11 +19,19 @@
 
 import MessageUI
 import UIKit
+import FirebaseAnalytics
 
 class StudyDashboardTabbarViewController: UITabBarController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    self.tabBar.layer.shadowColor = UIColor.lightGray.cgColor
+    self.tabBar.layer.borderWidth = 1.0
+    if #available(iOS 13.0, *) {
+      self.tabBar.layer.borderColor = UIColor.systemGray4.cgColor
+    }
+    self.delegate = self
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +68,9 @@ class StudyDashboardTabbarViewController: UITabBarController {
           title: NSLocalizedString(kTitleOk, comment: ""),
           style: .default,
           handler: { (_) in
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "StudyDashboardTabBar OK Alert"
+            ])
 
             self.dismiss(animated: true, completion: nil)
 
@@ -77,5 +88,13 @@ extension StudyDashboardTabbarViewController: MFMailComposeViewControllerDelegat
     error: Error?
   ) {
     controller.dismiss(animated: true, completion: nil)
+  }
+}
+
+extension StudyDashboardTabbarViewController: UITabBarControllerDelegate {
+  
+  override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+    UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
   }
 }

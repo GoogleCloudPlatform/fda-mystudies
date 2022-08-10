@@ -21,6 +21,8 @@ import MessageUI
 import SafariServices
 import UIKit
 import WebKit
+import FirebaseAnalytics
+import Reachability
 
 class ResourceDetailViewController: UIViewController {
 
@@ -28,12 +30,14 @@ class ResourceDetailViewController: UIViewController {
   @IBOutlet var webView: WKWebView!
   @IBOutlet var bottomToolBar: UIToolbar!
   @IBOutlet var activityIndicator: UIActivityIndicatorView!
+  @IBOutlet var shareButton: UIBarButtonItem!
 
   // MARK: - Properties
   var requestLink: String?
   var type: String?
   var htmlString: String?
   var resource: Resource?
+  private var reachability: Reachability!
 
   /// Resource converted from HTML string and saved in Cache directory.
   var tempResourceFilePath: URL?
@@ -50,11 +54,13 @@ class ResourceDetailViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupNotifiers()
     self.hidesBottomBarWhenPushed = true
     self.addBackBarButton()
     self.title = resource?.title
+    setNavigationBarColor()
   }
-
+    
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     webView.navigationDelegate = self
@@ -71,6 +77,43 @@ class ResourceDetailViewController: UIViewController {
     }
     webView.navigationDelegate = nil
   }
+    
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOffline() {
+        shareButton.isEnabled = false
+    }
+    
+    func setOnline() {
+        shareButton.isEnabled = true
+    }
 
   // MARK: - UI
   fileprivate func loadWebView() {
@@ -90,7 +133,8 @@ class ResourceDetailViewController: UIViewController {
         {
           activityIndicator.startAnimating()
           activityIndicator.isHidden.toggle()
-          let fileURL = checkIfFileExists(pdfNameFromUrl: resourceURL.lastPathComponent)
+//          let fileURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "").pdf")
+          let fileURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
           if let url = fileURL {
             webView.loadFileURL(url, allowingReadAccessTo: url)
             self.isFileAvailable = true
@@ -103,11 +147,33 @@ class ResourceDetailViewController: UIViewController {
       } else if self.resource?.file?.mimeType == .txt,
         let resourceHtmlString = self.resource?.file?.link
       {
+        let detailText = resourceHtmlString
         webView.allowsBackForwardNavigationGestures = false
+        var resourceHtmlString2 = resourceHtmlString.stringByDecodingHTMLEntities
+        let regex = "<[^>]+>"
+        if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+          if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+            
+            if let attributedText =
+                valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+              resourceHtmlString2 = attributedText.attriString2Html ?? ""
+            } else if let attributedText =
+                        resourceHtmlString2.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                      attributedText.length > 0 {
+              resourceHtmlString2 = attributedText.attriString2Html ?? ""
+            } else {
+              resourceHtmlString2 = resourceHtmlString
+            }
+          } else {
+            resourceHtmlString2 = resourceHtmlString
+          }
+        }
+        
         webView.loadHTMLString(
-          WebViewController.headerString + resourceHtmlString.stringByDecodingHTMLEntities,
+          WebViewController.headerString + resourceHtmlString2,
           baseURL: nil
         )
+        
       } else if let htmlString = self.htmlString {
         webView.allowsBackForwardNavigationGestures = false
         webView.loadHTMLString(WebViewController.headerString + htmlString, baseURL: nil)
@@ -150,10 +216,16 @@ class ResourceDetailViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Cancel"
+    ])
     self.dismiss(animated: true, completion: nil)
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Share"
+    ])
     self.shareResource { [weak self] (status) in
       if !status {
         self?.view.makeToast(kResourceShareError)
@@ -162,19 +234,23 @@ class ResourceDetailViewController: UIViewController {
   }
 
   @IBAction func buttonActionBack(_ sender: UIBarButtonItem) {
-
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail Back"
+    ])
     if webView.canGoBack {
       webView.goBack()
     } else if webView.backForwardList.backList.count == 0 {
-      if self.resource?.file?.mimeType != .pdf,
-        let htmlString = self.requestLink
-      {
+      if self.resource?.file?.mimeType != .pdf, self.resource?.file?.mimeType != .txt,
+         let htmlString = self.requestLink {
         webView.loadHTMLString(WebViewController.headerString + htmlString, baseURL: nil)
       }
     }
   }
 
   @IBAction func buttonActionGoForward(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ResourceDetail GoForward"
+    ])
     if webView.canGoForward {
       webView.goForward()
     }
@@ -265,8 +341,8 @@ extension ResourceDetailViewController {
     } else if self.resource?.file?.mimeType == .pdf,
       isFileAvailable,
       let path = resourceLink,
-      let fileName = URL(string: path)?.lastPathComponent,
-      let documentURL = checkIfFileExists(pdfNameFromUrl: fileName)
+//      let documentURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "").pdf")
+                let documentURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
     {
       attachResource(from: documentURL)
       completion(true)
@@ -278,7 +354,10 @@ extension ResourceDetailViewController {
         attachResource(from: tempPath)
         completion(true)
       } else {
-        ResourceDetailViewController.saveTempPdf(from: pdfData, name: self.resource?.file?.name ?? "Resource") {
+//        let valName = self.resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "Resource"
+        let valName = self.resource?.file?.name ?? "Resource"
+        ResourceDetailViewController.saveTempPdf(from: pdfData, name:
+                                                  valName) {
           [weak self] (url) in
           self?.tempResourceFilePath = url
           if let tempPath = url {
@@ -316,7 +395,8 @@ extension ResourceDetailViewController {
     DispatchQueue.global(qos: .background).async { [weak self] in
 
       let pdfData = try? Data(contentsOf: url)
-      let pdfNameFromUrl = url.lastPathComponent
+//      let pdfNameFromUrl = "\(self?.resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "").pdf"
+      let pdfNameFromUrl = "\(self?.resource?.file?.name ?? "").pdf"
       let actualPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
       do {
         try pdfData?.write(to: actualPath, options: .atomic)
@@ -346,6 +426,7 @@ extension ResourceDetailViewController {
     completion: @escaping (_ url: URL?) -> Void
   ) {
     DispatchQueue.global(qos: .background).async {
+//      let pdfNameFromUrl = name.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "" + ".pdf"
       let pdfNameFromUrl = name + ".pdf"
       let tempPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
       do {

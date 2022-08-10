@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,10 +28,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 @Entity
@@ -43,7 +44,7 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Column(name = "active_task_id")
-  private Integer activeTaskId;
+  private String activeTaskId;
 
   @Column(name = "frequency_end_date")
   private String frequencyEndDate;
@@ -51,12 +52,17 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
   @Column(name = "frequency_start_date")
   private String frequencyStartDate;
 
-  @Column(name = "frequency_time")
-  private String frequencyTime;
+  @Column(name = "frequency_start_time")
+  private String frequencyStartTime;
+
+  @Column(name = "frequency_end_time")
+  private String frequencyEndTime;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "is_used")
   @Type(type = "yes_no")
@@ -74,11 +80,14 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
   @Column(name = "time_period_to_days")
   private Integer timePeriodToDays;
 
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
+
   public ActiveTaskCustomScheduleBo() {
     // Do nothing
   }
 
-  public Integer getActiveTaskId() {
+  public String getActiveTaskId() {
     return this.activeTaskId;
   }
 
@@ -90,11 +99,7 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
     return this.frequencyStartDate;
   }
 
-  public String getFrequencyTime() {
-    return this.frequencyTime;
-  }
-
-  public Integer getId() {
+  public String getId() {
     return this.id;
   }
 
@@ -102,7 +107,7 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
     return used;
   }
 
-  public void setActiveTaskId(Integer activeTaskId) {
+  public void setActiveTaskId(String activeTaskId) {
     this.activeTaskId = activeTaskId;
   }
 
@@ -114,11 +119,7 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
     this.frequencyStartDate = frequencyStartDate;
   }
 
-  public void setFrequencyTime(String frequencyTime) {
-    this.frequencyTime = frequencyTime;
-  }
-
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -156,5 +157,29 @@ public class ActiveTaskCustomScheduleBo implements Serializable {
 
   public void setTimePeriodToDays(Integer timePeriodToDays) {
     this.timePeriodToDays = timePeriodToDays;
+  }
+
+  public String getFrequencyStartTime() {
+    return frequencyStartTime;
+  }
+
+  public void setFrequencyStartTime(String frequencyStartTime) {
+    this.frequencyStartTime = frequencyStartTime;
+  }
+
+  public String getFrequencyEndTime() {
+    return frequencyEndTime;
+  }
+
+  public void setFrequencyEndTime(String frequencyEndTime) {
+    this.frequencyEndTime = frequencyEndTime;
+  }
+
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
+
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
   }
 }

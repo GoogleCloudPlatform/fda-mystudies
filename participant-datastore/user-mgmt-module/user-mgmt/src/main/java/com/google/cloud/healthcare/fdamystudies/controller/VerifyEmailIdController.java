@@ -31,6 +31,8 @@ import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileSer
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ResponseUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.sql.Timestamp;
 import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
@@ -38,8 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,10 +50,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Verify Email",
+    value = "Verify Email",
+    description = "Operation pertaining to verify email in user management service")
 @RestController
 public class VerifyEmailIdController {
 
-  private static final Logger logger = LogManager.getLogger(VerifyEmailIdController.class);
+  private XLogger logger = XLoggerFactory.getXLogger(VerifyEmailIdController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @Autowired private FdaEaUserDetailsService userDetailsService;
 
@@ -61,13 +71,14 @@ public class VerifyEmailIdController {
 
   @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
 
+  @ApiOperation(value = "Email verification based on the code")
   @PostMapping("/verifyEmailId")
   public ResponseEntity<?> verifyEmailId(
       @Valid @RequestBody EmailIdVerificationForm verificationForm,
       @RequestHeader("appId") String appId,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("VerifyEmailIdController verifyEmailId() - starts");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setAppId(appId);
 
@@ -137,6 +148,7 @@ public class VerifyEmailIdController {
     userMgmntAuditHelper.logEvent(USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION, auditRequest);
     userMgmntAuditHelper.logEvent(REGISTRATION_SUCCEEDED, auditRequest);
 
+    logger.exit(String.format(STATUS_LOG, HttpStatus.OK.value()));
     return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.OK);
   }
 

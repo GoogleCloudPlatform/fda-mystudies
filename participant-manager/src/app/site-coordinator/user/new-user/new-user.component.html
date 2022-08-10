@@ -31,7 +31,7 @@
               name="firstName"
               #firstName="ngModel"
               required
-              pattern=".*[^ ].*"
+              pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
             />
             <div
               class="validation-error"
@@ -49,7 +49,8 @@
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.pattern"
               >
-                Please fill out this field
+                Please use characters from the following set only: A-Z a-z 0-9
+                *()_+|:.-
               </span>
             </div>
           </div>
@@ -68,6 +69,7 @@
               class="form-control"
               id="lname"
               placeholder="Enter last name"
+              pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
             />
 
             <div
@@ -83,7 +85,8 @@
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.pattern"
               >
-                Please fill out this field
+                Please use characters from the following set only: A-Z a-z 0-9
+                *()_+|:.-
               </span>
             </div>
           </div>
@@ -91,7 +94,7 @@
       </div>
       <div class="row">
         <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
-          <div class="form-group">
+          <div class="form-group myarrow">
             <label for="emailId">Email</label>
             <input
               type="email"
@@ -205,7 +208,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                   />
                   <label
                     for="location_view_edit_permssion"
-                    class="txt_style_unset"
+                    class="font12 txt_style_unset"
                   >
                     View and edit
                   </label>
@@ -240,7 +243,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
               <div class="flex__justify__space-between">
                 <div class="acc__dele mob_custom_width">
                   <div class="card-header">
-                    <div class="mb-0 flex__justify__space-between">
+                    <div
+                      class="mb-0 flex__justify__space-between mob_display-flowroot"
+                    >
                       <div>
                         <div class="custom__labels">
                           <input
@@ -270,7 +275,12 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                               name="appRadioGroup{{ app.id }}"
                               (change)="appRadioButtonChange(app)"
                             />
-                            <label for="appRadioView{{ app.id }}">View</label>
+                            <label
+                              class="font12"
+                              for="appRadioView{{ app.id }}"
+                            >
+                              View
+                            </label>
                           </span>
                           <span>
                             <input
@@ -285,14 +295,17 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                             />
                             <label
                               for="appRadioEdit{{ app.id }}"
-                              class="txt_style_unset"
+                              class="font12 txt_style_unset"
                             >
                               View and edit
                             </label>
                           </span>
                         </div>
                       </div>
-                      <div class="app__id_num flex__justify__space-between">
+                      <div class="clearfix"></div>
+                      <div
+                        class="app__id_num flex__justify__space-between mob_pull_right"
+                      >
                         <div class="pr-2">
                           {{
                             app.selectedSitesCount
@@ -300,7 +313,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                           }}
                         </div>
                         <div
-                          class="fa__plus__minus"
+                          class="fa__plus__minus mob_pull_right"
                           type="button"
                           data-toggle="collapse"
                           [attr.data-target]="'#collapse' + app.id"
@@ -323,7 +336,9 @@ Superadmins can manage users of the Participant Manager and in addition, can man
 
                         <div class="card" *ngFor="let study of app.studies">
                           <div class="card-header">
-                            <div class="mb-0 flex__justify__space-between">
+                            <div
+                              class="mb-0 flex__justify__space-between mob_display-flowroot"
+                            >
                               <div>
                                 <div class="custom__labels">
                                   <input
@@ -335,7 +350,10 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     [(ngModel)]="study.selected"
                                     [ngModelOptions]="{standalone: true}"
                                   />
-                                  <label for="studyCheckBox{{ study.studyId }}">
+                                  <label
+                                    class="font14"
+                                    for="studyCheckBox{{ study.studyId }}"
+                                  >
                                     {{ study.studyName }}
                                   </label>
                                 </div>
@@ -374,7 +392,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     />
                                     <label
                                       for="studyRadioEdit{{ study.studyId }}"
-                                      class="txt_style_unset"
+                                      class="font12 txt_style_unset"
                                     >
                                       View and edit
                                     </label>
@@ -391,7 +409,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                   }}
                                 </div>
                                 <div
-                                  class="fa__plus__minus"
+                                  class="fa__plus__minus mob_pull_right"
                                   type="button"
                                   data-toggle="collapse"
                                   [attr.data-target]="
@@ -465,7 +483,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
                                     />
                                     <label
                                       for="siteRadioEdit{{ site.siteId }}"
-                                      class="txt_style_unset"
+                                      class="font12 txt_style_unset"
                                     >
                                       View and edit
                                     </label>
@@ -496,7 +514,7 @@ Superadmins can manage users of the Participant Manager and in addition, can man
         [disabled]="!addUserForm.form.valid || disableButton"
         type="submit"
         name="add"
-        class="btn bt__add bt__add__auto mr-sm"
+        class="btn bt__add bt__add__auto mr-sm mb-2 mt-2"
       >
         Add admin user and invite
       </button>

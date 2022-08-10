@@ -85,13 +85,17 @@ public struct URLEncoding: ParameterEncoding {
         case brackets
         /// No brackets are appended. The key is encoded as is.
         case noBrackets
+        /// Brackets containing the item index are appended. This matches the jQuery and Node.js behavior.
+        case indexInBrackets
 
-        func encode(key: String) -> String {
+        func encode(key: String, atIndex index: Int) -> String {
             switch self {
             case .brackets:
                 return "\(key)[]"
             case .noBrackets:
                 return key
+            case .indexInBrackets:
+                return "\(key)[\(index)]"
             }
         }
     }
@@ -168,8 +172,8 @@ public struct URLEncoding: ParameterEncoding {
                 urlRequest.url = urlComponents.url
             }
         } else {
-            if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-                urlRequest.setValue("application/x-www-form-urlencoded; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            if urlRequest.headers["Content-Type"] == nil {
+                urlRequest.headers.update(.contentType("application/x-www-form-urlencoded; charset=utf-8"))
             }
 
             urlRequest.httpBody = Data(query(parameters).utf8)
@@ -193,8 +197,8 @@ public struct URLEncoding: ParameterEncoding {
                 components += queryComponents(fromKey: "\(key)[\(nestedKey)]", value: value)
             }
         case let array as [Any]:
-            for value in array {
-                components += queryComponents(fromKey: arrayEncoding.encode(key: key), value: value)
+            for (index, value) in array.enumerated() {
+                components += queryComponents(fromKey: arrayEncoding.encode(key: key, atIndex: index), value: value)
             }
         case let number as NSNumber:
             if number.isBool {
@@ -265,8 +269,8 @@ public struct JSONEncoding: ParameterEncoding {
         do {
             let data = try JSONSerialization.data(withJSONObject: parameters, options: options)
 
-            if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if urlRequest.headers["Content-Type"] == nil {
+                urlRequest.headers.update(.contentType("application/json"))
             }
 
             urlRequest.httpBody = data
@@ -293,8 +297,8 @@ public struct JSONEncoding: ParameterEncoding {
         do {
             let data = try JSONSerialization.data(withJSONObject: jsonObject, options: options)
 
-            if urlRequest.value(forHTTPHeaderField: "Content-Type") == nil {
-                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if urlRequest.headers["Content-Type"] == nil {
+                urlRequest.headers.update(.contentType("application/json"))
             }
 
             urlRequest.httpBody = data

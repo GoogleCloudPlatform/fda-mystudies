@@ -128,7 +128,6 @@ input[type=file]:focus, input[type=checkbox]:focus, input[type=radio]:focus, .ch
   -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
   transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
 }
-
 .checkbox label::after {
   display: inline-block;
   position: absolute;
@@ -383,8 +382,13 @@ input[type=file]:focus, input[type=checkbox]:focus, input[type=radio]:focus, .ch
 }
 
 .study-selected-item {
-  padding: 10px 0px;
-  border-bottom: 1px solid #cfd4d7;
+  padding: 10px 0px !important;
+  border-bottom: 1px solid #cfd4d7 !important;
+}
+
+.app-selected-item {
+  padding: 10px 0px !important;
+  border-bottom: 1px solid #cfd4d7 !important;
 }
 
 .blue-link {
@@ -492,7 +496,6 @@ div.mce-edit-area {
   margin-bottom: 0;
   padding: 5px 0px;
 }
-
 .help-block ul li {
   display: none;
 }
@@ -524,11 +527,17 @@ div.mce-edit-area {
   margin: 0 auto;
   text-align: center;
   position: absolute;
-  top: 12%;
+  /* top: 12%;
   bottom: 0;
   left: 0;
-  right: 0;
+  right: 0; */
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%,-50%) !important;
+  margin-top: 0px !important;
+    margin-bottom: 0px  !important;
 }
+
 
 .left-content-container ul {
   width: 100% !important;
@@ -574,7 +583,7 @@ div.mce-edit-area {
 }
 
 .right-content-head {
-  padding: 12px 30px;
+  padding: 12px 20px;
   z-index: 999;
   position: relative;
   border-bottom: 1px solid #ddd;
@@ -770,6 +779,10 @@ table.dataTable thead th, table.dataTable thead td {
   border-bottom: 1px solid #ddd;
 }
 
+tbody > tr:last-child > td {
+  border-bottom: 1px solid #ddd;
+}
+
 /* #comprehension_list thead th:last-child,#comprehension_list tbody td:last-child,.dragtbl thead th:last-child,.dragtbl tbody td:last-child,.tbl_rightalign thead th:last-child,.tbl_rightalign tbody td:last-child{
     text-align: right;
 }
@@ -803,7 +816,7 @@ select.bs-select-hidden, select.selectpicker {
 
 .bootbox .modal-dialog {
   width: 480px !important;
-  text-align: center;
+  text-align: center !important;
 }
 
 .bootbox .modal-dialog .modal-content .modal-footer .btn-default {
@@ -1191,7 +1204,12 @@ input[type=radio]:disabled + label::after {
 .changeView div.dropdown-menu ul.dropdown-menu {
   max-height: 0px !important;
   overflow-y: auto !important;
-  min-height: 110px !important;
+  overflow-x: hidden !important;
+  min-height: 100% !important;
+}
+
+.changeView div.dropdown-menu {
+  width: 100% !important;
 }
 
 .dis-ellipsis {
@@ -2219,10 +2237,6 @@ option:first-child {
   text-transform: capitalize !important;
 }
 
-.filter-option {
-  text-transform: capitalize;
-}
-
 .numeric__row > span {
   width: 50px;
 }
@@ -2635,7 +2649,10 @@ a:focus {
 
 #alignCenter {
   position: absolute;
-  top: 0px;
+  margin-top: 0 !important;
+  top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 
@@ -2680,3 +2697,65 @@ a:focus {
   padding-left: 40px !important;
   padding-top: 30px !important;
 } 
+
+td span.edit-inc-draft:hover {
+    background: url(../images/icons/edit_draft_icon__hover.png) no-repeat;
+    width: 20px;
+    height: 22px;
+  	display: inline-block;
+  	cursor: pointer;
+  vertical-align: middle;
+    }
+    
+td span.edit-inc:hover {
+    background: url(../images/icons/edit_icn__hover.png) no-repeat;
+    width: 20px;
+    height: 22px;
+  	display: inline-block;
+  	cursor: pointer;
+  vertical-align: middle;
+    }
+   
+td span.eye-inc:hover {
+    background: url(../images/icons/live_icn__hover.png) no-repeat;
+    width: 20px;
+    height: 16px;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: middle;
+}
+    
+    
+.tooltip > .tooltip-inner {
+text-align: left !important;
+align-items: left !important;
+width:100% !important;
+}
+
+.dataTables_empty {
+	font-size: 12px;
+    color: #7c868d;
+    padding-top: 20px !important;
+    }
+
+.tooltip-inner {
+    max-width: 400px !important;
+}
+
+.checkbox input[type="checkbox"] {
+    margin-top: 1px !important;
+     margin-left: -18px !important;
+}
+
+.bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+    margin-right: 0px !important;
+}
+
+.changeView div.dropdown-menu ul.dropdown-menu > li > a {
+    padding: 8px 0px 8px 20px !important;
+}
+    
+.note-icon-menu-check:before {
+    content: "\ea21";
+    visibility: hidden !important;
+}

@@ -1,0 +1,108 @@
+.has-error input[type="email"],
+.has-error input[type="checkbox"],
+.has-error input[type="radio"],
+.has-error input[type="text"],
+.has-error input[type="password"] {
+  border-color: var(--light-red);
+  color: var(--light-red);
+}
+
+.help-block {
+  color: var(--light-red);
+}
+input[type="number"] {
+  -moz-appearance: textfield !important;
+}
+
+.form-heading__three {
+  font-size: 30px;
+  color: #181919;
+  text-align: center;
+  font-weight: 500;
+  line-height: 36px;
+  letter-spacing: 0px;
+}
+
+.content_doc_info_two p {
+  font-size: 18px;
+  line-height: 28px;
+  color: #181919;
+  font-weight: 500;
+  text-align: center;
+}
+
+.dis_button {
+  cursor: not-allowed !important;
+  border: 1px !important;
+  background-color: rgb(229, 229, 229) !important;
+}
+/* p {
+  font-size: 14px;
+  line-height: 25px;
+  color: #181919;
+  font-weight: 500;
+} */
+
+div p span,
+div p a {
+  font-weight: 600;
+}
+
+.form-control[readonly] {
+  background-color: transparent !important;
+}
+
+/* .btn__sub:hover{
+  color:#3c9a80 !important;
+} */
+
+.dis_button:hover {
+  color: #fff !important;
+}
+
+/* select:invalid, select option[value="0"] {
+  color: #a3a6a6 !important;
+} */
+
+/* select:invalid { color:#a3a6a6; font-weight: 500; } */
+.field-icon {
+  float: right;
+  margin-left: -20px;
+  margin-right: -2px;
+  margin-top: -30px;
+  padding: 5px;
+  position: relative;
+  z-index: 2;
+  color: var(--light-blue);
+  cursor: pointer;
+  background: #fff;
+}
+.passCriteria {
+  float: right;
+}
+/* 
+meter::-webkit-meter-bar {background: #e6e6e9;} 
+meter::-webkit-meter-optimum-value {background: green;}
+meter::-webkit-meter-suboptimum-value{background:orange;}
+meter::-webkit-meter-even-less-good-value{background:red;} */
+
+/* meter::-webkit-meter-optimum-value {
+  background: red;
+} */
+/* Firefox Pseudo Class */
+/* meter::-moz-meter-bar { 
+  background: red;
+} */
+@media only screen and (max-width: 1020px) and (min-width: 320px) {
+  #desktop-menu {
+    display: block !important;
+  }
+}
+
+.cursor__none {
+  cursor: default !important;
+}
+
+.form-group .custom__labels label:before {
+  display: none !important;
+}

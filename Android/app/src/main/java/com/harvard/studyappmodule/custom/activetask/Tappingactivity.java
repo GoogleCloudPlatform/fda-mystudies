@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import androidx.appcompat.app.AlertDialog;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.CustomSurveyViewTaskActivity;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;

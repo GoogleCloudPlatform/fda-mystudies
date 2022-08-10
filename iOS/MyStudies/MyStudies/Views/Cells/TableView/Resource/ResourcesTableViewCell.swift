@@ -41,6 +41,9 @@ class ResourcesTableViewCell: UITableViewCell {
     if !subTitle.isEmpty {
       subtextLbl.isHidden = false
       subtextLbl.text = subTitle
+    } else {
+      subtextLbl.isHidden = true
+      subtextLbl.text = ""
     }
   }
 

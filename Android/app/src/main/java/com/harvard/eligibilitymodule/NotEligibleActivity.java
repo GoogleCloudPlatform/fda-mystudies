@@ -17,10 +17,9 @@
 package com.harvard.eligibilitymodule;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-
+import androidx.appcompat.app.AppCompatActivity;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -42,18 +41,18 @@ import org.json.JSONObject;
 public class NotEligibleActivity extends AppCompatActivity
     implements ApiCall.OnAsyncRequestComplete {
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 200;
-  DbServiceSubscriber dbServiceSubscriber;
   private CustomFirebaseAnalytics analyticsInstance;
+  DbServiceSubscriber dbServiceSubscriber;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_not_eligible);
-    dbServiceSubscriber = new DbServiceSubscriber();
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    dbServiceSubscriber = new DbServiceSubscriber();
     TextView textView = (TextView) findViewById(R.id.notEligibleOK);
     TextView textView1 = findViewById(R.id.notEligibleDesc);
-    if(AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))){
+    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
       textView1.setText(getString(R.string.noeligibleStandalonemsg));
     }
     textView.setOnClickListener(
@@ -66,7 +65,6 @@ public class NotEligibleActivity extends AppCompatActivity
                 getString(R.string.not_eligible));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-
             finish();
           }
         });

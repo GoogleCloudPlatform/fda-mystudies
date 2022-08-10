@@ -49,6 +49,11 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_address
+            - name: MAIL_CONTACT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: contact_email_address
             - name: FROM_EMAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -97,7 +102,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: study_resources_bucket_name
+                  key: study_resources_bucket_name   
+            - name: EXPORT_STUDIES_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: study_export_import_bucket_name 
             - name: ORG_NAME
               valueFrom:
                 secretKeyRef:
@@ -107,6 +117,36 @@ spec:
               value: -Duser.timezone=America/New_York
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
+            - name: EXPORT_STUDIES_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: study_export_import_bucket_name
+            - name: PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: project_id
+            - name: REGION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: region_id
+            - name: CONSENT_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: consent_enabled
+            - name: FHIR_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: fhir_enabled
+            - name: CONSENT_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: consent_bucket_name
           ports:
           - containerPort: 8080
           readinessProbe:

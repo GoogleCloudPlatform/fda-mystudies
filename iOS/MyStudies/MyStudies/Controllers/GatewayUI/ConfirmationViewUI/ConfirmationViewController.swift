@@ -17,22 +17,24 @@
 // OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 let kConfirmationSegueIdentifier = "confirmationSegue"
 let kHeaderDescription =
   """
-  You have chosen to delete your #APPNAME# account. \
+  You have chosen to delete your app account. \
   This will result in automatic withdrawal from the studies you were enrolled in.
   """
 
 let kHeaderDescriptionStandalone =
   """
-  You have chosen to delete your #APPNAME# account. \
+  You have chosen to delete your app account. \
   This will result in automatic withdrawal from the studies you were enrolled in.
   """
 
 let kConfirmWithdrawlSelectOptionsAlert =
-  "Please select an option between Delete Data or Retain Data for all studies."
+  "Please select a data retention preference for all studies in the list."
 let kResponseDataDeletedText = "Response data will be deleted"
 let kResponseDataRetainedText = "Response data will be retained"
 
@@ -78,12 +80,12 @@ class ConfirmationViewController: UIViewController {
   lazy var joinedStudies: [Study]! = []
   var studyWithoutWCData: Study?
   lazy var studiesToWithdraw: [StudyToDelete] = []
-
+  private var reachability: Reachability!
   // MARK: - View Controller LifeCycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    setupNotifiers()
     let navTitle = Branding.productTitle
     var descriptionText =
       Utilities.isStandaloneApp()
@@ -104,11 +106,63 @@ class ConfirmationViewController: UIViewController {
     self.checkWithdrawlConfigurationForNextStudy()
 
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.addBackBarButton()
   }
+  
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) {
+        }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonDoNotDeleteAccount?.isEnabled = true
+        buttonDoNotDeleteAccount?.layer.opacity = 1
+        buttonDeleteAccount?.isEnabled = true
+        buttonDeleteAccount?.layer.opacity = 1
+    }
+    
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+        buttonDoNotDeleteAccount?.isEnabled = false
+        buttonDoNotDeleteAccount?.layer.opacity = 0.5
+        buttonDeleteAccount?.isEnabled = false
+        buttonDeleteAccount?.layer.opacity = 0.5
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
 
   // MARK: - Utils
 
@@ -142,12 +196,7 @@ class ConfirmationViewController: UIViewController {
         studyName: studyName,
         withdrawalConfigration: withdrawalConfigration
       )
-
-      if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.deleteData {
-        withdrawnStudy.shouldDelete = true
-      } else if study.withdrawalConfigration?.type == StudyWithdrawalConfigrationType.noAction {
-        withdrawnStudy.shouldDelete = false
-      }
+      withdrawnStudy.shouldDelete = false
       studiesToWithdraw.append(withdrawnStudy)
     }
   }
@@ -194,6 +243,9 @@ class ConfirmationViewController: UIViewController {
 
   /// Delete account button clicked.
   @IBAction func deleteAccountAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Delete Account"
+    ])
 
     var found: Bool = false
     for withdrawnStudy in studiesToWithdraw where withdrawnStudy.shouldDelete == nil {
@@ -217,6 +269,9 @@ class ConfirmationViewController: UIViewController {
 
   /// Don't Delete button action.
   @IBAction func doNotDeleteAccountAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "DoNot Delete Account"
+    ])
     _ = self.navigationController?.popViewController(animated: true)
   }
 }

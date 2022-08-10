@@ -20,6 +20,8 @@
 import Foundation
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 let kEligibilityConsentTask = "EligibilityConsentTask"
 let kEligibilityTokenStep = "EligibilityTokenStep"
@@ -35,6 +37,9 @@ let kStudyDashboardViewControllerIdentifier = "StudyDashboardViewController"
 let kStudyDashboardTabbarControllerIdentifier = "StudyDashboardTabbarViewControllerIdentifier"
 
 let kShareConsentFailureAlert = "You can't join study without sharing your data"
+
+let kConsentSharingImagePDF = "ConsentpdfSharingImage.pdf"
+let kConsentSharingImage = "ConsentSharingImage"
 
 protocol StudyHomeViewDontrollerDelegate: class {
   func studyHomeJoinStudy()
@@ -67,7 +72,7 @@ class StudyHomeViewController: UIViewController {
   lazy var hideViewConsentAfterJoining = false
   lazy var loadViewFrom: StudyHomeLoadFrom = .home
   var isUpdatingIneligibility: Bool = false
-
+  private var reachability: Reachability!
   var consentRestorationData: Data?
   var isStudyActivitiesPresented = false
 
@@ -85,7 +90,7 @@ class StudyHomeViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+      setupNotifiers()
     // Added to change next screen
     pageControlView?.addTarget(
       self,
@@ -114,7 +119,7 @@ class StudyHomeViewController: UIViewController {
     let viewConsent = Branding.viewConsentButtonTitle
     buttonViewConsent?.setTitle(viewConsent, for: .normal)
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     // hide navigationbar
@@ -159,6 +164,71 @@ class StudyHomeViewController: UIViewController {
 
     configureStandaloneUI()
   }
+  
+  // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+  
+    func setOnline() {
+        if let viewController = self.presentedViewController {
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+            self.view.hideAllToasts()
+        } else {
+            self.view.hideAllToasts()
+        }
+        
+        buttonJoinStudy?.isEnabled = true
+        buttonJoinStudy?.layer.opacity = 1
+        
+    }
+  
+    func setOffline() {
+        if let viewController = self.presentedViewController {
+            ReachabilityIndicatorManager.shared.shouldPresentIndicator(viewController: viewController, isOffline: true)
+        } else {
+            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
+        }
+        buttonJoinStudy?.isEnabled = false
+        buttonJoinStudy?.layer.opacity = 0.5
+    }
+  
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
+  
+  @objc func methodOfReceivedNotification(notification: Notification) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ORKCancel"
+    ])
+  }
 
   // MARK: - UI Utils
 
@@ -173,6 +243,10 @@ class StudyHomeViewController: UIViewController {
   private func unHideSubViews() {
     for subview in view.subviews {
       subview.isHidden = false
+      let val = subview.alpha
+      if val == 0.6499999761581421 && subview != viewBottombarBg && subview != viewBottombarTopBg {
+        subview.alpha = 0
+      }
     }
     updateViewsStatus()
   }
@@ -256,7 +330,10 @@ class StudyHomeViewController: UIViewController {
       let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       consentResult?.token = appdelegate.consentToken
     }
-
+    
+    UserDefaults.standard.setValue("\(Study.currentStudy?.userParticipateState.status.description ?? "")", forKey: "consentEnrolledStatus")
+    UserDefaults.standard.synchronize()
+    
     EnrollServices().enrollForStudy(
       studyId: (Study.currentStudy?.studyId)!,
       token: (ConsentBuilder.currentConsent?.consentResult?.token)!,
@@ -543,6 +620,9 @@ class StudyHomeViewController: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionJoinStudy(_: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Join Study Clicked"
+    ])
 
     if User.currentUser.userType == .anonymousUser {
       /// User not logged in yet.
@@ -581,19 +661,10 @@ class StudyHomeViewController: UIViewController {
             )
           }
         } else if participatedStatus == .withdrawn {
-          // check if rejoining is allowed after withrdrawn from study
-          if currentStudy.studySettings.rejoinStudyAfterWithdrawn {
-            WCPServices().getEligibilityConsentMetadata(
-              studyId: (Study.currentStudy?.studyId)!,
-              delegate: self as NMWebServiceDelegate
-            )
-          } else {
-            UIUtilities.showAlertWithTitleAndMessage(
-              title: "",
-              message: NSLocalizedString(kMessageForStudyWithdrawnState, comment: "")
-                as NSString
-            )
-          }
+          WCPServices().getEligibilityConsentMetadata(
+            studyId: (Study.currentStudy?.studyId)!,
+            delegate: self as NMWebServiceDelegate
+          )
         }
       case .paused:
         UIUtilities.showAlertWithTitleAndMessage(
@@ -610,6 +681,9 @@ class StudyHomeViewController: UIViewController {
   }
 
   @IBAction func backButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Home Button"
+    ])
     let button = sender as! UIButton
     if button.tag == 200 {
       slideMenuController()?.openLeft()
@@ -619,8 +693,12 @@ class StudyHomeViewController: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
+  
     if sender.tag == 1188 {
       // Visit Website
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Visit Website Clicked"
+      ])
 
       navigateToWebView(
         link: Study.currentStudy?.overview.websiteLink,
@@ -630,6 +708,9 @@ class StudyHomeViewController: UIViewController {
 
     } else {
       // View Consent
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "View Consent"
+      ])
 
       if Study.currentStudy?.studyId != nil {
         WCPServices().getConsentDocument(
@@ -755,19 +836,54 @@ class StudyHomeViewController: UIViewController {
   func navigateToWebView(link: String?, htmlText: String?, isEmailAvailable: Bool?) {
     let loginStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
     let webViewController =
-      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
-      as? UINavigationController)!
+    (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+     as? UINavigationController)!
     let webView = (webViewController.viewControllers[0] as? WebViewController)!
     webView.isEmailAvailable = isEmailAvailable!
-
+    
     if link != nil {
       webView.requestLink = Study.currentStudy?.overview.websiteLink
     }
     if htmlText != nil {
       webView.htmlString = htmlText
+      let regex = "<[^>]+>"
+      let detailText = htmlText ?? ""
+      //      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) != nil {
+      //        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attributedString2Html {
+      //          webView.htmlString = "\(valReConversiontoHTMLfromHTML)"
+      //        }
+      //      }
+      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+          
+          if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else if let attributedText =
+                      detailText.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                    attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else {
+            webView.htmlString = detailText
+          }
+        } else {
+          webView.htmlString = detailText
+        }
+      } else {
+        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+          
+          if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else {
+            webView.htmlString = "\(detailText.stringByDecodingHTMLEntities.htmlToAttriString!)"
+          }
+        } else {
+          webView.htmlString = "\(detailText.stringByDecodingHTMLEntities.htmlToAttriString!)"
+        }
+      }
     }
     navigationController?.present(webViewController, animated: true, completion: nil)
   }
+
 }
 
 extension StudyHomeViewController: ComprehensionFailureDelegate {
@@ -777,6 +893,9 @@ extension StudyHomeViewController: ComprehensionFailureDelegate {
 
   func didTapOnCancel() {
     consentRestorationData = nil
+    if Utilities.isStandaloneApp() {
+      unHideSubViews()
+    }
   }
 }
 
@@ -908,7 +1027,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
     }
 
     if requestName as String == RegistrationMethods.userProfile.description {
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
       } else {
         EnrollServices().getStudyStates(self)
@@ -979,7 +1098,6 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   /// This method updates the study status to DB and Server.
   /// - Parameter status: `UserStudyStatus.StudyStatus` to be updated.
   fileprivate func updateStudyStatus(status: UserStudyStatus.StudyStatus) {
-
     guard let currentStudy = Study.currentStudy,
       let studyID = currentStudy.studyId
     else { return }
@@ -1086,6 +1204,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
+      
     if (taskViewController.result.results?.count)! > 1 {
       if activityBuilder?.actvityResult?.result?.count
         == taskViewController.result.results?
@@ -1161,6 +1280,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       // Checking if Signature is consented after Review Step
 
       if consentSignatureResult?.didTapOnViewPdf == false {
+        NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
         // Directly moving to completion step by skipping Intermediate PDF viewer screen
         stepViewController.goForward()
       } else {
@@ -1182,18 +1303,44 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _: ORKStepViewController,
     didFinishWith _: ORKStepViewControllerNavigationDirection
-  ) {}
+  ) { }
 
-  public func stepViewControllerResultDidChange(_: ORKStepViewController) {}
+  public func stepViewControllerResultDidChange(_: ORKStepViewController) { }
 
   public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {}
+  
+  func captureScreen() -> UIImage {
+
+      UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, false, 0);
+
+    self.view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+
+      let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+
+      UIGraphicsEndImageContext()
+
+      return image
+  }
 
   func taskViewController(
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
     // CurrentStep is TokenStep
+    let val = captureScreen()
+    
+    UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0);
 
+  self.view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+
+    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+
+    UIGraphicsEndImageContext()
+
+    let image2 = image
+    
+    
+    
     if step.identifier == kEligibilityTokenStep {
       let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
 
@@ -1247,9 +1394,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           let currentStatus = Study.currentStudy?.userParticipateState.status
           if currentStatus == .yetToEnroll
             || currentStatus == .notEligible
-            || (currentStatus == .withdrawn
-              && Study.currentStudy?.studySettings
-                .rejoinStudyAfterWithdrawn ?? false)
+            || currentStatus == .withdrawn
           {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 
@@ -1426,4 +1571,52 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       return nil
     }
   }
+  
+  func taskViewController(_ taskViewController: ORKTaskViewController,
+                          stepViewControllerWillDisappear stepViewController: ORKStepViewController,
+                          navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+    
+    if let val = stepViewController.step?.identifier, val == kConsentSharing {
+      UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0)
+      taskViewController.view.drawHierarchy(in: taskViewController.view.bounds, afterScreenUpdates: true)
+      let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+      UIGraphicsEndImageContext()
+      let image2 = image
+      let imageURl = saveImageInDocumentDirectory(image: image2, fileName: kConsentSharingImage)
+      
+      let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+      
+      let docURL = documentDirectory.appendingPathComponent(kConsentSharingImagePDF)
+      
+      createPDFForSnapShot(image: image2)?.write(to: docURL, atomically: true)
+    }
+  }
+  
+  func saveImageInDocumentDirectory(image: UIImage, fileName: String) -> URL? {
+
+          let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+          let fileURL = documentsUrl.appendingPathComponent(fileName)
+    if let imageData = image.pngData() {
+              try? imageData.write(to: fileURL, options: .atomic)
+              return fileURL
+          }
+          return nil
+      }
+
+  func createPDFForSnapShot(image: UIImage) -> NSData? {
+
+          let pdfData = NSMutableData()
+          let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)!
+
+          var mediaBox = CGRect.init(x: 0, y: 0, width: image.size.width, height: image.size.height)
+
+          let pdfContext = CGContext(consumer: pdfConsumer, mediaBox: &mediaBox, nil)!
+
+          pdfContext.beginPage(mediaBox: &mediaBox)
+          pdfContext.draw(image.cgImage!, in: mediaBox)
+          pdfContext.endPage()
+
+          return pdfData
+      }
+  
 }

@@ -580,11 +580,10 @@ public class AppController {
                 @Override
                 public void onClick(View v) {
                   Bundle eventProperties = new Bundle();
-                  eventProperties.putString(
-                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                      context.getString(R.string.custom_data_question_cancel));
-                  analyticsInstance.logEvent(
-                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                  eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                          context.getString(R.string.custom_data_question_cancel));
+                  analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                          eventProperties);
                   alertDialog.dismiss();
                   ((SplashActivity) context).loadsplash();
                 }
@@ -605,11 +604,10 @@ public class AppController {
             @Override
             public void onClick(View v) {
               Bundle eventProperties = new Bundle();
-              eventProperties.putString(
-                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                  context.getString(R.string.upgrade));
-              analyticsInstance.logEvent(
-                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.upgrade));
+              analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
+                      eventProperties);
               final String appPackageName = context.getPackageName();
               try {
                 ((Activity) context)
@@ -1199,7 +1197,9 @@ public class AppController {
     if (dir.exists()) {
       File from = new File(dir, oldName);
       File to = new File(dir, newName);
-      if (from.exists()) from.renameTo(to);
+      if (from.exists()) {
+        from.renameTo(to);
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -32,23 +33,32 @@ import java.util.List;
 public interface NotificationDAO {
 
   public String deleteNotification(
-      int notificationIdForDelete, SessionObject sessionObject, String notificationType);
+      String notificationIdForDelete, SessionObject sessionObject, String notificationType);
 
-  public NotificationBO getNotification(int notificationId);
+  public NotificationBO getNotification(String notificationId);
 
-  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(int notificationId);
+  public List<NotificationHistoryBO> getNotificationHistoryListNoDateTime(String notificationId);
 
-  public List<NotificationBO> getNotificationList(int studyId, String type);
+  public List<NotificationBO> getNotificationList(String studyId, String type);
 
-  public List<NotificationBO> getNotificationList(Integer studyId);
+  public List<NotificationBO> getNotificationList(String studyId);
 
-  public List<PushNotificationBean> getPushNotificationList(String date, String time);
+  public List<PushNotificationBean> getPushNotificationList(String scheduledTimestamp);
 
-  public Integer saveOrUpdateOrResendNotification(
+  public String saveOrUpdateOrResendNotification(
       NotificationBO notificationBO,
       String notificationType,
       String buttonType,
       SessionObject sessionObject);
 
   public List<String> getGatwayAppList();
+
+  public void saveNotification(NotificationBO notificationBO);
+
+  public List<NotificationBO> getNotificationsList(
+      String studyId, String customStudyId, String copyVersion);
+
+  public List<NotificationBO> getViewNotificationList(String userId);
+
+  public List<String> getGatwayAppListForNotification(String userId);
 }

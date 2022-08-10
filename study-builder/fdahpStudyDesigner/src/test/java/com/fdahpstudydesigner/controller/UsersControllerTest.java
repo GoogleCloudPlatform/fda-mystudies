@@ -11,10 +11,10 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_RESENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_RE_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_UPDATED;
@@ -29,14 +29,18 @@ import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.Mail;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
 import java.util.UUID;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 public class UsersControllerTest extends BaseMockIT {
+
+  @Autowired Mail mail;
 
   @Test
   public void shouldViewUserDetails() throws Exception {
@@ -100,7 +104,7 @@ public class UsersControllerTest extends BaseMockIT {
     session.setFirstName("firstname");
     session.setLastName("lastname");
     session.setAccessLevel("2");
-    session.setUserId(1);
+    session.setUserId("1");
     session.setAccessLevel(UserAccessLevel.STUDY_BUILDER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
@@ -127,16 +131,14 @@ public class UsersControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(PathMappingUri.RESEND_ACTIVATE_DETAILS_LINK.getPath())
-                .param("userId", "15")
+                .param("userId", "1")
                 .headers(headers)
                 .sessionAttrs(getSession()))
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
-    // H2 database doesn't support Column "BINARY". Expect LoginDAOImpl throws
-    // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found;
-    verifyAuditEventCall(PASSWORD_HELP_EMAIL_FAILED);
+    verifyAuditEventCall(NEW_USER_INVITATION_RESENT);
   }
 
   @Test
@@ -164,7 +166,6 @@ public class UsersControllerTest extends BaseMockIT {
   @Test
   public void shouldEnforcePasswordChangeForAllUsers() throws Exception {
     HttpHeaders headers = getCommonHeaders();
-
     mockMvc
         .perform(
             post(PathMappingUri.ENFORCE_PASSWORD_CHANGE.getPath())
@@ -183,6 +184,7 @@ public class UsersControllerTest extends BaseMockIT {
   public void shouldUpdateUserDetails() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     UserBO userBo = new UserBO();
+    userBo.setRoleId("1");
     userBo.setUserEmail("superunittest@grr.la");
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -218,6 +220,7 @@ public class UsersControllerTest extends BaseMockIT {
     userBo.setFirstName("new_user_first_name");
     userBo.setLastName("new_user_last_name");
     userBo.setPhoneNumber("654665146432");
+    userBo.setRoleId("2");
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())
@@ -252,7 +255,7 @@ public class UsersControllerTest extends BaseMockIT {
     session.setFirstName("firstname");
     session.setLastName("lastname");
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
-    session.setUserId(2);
+    session.setUserId("2");
     sessionAttributesMap.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     return sessionAttributesMap;
   }

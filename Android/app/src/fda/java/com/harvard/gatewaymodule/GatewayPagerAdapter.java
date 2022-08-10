@@ -18,15 +18,14 @@ package com.harvard.gatewaymodule;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.viewpager.widget.PagerAdapter;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;

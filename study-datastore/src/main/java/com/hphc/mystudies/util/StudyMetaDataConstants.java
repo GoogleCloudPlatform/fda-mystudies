@@ -81,7 +81,7 @@ public interface StudyMetaDataConstants {
   public static final String STUDY_CLOSED = "Closed";
 
   public static final String STUDY_REF_CATEGORIES = "Categories";
-  public static final String STUDY_REF_SPONSERS = "Research Sponsors";
+  public static final String STUDY_REF_SPONSERS = "Research sponsors";
 
   public static final String YES = "Yes";
   public static final String NO = "No";
@@ -312,4 +312,12 @@ public interface StudyMetaDataConstants {
       "Answer these questions to determine your eligibility for the study";
   public static final String COMPREHENSION_TEXT =
       "Take this comprehension test to assess your understanding of the study:";
+
+  public static final String STUDIES = "studies";
+
+  public static final String DEFAULT_IMAGES = "defaultImages";
+
+  public static final String DATA_IMAGE = "data:image/jpeg;base64,";
+
+  public static final String DATA_PDF = "data:application/pdf;base64,";
 }

@@ -87,6 +87,7 @@
         </RelativeLayout>
 
     </LinearLayout>
+
     <TextView
         android:id="@+id/offlineIndicatior"
         android:layout_width="200dp"

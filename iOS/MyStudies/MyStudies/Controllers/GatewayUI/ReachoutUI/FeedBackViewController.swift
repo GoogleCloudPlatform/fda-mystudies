@@ -20,6 +20,8 @@
 import Foundation
 import IQKeyboardManagerSwift
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 struct FeedbackDetail {
 
@@ -41,13 +43,14 @@ class FeedBackViewController: UIViewController {
 
   // MARK: - Properties
   var feedbackText: String = ""
+    private var reachability: Reachability!
 
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    self.navigationItem.title = NSLocalizedString("Leave Us Your Feedback", comment: "")
-
+    self.navigationItem.title = NSLocalizedString("Leave us your feedback", comment: "")
+    setupNotifiers()
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -58,26 +61,86 @@ class FeedBackViewController: UIViewController {
 
     _ = FeedbackDetail.init()
   }
-
+  
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonSubmit?.isEnabled = true
+        buttonSubmit?.layer.opacity = 1
+    }
+    
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+        buttonSubmit?.isEnabled = false
+        buttonSubmit?.layer.opacity = 0.5
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
+  
   // MARK: - Button Actions
 
   /// Validations after clicking on submit button
   /// If all the validations satisfy send user feedback request
   /// - Parameter sender: Instance of submit UIButton.
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Feedback Submit"
+    ])
+    
+    self.view.endEditing(true)
 
     if FeedbackDetail.subject.isEmpty && FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Fill all fields alert"
+      ])
     } else if FeedbackDetail.subject.isEmpty {
       UIUtilities.showAlertWithMessage(
-        alertMessage: NSLocalizedString("Please enter message", comment: "")
+        alertMessage: NSLocalizedString("Please enter the message", comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter message alert"
+      ])
     } else if FeedbackDetail.feedback.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString("Please provide your feedback", comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Provide feedback alert"
+      ])
     } else {
       UserServices().sendUserFeedback(delegate: self)
     }

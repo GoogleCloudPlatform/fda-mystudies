@@ -22,5 +22,6 @@ public class ActivityResponseDataStructureBean {
   private String resultType = AppConstants.EMPTY_STR;
   private String startTime = AppConstants.EMPTY_STR;
   private String endTime = AppConstants.EMPTY_STR;
+  private String submittedTime = AppConstants.EMPTY_STR;
   private List<QuestionnaireActivityStepsBean> results = new ArrayList<>();
 }

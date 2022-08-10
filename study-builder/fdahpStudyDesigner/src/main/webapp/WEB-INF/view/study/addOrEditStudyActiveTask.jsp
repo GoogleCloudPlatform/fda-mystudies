@@ -10,14 +10,14 @@
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
-      <div class="black-md-f text-uppercase dis-line pull-left line34">
+      <div class="black-md-f dis-line pull-left line34">
         <span
             class="pr-sm cur-pointer"
             onclick="goToBackPage(this);">
           <img src="../images/icons/back-b.png" class="pr-md" alt=""/></span>
-        <c:if test="${actionPage eq 'add'}"> Add Active Task</c:if>
-        <c:if test="${actionPage eq 'addEdit'}">Edit Active Task</c:if>
-        <c:if test="${actionPage eq 'view'}">View Active Task <c:set
+        <c:if test="${actionPage eq 'add'}"> Add active task</c:if>
+        <c:if test="${actionPage eq 'addEdit'}">Edit active task</c:if>
+        <c:if test="${actionPage eq 'view'}">View active task <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?activeTaskBo.activeTaskVersion:''}
         </c:if>
       </div>
@@ -55,7 +55,7 @@
     <div class="tab-content pl-xlg pr-xlg">
       <!-- Content-->
       <div id="content" class="tab-pane fade in active mt-xlg">
-        <div class="mt-md blue-md-f text-uppercase">Select Active Task</div>
+        <div class="mt-md blue-md-f text-uppercase">Select Active task</div>
         <div class="gray-xs-f mt-md mb-sm">Choose from a list of pre-defined active tasks</div>
         <div class="col-md-4 p-none">
           <select class="selectpicker targetOption" id="targetOptionId" taskId="${activeTaskBo.id}"
@@ -97,6 +97,10 @@
     var actionType = '${actionPage}';
 
     var selectedTask = $('.targetOption').find("option:selected").text();
+    
+    if(actionType == 'view'){
+        $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+    }
 
     if (activeTaskInfoId) {
       $('.targetOption').prop('disabled', true);
@@ -131,7 +135,8 @@
       var typeOfActiveTask = $(this).val();
       var activeTaskInfoId = $(this).attr('taskId');
       $('.changeContent').empty();
-      $(document).find('#saveId,#doneId').unbind();
+      $(document).find('#saveId').unbind();
+      $(document).off('click', '#doneId');
       loadSelectedATask(typeOfActiveTask, activeTaskInfoId, actionType);
       $('.actBut').show();
       $('.scheduleTaskClass').prop('disabled', false);
@@ -151,8 +156,7 @@
             actionType: actionType
           },
           function () {
-            $(this).parents('form').attr('action',
-                '/studybuilder/adminStudies/saveOrUpdateActiveTaskContent.do?_S=${param._S}');
+            
             resetValidation($(this).parents('form'));
             var dt = new Date();
             $('#inputClockId').datetimepicker({
@@ -209,6 +213,43 @@
     });
   });
 
+  $("#doneId").click(function () {
+    var scheduletype = $('input[name="scheduleType"]:checked').val();
+	$('.manually-anchor-option').each(function(customAnchorCount) {
+		if ($('#xdays' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+	  	  $('#xdays' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+     	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").empty().append(
+     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+     	       "Please fill out this field"));
+   	  	  $('#xdays' + customAnchorCount).parent().find(".help-block-timer").show();
+	  	  $('#xdays' + customAnchorCount).parent().find(".help-block").hide();
+    	}
+		
+		if ($('#manualStartTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+	  	  $('#manualStartTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
+     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+     	       "Please fill out this field"));
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block-timer").show();
+     	  $('#manualStartTime' + customAnchorCount).parent().find(".help-block").hide();
+    	}
+		
+		if ($('#manualEndTime' + customAnchorCount).val() == '' && scheduletype == 'AnchorDate') {
+	  	  $('#manualEndTime' + customAnchorCount).parent().addClass("has-danger").addClass("has-error");
+     	  $('#manualEndTime' + customAnchorCount).parent().find(".help-block-timer").empty().append(
+     	  $("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+     	       "Please fill out this field"));
+    	}
+	});
+	
+	$('.manually-option').each(function(customCount) {
+		if ($('#customTime' + customCount).val() == '' && scheduletype == 'Regular') {
+		  $('#customTime' + customCount).parent().find(".help-block").show();
+		  $('#customTime' + customCount).parent().find(".help-block-timer").hide();
+		}
+	});
+  });
+		
   function goToBackPage(item) {
     //window.history.back();
     <c:if test="${actionPage ne 'view'}">
@@ -250,4 +291,15 @@
     </c:if>
   }
 
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
+  
+  var actionType = '${actionPage}';
+  $(".scheduleTaskClass ").click(function () {
+     if(actionType == 'view'){
+   		  $('.manuallyContainer').find('input:text').attr('disabled', 'disabled');
+     }
+  })
+ 
 </script>

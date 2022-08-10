@@ -120,6 +120,8 @@ class Activity {
   var lastModified: Date?
   var userStatus: UserActivityStatus.ActivityStatus = .yetToJoin
   var startDate: Date?
+  var startRawDate: String?
+  var endRawDate: String?
   var endDate: Date?
   var branching: Bool?
   var randomization: Bool?
@@ -176,6 +178,8 @@ class Activity {
     self.lastModified = nil
     self.userStatus = .yetToJoin
     self.startDate = nil
+    self.startRawDate = ""
+    self.endRawDate = ""
     self.endDate = nil
 
     self.shortName = ""
@@ -238,6 +242,7 @@ class Activity {
         self.startDate = Utilities.getDateFromStringWithOutTimezone(
           dateString: (infoDict[kActivityStartTime] as? String)!
         )
+        self.startRawDate = infoDict[kActivityStartTime] as? String
       }
       if Utilities.isValidValue(someObject: infoDict["schedulingType"] as AnyObject) {
         let scheduleValue = infoDict["schedulingType"] as? String ?? "Regular"
@@ -247,6 +252,7 @@ class Activity {
         self.endDate = Utilities.getDateFromStringWithOutTimezone(
           dateString: (infoDict[kActivityEndTime] as? String)!
         )
+        self.endRawDate = infoDict[kActivityEndTime] as? String
       }
 
       if Utilities.isValidObject(someObject: infoDict[kActivityFrequency] as AnyObject?) {
@@ -269,7 +275,7 @@ class Activity {
         ) {
           self.frequencyType = Frequency(
             rawValue: (frequencyDict[kActivityFrequencyType] as? String)!
-          )!
+          ) ?? .oneTime
         }
 
       }
@@ -346,17 +352,17 @@ class Activity {
 
     self.anchorDate = AnchorDate.init(availability)
     if self.anchorDate?.sourceType == "EnrollmentDate" {
-      var enrollmentDate = Study.currentStudy?.userParticipateState.joiningDate
+      var enrollmentDate = Study.currentStudy?.userParticipateState.joiningDate ?? Date()
 
       // update start date
-      var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate!)
+      var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate)
       let startTimeEnrollment = "00:00:00"
       startDateStringEnrollment =
         (startDateStringEnrollment ?? "") + " "
         + startTimeEnrollment
       enrollmentDate = Utilities.findDateFromString(
         dateString: startDateStringEnrollment ?? ""
-      )
+      ) ?? Date()
 
       self.anchorDate?.anchorDateValue = enrollmentDate
       let lifeTime = self.updateLifeTime(self.anchorDate!, frequency: self.frequencyType)
@@ -381,7 +387,13 @@ class Activity {
       }
 
       self.startDate = startdate
+      let val1 = TimeZone.current.secondsFromGMT(for: self.startDate!)
+      self.startRawDate = "\(startdate!)W\(val1)"
+      
       self.endDate = endDate
+      if endDate != nil {
+        self.endRawDate = "\(endDate!)W\(val1)"
+      }
     } else if anchorDate?.sourceType == "ActivityResponse"
       && isLaunchWithStudy
     {

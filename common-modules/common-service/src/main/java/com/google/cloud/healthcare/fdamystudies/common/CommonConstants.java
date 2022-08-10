@@ -94,4 +94,31 @@ public final class CommonConstants {
   public static final String ACTIVITY_STATE = "activity_state";
 
   public static final String PAGE_NO = "0";
+
+  public static final String UNAUTHORIZED_MESSAGE = "Unauthorized or Invalid token";
+
+  public static final String APPLICATION_ERROR_MESSAGE =
+      "Sorry, an error has occurred and your request could not be processed. Please try again later.";
+
+  public static final String BAD_REQUEST_MESSAGE =
+      "Invalid entries found in the submitted form. Please try again.";
+
+  public static final String AUTO_EXPIRATION = "autoExpiration";
+
+  public static final String VERSION = "Version";
+  public static final String CONSENT_DATE = "ConsentDate";
+  public static final String PDF_PATH = "PdfPath";
+  public static final String DATA_SHARING = "DataSharingPermission";
+  public static final String STUDY_ID = "StudyId";
+  public static final String SITE_ID = "SiteId";
+  public static final String ENROLLED = "Enrolled";
+  public static final String PARTICIPANT_ID = "ParticipantId";
+  public static final String CONSENT_TYPE = "ConsentType";
+  public static final String PRIMARY = "Primary Consent";
+  public static final String SHARING = "DataSharing Consent";
+
+  public static final String CONSENT_TABLE_NAME = "consent_data";
+
+  public static final String PARTICIPANT_STUDY_ID = "ParticipantStudyInfoId";
+  public static final String IMAGE_PATH = "ImagePath";
 }

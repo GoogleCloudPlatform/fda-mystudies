@@ -19,7 +19,7 @@
       <div>
         <div class="cards1 m-none">
           <table
-            class="table table-striped custom__table"
+            class="table table-borderless"
             [mfData]="
               manageLocations.locations
                 | paginate
@@ -38,7 +38,9 @@
           >
             <thead class="custom__thead">
               <tr>
-                <span class="text__387fea__12 mobile__view mr-sm sort_by_txt">
+                <span
+                  class="text__387fea__12 mobile__view mr-sm sort_by_txt pt-2"
+                >
                   Sort by:
                 </span>
                 <th>
@@ -96,14 +98,11 @@
                   </span>
                 </td>
               </tr>
-              <tr *ngIf="manageLocations.locations.length === 0">
-                <td colspan="4" class="text-center">No records found</td>
-              </tr>
             </tbody>
 
             <tfoot class="custom__tfoot">
               <tr>
-                <td colspan="4">
+                <td colspan="4" class="mob_tbl_footer_text_center">
                   <div class="text-center">
                     <pagination-controls
                       pagination-template
@@ -111,6 +110,17 @@
                       (pageChange)="pageChange($event)"
                     ></pagination-controls>
                   </div>
+                </td>
+              </tr>
+            </tfoot>
+
+            <tfoot>
+              <tr *ngIf="manageLocations.locations.length === 0">
+                <td
+                  colspan="4"
+                  class="text-center font12 txt__light-gray mob_tbl_footer_text_center"
+                >
+                  No records found
                 </td>
               </tr>
             </tfoot>

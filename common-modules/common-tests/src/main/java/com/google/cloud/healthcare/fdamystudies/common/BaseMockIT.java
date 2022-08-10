@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -25,6 +25,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
@@ -32,7 +35,10 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -46,6 +52,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -60,6 +67,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -119,6 +127,8 @@ public class BaseMockIT {
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   @LocalServerPort int randomServerPort;
+
+  @Autowired private TestRestTemplate restTemplate;
 
   @PostConstruct
   public void logServerPort() {
@@ -329,5 +339,31 @@ public class BaseMockIT {
     assertThat(mail.getDataHandler().getContentType())
         .isEqualToIgnoringCase("text/html; charset=utf-8");
     return mail;
+  }
+
+  protected String generateApiDocs() throws IOException {
+    // get swagger json
+    String apiDocs = this.restTemplate.getForObject("/v2/api-docs", String.class);
+
+    // format the json
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+    ObjectNode jsonObjNode = mapper.readValue(apiDocs, ObjectNode.class);
+    jsonObjNode.put("host", "localhost:8080");
+
+    // prepare the filepath
+    String documentPath = Paths.get("").toAbsolutePath().toString();
+    if (StringUtils.contains(documentPath, "fda-mystudies")) {
+      documentPath =
+          documentPath.substring(0, documentPath.indexOf("fda-mystudies"))
+              + "fda-mystudies/documentation/API";
+    }
+    documentPath += servletContext.getContextPath() + "/openapi.json";
+    documentPath = documentPath.replace(" ", "_");
+    // write api-docs json to a file
+    FileUtils.write(new File(documentPath), jsonObjNode.toPrettyString(), Charset.defaultCharset());
+    logger.info(String.format("Open API documentation created at %s", documentPath));
+    return documentPath;
   }
 }

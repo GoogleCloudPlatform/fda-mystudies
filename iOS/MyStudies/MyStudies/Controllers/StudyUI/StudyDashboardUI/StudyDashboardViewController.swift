@@ -19,6 +19,8 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 let kMessageForSharingDashboard =
   "This action will create a shareable image file of the dashboard currently seen in this section. Proceed?"
@@ -35,11 +37,13 @@ class StudyDashboardViewController: UIViewController {
 
   @IBOutlet var labelStudyTitle: UILabel?
   @IBOutlet var buttonHome: UIButton!
+  @IBOutlet var shareButton: UIButton!
 
   var dataSourceKeysForResponse: [[String: String]] = []
   lazy var tableViewRowDetails = NSMutableArray()
   lazy var todayActivitiesArray = NSMutableArray()
   lazy var statisticsArray = NSMutableArray()
+    private var reachability: Reachability!
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .lightContent
@@ -70,7 +74,10 @@ class StudyDashboardViewController: UIViewController {
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-
+      setupNotifiers()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard"
+    ])
     // load plist info
     let plistPath = Bundle.main.path(
       forResource: "StudyDashboard",
@@ -88,13 +95,12 @@ class StudyDashboardViewController: UIViewController {
     labelStudyTitle?.text = Study.currentStudy?.name
 
     // check if consent is udpated
-    if StudyUpdates.studyConsentUpdated {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }
-
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -110,16 +116,63 @@ class StudyDashboardViewController: UIViewController {
 
     // show navigationbar
     self.navigationController?.setNavigationBarHidden(true, animated: true)
-    self.tableView?.reloadData()
+    
+    guard let study = Study.currentStudy else { return }
+    let key = "Response" + study.studyId
+    if !(UserDefaults.standard.bool(forKey: key)) {
+      DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
+    }
     getResponse()
   }
 
   // MARK: - Utils
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+          
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+    }
+      
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+              setOnline()
+              break
+        case .wifi:
+              setOnline()
+              break
+        case .none:
+              setOffline()
+              break
+        case .unavailable:
+              setOffline()
+              break
+        }
+    }
+  
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .bottom, title: nil, image: nil, completion: nil)
+        shareButton.isEnabled = false
+        shareButton.layer.opacity = 0.5
+    }
+  
+    func setOnline() {
+        self.view.hideAllToasts()
+        shareButton.isEnabled = true
+        shareButton.layer.opacity = 1
+    }
 
   private func loadStatsFromDB(for study: Study) {
     DBHandler.loadStatisticsForStudy(studyId: study.studyId) { (statiticsList) in
       if !statiticsList.isEmpty {
         StudyDashboard.instance.statistics = statiticsList
+        self.tableView?.reloadData()
+      } else {
+        StudyDashboard.instance.statistics = []
         self.tableView?.reloadData()
       }
     }
@@ -131,11 +184,18 @@ class StudyDashboardViewController: UIViewController {
     guard let study = Study.currentStudy else { return }
     let key = "Response" + study.studyId
     if !(UserDefaults.standard.bool(forKey: key)) {
-      self.addProgressIndicator(with: kDashSetupMessage)
-      responseDataFetch?.checkUpdates { [unowned self] in
-        self.loadStatsFromDB(for: study)
-        self.removeProgressIndicator()
-      }
+      DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
+      StudyDashboard.instance.dashboardResponse = []
+        if reachability.connection != .unavailable {
+            self.addProgressIndicator(with: kDashSetupMessage)
+            responseDataFetch?.checkUpdates { [unowned self] in
+              
+              DispatchQueue.main.async {
+                self.loadStatsFromDB(for: study)
+                self.removeProgressIndicator()
+              }
+            }
+        }
     } else {
       loadStatsFromDB(for: study)
     }
@@ -190,6 +250,9 @@ class StudyDashboardViewController: UIViewController {
 
   /// Home button clicked.
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Home"
+    ])
     let button = sender as! UIButton
     if button.tag == 200 {
       self.slideMenuController()?.openLeft()
@@ -200,7 +263,9 @@ class StudyDashboardViewController: UIViewController {
 
   /// Share to others button clicked.
   @IBAction func shareButtonAction(_ sender: AnyObject) {
-
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyDashboard Share"
+    ])
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
       NSLocalizedString(kTitleMessage, comment: ""),
       errorMessage: NSLocalizedString(kMessageForSharingDashboard, comment: ""),
@@ -208,9 +273,17 @@ class StudyDashboardViewController: UIViewController {
       errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
       viewControllerUsed: self,
       action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "StudyDashboard Ok Alert"
+        ])
+
         self.shareScreenShotByMail()
       },
       action2: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "StudyDashboard Cancel Alert"
+        ])
+
         // Handle cancel action
       }
     )
@@ -382,7 +455,6 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
-
     switch reason {
     case ORKTaskViewControllerFinishReason.completed:
       ConsentBuilder.currentConsent?.consentResult?.consentDocument =
@@ -408,7 +480,6 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
-
     if (taskViewController.result.results?.count)! > 1,
       activityBuilder?.actvityResult?.result?.count == taskViewController.result.results?.count
     {
@@ -444,6 +515,8 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
 
       // Checking if Signature is consented after Review Step
       if consentSignatureResult?.didTapOnViewPdf == false {
+        NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
         // Directly moving to completion step by skipping Intermediate PDF viewer screen
         stepViewController.goForward()
       }
@@ -458,11 +531,9 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection
-  ) {
-  }
+  ) { }
 
-  public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
-  }
+  public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) { }
 
   public func stepViewControllerDidFail(
     _ stepViewController: ORKStepViewController,
@@ -474,7 +545,6 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
-
     // CurrentStep is TokenStep
     if step.identifier == kEligibilityTokenStep {  // For EligibilityToken Step
       let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)

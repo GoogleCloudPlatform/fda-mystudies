@@ -85,6 +85,7 @@ class User {
   var firstName: String?
   var lastName: String?
   var emailId: String?
+  var verificationTime: String?
   var settings: Settings?
   var userType: UserType?
   var userId: String!
@@ -123,6 +124,7 @@ class User {
     self.firstName = ""
     self.lastName = ""
     self.emailId = ""
+    self.verificationTime = ""
     self.settings = Settings()
     self.userType = UserType.anonymousUser
     self.userId = ""
@@ -135,18 +137,21 @@ class User {
   ///   - firstName: `User` First Name
   ///   - lastName: `User` Last Name
   ///   - emailId: `User` Email Id
+  ///   - verificationTime: `User` Verification Time
   ///   - userType: `User` Type
   ///   - userId: `User` ID
   init(
     firstName: String?,
     lastName: String?,
     emailId: String?,
+    verificationTime: String?,
     userType: UserType?,
     userId: String?
   ) {
     self.firstName = firstName
     self.lastName = lastName
     self.emailId = emailId
+    self.verificationTime = verificationTime
     self.userType = userType
     self.userId = userId
   }
@@ -178,6 +183,14 @@ class User {
       self.participatedStudies.append(studyStatus)
 
       return studyStatus
+    }
+  }
+  
+  func udpateUserStudyVersion(studyId: String, userStudyVersion: String) {
+
+    let studies = self.participatedStudies
+    if let study = studies?.filter({ $0.studyId == studyId }).first {
+      study.userStudyVersion = userStudyVersion
     }
   }
 
@@ -232,7 +245,7 @@ class User {
   ) -> UserActivityStatus {
 
     let activities = self.participatedActivites
-    if let activity = activities?.filter({ $0.activityId == activityId && $0.activityRunId == runId }
+    if let activity = activities?.filter({ $0.activityId == activityId && $0.activityRunId == runId && $0.studyId == studyId }
     ).first {
       activity.status = status
       return activity
@@ -380,7 +393,7 @@ class UserStudyStatus {
     var description: String {
       switch self {
       case .yetToEnroll:
-        return "Yet To enroll"
+        return "Yet to enroll"
       case .enrolled:
         return "Enrolled"
       case .completed:
@@ -396,7 +409,7 @@ class UserStudyStatus {
     var closedStudyDescription: String {
       switch self {
       case .yetToEnroll:
-        return "No participation"
+        return "No Participation"
       case .enrolled:
         return "Partial participation"
       case .completed:
@@ -440,7 +453,9 @@ class UserStudyStatus {
 
   lazy var completion: Int = 0
   lazy var adherence: Int = 0
-
+  lazy var userStudyVersion: String = ""
+  
+  var dataSharingPermission: String = "Not Applicable"
   var participantId: String?
   var siteID: String!
   var tokenIdentifier: String!
@@ -461,6 +476,12 @@ class UserStudyStatus {
       }
       if Utilities.isValidValue(someObject: detail[kAdherence] as AnyObject) {
         self.adherence = (detail[kAdherence] as? Int)!
+      }
+      if Utilities.isValidValue(someObject: detail["userStudyVersion"] as AnyObject) {
+        self.userStudyVersion = (detail["userStudyVersion"] as? String) ?? ""
+      }
+      if Utilities.isValidValue(someObject: detail[kDataSharingPermission] as AnyObject) {
+        self.dataSharingPermission = detail[kDataSharingPermission] as? String ?? "Not Applicable"
       }
       if Utilities.isValidValue(someObject: detail[kStudyParticipantId] as AnyObject) {
         self.participantId = detail[kStudyParticipantId] as? String
@@ -502,14 +523,25 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getParticipatedUserStudyStatus() -> [String: Any] {
 
-    let id = self.participantId ?? ""
+    let id = self.participantId ?? (Study.currentStudy?.userParticipateState.participantId ?? "")
+    var valUserStudyVersion = Study.currentStudy?.newVersion ?? ""
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+      if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&
+          Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "0") {
+        valUserStudyVersion = Study.currentStudy?.userParticipateState.userStudyVersion ?? ""
+      }
+    }
+    
     var studyDetail =
       [
         kStudyId: self.studyId,
+        "userStudyVersion": valUserStudyVersion,
         kStudyStatus: self.status.paramValue,
       ] as [String: Any]
-    if !siteID.isEmpty {
-      studyDetail["siteId"] = siteID
+    if let siteID = siteID {
+      if !siteID.isEmpty {
+        studyDetail["siteId"] = siteID
+      }
     }
     if !id.isEmpty {
       studyDetail[kStudyParticipantId] = id
@@ -521,14 +553,27 @@ class UserStudyStatus {
   /// - Returns: `JSONDictionary` object
   func getCompletionAdherence() -> [String: Any] {
     let id = self.participantId ?? ""
+    var valUserStudyVersion = Study.currentStudy?.newVersion ?? ""
+    
+    if StudyUpdates.studyConsentUpdated &&
+        StudyUpdates.studyEnrollAgain {
+      if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&
+          Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "0") {
+        valUserStudyVersion = Study.currentStudy?.userParticipateState.userStudyVersion ?? ""
+      }
+    }
+    
     var studyDetail =
       [
         kStudyId: self.studyId,
         "completion": completion,
+        "userStudyVersion": valUserStudyVersion,
         "adherence": adherence,
       ] as [String: Any]
-    if !siteID.isEmpty {
-      studyDetail["siteId"] = siteID
+    if let siteID = siteID {
+      if !siteID.isEmpty {
+        studyDetail["siteId"] = siteID
+      }
     }
     if !id.isEmpty {
       studyDetail[kStudyParticipantId] = id
@@ -583,6 +628,62 @@ class TermsAndPolicy {
         self.policyURL = ""
       }
     }
+  }
+
+}
+
+// MARK: Manage Apps
+class UserManageApps {
+  var appName: String?
+  var code: String?
+  var contactUsEmail: String?
+  var supportEmail: String?
+  var fromEmail: String?
+  var appWebsite: String?
+  var privacyPolicyUrl: String?
+  var termsUrl: String?
+  var latestVersion: String?
+  var isForceUpdate: String?
+  static var appDetails: UserManageApps?
+
+  /// Default Initializer
+  init() {
+    self.appName = ""
+    self.code = ""
+    self.contactUsEmail = ""
+    self.supportEmail = ""
+    self.fromEmail = ""
+    self.appWebsite = ""
+    self.privacyPolicyUrl = ""
+    self.termsUrl = ""
+    self.latestVersion = ""
+    self.isForceUpdate = ""
+  }
+
+  /// Initializes all properties of `Manage Apps`
+  /// - Parameters:
+  ///   - appName: AppName
+  ///   - contactUsEmail: ContactUs Email
+  ///   - supportEmail: Support Email
+  ///   - fromEmail: From Email
+  ///   - appWebsite: App Website
+  ///   - termsUrl: Terms Url
+  ///   - privacyPolicyUrl: Policy Url
+  ///   - version: Array of Latest Version, Is Force Update Required, Code
+  func initWith(_ appName: String, _ contactUsEmail: String,
+                _ supportEmail: String, _ fromEmail: String,
+                _ appWebsite: String, _ privacyPolicyUrl: String,
+                _ termsUrl: String, _ version: [String]) {
+    self.appName = appName
+    self.code = version[2]
+    self.contactUsEmail = contactUsEmail
+    self.supportEmail = supportEmail
+    self.fromEmail = fromEmail
+    self.appWebsite = appWebsite
+    self.privacyPolicyUrl = privacyPolicyUrl
+    self.termsUrl = termsUrl
+    self.latestVersion = version[0]
+    self.isForceUpdate = version[1]
   }
 
 }
@@ -746,4 +847,15 @@ class UserActivityStatus {
 
     return studyDetail
   }
+  
+  func getParticipatedUserUpdateRunActivityStatus() -> [String: Any] {
+    let runDetail = [
+      "total": self.totalRuns,
+      "completed": self.compeltedRuns,
+      "missed": self.incompletedRuns,
+    ]
+
+    return runDetail
+  }
+  
 }

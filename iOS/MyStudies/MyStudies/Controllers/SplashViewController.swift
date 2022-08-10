@@ -34,6 +34,19 @@ class SplashViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    let ud = UserDefaults.standard
+    ud.set(true, forKey: kFromSplashScreen)
+    ud.set(Upgrade.fromSplash.rawValue, forKey: kFromBackground)
+    ud.set(false, forKey: kIsShowUpdateAppVersion)
+    ud.set("", forKey: "pausedNotification")
+    ud.removeObject(forKey: "isAlertShown")
+    ud.setValue("", forKey: "consentEnrolledStatus")
+    
+    print("999userInfoDetails---\(UserDefaults.standard.value(forKey: "userInfoDetails"))")
+    ud.set("", forKey: "userInfoDetails")
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+    ud.synchronize()
   }
 
   override func viewWillAppear(_ animated: Bool) {

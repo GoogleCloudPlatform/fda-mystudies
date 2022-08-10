@@ -26,10 +26,6 @@ public interface ActivityResponseProcessorService {
       String studyId, String siteId, String participantId, String activityId, String questionKey)
       throws ProcessResponseException;
 
-  void deleteActivityResponseDataForParticipant(
-      String studyId, String participantId, AuditLogEventRequest auditRequest)
-      throws ProcessResponseException;
-
   void updateWithdrawalStatusForParticipant(String studyId, String participantId)
       throws ProcessResponseException;
 }

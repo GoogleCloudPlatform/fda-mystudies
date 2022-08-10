@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.AUTO_EXPIRATION;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -25,8 +26,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -40,7 +41,8 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class UserManagementUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(UserManagementUtil.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(UserManagementUtil.class.getName());
 
   @Autowired private RestTemplate restTemplate;
 
@@ -54,7 +56,7 @@ public class UserManagementUtil {
       UpdateEmailStatusRequest updateEmailStatusRequest,
       String userId,
       AuditLogEventRequest auditRequest) {
-    logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
+    logger.entry("Begin updateUserInfoInAuthServer()");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -86,7 +88,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.info("UserManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("UserManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -111,9 +113,8 @@ public class UserManagementUtil {
       String participantId,
       String studyId,
       String studyVersion,
-      String delete,
       AuditLogEventRequest auditRequest) {
-    logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
+    logger.entry("Begin withDrawParticipantFromStudy()");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
 
@@ -133,23 +134,23 @@ public class UserManagementUtil {
             + "&studyVersion="
             + studyVersion
             + "&participantId="
-            + participantId
-            + "&deleteResponses="
-            + String.valueOf(delete);
+            + participantId;
 
     ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 
+    logger.info("Withdrawal status code" + response.getStatusCode());
     if (response.getStatusCode() == HttpStatus.OK) {
       userMgmntAuditHelper.logEvent(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE, auditRequest);
+      logger.info("WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE");
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
     }
 
-    logger.info("UserManagementUtil withDrawParticipantFromStudy() - Ends ");
+    logger.exit("withDrawParticipantFromStudy() - Ends ");
     return message;
   }
 
   public static String genarateEmailContent(String emailContentName, Map<String, String> keyValue) {
-    logger.info("UserManagementUtil - genarateEmailContent() :: Starts");
+    logger.entry("Begin genarateEmailContent()");
     if (StringUtils.isNotEmpty(emailContentName)) {
       for (Map.Entry<String, String> entry : keyValue.entrySet()) {
         emailContentName =
@@ -157,18 +158,35 @@ public class UserManagementUtil {
                 entry.getKey(), StringUtils.isBlank(entry.getValue()) ? "" : entry.getValue());
       }
     }
-    logger.info("UserManagementUtil - genarateEmailContent() :: Ends");
+    logger.exit("genarateEmailContent() :: Ends");
     return emailContentName;
   }
 
-  public void deleteUserInfoInAuthServer(String userId) {
+  public void deleteUserInfoInAuthServer(String userId, boolean isappDeactivate) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
     HttpEntity<Object> entity = new HttpEntity<>(headers);
 
-    restTemplate.exchange(
-        appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, entity, Void.class, userId);
+    String url = "";
+    if (isappDeactivate) {
+      url = appConfig.getAuthServerDeleteStatusUrl() + "?appAndUserDeactivate=" + AUTO_EXPIRATION;
+    } else {
+      url = appConfig.getAuthServerDeleteStatusUrl();
+    }
+    restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class, userId);
+  }
+
+  public static String getCurrentDate() {
+    Calendar currentDate = Calendar.getInstance();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    return formatter.format(currentDate.getTime());
+  }
+
+  public static String getCurrentTime() {
+    Calendar currentDate = Calendar.getInstance();
+    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+    return formatter.format(currentDate.getTime());
   }
 }

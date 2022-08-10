@@ -18,6 +18,7 @@
 
 import ResearchKit
 import UIKit
+import FirebaseAnalytics
 
 class InEligibilityStep: ORKStep {
 
@@ -51,6 +52,7 @@ class InEligibilityStepViewController: ORKStepViewController {
   }
 
   override func goForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
     super.goForward()
   }
 
@@ -62,6 +64,10 @@ class InEligibilityStepViewController: ORKStepViewController {
 
   // MARK: - Actions
   @IBAction func buttonActionDone(sender: UIButton?) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "InEligibility Done"
+    ])
+    self.goForward()
     self.taskViewController?.dismiss(animated: true, completion: nil)
   }
 }

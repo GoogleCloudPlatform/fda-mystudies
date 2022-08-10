@@ -30,6 +30,8 @@ import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityState
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,8 +39,8 @@ import javax.ws.rs.core.Context;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -50,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(tags = "Process activity state", description = "Activity state operation performed")
 @RestController
 public class ProcessActivityStateController {
   @Autowired
@@ -57,9 +60,12 @@ public class ProcessActivityStateController {
 
   @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(ProcessActivityStateController.class);
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
+  private XLogger logger =
+      XLoggerFactory.getXLogger(ProcessActivityStateController.class.getName());
+
+  @ApiOperation(value = "Get activity state")
   @GetMapping(
       value = "/participant/get-activity-state",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -69,6 +75,7 @@ public class ProcessActivityStateController {
       @RequestParam("participantId") String participantId,
       HttpServletRequest request)
       throws ProcessActivityStateException {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
@@ -96,12 +103,14 @@ public class ProcessActivityStateController {
     }
   }
 
+  @ApiOperation(value = "Update activity state")
   @PostMapping("/participant/update-activity-state")
   public ResponseEntity<?> updateActivityState(
       @RequestBody ActivityStateRequestBean activityStateRequestBean,
       @Context HttpServletResponse response,
       @RequestHeader String userId,
       HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(userId);
     if (activityStateRequestBean == null

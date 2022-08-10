@@ -44,6 +44,8 @@ public class ParticipantRegistryDetail extends BaseResponse {
 
   private String appName;
 
+  private String appStatus;
+
   private String siteId;
 
   private String customLocationId;

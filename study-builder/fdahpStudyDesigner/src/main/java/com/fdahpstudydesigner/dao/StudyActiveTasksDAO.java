@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,7 +25,10 @@
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
+import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
+import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
+import com.fdahpstudydesigner.bo.ActiveTaskFrequencyBo;
 import com.fdahpstudydesigner.bo.ActiveTaskListBo;
 import com.fdahpstudydesigner.bo.ActiveTaskMasterAttributeBo;
 import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
@@ -37,7 +41,7 @@ public interface StudyActiveTasksDAO {
   public String deleteActiveTask(
       ActiveTaskBo activeTaskBo, SessionObject sesObj, String customStudyId);
 
-  public ActiveTaskBo getActiveTaskById(Integer activeTaskId, String customStudyId);
+  public ActiveTaskBo getActiveTaskById(String activeTaskId, String customStudyId);
 
   public List<ActivetaskFormulaBo> getActivetaskFormulas();
 
@@ -56,7 +60,7 @@ public interface StudyActiveTasksDAO {
       ActiveTaskBo activeTaskBo, SessionObject sesObj, String customStudyId);
 
   public boolean validateActiveTaskAttrById(
-      Integer studyId,
+      String studyId,
       String activeTaskName,
       String activeTaskAttIdVal,
       String activeTaskAttIdName,
@@ -64,4 +68,22 @@ public interface StudyActiveTasksDAO {
 
   public List<ActiveStatisticsBean> validateActiveTaskStatIds(
       String customStudyId, List<ActiveStatisticsBean> activeStatisticsBeans);
+
+  public List<ActiveTaskBo> getStudyActiveTaskByStudyId(
+      String studyId, String customId, String version);
+
+  public List<ActiveTaskAtrributeValuesBo> getActiveTaskAtrributeValuesByActiveTaskId(
+      List<String> activeTaskId);
+
+  public List<ActiveTaskCustomScheduleBo> getActiveTaskCustomScheduleBoList(
+      List<String> activeTaskId);
+
+  public List<ActiveTaskFrequencyBo> getActiveTaskFrequencyBoList(List<String> activeTaskId);
+
+  public List<ActiveTaskMasterAttributeBo> getActiveTaskMasterAttributesByType(
+      List<String> activeTaskType);
+
+  public List<ActiveTaskCustomScheduleBo> getActivetaskCustomFrequencies(String activetaskId);
+
+  public List<ActiveTaskFrequencyBo> getActiveTaskFrequency(String activetaskId);
 }

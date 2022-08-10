@@ -62,7 +62,8 @@
               <td width="60%">
                 <div class="dis-ellipsis">${fn:escapeXml(studyNotification.notificationText)}</div>
               </td>
-              <td class="wid20">${studyNotification.checkNotificationSendingStatus}</td>
+              <td class="wid20"><c:if test="${not studyNotification.notificationDone}">Draft</c:if>
+              <c:if test="${studyNotification.notificationDone}">${studyNotification.checkNotificationSendingStatus}</c:if></td>
               <td class="wid20 text-right">
                 <span class="sprites_icon preview-g mr-lg studyNotificationDetails"
                       actionType="view"
@@ -150,7 +151,7 @@
       "lengthChange": false,
       "searching": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
     });
 
@@ -159,5 +160,23 @@
   function markAsCompleted() {
     $('.markCompleted').prop('disabled', true);
     $("#notificationMarkAsCompletedForm").submit();
+  }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+  function showSucMsg(message) {
+    $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+    $('#alertMsg').show('5000');
+    if('${param.buttonText}' == 'completed'){
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/actionList.do?_S=${param._S}";
+	
+	    }, 5000);
+    }else{
+  	setTimeout(hideDisplayMessage, 5000);
+    }
   }
 </script>

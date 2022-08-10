@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -17,7 +17,6 @@ package com.harvard.studyappmodule.consent;
 
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import com.harvard.R;
 import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
@@ -223,7 +222,6 @@ public class ConsentBuilder {
     String dataSharing =
         AppController.getHelperSharedPreference()
             .readPreference(context, "DataSharingScreen" + pdftitle, "");
-    Log.e("check", "dataSharing " + dataSharing);
     if (dataSharing == null || !dataSharing.equalsIgnoreCase("false")) {
       if (!consent.getSharing().getTitle().equalsIgnoreCase("")
           && !consent.getSharing().getText().equalsIgnoreCase("")
@@ -321,19 +319,20 @@ public class ConsentBuilder {
     TextAnswerFormatRegex textAnswerFormat = new TextAnswerFormatRegex(Integer.MAX_VALUE, "", "");
     textAnswerFormat.setIsMultipleLines(false);
     QuestionStepCustom firstName =
-        new QuestionStepCustom(
-            context.getResources().getString(R.string.first_name),
-            context.getResources().getString(R.string.first_name_2),
-            textAnswerFormat);
+            new QuestionStepCustom(
+                    context.getResources().getString(R.string.first_name),
+                    context.getResources().getString(R.string.first_name_2),
+                    textAnswerFormat);
+
     firstName.setPlaceholder(context.getResources().getString(R.string.required));
     firstName.setAnswerFormat1(textAnswerFormat);
     firstName.setOptional(false);
 
     QuestionStepCustom lastName =
-        new QuestionStepCustom(
-            context.getResources().getString(R.string.last_name),
-            context.getResources().getString(R.string.last_name_2),
-            textAnswerFormat);
+            new QuestionStepCustom(
+                    context.getResources().getString(R.string.last_name),
+                    context.getResources().getString(R.string.last_name_2),
+                    textAnswerFormat);
     lastName.setPlaceholder(context.getResources().getString(R.string.required));
     lastName.setAnswerFormat1(textAnswerFormat);
     lastName.setOptional(false);

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,12 +28,12 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -115,12 +116,13 @@ public class QuestionReponseTypeBo implements Serializable {
   private String placeholder;
 
   @Column(name = "questions_response_type_id")
-  private Integer questionsResponseTypeId;
+  private String questionsResponseTypeId;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "response_type_id")
-  private Integer responseTypeId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "response_type_id", updatable = false, nullable = false)
+  private String responseTypeId;
 
   @Column(name = "selection_style")
   private String selectionStyle;
@@ -168,7 +170,7 @@ public class QuestionReponseTypeBo implements Serializable {
   private String otherExclusive;
 
   @Column(name = "other_destination_step_id")
-  private Integer otherDestinationStepId;
+  private String otherDestinationStepId;
 
   @Column(name = "other_description")
   private String otherDescription;
@@ -181,6 +183,10 @@ public class QuestionReponseTypeBo implements Serializable {
 
   @Column(name = "other_participant_fill")
   private String otherParticipantFill;
+
+  @Transient private String signedMaxImage;
+
+  @Transient private String signedMinImage;
 
   public Boolean getActive() {
     return active;
@@ -274,11 +280,11 @@ public class QuestionReponseTypeBo implements Serializable {
     return placeholder;
   }
 
-  public Integer getQuestionsResponseTypeId() {
+  public String getQuestionsResponseTypeId() {
     return questionsResponseTypeId;
   }
 
-  public Integer getResponseTypeId() {
+  public String getResponseTypeId() {
     return responseTypeId;
   }
 
@@ -418,11 +424,11 @@ public class QuestionReponseTypeBo implements Serializable {
     this.placeholder = placeholder;
   }
 
-  public void setQuestionsResponseTypeId(Integer questionsResponseTypeId) {
+  public void setQuestionsResponseTypeId(String questionsResponseTypeId) {
     this.questionsResponseTypeId = questionsResponseTypeId;
   }
 
-  public void setResponseTypeId(Integer responseTypeId) {
+  public void setResponseTypeId(String responseTypeId) {
     this.responseTypeId = responseTypeId;
   }
 
@@ -502,11 +508,11 @@ public class QuestionReponseTypeBo implements Serializable {
     this.otherExclusive = otherExclusive;
   }
 
-  public Integer getOtherDestinationStepId() {
+  public String getOtherDestinationStepId() {
     return otherDestinationStepId;
   }
 
-  public void setOtherDestinationStepId(Integer otherDestinationStepId) {
+  public void setOtherDestinationStepId(String otherDestinationStepId) {
     this.otherDestinationStepId = otherDestinationStepId;
   }
 
@@ -540,5 +546,21 @@ public class QuestionReponseTypeBo implements Serializable {
 
   public void setOtherParticipantFill(String otherParticipantFill) {
     this.otherParticipantFill = otherParticipantFill;
+  }
+
+  public String getSignedMaxImage() {
+    return signedMaxImage;
+  }
+
+  public String getSignedMinImage() {
+    return signedMinImage;
+  }
+
+  public void setSignedMaxImage(String signedMaxImage) {
+    this.signedMaxImage = signedMaxImage;
+  }
+
+  public void setSignedMinImage(String signedMinImage) {
+    this.signedMinImage = signedMinImage;
   }
 }

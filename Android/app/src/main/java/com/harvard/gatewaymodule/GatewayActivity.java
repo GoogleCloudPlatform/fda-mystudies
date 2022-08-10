@@ -198,6 +198,7 @@ public class GatewayActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
+
       if (alertDialog != null) alertDialog.dismiss();
     } catch (Exception e) {
       e.printStackTrace();
@@ -316,7 +317,6 @@ public class GatewayActivity extends AppCompatActivity
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.get_started));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
-
             GetStartedEvent getStartedEvent = new GetStartedEvent();
             getStartedEvent.setCommingFrom(COMMING_FROM);
             onEvent(getStartedEvent);
@@ -452,6 +452,26 @@ public class GatewayActivity extends AppCompatActivity
     }
   }
 
+  private void getAppsInfo() {
+    AppController.getHelperProgressDialog().showProgress(GatewayActivity.this, "", "", false);
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
+            "get",
+            Urls.APPS + "?appId=" + AppConfig.APP_ID_VALUE,
+            APPS_RESPONSE,
+            this,
+            Apps.class,
+            new HashMap<String, String>(),
+            null,
+            null,
+            false,
+            this);
+    RegisterUserEvent registerUserEvent = new RegisterUserEvent();
+    registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performRegistration(registerUserEvent);
+  }
+
   public void isUpgrade(boolean b, String latestVersion, final boolean force) {
     this.latestVersion = latestVersion;
     this.force = force;
@@ -521,25 +541,5 @@ public class GatewayActivity extends AppCompatActivity
       alertDialog = alertDialogBuilder.create();
       alertDialog.show();
     }
-  }
-
-  private void getAppsInfo() {
-    AppController.getHelperProgressDialog().showProgress(GatewayActivity.this, "", "", false);
-    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
-        new ParticipantDatastoreConfigEvent(
-            "get",
-            Urls.APPS + "?appId=" + AppConfig.APP_ID_VALUE,
-            APPS_RESPONSE,
-            this,
-            Apps.class,
-            new HashMap<String, String>(),
-            null,
-            null,
-            false,
-            this);
-    RegisterUserEvent registerUserEvent = new RegisterUserEvent();
-    registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
-    UserModulePresenter userModulePresenter = new UserModulePresenter();
-    userModulePresenter.performRegistration(registerUserEvent);
   }
 }

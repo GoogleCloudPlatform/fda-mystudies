@@ -1,0 +1,831 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Api Documentation",
+    "contact" : { },
+    "license" : {
+      "name" : "View License",
+      "url" : "https://github.com/GoogleCloudPlatform/fda-mystudies/blob/master/LICENSE.txt"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/response-datastore",
+  "tags" : [ {
+    "name" : "Generate participant id",
+    "description" : "Generate participant id based on study"
+  }, {
+    "name" : "Get Health",
+    "description" : "Provides an indication about the health of the service"
+  }, {
+    "name" : "Process activity response",
+    "description" : "Response activity operation performed"
+  }, {
+    "name" : "Process activity state",
+    "description" : "Activity state operation performed"
+  }, {
+    "name" : "Study metadata",
+    "description" : "Operations pertaining to study metadata, once study is published from study builder"
+  } ],
+  "paths" : {
+    "/healthCheck" : {
+      "get" : {
+        "tags" : [ "Get Health" ],
+        "summary" : "Provides an indication about the health of the service",
+        "description" : "Default response codes 400 and 401 are not applicable for this operation",
+        "operationId" : "healthUsingGET",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Service is Up and Running",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/participant/add" : {
+      "post" : {
+        "tags" : [ "Generate participant id" ],
+        "summary" : "Generate participant id from response datastore",
+        "operationId" : "addParticipantIdentifierUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "appId",
+          "in" : "header",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "enrollmentTokenIdentifierBean",
+          "description" : "enrollmentTokenIdentifierBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EnrollmentTokenIdentifierBean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/participant/get-activity-state" : {
+      "get" : {
+        "tags" : [ "Process activity state" ],
+        "summary" : "Get activity state",
+        "operationId" : "getActivityStateUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "participantId",
+          "in" : "query",
+          "description" : "participantId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "studyId",
+          "in" : "query",
+          "description" : "studyId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/participant/getresponse" : {
+      "get" : {
+        "tags" : [ "Process activity response" ],
+        "summary" : "Get activity response data for participant from cloud fire store",
+        "operationId" : "getActivityResponseDataForParticipantUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "activityId",
+          "in" : "query",
+          "description" : "activityId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "appId",
+          "in" : "query",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "participantId",
+          "in" : "query",
+          "description" : "participantId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "questionKey",
+          "in" : "query",
+          "description" : "questionKey",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "siteId",
+          "in" : "query",
+          "description" : "siteId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "studyId",
+          "in" : "query",
+          "description" : "studyId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "tokenId",
+          "in" : "query",
+          "description" : "tokenId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/participant/process-response" : {
+      "post" : {
+        "tags" : [ "Process activity response" ],
+        "summary" : "Process activity response for participant and store in cloud fire store",
+        "operationId" : "processActivityResponseForParticipantUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "questionnaireActivityResponseBean",
+          "description" : "questionnaireActivityResponseBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ActivityResponseBean"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/participant/update-activity-state" : {
+      "post" : {
+        "tags" : [ "Process activity state" ],
+        "summary" : "Update activity state",
+        "operationId" : "updateActivityStateUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "activityStateRequestBean",
+          "description" : "activityStateRequestBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ActivityStateRequestBean"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/participant/withdraw" : {
+      "post" : {
+        "tags" : [ "Process activity response" ],
+        "summary" : "Withdraw participant from study from response datastore",
+        "operationId" : "withdrawParticipantFromStudyUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "appId",
+          "in" : "header",
+          "description" : "appId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "participantId",
+          "in" : "query",
+          "description" : "participantId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "studyId",
+          "in" : "query",
+          "description" : "studyId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "studyVersion",
+          "in" : "query",
+          "description" : "studyVersion",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/studymetadata" : {
+      "post" : {
+        "tags" : [ "Study metadata" ],
+        "summary" : "Add or update study metadata in response datastore when a study is published from study builder",
+        "operationId" : "addUpdateStudyMetadataUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "studyMetadataBean",
+          "description" : "studyMetadataBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/StudyMetadataBean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "ActivityMetadataBean" : {
+      "type" : "object",
+      "properties" : {
+        "activityId" : {
+          "type" : "string"
+        },
+        "activityRunId" : {
+          "type" : "string"
+        },
+        "activityType" : {
+          "type" : "string"
+        },
+        "endDate" : {
+          "type" : "string"
+        },
+        "lastModified" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "startDate" : {
+          "type" : "string"
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "studyVersion" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ActivityMetadataBean"
+    },
+    "ActivityResponseBean" : {
+      "type" : "object",
+      "properties" : {
+        "applicationId" : {
+          "type" : "string"
+        },
+        "createdTimestamp" : {
+          "type" : "string"
+        },
+        "data" : {
+          "$ref" : "#/definitions/ActivityResponseDataStructureBean"
+        },
+        "metadata" : {
+          "$ref" : "#/definitions/ActivityMetadataBean"
+        },
+        "participantId" : {
+          "type" : "string"
+        },
+        "sharingConsent" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "tokenIdentifier" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "withdrawalStatus" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "ActivityResponseBean"
+    },
+    "ActivityResponseDataStructureBean" : {
+      "type" : "object",
+      "properties" : {
+        "endTime" : {
+          "type" : "string"
+        },
+        "resultType" : {
+          "type" : "string"
+        },
+        "results" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QuestionnaireActivityStepsBean"
+          }
+        },
+        "startTime" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ActivityResponseDataStructureBean"
+    },
+    "ActivityRunBean" : {
+      "type" : "object",
+      "properties" : {
+        "completed" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "missed" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "total" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "ActivityRunBean"
+    },
+    "ActivityStateRequestBean" : {
+      "type" : "object",
+      "properties" : {
+        "activity" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ParticipantActivityBean"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "participantId" : {
+          "type" : "string"
+        },
+        "studyId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ActivityStateRequestBean"
+    },
+    "ActivityValueGroupBean" : {
+      "type" : "object",
+      "properties" : {
+        "valueGroup" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QuestionnaireActivityStepsBean"
+          }
+        }
+      },
+      "title" : "ActivityValueGroupBean"
+    },
+    "BaseResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "BaseResponse"
+    },
+    "DestinationBean" : {
+      "type" : "object",
+      "properties" : {
+        "condition" : {
+          "type" : "string"
+        },
+        "destination" : {
+          "type" : "string"
+        },
+        "operator" : {
+          "type" : "string"
+        }
+      },
+      "title" : "DestinationBean"
+    },
+    "EnrollmentTokenIdentifierBean" : {
+      "type" : "object",
+      "properties" : {
+        "customStudyId" : {
+          "type" : "string"
+        },
+        "studyVersion" : {
+          "type" : "string"
+        },
+        "tokenIdentifier" : {
+          "type" : "string"
+        }
+      },
+      "title" : "EnrollmentTokenIdentifierBean"
+    },
+    "ParticipantActivityBean" : {
+      "type" : "object",
+      "properties" : {
+        "activityId" : {
+          "type" : "string"
+        },
+        "activityRun" : {
+          "$ref" : "#/definitions/ActivityRunBean"
+        },
+        "activityRunId" : {
+          "type" : "string"
+        },
+        "activityState" : {
+          "type" : "string"
+        },
+        "activityVersion" : {
+          "type" : "string"
+        },
+        "bookmarked" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "ParticipantActivityBean"
+    },
+    "QuestionnaireActivityStepsBean" : {
+      "type" : "object",
+      "properties" : {
+        "actvityValueGroup" : {
+          "$ref" : "#/definitions/ActivityValueGroupBean"
+        },
+        "destinations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DestinationBean"
+          }
+        },
+        "endTime" : {
+          "type" : "string"
+        },
+        "format" : {
+          "type" : "object"
+        },
+        "groupName" : {
+          "type" : "string"
+        },
+        "healthDataKey" : {
+          "type" : "string"
+        },
+        "key" : {
+          "type" : "string"
+        },
+        "options" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "repeatable" : {
+          "type" : "boolean"
+        },
+        "repeatableText" : {
+          "type" : "string"
+        },
+        "resultType" : {
+          "type" : "string"
+        },
+        "skippable" : {
+          "type" : "boolean"
+        },
+        "skipped" : {
+          "type" : "boolean"
+        },
+        "startTime" : {
+          "type" : "string"
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/QuestionnaireActivityStepsBean"
+          }
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "object"
+        }
+      },
+      "title" : "QuestionnaireActivityStepsBean"
+    },
+    "StudyMetadataBean" : {
+      "type" : "object",
+      "properties" : {
+        "appDescription" : {
+          "type" : "string"
+        },
+        "appId" : {
+          "type" : "string"
+        },
+        "appName" : {
+          "type" : "string"
+        },
+        "contactEmail" : {
+          "type" : "string"
+        },
+        "logoImageUrl" : {
+          "type" : "string"
+        },
+        "studyCategory" : {
+          "type" : "string"
+        },
+        "studyEnrolling" : {
+          "type" : "string"
+        },
+        "studyId" : {
+          "type" : "string"
+        },
+        "studySponsor" : {
+          "type" : "string"
+        },
+        "studyStatus" : {
+          "type" : "string"
+        },
+        "studyTagline" : {
+          "type" : "string"
+        },
+        "studyTitle" : {
+          "type" : "string"
+        },
+        "studyType" : {
+          "type" : "string"
+        },
+        "studyVersion" : {
+          "type" : "string"
+        }
+      },
+      "title" : "StudyMetadataBean"
+    },
+    "ValidationErrorResponse" : {
+      "type" : "object",
+      "properties" : {
+        "error_code" : {
+          "type" : "string"
+        },
+        "error_description" : {
+          "type" : "string"
+        },
+        "error_type" : {
+          "type" : "string"
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "title" : "ValidationErrorResponse"
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Violation"
+    }
+  }
+}

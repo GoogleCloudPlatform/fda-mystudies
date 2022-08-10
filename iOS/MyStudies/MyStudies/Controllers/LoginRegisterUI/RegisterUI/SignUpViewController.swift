@@ -20,9 +20,13 @@
 import Foundation
 import IQKeyboardManagerSwift
 import UIKit
+import GoogleUtilities
+import GoogleDataTransport
+import FirebaseAnalytics
+import Reachability
 
 let kVerifyMessageFromSignUp =
-  "An email has been sent to xyz@gmail.com. Please type in the Verification Code received in the email to complete the verification step."
+  "An email has been sent to xyz@gmail.com. Please type in the verification code received in the email to complete account setup."
 
 enum SignUpLoadFrom: Int {
   case gatewayOverview
@@ -48,7 +52,7 @@ class SignUpViewController: UIViewController {
 
   // MARK: - Properties
   var tableViewRowDetails: NSMutableArray?
-
+  private var reachability: Reachability!
   lazy var agreedToTerms: Bool = false
   lazy var confirmPassword = ""
   var user: User!
@@ -63,7 +67,14 @@ class SignUpViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupNotifiers()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "New User"
+    ])
 
+    self.navigationController?.navigationBar.backgroundColor = .white
+    navigationController?.navigationBar.barTintColor = .white
+    UINavigationBar.appearance().backgroundColor = .white
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -92,10 +103,14 @@ class SignUpViewController: UIViewController {
     let terms = Branding.termsAndConditionURL
     TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
     self.agreeToTermsAndConditions()
+    setNavigationBarColor()
   }
-
+    
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    self.navigationController?.navigationBar.backgroundColor = .white
+    navigationController?.navigationBar.barTintColor = .white
+    UINavigationBar.appearance().backgroundColor = .white
 
     if termsPageOpened {
       termsPageOpened = false
@@ -103,9 +118,12 @@ class SignUpViewController: UIViewController {
       // unhide navigationbar
       self.navigationController?.setNavigationBarHidden(false, animated: true)
 
+      let valPassword = self.user?.password ?? ""
+      let valEmail = self.user?.emailId ?? ""
       User.resetCurrentUser()
       self.user = User.currentUser
-      confirmPassword = ""
+      self.user.password = valPassword
+      self.user.emailId = valEmail
 
       if viewLoadFrom == .menu {
         self.setNavigationBarItem()
@@ -114,26 +132,75 @@ class SignUpViewController: UIViewController {
       }
 
       setNeedsStatusBarAppearanceUpdate()
-      self.tableView?.reloadData()
     }
   }
 
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {}
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    self.view.hideAllToasts()
+    buttonSubmit?.isEnabled = true
+    buttonSubmit?.layer.opacity = 1
+    termsAndCondition?.isUserInteractionEnabled = true
+  }
+  
+  func setOffline() {
+    self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+    buttonSubmit?.isEnabled = false
+    buttonSubmit?.layer.opacity = 0.5
+    termsAndCondition?.isUserInteractionEnabled = false
+  }
+  
+  override func showOfflineIndicator() -> Bool {
+    return true
+  }
+    
   // MARK: - Utility Methods
 
   ///  Attributed string for Terms & Privacy Policy.
   func agreeToTermsAndConditions() {
-
+    
     self.termsAndCondition?.delegate = self
     let attributedString = (termsAndCondition?.attributedText.mutableCopy() as? NSMutableAttributedString)!
 
-    var foundRange = attributedString.mutableString.range(of: "Terms")
+    var foundRange = attributedString.mutableString.range(of: "terms")
+    
     attributedString.addAttribute(
       NSAttributedString.Key.link,
       value: (TermsAndPolicy.currentTermsAndPolicy?.termsURL!)! as String,
       range: foundRange
     )
 
-    foundRange = attributedString.mutableString.range(of: "Privacy Policy")
+    foundRange = attributedString.mutableString.range(of: "privacy policy")
     attributedString.addAttribute(
       NSAttributedString.Key.link,
       value: (TermsAndPolicy.currentTermsAndPolicy?.policyURL!)! as String,
@@ -162,30 +229,89 @@ class SignUpViewController: UIViewController {
         .isEmpty
     {
       self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Sign-Up required fields alert"
+      ])
       return false
     } else if self.user.emailId == "" {
       self.showAlertMessages(textMessage: kMessageEmailBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter email alert"
+      ])
       return false
     } else if !(Utilities.isValidEmail(testStr: self.user.emailId!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter validMail alert"
+      ])
       return false
     } else if self.user.password == "" {
       self.showAlertMessages(textMessage: kMessagePasswordBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter password alert"
+      ])
       return false
     } else if Utilities.isPasswordValid(text: (self.user.password)!) == false {
       self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password criteria alert"
+      ])
       return false
     } else if (self.user.password)! == user.emailId {
       self.showAlertMessages(textMessage: kMessagePasswordMatchingToOtherFeilds)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password+Email match alert"
+      ])
       return false
     } else if confirmPassword == "" {
       self.showAlertMessages(textMessage: kMessageProfileConfirmPasswordBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Confirm password alert"
+      ])
       return false
     } else if self.user.password != confirmPassword {
       self.showAlertMessages(textMessage: kMessageValidatePasswords)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password dont match alert"
+      ])
       return false
     }
     return true
+  }
+  
+  func validateEmailField() {
+    if self.user.emailId == "" {
+    } else if !(Utilities.isValidEmail(testStr: self.user.emailId!)) {
+      self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter validMail Alert"
+      ])
+    }
+  }
+  
+  func validatePasswordField() {
+    if self.user.password == "" {
+    } else if Utilities.isPasswordValid(text: (self.user.password)!) == false {
+      self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password criteria alert"
+      ])
+    } else if (self.user.password)! == user.emailId {
+      self.showAlertMessages(textMessage: kMessagePasswordMatchingToOtherFeilds)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password+Email match alert"
+      ])
+    }
+  }
+  
+  func validateConfirmPasswordField() {
+    if confirmPassword == "" {
+    } else if self.user.password ?? "" != "" && self.user.password != confirmPassword {
+      self.showAlertMessages(textMessage: kMessageValidatePasswords)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Password dont match alert"
+      ])
+    }
   }
 
   /// Used to show the alert using Utility.
@@ -208,12 +334,18 @@ class SignUpViewController: UIViewController {
   /// Used to check all the validations
   /// before making a Register webservice call.
   @IBAction func submitButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-Up Submit"
+    ])
 
     self.view.endEditing(true)
 
     if self.validateAllFields() == true {
       if !(agreedToTerms) {
         self.showAlertMessages(textMessage: kMessageAgreeToTermsAndConditions)
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Review terms/conditions alert"
+        ])
       } else {
         // Call the Webservice
         UserServices().registerUser(self as NMWebServiceDelegate)
@@ -230,6 +362,10 @@ class SignUpViewController: UIViewController {
       agreedToTerms = true
       (sender as? UIButton)!.isSelected = !(sender as? UIButton)!.isSelected
     }
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-Up Terms&Policy"
+    ])
   }
 
   // MARK: - Segue Method
@@ -299,14 +435,21 @@ extension SignUpViewController: UITextViewDelegate {
   {
 
     var link: String = TermsAndPolicy.currentTermsAndPolicy?.termsURL ?? ""
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Sign-Up Terms"
+    ])
     var title: String = kNavigationTitleTerms
     if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
       && characterRange
-        .length == String("Privacy Policy").count
+        .length == String("privacy policy").count
     {
       link = TermsAndPolicy.currentTermsAndPolicy?.policyURL ?? ""
       title = kNavigationTitlePrivacyPolicy
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Sign-Up PrivacyPolicy"
+      ])
     }
+    
     guard !link.isEmpty else { return false }
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =
@@ -398,6 +541,7 @@ extension SignUpViewController: UITextFieldDelegate {
   func textFieldDidBeginEditing(_ textField: UITextField) {
     if textField.tag == TextFieldTags.emailId.rawValue {
       textField.keyboardType = .emailAddress
+      textField.isSecureTextEntry = false
     }
   }
 
@@ -421,6 +565,7 @@ extension SignUpViewController: UITextFieldDelegate {
         return true
       }
     } else if tag == .password || tag == .confirmPassword {
+      textField.isSecureTextEntry = true
       if finalString.count > 64 {
         return false
       } else {
@@ -445,6 +590,8 @@ extension SignUpViewController: UITextFieldDelegate {
     switch tag {
     case .emailId:
       self.user.emailId = textField.text!
+      textField.isSecureTextEntry = false
+      validateEmailField()
 
     case .password:
       if let password = textField.text {
@@ -452,11 +599,18 @@ extension SignUpViewController: UITextFieldDelegate {
           !Utilities.isPasswordValid(text: password)
         {
           self.showAlertMessages(textMessage: kMessageValidatePasswordComplexity)
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Password criteria alert"
+          ])
         }
         self.user.password = password
+        validatePasswordField()
       }
+      textField.isSecureTextEntry = true
     case .confirmPassword:
       confirmPassword = textField.text!
+      textField.isSecureTextEntry = true
+      validateConfirmPasswordField()
     }
   }
 }

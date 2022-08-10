@@ -41,7 +41,7 @@ enum AuthRouter: URLRequestConvertible {
 
   case changePassword(params: JSONDictionary, userID: String)
   case logout(userID: String)
-  case forgotPassword(params: JSONDictionary)
+  case forgotPassword(params: JSONDictionary, headers: [String: String])
   case auth(params: JSONDictionary)
   case codeGrant(params: JSONDictionary, headers: [String: String])
 
@@ -80,12 +80,13 @@ enum AuthRouter: URLRequestConvertible {
         headers: headers
       )
 
-    case .forgotPassword(let parameters):
+    case .forgotPassword(let parameters, let headers):
       return Request(
         method: .post,
         path: "/user/reset_password",
         encoding: JSONEncoding.default,
-        parameters: parameters
+        parameters: parameters,
+        headers: headers
       )
 
     case .logout(let userID):

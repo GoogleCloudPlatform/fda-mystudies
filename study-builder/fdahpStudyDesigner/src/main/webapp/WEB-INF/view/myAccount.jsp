@@ -8,11 +8,7 @@
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="black-lg-f">
-      My Account <c:if test="${accountManager eq 'Yes'}">
-      <span
-          class="gray-xs-f ml-xlg">Account Manager
-      </span>
-    </c:if>
+      My account 
     </div>
   </div>
 
@@ -38,7 +34,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="firstName" value="${fn:escapeXml(userBO.firstName)}"
                      oldVal="${fn:escapeXml(userBO.firstName)}"
-                     maxlength="50" required readonly/>
+                     maxlength="50" required data-error="Please fill out this field" readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -59,7 +55,7 @@
               <input type="text" class="form-control edit-field bor-trans resetVal linkDis"
                      name="lastName" value="${fn:escapeXml(userBO.lastName)}"
                      oldVal="${fn:escapeXml(userBO.lastName)}"
-                     maxlength="50" required readonly/>
+                     maxlength="50" required data-error="Please fill out this field" readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -81,8 +77,8 @@
               <input type="text" class="form-control bor-trans validateUserEmail resetVal linkDis"
                      id="userEmail" name="userEmail" value="${userBO.userEmail}"
                      oldVal="${userBO.userEmail}" maxlength="100"
-                     pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                     data-pattern-error="Email address is invalid" required readonly/>
+                     pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,24}$"
+                     data-pattern-error="Email address is invalid" required data-error="Please fill out this field" readonly/>
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
@@ -168,7 +164,7 @@
                   <input autofocus="autofocus" type="password"
                          class="input-field wow_input emptyField" maxlength="64" id="oldPassword"
                          name="oldPassword"
-                         required tabindex="1" autocomplete="off"/>
+                         required data-error="Please fill out this field" tabindex="1" autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
                 </div>
               </div>
@@ -185,7 +181,7 @@
                 <div class="form-group">
                   <input type="password" class="input-field wow_input emptyField" id="password"
                          maxlength="64" data-minlength="8"
-                         tabindex="2" name="password" data-error="Password is invalid"
+                         tabindex="2" name="password" data-pattern-error="Password is invalid" data-error="Please fill out this field"
                          pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~])[A-Za-z\d!&quot;#$%&amp;'()*+,-.:;&lt;=&gt;?@[\]^_`{|}~]{8,64}"
                          required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
@@ -204,7 +200,7 @@
               <div class="col-md-6 p-none">
                 <div class="form-group">
                   <input type="password" class="input-field wow_input emptyField" maxlength="64"
-                         data-minlength="8" data-match-error="Whoops, these don't match"
+                         data-minlength="8" data-match-error="Passwords do not match" data-error="Please fill out this field"
                          id="conpassword" data-match="#password"
                          tabindex="3" required autocomplete="off"/>
                   <div class="help-block with-errors red-txt"></div>
@@ -229,6 +225,7 @@
     </div>
   </div>
 </form:form>
+ <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
   <div class="white-bg box-space">
 
@@ -239,7 +236,7 @@
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW') or
               fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
       <div class="edit-user-list-widget mb-xs">
-        <span>Users</span>
+        <span>Admins</span>
         <span class="gray-xs-f pull-right">
            <c:if
               test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">View only</c:if>
@@ -249,20 +246,41 @@
       </div>
       </c:if>
 
-	 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT') or
-              fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
-      <div class="edit-user-list-widget mb-xs">
-        <span>Notifications</span>
-        <span class="gray-xs-f pull-right">
-          <c:if
-              test="${!fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View only</c:if>
-          <c:if
-              test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT')}">View and edit</c:if>
-        </span>
+      <!-- Assigned Permissions List-->
+      <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
+      <div class="edit-user-list-widget">
+        <span>Apps</span>
+        <span class="gray-xs-f pull-right">Yes</span>
+        <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
+          <div class="mt-lg pl-md">
+            <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_CREATE_MANAGE_APPS')}">
+              <div class="pb-md bor-dashed">
+                <span class="dot">Create new apps</span>
+              </div>
+            </c:if>
+            <div class="pl-sm pt-md">
+              <span
+                  class="gray-xs-f text-weight-bold">List of assigned apps with permissions
+              </span>
+            </div>
+            <c:forEach items="${appAndPermissionList}" var="appAndPermission">
+              <div class="pt-sm pb-sm pl-sm b-bor-dark">
+                <span class="dot"
+                      id="${appAndPermission.customAppId}">${appAndPermission.name}&nbsp;(${appAndPermission.customAppId})
+                </span>
+                <span class="gray-xs-f pull-right">
+                  <c:if
+                      test="${not appAndPermission.viewPermission}">View only</c:if>
+                  <c:if
+                      test="${appAndPermission.viewPermission}">View and edit</c:if>
+                </span>
+              </div>
+            </c:forEach>
+          </div>
+        </c:if>
       </div>
       </c:if>
-
-
+      
       <!-- Assigned Permissions List-->
       <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
       <div class="edit-user-list-widget">
@@ -297,9 +315,11 @@
         </c:if>
       </div>
       </c:if>
+       
     </div>
   </div>
 </div>
+</c:if>
 <input type="hidden" id="csrfDet" csrfParamName="${_csrf.parameterName}"
        csrfToken="${_csrf.token}"/>
 
@@ -390,7 +410,7 @@
             success: function getResponse(data, status) {
               var message = data.message;
               if ('SUCCESS' == message) {
-                showSucMsg('Password updated successfully.');
+                showSucMsg('Password updated successfully');
                 $("#cancelBtn").click();
               } else {
                 showErrMsg(message);
@@ -402,7 +422,7 @@
             },
           });
         } else {
-          showErrMsg('New password should not be same as old Password.');
+          showErrMsg('New password should not be same as old password');
           $(window).scrollTop(0);
           $(".changepwd .emptyField").val("");
           $("#updateBtn").prop('disabled', false);

@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "POST",
-		"url": "/response-datastore/participant/withdraw?studyId=studyId1&studyVersion=3.6&participantId=4&deleteResponses=true"
+		"url": "/response-datastore/participant/withdraw?studyId=studyId1&studyVersion=3.6&participantId=4"
 	},
 	"response": {
 		"status": 200,

@@ -33,9 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 public interface UsersService {
 
   public String activateOrDeactivateUser(
-      int userId,
+      String userId,
       int userStatus,
-      int loginUser,
+      String loginUser,
       SessionObject userSession,
       HttpServletRequest request);
 
@@ -43,25 +43,28 @@ public interface UsersService {
       HttpServletRequest request,
       UserBO userBO,
       String permissions,
-      List<Integer> permissionList,
       String selectedStudies,
       String permissionValues,
       SessionObject userSession,
-      AuditLogEventRequest auditRequest);
+      String selectedApps,
+      AuditLogEventRequest auditRequest,
+      String permissionValuesForApp);
 
-  public String enforcePasswordChange(Integer userId, String email);
+  public String enforcePasswordChange(String userId, String email);
 
   public List<String> getActiveUserEmailIds();
 
-  public List<Integer> getPermissionsByUserId(Integer userId);
+  public List<Integer> getPermissionsByUserId(String userId);
 
-  public UserBO getUserDetails(Integer userId);
+  public UserBO getUserDetails(String userId);
 
   public List<UserBO> getUserList();
 
-  public Integer getUserPermissionByUserId(Integer sessionUserId);
+  public String getUserPermissionByUserId(String sessionUserId);
 
-  public RoleBO getUserRole(int roleId);
+  public RoleBO getUserRole(String roleId);
 
   public List<RoleBO> getUserRoleList();
+
+  public String deleteByUserId(String userId);
 }

@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -53,7 +54,7 @@ public class QuestionnaireActivityStepsBean {
 
   private Map<String, Object> format = new HashMap<>();
 
-  private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
+  private List<QuestionnaireStepsBean> steps = new ArrayList<>();
 
   private String[] options = new String[0];
 
@@ -153,11 +154,11 @@ public class QuestionnaireActivityStepsBean {
     this.format = format;
   }
 
-  public List<QuestionnaireActivityStepsBean> getSteps() {
+  public List<QuestionnaireStepsBean> getSteps() {
     return steps;
   }
 
-  public void setSteps(List<QuestionnaireActivityStepsBean> steps) {
+  public void setSteps(List<QuestionnaireStepsBean> steps) {
     this.steps = steps;
   }
 

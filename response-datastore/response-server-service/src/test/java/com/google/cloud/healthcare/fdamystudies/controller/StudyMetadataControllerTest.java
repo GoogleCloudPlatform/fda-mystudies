@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.STUDY_METADATA_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CONTACT_EMAIL_ID;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -132,13 +133,11 @@ public class StudyMetadataControllerTest extends BaseMockIT {
         "1.0",
         "Open",
         "Active",
-        "Health",
-        "TEST_TAGLINE",
-        "TEST_SPONSOR",
         "Yes",
         APP_ID_VALUE,
         "Test App",
         "Test app for population health study",
-        LOGO_IMAGE_URL);
+        LOGO_IMAGE_URL,
+        CONTACT_EMAIL_ID);
   }
 }

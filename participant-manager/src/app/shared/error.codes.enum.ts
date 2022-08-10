@@ -118,6 +118,14 @@ const errorMessages = {
   EC_0078: 'Temporary password is incorrect',
   EC_0079:
     'This site belongs to an active study that has one or more actively enrolled participants, and cannot be decommissioned.',
+  EC_0081: 'Consecutive characters and space is not allowed',
+  EC_0082: 'Password should not contain user name',
+  EC_0083: 'Password should not contain service name',
+  EC_0084: 'Please enter strong password',
+  EC_0086:
+    'This is a default location ID in use by the system already. Please enter a different location ID.',
+  EC_0087:
+    'This is a default location name in use by the system already. Please enter a different location name.',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;

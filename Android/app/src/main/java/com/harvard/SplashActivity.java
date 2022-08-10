@@ -23,11 +23,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.widget.Toast;
-
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -41,16 +39,12 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
-import com.harvard.utils.realm.RealmMigrationHelper;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-
 import java.util.HashMap;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 

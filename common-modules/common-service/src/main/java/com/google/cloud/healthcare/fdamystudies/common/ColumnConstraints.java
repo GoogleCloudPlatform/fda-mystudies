@@ -25,4 +25,6 @@ public final class ColumnConstraints {
   public static final int LARGE_LENGTH = 255;
 
   public static final int ID_LENGTH = 64;
+
+  public static final int EMAIL_LENGTH = 320;
 }

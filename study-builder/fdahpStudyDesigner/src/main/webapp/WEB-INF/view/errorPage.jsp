@@ -54,7 +54,7 @@ html, body {
 
  header.header {
 	 width: 100%;
-	 height: 50px;
+	 height: 60px;
 	 background-color: #fff;
 	 user-select: none;
 }
@@ -131,7 +131,7 @@ html, body {
           <img
             class="mr-sm width__auto"
            src="/studybuilder/images/logo/logo_innerScreens.png"
-            alt="main logo"
+            alt="main logo" style="margin-top: 7px; margin-left: 25px;"
           />
         </a>
         </div>
@@ -145,7 +145,7 @@ html, body {
         <span class="display-1 d-block">
           <img src="/studybuilder/images/icons/ErrorIcon.svg" alt="Page not found here" />
         </span>
-        <div class="invalidLink_text mt-4 mb-4 width__50  mar_0_auto">This page is no longer valid. 
+        <div class="invalidLink_text mt-4 mb-4 width__50  mar_0_auto">This link is no longer valid to be used. 
         For any assistance needed with your account,<br> please contact the system admin.
         </div>
       </div>

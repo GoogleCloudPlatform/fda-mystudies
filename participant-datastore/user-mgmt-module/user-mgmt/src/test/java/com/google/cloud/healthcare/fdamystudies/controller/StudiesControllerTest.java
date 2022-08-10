@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -89,14 +89,12 @@ public class StudiesControllerTest extends BaseMockIT {
         Constants.STUDY_VERSION,
         Constants.STUDY_TYPE,
         Constants.STUDY_STATUS,
-        Constants.STUDY_CATEGORY,
-        Constants.STUDY_TAGLINE,
-        Constants.STUDY_SPONSOR,
         Constants.STUDY_ENROLLING,
         Constants.APP_ID_VALUE,
         Constants.APP_NAME,
         Constants.APP_DESCRIPTION,
-        Constants.LOGO_IMAGE_URL);
+        Constants.LOGO_IMAGE_URL,
+        Constants.CONTACT_EMAIL_ID);
   }
 
   @Test
@@ -123,8 +121,6 @@ public class StudiesControllerTest extends BaseMockIT {
             .findFirst()
             .orElse(null);
     assertNotNull(studyInfoBo);
-    assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
-    assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
     assertEquals(Constants.LOGO_IMAGE_URL, studyInfoBo.getLogoImageUrl());
 
     verifyTokenIntrospectRequest(1);

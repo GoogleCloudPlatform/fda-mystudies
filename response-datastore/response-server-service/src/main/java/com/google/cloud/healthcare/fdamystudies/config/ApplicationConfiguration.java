@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -59,4 +59,22 @@ public class ApplicationConfiguration {
 
   @Value("${enroll.mgmt.service.url}")
   private String regServerPartStudyInfoUrl;
+
+  @Value("${projectId}")
+  private String projectId;
+
+  @Value("${regionId}")
+  private String regionId;
+
+  @Value("${enableFHIRManagementAPI}")
+  private String enableFHIRManagementAPI;
+
+  @Value("${enableBigQuery}")
+  private String enableBigQuery;
+
+  @Value("${enableConsentManagementAPI}")
+  private String enableConsentManagementAPI;
+
+  @Value("${discardFHIRAfterDID}")
+  private String discardFHIRAfterDID;
 }

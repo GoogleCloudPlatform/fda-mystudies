@@ -125,10 +125,10 @@ public class ChartActivity extends AppCompatActivity
           public void onClick(View v) {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
-                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getString(R.string.chart_actvity_share));
+                    CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                    getString(R.string.chart_actvity_share));
             analyticsInstance.logEvent(
-                CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+                    CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             screenshotWritingPermission();
           }
         });
@@ -591,7 +591,8 @@ public class ChartActivity extends AppCompatActivity
     }
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
-    String fname = getIntent().getStringExtra("studyName").replace("/", "\u2215") + "_Chart.png";
+    String fname = getIntent().getStringExtra("studyName")
+            .replace("/", "\u2215") + "_Chart.png";
     File file = new File(dir, fname);
     if (file.exists()) {
       file.delete();

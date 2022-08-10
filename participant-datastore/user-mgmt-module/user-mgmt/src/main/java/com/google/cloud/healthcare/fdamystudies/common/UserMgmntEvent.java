@@ -134,27 +134,6 @@ public enum UserMgmntEvent implements AuditLogEvent {
       "Profile/Preferences update by app user failed.",
       "USER_PROFILE_UPDATE_FAILED"),
 
-  DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL(
-      MOBILE_APPS,
-      PARTICIPANT_USER_DATASTORE,
-      null,
-      "Based on participant choice/study setting, the data retention setting upon withdrawal from study is read as '${delete_or_retain}'.",
-      "DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL"),
-
-  PARTICIPANT_DATA_DELETED(
-      PARTICIPANT_USER_DATASTORE,
-      PARTICIPANT_USER_DATASTORE,
-      null,
-      "Participant's study related data was deleted or nullified.",
-      "PARTICIPANT_DATA_DELETED"),
-
-  PARTICIPANT_DATA_DELETION_FAILED(
-      PARTICIPANT_USER_DATASTORE,
-      PARTICIPANT_USER_DATASTORE,
-      null,
-      "Participant's study related data could not be completely deleted or nullified.",
-      "PARTICIPANT_DATA_DELETION_FAILED"),
-
   WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE(
       PARTICIPANT_USER_DATASTORE,
       RESPONSE_DATASTORE,
@@ -166,7 +145,7 @@ public enum UserMgmntEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       RESPONSE_DATASTORE,
       null,
-      "Communication failed to Response Datastore about participant's study withdrawal information and corresponding Data Retention setting '${delete_or_retain}'.",
+      "Communication failed to Response Datastore about participant's study withdrawal information.",
       "WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED"),
 
   STUDY_METADATA_RECEIVED(
@@ -237,7 +216,15 @@ public enum UserMgmntEvent implements AuditLogEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       "Content submitted by app user via 'Contact Us' form in mobile app, could not be emailed to ${contactus_destination_email_address}.",
-      "CONTACT_US_CONTENT_EMAIL_FAILED");
+      "CONTACT_US_CONTENT_EMAIL_FAILED"),
+
+  APP_USER_ACCOUNTS_DELETED(
+      STUDY_BUILDER,
+      PARTICIPANT_USER_DATASTORE,
+      null,
+      "User records for app (with App ID '${AppID}') deactivated on Participant Datastore and "
+          + "deleted from Auth Server, after the app was deactivated via the Study Builder.",
+      "APP_USER_ACCOUNTS_DELETED");
 
   private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;

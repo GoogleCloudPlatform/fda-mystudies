@@ -27,16 +27,17 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
-import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.bo.NotificationHistoryBO;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.PlatformComponent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.LoginDAO;
 import com.fdahpstudydesigner.dao.NotificationDAO;
+import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.OAuthService;
-import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import java.io.File;
@@ -46,7 +47,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -63,13 +63,18 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -77,7 +82,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @EnableScheduling
 public class FDASchedulerService {
 
-  private static Logger logger = Logger.getLogger(FDASchedulerService.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(FDASchedulerService.class.getName());
 
   private static final Map<?, ?> configMap = FdahpStudyDesignerUtil.getAppProperties();
 
@@ -93,6 +98,8 @@ public class FDASchedulerService {
 
   @Autowired private OAuthService oauthService;
 
+  @Autowired private StudyDAO studyDAO;
+
   @Bean()
   public ThreadPoolTaskScheduler taskScheduler() {
     ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
@@ -100,9 +107,16 @@ public class FDASchedulerService {
     return taskScheduler;
   }
 
+  HibernateTemplate hibernateTemplate;
+
+  @Autowired
+  public void setSessionFactory(SessionFactory sessionFactory) {
+    this.hibernateTemplate = new HibernateTemplate(sessionFactory);
+  }
+
   @Scheduled(cron = "0 0 0 * * ?")
   public void createAuditLogs() {
-    logger.info("FDASchedulerService - createAuditLogs - Starts");
+    logger.entry("begin createAuditLogs()");
     StringBuilder logString = null;
     try {
       logString = new StringBuilder();
@@ -123,36 +137,13 @@ public class FDASchedulerService {
       loginDAO.passwordLoginBlocked();
     } catch (Exception e) {
       logger.error("FDASchedulerService - createAuditLogs - ERROR", e);
-
-      List<String> emailAddresses = usersDAO.getSuperAdminList();
-      String failLogBody;
-      if ((emailAddresses != null) && !emailAddresses.isEmpty()) {
-        Map<String, String> genarateEmailContentMap = new HashMap<>();
-        String date =
-            new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE)
-                .format(FdahpStudyDesignerUtil.addDaysToDate(new Date(), -1));
-        if (emailAddresses.size() > 1) {
-          genarateEmailContentMap.put("$firstName", "Admin");
-        } else {
-          UserBO userBO = loginDAO.getValidUserByEmail(emailAddresses.get(0));
-          genarateEmailContentMap.put("$firstName", userBO.getFirstName());
-        }
-        genarateEmailContentMap.put("$startTime", date + " 00:00:00");
-        genarateEmailContentMap.put("$endTime", date + " 23:59:59");
-        genarateEmailContentMap.put("$orgName", (String) configMap.get("orgName"));
-        failLogBody =
-            FdahpStudyDesignerUtil.genarateEmailContent(
-                (String) configMap.get("mail.audit.failure.content"), genarateEmailContentMap);
-        EmailNotification.sendEmailNotificationToMany(
-            "mail.audit.failure.subject", failLogBody, emailAddresses, null, null);
-      }
     }
-    logger.info("FDASchedulerService - createAuditLogs - Ends");
+    logger.exit("createAuditLogs() - Ends");
   }
 
   @Scheduled(cron = "0 * * * * ?")
   public void sendPushNotification() {
-    logger.info("FDASchedulerService - sendPushNotification - Starts");
+    logger.entry("begin sendPushNotification()");
     List<PushNotificationBean> pushNotificationBeans;
     List<PushNotificationBean> pushNotificationBeanswithAppId =
         new ArrayList<PushNotificationBean>();
@@ -162,13 +153,16 @@ public class FDASchedulerService {
     ObjectMapper objectMapper = new ObjectMapper();
     String responseString = "";
     try {
+
       date = FdahpStudyDesignerUtil.getCurrentDate();
       time =
           FdahpStudyDesignerUtil.privMinDateTime(
-              new SimpleDateFormat(FdahpStudyDesignerConstants.UI_SDF_TIME).format(new Date()),
-              FdahpStudyDesignerConstants.UI_SDF_TIME,
+              new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_TIME).format(new Date()),
+              FdahpStudyDesignerConstants.DB_SDF_TIME,
               1);
-      pushNotificationBeans = notificationDAO.getPushNotificationList(date, time);
+      pushNotificationBeans =
+          notificationDAO.getPushNotificationList(
+              FdahpStudyDesignerUtil.getTimeStamp(date, time).toString());
       if ((pushNotificationBeans != null) && !pushNotificationBeans.isEmpty()) {
         for (PushNotificationBean p : pushNotificationBeans) {
           if (p.getAppId() == null) {
@@ -196,37 +190,55 @@ public class FDASchedulerService {
             }
           }
         }
+        List<PushNotificationBean> pushNotification = new ArrayList<>();
+        for (PushNotificationBean finalPushNotificationBean : finalPushNotificationBeans) {
+          StudyBo studyDetails =
+              studyDAO.getStudyByLatestVersion(finalPushNotificationBean.getCustomStudyId());
+          String deviceType = null;
+          if (studyDetails != null
+              && studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.IOS)) {
+            deviceType = FdahpStudyDesignerConstants.DEVICE_IOS;
+          } else if (studyDetails != null
+              && studyDetails.getPlatform().equalsIgnoreCase(FdahpStudyDesignerConstants.ANDROID)) {
+            deviceType = FdahpStudyDesignerConstants.DEVICE_ANDROID;
+          }
 
-        JSONArray arrayToJson =
-            new JSONArray(objectMapper.writeValueAsString(finalPushNotificationBeans));
-        logger.info("FDASchedulerService - sendPushNotification " + arrayToJson);
-        JSONObject json = new JSONObject();
-        json.put("notifications", arrayToJson);
+          finalPushNotificationBean.setDeviceType(deviceType);
+          pushNotification.add(finalPushNotificationBean);
 
-        HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
-        HttpConnectionParams.setSoTimeout(httpParams, 30000);
-        HttpClient client = new DefaultHttpClient(httpParams);
+          JSONArray arrayToJson = new JSONArray(objectMapper.writeValueAsString(pushNotification));
+          logger.info("FDASchedulerService - sendPushNotification " + arrayToJson);
+          JSONObject json = new JSONObject();
+          json.put("notifications", arrayToJson);
+          logger.info("FDASchedulerService - sendPushNotification " + arrayToJson);
 
-        HttpResponse response =
-            invokePushNotificationApi(json, client, oauthService.getAccessToken());
-        if (response.getStatusLine().getStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
-          // Below method is called to indicate that the content of this entity is no longer
-          // required.This will fix the error
-          // Invalid use of BasicClientConnManager: connection still allocated.
-          // Make sure to release the connection before allocating another one.
-          response.getEntity().consumeContent();
-          response = invokePushNotificationApi(json, client, oauthService.getNewAccessToken());
-        }
+          HttpParams httpParams = new BasicHttpParams();
+          HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
+          HttpConnectionParams.setSoTimeout(httpParams, 30000);
+          HttpClient client = new DefaultHttpClient(httpParams);
 
-        if (response.getStatusLine().getStatusCode() != HttpStatus.OK.value()) {
-          logger.error(
-              String.format(
-                  "Push notification API failed with status=%d",
-                  response.getStatusLine().getStatusCode()));
-          logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
-        } else {
-          logSendNotificationFailedEvent(NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
+          HttpResponse response =
+              invokePushNotificationApi(json, client, oauthService.getAccessToken());
+          if (response.getStatusLine().getStatusCode() == HttpStatus.UNAUTHORIZED.value()) {
+            // Below method is called to indicate that the content of this entity is no longer
+            // required.This will fix the error
+            // Invalid use of BasicClientConnManager: connection still allocated.
+            // Make sure to release the connection before allocating another one.
+            response.getEntity().consumeContent();
+            response = invokePushNotificationApi(json, client, oauthService.getNewAccessToken());
+          }
+
+          if (response.getStatusLine().getStatusCode() != HttpStatus.OK.value()) {
+            logger.error(
+                String.format(
+                    "Push notification API failed with status=%d",
+                    response.getStatusLine().getStatusCode()));
+            logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
+          } else {
+            updateNotification(finalPushNotificationBean);
+            logSendNotificationFailedEvent(NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
+          }
+          pushNotification.clear();
         }
       }
     } catch (Exception e) {
@@ -235,7 +247,7 @@ public class FDASchedulerService {
 
       logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
     }
-    logger.info("FDASchedulerService - sendPushNotification - Ends");
+    logger.exit("sendPushNotification() - Ends");
   }
 
   private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {
@@ -262,5 +274,34 @@ public class FDASchedulerService {
     StringEntity requestEntity = new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
     post.setEntity(requestEntity);
     return client.execute(post);
+  }
+
+  private void updateNotification(PushNotificationBean pushNotificationBean) {
+    String sb = "";
+    Session session = hibernateTemplate.getSessionFactory().openSession();
+    Transaction trans = session.beginTransaction();
+    if (null != pushNotificationBean) {
+      if ((pushNotificationBean.getNotificationSubType() == null)
+          || ((pushNotificationBean.getNotificationSubType() != null)
+              && !FdahpStudyDesignerConstants.RESOURCE.equals(
+                  pushNotificationBean.getNotificationSubType())
+              && !FdahpStudyDesignerConstants.STUDY_EVENT.equals(
+                  pushNotificationBean.getNotificationSubType()))) {
+        NotificationHistoryBO historyBO = new NotificationHistoryBO();
+        historyBO.setNotificationId(pushNotificationBean.getNotificationId());
+        historyBO.setNotificationSentDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+        session.save(historyBO);
+      }
+      sb =
+          "update NotificationBO NBO set NBO.notificationSent = true  where NBO.notificationId = :notificationId";
+      session
+          .createQuery(sb)
+          .setParameter("notificationId", pushNotificationBean.getNotificationId())
+          .executeUpdate();
+    }
+    trans.commit();
+    if (session.isOpen()) {
+      session.close();
+    }
   }
 }

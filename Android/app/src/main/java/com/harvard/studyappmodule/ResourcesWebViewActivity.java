@@ -106,6 +106,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity
     // removing space b/w the string : name of the pdf
     try {
       title = intentTitle.replaceAll("\\s+", "");
+      title = title.replace("/", "\u2215");
     } catch (Exception e) {
       title = intentTitle;
       Logger.log(e);
@@ -199,7 +200,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity
               } else {
                 shareIntent.setType("text/html");
                 shareIntent.putExtra(
-                    Intent.EXTRA_TEXT, Html.fromHtml(resource.getContent()).toString());
+                    Intent.EXTRA_TEXT,Html.fromHtml(resource.getContent()).toString());
                 shareIntent.putExtra(
                     Intent.EXTRA_HTML_TEXT, Html.fromHtml(resource.getContent()).toString());
               }
@@ -359,7 +360,9 @@ public class ResourcesWebViewActivity extends AppCompatActivity
 
   class CreateFileFromBase64 extends AsyncTask<String, String, String> {
 
-    /** Before starting background thread Show Progress Bar Dialog. */
+    /**
+     * Before starting background thread Show Progress Bar Dialog.
+     */
     String downloadUrl = "";
 
     String filePath = "";
@@ -375,10 +378,12 @@ public class ResourcesWebViewActivity extends AppCompatActivity
     protected void onPreExecute() {
       super.onPreExecute();
       AppController.getHelperProgressDialog()
-          .showProgress(ResourcesWebViewActivity.this, "", "", false);
+              .showProgress(ResourcesWebViewActivity.this, "", "", false);
     }
 
-    /** Downloading file in background thread. */
+    /**
+     * Downloading file in background thread.
+     */
     @Override
     protected String doInBackground(String... url1) {
       int count;
@@ -399,7 +404,9 @@ public class ResourcesWebViewActivity extends AppCompatActivity
       return null;
     }
 
-    /** After completing background task Dismiss the progress dialog. */
+    /**
+     * After completing background task Dismiss the progress dialog.
+     */
     @Override
     protected void onPostExecute(String url) {
       try {

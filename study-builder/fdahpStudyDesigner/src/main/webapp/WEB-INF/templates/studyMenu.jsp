@@ -89,7 +89,7 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if></li>
       <li class="sub sixthTask commonCls ">
-        Active Tasks
+        Active tasks
         <c:if test="${studyBo.studySequenceBo.studyExcActiveTask}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
@@ -160,12 +160,12 @@
       document.body.appendChild(a).click();
     });
 
-    <c:if test="${not empty studyBo.studySequenceBo && studyBo.studySequenceBo.basicInfo}">
+    <c:if test="${(not empty studyBo.studySequenceBo && studyBo.studySequenceBo.basicInfo) || (not empty studyBo.status && studyBo.status ne 'Pre-launch')}">
     $('.second').click(function () {
       a.href = "/studybuilder/adminStudies/viewSettingAndAdmins.do?_S=${param._S}";
       document.body.appendChild(a).click();
     });
-    <c:if test="${studyBo.studySequenceBo.settingAdmins}">
+    <c:if test="${studyBo.studySequenceBo.settingAdmins || studyBo.status ne 'Pre-launch'}">
     $('.third').click(function () {
       a.href = "/studybuilder/adminStudies/overviewStudyPages.do?_S=${param._S}";
       document.body.appendChild(a).click();
@@ -221,10 +221,10 @@
     });
     </c:if>
     </c:if>
-    <c:if test="${(empty studyBo.studySequenceBo) || not studyBo.studySequenceBo.basicInfo}">
+    <c:if test="${(empty studyBo.status || studyBo.status eq 'Pre-launch') && ((empty studyBo.studySequenceBo) || not studyBo.studySequenceBo.basicInfo)}">
     $('.commonCls').addClass('cursor-none-without-event');
     </c:if>
-    <c:if test="${studyBo.studySequenceBo.basicInfo && not studyBo.studySequenceBo.settingAdmins}">
+    <c:if test="${(empty studyBo.status || studyBo.status eq 'Pre-launch') && studyBo.studySequenceBo.basicInfo && not studyBo.studySequenceBo.settingAdmins}">
     $('.commonCls').not('.second').addClass('cursor-none-without-event');
     </c:if>
     $(window).on('load resize', function () {

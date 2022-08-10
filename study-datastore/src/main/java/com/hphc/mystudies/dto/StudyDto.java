@@ -1,24 +1,9 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Copyright 2020-2021 Google LLC
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 package com.hphc.mystudies.dto;
 
@@ -26,9 +11,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
@@ -60,9 +45,10 @@ public class StudyDto implements Serializable {
   private static final long serialVersionUID = -5843091568457462789L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
   @Column(name = "custom_study_id")
   private String customStudyId;
@@ -96,13 +82,16 @@ public class StudyDto implements Serializable {
 
   @Column(name = "enrolling_participants")
   private String enrollingParticipants;
-
+  
+  @Deprecated
   @Column(name = "retain_participant")
   private String retainParticipant;
 
+  @Deprecated
   @Column(name = "allow_rejoin")
   private String allowRejoin;
 
+  @Deprecated
   @Column(name = "allow_rejoin_text")
   private String allowRejoinText;
 
@@ -119,10 +108,10 @@ public class StudyDto implements Serializable {
   private String modifiedOn;
 
   @Column(name = "created_by")
-  private Integer createdBy;
+  private String createdBy;
 
   @Column(name = "modified_by")
-  private Integer modifiedBy;
+  private String modifiedBy;
 
   @Column(name = "status")
   private String status;
@@ -173,11 +162,11 @@ public class StudyDto implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -268,7 +257,7 @@ public class StudyDto implements Serializable {
   public void setEnrollingParticipants(String enrollingParticipants) {
     this.enrollingParticipants = enrollingParticipants;
   }
-
+  
   public String getRetainParticipant() {
     return retainParticipant;
   }
@@ -325,19 +314,19 @@ public class StudyDto implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public Integer getCreatedBy() {
+  public String getCreatedBy() {
     return createdBy;
   }
 
-  public void setCreatedBy(Integer createdBy) {
+  public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
-  public Integer getModifiedBy() {
+  public String getModifiedBy() {
     return modifiedBy;
   }
 
-  public void setModifiedBy(Integer modifiedBy) {
+  public void setModifiedBy(String modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
 

@@ -62,10 +62,10 @@ import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import io.realm.Realm;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
-import io.realm.Realm;
 
 public class SignupFragment extends Fragment
     implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
@@ -320,14 +320,14 @@ public class SignupFragment extends Fragment
         && email.getText().toString().isEmpty()
         && confirmPassword.getText().toString().isEmpty()) {
       Toast.makeText(
-              context, getResources().getString(R.string.enter_all_field_empty), Toast.LENGTH_SHORT)
+          context, getResources().getString(R.string.enter_all_field_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (email.getText().toString().isEmpty()) {
       Toast.makeText(context, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (!AppController.getHelperIsValidEmail(email.getText().toString())) {
       Toast.makeText(
-              context, getResources().getString(R.string.email_validation), Toast.LENGTH_SHORT)
+          context, getResources().getString(R.string.email_validation), Toast.LENGTH_SHORT)
           .show();
     } else if (password.getText().toString().isEmpty()) {
       Toast.makeText(context, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
@@ -337,27 +337,27 @@ public class SignupFragment extends Fragment
     } else if (checkPasswordContainsEmailID(
         email.getText().toString(), password.getText().toString())) {
       Toast.makeText(
-              context,
-              getResources().getString(R.string.password_contain_email),
-              Toast.LENGTH_SHORT)
+          context,
+          getResources().getString(R.string.password_contain_email),
+          Toast.LENGTH_SHORT)
           .show();
     } else if (confirmPassword.getText().toString().isEmpty()) {
       Toast.makeText(
-              context,
-              getResources().getString(R.string.confirm_password_empty),
-              Toast.LENGTH_SHORT)
+          context,
+          getResources().getString(R.string.confirm_password_empty),
+          Toast.LENGTH_SHORT)
           .show();
     } else if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
       Toast.makeText(
-              context,
-              getResources().getString(R.string.password_mismatch_error),
-              Toast.LENGTH_SHORT)
+          context,
+          getResources().getString(R.string.password_mismatch_error),
+          Toast.LENGTH_SHORT)
           .show();
     } else if (!agree.isChecked()) {
       Toast.makeText(
-              context,
-              getResources().getString(R.string.terms_and_condition_validation),
-              Toast.LENGTH_SHORT)
+          context,
+          getResources().getString(R.string.terms_and_condition_validation),
+          Toast.LENGTH_SHORT)
           .show();
     } else {
       try {
@@ -409,9 +409,9 @@ public class SignupFragment extends Fragment
         startActivity(intent);
       } else {
         Toast.makeText(
-                context,
-                context.getResources().getString(R.string.unable_to_signup),
-                Toast.LENGTH_SHORT)
+            context,
+            context.getResources().getString(R.string.unable_to_signup),
+            Toast.LENGTH_SHORT)
             .show();
       }
     } else if (responseCode == GET_TERMS_AND_CONDITION) {
@@ -423,16 +423,16 @@ public class SignupFragment extends Fragment
           signup(registrationData);
         } else {
           Toast.makeText(
-                  context,
-                  context.getResources().getString(R.string.unable_to_signup),
-                  Toast.LENGTH_SHORT)
+              context,
+              context.getResources().getString(R.string.unable_to_signup),
+              Toast.LENGTH_SHORT)
               .show();
         }
       } else {
         Toast.makeText(
-                context,
-                context.getResources().getString(R.string.unable_to_signup),
-                Toast.LENGTH_SHORT)
+            context,
+            context.getResources().getString(R.string.unable_to_signup),
+            Toast.LENGTH_SHORT)
             .show();
       }
     }

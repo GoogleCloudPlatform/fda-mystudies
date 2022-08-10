@@ -1,28 +1,14 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.util;
+
+import java.text.SimpleDateFormat;
 
 public class FdahpStudyDesignerConstants {
 
@@ -30,22 +16,22 @@ public class FdahpStudyDesignerConstants {
 
   public static final String ACTION_DEACTIVATE = "deactivateId";
   public static final String ACTION_DEACTIVATE_SUCCESS_MSG =
-      "The study has been successfully deactivated.";
+      "The study has been successfully deactivated";
 
   public static final String ACTION_LUNCH = "lunchId";
   public static final String ACTION_LUNCH_SUCCESS_MSG =
-      "The study has been launched and is now available to participants in the mobile applications.";
+      "The study has been launched and is now available to participants in the mobile applications";
   public static final String ACTION_ON = "actionOn";
   public static final String ACTION_PAGE = "actionPage";
   public static final String ACTION_PAUSE = "pauseId";
-  public static final String ACTION_PAUSE_SUCCESS_MSG = "The study has been paused.";
+  public static final String ACTION_PAUSE_SUCCESS_MSG = "The study has been paused";
   // Action buttons
   public static final String ACTION_PUBLISH = "publishId";
   // Action success Messages
   public static final String ACTION_PUBLISH_SUCCESS_MSG =
       "The study has been published as an upcoming study.";
   public static final String ACTION_RESUME = "resumeId";
-  public static final String ACTION_RESUME_SUCCESS_MSG = "The study has been resumed.";
+  public static final String ACTION_RESUME_SUCCESS_MSG = "The study has been resumed";
 
   public static final String ACTION_SUC_MSG = "actionSucMsg";
   public static final String ACTION_TYPE = "actionType";
@@ -58,7 +44,7 @@ public class FdahpStudyDesignerConstants {
   public static final String ACTION_UNPUBLISH_SUCCESS_MSG =
       "The study has been removed from the list of upcoming studies.";
   public static final String ACTION_UPDATES = "updatesId";
-  public static final String ACTION_UPDATES_SUCCESS_MSG = "Study updates have been published.";
+  public static final String ACTION_UPDATES_SUCCESS_MSG = "Study updates have been published";
 
   public static final String ACTIVE = "active";
   public static final int ACTIVE_STATUS = 1;
@@ -68,7 +54,7 @@ public class FdahpStudyDesignerConstants {
       "The study must have at least one questionnaire or active task added before attempting this action.";
 
   public static final String ACTIVETASK_DATE_ERROR_MSG =
-      "One or more of the study's activities are scheduled for dates that are in the past. Please configure activity schedules to have upcoming dates and try again.";
+      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again.";
   public static final String ACTIVETASK_LIST = "activeTaskList";
   public static final String ACTIVITY_MESSAGE = "activityMsg";
   public static final String ACTIVITY_STUDY_ID = "activityStudyId";
@@ -173,7 +159,7 @@ public class FdahpStudyDesignerConstants {
   public static final String FDA_ENV_UATL = "uat";
 
   public static final String FDA_SALT = "BTCSoft";
-  public static final String FETAL_KICK_COUNTER = "Fetal Kick Counter";
+  public static final String FETAL_KICK_COUNTER = "Fetal kick counter";
 
   public static final String FORM_ID = "formId";
   public static final String FORM_STEP = "Form";
@@ -245,7 +231,7 @@ public class FdahpStudyDesignerConstants {
   public static final String NOTIFICATION_DEACTIVATE_TEXT =
       "The study $customId has been closed. We thank you for your participation.";
   public static final String NOTIFICATION_ERROR_MSG =
-      "One or more of the study's notifications are scheduled for dates that are in the past. Please configure notification schedules to have upcoming dates and try again.";
+      "One or more of the study's notifications is scheduled for a date in the past. Please correct the same and try again.";
   public static final String NOTIFICATION_GT = "GT";
   public static final String NOTIFICATION_IMMEDIATE = "immediate";
 
@@ -303,7 +289,7 @@ public class FdahpStudyDesignerConstants {
       "This section has been marked as complete";
   public static final String QUESTIONNARIE_STUDY_ID = "questionnarieStudyId";
   public static final String QUESTIONNARIES_ERROR_MSG =
-      "One or more of the study's activities are scheduled for dates that are in the past. Please configure activity schedules to have upcoming dates and try again.";
+      "One or more of the study's activities is scheduled for a date that has already expired. Please correct the same and try again.";
   public static final String QUESTIONSTEP_ACTIVITY = "Question step";
   public static final String QUESTIONSTEP_DELETED = "Question step deleted";
   public static final String QUESTIONSTEP_DONE = "Question step marked complete";
@@ -329,13 +315,13 @@ public class FdahpStudyDesignerConstants {
   public static final String RESUME_CHECKLIST_ERROR_MSG =
       "The Checklist section does not have all items marked complete. Do you want to proceed?";
   public static final Integer ROLE_CREATE_MANAGE_STUDIES = 8;
-  public static final Integer ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT = 6;
-  public static final Integer ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW = 4;
   public static final Integer ROLE_MANAGE_REPO = 3;
   public static final Integer ROLE_MANAGE_STUDIES = 2;
   public static final Integer ROLE_MANAGE_USERS_EDIT = 5;
   public static final Integer ROLE_MANAGE_USERS_VIEW = 7;
   public static final Integer ROLE_SUPERADMIN = 1;
+  public static final Integer ROLE_MANAGE_APPS = 10;
+  public static final Integer ROLE_CREATE_MANAGE_APPS = 9;
   public static final String RUN_BASED = "Run-based";
   // Button Name
   public static final String SAVE_BUTTON = "save";
@@ -369,7 +355,7 @@ public class FdahpStudyDesignerConstants {
   // Active task attribute name
   public static final String SHORT_TITLE = "shortTitle";
 
-  public static final String SPATIAL_SPAN_MEMORY = "Spatial Span Memory";
+  public static final String SPATIAL_SPAN_MEMORY = "Spatial span memory";
   public static final String SPECIALCHARACTERS = "specialcharacters";
   public static final String STAT_INFO_LIST = "statisticsInfoList";
   public static final boolean STATUS_ACTIVE = true;
@@ -392,6 +378,8 @@ public class FdahpStudyDesignerConstants {
   // supported
   // android
   public static final String STUDY_PLATFORM_TYPE_IOS = "I"; // platform
+  // supported noth ios and android
+  public static final String STUDY_PLATFORM_TYPE_IOS_ANDROID = "I,A"; // platform
 
   // Study Status
   public static final String STUDY_PRE_LAUNCH = "Pre-launch";
@@ -410,7 +398,7 @@ public class FdahpStudyDesignerConstants {
   public static final String SUC_MSG = "sucMsg";
   public static final String SUCCESS = "SUCCESS";
 
-  public static final String TOWER_OF_HANOI = "Tower Of Hanoi";
+  public static final String TOWER_OF_HANOI = "Tower of hanoi";
   public static final String UI_DISPLAY_DATE = "EEE, MMM dd, yyyy";
   public static final String UI_SDF_DATE = "MM/dd/yyyy";
   public static final String UI_SDF_DATE_FORMAT = "dd/MM/yyyy";
@@ -434,7 +422,7 @@ public class FdahpStudyDesignerConstants {
 
   public static final String YES = "Yes";
 
-  public static final String ANCHOR_TYPE_ENROLLMENTDATE = "Enrollment Date";
+  public static final String ANCHOR_TYPE_ENROLLMENTDATE = "Enrollment date";
   public static final String SCHEDULETYPE_REGULAR = "Regular";
   public static final String SCHEDULETYPE_ANCHORDATE = "AnchorDate";
   public static final String ANCHOR_ERROR_MSG =
@@ -446,13 +434,116 @@ public class FdahpStudyDesignerConstants {
 
   public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
   public static final String FDA_SMD_STUDY_PAGE_PATH = "fda.smd.study.pagePath";
-  public static final String ALLOW_REJOIN_TEXT = "Are you sure you want to leave the study?";
 
   public static final String STUDY_BASICINFORMATION_DEFAULT_IMAGE =
       "study.basicInformation.defaultImage";
 
-  public static final String CONSENT_AGREEMENT =
-      "By tapping on Agree, you confirm that you have reviewed the consent document and agree to participate in the study.";
+  public static final String ADD = "add";
+
+  public static final String SUPER_ADMIN_PERMISSIONS =
+      "ROLE_MANAGE_STUDIES,ROLE_CREATE_MANAGE_STUDIES,ROLE_SUPERADMIN,ROLE_MANAGE_USERS_EDIT,ROLE_MANAGE_USERS_VIEW,ROLE_MANAGE_APPS,ROLE_CREATE_MANAGE_APPS";
+
+  public static final String FAILURE_EXPORT_STUDY_MESSAGE =
+      "Sorry, a technical error occurred and the study could not be exported.";
+
+  public static final String IMPORT_FAILED_DUE_TO_ANOMOLIES_DETECTED_IN_FILLE =
+      "Import failed due to anomalies detected in the exported study file. Please try again with a new signed URL generated at the point of export in the origin Study Builder.";
+
+  public static final String IMPORT_FAILED_DUE_TO_INCOMPATIBLE_VERSION =
+      "Import failed. Studies can only be imported from compatible Study Builder applications (running a platform release version of 2.0.6 or higher, and lower than or equal to the destination platform version  which is";
+
+  public static final String IMPORT_FAILED_DUE_TO_ALREADY_USED_URL =
+      "The URL has already been used to import a study into this Study Builder. Use the copy-into-new action to replicate the study or use a new URL generated at the point of study export.";
+
+  public static final String PATH_SEPARATOR = "/";
+
+  public static final String STUDIES = "studies";
+
+  public static final String DEFAULT_IMAGES = "defaultImages";
+
+  public static final String EXPORT_SUCCESS_MSG = "Study exported successfully";
+
+  public static final String IMPORT_SUCCESS_MSG = "Study imported successfully";
+
+  public static final String STUDY_REPLICATTE_SUCCESS_MSG = "Study replicated successfully";
+
+  public static final String IMPORT_FAILURE_MSG = "Import failed";
+
+  public static final String EXPORT_FAILURE_MSG = "Export failed. Please try again later.";
+
+  public static final String STUDY_REPLICATTE_FAILURE_MSG =
+      "Study replication failed. Please try again later.";
+
+  public static final String INVALID_URL = "Please enter a valid URL";
+
+  public static final String STUDY_PRE_LUNCH_VERSION = "0.0";
+
+  public static final String NA = "NA";
+
+  public static final String DEVICE_ANDROID = "android";
+
+  public static final String DEVICE_IOS = "ios";
+
+  public static final String PUBLISHED_VERSION = "publishedVersion";
+
+  public static final String WORKING_VERSION = "workingVersion";
+
+  public static final String APP_ID = "appId";
+  public static final String APP_BO = "appBo";
+
+  public static final String CUSTOM_APP_ID = "customAppId";
+
+  public static final String APP_DEACTIVATED = "Deactivated";
+
+  public static final String FAILURE_APP_MESSAGE =
+      "Sorry, a technical error occurred and the update(s) could not be published.";
+
+  public static final String FAILURE_DEACTIVATE_APP_MESSAGE =
+      "Sorry, a technical error occurred and App deactivation failed";
+
+  public static final String VIEW_ASSOCIATED_STUDIES_MESSAGE =
+      "Studies seen in the list are based on the permissions you have in the Study Builder";
+
+  public static final String FAILURE_CONSENT_STORE_MESSAGE =
+      "Sorry, an error has occurred and your request could not be processed. Please try again later";
+
+  public static final String DEFAULT_MIN_TIME = "00:00:00";
+  public static final String DEFAULT_MAX_TIME = "23:59:59";
+  public static final String RESULT_TYPE_GROUPED = "grouped";
+
+  public static final String SDF_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+  public static final String SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN =
+      "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+  public static final String SDF_DATE_PATTERN = "yyyy-MM-dd";
+
+  public static SimpleDateFormat SDF_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  public static SimpleDateFormat SDF_DATE_TIME_12 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+  public static SimpleDateFormat SDF_DATE = new SimpleDateFormat("yyyy-MM-dd");
+  public static SimpleDateFormat SDF_TIME_24 = new SimpleDateFormat("HH:mm:ss");
+  public static SimpleDateFormat SDF_TIME_12 = new SimpleDateFormat("hh:mm a");
+
+  public static final String SSM_INITIAL = "Initial_Span_spatial";
+  public static final String SSM_MINIMUM = "Minimum_Span_spatial";
+  public static final String SSM_MAXIMUM = "Maximum_Span_spatial";
+  public static final String SSM_PLAY_SPEED = "Play_Speed_spatial";
+  public static final String SSM_MAX_TEST = "Maximum_Tests_spatial";
+  public static final String SSM_MAX_CONSECUTIVE_FAILURES = "Maximum_Consecutive_Failuress_spatial";
+  public static final String SSM_REQUIRE_REVERSAL = "Require_reversal_spatial";
+  public static final String SSM_SCORE = "Score_spatial";
+  public static final String SSM_NO_OF_GAMES = "Number_of_Games_spatial";
+  public static final String SSM_NO_OF_FAILURES = "Number_of_Failures_spatial";
+
+  public static final String LENGTH_OF_WALK_RUN = "length_of_walk_period_run";
+  public static final String LENGTH_OF_REST_RUN = "length_of_rest_period_run";
+  public static final String AUDIO_PROMPT_INTERVAL_RUN = "Audio_prompt_interval_run";
+
+  public static final String LENGTH_OF_WALK_STEP = "length_of_walk_period_step";
+  public static final String LENGTH_OF_REST_STEP = "length_of_rest_period_step";
+  public static final String AUDIO_PROMPT_INTERVAL_STEP = "Audio_prompt_interval_step";
+
+  public static final String LENGTH_OF_WALK = "length_of_walk_period";
+  public static final String LENGTH_OF_REST_WALK = "length_of_rest_period_walk";
+  public static final String AUDIO_PROMPT_INTERVAL_WALK = "Audio_prompt_interval_walk";
 
   private FdahpStudyDesignerConstants() {
     // Do nothing

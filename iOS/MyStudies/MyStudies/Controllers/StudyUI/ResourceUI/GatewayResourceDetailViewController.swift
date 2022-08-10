@@ -20,6 +20,8 @@
 import MessageUI
 import UIKit
 import WebKit
+import FirebaseAnalytics
+import Reachability
 
 let resourcesDownloadPath = AKUtility.baseFilePath + "/Resources"
 
@@ -28,6 +30,7 @@ class GatewayResourceDetailViewController: UIViewController {
   // MARK: - Outlets
   @IBOutlet weak var webView: WKWebView!
   @IBOutlet weak var progressBar: UIProgressView?
+  @IBOutlet weak var shareButton: UIBarButtonItem!
 
   // MARK: - Properties
   var activityIndicator: UIActivityIndicatorView!
@@ -36,6 +39,7 @@ class GatewayResourceDetailViewController: UIViewController {
   var htmlString: String?
   var resource: Resource?
   var isEmailComposerPresented: Bool?
+  private var reachability: Reachability!
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
@@ -48,8 +52,9 @@ class GatewayResourceDetailViewController: UIViewController {
     self.addBackBarButton()
     self.isEmailComposerPresented = false
     self.title = resource?.title
+      setupNotifiers()
   }
-
+    
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -97,6 +102,43 @@ class GatewayResourceDetailViewController: UIViewController {
       webView.contentScaleFactor = 1.0
     }
 
+  }
+    
+    // MARK: - Utility functions
+  func setupNotifiers() {
+      NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                             name: Notification.Name.reachabilityChanged, object: nil);
+        
+      do {
+          self.reachability = try Reachability()
+          try self.reachability.startNotifier()
+          } catch(let error) { }
+  }
+    
+  @objc func reachabilityChanged(note: Notification) {
+      let reachability = note.object as! Reachability
+      switch reachability.connection {
+      case .cellular:
+            setOnline()
+            break
+      case .wifi:
+            setOnline()
+            break
+      case .none:
+            setOffline()
+            break
+      case .unavailable:
+            setOffline()
+            break
+      }
+  }
+    
+  func setOffline() {
+      shareButton.isEnabled = false
+  }
+    
+  func setOnline() {
+      shareButton.isEnabled = true
   }
 
   func loadWebViewWithPath(path: String) {
@@ -150,10 +192,16 @@ class GatewayResourceDetailViewController: UIViewController {
   // MARK: Button Actions
 
   @IBAction func cancelButtonClicked(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "GatewatResourceDetail Cancel"
+    ])
     self.dismiss(animated: true, completion: nil)
   }
 
   @IBAction func buttonActionForward(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "App Glosary Share"
+    ])
     self.shareResource()
   }
 

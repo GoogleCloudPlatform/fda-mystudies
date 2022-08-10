@@ -26,15 +26,9 @@ let kEligibilityCorrectAnswers = "correctAnswers"
 let kEligibilityTokenTitle = "tokenTitle"
 
 let kEligibilityInEligibleScreen = "InEligibleScreen"
-let kEligibilityInEligibleDescriptionText = "Sorry, You are Ineligible"
 
 let kEligibilityVerifiedScreen = "VerifiedScreen"
-let kEligibilityCompletionDescriptionText =
-  """
-  Your enrollment token has been successfully validated. You are eligible to join the Study.
-  Please click Continue to proceed to the Consent section.
-  """
-let kEligibilityCompletionTitle = "Eligibility Confirmed"
+let kEligibilityCompletionTitle = "Eligibility confirmed"
 
 let kEligibilityStep = "steps"
 
@@ -44,7 +38,7 @@ let kEligibilityValidationDescriptionText =
 let kEligibilityValidationTitle = "Validated!"
 
 let kEligibilityTestInstructionStep = "EligibilityTestInstructionStep"
-let kEligibilityTestInstructionTestTitle = "Eligibility Test"
+let kEligibilityTestInstructionTestTitle = "Eligibility test"
 let kEligibilityInstructionTestText =
   "Please answer some quick questions to confirm your eligibility for this study."
 

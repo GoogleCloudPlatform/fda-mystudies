@@ -16,7 +16,7 @@
 <div class="max__w__1280 m-none" *ngIf="manageUser$ | async as manageUsers">
   <div class="cards1 m-none">
     <table
-      class="table table-striped custom__table"
+      class="table table-borderless"
       [mfData]="
         manageUsers.users
           | paginate
@@ -74,14 +74,11 @@
             </span>
           </td>
         </tr>
-        <tr *ngIf="manageUsers.users.length === 0">
-          <td colspan="4" class="text-center">No records found</td>
-        </tr>
       </tbody>
 
       <tfoot class="custom__tfoot">
         <tr>
-          <td colspan="4">
+          <td colspan="4" class="mob_tbl_footer_text_center">
             <div class="text-center">
               <pagination-controls
                 pagination-template
@@ -89,6 +86,17 @@
                 (pageChange)="pageChange($event)"
               ></pagination-controls>
             </div>
+          </td>
+        </tr>
+      </tfoot>
+
+      <tfoot>
+        <tr *ngIf="manageUsers.users.length === 0">
+          <td
+            colspan="4"
+            class="text-center font12 txt__light-gray txt__light-gray mob_tbl_footer_text_center"
+          >
+            No records found
           </td>
         </tr>
       </tfoot>

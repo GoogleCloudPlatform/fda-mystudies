@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -28,12 +28,10 @@ public class StudyMetadataBean implements Serializable {
   private String studyVersion;
   private String studyType;
   private String studyStatus;
-  private String studyCategory;
-  private String studyTagline;
-  private String studySponsor;
   private String studyEnrolling;
   private String appId;
   private String appName;
   private String appDescription;
   private String logoImageUrl;
+  private String contactEmail;
 }

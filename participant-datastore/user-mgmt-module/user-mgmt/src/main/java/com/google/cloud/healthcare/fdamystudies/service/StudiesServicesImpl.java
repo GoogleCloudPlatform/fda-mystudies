@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -16,9 +16,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.beans.FcmPushNotificationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
-import com.google.cloud.healthcare.fdamystudies.beans.PushNotificationResponse;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
@@ -28,16 +28,11 @@ import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
-import com.notnoop.apns.APNS;
-import com.notnoop.apns.ApnsService;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -48,8 +43,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -58,7 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class StudiesServicesImpl implements StudiesServices {
 
-  private static Logger logger = LoggerFactory.getLogger(StudiesServicesImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(StudiesServicesImpl.class.getName());
 
   @Autowired private StudiesDao studiesDao;
 
@@ -73,12 +68,12 @@ public class StudiesServicesImpl implements StudiesServices {
   @Override
   @Transactional()
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
-    logger.info("StudiesServicesImpl - saveStudyMetadata() : starts");
+    logger.entry("Begin saveStudyMetadata()");
     ErrorBean errorBean = null;
 
     errorBean = studiesDao.saveStudyMetadata(studyMetadataBean);
 
-    logger.info("StudiesServicesImpl - saveStudyMetadata() : ends");
+    logger.exit("saveStudyMetadata() : ends");
     return errorBean;
   }
 
@@ -92,7 +87,7 @@ public class StudiesServicesImpl implements StudiesServices {
     Map<Object, StudyEntity> studyInfobyStudyCustomId = new HashMap<>();
     Map<String, JSONArray> allDeviceTokens = new HashMap<>();
     Map<Object, AppEntity> appInfobyAppCustomId = new HashMap<>();
-    logger.info("StudiesServicesImpl.SendNotificationAction() - starts");
+    logger.entry("Begin SendNotificationAction()");
 
     for (NotificationBean notificationBean : notificationForm.getNotifications()) {
       if (notificationBean.getNotificationType().equalsIgnoreCase(AppConstants.STUDY_LEVEL)) {
@@ -123,7 +118,7 @@ public class StudiesServicesImpl implements StudiesServices {
                   .collect(Collectors.toMap(StudyEntity::getCustomId, Function.identity()));
         }
       }
-      PushNotificationResponse fcmNotificationResponse = null;
+      FcmPushNotificationResponse fcmNotificationResponse = null;
       if ((allDeviceTokens != null && !allDeviceTokens.isEmpty())
           || (studiesMap != null && !studiesMap.isEmpty())) {
         for (NotificationBean notificationBean : notificationForm.getNotifications()) {
@@ -193,11 +188,11 @@ public class StudiesServicesImpl implements StudiesServices {
       }
     }
 
-    logger.info("StudiesServicesImpl.SendNotificationAction() - ends");
+    logger.exit("SendNotificationAction() - ends");
     return new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
   }
 
-  private PushNotificationResponse sendStudyLevelNotification(
+  private FcmPushNotificationResponse sendStudyLevelNotification(
       Map<String, Map<String, JSONArray>> studiesMap,
       Map<Object, StudyEntity> studyInfobyStudyCustomId,
       Map<Object, AppEntity> appInfobyAppCustomId,
@@ -207,59 +202,96 @@ public class StudiesServicesImpl implements StudiesServices {
     Map<String, JSONArray> deviceTokensMap =
         studiesMap.get(studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()).getId());
     notificationBean.setNotificationType(AppConstants.STUDY);
-    PushNotificationResponse pushNotificationResponse = null;
+    FcmPushNotificationResponse pushNotificationResponse = null;
     if (deviceTokensMap != null) {
-      if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
+      if (AppConstants.DEVICE_ANDROID.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
         pushNotificationResponse =
-            pushFCMNotification(
+            pushFcmNotification(
                 notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-      }
-      if (deviceTokensMap.get(AppConstants.DEVICE_IOS) != null) {
+      } else if (AppConstants.DEVICE_IOS.equalsIgnoreCase(notificationBean.getDeviceType())) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_IOS));
-        pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      } else {
+        notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
+        notificationBean.setDeviceType(AppConstants.DEVICE_ANDROID);
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+
+        notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_IOS));
+        notificationBean.setDeviceType(AppConstants.DEVICE_IOS);
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
       }
     }
     JsonNode fcmResponse =
         pushNotificationResponse != null ? pushNotificationResponse.getFcmResponse() : null;
-    return new PushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
+    return new FcmPushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
   }
 
-  private PushNotificationResponse sendGatewaylevelNotification(
+  private FcmPushNotificationResponse sendGatewaylevelNotification(
       Map<String, JSONArray> allDeviceTokens,
       Map<Object, AppEntity> appInfobyAppCustomId,
       NotificationBean notificationBean)
       throws IOException {
 
     notificationBean.setNotificationType(AppConstants.GATEWAY);
-    PushNotificationResponse pushNotificationResponse = null;
-    if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
-        && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0) {
-      notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
-      pushNotificationResponse =
-          pushFCMNotification(
-              notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+    FcmPushNotificationResponse pushNotificationResponse = null;
+
+    if ((allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
+            && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0)
+        || (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null
+            && allDeviceTokens.get(AppConstants.DEVICE_IOS).length() != 0)) {
+      if (AppConstants.STUDY_EVENT.equalsIgnoreCase(notificationBean.getNotificationSubType())
+          && AppConstants.DEVICE_ANDROID.equalsIgnoreCase(notificationBean.getDeviceType())) {
+        notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      } else if (AppConstants.STUDY_EVENT.equalsIgnoreCase(
+              notificationBean.getNotificationSubType())
+          && AppConstants.DEVICE_IOS.equalsIgnoreCase(notificationBean.getDeviceType())) {
+        notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
+        pushFcmNotification(
+            notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      } else {
+        notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
+        notificationBean.setDeviceType(AppConstants.DEVICE_ANDROID);
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+
+        notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
+        notificationBean.setDeviceType(AppConstants.DEVICE_IOS);
+        pushNotificationResponse =
+            pushFcmNotification(
+                notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      }
     }
-    if (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null) {
-      notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
-      pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
-    }
+
     JsonNode fcmResponse =
         pushNotificationResponse != null ? pushNotificationResponse.getFcmResponse() : null;
-    return new PushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
+    return new FcmPushNotificationResponse(fcmResponse, HttpStatus.OK.value(), "success");
   }
 
-  public PushNotificationResponse pushFCMNotification(
+  public FcmPushNotificationResponse pushFcmNotification(
       NotificationBean notification, AppEntity appPropertiesDetails) throws IOException {
 
     String authKey = "";
-    logger.info("StudiesServicesImpl - pushFCMNotification() : starts");
+    logger.entry("Begin pushFCMNotification()");
 
     if (notification.getDeviceToken() != null
         && notification.getDeviceToken().length() > 0
         && appPropertiesDetails != null) {
 
-      authKey = appPropertiesDetails.getAndroidServerKey(); // You FCM AUTH key
+      authKey =
+          AppConstants.DEVICE_ANDROID.equals(notification.getDeviceType())
+              ? appPropertiesDetails.getAndroidServerKey()
+              : appPropertiesDetails.getIosServerKey();
 
       URL url = new URL((String) applicationPropertyConfiguration.getApiUrlFcm());
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -282,18 +314,26 @@ public class StudiesServicesImpl implements StudiesServices {
       dataInfo.put("type", notification.getNotificationType());
       dataInfo.put("title", notification.getNotificationTitle());
       dataInfo.put("message", notification.getNotificationText());
+      dataInfo.put("body", notification.getNotificationText());
       if (notification.getCustomStudyId() != null
           && StringUtils.isNotEmpty(notification.getCustomStudyId())) {
         dataInfo.put("studyId", notification.getCustomStudyId());
       }
+
+      JSONObject notificationForIos = new JSONObject();
+      notificationForIos.put("title", notification.getNotificationTitle());
+      notificationForIos.put("body", notification.getNotificationText());
+
       json.put("data", dataInfo);
+      json.put("notification", notificationForIos);
+
       OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
       wr.write(json.toString());
       wr.flush();
       String response = IOUtils.toString(conn.getInputStream(), StandardCharsets.UTF_8);
       JsonNode responseJson = new ObjectMapper().readTree(response);
-      PushNotificationResponse fcmNotificationResponse =
-          new PushNotificationResponse(
+      FcmPushNotificationResponse fcmNotificationResponse =
+          new FcmPushNotificationResponse(
               responseJson, conn.getResponseCode(), conn.getResponseMessage());
       logger.trace(
           String.format(
@@ -302,68 +342,6 @@ public class StudiesServicesImpl implements StudiesServices {
       return fcmNotificationResponse;
     }
 
-    return new PushNotificationResponse(null, HttpStatus.OK.value(), "SUCCESS");
-  }
-
-  public void pushNotification(NotificationBean notificationBean, AppEntity appPropertiesDetails)
-      throws IOException {
-
-    logger.info("StudiesServicesImpl - pushNotification() : starts");
-    String certificatePassword = "";
-    String iosNotificationType = applicationPropertyConfiguration.getIosPushNotificationType();
-
-    File file = null;
-    if (notificationBean.getDeviceToken() != null
-        && notificationBean.getDeviceToken().length() > 0
-        && appPropertiesDetails != null) {
-      File root = null;
-      certificatePassword = appPropertiesDetails.getIosCertificatePassword();
-
-      byte[] decodedBytes;
-      FileOutputStream fop;
-      decodedBytes =
-          java.util.Base64.getDecoder()
-              .decode(appPropertiesDetails.getIosCertificate().replaceAll("\n", ""));
-      file = File.createTempFile("pushCert_" + appPropertiesDetails.getAppId(), ".p12");
-      fop = new FileOutputStream(file);
-      fop.write(decodedBytes);
-      fop.flush();
-      fop.close();
-      file.deleteOnExit();
-
-      ApnsService service = null;
-      if (file != null) {
-        if (iosNotificationType.equals("production")) {
-          service =
-              APNS.newService()
-                  .withCert(file.getPath(), certificatePassword)
-                  .withProductionDestination()
-                  .build();
-        } else {
-          service =
-              APNS.newService()
-                  .withCert(file.getPath(), certificatePassword)
-                  .withSandboxDestination()
-                  .build();
-        }
-        List<String> tokens = new ArrayList<String>();
-
-        for (int i = 0; i < notificationBean.getDeviceToken().length(); i++) {
-          String token = (String) notificationBean.getDeviceToken().get(i);
-          tokens.add(token);
-        }
-        String customPayload =
-            APNS.newPayload()
-                .badge(1)
-                .alertTitle("")
-                .alertBody(notificationBean.getNotificationText())
-                .customField("subtype", notificationBean.getNotificationSubType())
-                .customField("type", notificationBean.getNotificationType())
-                .customField("studyId", notificationBean.getCustomStudyId())
-                .sound("default")
-                .build();
-        service.push(tokens, customPayload);
-      }
-    }
+    return new FcmPushNotificationResponse(null, HttpStatus.OK.value(), "SUCCESS");
   }
 }

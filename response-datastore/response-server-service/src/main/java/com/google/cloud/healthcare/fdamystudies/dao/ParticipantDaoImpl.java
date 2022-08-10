@@ -23,8 +23,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,12 +32,12 @@ import org.springframework.stereotype.Repository;
 public class ParticipantDaoImpl implements ParticipantDao {
   @Autowired private EntityManagerFactory entityManagerFactory;
 
-  private static final Logger logger = LoggerFactory.getLogger(ParticipantDaoImpl.class);
+  private XLogger logger = XLoggerFactory.getXLogger(ParticipantDaoImpl.class.getName());
 
   @Override
   public String saveParticipant(ParticipantInfoEntity participantBo)
       throws ProcessResponseException {
-    logger.debug("ParticipantDaoImpl saveParticipant() - starts ");
+    logger.entry("begin saveParticipant()");
     Transaction transaction = null;
     Session session = null;
 
@@ -64,7 +64,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
       transaction = session.beginTransaction();
       session.save(participantBo);
       transaction.commit();
-      logger.debug("ParticipantDaoImpl saveParticipant() - ends ");
+      logger.exit("saveParticipant() - ends ");
       return particpantUniqueIdentifier.toString();
     } catch (PersistenceException e) {
       logger.error("saveParticipant - error " + e.getMessage());
@@ -101,7 +101,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
   @Override
   public boolean isValidParticipant(ParticipantInfoEntity participantBo)
       throws ProcessResponseException {
-    logger.debug("ParticipantDaoImpl isValidParticipant() - starts ");
+    logger.entry("begin isValidParticipant()");
     Session session = null;
     try {
       session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
@@ -121,7 +121,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
       List<ParticipantInfoEntity> resultList =
           session.createQuery(participantBoCriteria).getResultList();
       if (resultList != null && resultList.size() == 1) {
-        logger.debug("ParticipantDaoImpl isValidParticipant() - ends ");
+        logger.exit("isValidParticipant() - ends ");
         return true;
       } else {
         throw new ProcessResponseException(

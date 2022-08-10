@@ -16,9 +16,12 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_VERSION_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEEPLINK_URL;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEEPLINK_URL_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_DESCRIPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FROM_EMAIL_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_VIEW_NAME;
@@ -29,6 +32,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SUPPORT_EMAIL_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
@@ -156,8 +160,11 @@ public class LoginController {
     String mobilePlatform = cookieHelper.getCookieValue(request, MOBILE_PLATFORM_COOKIE);
     String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
     String appName = cookieHelper.getCookieValue(request, APP_NAME_COOKIE);
+    String fromEmail = cookieHelper.getCookieValue(request, FROM_EMAIL_COOKIE);
+    String supportEmail = cookieHelper.getCookieValue(request, SUPPORT_EMAIL_COOKIE);
+    String deeplinkCookie = cookieHelper.getCookieValue(request, DEEPLINK_URL_COOKIE);
 
-    boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source);
+    boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source, deeplinkCookie);
     if (!attrsAdded) {
       return ERROR_VIEW_NAME;
     }
@@ -184,12 +191,15 @@ public class LoginController {
     user.setPassword(loginRequest.getPassword());
     user.setAppId(appId);
     user.setAppName(appName);
+    user.setSupportEmail(supportEmail);
+    user.setFromEmail(fromEmail);
 
     AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
 
     if (UserAccountStatus.PENDING_CONFIRMATION.getStatus()
         == authenticationResponse.getAccountStatus()) {
-      String redirectUrl = redirectConfig.getAccountActivationUrl(mobilePlatform, source);
+      String redirectUrl =
+          redirectConfig.getAccountActivationUrl(mobilePlatform, source, deeplinkCookie);
       String url = String.format("%s?email=%s", redirectUrl, loginRequest.getEmail());
       return redirect(response, url);
     }
@@ -213,13 +223,13 @@ public class LoginController {
     Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
     if (!optUser.isPresent()) {
       logger.exit("tempRegId is invalid, return to login page");
-      cookieHelper.deleteCookie(response, TEMP_REG_ID_COOKIE);
       return LOGIN_VIEW_NAME;
     } else {
       UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
       cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
       cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
+      cookieHelper.deleteCookie(response, TEMP_REG_ID_COOKIE);
       userService.resetTempRegId(user.getUserId());
       return redirectToConsentPage(loginChallenge, user.getUserId(), response);
     }
@@ -252,13 +262,20 @@ public class LoginController {
         APP_VERSION_COOKIE,
         MOBILE_PLATFORM_COOKIE,
         SOURCE_COOKIE,
-        APP_NAME_COOKIE);
+        APP_NAME_COOKIE,
+        FROM_EMAIL_COOKIE,
+        SUPPORT_EMAIL_COOKIE,
+        DEEPLINK_URL_COOKIE);
 
     String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
     String source = qsParams.getFirst(SOURCE);
+    String deeplinkUrl = qsParams.getFirst(DEEPLINK_URL);
+
     model.addAttribute(LOGIN_CHALLENGE, loginChallenge);
-    boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source);
+    boolean attrsAdded = addAttributesToModel(model, mobilePlatform, source, deeplinkUrl);
     if (!attrsAdded) {
+      logger.warn(
+          String.format("'%s' attributes not added to model. deeplinkCookie value: ", deeplinkUrl));
       return ERROR_VIEW_NAME;
     }
 
@@ -280,7 +297,8 @@ public class LoginController {
     return LOGIN_VIEW_NAME;
   }
 
-  private boolean addAttributesToModel(Model model, String mobilePlatform, String source) {
+  private boolean addAttributesToModel(
+      Model model, String mobilePlatform, String source, String deeplinkCookie) {
     PlatformComponent platformComponent = PlatformComponent.fromValue(source);
     if (platformComponent == null) {
       logger.warn(
@@ -291,10 +309,13 @@ public class LoginController {
     }
 
     model.addAttribute(
-        FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform, source));
-    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
-    model.addAttribute(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform, source));
-    model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
+        FORGOT_PASSWORD_LINK,
+        redirectConfig.getForgotPasswordUrl(mobilePlatform, source, deeplinkCookie));
+    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform, deeplinkCookie));
+    model.addAttribute(
+        TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform, source, deeplinkCookie));
+    model.addAttribute(
+        PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform, deeplinkCookie));
     model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(source));
     model.addAttribute(MOBILE_APP, platformComponent.equals(PlatformComponent.MOBILE_APPS));
     return true;
@@ -322,16 +343,22 @@ public class LoginController {
       mobilePlatform =
           StringUtils.defaultIfEmpty(mobilePlatform, MobilePlatform.UNKNOWN.getValue());
       String source = cookieHelper.getCookieValue(req, SOURCE_COOKIE);
+      String deeplinkUrlCookie = cookieHelper.getCookieValue(req, DEEPLINK_URL_COOKIE);
 
       ModelAndView modelView = new ModelAndView();
       modelView.setViewName(LOGIN_VIEW_NAME);
       modelView.addObject("loginRequest", new LoginRequest());
       modelView.addObject(ERROR_DESCRIPTION, ex.getErrorCode().getDescription());
       modelView.addObject(
-          FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform, source));
-      modelView.addObject(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
-      modelView.addObject(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform, source));
-      modelView.addObject(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
+          FORGOT_PASSWORD_LINK,
+          redirectConfig.getForgotPasswordUrl(mobilePlatform, source, deeplinkUrlCookie));
+      modelView.addObject(
+          SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform, deeplinkUrlCookie));
+      modelView.addObject(
+          TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform, source, deeplinkUrlCookie));
+      modelView.addObject(
+          PRIVACY_POLICY_LINK,
+          redirectConfig.getPrivacyPolicyUrl(mobilePlatform, deeplinkUrlCookie));
       modelView.addObject(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
 
       PlatformComponent platformComponent = PlatformComponent.fromValue(source);

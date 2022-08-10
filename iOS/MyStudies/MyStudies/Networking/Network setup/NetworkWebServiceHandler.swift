@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
+import FirebaseAnalytics
 
 enum RequestType: NSInteger {
   case requestTypeJSON
@@ -363,7 +364,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
   ///   - request: instance of URLRequest
   ///   - requestName: name of the request of type String
   fileprivate func fireRequest(_ request: URLRequest?, requestName: NSString?) {
-
     if NetworkManager.isNetworkAvailable() {
 
       let config = URLSessionConfiguration.default
@@ -422,7 +422,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
     requestName: NSString?,
     error: NSError?
   ) {
-
     if error != nil {
       if shouldRetryRequest && maxRequestRetryCount > 0 {
         maxRequestRetryCount -= 1
@@ -450,6 +449,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           responseDict =
             try JSONSerialization.jsonObject(with: data!, options: [])
             as? NSDictionary
+          
         } catch let error {
           Logger.sharedInstance.error("Serialization error: \(requestName ?? "")", error.localizedDescription)
           responseDict = [:]
@@ -474,12 +474,17 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
               options: .allowFragments
             )
             as? [String: Any]
+          
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Account Existing OKAlert"
+            ])
           } else {
             error1 = error ?? NSError(domain: "", code: statusCode, userInfo: [:])
           }
         } else {
+
           error1 = NSError(
             domain: NSURLErrorDomain,
             code: statusCode,

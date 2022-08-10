@@ -22,7 +22,8 @@
 		<property name="hibernate.cache.use_second_level_cache">false</property>
 		<property name="hibernate.cache.use_query_cache">false</property>
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
-
+		<property name="javax.persistence.validation.mode">none</property>
+		
 		<mapping class="com.hphc.mystudies.dto.BrandingDto" />
 		<mapping class="com.hphc.mystudies.dto.ChartsDto" />
 		<mapping class="com.hphc.mystudies.dto.ComprehensionTestQuestionDto" />
