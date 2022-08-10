@@ -43,14 +43,10 @@ import com.harvard.usermodule.event.VerifyUserEvent;
 
 public class UserModuleSubscriber extends BaseSubscriber {
   /** get User. */
-  public void onEvent(GetUserEvent event) {
-    // default implementation ignored
-  }
+  public void onEvent(GetUserEvent event) {}
 
   /** Set user. */
-  public void onEvent(SetUserEvent event) {
-    // default implementation ignored
-  }
+  public void onEvent(SetUserEvent event) {}
 
   /** Register user. */
   public void onEvent(RegisterUserEvent registerUserEvent) {
@@ -63,19 +59,13 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   /** set touchId. */
-  public void onEvent(SetTouchIdEvent setTouchIdEvent) {
-    // default implementation ignored
-  }
+  public void onEvent(SetTouchIdEvent setTouchIdEvent) {}
 
   /** set passcode. */
-  public void onEvent(SetPasscodeEvent setPasscodeEvent) {
-    // default implementation ignored
-  }
+  public void onEvent(SetPasscodeEvent setPasscodeEvent) {}
 
   /** validate passcode. */
-  public void onEvent(ValidatePasscodeEvent validatePasscodeEvent) {
-    // default implementation ignored
-  }
+  public void onEvent(ValidatePasscodeEvent validatePasscodeEvent) {}
 
   /** Login. */
   public void onEvent(LoginEvent loginEvent) {
