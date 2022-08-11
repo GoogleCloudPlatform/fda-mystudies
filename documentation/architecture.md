@@ -31,6 +31,9 @@ Some of the terms used in this document include:
 1.  *Response data*: The responses provided by a participant to questionnaires and activities that are presented as part of a study.
 1.  *HealthCare APIs*: Google Healthcare API is a fully managed, highly scalable, enterprise-grade development environment for building clinical and analytics solutions securely on Google Cloud for storing, maintaining, and backing up personal health information(PHI)
 2.  *FHIR*: Fast Healthcare Interoperability Resources (FHIR) is a healthcare data standard with an application programming interface (API) for representing and exchanging electronic health records (EHR)
+3.  *DID*: De-identification(DID) is the process of removing identifying information from data. The GCP DID API detects sensitive data in FHIR resources, such as protected health information (PHI), and then uses a de-identification transformation to mask, delete, or otherwise obscure the data. 
+4.  *Consent*: The GCP Consent Management API stores the consent information application receives from users, keep track of what data is permitted for each use case, and helps the application utilize data only as directed by users. 
+5.  *BigQuery*: Google BigQuery is a cloud-based enterprise data warehouse that offers rapid SQL queries and interactive analysis of massive datasets.
 
 
 ## Platform components
