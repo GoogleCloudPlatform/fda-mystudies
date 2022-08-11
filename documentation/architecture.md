@@ -19,7 +19,7 @@ The diagram above illustrates the various applications that comprise the FDA MyS
 Google Cloud Healthcare APIs facilitate end-users for exchanging the data between healthcare applications and solutions hosted on the Google Cloud Platform, the users get an environment for building clinical and analytics solutions on the Google Cloud Platform. For the current release, FDA MyStudies collects and stores response data in the FHIR data stores and Consent information in the consent data stores. The data stored in the HealthCare DataStores is ingested into BigQuery for future analytics and query. The data in BigQuery is compartmentalized under DataSets  for each study.
 The Android and iOS mobile applications are not shown. The diagram below illustrates how these applications fit into a production deployment that considers security, devops and data governance.
 
-![Deployment diagram](images/deployment-reference-architecture.svg)
+![Deployment diagram](images/deployment-reference-architecture.png)
 
 ## Terminology
 
