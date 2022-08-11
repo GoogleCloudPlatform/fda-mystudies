@@ -1122,6 +1122,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
+      print("---------Step did finish")
     consentRestorationData = nil
 
     if taskViewController.task?.identifier == kPasscodeTaskIdentifier {
@@ -1204,7 +1205,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
-      
+      print("---------Step will appear")
     if (taskViewController.result.results?.count)! > 1 {
       if activityBuilder?.actvityResult?.result?.count
         == taskViewController.result.results?
@@ -1229,6 +1230,12 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       || stepIndentifer == kComprehensionInstructionStepIdentifier
     {
 
+        if stepIndentifer == kReviewTitle {
+            print("--------Review controller")
+            if reachability.connection == .unavailable {
+                setOffline()
+            }
+        }
       if stepIndentifer == kInEligibilityStep {
         self.isUpdatingIneligibility = true
         self.updateStudyStatus(status: .notEligible)
@@ -1303,11 +1310,17 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _: ORKStepViewController,
     didFinishWith _: ORKStepViewControllerNavigationDirection
-  ) { }
+  ) {
+      print("---------Result finish step")
+  }
 
-  public func stepViewControllerResultDidChange(_: ORKStepViewController) { }
+  public func stepViewControllerResultDidChange(_: ORKStepViewController) {
+      print("---------Result change step")
+  }
 
-  public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {}
+  public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {
+      print("---------Result fail step")
+  }
   
   func captureScreen() -> UIImage {
 
@@ -1326,6 +1339,28 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
+      
+      if reachability.connection == .unavailable {
+          taskViewController.dismiss(
+            animated: true,
+            completion: nil
+          )
+          self.navigationController?.popViewController(animated: true)
+//          UIUtilities.showAlertMessageWithActionHandler(
+//            "You are offline",
+//            message: "Since enrollment flow is not offline capable, you have to cancel",
+//            buttonTitle: kTitleOk,
+//            viewControllerUsed: self,
+//            action: {
+//                taskViewController.dismiss(
+//                  animated: true,
+//                  completion: nil
+//                )
+////                _ = navigationController?.popViewController(animated: true)
+//            }
+//          )
+      }
+      print("---------Current step")
     // CurrentStep is TokenStep
     let val = captureScreen()
     
@@ -1375,7 +1410,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           _ = navigationController?.popViewController(animated: true)
           return nil
 
-        } else {
+        } else if reachability.connection != .unavailable {
           let documentCopy: ORKConsentDocument =
             ((ConsentBuilder.currentConsent?.consentDocument)!.copy()
             as? ORKConsentDocument)!
@@ -1403,6 +1438,14 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           }
 
           return ttController
+        } else {
+            taskViewController.dismiss(
+              animated: true,
+              completion: nil
+            )
+            _ = navigationController?.popViewController(animated: true)
+            return nil
+//            return taskViewController.currentStepViewController
         }
       } else {
         return nil
@@ -1575,6 +1618,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   func taskViewController(_ taskViewController: ORKTaskViewController,
                           stepViewControllerWillDisappear stepViewController: ORKStepViewController,
                           navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+      print("---------step navigation")
     
     if let val = stepViewController.step?.identifier, val == kConsentSharing {
       UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0)

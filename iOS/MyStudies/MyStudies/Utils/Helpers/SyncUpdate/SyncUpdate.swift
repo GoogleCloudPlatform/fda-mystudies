@@ -102,12 +102,17 @@ class SyncUpdate {
 
   private func deleteSyncedObject() {
     guard let realm = DBHandler.getRealmObject(),
-      let syncObj = lastSyncedObject
+          let syncObj = lastSyncedObject
     else { return }
     // Delete Synced object from DB
-    try? realm.write {
-      realm.delete(syncObj)
+    let method = syncObj.method
+    let date = syncObj.date
+    if date != nil, method != nil {
+      try? realm.write {
+        realm.delete(syncObj)
+      }
     }
+    
   }
 }
 
