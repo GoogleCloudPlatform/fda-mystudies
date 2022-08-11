@@ -15,7 +15,7 @@ This document describes the architecture of FDA MyStudies. It outlines the vario
 
 ![Applications diagram](images/apps-reference-architecture.svg.png)
 
-The diagram above illustrates the various applications that comprise the FDA MyStudies platform. The above diagram shows the Google Managed Services used in the new release. The GCP-managed services used are Cloud Healthcare API  and Google BigQuery.
+The diagram above illustrates the various applications that comprise the FDA MyStudies platform along with the Google Managed Services used in the new release. The GCP-managed services used are Cloud Healthcare API  and Google BigQuery.
 Google Cloud Healthcare APIs facilitate end-users for exchanging the data between healthcare applications and solutions hosted on the Google Cloud Platform, the users get an environment for building clinical and analytics solutions on the Google Cloud Platform. For the current release, FDA MyStudies collects and stores response data in the FHIR data stores and Consent information in the consent data stores. The data stored in the HealthCare DataStores is ingested into BigQuery for future analytics and query. The data in BigQuery is compartmentalized under DataSets  for each study.
 The Android and iOS mobile applications are not shown. The diagram below illustrates how these applications fit into a production deployment that considers security, devops and data governance.
 
