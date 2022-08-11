@@ -585,7 +585,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
           errorAlertActionTitle2: nil,
           viewControllerUsed: topController2,
           action1: {
-            
+              do {
+                  self.reachability = try Reachability()
+                } catch(let error) { }
               if self.reachability.connection != .unavailable {
                   self.addAndRemoveProgress(add: true)
                   WCPServices().getEligibilityConsentMetadata(
