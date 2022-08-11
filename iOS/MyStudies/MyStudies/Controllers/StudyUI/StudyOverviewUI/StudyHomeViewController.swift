@@ -90,7 +90,7 @@ class StudyHomeViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-      setupNotifiers()
+    setupNotifiers()
     // Added to change next screen
     pageControlView?.addTarget(
       self,
@@ -123,7 +123,7 @@ class StudyHomeViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     // hide navigationbar
-
+      
     setNeedsStatusBarAppearanceUpdate()
     navigationController?.setNavigationBarHidden(true, animated: true)
     if Utilities.isValidValue(
@@ -164,7 +164,10 @@ class StudyHomeViewController: UIViewController {
 
     configureStandaloneUI()
   }
-  
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        reachabilityCheck()
+    }
   // MARK: - Utility functions
     func setupNotifiers() {
         NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
@@ -180,6 +183,25 @@ class StudyHomeViewController: UIViewController {
     
     @objc func reachabilityChanged(note: Notification) {
         let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    func reachabilityCheck() {
+        guard let reachability = self.reachability else {
+            return
+        }
         switch reachability.connection {
         case .cellular:
             setOnline()
@@ -1341,24 +1363,20 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   ) -> ORKStepViewController? {
       
       if reachability.connection == .unavailable {
-          taskViewController.dismiss(
-            animated: true,
-            completion: nil
+
+          UIUtilities.showAlertMessageWithActionHandler(
+            "You are offline",
+            message: "Since enrollment flow is not offline capable, you can't use this section right now. Please check your internet and try again.",
+            buttonTitle: kTitleOk,
+            viewControllerUsed: taskViewController,
+            action: {
+                taskViewController.dismiss(
+                  animated: true,
+                  completion: nil
+                )
+                self.navigationController?.popViewController(animated: true)
+            }
           )
-          self.navigationController?.popViewController(animated: true)
-//          UIUtilities.showAlertMessageWithActionHandler(
-//            "You are offline",
-//            message: "Since enrollment flow is not offline capable, you have to cancel",
-//            buttonTitle: kTitleOk,
-//            viewControllerUsed: self,
-//            action: {
-//                taskViewController.dismiss(
-//                  animated: true,
-//                  completion: nil
-//                )
-////                _ = navigationController?.popViewController(animated: true)
-//            }
-//          )
       }
       print("---------Current step")
     // CurrentStep is TokenStep
@@ -1410,7 +1428,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           _ = navigationController?.popViewController(animated: true)
           return nil
 
-        } else if reachability.connection != .unavailable {
+        } else {
           let documentCopy: ORKConsentDocument =
             ((ConsentBuilder.currentConsent?.consentDocument)!.copy()
             as? ORKConsentDocument)!
@@ -1438,14 +1456,6 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           }
 
           return ttController
-        } else {
-            taskViewController.dismiss(
-              animated: true,
-              completion: nil
-            )
-            _ = navigationController?.popViewController(animated: true)
-            return nil
-//            return taskViewController.currentStepViewController
         }
       } else {
         return nil
