@@ -10,7 +10,7 @@
 * New HealthCare API functionaliy has been introduced namely Consent API,FHIR,DID
 * Introduced BigQuery data warehouse functionality for analytics of data
 * Security updates
-* Updated Google Analytics for the iOS and Android mobile apps
+* Updated Google Analytics, Offline Indicator for the iOS and Android mobile apps
 * Bug fixes and UI refinements
 * Additional code improvements and minor enhancements
 * The full list of bugs and refinements addressed in this release can be viewed [here ](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/14).
