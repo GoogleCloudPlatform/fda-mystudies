@@ -7,14 +7,14 @@
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
 # Release 2.0.11
-* New HealthCare API functionaliy has been introduced,Consent API,FHIR,DID
-* Introduced BigQuery Datawarehouse functionlity for analyis of data
+* New HealthCare API functionaliy has been introduced namelyConsent API,FHIR,DID
+* Introduced BigQuery data warehouse functionality for analytics of data
 * Security updates
 * Updated Google Analytics for the iOS and Android mobile apps
 * Bug fixes and UI refinements
 * Additional code improvements and minor enhancements
 * The full list of bugs and refinements addressed in this release can be viewed [here ](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/14).
-* Refer to [these](/deployment/README.md#whitelisting-the-tcp-port-10256-in-the-firewall-when-upgrading-to-2010-or-greater) steps when upgrading existing deployments to release 2.0.10
+* Refer to [these](/deployment/README.md#whitelisting-the-tcp-port-10256-in-the-firewall-when-upgrading-to-2010-or-greater) steps when upgrading existing deployments to release 2.0.11
 
 
 # Release 2.0.10
