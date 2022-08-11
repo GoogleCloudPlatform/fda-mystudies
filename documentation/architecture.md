@@ -13,7 +13,7 @@ This document describes the architecture of FDA MyStudies. It outlines the vario
 
 ## Architecture
 
-![Applications diagram](images/apps-reference-architecture.svg)
+![Applications diagram](images/apps-reference-architecture.svg.png)
 
 The diagram above illustrates the various applications that comprise the FDA MyStudies platform. The Android and iOS mobile applications are not shown. The diagram below illustrates how these applications fit into a production deployment that considers security, devops and data governance.
 
