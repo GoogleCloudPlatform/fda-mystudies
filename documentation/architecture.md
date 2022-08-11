@@ -29,6 +29,9 @@ Some of the terms used in this document include:
 1.  *Administrator*: Users of the `Study builder` UI and `Participant manager` UI are referred to as administrators. These administrators could be researchers, clinical coordinators, sponsor personnel or site investigators and staff. 
 1.  *Study content*: All the content that is required to carry out a study, which could include study eligibility criteria, consent forms, questionnaires or response types.
 1.  *Response data*: The responses provided by a participant to questionnaires and activities that are presented as part of a study.
+1.  *HealthCare APIs*: Google Healthcare API is a fully managed, highly scalable, enterprise-grade development environment for building clinical and analytics solutions securely on Google Cloud for storing, maintaining, and backing up personal health information(PHI)
+2.  *FHIR*: Fast Healthcare Interoperability Resources (FHIR) is a healthcare data standard with an application programming interface (API) for representing and exchanging electronic health records (EHR)
+
 
 ## Platform components
 
