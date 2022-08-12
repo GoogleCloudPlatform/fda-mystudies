@@ -570,10 +570,11 @@ extension WCPServices: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     delegate?.startedRequest(manager, requestName: requestName)
+      print("-------Request name:", requestName)
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-
+    print("-------Request name:", response)
     let methodName = WCPMethods(rawValue: requestName as String)!
 
     switch methodName {
