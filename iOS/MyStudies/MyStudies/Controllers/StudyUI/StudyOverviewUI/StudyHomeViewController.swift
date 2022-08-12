@@ -1363,10 +1363,13 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   ) -> ORKStepViewController? {
       
       if reachability.connection == .unavailable {
-
+          if let viewController = self.presentedViewController {
+              ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+              self.view.hideAllToasts()
+          }
           UIUtilities.showAlertMessageWithActionHandler(
             "You are offline",
-            message: "Since enrollment flow is not offline capable, you can't use this section right now. Please check your internet and try again.",
+            message: "You may require internet connection to move forward with this flow. Kindly check the internet and try again later.",
             buttonTitle: kTitleOk,
             viewControllerUsed: taskViewController,
             action: {
