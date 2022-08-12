@@ -7,7 +7,7 @@
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
 # Release 2.0.11
-* New HealthCare API functionaliy has been introduced namely Consent API,FHIR,DID
+* New HealthCare API functionality has been introduced namely Consent API,FHIR,DID
 * Introduced BigQuery data warehouse functionality for analytics of data
 * Security updates
 * Updated Google Analytics, Offline Indicator for the iOS and Android mobile apps
