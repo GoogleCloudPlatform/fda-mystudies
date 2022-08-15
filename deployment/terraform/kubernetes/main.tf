@@ -116,7 +116,6 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-consent-dataset-id",
       "manual-consent-enabled",
       "manual-fhir-enabled",
-	  "manual-bigquery-enabled",
       "manual-did-enabled",
       "manual-fhir-dataset-id",
       "manual-did-dataset-id",
@@ -172,7 +171,6 @@ resource "kubernetes_secret" "shared_secrets" {
     did_dataset_id                    = data.google_secret_manager_secret_version.secrets["manual-did-dataset-id"].secret_data
     did_enabled                       = data.google_secret_manager_secret_version.secrets["manual-did-enabled"].secret_data
     fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
-	bigquery_enabled                  = data.google_secret_manager_secret_version.secrets["manual-bigquery-enabled"].secret_data
 	discard_fhir_response             = data.google_secret_manager_secret_version.secrets["manual_discard_fhir_response_enabled"].secret_data
   }
 }
