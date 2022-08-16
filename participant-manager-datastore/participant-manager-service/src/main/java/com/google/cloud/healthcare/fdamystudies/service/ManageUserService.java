@@ -36,4 +36,6 @@ public interface ManageUserService {
       String userId, String superAdminUserId, AuditLogEventRequest auditRequest);
 
   public void sendUserEmail();
+
+  public void logoutAdminUser(String urAdminAuthId, AuditLogEventRequest auditRequest);
 }

@@ -563,7 +563,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.exit("Successfully deleted all the assigned permissions");
   }
 
-  private void logoutAdminUser(String authUserId, AuditLogEventRequest auditRequest) {
+  @Override
+  public void logoutAdminUser(String authUserId, AuditLogEventRequest auditRequest) {
     logger.entry("logoutAdminUser()");
 
     HttpHeaders headers = new HttpHeaders();
