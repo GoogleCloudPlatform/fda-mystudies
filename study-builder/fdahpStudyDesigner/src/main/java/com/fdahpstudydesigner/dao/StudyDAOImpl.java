@@ -8832,7 +8832,7 @@ public class StudyDAOImpl implements StudyDAO {
       String studyId, String customStudyId, List<ActiveTaskBo> activeTasks, Session session)
       throws GoogleJsonResponseException {
     // TODO Auto-generated method stub
-    String datasetPathforFHIR = String.format(DATASET_PATH, projectId, regionId, studyId);
+    String datasetPathforFHIR = String.format(DATASET_PATH, projectId, regionId, customStudyId);
     List<ActiveTaskBo> deletedActiveTasks = null;
     List<String> liveQuestionnaireIdList = new ArrayList<>();
     for (ActiveTaskBo activeTaskBo : activeTasks) {
@@ -9915,7 +9915,7 @@ public class StudyDAOImpl implements StudyDAO {
       String studyId, String customStudyId, List<QuestionnaireBo> questionnaires, Session session)
       throws GoogleJsonResponseException {
     // TODO Auto-generated method stub
-    String datasetPathforFHIR = String.format(DATASET_PATH, projectId, regionId, studyId);
+    String datasetPathforFHIR = String.format(DATASET_PATH, projectId, regionId, customStudyId);
     List<QuestionnaireBo> deletedQuestionnaires = null;
     List<String> liveQuestionnaireIdList = new ArrayList<>();
     for (QuestionnaireBo questionnaireBo : questionnaires) {
