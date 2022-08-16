@@ -41,9 +41,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class getResponsefhirApi {
+public class GetResponsefhirApi {
   @Autowired private ApplicationConfiguration appConfig;
-  private XLogger logger = XLoggerFactory.getXLogger(getResponsefhirApi.class.getName());
+  private XLogger logger = XLoggerFactory.getXLogger(GetResponsefhirApi.class.getName());
 
   public String getfhirResource(String resourceName) throws ProcessResponseException {
     logger.entry("begin getfhirSource()");
@@ -93,7 +93,7 @@ public class getResponsefhirApi {
     return retStoredResponseBean;
   }
 
-  public StoredResponseBean convertFHIRReesponseDataToBean(
+  public StoredResponseBean convertFhirResponseDataToBean(
       String participantId,
       SearchQuestionnaireResponseFhirBean searchResponseFhirbean,
       StoredResponseBean storedResponseBean) {

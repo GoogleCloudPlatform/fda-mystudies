@@ -15,8 +15,8 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.response.model.FHIRresponseEntity;
 import com.google.cloud.healthcare.fdamystudies.service.ActivityResponseProcessorServiceImpl;
-import com.google.cloud.healthcare.fdamystudies.utils.DeIdentifyHealthcareAPIs;
-import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareAPIs;
+import com.google.cloud.healthcare.fdamystudies.utils.DeIdentifyHealthcareApis;
+import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareApis;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +32,9 @@ public class DIDForFHIROldResponses {
   private XLogger logger = XLoggerFactory.getXLogger(DIDForFHIROldResponses.class.getName());
   @Autowired private ApplicationConfiguration appConfig;
   @Autowired private ActivityResponseProcessorServiceImpl activityResponseProcessorServiceImpl;
-  @Autowired private DeIdentifyHealthcareAPIs deIdentifyHealthcareAPIs;
+  @Autowired private DeIdentifyHealthcareApis deIdentifyHealthcareAPIs;
   @Autowired private CommonDao commonDao;
-  @Autowired private FhirHealthcareAPIs fhirHealthcareAPIs;
+  @Autowired private FhirHealthcareApis fhirHealthcareAPIs;
 
   private static final String DATASET_PATH = "projects/%s/locations/%s/datasets/%s";
   private static final String FHIR_STORES = "/fhirStores/";
@@ -42,7 +42,7 @@ public class DIDForFHIROldResponses {
   @PostConstruct
   public void didFHIRUpdate() throws Exception {
     logger.entry("didFHIRUpdate() begins");
-    if (appConfig.getEnableFHIRManagementAPI().equalsIgnoreCase("FHIR_DID")) {
+    if (appConfig.getEnableFhirManagementApi().equalsIgnoreCase("FHIR_DID")) {
 
       List<FHIRresponseEntity> fhirList = commonDao.getFhirDetails(false);
       if (!fhirList.isEmpty()) {
@@ -89,7 +89,7 @@ public class DIDForFHIROldResponses {
               "DID_" + fhiRresponseEntity.getStudyId(),
               fhirQuestionnaireResponseBean);
 
-          if (appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("true")) {
+          if (appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("true")) {
             String resourceName =
                 datasetPathforFHIR
                     + FHIR_STORES

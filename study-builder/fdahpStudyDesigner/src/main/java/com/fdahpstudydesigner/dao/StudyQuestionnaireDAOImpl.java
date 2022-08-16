@@ -6213,6 +6213,15 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             getQuestionConditionalBranchingLogic(session, questionBo.getId());
         questionnairesStepsBo.setQuestionConditionBranchBoList(questionConditionBranchList);
       }
+      if ((questionReponseTypeBo != null)
+          && (questionReponseTypeBo.getFormulaBasedLogic() != null)
+          && questionReponseTypeBo
+              .getFormulaBasedLogic()
+              .equalsIgnoreCase(FdahpStudyDesignerConstants.NO)) {
+        List<QuestionConditionBranchBo> questionConditionBranchList =
+            getQuestionConditionalBranchingLogic(session, questionBo.getId());
+        questionnairesStepsBo.setQuestionConditionBranchBoList(questionConditionBranchList);
+      }
     } catch (Exception e) {
       logger.error("getenabledValues() - ERROR ", e);
     } finally {

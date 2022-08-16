@@ -30,10 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeIdentifyHealthcareAPIs {
+public class DeIdentifyHealthcareApis {
 
-  private XLogger logger = XLoggerFactory.getXLogger(DeIdentifyHealthcareAPIs.class.getName());
-  @Autowired private FhirHealthcareAPIs fhirHealthcareAPIs;
+  private XLogger logger = XLoggerFactory.getXLogger(DeIdentifyHealthcareApis.class.getName());
+  @Autowired private FhirHealthcareApis fhirHealthcareAPIs;
 
   private static final String FHIR_STORES = "/fhirStores/";
 

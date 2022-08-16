@@ -57,8 +57,8 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantInfoReposi
 import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesEntity;
 import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.Constants;
-import com.google.cloud.healthcare.fdamystudies.utils.DeIdentifyHealthcareAPIs;
-import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareAPIs;
+import com.google.cloud.healthcare.fdamystudies.utils.DeIdentifyHealthcareApis;
+import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareApis;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
 import java.util.List;
@@ -99,9 +99,9 @@ public class FHIRStoreApisTest extends BaseMockIT {
 
   @Autowired private ParticipantActivitiesRepository participantActivitiesRepository;
 
-  @MockBean private FhirHealthcareAPIs fhirHealthcareAPIs;
+  @MockBean private FhirHealthcareApis fhirHealthcareAPIs;
 
-  @MockBean private DeIdentifyHealthcareAPIs deIdentifyHealthcareAPIs;
+  @MockBean private DeIdentifyHealthcareApis deIdentifyHealthcareAPIs;
 
   @BeforeEach
   public void setUp() {

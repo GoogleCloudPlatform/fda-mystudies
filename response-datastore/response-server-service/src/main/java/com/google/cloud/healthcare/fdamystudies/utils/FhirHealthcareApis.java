@@ -34,8 +34,8 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FhirHealthcareAPIs {
-  private XLogger logger = XLoggerFactory.getXLogger(FhirHealthcareAPIs.class.getName());
+public class FhirHealthcareApis {
+  private XLogger logger = XLoggerFactory.getXLogger(FhirHealthcareApis.class.getName());
 
   public void fhirStoreCreate(String datasetName, String fhirStoreId)
       throws ProcessResponseException {

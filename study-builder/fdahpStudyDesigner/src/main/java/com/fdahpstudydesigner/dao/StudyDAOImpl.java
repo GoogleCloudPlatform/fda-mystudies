@@ -120,6 +120,8 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -184,6 +186,14 @@ public class StudyDAOImpl implements StudyDAO {
 
   public static final String DATE_FORMAT_RESPONSE_MOBILE = "yyyy-MM-dd'T'HH:mm:ss.SSSXX";
   public static final String DATE_FORMAT_RESPONSE_FHIR = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+  protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+
+  String projectId = configMap.get("projectId");
+
+  String regionId = configMap.get("regionId");
+
+  public static final String fhirEnabled = configMap.get("enableFHIRManagementAPI");
 
   HibernateTemplate hibernateTemplate;
   private Query query = null;
@@ -4293,11 +4303,12 @@ public class StudyDAOImpl implements StudyDAO {
     return resourceId;
   }
 
-  protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  //  protected static final Map<String, String> configMap =
+  // FdahpStudyDesignerUtil.getAppProperties();
 
   private static final String propertyValue = null;
-  String projectId = configMap.get("projectId");
-  String regionId = configMap.get("regionId");
+  // String projectId = configMap.get("projectId");
+  // String regionId = configMap.get("regionId");
 
   @SuppressWarnings("unchecked")
   @Override
@@ -8671,6 +8682,7 @@ public class StudyDAOImpl implements StudyDAO {
     return consentInfoList;
   }
 
+  @Override
   public String deleteById(String studyId, AuditLogEventRequest auditRequest) {
     logger.entry("begin studydeleteById()");
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -8847,7 +8859,7 @@ public class StudyDAOImpl implements StudyDAO {
     } else {
       searchQuery =
           "From ActiveTaskBo ABO WHERE ABO.studyId =:studyId "
-              + " and ABO.active=0 and ABO.live=0 AND ABO.shortTitle NOT IN (SELECT ab.shortTitle from ActiveTaskBo ab WHERE ab.active=1 AND ab.live=1 AND ab.customStudyId=:customStudyId) )";
+              + " and ABO.active=0 and ABO.live=0 AND ABO.shortTitle NOT IN (SELECT ab.shortTitle from ActiveTaskBo ab WHERE ab.active=1 AND ab.live=1 AND ab.customStudyId=:customStudyId )";
       query =
           session
               .createQuery(searchQuery)
@@ -8889,6 +8901,21 @@ public class StudyDAOImpl implements StudyDAO {
                   + resourceId;
           String data = "[{\"op\": \"replace\", \"path\": \"/status\", \"value\": \"retired\"}]";
           fhirHealthcareAPIs.fhirResourcePatch(RESOURCE_NAME, data);
+
+          if (fhirEnabled.contains("did")) {
+            final String DID_RESOURCE_NAME =
+                datasetPathforFHIR
+                    + FHIR_STORES
+                    + "DID_"
+                    + customStudyId
+                    + "/fhir/"
+                    + QUESTIONNAIRE_TYPE
+                    + "/"
+                    + resourceId;
+            String didData =
+                "[{\"op\": \"replace\", \"path\": \"/status\", \"value\": \"retired\"}]";
+            fhirHealthcareAPIs.fhirResourcePatch(DID_RESOURCE_NAME, didData);
+          }
         }
       }
     }
@@ -8907,7 +8934,13 @@ public class StudyDAOImpl implements StudyDAO {
       List<ItemsQuestionnaire> listOfItems = new LinkedList<>();
       String datasetPathforFHIR = String.format(DATASET_PATH, projectId, regionId, studyId);
       String resourceId = null;
-      createFhirStore(datasetPathforFHIR, studyId);
+
+      createFhirStore(datasetPathforFHIR, "FHIR_", studyId);
+
+      if (fhirEnabled.contains("did")) {
+        createFhirStore(datasetPathforFHIR, "DID_", studyId);
+      }
+
       float versionIdOfSubmittedforActiveTask = 0.0f;
       String identifierValue = activeTask.getShortTitle();
       String searchQuestionnaireJson =
@@ -9016,7 +9049,7 @@ public class StudyDAOImpl implements StudyDAO {
         listOfItems.add(activeTaskQuestionnaire);
         FHIRQuestionnaire fhirQuestionnaire = new FHIRQuestionnaire();
         fhirQuestionnaire.setName(activeTask.getShortTitle());
-        fhirQuestionnaire.setTitle(activeTask.getTitle());
+        fhirQuestionnaire.setTitle(activeTask.getDisplayName());
         fhirQuestionnaire.setResourceType(QUESTIONNAIRE_TYPE);
         String lastModifiedDate =
             FdahpStudyDesignerUtil.getFormattedDateTimeZone(
@@ -9034,8 +9067,9 @@ public class StudyDAOImpl implements StudyDAO {
         fhirQuestionnaire.setExtension(extensionsForSchedule);
         EffectivePeriod effectivePeriod = new EffectivePeriod();
         effectivePeriod = getTimeDetailsOfActiveTask(session, activeTask);
+
         effectivePeriod.setStart(
-            effectivePeriod.getStart() != null
+            StringUtils.isNotBlank(effectivePeriod.getStart())
                 ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
                     effectivePeriod.getStart(),
                     DATE_FORMAT_RESPONSE_MOBILE,
@@ -9047,7 +9081,8 @@ public class StudyDAOImpl implements StudyDAO {
                     effectivePeriod.getEnd(),
                     DATE_FORMAT_RESPONSE_MOBILE,
                     DATE_FORMAT_RESPONSE_FHIR)
-                : null);
+                : "");
+
         fhirQuestionnaire.setEffectivePeriod(effectivePeriod);
         List<Identifier> identifiers = new ArrayList<>();
         Identifier identifier = new Identifier();
@@ -9064,19 +9099,33 @@ public class StudyDAOImpl implements StudyDAO {
         identifiers.add(identifier);
         fhirQuestionnaire.setIdentifier(identifiers);
         fhirQuestionnaire.setItem(listOfItems);
-        System.out.println(new Gson().toJson(fhirQuestionnaire));
 
-        final String DATASET_NAME = datasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId;
+        final String FHIR_DATASET_NAME = datasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId;
+        final String DID_DATASET_NAME = datasetPathforFHIR + FHIR_STORES + "DID_" + studyId;
+
         if (resourceId != null) {
           fhirQuestionnaire.setId(resourceId);
           fhirHealthcareAPIs.fhirResourceUpdate(
-              DATASET_NAME, QUESTIONNAIRE_TYPE, new Gson().toJson(fhirQuestionnaire), resourceId);
+              FHIR_DATASET_NAME,
+              QUESTIONNAIRE_TYPE,
+              new Gson().toJson(fhirQuestionnaire),
+              resourceId);
+          if (fhirEnabled.contains("did")) {
+            fhirHealthcareAPIs.fhirResourceUpdate(
+                DID_DATASET_NAME,
+                QUESTIONNAIRE_TYPE,
+                new Gson().toJson(fhirQuestionnaire),
+                resourceId);
+          }
         } else {
           fhirHealthcareAPIs.fhirResourceCreate(
-              DATASET_NAME, QUESTIONNAIRE_TYPE, new Gson().toJson(fhirQuestionnaire));
+              FHIR_DATASET_NAME, QUESTIONNAIRE_TYPE, new Gson().toJson(fhirQuestionnaire));
+          if (fhirEnabled.contains("did")) {
+            fhirHealthcareAPIs.fhirResourceCreate(
+                DID_DATASET_NAME, QUESTIONNAIRE_TYPE, new Gson().toJson(fhirQuestionnaire));
+          }
         }
       }
-      /*}*/
     }
   }
 
@@ -9087,11 +9136,33 @@ public class StudyDAOImpl implements StudyDAO {
     try {
       startDateTime =
           StringUtils.isEmpty(activeTask.getActiveTaskLifetimeStart())
-              + " "
-              + FdahpStudyDesignerConstants.DEFAULT_MIN_TIME;
+              ? ""
+              : activeTask.getActiveTaskLifetimeStart()
+                  + " "
+                  + FdahpStudyDesignerConstants.DEFAULT_MIN_TIME;
+
+      if (StringUtils.isEmpty(activeTask.getActiveTaskLifetimeEnd())) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+        String startdate = "";
+        if (StringUtils.isNotEmpty(activeTask.getActiveTaskLifetimeStart())) {
+          startdate = activeTask.getActiveTaskLifetimeStart();
+        } else {
+          startdate = activeTask.getModifiedDate();
+          startdate = startdate.substring(0, Math.min(startdate.length(), 10));
+        }
+
+        LocalDate dateTime = LocalDate.parse(startdate, formatter);
+        dateTime = dateTime.plusYears(3);
+        String threeYearsAfterString = dateTime.format(formatter);
+        System.out.println(threeYearsAfterString);
+        endDateTime = threeYearsAfterString;
+      }
+
       endDateTime =
           StringUtils.isEmpty(activeTask.getActiveTaskLifetimeEnd())
-              ? ""
+              ? StringUtils.isNotEmpty(endDateTime)
+                  ? endDateTime + " " + FdahpStudyDesignerConstants.DEFAULT_MAX_TIME
+                  : " "
               : activeTask.getActiveTaskLifetimeEnd()
                   + " "
                   + FdahpStudyDesignerConstants.DEFAULT_MAX_TIME;
@@ -9111,7 +9182,8 @@ public class StudyDAOImpl implements StudyDAO {
                   session
                       .createQuery(
                           "from ActiveTaskFrequencyBo ATFDTO"
-                              + " where ATFDTO.activeTaskId=:activeTaskId")
+                              + " where ATFDTO.activeTaskId=:activeTaskId"
+                              + " ORDER BY ATFDTO.frequencyTime")
                       .setString("activeTaskId", activeTask.getId())
                       .uniqueResult();
           if ((activeTaskFrequency != null)
@@ -9122,7 +9194,7 @@ public class StudyDAOImpl implements StudyDAO {
                   activeTask.getActiveTaskLifetimeStart()
                       + " "
                       + activeTaskFrequency.getFrequencyTime();
-            } else {
+            } else if (null != activeTaskFrequency.getFrequencyDate()) {
               startDateTime =
                   activeTaskFrequency.getFrequencyDate()
                       + " "
@@ -9131,7 +9203,8 @@ public class StudyDAOImpl implements StudyDAO {
             if (!activeTask
                     .getFrequency()
                     .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_ONE_TIME)
-                && !activeTaskFrequency.getIsStudyLifeTime()) {
+                && !activeTaskFrequency.getIsStudyLifeTime()
+                && null != activeTask.getActiveTaskLifetimeEnd()) {
               endDateTime =
                   activeTask.getActiveTaskLifetimeEnd()
                       + " "
@@ -9140,14 +9213,22 @@ public class StudyDAOImpl implements StudyDAO {
           }
 
           effectivePeriod.setStart(
-              FdahpStudyDesignerUtil.getFormattedDateTimeZone(
-                  startDateTime,
-                  FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
-                  FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+              StringUtils.isEmpty(startDateTime)
+                  ? FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      activeTask.getModifiedDate(),
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)
+                  : FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      startDateTime,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 
           effectivePeriod.setEnd(
               StringUtils.isEmpty(endDateTime)
-                  ? ""
+                  ? FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      activeTask.getModifiedDate(),
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)
                   : FdahpStudyDesignerUtil.getFormattedDateTimeZone(
                       endDateTime,
                       FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
@@ -9165,7 +9246,10 @@ public class StudyDAOImpl implements StudyDAO {
                           + " ORDER BY ATFDTO.frequencyTime")
                   .setString("activeTaskId", activeTask.getId())
                   .list();
-          if ((activeTaskFrequencyList != null) && !activeTaskFrequencyList.isEmpty()) {
+          if ((activeTaskFrequencyList != null)
+              && !activeTaskFrequencyList.isEmpty()
+              && activeTask.getActiveTaskLifetimeEnd() != null
+              && activeTask.getActiveTaskLifetimeStart() != null) {
             startDateTime =
                 activeTask.getActiveTaskLifetimeStart()
                     + " "
@@ -9191,6 +9275,27 @@ public class StudyDAOImpl implements StudyDAO {
                     FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
                     FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
           }
+          effectivePeriod.setStart(
+              StringUtils.isEmpty(startDateTime)
+                  ? FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      activeTask.getModifiedDate(),
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)
+                  : FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      startDateTime,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+
+          effectivePeriod.setEnd(
+              StringUtils.isEmpty(endDateTime)
+                  ? FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      activeTask.getModifiedDate(),
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)
+                  : FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      endDateTime,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
 
         } else if (activeTask
             .getFrequency()
@@ -9205,11 +9310,16 @@ public class StudyDAOImpl implements StudyDAO {
                   .setString("activeTaskId", activeTask.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
-            String startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
-            String endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
-
+            String startDate = "";
+            String endDate = "";
+            if (activeTaskCustomFrequencyList.get(0).getFrequencyStartDate() != null
+                && activeTaskCustomFrequencyList.get(0).getFrequencyEndDate() != null) {
+              startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
+              endDate = activeTaskCustomFrequencyList.get(0).getFrequencyEndDate();
+            }
             for (ActiveTaskCustomScheduleBo customFrequency : activeTaskCustomFrequencyList) {
               if (null != startDate
+                  && customFrequency.getFrequencyStartDate() != null
                   && FdahpStudyDesignerConstants.SDF_DATE
                       .parse(startDate)
                       .after(
@@ -9219,6 +9329,7 @@ public class StudyDAOImpl implements StudyDAO {
               }
 
               if (null != endDate
+                  && customFrequency.getFrequencyEndDate() != null
                   && FdahpStudyDesignerConstants.SDF_DATE
                       .parse(endDate)
                       .before(
@@ -9241,10 +9352,10 @@ public class StudyDAOImpl implements StudyDAO {
             if (!frequencyEndTime.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")) {
               frequencyEndTime = frequencyEndTime + ":00";
             }
-
-            startDateTime = startDate + " " + frequencyStartTime;
-            endDateTime = endDate + " " + frequencyEndTime;
-
+            if (StringUtils.isNotEmpty(startDate) && StringUtils.isNotEmpty(endDate)) {
+              startDateTime = startDate + " " + frequencyStartTime;
+              endDateTime = endDate + " " + frequencyEndTime;
+            }
             if (StringUtils.isNotBlank(startDate)) {
               effectivePeriod.setStart(
                   FdahpStudyDesignerUtil.getFormattedDateTimeZone(
@@ -9266,6 +9377,27 @@ public class StudyDAOImpl implements StudyDAO {
                       FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
                       FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
             }
+            effectivePeriod.setStart(
+                StringUtils.isEmpty(startDateTime)
+                    ? FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                        activeTask.getModifiedDate(),
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)
+                    : FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                        startDateTime,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+
+            effectivePeriod.setEnd(
+                StringUtils.isEmpty(endDateTime)
+                    ? FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                        activeTask.getModifiedDate(),
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)
+                    : FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                        endDateTime,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
           }
         }
       }
@@ -9451,7 +9583,8 @@ public class StudyDAOImpl implements StudyDAO {
         spatialSpanItem.setType("integer");
         break;
       case FdahpStudyDesignerConstants.SSM_MAX_CONSECUTIVE_FAILURES:
-        spatialSpanItem.setLinkId(masterAttributeDto.getAttributeName());
+        // spatialSpanItem.setLinkId(masterAttributeDto.getAttributeName());
+        spatialSpanItem.setLinkId("Maximum_Consecutive_Failures_spatial");
         spatialSpanItem.setText(masterAttributeDto.getDisplayName());
         spatialSpanItem.setDefinition(attributeDto.getAttributeVal());
         spatialSpanItem.setType("integer");
@@ -9494,7 +9627,12 @@ public class StudyDAOImpl implements StudyDAO {
       List<ItemsQuestionnaire> listOfItems = new LinkedList<>();
       String datasetPathforFHIR = String.format(DATASET_PATH, projectId, regionId, studyId);
       String resourceId = null;
-      createFhirStore(datasetPathforFHIR, studyId);
+
+      createFhirStore(datasetPathforFHIR, "FHIR_", studyId);
+
+      if (fhirEnabled.contains("did")) {
+        createFhirStore(datasetPathforFHIR, "DID_", studyId);
+      }
 
       float versionIdOfSubmittedResponse = 0.0f;
       String identifierValue = questionnaireBo.getShortTitle();
@@ -9533,83 +9671,24 @@ public class StudyDAOImpl implements StudyDAO {
                       .setString("stepId", questionnairesStepsBo.getInstructionFormId())
                       .uniqueResult();
           // branching when enabled
-          if (questionnaireBo.getBranching() && questionsBo != null) {
-            logger.debug("Branching is enabled: " + questionnaireBo.getBranching());
-            // list of destination step list
-            List<QuestionnairesStepsBo> destinationList = destinationAllList(questionnairesStepsBo);
-            for (QuestionnairesStepsBo questionstep : destinationList) {
-              QuestionsBo questionBo =
-                  (QuestionsBo)
-                      session
-                          .getNamedQuery("getQuestionStep")
-                          .setString("stepId", questionstep.getInstructionFormId())
-                          .uniqueResult();
-              if (questionBo != null) {
-                QuestionnairesStepsBo callingStep =
-                    studyQuestionnaireService.getenabledValues(questionBo);
-                int responseType = questionBo.getResponseType();
-                // when Choice based condition then
-                if ((callingStep.getQuestionReponseTypeBo() != null)
-                    && (callingStep.getQuestionReponseTypeBo().getFormulaBasedLogic() != null)
-                    && callingStep
-                        .getQuestionReponseTypeBo()
-                        .getFormulaBasedLogic()
-                        .equalsIgnoreCase(FdahpStudyDesignerConstants.NO)
-                    && getChoiceBased(responseType)) {
-                  for (QuestionResponseSubTypeBo QResposneSubType :
-                      callingStep.getQuestionResponseSubTypeList()) {
-                    if (QResposneSubType != null
-                        && QResposneSubType.getDestinationStepId() != null
-                        && QResposneSubType.getDestinationStepId()
-                            .equals(questionstep.getDestinationStep())) {
-                      EnableWhenBranching enableWhenBranching = new EnableWhenBranching();
-                      enableWhenBranching.setQuestion(questionstep.getStepShortTitle());
-                      enableWhenBranching.setOperator("equals");
-                      getResponseTypeValue(
-                          callingStep, responseType, QResposneSubType, enableWhenBranching);
-                      enableWhenBranchinglist.add(enableWhenBranching);
-                    }
-                  }
-                }
-                // when formula based condition then
-                if ((callingStep.getQuestionReponseTypeBo() != null)
-                    && (callingStep.getQuestionReponseTypeBo().getFormulaBasedLogic() != null)
-                    && callingStep
-                        .getQuestionReponseTypeBo()
-                        .getFormulaBasedLogic()
-                        .equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
-                  logger.info("Fromula based Branching");
-                  int responseFormulaType = questionBo.getResponseType();
-                  for (QuestionResponseSubTypeBo QResposneSubType :
-                      callingStep.getQuestionResponseSubTypeList()) {
-                    if (QResposneSubType != null
-                        && QResposneSubType.getDestinationStepId()
-                            .equals(questionstep.getDestinationStep())) {
-                      EnableWhenBranching enableWhenBranching = new EnableWhenBranching();
-                      enableWhenBranching.setQuestion(questionstep.getStepShortTitle());
-                      String operator = "";
-                      for (QuestionConditionBranchBo Qcb :
-                          callingStep.getQuestionConditionBranchBoList()) {
-                        operator = Qcb.getInputTypeValue();
-                        break;
-                      }
-                      enableWhenBranching.setOperator(operator);
-                      getResponseFormulaTypeValue(
-                          responseFormulaType, QResposneSubType, enableWhenBranching);
-                      enableWhenBranchinglist.add(enableWhenBranching);
-                    }
-                  }
-                }
-              }
-            }
-          }
+          updateQuestionaireForBranching(
+              session,
+              questionnaireBo,
+              questionnairesStepsBo,
+              enableWhenBranchinglist,
+              questionsBo);
           if (!questionnaireBo.getBranching()) {
             logger.info("Branching is not enabled");
           }
           logger.info("Branching exit here", enableWhenBranchinglist);
-          if (questionnairesStepsBo.getStepType().equalsIgnoreCase("Question")) {
+          if (enableWhenBranchinglist.size() > 2) {
+            items.setEnableBehavior("any");
+          }
+          if (questionnairesStepsBo.getStepType().equalsIgnoreCase("Question")
+              && null != questionsBo) {
             items.setDefinition(FdahpStudyDesignerConstants.QUESTIONSTEP_ACTIVITY);
             items.setEnableWhen(enableWhenBranchinglist);
+
             logger.debug("enabledvalue", items);
             items =
                 toQuestionDetails(
@@ -9672,18 +9751,253 @@ public class StudyDAOImpl implements StudyDAO {
         FHIRQuestionnaire fhirQuestionnaire =
             toFHIRQuestionnaire(session, listOfItems, study, questionnaireBo);
 
-        final String DATASET_NAME = datasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId;
+        final String FHIR_DATASET_NAME = datasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId;
+        final String DID_DATASET_NAME = datasetPathforFHIR + FHIR_STORES + "DID_" + studyId;
+
         if (resourceId != null) {
           fhirQuestionnaire.setId(resourceId);
           fhirHealthcareAPIs.fhirResourceUpdate(
-              DATASET_NAME, QUESTIONNAIRE_TYPE, new Gson().toJson(fhirQuestionnaire), resourceId);
+              FHIR_DATASET_NAME,
+              QUESTIONNAIRE_TYPE,
+              new Gson().toJson(fhirQuestionnaire),
+              resourceId);
+          if (fhirEnabled.contains("did")) {
+            fhirHealthcareAPIs.fhirResourceUpdate(
+                DID_DATASET_NAME,
+                QUESTIONNAIRE_TYPE,
+                new Gson().toJson(fhirQuestionnaire),
+                resourceId);
+          }
         } else {
           fhirHealthcareAPIs.fhirResourceCreate(
-              DATASET_NAME, QUESTIONNAIRE_TYPE, new Gson().toJson(fhirQuestionnaire));
+              FHIR_DATASET_NAME, QUESTIONNAIRE_TYPE, new Gson().toJson(fhirQuestionnaire));
+          if (fhirEnabled.contains("did")) {
+            fhirHealthcareAPIs.fhirResourceCreate(
+                DID_DATASET_NAME, QUESTIONNAIRE_TYPE, new Gson().toJson(fhirQuestionnaire));
+          }
         }
       }
     }
     logger.exit("StudyDaoImpl - formatToQuestionnaireType() - Ends");
+  }
+  /**
+   * this method update for QuestionnaireResponseForBranching
+   *
+   * @param session
+   * @param questionnaireBo
+   * @param questionnairesStepsBo
+   * @param enableWhenBranchinglist
+   * @param questionsBo
+   */
+  private void updateQuestionaireForBranching(
+      Session session,
+      QuestionnaireBo questionnaireBo,
+      QuestionnairesStepsBo questionnairesStepsBo,
+      List<EnableWhenBranching> enableWhenBranchinglist,
+      QuestionsBo questionsBo) {
+    if (questionnaireBo.getBranching() /* && questionsBo != null*/) {
+      logger.debug("Branching is enabled: " + questionnaireBo.getBranching());
+      // list of destination step list
+      // EnableWhenBranching enableWhenBranching = new EnableWhenBranching();
+      List<QuestionResponseSubTypeBo> destinationList = destinationAllList(questionnairesStepsBo);
+      for (QuestionResponseSubTypeBo reponsestep : destinationList) {
+        QuestionnairesStepsBo questionstep = getQuestionStep(reponsestep.getResponseTypeId());
+        QuestionsBo questionBo =
+            (QuestionsBo)
+                session
+                    .getNamedQuery("getQuestionStep")
+                    .setString("stepId", reponsestep.getResponseTypeId())
+                    .uniqueResult();
+        if (questionBo != null) {
+          QuestionnairesStepsBo callingStep =
+              studyQuestionnaireService.getenabledValues(questionBo);
+          int responseType = questionBo.getResponseType();
+          // when Choice based condition then
+          if ((callingStep.getQuestionReponseTypeBo() != null)
+              && (callingStep.getQuestionReponseTypeBo().getFormulaBasedLogic() != null)
+              && callingStep
+                  .getQuestionReponseTypeBo()
+                  .getFormulaBasedLogic()
+                  .equalsIgnoreCase(FdahpStudyDesignerConstants.NO)
+              && getChoiceBased(responseType)) {
+            if (reponsestep != null && reponsestep.getDestinationStepId() != null) {
+              EnableWhenBranching enableWhenBranching = new EnableWhenBranching();
+              enableWhenBranching.setQuestion(questionstep.getStepShortTitle());
+              enableWhenBranching.setOperator("equals");
+              getResponseTypeValue(callingStep, responseType, reponsestep, enableWhenBranching);
+              enableWhenBranchinglist.add(enableWhenBranching);
+            }
+            //  }
+          }
+          // when formula based condition then
+          if ((callingStep.getQuestionReponseTypeBo() != null)
+              && (callingStep.getQuestionReponseTypeBo().getFormulaBasedLogic() != null)
+              && callingStep
+                  .getQuestionReponseTypeBo()
+                  .getFormulaBasedLogic()
+                  .equalsIgnoreCase(FdahpStudyDesignerConstants.YES)) {
+            logger.info("Fromula based Branching");
+            int responseFormulaType = questionBo.getResponseType();
+            /*for (QuestionResponseSubTypeBo QResposneSubType :
+            callingStep.getQuestionResponseSubTypeList()) {*/
+            if (reponsestep != null && reponsestep.getDestinationStepId() != null) {
+              EnableWhenBranching enableWhenBranching = new EnableWhenBranching();
+              enableWhenBranching.setQuestion(questionstep.getStepShortTitle());
+              String operator = "";
+              for (QuestionConditionBranchBo Qcb : callingStep.getQuestionConditionBranchBoList()) {
+                operator = Qcb.getInputTypeValue();
+                break;
+              }
+              enableWhenBranching.setOperator(operator);
+              getResponseFormulaTypeValue(responseFormulaType, reponsestep, enableWhenBranching);
+              enableWhenBranchinglist.add(enableWhenBranching);
+            }
+            // }
+          }
+        }
+      } // for loop end here
+      // for default destination step
+      if (questionnairesStepsBo.getStepId() != null
+          && StringUtils.isNotBlank(questionnairesStepsBo.getStepId())) {
+        List<QuestionnairesStepsBo> stepsBo =
+            getdefaultQuestionStep(questionnairesStepsBo.getStepId());
+        for (QuestionnairesStepsBo bo : stepsBo) {
+          EnableWhenBranching enableWhenBranching = new EnableWhenBranching();
+          enableWhenBranching.setQuestion(bo.getStepShortTitle());
+          enableWhenBranching.setOperator("equals");
+          enableWhenBranching.setAnswerString("defaultStep");
+          enableWhenBranchinglist.add(enableWhenBranching);
+        }
+      }
+      // ends here default
+      // questions other inludes start here
+      if (questionnairesStepsBo.getStepId() != null
+          && StringUtils.isNotBlank(questionnairesStepsBo.getStepId())) {
+        QuestionReponseTypeBo reponseTypeBo = null;
+        reponseTypeBo = getDestinationFromQuestionResponse(questionnairesStepsBo.getStepId());
+        if (reponseTypeBo != null && reponseTypeBo.getQuestionsResponseTypeId() != null) {
+          QuestionnairesStepsBo stepsBo =
+              getQuestionnaireStep(reponseTypeBo.getQuestionsResponseTypeId());
+          if (stepsBo != null) {
+            EnableWhenBranching enableWhenBranching = new EnableWhenBranching();
+            enableWhenBranching.setQuestion(stepsBo.getStepShortTitle());
+            enableWhenBranching.setOperator("equals");
+            enableWhenBranching.setAnswerString(reponseTypeBo.getOtherText());
+            enableWhenBranchinglist.add(enableWhenBranching);
+          }
+        }
+      }
+      //// questions other inludes ends here
+    }
+  }
+
+  private QuestionnairesStepsBo getQuestionnaireStep(String questionsResponseTypeId) {
+
+    Session session = null;
+    QuestionnairesStepsBo questionnairesStepsBo = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      if (questionsResponseTypeId != null) {
+        String searchQuery =
+            "From QuestionnairesStepsBo QSBO where QSBO.instructionFormId=:instructionFormId ";
+
+        questionnairesStepsBo =
+            (QuestionnairesStepsBo)
+                session
+                    .createQuery(searchQuery)
+                    .setString("instructionFormId", questionsResponseTypeId)
+                    .uniqueResult();
+      }
+    } catch (Exception e) {
+      logger.error("getDestinationFromQuestionResponse() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    logger.exit("getDestinationFromQuestionResponse() - Ends");
+    return questionnairesStepsBo;
+  }
+
+  private QuestionReponseTypeBo getDestinationFromQuestionResponse(String stepId) {
+
+    Session session = null;
+    QuestionReponseTypeBo questionReponseTypeBo = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      if (stepId != null) {
+        String searchQuery =
+            "From QuestionReponseTypeBo QSBO where QSBO.otherDestinationStepId=:stepId ";
+
+        questionReponseTypeBo =
+            (QuestionReponseTypeBo)
+                session.createQuery(searchQuery).setString("stepId", stepId).uniqueResult();
+      }
+    } catch (Exception e) {
+      logger.error("getDestinationFromQuestionResponse() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    logger.exit("getDestinationFromQuestionResponse() - Ends");
+    return questionReponseTypeBo;
+  }
+
+  private List<QuestionnairesStepsBo> getdefaultQuestionStep(String destinationStep) {
+    Session session = null;
+    List<QuestionnairesStepsBo> questionnairesStepsBos = new ArrayList<>();
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      if (destinationStep != null) {
+        String searchQuery =
+            "From QuestionnairesStepsBo QSBO where QSBO.destinationStep=:destinationStep ";
+
+        questionnairesStepsBos =
+            session.createQuery(searchQuery).setString("destinationStep", destinationStep).list();
+      }
+    } catch (Exception e) {
+      logger.error("getdestinationShortTitle() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    logger.exit("getdestinationShortTitle() - Ends");
+    return questionnairesStepsBos;
+  }
+
+  private QuestionnairesStepsBo getQuestionStep(String responseTypeId) {
+
+    Session session = null;
+    // List<QuestionResponseSubTypeBo> questionResponseSubTypelist = new ArrayList<>();
+    QuestionnairesStepsBo questionnairesStepsBo = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+
+      if (responseTypeId != null) {
+        String searchQuery =
+            "From QuestionnairesStepsBo QSBO where QSBO.instructionFormId=:responseTypeId ";
+
+        questionnairesStepsBo =
+            (QuestionnairesStepsBo)
+                session
+                    .createQuery(searchQuery)
+                    .setString("responseTypeId", responseTypeId)
+                    .uniqueResult();
+      }
+    } catch (Exception e) {
+      logger.error("getdestinationShortTitle() - ERROR ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+    }
+    logger.exit("getdestinationShortTitle() - Ends");
+    return questionnairesStepsBo;
   }
 
   private void getResponseFormulaTypeValue(
@@ -9832,19 +10146,19 @@ public class StudyDAOImpl implements StudyDAO {
         || Rtype == 15;
   }
 
-  public List<QuestionnairesStepsBo> destinationAllList(
+  public List<QuestionResponseSubTypeBo> destinationAllList(
       QuestionnairesStepsBo questionnairesStepsBo) {
 
     Session session = null;
-    List<QuestionnairesStepsBo> questionnairesStepslist = new ArrayList<>();
+    List<QuestionResponseSubTypeBo> questionResponseSubTypelist = new ArrayList<>();
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
 
       if (questionnairesStepsBo != null && questionnairesStepsBo.getStepId() != null) {
         String searchQuery =
-            "From QuestionnairesStepsBo QSBO where QSBO.destinationStep=:destinationStep ";
+            "From QuestionResponseSubTypeBo QSBO where QSBO.destinationStepId=:destinationStep ";
 
-        questionnairesStepslist =
+        questionResponseSubTypelist =
             session
                 .createQuery(searchQuery)
                 .setString("destinationStep", questionnairesStepsBo.getStepId())
@@ -9858,7 +10172,7 @@ public class StudyDAOImpl implements StudyDAO {
       }
     }
     logger.exit("getdestinationShortTitle() - Ends");
-    return questionnairesStepslist;
+    return questionResponseSubTypelist;
   }
 
   public FHIRQuestionnaire toFHIRQuestionnaire(
@@ -9886,16 +10200,41 @@ public class StudyDAOImpl implements StudyDAO {
     fhirQuestionnaire.setExtension(extensionsForSchedule);
     EffectivePeriod effectivePeriod = new EffectivePeriod();
     effectivePeriod = getTimeDetailsOfQuestionnaire(session, questionnaireBo);
-    effectivePeriod.setStart(
-        StringUtils.isNotBlank(effectivePeriod.getStart())
-            ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
-                effectivePeriod.getStart(), DATE_FORMAT_RESPONSE_MOBILE, DATE_FORMAT_RESPONSE_FHIR)
-            : null);
-    effectivePeriod.setEnd(
-        StringUtils.isNotBlank(effectivePeriod.getEnd())
-            ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
-                effectivePeriod.getEnd(), DATE_FORMAT_RESPONSE_MOBILE, DATE_FORMAT_RESPONSE_FHIR)
-            : null);
+
+    // test
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    if (StringUtils.isNotBlank(effectivePeriod.getStart())
+        && StringUtils.isNotBlank(effectivePeriod.getEnd())
+        && sdf.parse(effectivePeriod.getStart()).before(sdf.parse(effectivePeriod.getEnd()))) {
+
+      effectivePeriod.setStart(
+          StringUtils.isNotBlank(effectivePeriod.getStart())
+              ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
+                  effectivePeriod.getStart(),
+                  DATE_FORMAT_RESPONSE_MOBILE,
+                  DATE_FORMAT_RESPONSE_FHIR)
+              : null);
+      effectivePeriod.setEnd(
+          StringUtils.isNotBlank(effectivePeriod.getEnd())
+              ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
+                  effectivePeriod.getEnd(), DATE_FORMAT_RESPONSE_MOBILE, DATE_FORMAT_RESPONSE_FHIR)
+              : null);
+    } else {
+      effectivePeriod.setStart(
+          StringUtils.isNotBlank(effectivePeriod.getStart())
+              ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
+                  effectivePeriod.getStart(),
+                  DATE_FORMAT_RESPONSE_MOBILE,
+                  DATE_FORMAT_RESPONSE_FHIR)
+              : null);
+      effectivePeriod.setEnd(
+          StringUtils.isNotBlank(effectivePeriod.getEnd())
+              ? FdahpStudyDesignerUtil.convertDateToOtherFormat(
+                  effectivePeriod.getEnd(), DATE_FORMAT_RESPONSE_MOBILE, DATE_FORMAT_RESPONSE_FHIR)
+              : null);
+    }
+
     fhirQuestionnaire.setEffectivePeriod(effectivePeriod);
     List<Identifier> identifiers = new ArrayList<>();
     Identifier identifier = new Identifier();
@@ -9931,7 +10270,7 @@ public class StudyDAOImpl implements StudyDAO {
     } else {
       searchQuery =
           "From QuestionnaireBo QBO WHERE QBO.studyId =:studyId "
-              + " and QBO.active=0 and QBO.live=0 AND QBO.shortTitle NOT IN (SELECT qb.shortTitle from QuestionnaireBo qb WHERE qb.active=1 AND qb.live=1 AND qb.customStudyId=:customStudyId) )";
+              + " and QBO.active=0 and QBO.live=0 AND QBO.shortTitle NOT IN (SELECT qb.shortTitle from QuestionnaireBo qb WHERE qb.active=1 AND qb.live=1 AND qb.customStudyId=:customStudyId )";
       query =
           session
               .createQuery(searchQuery)
@@ -9973,6 +10312,20 @@ public class StudyDAOImpl implements StudyDAO {
                   + resourceId;
           String data = "[{\"op\": \"replace\", \"path\": \"/status\", \"value\": \"retired\"}]";
           fhirHealthcareAPIs.fhirResourcePatch(RESOURCE_NAME, data);
+          if (fhirEnabled.contains("did")) {
+            final String DID_RESOURCE_NAME =
+                datasetPathforFHIR
+                    + FHIR_STORES
+                    + "DID_"
+                    + customStudyId
+                    + "/fhir/"
+                    + QUESTIONNAIRE_TYPE
+                    + "/"
+                    + resourceId;
+            String didData =
+                "[{\"op\": \"replace\", \"path\": \"/status\", \"value\": \"retired\"}]";
+            fhirHealthcareAPIs.fhirResourcePatch(DID_RESOURCE_NAME, didData);
+          }
         }
       }
     }
@@ -10029,17 +10382,16 @@ public class StudyDAOImpl implements StudyDAO {
     return extensionsForSchedule;
   }
 
-  public void createFhirStore(String datasetPath, String studyId) throws Exception {
+  public void createFhirStore(String datasetPath, String storePrefix, String studyId)
+      throws Exception {
 
     try {
-      fhirHealthcareAPIs.fhirStoreGet(datasetPath + FHIR_STORES + "FHIR_" + studyId);
+      fhirHealthcareAPIs.fhirStoreGet(datasetPath + FHIR_STORES + storePrefix + studyId);
     } catch (Exception e) {
       if (e instanceof GoogleJsonResponseException
           && ((GoogleJsonResponseException) e).getStatusCode() == 404
           && ((GoogleJsonResponseException) e).getStatusMessage().equals("Not Found")) {
-        fhirHealthcareAPIs.fhirStoreCreate(datasetPath, "FHIR_" + studyId);
-      } else {
-        throw new Exception(((GoogleJsonResponseException) e).getDetails().getMessage());
+        fhirHealthcareAPIs.fhirStoreCreate(datasetPath, storePrefix + studyId);
       }
     }
   }
@@ -10051,7 +10403,13 @@ public class StudyDAOImpl implements StudyDAO {
       List<AnswerOption> answerOptions,
       List<Initial> initials,
       QuestionsBo questionsBo) {
-    items.setText(questionsBo.getQuestion());
+
+    if (questionsBo.getQuestion().equalsIgnoreCase("null")) {
+      items.setText("");
+    } else {
+      items.setText(questionsBo.getQuestion());
+    }
+
     boolean skippable =
         questionnairesStepsBo.getSkiappable().equalsIgnoreCase("Yes") ? true : false;
     items.setRequired(skippable);
@@ -10066,13 +10424,15 @@ public class StudyDAOImpl implements StudyDAO {
     List<Extension> extensionForMinMaxValue = new ArrayList<>();
     switch (questionsBo.getResponseType()) {
       case 1: // scale
-        answerOptions = this.formatQuestionScaleDetails(questionReponseTypeBo, items);
+        // After discussion with BA, we will not store all option values, only min, max and decimal.
+        // answerOptions = this.formatQuestionScaleDetails(questionReponseTypeBo, items);
         extensionForMinMaxValue = setMinMaxValue(questionReponseTypeBo, questionsBo);
         items.setExtension(extensionForMinMaxValue);
         items.setType("choice");
         break;
       case 2: // continuous scale
-        answerOptions = this.formatQuestionContinuousScaleDetails(questionReponseTypeBo);
+        // After discussion with BA, we will not store all option values, only min, max and decimal.
+        //  answerOptions = this.formatQuestionContinuousScaleDetails(questionReponseTypeBo);
         extensionForMinMaxValue = setMinMaxValue(questionReponseTypeBo, questionsBo);
         items.setExtension(extensionForMinMaxValue);
         items.setType("choice");
@@ -10080,6 +10440,8 @@ public class StudyDAOImpl implements StudyDAO {
       case 3: // text scale
         answerOptions =
             this.formatQuestionChoiceDetails(questionReponseTypeBo, questionsBo, session);
+        extensionForMinMaxValue = setStepSlider(questionReponseTypeBo, questionsBo);
+        items.setExtension(extensionForMinMaxValue);
         items.setType("choice");
         break;
       case 4: // value picker
@@ -10094,8 +10456,9 @@ public class StudyDAOImpl implements StudyDAO {
         break;
       case 6: // text choice
         answerOptions =
-            this.formatQuestionChoiceDetails(questionReponseTypeBo, questionsBo, session);
-        items.setType("choice");
+            this.formatQuestionTextChoiceDetails(
+                questionnairesStepsBo, questionReponseTypeBo, questionsBo, session);
+        items.setType("open-choice");
         break;
       case 7: // boolean
         answerOptions =
@@ -10103,7 +10466,7 @@ public class StudyDAOImpl implements StudyDAO {
         items.setType("choice");
         break;
       case 8: // numeric
-        if (!questionReponseTypeBo.getPlaceholder().isEmpty()) {
+        if (!questionReponseTypeBo.getPlaceholder().isEmpty() && answerOptions.isEmpty()) {
           initials = setPlaceholderValues(questionReponseTypeBo, initials);
         }
         extensionForMinMaxValue = setMinMaxValue(questionReponseTypeBo, questionsBo);
@@ -10121,7 +10484,7 @@ public class StudyDAOImpl implements StudyDAO {
         items.setType(typeForDate);
         break;
       case 11: // text
-        if (!questionReponseTypeBo.getPlaceholder().isEmpty()) {
+        if (!questionReponseTypeBo.getPlaceholder().isEmpty() && answerOptions.isEmpty()) {
           initials = setPlaceholderValues(questionReponseTypeBo, initials);
         }
         items.setType("string");
@@ -10135,7 +10498,7 @@ public class StudyDAOImpl implements StudyDAO {
         items.setExtension(textExtensions);
         break;
       case 12: // email
-        if (!questionReponseTypeBo.getPlaceholder().isEmpty()) {
+        if (!questionReponseTypeBo.getPlaceholder().isEmpty() && answerOptions.isEmpty()) {
           initials = setPlaceholderValues(questionReponseTypeBo, initials);
         }
         items.setType("url");
@@ -10144,7 +10507,7 @@ public class StudyDAOImpl implements StudyDAO {
         items.setType("time");
         break;
       case 14: // height
-        if (!questionReponseTypeBo.getPlaceholder().isEmpty()) {
+        if (!questionReponseTypeBo.getPlaceholder().isEmpty() && answerOptions.isEmpty()) {
           initials = setPlaceholderValues(questionReponseTypeBo, initials);
         }
         items.setType("decimal");
@@ -10158,6 +10521,68 @@ public class StudyDAOImpl implements StudyDAO {
     items.setAnswerOption(answerOptions);
     items.setInitial(initials);
     return items;
+  }
+
+  private List<AnswerOption> formatQuestionTextChoiceDetails(
+      QuestionnairesStepsBo questionnairesStepsBo,
+      QuestionReponseTypeBo questionReponseTypeBo,
+      QuestionsBo questionsBo,
+      Session session) {
+    List<AnswerOption> options = new ArrayList<>();
+    // get the response level attributes values of an
+    // questions other inludes
+    QuestionReponseTypeBo reponseTypeBo = null;
+    logger.info(
+        "StudyQuestionnaireDAOImpl - getQuestionnaireStep() - questionsResponseTypeId:"
+            + questionsBo.getId());
+    query =
+        session
+            .getNamedQuery("getQuestionResponse")
+            .setString("questionsResponseTypeId", questionsBo.getId());
+    query.setMaxResults(1);
+    reponseTypeBo = (QuestionReponseTypeBo) query.uniqueResult();
+    //// questions other inludes ends here
+    List<QuestionResponseSubTypeBo> questionResponseSubTypeList =
+        session
+            .getNamedQuery("getQuestionSubResponse")
+            .setString("responseTypeId", questionsBo.getId())
+            .list();
+    if ((questionResponseSubTypeList != null) && !questionResponseSubTypeList.isEmpty()) {
+      for (QuestionResponseSubTypeBo subType : questionResponseSubTypeList) {
+        AnswerOption option = new AnswerOption();
+        if (questionReponseTypeBo.getSelectionStyle() != null
+            && questionReponseTypeBo.getSelectionStyle().equals("Multiple")) {
+          List<Extension> extensionsForTextChoice = new ArrayList<>();
+          Extension extension = new Extension();
+          extension.setUrl("http://hl7.org/fhir/StructureDefinition/questionnaire-optionExclusive");
+          extension.setValueBoolean(subType.getExclusive().equals("Yes"));
+          extensionsForTextChoice.add(extension);
+          option.setExtension(extensionsForTextChoice);
+        }
+
+        option.setValueString(subType.getText());
+        options.add(option);
+      }
+    }
+    if (reponseTypeBo != null && StringUtils.isNotEmpty(reponseTypeBo.getOtherText())) {
+      AnswerOption option = new AnswerOption();
+      option.setValueString(reponseTypeBo.getOtherText());
+      options.add(option);
+    }
+    return options;
+  }
+
+  private List<Extension> setStepSlider(
+      QuestionReponseTypeBo questionReponseTypeBo, QuestionsBo questionsBo) {
+    List<Extension> minMaxValueExtension = new ArrayList<>();
+    if (questionsBo.getResponseType().equals(3)) {
+      Extension extensionForSliderStepValue = new Extension();
+      extensionForSliderStepValue.setUrl("DefaultSliderValue");
+      extensionForSliderStepValue.setValueInteger(questionReponseTypeBo.getStep());
+      // extensionForSliderStepValue.setValueString(questionReponseTypeBo.getDefaultValue());
+      minMaxValueExtension.add(extensionForSliderStepValue);
+    }
+    return minMaxValueExtension;
   }
 
   private List<Extension> setMinMaxValue(
@@ -10197,6 +10622,26 @@ public class StudyDAOImpl implements StudyDAO {
           "http://hl7.org/fhir/StructureDefinition/questionnaire-sliderStepValue");
       extensionForSliderStepValue.setValueInteger(stepSize);
       minMaxValueExtension.add(extensionForSliderStepValue);
+    }
+    if (questionsBo.getResponseType().equals(1) || questionsBo.getResponseType().equals(2)) {
+      if (questionReponseTypeBo.getDefaultValue() != null) {
+        Extension extensionFordefaultSlide = new Extension();
+        extensionFordefaultSlide.setUrl("DefaultSliderValue");
+        extensionFordefaultSlide.setValueString(questionReponseTypeBo.getDefaultValue());
+        minMaxValueExtension.add(extensionFordefaultSlide);
+      }
+      if (questionReponseTypeBo.getMaxDescription() != null) {
+        Extension extensionForMaxDescription = new Extension();
+        extensionForMaxDescription.setUrl("Description for maximum value");
+        extensionForMaxDescription.setValueString(questionReponseTypeBo.getMaxDescription());
+        minMaxValueExtension.add(extensionForMaxDescription);
+      }
+      if (questionReponseTypeBo.getMinDescription() != null) {
+        Extension extensionForMinDescription = new Extension();
+        extensionForMinDescription.setUrl("Description for minimum value");
+        extensionForMinDescription.setValueString(questionReponseTypeBo.getMinDescription());
+        minMaxValueExtension.add(extensionForMinDescription);
+      }
     }
 
     minMaxValueExtension.add(extensionForMinValue);
@@ -10297,9 +10742,28 @@ public class StudyDAOImpl implements StudyDAO {
     try {
       startDateTime =
           questionaire.getStudyLifetimeStart() + " " + FdahpStudyDesignerConstants.DEFAULT_MIN_TIME;
+
+      if (StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+
+        // String startdate = questionaire.getStudyLifetimeStart();
+        String startdate = "";
+        if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())) {
+          startdate = questionaire.getStudyLifetimeStart();
+        } else {
+          startdate = questionaire.getModifiedDate();
+          startdate = startdate.substring(0, Math.min(startdate.length(), 10));
+        }
+        LocalDate dateTime = LocalDate.parse(startdate, formatter);
+        dateTime = dateTime.plusYears(3);
+        String threeYearsAfterString = dateTime.format(formatter);
+        System.out.println(threeYearsAfterString);
+        endDateTime = threeYearsAfterString;
+      }
+
       endDateTime =
           StringUtils.isEmpty(questionaire.getStudyLifetimeEnd())
-              ? ""
+              ? endDateTime + " " + FdahpStudyDesignerConstants.DEFAULT_MAX_TIME
               : questionaire.getStudyLifetimeEnd()
                   + " "
                   + FdahpStudyDesignerConstants.DEFAULT_MAX_TIME;
@@ -10339,29 +10803,49 @@ public class StudyDAOImpl implements StudyDAO {
             }
           }
 
-          if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())) {
+          // test
+          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+          if (StringUtils.isNotBlank(questionaire.getStudyLifetimeStart())
+              && StringUtils.isNotBlank(questionaire.getStudyLifetimeEnd())
+              && sdf.parse(questionaire.getStudyLifetimeStart())
+                  .before(sdf.parse(questionaire.getStudyLifetimeEnd()))) {
+
+            if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeStart())) {
+              effectivePeriod.setStart(
+                  FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      startDateTime,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            } else {
+              effectivePeriod.setStart("");
+            }
+
+            if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
+              effectivePeriod.setEnd(
+                  FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                      endDateTime,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            }
+
+          } else {
             effectivePeriod.setStart(
-                FdahpStudyDesignerUtil.getFormattedDateTimeZone(
-                    startDateTime,
-                    FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
-                    FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          } else if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
-            effectivePeriod.setStart(
-                FdahpStudyDesignerUtil.getFormattedDateTimeZone(
-                    endDateTime,
-                    FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
-                    FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+                StringUtils.isNotBlank(startDateTime)
+                    ? FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                        startDateTime,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)
+                    : null);
+            effectivePeriod.setEnd(
+                StringUtils.isNotBlank(endDateTime)
+                    ? FdahpStudyDesignerUtil.getFormattedDateTimeZone(
+                        endDateTime,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
+                        FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN)
+                    : null);
           }
 
-          if (StringUtils.isNotEmpty(questionaire.getStudyLifetimeEnd())) {
-            effectivePeriod.setEnd(
-                FdahpStudyDesignerUtil.getFormattedDateTimeZone(
-                    endDateTime,
-                    FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
-                    FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-          } /*else {
-              effectivePeriod.setEndTime("");
-            }*/
         } else if (questionaire
             .getFrequency()
             .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_DAILY)) {
@@ -10400,6 +10884,7 @@ public class StudyDAOImpl implements StudyDAO {
                     FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
                     FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
           }
+
         } else if (questionaire
             .getFrequency()
             .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
@@ -10461,12 +10946,8 @@ public class StudyDAOImpl implements StudyDAO {
                       startDateTime,
                       FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
                       FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-            } else if (StringUtils.isNotBlank(endDate)) {
-              effectivePeriod.setStart(
-                  FdahpStudyDesignerUtil.getFormattedDateTimeZone(
-                      endDateTime,
-                      FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
-                      FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
+            } else {
+              effectivePeriod.setStart("");
             }
 
             if (StringUtils.isNotBlank(endDate)) {
@@ -10475,9 +10956,7 @@ public class StudyDAOImpl implements StudyDAO {
                       endDateTime,
                       FdahpStudyDesignerConstants.SDF_DATE_TIME_PATTERN,
                       FdahpStudyDesignerConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
-            } /*else {
-                effectivePeriod.setEndTime("");
-              }*/
+            }
           }
         }
       }

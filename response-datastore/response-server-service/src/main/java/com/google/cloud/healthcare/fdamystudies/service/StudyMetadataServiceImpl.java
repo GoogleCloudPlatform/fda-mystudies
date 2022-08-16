@@ -81,7 +81,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     String studyCollectionName = AppUtil.makeStudyCollectionName(studyMetadataBean.getStudyId());
 
     logger.info("saveStudyMetadata() : \n Study Collection Name: " + studyCollectionName);
-    if (appConfig.getEnableFHIRManagementAPI().equalsIgnoreCase("false")) {
+    if (appConfig.getEnableFhirManagementApi().equalsIgnoreCase("false")) {
       responsesDao.saveStudyMetadata(
           studyCollectionName, studyMetadataBean.getStudyId(), dataToStore);
       logger.exit(

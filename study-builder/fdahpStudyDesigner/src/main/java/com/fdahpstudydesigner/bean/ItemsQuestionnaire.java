@@ -17,6 +17,7 @@ public class ItemsQuestionnaire {
   private String definition;
   private String type;
   private List<EnableWhenBranching> enableWhen;
+  private String enableBehavior;
   private Boolean required;
   private Boolean repeats;
   private List<AnswerOption> answerOption = new LinkedList<>();
@@ -105,11 +106,19 @@ public class ItemsQuestionnaire {
     this.extension = extension;
   }
 
-public List<EnableWhenBranching> getEnableWhen() {
-	return enableWhen;
-}
+  public List<EnableWhenBranching> getEnableWhen() {
+    return enableWhen;
+  }
 
-public void setEnableWhen(List<EnableWhenBranching> enableWhen) {
-	this.enableWhen = enableWhen;
-}
+  public void setEnableWhen(List<EnableWhenBranching> enableWhen) {
+    this.enableWhen = enableWhen;
+  }
+
+  public String getEnableBehavior() {
+    return enableBehavior;
+  }
+
+  public void setEnableBehavior(String enableBehavior) {
+    this.enableBehavior = enableBehavior;
+  }
 }
