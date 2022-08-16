@@ -28,6 +28,7 @@ import com.google.api.services.healthcare.v1.model.ListConsentRevisionsResponse;
 import com.google.api.services.healthcare.v1.model.ListConsentStoresResponse;
 import com.google.api.services.healthcare.v1.model.ListConsentsResponse;
 import com.google.api.services.healthcare.v1.model.ListDatasetsResponse;
+import com.google.api.services.healthcare.v1.model.Operation;
 import com.google.api.services.healthcare.v1.model.RevokeConsentRequest;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -346,5 +347,43 @@ public class ConsentManagementAPIs {
     }
 
     return datasets;
+  }
+
+  public void createDatasetInHealthcareAPI(String datasetId, String parentName) throws IOException {
+
+    logger.entry("Begin datasetCreateHealthcareAPI()");
+
+    try {
+      // Initialize the client, which will be used to interact with the service.
+      CloudHealthcare client = createClient();
+
+      // Configure the dataset to be created.
+      Dataset dataset = new Dataset();
+
+      Datasets.Create request =
+          client.projects().locations().datasets().create(parentName, dataset);
+      request.setDatasetId(datasetId);
+
+      // Execute the request, wait for the operation to complete, and process the results.
+
+      Operation operation = request.execute();
+
+      while (operation.getDone() == null || !operation.getDone()) {
+        // Update the status of the operation with another request.
+        Thread.sleep(500); // Pause for 500ms between requests.
+        operation =
+            client
+                .projects()
+                .locations()
+                .datasets()
+                .operations()
+                .get(operation.getName())
+                .execute();
+      }
+
+    } catch (Exception ex) {
+      logger.error("Error datasetCreateHealthcareAPI(): ", ex);
+    }
+    logger.exit("End datasetCreateHealthcareAPI()");
   }
 }
