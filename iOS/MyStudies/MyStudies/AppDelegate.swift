@@ -1972,7 +1972,24 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
   ) -> ORKStepViewController? {
 
     if taskViewController.task?.identifier == kConsentTaskIdentifier {
+        do {
+            self.reachability = try Reachability()
+          } catch(let error) { }
+        if reachability.connection == .unavailable {
 
+            UIUtilities.showAlertMessageWithActionHandler(
+              "You are offline",
+              message: "You may require internet connection to move forward with this flow. Kindly check the internet and try again later.",
+              buttonTitle: kTitleOk,
+              viewControllerUsed: taskViewController,
+              action: {
+                  taskViewController.dismiss(
+                    animated: true,
+                    completion: nil
+                  )
+              }
+            )
+        }
       // CurrentStep is TokenStep
       if step.identifier != kEligibilityTokenStep
         && step.identifier
