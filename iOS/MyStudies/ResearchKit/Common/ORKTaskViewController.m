@@ -1168,14 +1168,12 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     if (step == nil) {
         return nil;
     }
-    printf("%s", [@"\n--------Review-Consent-------1" UTF8String]);
     ORKStepViewController *stepViewController = nil;
     
     if ([self.delegate respondsToSelector:@selector(taskViewController:viewControllerForStep:)]) {
         // NOTE: While the delegate does not have direct access to the defaultResultSource,
         // it is assumed that it can set results as needed on the custom implementation of an
         // ORKStepViewController that it returns.
-        printf("%s", [@"\n--------Review-Consent-------2-delegate" UTF8String]);
         stepViewController = [self.delegate taskViewController:self viewControllerForStep:step];
     }
     
@@ -1262,10 +1260,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 #pragma mark - internal action Handlers
 
 - (void)finishWithReason:(ORKTaskViewControllerFinishReason)reason error:(NSError *)error {
-    printf("%s", [@"\n--------Review-Consent-------3" UTF8String]);
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     if ([strongDelegate respondsToSelector:@selector(taskViewController:didFinishWithReason:error:)]) {
-        printf("%s", [@"\n--------Review-Consent-------3-delegate" UTF8String]);
         [strongDelegate taskViewController:self didFinishWithReason:reason error:error];
     }
 }
@@ -1429,15 +1425,12 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 #pragma mark -  ORKStepViewControllerDelegate
 
 - (void)stepViewControllerWillAppear:(ORKStepViewController *)viewController {
-    printf("%s", [@"\n--------Review-Consent-------4" UTF8String]);
     if ([self.delegate respondsToSelector:@selector(taskViewController:stepViewControllerWillAppear:)]) {
-        printf("%s", [@"\n--------Review-Consent-------4-delegate" UTF8String]);
         [self.delegate taskViewController:self stepViewControllerWillAppear:viewController];
     }
 }
 
 - (void)stepViewController:(ORKStepViewController *)stepViewController didFinishWithNavigationDirection:(ORKStepViewControllerNavigationDirection)direction {
-    printf("%s", [@"\n--------Review-Consent-------5" UTF8String]);
     if (stepViewController != nil) {
         if (!stepViewController.readOnlyMode) {
             // Add step result object
@@ -1448,7 +1441,6 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
     // Alert the delegate that the step is finished
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     if ([strongDelegate respondsToSelector:@selector(taskViewController:stepViewControllerWillDisappear:navigationDirection:)]) {
-        printf("%s", [@"\n--------Review-Consent-------5-delegate" UTF8String]);
         [strongDelegate taskViewController:self stepViewControllerWillDisappear:stepViewController navigationDirection:direction];
     }
     
@@ -1499,10 +1491,8 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 }
 
 - (void)stepViewController:(ORKStepViewController *)stepViewController recorder:(ORKRecorder *)recorder didFailWithError:(NSError *)error {
-    printf("%s", [@"\n--------Review-Consent-------7" UTF8String]);
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     if ([strongDelegate respondsToSelector:@selector(taskViewController:recorder:didFailWithError:)]) {
-        printf("%s", [@"\n--------Review-Consent-------7-delegate: " UTF8String]);
         [strongDelegate taskViewController:self recorder:recorder didFailWithError:error];
     }
 }
