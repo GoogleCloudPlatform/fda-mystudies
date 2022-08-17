@@ -120,7 +120,7 @@ class EligibilityStepViewController: ORKStepViewController {
     self.view.addSubview(footerView)
 
     print("UIScreen.main.bounds.height---\(UIScreen.main.bounds.height)")
-    let valHeight = (UIScreen.main.bounds.height * 100) / 870
+    let valHeight = (UIScreen.main.bounds.height * 70) / 870
     NSLayoutConstraint.activate(
       [
         footerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0),

@@ -1432,7 +1432,7 @@ static NSString *const _ChildNavigationControllerRestorationKey = @"childNavigat
 }
 
 - (void)stepViewController:(ORKStepViewController *)stepViewController didFinishWithNavigationDirection:(ORKStepViewControllerNavigationDirection)direction {
-    
+ 
     if (stepViewController != nil) {
         if (!stepViewController.readOnlyMode) {
             // Add step result object

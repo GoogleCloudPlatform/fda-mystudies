@@ -153,7 +153,7 @@ class StudyListViewController: UIViewController {
       
       DispatchQueue.main.async {
           
-          self.performTaskBasedOnStudyStatus()
+//          self.performTaskBasedOnStudyStatus()
           
       let val1 = UserDefaults.standard.value(forKey: "performTaskBasedOnStudyStatus") as? String ?? ""
       UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
@@ -420,7 +420,7 @@ class StudyListViewController: UIViewController {
         Study.updateCurrentStudy(study: study!)
           UserDefaults.standard.set("326---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
           UserDefaults.standard.synchronize()
-        performTaskBasedOnStudyStatus()
+        performMainTaskBasedOnStudyStatus()
       }
     }
   }
@@ -790,20 +790,33 @@ class StudyListViewController: UIViewController {
     // Study ID from notification
     if let studyID = studyID,
         let study = studiesList.filter({ $0.studyId == studyID }).first {
+      UserDefaults.standard.set("628,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       Study.updateCurrentStudy(study: study)
     }
     
+    UserDefaults.standard.set("627,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    
     guard let study = Study.currentStudy else { return }
-
+    UserDefaults.standard.set("629,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
     if User.currentUser.userType == UserType.loggedInUser {
+      UserDefaults.standard.set("630,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       let val = UserDefaults.standard.value(forKey: "pausedNotification") as? String ?? ""
       if Study.currentStudy?.status == .paused || val == "paused" {
+        UserDefaults.standard.set("631,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         UserDefaults.standard.set("", forKey: "pausedNotification")
         UserDefaults.standard.synchronize()
         let userStudyStatus = study.userParticipateState.status
-        
+        UserDefaults.standard.set("632,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
           DispatchQueue.main.async {
+            UserDefaults.standard.set("633,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
             if (studyID == nil) {
               UIUtilities.showAlertWithTitleAndMessage(
                 title: "",
@@ -816,12 +829,18 @@ class StudyListViewController: UIViewController {
             }
           }
         } else {
+          UserDefaults.standard.set("634,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           checkForStudyUpdate(study: study)
         }
       } else if study.status == .active {
+        UserDefaults.standard.set("635,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
         let userStudyStatus = study.userParticipateState.status
 
         if userStudyStatus == .completed || userStudyStatus == .enrolled {
+          UserDefaults.standard.set("636,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           // check if study version is udpated
           if study.version != study.newVersion {
             WCPServices().getStudyUpdates(study: study, delegate: self)
@@ -830,17 +849,106 @@ class StudyListViewController: UIViewController {
             perform(#selector(loadStudyDetails), with: self, afterDelay: 1)
           }
         } else if userStudyStatus == .yetToEnroll {
+          UserDefaults.standard.set("637,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           checkDatabaseForStudyInfo(study: study)
         } else {
+          UserDefaults.standard.set("638,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
           checkForStudyUpdate(study: study)
         }
       }
     } else {
+      UserDefaults.standard.set("639,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       checkForStudyUpdate(study: study)
     }
   }
     
+  func performMainTaskBasedOnStudyStatus(studyID: String? = nil) {
+      UserDefaults.standard.set("591,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+    // Study ID from notification
+    if let studyID = studyID,
+        let study = studiesList.filter({ $0.studyId == studyID }).first {
+      UserDefaults.standard.set("592,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      Study.updateCurrentStudy(study: study)
+    }
+    
+    UserDefaults.standard.set("593,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    
+    guard let study = Study.currentStudy else { return }
+    UserDefaults.standard.set("594,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    if User.currentUser.userType == UserType.loggedInUser {
+      UserDefaults.standard.set("595,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      let val = UserDefaults.standard.value(forKey: "pausedNotification") as? String ?? ""
+      if Study.currentStudy?.status == .paused || val == "paused" {
+        UserDefaults.standard.set("596,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+        UserDefaults.standard.set("", forKey: "pausedNotification")
+        UserDefaults.standard.synchronize()
+        let userStudyStatus = study.userParticipateState.status
+        UserDefaults.standard.set("597,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
+          DispatchQueue.main.async {
+            UserDefaults.standard.set("598,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
+            if (studyID == nil) {
+              UIUtilities.showAlertWithTitleAndMessage(
+                title: "",
+                message: NSLocalizedString(
+                  kMessageForStudyPausedAfterJoiningState,
+                  comment: ""
+                )
+                as NSString
+              )
+            }
+          }
+        } else {
+          UserDefaults.standard.set("599,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          checkForStudyUpdate(study: study)
+        }
+      } else if study.status == .active {
+        UserDefaults.standard.set("581,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+        UserDefaults.standard.synchronize()
+        let userStudyStatus = study.userParticipateState.status
+
+        if userStudyStatus == .completed || userStudyStatus == .enrolled {
+          UserDefaults.standard.set("582,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          // check if study version is udpated
+          if study.version != study.newVersion {
+            WCPServices().getStudyUpdates(study: study, delegate: self)
+          } else {
+            addProgressIndicator()
+            perform(#selector(loadStudyDetails), with: self, afterDelay: 1)
+          }
+        } else if userStudyStatus == .yetToEnroll {
+          UserDefaults.standard.set("583,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          checkDatabaseForStudyInfo(study: study)
+        } else {
+          UserDefaults.standard.set("584,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+          checkForStudyUpdate(study: study)
+        }
+      }
+    } else {
+      UserDefaults.standard.set("585,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
+      checkForStudyUpdate(study: study)
+    }
+  }
+  
     func pushToTabbar(viewController: UIViewController, selectedTab: Int, studyID: String? = nil) {
+      UserDefaults.standard.set("586,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+      UserDefaults.standard.synchronize()
       DispatchQueue.main.async {
       let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
 
@@ -1024,7 +1132,7 @@ extension StudyListViewController: UITableViewDelegate {
     Study.updateCurrentStudy(study: study)
       UserDefaults.standard.set("327---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
       UserDefaults.standard.synchronize()
-    performTaskBasedOnStudyStatus()
+    performMainTaskBasedOnStudyStatus()
   }
 }
 

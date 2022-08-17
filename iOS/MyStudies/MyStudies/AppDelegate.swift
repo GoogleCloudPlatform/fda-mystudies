@@ -585,7 +585,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
           errorAlertActionTitle2: nil,
           viewControllerUsed: topController2,
           action1: {
-            
+              do {
+                  self.reachability = try Reachability()
+                } catch(let error) { }
               if self.reachability.connection != .unavailable {
                   self.addAndRemoveProgress(add: true)
                   WCPServices().getEligibilityConsentMetadata(
@@ -644,7 +646,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   /// Handler for local notification
   /// - Parameter userInfoDetails: Contains the info for notification
   func handleLocalNotification(userInfoDetails: [String: Any]) {
-
+    UserDefaults.standard.set("900,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
     var initialVC: UIViewController?
 
     // getting topmost visible controller
@@ -691,7 +694,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   /// - Parameter userInfoDetails: contains the info for notification
   func handleLocalAndRemoteNotification(userInfoDetails: JSONDictionary?) {
     var initialVC: UIViewController?
-    
+    notificationDetails = nil//NEEEW
+    NotificationHandler.instance.reset()
     UserDefaults.standard.set("30,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
     UserDefaults.standard.synchronize()
     print("30userInfoDetails---")
@@ -1968,7 +1972,25 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
   ) -> ORKStepViewController? {
 
     if taskViewController.task?.identifier == kConsentTaskIdentifier {
-
+        
+        do {
+            self.reachability = try Reachability()
+          } catch(let error) { }
+        if reachability.connection == .unavailable {
+            taskViewController.view.hideAllToasts()
+            UIUtilities.showAlertMessageWithActionHandler(
+              "You are offline",
+              message: "You may require internet connection to move forward with this flow. Kindly check the internet and try again later.",
+              buttonTitle: kTitleOk,
+              viewControllerUsed: taskViewController,
+              action: {
+                  taskViewController.dismiss(
+                    animated: true,
+                    completion: nil
+                  )
+              }
+            )
+        }
       // CurrentStep is TokenStep
       if step.identifier != kEligibilityTokenStep
         && step.identifier
@@ -2017,7 +2039,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             self.popViewControllerAfterConsentDisagree()
             return nil
 
-          } else {  // Consented
+          } else if reachability.connection != .unavailable {  // Consented
 
             // Copying consent document
             let documentCopy: ORKConsentDocument =
@@ -2045,6 +2067,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             }
 
             return ttController
+          } else {
+              return taskViewController.currentStepViewController
           }
         } else {
           return nil
@@ -2343,6 +2367,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) ->
       Void
   ) {
+    
+    UserDefaults.standard.set("903,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    
     let userInfo = notification.request.content.userInfo
 
     if userInfo.count > 0 && userInfo.keys.contains(kType) {
@@ -2350,7 +2378,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     if let userInfo = userInfo as? JSONDictionary {
       refreshStudyActivitiesState(with: userInfo)
-    }
+    }; 
     completionHandler([UNNotificationPresentationOptions.alert, .sound, .badge])
   }
 
@@ -2359,6 +2387,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     didReceive response: UNNotificationResponse,
     withCompletionHandler completionHandler: @escaping () -> Void
   ) {
+    UserDefaults.standard.set("901,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+    UserDefaults.standard.synchronize()
+    
     let userInfo = response.notification.request.content.userInfo
     UIApplication.shared.applicationIconBadgeNumber = 0
 

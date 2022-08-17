@@ -217,20 +217,34 @@ class ActivitiesViewController: UIViewController {
         switch reachability.connection {
         case .cellular:
             ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            setOnline()
             break
         case .wifi:
             ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            setOnline()
             break
         case .none:
             ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
-            
+            setOffline()
             break
         case .unavailable:
             ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            setOffline()
             break
         }
     }
-    
+    func setOnline() {
+        if let viewController = self.presentedViewController as? ORKTaskViewController {
+            viewController.view.hideAllToasts()
+        }
+    }
+  
+    func setOffline() {
+        if let viewController = self.presentedViewController as? ORKTaskViewController {
+            viewController.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
+        }
+    }
     override func showOfflineIndicator() -> Bool {
         return true
     }
