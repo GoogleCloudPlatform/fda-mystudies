@@ -249,7 +249,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
       if Utilities.isValidObject(someObject: notification as AnyObject) {  // Launched from Remote Notification
 
         notificationDetails = notification as? [String: Any]
-
+print("1notificationDetails---\(notificationDetails)")
+        
+        UserDefaults.standard.set("\(notificationDetails)", forKey: "newactivity3")
+        UserDefaults.standard.synchronize()
+        
         let ud = UserDefaults.standard
         ud.set(true, forKey: kShowNotification)
         ud.synchronize()
@@ -696,11 +700,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
     
     let studyId2 = userInfoDetails?[kStudyId] as? String ?? ""
     
-    UserDefaults.standard.set("\(studyId2) 0", forKey: "newactivity2")
+    UserDefaults.standard.set("\(studyId2)", forKey: "newactivity1")
     
     let userInfoDetails2 = userInfoDetails
     
-    UserDefaults.standard.set("\(userInfoDetails) 0", forKey: "newactivity2")
+    UserDefaults.standard.set("\(userInfoDetails)", forKey: "newactivity2")
     UserDefaults.standard.synchronize()
     
     
@@ -2383,6 +2387,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     let userInfo = response.notification.request.content.userInfo
     UIApplication.shared.applicationIconBadgeNumber = 0
+    
+    UserDefaults.standard.set("\(userInfo as? JSONDictionary ?? [:])", forKey: "newactivity4")
+            UserDefaults.standard.synchronize()
 
     if UIApplication.shared.applicationState == UIApplication.State.background
       || UIApplication.shared.applicationState == UIApplication.State.active
