@@ -24,6 +24,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -654,6 +655,8 @@ public class StudyInfoActivity extends AppCompatActivity
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
+    header.put("deviceType", android.os.Build.MODEL);
+    header.put("deviceOS", Build.VERSION.RELEASE);
     ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
         new ParticipantEnrollmentDatastoreConfigEvent(
             "get",
