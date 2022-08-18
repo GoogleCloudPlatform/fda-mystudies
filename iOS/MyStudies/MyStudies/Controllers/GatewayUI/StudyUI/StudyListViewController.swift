@@ -69,7 +69,18 @@ class StudyListViewController: UIViewController {
     let val31 = UserDefaults.standard.value(forKey: "newactivity1") as? String ?? ""
     
    let val4 = (UserDefaults.standard.value(forKey: "newactivity2") as! String).contains("A new activity")
-    if val4 && val31 == "" {
+    
+    let val4b = (UserDefaults.standard.value(forKey: "newactivity3") as! String).contains("A new activity")
+    
+    let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    let val4c = "\(appdelegate.notificationDetails)"
+    let val4d = "\(appdelegate.notificationDetails)".contains("A new activity")
+    
+    let val5b = (UserDefaults.standard.value(forKey: "newactivity4") as! String).contains("A new activity")
+    
+    
+//    if val4 && val31 == "" {
+      if val4 {
       let val5 = (UserDefaults.standard.value(forKey: "newactivity2") as! String).components(separatedBy: "\"studyId\": ")
       if val5.count > 1 {
        print("8881userInfoDetails---\(val5[1])")
@@ -82,6 +93,49 @@ class StudyListViewController: UIViewController {
         }
       }
     }
+    else if val4b {
+      let val5 = (UserDefaults.standard.value(forKey: "newactivity3") as! String).components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    } else if val4d {
+      let val5 = val4c.components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    } else if val5b {
+      let val5 = (UserDefaults.standard.value(forKey: "newactivity4") as! String).components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    }
+    
+    UserDefaults.standard.set("", forKey: "newactivity2")
+    UserDefaults.standard.set("", forKey: "newactivity1")
+    UserDefaults.standard.set("", forKey: "newactivity3")
+    UserDefaults.standard.set("", forKey: "newactivity4")
+    UserDefaults.standard.synchronize()
     
     
     addNavigationTitle()
