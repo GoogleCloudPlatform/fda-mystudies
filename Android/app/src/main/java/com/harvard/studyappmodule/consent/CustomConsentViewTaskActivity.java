@@ -984,7 +984,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(
                 CustomConsentViewTaskActivity.this, getResources().getString(R.string.userid), ""));
-
+    header.put("deviceType", android.os.Build.MODEL);
+    header.put("deviceOS", Build.VERSION.RELEASE);
     ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
         new ParticipantEnrollmentDatastoreConfigEvent(
             "get",

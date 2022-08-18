@@ -922,6 +922,10 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(
                 StandaloneStudyInfoActivity.this, getResources().getString(R.string.userid), ""));
+
+    header.put("deviceType", android.os.Build.MODEL);
+    header.put("deviceOS", Build.VERSION.RELEASE);
+
     ParticipantEnrollmentDatastoreConfigEvent participantDatastoreConfigEvent =
         new ParticipantEnrollmentDatastoreConfigEvent(
             "get",

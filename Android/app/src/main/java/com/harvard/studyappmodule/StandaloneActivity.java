@@ -20,6 +20,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -205,6 +206,8 @@ public class StandaloneActivity extends AppCompatActivity
                 AppController.getHelperSharedPreference()
                     .readPreference(
                         StandaloneActivity.this, getResources().getString(R.string.userid), ""));
+            header.put("deviceType", android.os.Build.MODEL);
+            header.put("deviceOS", Build.VERSION.RELEASE);
 
             ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
                 new ParticipantEnrollmentDatastoreConfigEvent(
