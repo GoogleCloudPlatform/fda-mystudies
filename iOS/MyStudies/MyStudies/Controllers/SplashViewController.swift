@@ -46,6 +46,9 @@ class SplashViewController: UIViewController {
     print("999userInfoDetails---\(UserDefaults.standard.value(forKey: "userInfoDetails"))")
     ud.set("", forKey: "userInfoDetails")
       UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+    UserDefaults.standard.set("", forKey: "performActivityTaskBasedOnStudyStatus")
+    UserDefaults.standard.set("", forKey: "newactivity2")
+    UserDefaults.standard.set("", forKey: "newactivity1")
     ud.synchronize()
   }
 

@@ -693,6 +693,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   /// Handler for local & remote notification
   /// - Parameter userInfoDetails: contains the info for notification
   func handleLocalAndRemoteNotification(userInfoDetails: JSONDictionary?) {
+    
+    let studyId2 = userInfoDetails?[kStudyId] as? String ?? ""
+    
+    UserDefaults.standard.set("\(studyId2) 0", forKey: "newactivity2")
+    
+    let userInfoDetails2 = userInfoDetails
+    
+    UserDefaults.standard.set("\(userInfoDetails) 0", forKey: "newactivity2")
+    UserDefaults.standard.synchronize()
+    
+    
     var initialVC: UIViewController?
     notificationDetails = nil//NEEEW
     NotificationHandler.instance.reset()
