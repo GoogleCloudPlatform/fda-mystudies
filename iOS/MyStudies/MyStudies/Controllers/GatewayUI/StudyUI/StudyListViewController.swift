@@ -65,23 +65,22 @@ class StudyListViewController: UIViewController {
     print("777userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity1"))")
     print("888userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity2"))")
     
-    let val3 = UserDefaults.standard.value(forKey: "newactivity2") as? [String : Any]
     let val31 = UserDefaults.standard.value(forKey: "newactivity1") as? String ?? ""
     
-   let val4 = (UserDefaults.standard.value(forKey: "newactivity2") as! String).contains("A new activity")
+   let val4 = ((UserDefaults.standard.value(forKey: "newactivity2") as? String) ?? "").contains("A new activity")
     
-    let val4b = (UserDefaults.standard.value(forKey: "newactivity3") as! String).contains("A new activity")
+    let val4b = ((UserDefaults.standard.value(forKey: "newactivity3") as? String) ?? "").contains("A new activity")
     
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
     let val4c = "\(appdelegate.notificationDetails)"
     let val4d = "\(appdelegate.notificationDetails)".contains("A new activity")
     
-    let val5b = (UserDefaults.standard.value(forKey: "newactivity4") as! String).contains("A new activity")
+    let val5b = ((UserDefaults.standard.value(forKey: "newactivity4") as? String) ?? "").contains("A new activity")
     
     
 //    if val4 && val31 == "" {
       if val4 {
-      let val5 = (UserDefaults.standard.value(forKey: "newactivity2") as! String).components(separatedBy: "\"studyId\": ")
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity2") as? String) ?? "").components(separatedBy: "\"studyId\": ")
       if val5.count > 1 {
        print("8881userInfoDetails---\(val5[1])")
         let val6 = val5[1]
@@ -94,7 +93,7 @@ class StudyListViewController: UIViewController {
       }
     }
     else if val4b {
-      let val5 = (UserDefaults.standard.value(forKey: "newactivity3") as! String).components(separatedBy: "\"studyId\": ")
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity3") as? String) ?? "").components(separatedBy: "\"studyId\": ")
       if val5.count > 1 {
        print("8881userInfoDetails---\(val5[1])")
         let val6 = val5[1]
@@ -118,7 +117,7 @@ class StudyListViewController: UIViewController {
         }
       }
     } else if val5b {
-      let val5 = (UserDefaults.standard.value(forKey: "newactivity4") as! String).components(separatedBy: "\"studyId\": ")
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity4") as? String) ?? "").components(separatedBy: "\"studyId\": ")
       if val5.count > 1 {
        print("8881userInfoDetails---\(val5[1])")
         let val6 = val5[1]
@@ -158,29 +157,6 @@ class StudyListViewController: UIViewController {
         return true
     }
   override func viewWillAppear(_ animated: Bool) {
-    
-//    print("777userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity1"))")
-//    print("888userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity2"))")
-//
-//    let val3 = UserDefaults.standard.value(forKey: "newactivity2") as? [String : Any]
-//
-//
-//   let val4 = (UserDefaults.standard.value(forKey: "newactivity2") as! String).contains("A new activity")
-//    if val4 {
-//      let val5 = (UserDefaults.standard.value(forKey: "newactivity2") as! String).components(separatedBy: "\"studyId\": ")
-//      if val5.count > 1 {
-//       print("8881userInfoDetails---\(val5[1])")
-//        let val6 = val5[1]
-//        let val7 = val6.components(separatedBy: ",")
-//        if val7.count > 1 {
-//          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
-//          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performTaskBasedOnStudyStatus")
-//          UserDefaults.standard.synchronize()
-//        }
-//      }
-//    }
-    
-    
     setupNotifiers()
     if !isComingFromFilterScreen && !(self.slideMenuController()?.isLeftOpen() ?? true) {
       self.addProgressIndicator()
@@ -195,27 +171,7 @@ class StudyListViewController: UIViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    
-//    print("777userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity1"))")
-//    print("888userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity2"))")
-//
-//    let val3 = UserDefaults.standard.value(forKey: "newactivity2") as? [String : Any]
-//
-//
-//   let val4 = (UserDefaults.standard.value(forKey: "newactivity2") as! String).contains("A new activity")
-//    if val4 {
-//      let val5 = (UserDefaults.standard.value(forKey: "newactivity2") as! String).components(separatedBy: "\"studyId\": ")
-//      if val5.count > 1 {
-//       print("8881userInfoDetails---\(val5[1])")
-//        let val6 = val5[1]
-//        let val7 = val6.components(separatedBy: ",")
-//        if val7.count > 1 {
-//          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
-//          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performTaskBasedOnStudyStatus")
-//          UserDefaults.standard.synchronize()
-//        }
-//      }
-//    }
+  
     
     if isComingFromFilterScreen {
       isComingFromFilterScreen = false
