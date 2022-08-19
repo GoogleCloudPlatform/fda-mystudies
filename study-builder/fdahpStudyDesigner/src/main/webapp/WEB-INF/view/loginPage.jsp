@@ -120,8 +120,8 @@
                      autocomplete="off">
             <input type="hidden" id="idp" value="${idpEnabled}" name="idp"/>
             <input type="hidden" id="mfa" value="${mfaEnabled}" name="mfa"/>
-            <div id="errMsg" class="error_msg">${errMsg}</div>
-            <div id="sucMsg" class="suceess_msg">${sucMsg}</div>
+            <div id="errMsg" class="error_msg" style="display: contents;">${errMsg}</div>
+            <div id="sucMsg" class="suceess_msg" style="display: contents;">${sucMsg}</div>
            
             <div class="login pt-lg">
               <div class="mb-lg form-group">
