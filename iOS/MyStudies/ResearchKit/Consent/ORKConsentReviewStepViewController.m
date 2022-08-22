@@ -460,7 +460,12 @@ static NSString *const _SignatureStepIdentifier = @"signatureStep";
 }
 
 #pragma mark ORKConsentReviewControllerDelegate
-
+- (void)consentReviewControllerWillAcknowledge:(ORKConsentReviewController *)consentReviewController {
+    ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
+    if ([strongDelegate respondsToSelector:@selector(stepViewControllerResultWillChange:)]) {
+        [strongDelegate stepViewControllerResultWillChange:self];
+    }
+}
 - (void)consentReviewControllerDidAcknowledge:(ORKConsentReviewController *)consentReviewController {
     _documentReviewed = YES;
     [self notifyDelegateOnResultChange];

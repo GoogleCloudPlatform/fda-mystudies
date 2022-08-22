@@ -1965,7 +1965,51 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
       }
     }
   }
-
+    func taskViewController(_ taskViewController: ORKTaskViewController, willChange result: ORKTaskResult) {
+        if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+            do {
+                self.reachability = try Reachability()
+              } catch(let error) { }
+            if reachability.connection == .unavailable && identifier == "Review" {
+                taskViewController.view.hideAllToasts()
+                UIUtilities.showAlertMessageWithActionHandler(
+                  "You are offline",
+                  message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                  buttonTitle: kTitleOk,
+                  viewControllerUsed: taskViewController,
+                  action: {
+                      taskViewController.dismiss(
+                        animated: true,
+                        completion: nil
+                      )
+                  }
+                )
+            }
+        }
+    }
+    func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
+        print("---------Result change result")
+        if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+            do {
+                self.reachability = try Reachability()
+              } catch(let error) { }
+            if reachability.connection == .unavailable && identifier == "Review" {
+                taskViewController.view.hideAllToasts()
+                UIUtilities.showAlertMessageWithActionHandler(
+                  "You are offline",
+                  message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                  buttonTitle: kTitleOk,
+                  viewControllerUsed: taskViewController,
+                  action: {
+                      taskViewController.dismiss(
+                        animated: true,
+                        completion: nil
+                      )
+                  }
+                )
+            }
+        }
+    }
   // MARK: - StepViewController Delegate
 
   public func stepViewController(
@@ -1995,7 +2039,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             taskViewController.view.hideAllToasts()
             UIUtilities.showAlertMessageWithActionHandler(
               "You are offline",
-              message: "You may require internet connection to move forward with this flow. Kindly check the internet and try again later.",
+              message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
               buttonTitle: kTitleOk,
               viewControllerUsed: taskViewController,
               action: {
