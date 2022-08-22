@@ -161,8 +161,8 @@ public class UserServiceImpl implements UserService {
 
         userEntity.setIdpUser(true);
         userEntity.setPhoneNumber(
-            StringUtils.isNotEmpty(userEntity.getPhoneNumber())
-                ? userEntity.getPhoneNumber().toString()
+            StringUtils.isNotEmpty(userRequest.getPhoneNumber())
+                ? userRequest.getPhoneNumber().toString()
                 : "");
       } catch (FirebaseAuthException e) {
         logger.error("UserServiceImpl.createUser firebase error: ", e);

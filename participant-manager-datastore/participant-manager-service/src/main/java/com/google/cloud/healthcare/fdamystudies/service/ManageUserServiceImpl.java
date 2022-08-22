@@ -142,12 +142,13 @@ public class ManageUserServiceImpl implements ManageUserService {
   @Override
   @Transactional
   public AdminUserResponse createUser(UserRequest user, AuditLogEventRequest auditRequest) {
-    logger.entry(String.format("createUser() with isSuperAdmin=%b", user.isSuperAdmin()));
+    logger.debug(String.format("createUser() with isSuperAdmin=%b", user.isSuperAdmin()));
     ErrorCode errorCode = validateUserRequest(user);
     if (errorCode != null) {
       throw new ErrorCodeException(errorCode);
     }
 
+    logger.debug("createUser()2 ");
     AdminUserResponse userResponse =
         user.isSuperAdmin()
             ? saveSuperAdminDetails(user, auditRequest)
@@ -177,6 +178,7 @@ public class ManageUserServiceImpl implements ManageUserService {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
 
+    logger.debug("user.getEmail(): " + user.getEmail());
     Optional<UserRegAdminEntity> optUsers = userAdminRepository.findByEmail(user.getEmail());
     logger.exit("Successfully validated user request");
     return optUsers.isPresent() ? ErrorCode.EMAIL_EXISTS : null;
