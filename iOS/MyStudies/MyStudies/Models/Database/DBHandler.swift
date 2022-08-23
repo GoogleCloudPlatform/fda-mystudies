@@ -826,7 +826,7 @@ class DBHandler: NSObject {
           let resultsArray = ((quesResults!["value"] as? [[Any]])?.first) as? [[String: Any]]
           dictionary = resultsArray!.filter { $0["key"] as! String == sourceKey }.first!
         } else {
-          dictionary = results.filter { $0["key"] as! String == sourceKey }.first!
+          dictionary = results.filter { $0["key"] as! String == sourceKey }.first ?? [:]
         }
         
         guard let userInputDate = dictionary["value"] as? String else {

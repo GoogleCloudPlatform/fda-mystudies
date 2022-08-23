@@ -1974,7 +1974,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
                 taskViewController.view.hideAllToasts()
                 UIUtilities.showAlertMessageWithActionHandler(
                   "You are offline",
-                  message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                  message:
+                    "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
                   buttonTitle: kTitleOk,
                   viewControllerUsed: taskViewController,
                   action: {
@@ -1997,7 +1998,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
                 taskViewController.view.hideAllToasts()
                 UIUtilities.showAlertMessageWithActionHandler(
                   "You are offline",
-                  message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                  message:
+                    "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
                   buttonTitle: kTitleOk,
                   viewControllerUsed: taskViewController,
                   action: {
@@ -2037,7 +2039,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             
         }
     }
-    func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+  func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController,
+                          navigationDirection direction: ORKStepViewControllerNavigationDirection) {
       if reachability.connection == .unavailable {
           taskViewController.view.hideAllToasts()
           UIUtilities.showAlertMessageWithActionHandler(
