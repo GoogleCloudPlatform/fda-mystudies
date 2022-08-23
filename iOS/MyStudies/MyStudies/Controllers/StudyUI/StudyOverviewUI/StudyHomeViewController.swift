@@ -220,8 +220,7 @@ class StudyHomeViewController: UIViewController {
   
     func setOnline() {
         if let viewController = self.presentedViewController {
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
-            self.view.hideAllToasts()
+            viewController.view.hideAllToasts()
         } else {
             self.view.hideAllToasts()
         }
@@ -233,7 +232,8 @@ class StudyHomeViewController: UIViewController {
   
     func setOffline() {
         if let viewController = self.presentedViewController {
-            ReachabilityIndicatorManager.shared.shouldPresentIndicator(viewController: viewController, isOffline: true)
+            viewController.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
         } else {
             self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
                                 position: .center, title: nil, image: nil, completion: nil)
@@ -1333,13 +1333,59 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     _: ORKStepViewController,
     didFinishWith _: ORKStepViewControllerNavigationDirection
   ) {
-      print("---------Result finish step")
   }
 
   public func stepViewControllerResultDidChange(_: ORKStepViewController) {
-      print("---------Result change step")
+      
   }
 
+  func taskViewController(_ taskViewController: ORKTaskViewController, willChange result: ORKTaskResult) {
+      if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+          if reachability.connection == .unavailable && identifier == "Review"{
+              if let viewController = self.presentedViewController {
+//                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+                  viewController.view.hideAllToasts()
+              }
+              UIUtilities.showAlertMessageWithActionHandler(
+                "You are offline",
+                message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                buttonTitle: kTitleOk,
+                viewControllerUsed: taskViewController,
+                action: {
+                  taskViewController.dismiss(
+                    animated: true,
+                    completion: nil
+                    )
+                }
+                )
+          }
+      }
+  }
+  func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
+      print("---------Result change result")
+      if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+          if reachability.connection == .unavailable && identifier == "Review"{
+//      if reachability.connection == .unavailable {
+
+              if let viewController = self.presentedViewController {
+//                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+                  viewController.view.hideAllToasts()
+              }
+              UIUtilities.showAlertMessageWithActionHandler(
+                "You are offline",
+                message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                buttonTitle: kTitleOk,
+                viewControllerUsed: taskViewController,
+                action: {
+                    taskViewController.dismiss(
+                      animated: true,
+                      completion: nil
+                    )
+                }
+              )
+          }
+      }
+  }
   public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {
       print("---------Result fail step")
   }
@@ -1364,12 +1410,12 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       
       if reachability.connection == .unavailable {
           if let viewController = self.presentedViewController {
-              ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
-              self.view.hideAllToasts()
+//              ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+              viewController.view.hideAllToasts()
           }
           UIUtilities.showAlertMessageWithActionHandler(
             "You are offline",
-            message: "You may require internet connection to move forward with this flow. Kindly check the internet and try again later.",
+            message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
             buttonTitle: kTitleOk,
             viewControllerUsed: taskViewController,
             action: {
@@ -1377,7 +1423,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
                   animated: true,
                   completion: nil
                 )
-                self.navigationController?.popViewController(animated: true)
+//                self.navigationController?.popViewController(animated: true)
             }
           )
       }
@@ -1424,11 +1470,13 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           as? ORKConsentSignatureResult
 
         if consentSignatureResult?.consented == false {
-          taskViewController.dismiss(
-            animated: true,
-            completion: nil
-          )
-          _ = navigationController?.popViewController(animated: true)
+            if reachability.connection != .unavailable {
+                taskViewController.dismiss(
+                  animated: true,
+                  completion: nil
+                )
+                _ = navigationController?.popViewController(animated: true)
+            }
           return nil
 
         } else {
@@ -1627,11 +1675,29 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       return nil
     }
   }
-  
+
   func taskViewController(_ taskViewController: ORKTaskViewController,
                           stepViewControllerWillDisappear stepViewController: ORKStepViewController,
                           navigationDirection direction: ORKStepViewControllerNavigationDirection) {
-      print("---------step navigation")
+      print("\n---------step navigation")
+      if reachability.connection == .unavailable {
+          if let viewController = self.presentedViewController {
+              viewController.view.hideAllToasts()
+          }
+          UIUtilities.showAlertMessageWithActionHandler(
+            "You are offline",
+            message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+            buttonTitle: kTitleOk,
+            viewControllerUsed: taskViewController,
+            action: {
+                taskViewController.dismiss(
+                  animated: true,
+                  completion: nil
+                )
+//                self.navigationController?.popViewController(animated: true)
+            }
+          )
+      }
     
     if let val = stepViewController.step?.identifier, val == kConsentSharing {
       UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0)

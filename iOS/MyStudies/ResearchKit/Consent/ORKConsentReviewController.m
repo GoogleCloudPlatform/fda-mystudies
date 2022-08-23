@@ -193,6 +193,7 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (IBAction)cancel {
+    printf("%s", [@"\nDis agree action" UTF8String]);
   NSDictionary *userDict = @{@"ORKAction":@"ORKReviewDisAgree"};
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     if (self.delegate && [self.delegate respondsToSelector:@selector(consentReviewControllerDidCancel:)]) {
@@ -207,6 +208,9 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (IBAction)ack {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(consentReviewControllerWillAcknowledge:)]) {
+        [self.delegate consentReviewControllerWillAcknowledge:self];
+    }
   NSDictionary *userDict = @{@"ORKAction":@"ORKReviewAgree"};
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:ORKLocalizedString(@"CONSENT_REVIEW_ALERT_TITLE", nil)
