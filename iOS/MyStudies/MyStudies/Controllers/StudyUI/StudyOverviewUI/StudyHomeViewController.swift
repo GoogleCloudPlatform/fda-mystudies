@@ -1343,8 +1343,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       if let identifier = taskViewController.currentStepViewController?.step?.identifier {
           if reachability.connection == .unavailable && identifier == "Review"{
               if let viewController = self.presentedViewController {
-                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
-                  self.view.hideAllToasts()
+//                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+                  viewController.view.hideAllToasts()
               }
               UIUtilities.showAlertMessageWithActionHandler(
                 "You are offline",
@@ -1365,9 +1365,11 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       print("---------Result change result")
       if let identifier = taskViewController.currentStepViewController?.step?.identifier {
           if reachability.connection == .unavailable && identifier == "Review"{
+//      if reachability.connection == .unavailable {
+
               if let viewController = self.presentedViewController {
-                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
-                  self.view.hideAllToasts()
+//                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+                  viewController.view.hideAllToasts()
               }
               UIUtilities.showAlertMessageWithActionHandler(
                 "You are offline",
@@ -1408,8 +1410,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       
       if reachability.connection == .unavailable {
           if let viewController = self.presentedViewController {
-              ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
-              self.view.hideAllToasts()
+//              ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+              viewController.view.hideAllToasts()
           }
           UIUtilities.showAlertMessageWithActionHandler(
             "You are offline",
@@ -1468,11 +1470,13 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           as? ORKConsentSignatureResult
 
         if consentSignatureResult?.consented == false {
-          taskViewController.dismiss(
-            animated: true,
-            completion: nil
-          )
-          _ = navigationController?.popViewController(animated: true)
+            if reachability.connection != .unavailable {
+                taskViewController.dismiss(
+                  animated: true,
+                  completion: nil
+                )
+                _ = navigationController?.popViewController(animated: true)
+            }
           return nil
 
         } else {
@@ -1671,11 +1675,29 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       return nil
     }
   }
-  
+
   func taskViewController(_ taskViewController: ORKTaskViewController,
                           stepViewControllerWillDisappear stepViewController: ORKStepViewController,
                           navigationDirection direction: ORKStepViewControllerNavigationDirection) {
-      print("---------step navigation")
+      print("\n---------step navigation")
+      if reachability.connection == .unavailable {
+          if let viewController = self.presentedViewController {
+              viewController.view.hideAllToasts()
+          }
+          UIUtilities.showAlertMessageWithActionHandler(
+            "You are offline",
+            message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+            buttonTitle: kTitleOk,
+            viewControllerUsed: taskViewController,
+            action: {
+                taskViewController.dismiss(
+                  animated: true,
+                  completion: nil
+                )
+//                self.navigationController?.popViewController(animated: true)
+            }
+          )
+      }
     
     if let val = stepViewController.step?.identifier, val == kConsentSharing {
       UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0)

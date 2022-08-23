@@ -193,6 +193,7 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (IBAction)cancel {
+    printf("%s", [@"\nDis agree action" UTF8String]);
   NSDictionary *userDict = @{@"ORKAction":@"ORKReviewDisAgree"};
     [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     if (self.delegate && [self.delegate respondsToSelector:@selector(consentReviewControllerDidCancel:)]) {

@@ -2015,8 +2015,26 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection
-  ) {}
-
+  ) {
+      
+  }
+  func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+      if reachability.connection == .unavailable {
+          taskViewController.view.hideAllToasts()
+          UIUtilities.showAlertMessageWithActionHandler(
+            "You are offline",
+            message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+            buttonTitle: kTitleOk,
+            viewControllerUsed: taskViewController,
+            action: {
+              taskViewController.dismiss(
+                animated: true,
+                completion: nil
+                )
+            }
+          )
+      }
+  }
   public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
   }
 
@@ -2093,9 +2111,11 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             as? ORKConsentSignatureResult
 
           if consentSignatureResult?.consented == false {  // Disgreed
-            taskViewController.dismiss(animated: true, completion: nil)
-
-            self.popViewControllerAfterConsentDisagree()
+              if reachability.connection != .unavailable {
+                  taskViewController.dismiss(animated: true, completion: nil)
+                  self.popViewControllerAfterConsentDisagree()
+              }
+            
             return nil
 
           } else if reachability.connection != .unavailable {  // Consented
