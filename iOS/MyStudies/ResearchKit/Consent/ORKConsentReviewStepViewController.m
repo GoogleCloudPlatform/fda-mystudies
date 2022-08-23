@@ -354,6 +354,10 @@ static NSString *const _SignatureStepIdentifier = @"signatureStep";
 #pragma mark ORKStepViewControllerDelegate
 
 - (void)stepViewController:(ORKStepViewController *)stepViewController didFinishWithNavigationDirection:(ORKStepViewControllerNavigationDirection)direction {
+    printf("%s", [@"Next call back recieved" UTF8String]);
+    ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
+    [strongDelegate stepViewControllerResultWillChange:self];
+//    [strongDelegate stepViewController:self didFinishWithNavigationDirection:direction];
     if (_currentPageIndex == NSNotFound) {
         return;
     }
@@ -380,7 +384,7 @@ static NSString *const _SignatureStepIdentifier = @"signatureStep";
 
 - (void)goToPage:(NSInteger)page animated:(BOOL)animated {
     UIViewController *viewController = [self viewControllerForIndex:page];
-    
+    printf("%s", [@"Next call back recieved 2" UTF8String]);
     if (!viewController) {
         ORK_Log_Debug(@"No view controller!");
         return;
@@ -412,6 +416,7 @@ static NSString *const _SignatureStepIdentifier = @"signatureStep";
 }
 
 - (void)stepViewControllerResultDidChange:(ORKStepViewController *)stepViewController {
+    printf("%s", [@"Call back 4" UTF8String]);
     if ([stepViewController.step.identifier isEqualToString:_NameFormIdentifier]) {
         // If this is the form step then update the values from the form
         ORKStepResult *result = [stepViewController result];

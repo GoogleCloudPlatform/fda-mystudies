@@ -1328,11 +1328,33 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   }
 
   // MARK: - StepViewController Delegate
-
   public func stepViewController(
-    _: ORKStepViewController,
+    stepViewController: ORKStepViewController,
     didFinishWith _: ORKStepViewControllerNavigationDirection
   ) {
+
+      print("\n---------step navigation next button")
+      if reachability.connection == .unavailable {
+          if let viewController = self.presentedViewController {
+              viewController.view.hideAllToasts()
+          }
+          if let taskViewController = stepViewController.taskViewController {
+              UIUtilities.showAlertMessageWithActionHandler(
+                "You are offline",
+                message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                buttonTitle: kTitleOk,
+                viewControllerUsed: taskViewController,
+                action: {
+                    taskViewController.dismiss(
+                      animated: true,
+                      completion: nil
+                    )
+    //                self.navigationController?.popViewController(animated: true)
+                }
+              )
+          }
+          
+      }
   }
 
   public func stepViewControllerResultDidChange(_: ORKStepViewController) {
