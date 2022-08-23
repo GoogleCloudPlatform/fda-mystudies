@@ -1348,7 +1348,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
               }
               UIUtilities.showAlertMessageWithActionHandler(
                 "You are offline",
-                message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                message:
+                  "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
                 buttonTitle: kTitleOk,
                 viewControllerUsed: taskViewController,
                 action: {
@@ -1373,7 +1374,8 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
               }
               UIUtilities.showAlertMessageWithActionHandler(
                 "You are offline",
-                message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                message:
+                  "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
                 buttonTitle: kTitleOk,
                 viewControllerUsed: taskViewController,
                 action: {
