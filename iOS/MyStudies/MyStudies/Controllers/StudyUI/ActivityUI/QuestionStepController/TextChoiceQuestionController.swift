@@ -125,16 +125,31 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     if self.isOtherCellSelected {
       var otherChoiceDict: [String: Any]!
       if self.otherChoice.isShowOtherField {
+        if otherChoice.otherChoiceText == "" {
+          otherChoiceDict = [
+            "other": otherChoice.otherTitle,
+            "otherValue": otherChoice.value,
+          ]
+          } else {
         otherChoiceDict = [
-          "other": otherChoice.otherTitle, "text": otherChoice.otherChoiceText,
+          "other": otherChoice.otherTitle,
+          "text": otherChoice.otherChoiceText,
           "otherValue": otherChoice.value,
         ]
+        }
       } else {
+        if otherChoice.otherChoiceText == "" {
         otherChoiceDict = [
           "other": otherChoice.otherTitle,
           "otherValue": otherChoice.value,
-          "text": otherChoice.otherChoiceText,
         ]
+        } else {
+          otherChoiceDict = [
+            "other": otherChoice.otherTitle,
+            "otherValue": otherChoice.value,
+            "text": otherChoice.otherChoiceText,
+          ]
+          }
       }
       choices.append(otherChoiceDict as Any)
       choices.append(otherChoice.value)
