@@ -2012,13 +2012,32 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     }
   // MARK: - StepViewController Delegate
 
-  public func stepViewController(
-    _ stepViewController: ORKStepViewController,
-    didFinishWith direction: ORKStepViewControllerNavigationDirection
-  ) {
-      
-  }
-  func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+    public func stepViewController(
+      stepViewController: ORKStepViewController,
+      didFinishWith _: ORKStepViewControllerNavigationDirection
+    ) {
+
+        print("\n---------step navigation next button")
+        if reachability.connection == .unavailable {
+
+            stepViewController.view.hideAllToasts()
+            UIUtilities.showAlertMessageWithActionHandler(
+              "You are offline",
+              message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+              buttonTitle: kTitleOk,
+              viewControllerUsed: stepViewController,
+              action: {
+                  stepViewController.dismiss(
+                    animated: true,
+                    completion: nil
+                  )
+              }
+            )
+
+            
+        }
+    }
+    func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController, navigationDirection direction: ORKStepViewControllerNavigationDirection) {
       if reachability.connection == .unavailable {
           taskViewController.view.hideAllToasts()
           UIUtilities.showAlertMessageWithActionHandler(

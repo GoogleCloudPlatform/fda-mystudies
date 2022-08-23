@@ -360,6 +360,11 @@
 }
 
 - (IBAction)next {
+    printf("%s", [@"Next button action" UTF8String]);
+    ORKStepViewControllerNavigationDirection direction = self.isBeingReviewed ? ORKStepViewControllerNavigationDirectionReverse : ORKStepViewControllerNavigationDirectionForward;
+    ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
+    [strongDelegate stepViewController:self didFinishWithNavigationDirection:direction];
+    
     ORKConsentSceneViewController *currentConsentSceneViewController = [self viewControllerForIndex:[self currentIndex]];
     [(ORKAnimationPlaceholderView *)_animationView scrollToTopAnimated:YES completion:nil];
     [currentConsentSceneViewController scrollToTopAnimated:YES completion:^(BOOL finished) {
