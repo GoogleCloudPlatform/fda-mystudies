@@ -1910,6 +1910,40 @@
   }
   
   $(document).ready(function () {
+	  if(${questionnaireBo.frequency=='Weekly'}){
+		  var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];  
+		  var weekDay = $("#startDateWeekly").val();
+	      var weeks = [];
+	      for (var i = 0; i < daysOfWeek.length; i++) {
+	        if (weekDay != daysOfWeek[i]) {
+	          weeks.push(i);
+	        }
+	      }
+	     // $('#startWeeklyDate').data("DateTimePicker").destroy();
+	      $('#startWeeklyDate').not('.cursor-none, :disabled').datetimepicker({
+	        format: 'MM/DD/YYYY',
+	        minDate: serverDate(),
+	        daysOfWeekDisabled: weeks,
+	        useCurrent: false,
+	        ignoreReadonly: true
+	      }).on("dp.change", function (e) {
+	        var weeklyDate = $("#startWeeklyDate").val();
+	        var weeks = $("#weeks").val();
+
+	        if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks
+	            != null && weeks != '' && typeof weeks != 'undefined')) {
+	          var dt = new Date(weeklyDate);
+	          var weekcount = Number(weeks) * 7;
+
+	          dt.setDate(dt.getDate() + Number(weekcount));
+	          endDate = formatDate(dt);
+	          $("#studyWeeklyLifetimeEnd").val(endDate);
+	          $("#weekEndDate").text(endDate);
+	          $("#weekLifeTimeEnd").text(weeklyDate + ' - ' + endDate);
+	        }
+	      });
+	     // $('#startWeeklyDate').val('');		
+	 } 
 	$('.studyClass').addClass("active");
     $("#dailyxdaysId").change(function () {
       dailyXday = $("#dailyxdaysId").val();
@@ -5443,6 +5477,29 @@
 
 
     });
+    if(${questionnaireBo.frequency=='Monthly'}){
+		  debugger
+		  $('#pickStartDate').not('.cursor-none, :disabled').datetimepicker({
+			  beforeShowDay:function(date){
+				     return [false, ''];
+			  }
+		    }).on("dp.show", function (e) {
+		    	debugger
+		    	var monthlyDate = $("#startDateMonthly").val();
+		      var b = new Date(monthlyDate).getFullYear();
+		      var dateArr = [];
+		      for (var i = new Date(monthlyDate).getFullYear(); i < 2108; i++) {
+		        for (var j = 0; j < 12; j++) {
+		          var allowedDate = new Date(i, j, new Date(monthlyDate).getDate());
+		          if (allowedDate.getMonth() !== j) {
+		            allowedDate = new Date(i, j + 1, 0);
+		          }
+		          dateArr.push(allowedDate);
+		        }
+		      }
+		      $('#pickStartDate').data("DateTimePicker").enabledDates(dateArr);
+		    });
+			  }
   });
 
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
