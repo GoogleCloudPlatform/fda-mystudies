@@ -62,7 +62,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -715,6 +718,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               + questionnaireActivityResponseBean.getMetadata().getStudyId()
               + "/fhir/"
               + QUESTIONNAIRE_TYPE_FHIR;
+      logger.debug("processToFhirResponse4.1" + searchPostForQuestionaire);
       String searchJson =
           fhirHealthcareAPIs.fhirResourceSearchPost(
               searchPostForQuestionaire,
@@ -760,6 +764,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
       SearchQuestionnaireFhirBean searchVersionQuestionnaireFhirBean =
           new Gson().fromJson(searchVersionHistoryJson, SearchQuestionnaireFhirBean.class);
+      logger.debug("processToFhirResponse6" + searchVersionQuestionnaireFhirBean.toString());
 
       QuestionnaireEntry questionnaireEntry =
           searchVersionQuestionnaireFhirBean
@@ -962,9 +967,19 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                       && StringUtils.isNotBlank((String) valueObj)
                       && !skipped) {
                     ans = new Answer();
+                    logger.debug("valueObj" + valueObj.toString());
                     ans = fhirAnswerValue(map, valueObj, ans);
                     answer.add(ans);
                     items.setAnswer(answer);
+                  } else {
+                    if (valueObj != null || ObjectUtils.isNotEmpty(valueObj)) {
+                      ans = new Answer();
+                      logger.debug("othervalueObj" + valueObj);
+                      List<Answer> a1 = new LinkedList<>();
+                      a1 = fhirAnswerValueForOther(map, valueObj, a1);
+                      // answer.add(ans);
+                      items.setAnswer(a1);
+                    }
                   }
                 }
                 if (type.equals("task")) {
@@ -980,6 +995,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
             } else {
               if (!responseResultType.equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)
                   && !skipped) {
+                logger.debug("valueObj1" + propertyValue.toString());
                 ans = fhirAnswerValue(map, propertyValue, ans);
                 answerList = new LinkedList<>();
                 answerList.add(ans);
@@ -994,6 +1010,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                 map.put(WCP_RESULT_TYPE, "Integer");
                 propertyValue = Double.parseDouble((String) propertyValue);
               }
+              logger.debug("valueObj2" + propertyValue.toString());
               ans = fhirAnswerValue(map, propertyValue, ans);
               answerList = new LinkedList<>();
               answerList.add(ans);
@@ -1004,6 +1021,45 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       }
     }
     logger.exit("toFHIRFormatQuestionnaireResponse() - ends ");
+  }
+
+  private List<Answer> fhirAnswerValueForOther(
+      Map<String, Object> map, Object propertyValue, List<Answer> a1) throws Exception {
+    logger.entry("begin fhirAnswerValue()");
+    logger.debug("fhirAnswerValue()" + propertyValue.toString());
+    String responseResultType = (String) map.get(RESPONSE_RESULT_TYPE);
+    if (responseResultType.equals("textChoice")) {
+      logger.debug("fhirAnswerValue()textChoice1" + propertyValue);
+      try {
+        logger.debug("fhirAnswerValue()otherChoice3" + propertyValue);
+        JSONObject jsonObject = new JSONObject(propertyValue.toString());
+        logger.debug("fhirAnswerValue()otherChoice4" + jsonObject);
+        if (jsonObject.has("other")) {
+          String otheroptionvalue = jsonObject.get("other").toString();
+          logger.debug("fhirAnswerValue()otherChoice5" + otheroptionvalue);
+          Answer answerMap = new Answer();
+          answerMap.setValueString(otheroptionvalue);
+          logger.debug("fhirAnswerValue()otherChoice6" + answerMap.toString());
+          a1.add(answerMap);
+        }
+        if (jsonObject.has("text")) {
+          String otheroptiontext = jsonObject.get("text").toString();
+          logger.debug("fhirAnswerValue()otherChoice7" + otheroptiontext);
+          if (!otheroptiontext.equalsIgnoreCase("null")) {
+            Answer answerMap = new Answer();
+            answerMap.setValueString(otheroptiontext);
+            logger.debug("fhirAnswerValue()otherChoice8" + answerMap.toString());
+            a1.add(answerMap);
+          }
+        }
+
+      } catch (JSONException e) {
+        logger.error(
+            "fhirAnswerValue() method: Unable to getvalue of otheroption object" + e.getMessage());
+      }
+    }
+    logger.exit("fhirAnswerValue() - ends ");
+    return a1;
   }
 
   @SuppressWarnings("deprecation")
