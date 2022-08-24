@@ -25,7 +25,6 @@ Project | Name | Purpose
 Devops | `{PREFIX}-{ENV}-devops` | This project executes the Terraform CICD pipeline that keeps your infrastructure aligned with the state defined in the [`deployment/terraform/`](/deployment/terraform/) directory of your GitHub repository
 Apps | `{PREFIX}-{ENV}-apps` | This project stores the container images for each of your FDA MyStudies applications, updates those images with CICD pipelines that monitor changes you make to the application directories of your GitHub repository, and administers the Kubernetes cluster that operates those images ([**Figure 2**](#figure-2-application-architecture) diagrams each the applications and how they related to their data sources)
 Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications, and the blob storage buckets that hold study resources and consent documents
-Firebase | `{PREFIX}-{ENV}-firebase` | This project contains the NoSQL database that stores the study response data
 Networks | `{PREFIX}-{ENV}-networks` | This project manages the network policies and firewalls 
 Secrets | `{PREFIX}-{ENV}-secrets` | This project manages the deployment’s secrets, such as client ids and client secrets
 Audit | `{PREFIX}-{ENV}-audit` | This project stores the audit logs for the FDA MyStudies platform and applications
