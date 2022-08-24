@@ -45,7 +45,7 @@ Application | URL | Notes
 More information about the purpose of each application can be found in the [*Platform Overview*](/documentation/architecture.md) guide. Detailed information about configuration and operation of each application can be found in their [respective READMEs](/documentation/README.md).
 
 #### Figure 1: Overall architecture of the semi-automated deployment
-![Architecture](/documentation/images/deployment-reference-architecture.svg "Architecture")
+![Architecture](/documentation/images/deployment-reference-architecture.png "Architecture")
 
 #### Figure 2: Application architecture
 ![Applications](/documentation/images/apps-reference-architecture.svg "Applications")
