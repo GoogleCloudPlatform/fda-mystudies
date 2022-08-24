@@ -727,6 +727,32 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
       SearchQuestionnaireFhirBean searchQuestionnaireFhirBean =
           new Gson().fromJson(searchJson, SearchQuestionnaireFhirBean.class);
+
+      String metaVersion = questionnaireActivityResponseBean.getMetadata().getVersion();
+      for (int i = 0; i < 10; i++) {
+        if (searchQuestionnaireFhirBean.getEntry() == null
+            || searchQuestionnaireFhirBean.getEntry().isEmpty()) {
+          metaVersion =
+              Float.valueOf(String.format("%.02f", Float.parseFloat(metaVersion) + 0.1f))
+                  .toString();
+          searchJson =
+              fhirHealthcareAPIs.fhirResourceSearchPost(
+                  searchPostForQuestionaire,
+                  "identifier="
+                      + questionnaireActivityResponseBean.getMetadata().getActivityId()
+                      + "&"
+                      + "version="
+                      + metaVersion);
+
+          logger.debug("processToFhirResponse5" + searchJson);
+
+          searchQuestionnaireFhirBean =
+              new Gson().fromJson(searchJson, SearchQuestionnaireFhirBean.class);
+        } else {
+          break;
+        }
+      }
+
       String resourceId = searchQuestionnaireFhirBean.getEntry().get(0).getResource().getId();
       String searchVersionHistoryJson =
           fhirHealthcareAPIs.fhirResourceGetHistory(searchPostForQuestionaire + "/" + resourceId);
