@@ -48,7 +48,7 @@ More information about the purpose of each application can be found in the [*Pla
 ![Architecture](/documentation/images/deployment-reference-architecture.png "Architecture")
 
 #### Figure 2: Application architecture
-![Applications](/documentation/images/apps-reference-architecture.svg "Applications")
+![Applications](/documentation/images/apps-reference-architecture.svg.png "Applications")
 
 The deployment process takes the following approach:
 1. Create a copy of the FDA MyStudies repository that you will use for your deployment
