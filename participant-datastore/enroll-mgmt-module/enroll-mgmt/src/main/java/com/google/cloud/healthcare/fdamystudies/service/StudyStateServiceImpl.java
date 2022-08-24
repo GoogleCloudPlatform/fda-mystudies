@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -204,8 +205,10 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
-  @Transactional(readOnly = true)
-  public List<StudyStateBean> getStudiesState(String userId) throws SystemException {
+  @Transactional
+  public List<StudyStateBean> getStudiesState(
+      String userId, String deviceType, String deviceOS, String mobilePlatform)
+      throws SystemException {
     logger.entry("Begin getStudiesState()");
 
     List<StudyStateBean> serviceResponseList = new ArrayList<>();
@@ -213,6 +216,11 @@ public class StudyStateServiceImpl implements StudyStateService {
     UserDetailsEntity userDetailsEntity = userRegAdminUserDao.getRecord(userId);
     if (userDetailsEntity == null) {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    } else {
+      userDetailsEntity.setDeviceType(deviceType);
+      userDetailsEntity.setDeviceOS(deviceOS);
+      userDetailsEntity.setMobilePlatform(mobilePlatform);
+      userRegAdminUserDao.updateUserDetails(userDetailsEntity);
     }
 
     List<ParticipantStudyEntity> participantStudiesList =
@@ -291,7 +299,7 @@ public class StudyStateServiceImpl implements StudyStateService {
 
       participantStudiesInfoDao.deleteParticipantFromStudyConsentEntity(
           participantStudy.get().getId());
-      
+
       participantEnrollmentHistoryRepository.updateWithdrawalDateAndStatus(
           participantStudy.get().getUserDetails().getId(),
           participantStudy.get().getStudy().getId(),
