@@ -1990,11 +1990,11 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     }
     func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
         print("---------Result change result")
-        if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+//        if let identifier = taskViewController.currentStepViewController?.step?.identifier {
             do {
                 self.reachability = try Reachability()
               } catch(let error) { }
-            if reachability.connection == .unavailable && identifier == "Review" {
+            if reachability.connection == .unavailable {
                 taskViewController.view.hideAllToasts()
                 UIUtilities.showAlertMessageWithActionHandler(
                   "You are offline",
@@ -2010,7 +2010,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
                   }
                 )
             }
-        }
+//        }
     }
   // MARK: - StepViewController Delegate
 
