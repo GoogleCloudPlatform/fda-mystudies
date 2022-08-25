@@ -593,13 +593,15 @@ print("1notificationDetails---\(notificationDetails)")
                   self.reachability = try Reachability()
                 } catch(let error) { }
               if self.reachability.connection != .unavailable {
-                  self.addAndRemoveProgress(add: true)
+//                  self.addAndRemoveProgress(add: true)
                   WCPServices().getEligibilityConsentMetadata(
                     studyId: (Study.currentStudy?.studyId)!,
                     delegate: self as NMWebServiceDelegate
                   )
               } else {
                   if controller.isKind(of: ActivitiesViewController.self) {
+                      self.addAndRemoveProgress(add: false)
+                      controller.removeProgressIndicator()
                       ReachabilityIndicatorManager.shared.presentIndicator(viewController: controller, isOffline: true)
                   }
               }
@@ -1796,10 +1798,14 @@ extension AppDelegate {
 // MARK: Webservices delegates
 
 extension AppDelegate: NMWebServiceDelegate {
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
-
+  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
+      if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
+          self.addAndRemoveProgress(add: true)
+      }
+  }
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
+      self.addAndRemoveProgress(add: false)
       self.createEligibilityConsentTask()
 
     } else if requestName as String
