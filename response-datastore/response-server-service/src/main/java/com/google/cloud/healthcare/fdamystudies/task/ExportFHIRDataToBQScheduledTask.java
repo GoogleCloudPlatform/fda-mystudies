@@ -51,8 +51,8 @@ public class ExportFHIRDataToBQScheduledTask {
 
     try {
       if (appConfig.getEnableBigQuery().equalsIgnoreCase("true")
-          && appConfig.getEnableFHIRManagementAPI().contains("FHIR")
-          && !appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("true")) {
+          && appConfig.getEnableFhirManagementApi().contains("FHIR")
+          && !appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("true")) {
 
         List<com.google.api.services.healthcare.v1.model.Dataset> datasets =
             consentManagementAPIs.datasetList(appConfig.getProjectId(), appConfig.getRegionId());
@@ -85,7 +85,7 @@ public class ExportFHIRDataToBQScheduledTask {
 
     try {
       if (appConfig.getEnableBigQuery().equalsIgnoreCase("true")
-          && appConfig.getEnableFHIRManagementAPI().equalsIgnoreCase("FHIR_DID")) {
+          && appConfig.getEnableFhirManagementApi().equalsIgnoreCase("FHIR_DID")) {
 
         List<com.google.api.services.healthcare.v1.model.Dataset> datasets =
             consentManagementAPIs.datasetList(appConfig.getProjectId(), appConfig.getRegionId());

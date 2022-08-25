@@ -66,8 +66,8 @@ public class ApplicationConfiguration {
   @Value("${regionId}")
   private String regionId;
 
-  @Value("${enableFHIRManagementAPI}")
-  private String enableFHIRManagementAPI;
+  @Value("${enableFhirManagementApi}")
+  private String enableFhirManagementApi;
 
   @Value("${enableBigQuery}")
   private String enableBigQuery;
@@ -75,6 +75,6 @@ public class ApplicationConfiguration {
   @Value("${enableConsentManagementAPI}")
   private String enableConsentManagementAPI;
 
-  @Value("${discardFHIRAfterDID}")
-  private String discardFHIRAfterDID;
+  @Value("${discardFhirAfterDid}")
+  private String discardFhirAfterDid;
 }

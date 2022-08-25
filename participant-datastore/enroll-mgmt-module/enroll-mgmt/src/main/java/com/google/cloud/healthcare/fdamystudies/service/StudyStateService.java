@@ -28,7 +28,8 @@ public interface StudyStateService {
       AuditLogEventRequest auditRequest,
       UserDetailsEntity user);
 
-  public List<StudyStateBean> getStudiesState(String userId)
+  public List<StudyStateBean> getStudiesState(
+      String userId, String deviceType, String deviceOS, String mobilePlatform)
       throws javax.transaction.SystemException;
 
   public WithDrawFromStudyRespBean withdrawFromStudy(

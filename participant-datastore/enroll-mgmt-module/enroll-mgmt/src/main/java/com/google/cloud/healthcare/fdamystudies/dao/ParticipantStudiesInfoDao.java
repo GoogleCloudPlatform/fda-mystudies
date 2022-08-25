@@ -16,4 +16,7 @@ public interface ParticipantStudiesInfoDao {
 
   List<ParticipantStudyEntity> getParticipantStudiesInfo(String userDetailsId)
       throws SystemException;
+  
+  void deleteParticipantFromStudyConsentEntity(String participantStudy);
 }
+

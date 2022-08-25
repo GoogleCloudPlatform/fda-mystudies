@@ -51,7 +51,7 @@
       <input type="hidden" id="type" name="type" value="complete"/>
       <input type="hidden" name="questionnairesStepsBo.stepId" id="stepId"
              value="${instructionsBo.questionnairesStepsBo.stepId}">
-      <div class="col-md-6 pl-none">
+      <div class="col-md-6 pl-none mt-xlg">
         <div class="gray-xs-f mb-xs">Step short title or key (15 characters max)
           <span
               class="requiredStar">*
@@ -72,7 +72,7 @@
                  value="${fn:escapeXml(instructionsBo.questionnairesStepsBo.stepShortTitle)}"/>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 mt-xlg">
         <div class="gray-xs-f mb-xs">Step type</div>
         <div>Instruction step</div>
       </div>

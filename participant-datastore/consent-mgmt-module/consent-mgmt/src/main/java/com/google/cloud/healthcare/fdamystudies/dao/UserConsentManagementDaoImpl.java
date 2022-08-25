@@ -21,32 +21,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.SI
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STUDY_ID;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VERSION;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.CriteriaUpdate;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
-
-import org.apache.commons.collections4.map.HashedMap;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
 import com.google.api.services.healthcare.v1.model.Consent;
 import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
@@ -63,6 +37,29 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
+import org.apache.commons.collections4.map.HashedMap;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate5.HibernateTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 @Transactional
 @Repository
@@ -79,7 +76,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
   @Autowired ConsentManagementAPIs consentApis;
 
   @Autowired SiteRepository siteRepository;
-  
+
   HibernateTemplate hibernateTemplate;
 
   @Override
@@ -135,7 +132,17 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       participantStudiesBoList = session.createQuery(participantStudiesBoCriteria).getResultList();
 
       if (!participantStudiesBoList.isEmpty()) {
-        participantStudiesEntity = participantStudiesBoList.get(0);
+        if (!StringUtils.isEmpty(appConfig.getEnableConsentManagementAPI())
+            && Boolean.valueOf(appConfig.getEnableConsentManagementAPI())) {
+          for (ParticipantStudyEntity participantStudiesentity : participantStudiesBoList) {
+            if (participantStudiesentity.getParticipantId() != null) {
+              participantStudiesEntity = participantStudiesentity;
+              break;
+            }
+          }
+        } else {
+          participantStudiesEntity = participantStudiesBoList.get(0);
+        }
       }
     }
     logger.exit("getParticipantStudies() - Ends ");
@@ -556,32 +563,33 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     return metadata;
   }
 
-@Override
-public StudyConsentEntity getExistStudyConsent(String userId, String studyId,String participanStudyId) {
-	 logger.entry("begin getExistStudyConsent()");
-	    Session session = null;
-	    Query query = null;
-	    Transaction transaction = null;
-	    List<StudyConsentEntity> studyConsentEntities = null;
-	    StudyConsentEntity consentEntity=null;
-	    try {
-	    	 session = this.sessionFactory.getCurrentSession();
-	        String searchQuery =
-	            "from StudyConsentEntity where study =:studyId and userDetails =:userId and participantStudy =:participanStudyId and DataSharingConsentArtifactPath IS NOT NULL ";
-	        query =
-	            session
-	                .createQuery(searchQuery)
-	                .setString("studyId", studyId)
-	                .setString("userId", userId)
-	                .setString("participanStudyId", participanStudyId);
-	        studyConsentEntities = query.list();
-	        if(studyConsentEntities!=null) {
-	        	 consentEntity =studyConsentEntities.get(studyConsentEntities.size()-1);
-	        }
-	    } catch (Exception e) {
-	        logger.error("UserconsentDAO - getExistStudyConsent() - ERROR ", e);
-	      } 
-	      logger.exit("getExistStudyConsent() - Ends");
-	return consentEntity;
-}
+  @Override
+  public StudyConsentEntity getExistStudyConsent(
+      String userId, String studyId, String participanStudyId) {
+    logger.entry("begin getExistStudyConsent()");
+    Session session = null;
+    Query query = null;
+    Transaction transaction = null;
+    List<StudyConsentEntity> studyConsentEntities = null;
+    StudyConsentEntity consentEntity = null;
+    try {
+      session = this.sessionFactory.getCurrentSession();
+      String searchQuery =
+          "from StudyConsentEntity where study =:studyId and userDetails =:userId and participantStudy =:participanStudyId and DataSharingConsentArtifactPath IS NOT NULL ";
+      query =
+          session
+              .createQuery(searchQuery)
+              .setString("studyId", studyId)
+              .setString("userId", userId)
+              .setString("participanStudyId", participanStudyId);
+      studyConsentEntities = query.list();
+      if (studyConsentEntities != null && studyConsentEntities.size() > 0) {
+        consentEntity = studyConsentEntities.get(studyConsentEntities.size() - 1);
+      }
+    } catch (Exception e) {
+      logger.error("UserconsentDAO - getExistStudyConsent() - ERROR ", e);
+    }
+    logger.exit("getExistStudyConsent() - Ends");
+    return consentEntity;
+  }
 }

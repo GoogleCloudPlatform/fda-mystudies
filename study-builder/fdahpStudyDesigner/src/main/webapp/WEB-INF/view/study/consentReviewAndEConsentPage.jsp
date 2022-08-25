@@ -182,7 +182,7 @@
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-md-12 p-none" id="learnMoreText">
+                <div class="col-md-12 p-none">
                   <div class="gray-xs-f mb-xs">
                     Explanatory text that can be provided in a 'Learn more'
                     section
@@ -193,10 +193,11 @@
 	                   title="<span class='font24 text-weight-light pull-left'></span> Fill out these fields and see how they will display in the mobile app using the Preview action at the bottom of this page.">
             		</span>
                   </div>
+                  <div class="col-md-12 p-none" id="learnMoreText" >
                   <div class="form-group">
-                    <textarea id="learnMoreTextId" name="learnMoreText" data-error="Please fill out this field"
+                    <textarea class="form-control requiredClass" id="learnMoreTextId" name="learnMoreText" data-error="Please fill out this field"
                               required>${consentBo.learnMoreText}</textarea>
-                    <div class="help-block with-errors red-txt"></div>
+                    <div class="help-block with-errors red-txt"></div></div>
                   </div>
                 </div>
                 <div class="col-md-12 pl-none mt-lg mb-xlg">
@@ -258,6 +259,7 @@
             </div>
             <c:if  test="${status ne 'Pre-launch'}"> 
             <div class="pt-lg mt-xs pb-lg">
+            <div class="gray-xs mb-sm">
         		<span class="checkbox checkbox-inline">
           		<input type="checkbox" id="consentAgain" name="enrollAgain" <c:if test="${consentBo.enrollAgain eq 'true'}">checked</c:if>>	
           		<label for="consentAgain">Enforce e-consent flow again for enrolled participants</label>
@@ -267,12 +269,13 @@
 	                   data-html="true"
 	                   title="<span class='font24 text-weight-light pull-left'></span> Check this box if you want enrolled participants to undergo consent in the mobile app again with the latest version of the consent document. New participants will always see the latest version of the consent document.">
             	</span>	
+            	</div>
       		</div>
       		</c:if>
             <div class="mt-xlg">
-              <div class="black-md-f">
-                Consent document
-                <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
+              <div class="black-md">
+                Consent document (last published version: ${lastPublishedVersion})
+                <%-- <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small> --%>
                 <span id="requiredStarId" class="requiredStar">*</span>
                 <span class="filled-tooltip"
 	                   data-toggle="tooltip" data-placement="top"
@@ -430,9 +433,9 @@
     if ('${status}' == 'Active') {
       //  $('input[name="consentDocType"]').attr('disabled', 'disabled');
         $('#menu1 input').prop('disabled', true);
-        $('#learnMoreTextId').prop('disabled', true);
-        $('#learnMoreText').fadeTo('slow',.6);
-        $('#learnMoreText').append('<div style="position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;opacity:0.4;color: #2D2926;background: #dddddd;filter: alpha(opacity = 50)"></div>');
+        //$('#learnMoreTextId').prop('disabled', true);
+       
+        $('#learnMoreText').append('<div style="position: absolute;top:0;left:0;width: 100%;height:91%; cursor: not-allowed;z-index:2;opacity:0.4;color: #2D2926;background: #dddddd;filter: alpha(opacity = 50)"></div>');
         
         $('#longDescriptionId').attr('disabled','disabled');  //note-editable 
         $('.note-editing-area').attr('disabled','disabled');

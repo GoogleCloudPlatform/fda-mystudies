@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateServiceImpl;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -45,5 +46,35 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
     }
     logger.exit("getRecord() Ended ");
     return user;
+  }
+
+  @Override
+  public void updateUserDetails(UserDetailsEntity userDetailsEntity) {
+    try {
+      Session session = this.sessionFactory.getCurrentSession();
+      session
+          .createSQLQuery(
+              "UPDATE user_details set device_type=:device_type ,device_os=:device_os ,mobile_platform=:mobile_platform  WHERE id=:id")
+          .setParameter(
+              "device_type",
+              StringUtils.isNotEmpty(userDetailsEntity.getDeviceType())
+                  ? userDetailsEntity.getDeviceType()
+                  : "")
+          .setParameter(
+              "device_os",
+              StringUtils.isNotEmpty(userDetailsEntity.getDeviceOS())
+                  ? userDetailsEntity.getDeviceOS()
+                  : "")
+          .setParameter(
+              "mobile_platform",
+              StringUtils.isNotEmpty(userDetailsEntity.getMobilePlatform())
+                  ? userDetailsEntity.getMobilePlatform()
+                  : "")
+          .setParameter("id", userDetailsEntity.getId())
+          .executeUpdate();
+    } catch (Exception e) {
+      logger.error("updateUserDetails - updateUserDetails() - Error", e);
+    }
+    logger.exit("updateUserDetails() - Ends");
   }
 }
