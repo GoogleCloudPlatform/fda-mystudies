@@ -1386,9 +1386,9 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   }
   func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
       print("---------Result change result")
-      if let identifier = taskViewController.currentStepViewController?.step?.identifier {
-          if reachability.connection == .unavailable && identifier == "Review"{
-//      if reachability.connection == .unavailable {
+//      if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+//          if reachability.connection == .unavailable && identifier == "Review"{
+      if reachability.connection == .unavailable {
 
               if let viewController = self.presentedViewController {
 //                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
@@ -1408,7 +1408,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
                 }
               )
           }
-      }
+//      }
   }
   public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {
       print("---------Result fail step")
