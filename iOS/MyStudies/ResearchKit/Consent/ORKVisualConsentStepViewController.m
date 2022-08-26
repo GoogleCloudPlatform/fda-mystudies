@@ -361,7 +361,8 @@
 
 - (IBAction)next {
     printf("%s", [@"Next button action" UTF8String]);
-//    ORKStepViewControllerNavigationDirection direction = self.isBeingReviewed ? ORKStepViewControllerNavigationDirectionReverse : ORKStepViewControllerNavigationDirectionForward;
+//    ORKStepViewControllerNavigationDirection direction =
+  //self.isBeingReviewed ? ORKStepViewControllerNavigationDirectionReverse : ORKStepViewControllerNavigationDirectionForward;
 //    ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
 //    [strongDelegate stepViewController:self didFinishWithNavigationDirection:direction];
     printf("%s", [@"Next call back recieved" UTF8String]);
