@@ -1972,7 +1972,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     }
   }
     func taskViewController(_ taskViewController: ORKTaskViewController, willChange result: ORKTaskResult) {
-        if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+        if let identifier =
+            taskViewController.currentStepViewController?.step?.identifier {
             do {
                 self.reachability = try Reachability()
               } catch(let error) { }
@@ -1981,7 +1982,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
                 UIUtilities.showAlertMessageWithActionHandler(
                   "You are offline",
                   message:
-                    "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                    kOffline,
                   buttonTitle: kTitleOk,
                   viewControllerUsed: taskViewController,
                   action: {
@@ -1996,7 +1997,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     }
     func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
         print("---------Result change result")
-//        if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+//        if let identifier =
+      //taskViewController.currentStepViewController?.step?.identifier {
             do {
                 self.reachability = try Reachability()
               } catch(let error) { }
@@ -2005,7 +2007,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
                 UIUtilities.showAlertMessageWithActionHandler(
                   "You are offline",
                   message:
-                    "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+                    kOffline,
                   buttonTitle: kTitleOk,
                   viewControllerUsed: taskViewController,
                   action: {
@@ -2031,7 +2033,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             stepViewController.view.hideAllToasts()
             UIUtilities.showAlertMessageWithActionHandler(
               "You are offline",
-              message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+              message: kOffline,
               buttonTitle: kTitleOk,
               viewControllerUsed: stepViewController,
               action: {
@@ -2051,7 +2053,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
           taskViewController.view.hideAllToasts()
           UIUtilities.showAlertMessageWithActionHandler(
             "You are offline",
-            message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+            message: kOffline,
             buttonTitle: kTitleOk,
             viewControllerUsed: taskViewController,
             action: {
@@ -2085,7 +2087,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             taskViewController.view.hideAllToasts()
             UIUtilities.showAlertMessageWithActionHandler(
               "You are offline",
-              message: "You may require internet connection to move forward with this flow. Kindly check the internet and try enrolling again later.",
+              message: kOffline,
               buttonTitle: kTitleOk,
               viewControllerUsed: taskViewController,
               action: {
