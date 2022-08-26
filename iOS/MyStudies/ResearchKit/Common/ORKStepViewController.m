@@ -474,7 +474,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 #pragma mark - Action Handlers
 
 - (void)goForward {
-    printf("%s", [@"Go Forward" UTF8String]);
     ORKStepViewControllerNavigationDirection direction = self.isBeingReviewed ? ORKStepViewControllerNavigationDirectionReverse : ORKStepViewControllerNavigationDirectionForward;
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     [strongDelegate stepViewController:self didFinishWithNavigationDirection:direction];
@@ -482,7 +481,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (void)goBackward {
-    printf("%s", [@"Go Backward" UTF8String]);
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     [strongDelegate stepViewController:self didFinishWithNavigationDirection:ORKStepViewControllerNavigationDirectionReverse];
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
