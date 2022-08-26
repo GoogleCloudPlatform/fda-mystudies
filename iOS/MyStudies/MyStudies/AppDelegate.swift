@@ -1972,7 +1972,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     }
   }
     func taskViewController(_ taskViewController: ORKTaskViewController, willChange result: ORKTaskResult) {
-        if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+        if let identifier =
+            taskViewController.currentStepViewController?.step?.identifier {
             do {
                 self.reachability = try Reachability()
               } catch(let error) { }
@@ -1996,7 +1997,8 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
     }
     func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
         print("---------Result change result")
-//        if let identifier = taskViewController.currentStepViewController?.step?.identifier {
+//        if let identifier =
+      //taskViewController.currentStepViewController?.step?.identifier {
             do {
                 self.reachability = try Reachability()
               } catch(let error) { }
