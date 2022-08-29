@@ -530,7 +530,15 @@ class ActivityQuestionStep: ActivityStep {
             formatDict?[kStepQuestionTextChoiceTextChoices] as? [Any]
             ?? []
 
-          let choiceResult = self.getTextChoices(dataArray: textChoiceDict)
+          
+          
+          let choiceResult = ((formatDict?[kStepQuestionTextChoiceSelectionStyle] as? String)!)
+          == kStepQuestionTextChoiceSelectionStyleSingle ?
+          self.getTextChoicesSingleSelection(dataArray: textChoiceDict) : self.getTextChoices(dataArray: textChoiceDict)
+          
+          
+          
+//          let choiceResult = self.getTextChoicesSingleSelection(dataArray: textChoiceDict)
           var otherChoice: OtherChoice? = choiceResult.1
 
           otherChoice = (otherChoice == nil) ? OtherChoice() : otherChoice
@@ -564,7 +572,6 @@ class ActivityQuestionStep: ActivityStep {
             answer: questionStepAnswerFormat!,
             otherChoice: otherChoice!
           )
-
           // By default a step is skippable
           if skippable == false {
             questionStep?.isOptional = false
@@ -938,7 +945,7 @@ class ActivityQuestionStep: ActivityStep {
   /// Creates ORKTextChoice array and OtherChoice
   /// - Parameter dataArray: is either array of Dictionary or array of String which returns array of ORKTextChoice array and OtherChoice
   func getTextChoices(dataArray: [Any]) -> ([ORKTextChoice]?, OtherChoice?) {
-
+    print("2getTextChoicesSingleSelection---\(getTextChoicesSingleSelection)")
     var textChoiceArray: [ORKTextChoice] = []
     var otherChoice: OtherChoice?
 
@@ -950,7 +957,7 @@ class ActivityQuestionStep: ActivityStep {
         let value = dict[kORKTextChoiceValue] as? String ?? ""
         let detail = dict[kORKTextChoiceDetailText] as? String ?? ""
         let isExclusive = dict[kORKTextChoiceExclusive] as? Bool ?? false
-
+ 
         if let otherDict = dict[kORKOTherChoice] as? JSONDictionary {
 
           let placeholder = otherDict["placeholder"] as? String ?? "enter here"
@@ -1007,6 +1014,78 @@ class ActivityQuestionStep: ActivityStep {
     }
 
   }
+  
+  func getTextChoicesSingleSelection(dataArray: [Any]) -> ([ORKTextChoice]?, OtherChoice?) {
+print("1getTextChoicesSingleSelection---\(getTextChoicesSingleSelection)")
+    var textChoiceArray: [ORKTextChoice] = []
+    var otherChoice: OtherChoice?
+
+    if let dictArr = dataArray as? [JSONDictionary] {
+
+      for dict in dictArr {
+
+        let text = dict[kORKTextChoiceText] as? String ?? ""
+        let value = dict[kORKTextChoiceValue] as? String ?? ""
+        let detail = dict[kORKTextChoiceDetailText] as? String ?? ""
+        let isExclusive = true
+ 
+        if let otherDict = dict[kORKOTherChoice] as? JSONDictionary {
+
+          let placeholder = otherDict["placeholder"] as? String ?? "enter here"
+          let isMandatory = otherDict["isMandatory"] as? Bool ?? false
+          let textFieldReq = otherDict["textfieldReq"] as? Bool ?? false
+
+          otherChoice = OtherChoice(
+            isShowOtherCell: true,
+            isShowOtherField: textFieldReq,
+            otherTitle: text,
+            placeholder: placeholder,
+            isMandatory: isMandatory,
+            isExclusive: isExclusive,
+            detailText: detail,
+            value: value
+          )
+          // No need to add other text choice
+          continue
+        }
+
+        let choice = ORKTextChoice(
+          text: text,
+          detailText: detail,
+          value: value as NSCoding & NSCopying & NSObjectProtocol,
+          exclusive: isExclusive
+        )
+
+        textChoiceArray.append(choice)
+
+      }
+
+    } else if let titleArr = dataArray as? [String] {
+
+      for (i, title) in titleArr.enumerated() {
+
+        let choice = ORKTextChoice(
+          text: title,
+          value: i as NSCoding & NSCopying & NSObjectProtocol
+        )
+
+        if self.textScaleDefaultValue?.isEmpty == false && self.textScaleDefaultValue != "" {
+          if title == self.textScaleDefaultValue {
+            self.textScaleDefaultIndex = i
+          }
+        }
+        textChoiceArray.append(choice)
+      }
+
+    }
+    if textChoiceArray.isEmpty {
+      return (nil, nil)
+    } else {
+      return (textChoiceArray, otherChoice)
+    }
+
+  }
+  
 
   /// Creates ORKImageChoice array
   /// - Parameter dataArray: is array which returns array of ORKImageChoice array

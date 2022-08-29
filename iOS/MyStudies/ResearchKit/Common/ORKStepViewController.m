@@ -443,7 +443,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (void)notifyDelegateOnResultChange {
-    
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     if ([strongDelegate respondsToSelector:@selector(stepViewControllerResultDidChange:)]) {
         [strongDelegate stepViewControllerResultDidChange:self];
@@ -482,7 +481,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (void)goBackward {
-    
     ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
     [strongDelegate stepViewController:self didFinishWithNavigationDirection:ORKStepViewControllerNavigationDirectionReverse];
     UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);

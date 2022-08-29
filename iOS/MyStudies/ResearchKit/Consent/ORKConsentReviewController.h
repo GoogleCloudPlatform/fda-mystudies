@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class ORKConsentReviewController;
 
 @protocol ORKConsentReviewControllerDelegate <NSObject>
-
+- (void)consentReviewControllerWillAcknowledge:(ORKConsentReviewController *)consentReviewController;
 - (void)consentReviewControllerDidAcknowledge:(ORKConsentReviewController *)consentReviewController;
 - (void)consentReviewControllerDidCancel:(ORKConsentReviewController *)consentReviewController;
 
