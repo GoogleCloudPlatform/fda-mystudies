@@ -1393,13 +1393,14 @@ public class StudyServiceImpl implements StudyService {
         message = studyDAO.updateStudyActionOnAction(studyId, buttonText, sesObj);
         StudyBo study = studyDAO.getStudy(studyId);
         if ((buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)
-                || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES))
+                || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_UPDATES)
+                || buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_DEACTIVATE))
             && message.equals("SUCCESS")
-            && fhirEnabled.contains("FHIR")) {
+            && fhirEnabled.contains("fhir")) {
 
-          // Create Dataset in Google Healthcare API
+          // Create Dataset in Google cloud Healthcare API
           try {
-            consentApis.datasetCreateHealthcareAPI(study.getCustomStudyId());
+            consentApis.createDatasetInHealthcareAPI(study.getCustomStudyId());
           } catch (Exception e) {
             if (e.getMessage().contains("already exists")) {
               logger.error(
@@ -1408,7 +1409,7 @@ public class StudyServiceImpl implements StudyService {
             }
           }
           logger.debug("updateStudyActionOnAction  dataset created: " + study.getCustomStudyId());
-          studyDAO.processToFHIR(study.getId(), study.getCustomStudyId());
+          studyDAO.processToFHIR(study.getId(), study.getCustomStudyId(), buttonText);
         }
       }
     } catch (Exception e) {

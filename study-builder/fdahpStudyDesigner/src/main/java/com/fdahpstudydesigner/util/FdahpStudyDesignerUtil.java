@@ -1,25 +1,22 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Copyright 2020-2021 Google LLC Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to use, copy, modify,
+ * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+ * to whom the Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+ * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.util;
@@ -95,8 +92,6 @@ public class FdahpStudyDesignerUtil {
 
   /* Read Properties file */
   private static XLogger logger = XLoggerFactory.getXLogger(FdahpStudyDesignerUtil.class.getName());
-
-  private static Map<String, String> appProperties = null;
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
 
@@ -270,11 +265,8 @@ public class FdahpStudyDesignerUtil {
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public static Map<String, String> getAppProperties() {
+    HashMap hm = new HashMap<String, String>();
     logger.entry("begin getAppProperties() :: Properties Initialization");
-    if (appProperties != null && !appProperties.isEmpty()) {
-      return appProperties;
-    }
-    appProperties = new HashMap<>();
     Enumeration<String> keys = null;
     Enumeration<Object> objectKeys = null;
     Resource resource = null;
@@ -284,7 +276,7 @@ public class FdahpStudyDesignerUtil {
       while (keys.hasMoreElements()) {
         String key = keys.nextElement();
         String value = rb.getString(key);
-        appProperties.put(key, value);
+        hm.put(key, value);
       }
       ServletContext context = ServletContextHolder.getServletContext();
       Properties prop =
@@ -293,14 +285,14 @@ public class FdahpStudyDesignerUtil {
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();
         String value = prop.getProperty(key);
-        appProperties.put(key, value);
+        hm.put(key, value);
       }
 
     } catch (Exception e) {
       logger.error("FdahpStudyDesignerUtil - getAppProperties() - ERROR ", e);
     }
     logger.exit("getAppProperties() - ends");
-    return appProperties;
+    return hm;
   }
 
   public static FormulaInfoBean getConditionalFormulaResult(
@@ -1078,7 +1070,11 @@ public class FdahpStudyDesignerUtil {
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
 
     try {
-      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Storage storage =
+          StorageOptions.newBuilder()
+              .setProjectId(configMap.get("dataProjectId"))
+              .build()
+              .getService();
       storage.create(blobInfo, fileStream.getBytes());
 
     } catch (Exception e) {
@@ -1090,7 +1086,11 @@ public class FdahpStudyDesignerUtil {
   public static String getSignedUrl(String filePath, int signedUrlDurationInHours) {
     try {
       BlobInfo blobInfo = BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), filePath).build();
-      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Storage storage =
+          StorageOptions.newBuilder()
+              .setProjectId(configMap.get("dataProjectId"))
+              .build()
+              .getService();
       return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
     } catch (Exception e) {
       logger.error("Unable to generate signed url", e);
@@ -1104,7 +1104,11 @@ public class FdahpStudyDesignerUtil {
     BlobInfo blobInfo =
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name"), absoluteFileName).build();
     try {
-      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Storage storage =
+          StorageOptions.newBuilder()
+              .setProjectId(configMap.get("dataProjectId"))
+              .build()
+              .getService();
       storage.create(blobInfo, fileStream.getBytes());
     } catch (Exception e) {
       logger.error("Save Default Image to cloud storage failed", e);
@@ -1115,6 +1119,7 @@ public class FdahpStudyDesignerUtil {
 
     String timestampInString = inputDate + " " + inputTime;
     try {
+      System.out.println("timestamp of notification " + timestampInString);
       return timestampInString;
     } catch (Exception e) {
       logger.error("Exception in getTimeStamp(): " + e);
@@ -1122,7 +1127,7 @@ public class FdahpStudyDesignerUtil {
     return null;
   }
 
-  public static void copyOrMoveStudyResources(
+  public static void copyOrMoveImage(
       String fileName,
       String underDirectory,
       String customStudyId,
@@ -1175,7 +1180,7 @@ public class FdahpStudyDesignerUtil {
       }
 
     } catch (Exception e) {
-      logger.error("Save Image in cloud storage failed", e);
+      //   logger.error("Save Image in cloud storage failed", e);
     }
   }
 
@@ -1183,7 +1188,11 @@ public class FdahpStudyDesignerUtil {
     try {
       BlobInfo blobInfo =
           BlobInfo.newBuilder(configMap.get("cloud.bucket.name.export.studies"), filePath).build();
-      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Storage storage =
+          StorageOptions.newBuilder()
+              .setProjectId(configMap.get("dataProjectId"))
+              .build()
+              .getService();
       return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
     } catch (Exception e) {
       logger.error("Unable to generate signed url", e);
@@ -1219,7 +1228,11 @@ public class FdahpStudyDesignerUtil {
             .setContentType("application/zip")
             .build();
     try {
-      Storage storage = StorageOptions.getDefaultInstance().getService();
+      Storage storage =
+          StorageOptions.newBuilder()
+              .setProjectId(configMap.get("dataProjectId"))
+              .build()
+              .getService();
       storage.create(blobInfo, Files.readAllBytes(Paths.get(filePath)));
 
     } catch (Exception e) {
@@ -1356,7 +1369,7 @@ public class FdahpStudyDesignerUtil {
         }
       }
     } catch (Exception e) {
-      logger.error("Unable to getImageResources", e);
+      //   logger.error("Unable to getImageResources", e);
     }
     return null;
   }
@@ -1375,7 +1388,11 @@ public class FdahpStudyDesignerUtil {
     BlobInfo blobInfo =
         BlobInfo.newBuilder(configMap.get("cloud.bucket.name.consent.document"), absoluteFileName)
             .build();
-    Storage storage = StorageOptions.getDefaultInstance().getService();
+    Storage storage =
+        StorageOptions.newBuilder()
+            .setProjectId(configMap.get("dataProjectId"))
+            .build()
+            .getService();
     try (WriteChannel writer = storage.writer(blobInfo)) {
 
       writer.write(ByteBuffer.wrap(bytes, 0, bytes.length));

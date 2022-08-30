@@ -69,8 +69,8 @@ public class ApplicationConfiguration {
   @Value("${enableFhirManagementApi}")
   private String enableFhirManagementApi;
 
-  @Value("${enableBigQuery}")
-  private String enableBigQuery;
+  @Value("${ingestDataToBigQuery}")
+  private String ingestDataToBigQuery;
 
   @Value("${enableConsentManagementAPI}")
   private String enableConsentManagementAPI;

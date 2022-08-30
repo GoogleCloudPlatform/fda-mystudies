@@ -27,4 +27,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${enableConsentManagementAPI}")
   private String enableConsentManagementAPI;
+
+  @Value("${dataProjectId}")
+  private String dataProjectId;
 }
