@@ -1,11 +1,3 @@
-/*
- * Copyright 2021 Google LLC
- *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
- */
-
 package com.google.cloud.healthcare.fdamystudies.task;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CONSENT_TABLE_NAME;
@@ -22,6 +14,7 @@ import com.google.cloud.healthcare.fdamystudies.mapper.BigQueryApis;
 import com.google.cloud.healthcare.fdamystudies.mapper.ConsentManagementAPIs;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -48,77 +41,87 @@ public class ExportFHIRDataToBQScheduledTask {
   public void exportFHIRDataToBQTask() throws Exception {
     logger.entry("begin exportFHIRConsentDataToBQTask()");
     String WriteDisposition = "WRITE_TRUNCATE";
+    logger.debug(
+        "begin exportFHIRConsentDataToBQTask() IngestDataToBigQuery : "
+            + appConfig.getIngestDataToBigQuery()
+            + " : ");
+    if (appConfig.getIngestDataToBigQuery().equalsIgnoreCase("true")) {
 
-    try {
-      if (appConfig.getEnableBigQuery().equalsIgnoreCase("true")
-          && appConfig.getEnableFhirManagementApi().contains("FHIR")
-          && !appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("true")) {
+      logger.debug("Export FHIR data from Google Healthcare API to BigQuery - begin");
+      try {
+        if (appConfig.getEnableFhirManagementApi().contains("fhir")) {
+          logger.debug(" getEnableFhirManagementApi fhir");
+          List<com.google.api.services.healthcare.v1.model.Dataset> datasets =
+              consentManagementAPIs.datasetList(appConfig.getProjectId(), appConfig.getRegionId());
 
-        List<com.google.api.services.healthcare.v1.model.Dataset> datasets =
-            consentManagementAPIs.datasetList(appConfig.getProjectId(), appConfig.getRegionId());
+          if (null != datasets && !datasets.isEmpty()) {
+            for (com.google.api.services.healthcare.v1.model.Dataset data : datasets) {
 
-        if (null != datasets && !datasets.isEmpty()) {
-          for (com.google.api.services.healthcare.v1.model.Dataset data : datasets) {
+              String FHIRStudyId = data.getName();
+              FHIRStudyId = FHIRStudyId.substring(FHIRStudyId.indexOf("/datasets/") + 10);
+              logger.info("exportFHIRConsentDataToBQTask() FHIR study ID: " + FHIRStudyId);
 
-            String FHIRStudyId = data.getName();
-            FHIRStudyId = FHIRStudyId.substring(FHIRStudyId.indexOf("/datasets/") + 10);
-            logger.info("exportFHIRConsentDataToBQTask() FHIR study ID: " + FHIRStudyId);
+              createDataSetInBigQuery(FHIRStudyId + "_FHIR");
 
-            createDataSetInBigQuery("FHIR_" + FHIRStudyId);
+              String fhirStoreLocation =
+                  String.format(
+                      "projects/%s/locations/%s/datasets/%s/fhirStores/%s",
+                      appConfig.getProjectId(),
+                      appConfig.getRegionId(),
+                      FHIRStudyId,
+                      "FHIR_" + FHIRStudyId);
 
-            String fhirStoreLocation =
-                String.format(
-                    "projects/%s/locations/%s/datasets/%s/fhirStores/%s",
-                    appConfig.getProjectId(),
-                    appConfig.getRegionId(),
-                    FHIRStudyId,
-                    "FHIR_" + FHIRStudyId);
+              bigQueryApis.exportFhirStoreDataToBigQuery(
+                  fhirStoreLocation, appConfig.getProjectId(), FHIRStudyId + "_FHIR");
 
-            bigQueryApis.exportFhirStoreDataToBigQuery(
-                fhirStoreLocation, appConfig.getProjectId(), "FHIR_" + FHIRStudyId);
+              logger.debug(" exportFhirStoreDataToBigQuery complete");
+            }
           }
         }
+      } catch (Exception e) {
+        logger.error("exportFHIRConsentDataToBQTask() FHIR Error ", e);
       }
-    } catch (Exception e) {
-      logger.error("exportFHIRConsentDataToBQTask() FHIR Error ", e);
-    }
 
-    try {
-      if (appConfig.getEnableBigQuery().equalsIgnoreCase("true")
-          && appConfig.getEnableFhirManagementApi().equalsIgnoreCase("FHIR_DID")) {
+      logger.debug("Export DID data from Google Healthcare API to BigQuery - Begin ");
+      try {
+        if (appConfig.getEnableFhirManagementApi().contains("did")) {
 
-        List<com.google.api.services.healthcare.v1.model.Dataset> datasets =
-            consentManagementAPIs.datasetList(appConfig.getProjectId(), appConfig.getRegionId());
+          logger.debug(" getEnableFhirManagementApi did");
+          List<com.google.api.services.healthcare.v1.model.Dataset> datasets =
+              consentManagementAPIs.datasetList(appConfig.getProjectId(), appConfig.getRegionId());
 
-        if (null != datasets && !datasets.isEmpty()) {
-          for (com.google.api.services.healthcare.v1.model.Dataset data : datasets) {
+          if (null != datasets && !datasets.isEmpty()) {
+            for (com.google.api.services.healthcare.v1.model.Dataset data : datasets) {
 
-            String DIDStudyId = data.getName();
-            DIDStudyId = DIDStudyId.substring(DIDStudyId.indexOf("/datasets/") + 10);
-            logger.info("exportFHIRConsentDataToBQTask() DID study ID: " + DIDStudyId);
+              String DIDStudyId = data.getName();
+              DIDStudyId = DIDStudyId.substring(DIDStudyId.indexOf("/datasets/") + 10);
+              logger.info("exportFHIRConsentDataToBQTask() DID study ID: " + DIDStudyId);
 
-            createDataSetInBigQuery(DIDStudyId);
+              createDataSetInBigQuery(DIDStudyId);
 
-            String didStoreLocation =
-                String.format(
-                    "projects/%s/locations/%s/datasets/%s/fhirStores/%s",
-                    appConfig.getProjectId(),
-                    appConfig.getRegionId(),
-                    DIDStudyId,
-                    "DID_" + DIDStudyId);
+              String didStoreLocation =
+                  String.format(
+                      "projects/%s/locations/%s/datasets/%s/fhirStores/%s",
+                      appConfig.getProjectId(),
+                      appConfig.getRegionId(),
+                      DIDStudyId,
+                      "DID_" + DIDStudyId);
 
-            bigQueryApis.exportFhirStoreDataToBigQuery(
-                didStoreLocation, appConfig.getProjectId(), DIDStudyId);
+              bigQueryApis.exportFhirStoreDataToBigQuery(
+                  didStoreLocation, appConfig.getProjectId(), DIDStudyId);
+
+              logger.debug(" exportFhirStoreDataToBigQuery did");
+            }
           }
         }
+      } catch (Exception e) {
+        logger.error("exportFHIRConsentDataToBQTask() DID Error ", e);
       }
-    } catch (Exception e) {
-      logger.error("exportFHIRConsentDataToBQTask() DID Error ", e);
     }
 
+    logger.debug("Export consent data from Google Healthcare API to BigQuery - Begin ");
     try {
-      if (appConfig.getEnableBigQuery().equalsIgnoreCase("true")
-          && appConfig.getEnableConsentManagementAPI().equalsIgnoreCase("true")) {
+      if (appConfig.getEnableConsentManagementAPI().equalsIgnoreCase("true")) {
 
         List<com.google.api.services.healthcare.v1.model.Dataset> datasets =
             consentManagementAPIs.datasetList(appConfig.getProjectId(), appConfig.getRegionId());
@@ -128,9 +131,9 @@ public class ExportFHIRDataToBQScheduledTask {
 
             String ConsentStudyId = data.getName();
             ConsentStudyId = ConsentStudyId.substring(ConsentStudyId.indexOf("/datasets/") + 10);
-            logger.info("exportFHIRConsentDataToBQTask() Consent study ID: " + ConsentStudyId);
+            logger.debug("exportFHIRConsentDataToBQTask() Consent study ID: " + ConsentStudyId);
 
-            createDataSetInBigQuery(ConsentStudyId);
+            // createDataSetInBigQuery(ConsentStudyId);
 
             // Ingest consent data
             List<Object> consentDataBQ = new ArrayList<Object>();
@@ -150,25 +153,63 @@ public class ExportFHIRDataToBQScheduledTask {
               for (Consent consentList : consentDataList) {
 
                 JSONObject jsonObj = new JSONObject();
-                jsonObj.put("ParticipantId", consentList.getUserId());
-                jsonObj.put("ConsentState", consentList.getState());
-                jsonObj.put("ConsentType", consentList.getMetadata().get("ConsentType"));
+                jsonObj.put(
+                    "ParticipantId",
+                    StringUtils.isNotEmpty(consentList.getUserId()) ? consentList.getUserId() : "");
+                jsonObj.put(
+                    "ConsentState",
+                    StringUtils.isNotEmpty(consentList.getState()) ? consentList.getState() : "");
+                jsonObj.put(
+                    "ConsentType",
+                    StringUtils.isNotEmpty(consentList.getMetadata().get("ConsentType"))
+                        ? consentList.getMetadata().get("ConsentType")
+                        : "");
                 jsonObj.put(
                     "DataSharingPermission",
-                    consentList.getMetadata().get("DataSharingPermission"));
+                    StringUtils.isNotEmpty(consentList.getMetadata().get("DataSharingPermission"))
+                        ? consentList.getMetadata().get("DataSharingPermission")
+                        : "");
 
                 consentDataBQ.add(jsonObj);
               }
             }
 
-            if (null != consentDataBQ && !consentDataBQ.isEmpty()) {
-              bigQueryApis.ingestDataToBigQueryTable(
-                  appConfig.getProjectId(),
-                  appConfig.getRegionId(),
-                  ConsentStudyId,
-                  CONSENT_TABLE_NAME,
-                  consentDataBQ,
-                  WriteDisposition);
+            if (appConfig.getEnableFhirManagementApi().contains("fhir")
+                && !appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("true")) {
+              if (null != consentDataBQ && !consentDataBQ.isEmpty()) {
+                bigQueryApis.ingestDataToBigQueryTable(
+                    appConfig.getProjectId(),
+                    appConfig.getRegionId(),
+                    ConsentStudyId + "_FHIR",
+                    CONSENT_TABLE_NAME,
+                    consentDataBQ,
+                    WriteDisposition);
+                logger.debug("ingestDataToBigQueryTable() complete FHIR ");
+              }
+            }
+
+            if (appConfig.getEnableFhirManagementApi().contains("did")) {
+              if (null != consentDataBQ && !consentDataBQ.isEmpty()) {
+                bigQueryApis.ingestDataToBigQueryTable(
+                    appConfig.getProjectId(),
+                    appConfig.getRegionId(),
+                    ConsentStudyId,
+                    CONSENT_TABLE_NAME,
+                    consentDataBQ,
+                    WriteDisposition);
+                logger.debug("ingestDataToBigQueryTable() complete DID ");
+              }
+            }
+
+            if (appConfig.getEnableFhirManagementApi().contains("fhir")) {
+              bigQueryApis.createViewsInBigQuery(
+                  appConfig.getProjectId(), ConsentStudyId + "_FHIR");
+              logger.debug(" createViewsInBigQuery complete");
+            }
+
+            if (appConfig.getEnableFhirManagementApi().contains("did")) {
+              bigQueryApis.createViewsInBigQuery(appConfig.getProjectId(), ConsentStudyId);
+              logger.debug(" createViewsInBigQuery did");
             }
           }
         }

@@ -33,10 +33,21 @@ import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * FhirHealthcareApis
+ *
+ * @author
+ */
 @Component
 public class FhirHealthcareApis {
   private XLogger logger = XLoggerFactory.getXLogger(FhirHealthcareApis.class.getName());
-
+  /**
+   * To create fhirStore
+   *
+   * @param datasetName
+   * @param fhirStoreId
+   * @throws ProcessResponseException
+   */
   public void fhirStoreCreate(String datasetName, String fhirStoreId)
       throws ProcessResponseException {
     logger.entry("begin fhirStoreCreate()");
@@ -72,6 +83,12 @@ public class FhirHealthcareApis {
     logger.exit("fhirStoreCreate() - Ends ");
   }
 
+  /**
+   * To get the fhirStore
+   *
+   * @param fhirStoreName
+   * @throws Exception
+   */
   public void fhirStoreGet(String fhirStoreName) throws Exception {
     logger.entry("begin fhirStoreGet()");
     // Initialize the client, which will be used to interact with the service.
@@ -89,6 +106,15 @@ public class FhirHealthcareApis {
     logger.exit("fhirStoreGet() - Ends ");
   }
 
+  /**
+   * To create FHIR Resource
+   *
+   * @param fhirStoreName
+   * @param resourceType
+   * @param requestJson
+   * @return
+   * @throws ProcessResponseException
+   */
   public String fhirResourceCreate(String fhirStoreName, String resourceType, String requestJson)
       throws ProcessResponseException {
 
@@ -96,15 +122,12 @@ public class FhirHealthcareApis {
     String fhirResponseJson = null;
     // Initialize the client, which will be used to interact with the service.
     try {
-
       CloudHealthcare client = AppUtil.createClient();
       HttpClient httpClient = HttpClients.createDefault();
       String uri =
           String.format("%sv1/%s/fhir/%s", client.getRootUrl(), fhirStoreName, resourceType);
       URIBuilder uriBuilder = new URIBuilder(uri).setParameter("access_token", getAccessToken());
-
       StringEntity requestEntity = new StringEntity(requestJson);
-
       HttpUriRequest request =
           RequestBuilder.post()
               .setUri(uriBuilder.build())
@@ -113,7 +136,6 @@ public class FhirHealthcareApis {
               .addHeader("Accept-Charset", "utf-8")
               .addHeader("Accept", "application/fhir+json; charset=utf-8")
               .build();
-
       // Execute the request and process the results.
       HttpResponse response = httpClient.execute(request);
       HttpEntity responseEntity = response.getEntity();
@@ -126,8 +148,8 @@ public class FhirHealthcareApis {
         }
       }
     } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
     logger.exit("fhirResourceCreate() - Ends ");
     return fhirResponseJson;
@@ -161,19 +183,20 @@ public class FhirHealthcareApis {
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
           logger.debug("HttpStatus code " + response.getStatusLine().getStatusCode());
           return null;
-        } else {
-          logger.debug(
-              "Exception searching POST FHIR resources: " + response.getStatusLine().toString());
-          throw new Exception();
         }
+        //        else {
+        //          logger.debug(
+        //              "Exception searching POST FHIR resources: " +
+        // response.getStatusLine().toString());
+        //          throw new Exception();
+        //        }
       } else {
         if (response.getEntity() != null) {
           responseJson = EntityUtils.toString(responseEntity);
         }
       }
     } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
+      logger.error("fhirResourceSearchPost() - Error ", e);
     }
     logger.exit("fhirResourceSearchPost() - Ends ");
     return responseJson;
@@ -244,11 +267,11 @@ public class FhirHealthcareApis {
       HttpResponse response = httpClient.execute(request);
       if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
         logger.debug("Exception patching FHIR resource: " + response.getStatusLine().toString());
-        throw new Exception();
+        // throw new Exception();
       }
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
+      // throw new ProcessResponseException(e.getMessage());
     }
     logger.exit("fhirResourcePatch() - Ends ");
   }
@@ -305,8 +328,8 @@ public class FhirHealthcareApis {
         }
       }
     } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
+      logger.error("error  fhirResourceGet(): " + e.getMessage(), e);
+      //  throw new ProcessResponseException(e.getMessage());
     }
     logger.exit("fhirResourceGet() - Ends ");
     return fhirResponseJson;
@@ -314,6 +337,8 @@ public class FhirHealthcareApis {
 
   public void fhirResourceDelete(String resourceName) throws ProcessResponseException {
     // Initialize the client, which will be used to interact with the service.
+
+    logger.entry("fhirResourceDelete() - starts ");
     try {
       CloudHealthcare client = AppUtil.createClient();
 
@@ -339,12 +364,13 @@ public class FhirHealthcareApis {
       if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
         logger.debug(
             "Exception while deleting FHIR resource: " + response.getStatusLine().toString());
-        throw new Exception();
+        // throw new Exception();
       }
     } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
+      logger.error("fhirResourceDelete() - Error: " + e.getMessage(), e);
+      // throw new ProcessResponseException(e.getMessage());
     }
     logger.exit("fhirResourceDelete() - Ends ");
   }
+
 }

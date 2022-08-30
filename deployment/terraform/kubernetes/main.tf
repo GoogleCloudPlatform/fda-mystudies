@@ -109,9 +109,9 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-region-id",
       "manual-consent-enabled",
       "manual-fhir-enabled",
-	  "manual-bigquery-enabled",
+      "manual-ingest-data-to-bigquery",
       "manual-did-enabled",
-	  "manual-discard-fhir-response-enabled",
+      "manual-discard-fhir-response-enabled",
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -144,6 +144,7 @@ resource "kubernetes_secret" "shared_secrets" {
     base_url                          = "https://participants.example-dev.example.com"
     studies_base_url                  = "https://studies.example-dev.example.com"
     firestore_project_id              = "example-dev-firebase"
+    data_project_id                   = "example-dev-data"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
@@ -154,8 +155,8 @@ resource "kubernetes_secret" "shared_secrets" {
     consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
     did_enabled                       = data.google_secret_manager_secret_version.secrets["manual-did-enabled"].secret_data
     fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
-	bigquery_enabled                  = data.google_secret_manager_secret_version.secrets["manual-bigquery-enabled"].secret_data
-	discard_fhir_response             = data.google_secret_manager_secret_version.secrets["manual-discard-fhir-response-enabled"].secret_data
+    ingest_data_to_bigquery           = data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data
+    discard_fhir_response             = data.google_secret_manager_secret_version.secrets["manual-discard-fhir-response-enabled"].secret_data
   }
 }
 
