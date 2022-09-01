@@ -906,11 +906,19 @@ public class AppController {
     } catch (InvalidKeyException e) {
       Logger.log(e);
     } finally {
-      try {
-        fis.close();
-        fos.close();
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (null != fis) {
+        try {
+          fis.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      if (null != fos) {
+        try {
+          fos.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
     return null;

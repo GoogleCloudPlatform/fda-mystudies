@@ -85,8 +85,8 @@ public class ConsentCompletedActivity extends AppCompatActivity
     try {
       if (getIntent().getStringExtra(FROM) != null
           && getIntent()
-              .getStringExtra(FROM)
-              .equalsIgnoreCase(SurveyActivitiesFragment.FROM_SURVAY)) {
+          .getStringExtra(FROM)
+          .equalsIgnoreCase(SurveyActivitiesFragment.FROM_SURVAY)) {
         comingFrom = SurveyActivitiesFragment.FROM_SURVAY;
       }
     } catch (Exception e) {
@@ -105,15 +105,15 @@ public class ConsentCompletedActivity extends AppCompatActivity
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if ((ActivityCompat.checkSelfPermission(
-                        ConsentCompletedActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED)
+                ConsentCompletedActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
                 || (ActivityCompat.checkSelfPermission(
-                        ConsentCompletedActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED)) {
+                ConsentCompletedActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)) {
               String[] permission =
-                  new String[] {
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                  new String[]{
+                      Manifest.permission.READ_EXTERNAL_STORAGE,
+                      Manifest.permission.WRITE_EXTERNAL_STORAGE
                   };
               if (!hasPermissions(permission)) {
                 ActivityCompat.requestPermissions(
@@ -195,7 +195,8 @@ public class ConsentCompletedActivity extends AppCompatActivity
   }
 
   @Override
-  public void onBackPressed() {}
+  public void onBackPressed() {
+  }
 
   private void setFont() {
     try {
@@ -305,8 +306,8 @@ public class ConsentCompletedActivity extends AppCompatActivity
         root
             + "/"
             + AppController.getHelperSharedPreference()
-                .readPreference(ConsentCompletedActivity.this, getString(R.string.title), "")
-                .replaceAll("/", "\u2215")
+            .readPreference(ConsentCompletedActivity.this, getString(R.string.title), "")
+            .replaceAll("/", "\u2215")
             + "_"
             + getString(R.string.signed_consent)
             + ".pdf";
@@ -327,13 +328,27 @@ public class ConsentCompletedActivity extends AppCompatActivity
       in.close();
       out.close();
     } catch (IOException e) {
+      if (in != null) {
+        in.close();
+      }
+      if (out != null) {
+        out.close();
+      }
       e.printStackTrace();
     } finally {
-      try {
-        in.close();
-        out.close();
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (null != in) {
+        try {
+          in.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      if (null != out) {
+        try {
+          out.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
 

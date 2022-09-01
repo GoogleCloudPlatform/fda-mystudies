@@ -7,6 +7,7 @@
  */
 
 package com.harvard;
+import static org.junit.Assert.assertNull;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -78,6 +79,7 @@ public class AppFirebaseMessagingServiceTest {
   @Test
   public void testNotificationTypeStudy() {
     Study study = getstudy();
+    assertNull(study);
     realm.beginTransaction();
     realm.copyToRealmOrUpdate(study);
     realm.commitTransaction();
@@ -100,6 +102,7 @@ public class AppFirebaseMessagingServiceTest {
   @Test
   public void testNotificationTypeOthers() {
     Study study = getstudy();
+    assertNull(study);
     realm.beginTransaction();
     realm.copyToRealmOrUpdate(study);
     realm.commitTransaction();

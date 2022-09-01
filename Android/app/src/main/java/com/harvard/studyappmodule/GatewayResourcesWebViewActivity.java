@@ -252,11 +252,19 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      try {
-        in.close();
-        out.close();
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (null != in) {
+        try {
+          in.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      if (null != out) {
+        try {
+          out.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
 
@@ -308,11 +316,19 @@ public class GatewayResourcesWebViewActivity extends AppCompatActivity
     } catch (IOException e) {
       Logger.log(e);
     } finally {
-      try {
-        outputStream.close();
-        inputStream.close();
-      } catch (IOException e) {
-        e.printStackTrace();
+      if (null != inputStream) {
+        try {
+          inputStream.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      if (null != outputStream) {
+        try {
+          outputStream.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
 

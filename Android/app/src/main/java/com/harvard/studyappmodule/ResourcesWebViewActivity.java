@@ -310,8 +310,20 @@ public class ResourcesWebViewActivity extends AppCompatActivity
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
-      in.close();
-      out.close();
+      if (null != in) {
+        try {
+          in.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      if (null != out) {
+        try {
+          out.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
 
     return file;
