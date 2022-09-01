@@ -1752,6 +1752,7 @@ class DBHandler: NSObject {
     let dbResourcesArray = realm.objects(DBResources.self).filter { $0.studyId == studyId }
 
     var dbResourcesList: [DBResources] = []
+    var index = 0
     for resource in resources {
 
       var dbResource: DBResources?
@@ -1762,13 +1763,14 @@ class DBHandler: NSObject {
 
           dbResource = DBHandler.getDBResource(resource: resource)
           dbResource?.studyId = studyId
+          dbResource?.order = index
           dbResourcesList.append(dbResource!)
         } else {
 
           try? realm.write {
 
             dbResource?.title = resource.title
-
+            dbResource?.order = index
             dbResource?.audience = resource.audience?.rawValue
             dbResource?.endDate = resource.endDate
             dbResource?.startDate = resource.startDate
@@ -1788,8 +1790,10 @@ class DBHandler: NSObject {
 
         dbResource = DBHandler.getDBResource(resource: resource)
         dbResource?.studyId = studyId
+        dbResource?.order = index
         dbResourcesList.append(dbResource!)
       }
+        index += 1
     }
 
     let newlist = resources
@@ -1857,6 +1861,8 @@ class DBHandler: NSObject {
         $0.studyId == studyId
           && $0.startDate == nil
           && $0.sourceType == "ActivityResponse"
+      }.sorted {
+        $0.order < $1.order
       }
     return dbResources
   }
@@ -1894,6 +1900,8 @@ class DBHandler: NSObject {
         $0.studyId == studyId
           && ($0.povAvailable == false
             || $0.startDate != nil)
+      }.sorted {
+        $0.order < $1.order
       }
 
     var resourceList: [Resource] = []
@@ -1915,6 +1923,8 @@ class DBHandler: NSObject {
         $0.studyId == studyId
           && $0.povAvailable == true
           && $0.startDate == nil
+      }.sorted {
+          $0.order < $1.order
       }
 
     if activityId != nil {
