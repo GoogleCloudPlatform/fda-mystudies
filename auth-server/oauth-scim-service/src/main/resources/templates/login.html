@@ -33,6 +33,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
 
+<!--  plugin adde due to eye icon funactionality -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" ></script>
+
+  <script>
+  $(document).ready(function(){  
+	  $(".toggle-password").click(function () {
+
+	    $(this).toggleClass("fa-eye-slash fa-eye");
+	    
+	    var input = $("#password");
+	    input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
+	});
+  
+  });
+  </script>
+  
 <style type="text/css">
   /* input auto complete bg color */
   
@@ -53,9 +69,47 @@
     filter: none !important;
   }
 
+
 .visibility__hidden {
-    visibility: hidden !important;
+  visibility: hidden !important;
 }
+/* eye icon css added here */
+
+.field_icon {
+    float: right;
+    margin-left: -20px;
+    margin-right: 10%;
+    margin-top: -12%;
+    padding: 5px;
+    position: relative;
+    z-index: 2;
+    color: var(--light-blue);
+    cursor: pointer;
+    background: #fff;
+}
+ 
+ .fa-eye:before {
+    content: "\f06e";
+} 
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+::-ms-reveal {
+    display: none;
+}
+
+input::-ms-clear, input::-ms-reveal {
+    display: none;
+}
+
+@media only screen and (max-width: 500px) and (min-width: 200px) {
+  .toggle-password {
+  display:none !important;
+  }
+}
+
 
   
 </style>
@@ -100,6 +154,9 @@
                           required="required" minlength="8"
                           maxlength="64" value=""
                           onblur="validateField('password');" />
+                          
+                            <span toggle="#password-field" class="fa fa-fw fa-eye-slash field_icon toggle-password"></span>
+                            
                         <div class="err__msg" id="password_error"
                           style="display: none">Please enter valid
                           password</div>
@@ -147,8 +204,8 @@
     </div>
   </section>
   <footer class="custom_footer text-center">
-    <div class="pt-3">&copy; Copyright 2020 Google LLC.</div>
-    <div class="pt-3">
+    <div class="pt-4">&copy; Copyright 2020 Google LLC.</div>
+    <div class="pt-4">
       <ul>
         <li th:if="${!mobileApp}"><a th:href="${about_link}">About</a></li>
         <li th:if="${!mobileApp}"><a th:href="${terms_link}">Terms
