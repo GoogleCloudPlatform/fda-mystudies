@@ -60,6 +60,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_eligibility_enrollment);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+
     networkChangeReceiver = new NetworkChangeReceiver(this);
     initializeXmlId();
     setTextForView();

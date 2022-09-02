@@ -237,11 +237,4 @@
         <item name="colorSwitchThumbNormal">@color/colorSecondary</item>
     </style>
 
-    <style name="Style_Dialog_Rounded_Corner" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowBackground">@drawable/dialog_rounded_corner</item>
-        <item name="android:windowMinWidthMinor">85%</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:title">You are offine</item>
-    </style>
-
 </resources>

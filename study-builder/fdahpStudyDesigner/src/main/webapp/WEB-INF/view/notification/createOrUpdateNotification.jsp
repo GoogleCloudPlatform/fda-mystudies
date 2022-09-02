@@ -24,10 +24,10 @@
           <img src="/studybuilder/images/icons/back-b.png" alt=""/></a>
       </span>
       <c:if
-          test="${notificationBO.actionPage eq 'addOrCopy' || notificationBO eq null}">Create Notification</c:if>
-      <c:if test="${notificationBO.actionPage eq 'edit'}">Edit Notification</c:if>
-      <c:if test="${notificationBO.actionPage eq 'view'}">View Notification</c:if>
-      <c:if test="${notificationBO.actionPage eq 'resend'}">Resend Notification</c:if>
+          test="${notificationBO.actionPage eq 'addOrCopy' || notificationBO eq null}">Create notification</c:if>
+      <c:if test="${notificationBO.actionPage eq 'edit'}">Edit notification</c:if>
+      <c:if test="${notificationBO.actionPage eq 'view'}">View notification</c:if>
+      <c:if test="${notificationBO.actionPage eq 'resend'}">Resend notification</c:if>
     </div>
   </div>
 </div>
@@ -57,7 +57,7 @@
           </div>
           <div class="form-group">
             <textarea autofocus="autofocus" class="form-control" maxlength="250" rows="5"
-                      id="notificationText" name="notificationText" required
+                      id="notificationText" name="notificationText" required data-error="Please fill out this field" 
             >${notificationBO.notificationText}</textarea>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -74,9 +74,12 @@
                          test="${notificationBO.actionPage eq 'addOrCopy'}">checked</c:if>>
               <label for="inlineRadio1">Schedule this notification
               <span
-               data-toggle="tooltip" data-placement="top"
-               title="Notifications are delivered to mobile app users at the selected date and time in accordance with the server time zone."
-               class="filled-tooltip"></span>
+               <fmt:formatDate value = "${date}" pattern="z" var="server_timezone"/>
+          class="ml-xs sprites_v3 filled-tooltip Selectedtooltip"
+          style="width: 20px;background-position: -164px -68px;"
+          data-toggle="tooltip"
+          data-placement="top"
+          title="The notification gets delivered to mobile app users at the selected date and time as per server time zone which is ${server_timezone}."></span>
               </label>
             </span>
             <span class="radio radio-inline">
@@ -87,14 +90,6 @@
               <label for="inlineRadio2">Send immediately</label>
             </span>
             <div class="help-block with-errors red-txt"></div>
-            <c:if test="${not empty notificationHistoryNoDateTime}">
-             <div class="gray-xs-f mb-xs mt-xs">Previously sent on: </div>
-              <c:forEach items="${notificationHistoryNoDateTime}" var="notificationHistory">
-                <span
-                    class="lastSendDateTime">${notificationHistory.notificationSentdtTime}</span>
-                <br><br>
-              </c:forEach>
-            </c:if>
             <div class="clearfix"></div>
           </div>
         </div>
@@ -105,7 +100,7 @@
             <span class="requiredStar">*</span>
           </div>
           <div class="form-group date">
-            <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal"
+            <input id='datetimepicker' type="text" class="form-control calendar datepicker resetVal" data-error="Please fill out this field" 
                    name="scheduleDate" value="${notificationBO.scheduleDate}"
                    oldValue="${notificationBO.scheduleDate}"
                    placeholder="MM/DD/YYYY" disabled/>
@@ -119,7 +114,7 @@
             <span class="requiredStar">*</span>
           </div>
           <div class="form-group">
-            <input id="timepicker1" class="form-control clock timepicker resetVal"
+            <input id="timepicker1" class="form-control clock timepicker resetVal" data-error="Please fill out this field" 
                    name="scheduleTime"
                    value="${notificationBO.scheduleTime}" oldValue="${notificationBO.scheduleTime}"
                    placeholder="00:00" disabled/>
@@ -129,13 +124,15 @@
 
      <div class=" ">
           <div class="form-group">
-            <div class="gray-xs-f mb-xs">App to which the notification must be sent</div>
+            <div class="gray-xs-f mb-xs">App to which the notification must be sent
+            <span class="requiredStar">*</span></div>
 			<c:choose>
-             <c:when test="${notificationBO.actionPage eq 'view'}">
-               <input type="text" value="${notificationBO.appId}" disabled="">
+               <c:when test="${notificationBO.actionPage eq 'view' || notificationBO.actionPage eq 'resend'}">
+                 <input type="text" id="notificationAppId"
+                    value="${notificationBO.appId}" disabled/>
              </c:when>
              <c:otherwise>
-              <select id="appId" class="selectpicker" name="appId">
+             <select id="appId" class="selectpicker" name="appId" required data-error="Please fill out this field">
               <option value=''>Select app ID</option>
               <c:forEach items="${gatewayAppList}" var="app">
                 <option
@@ -148,6 +145,15 @@
           </div>
         </div>
 
+           <c:if test="${not empty notificationHistoryNoDateTime}">
+             <div class="gray-xs-f mb-xs mt-xs">Previously sent on: </div>
+              <c:forEach items="${notificationHistoryNoDateTime}" var="notificationHistory">
+                <span
+                    class="lastSendDateTime">${notificationHistory.notificationSentdtTime}</span>
+                <br><br>
+              </c:forEach>
+            </c:if>
+            
       </div>
     </div>
   </div>
@@ -210,7 +216,7 @@
 </form:form>
 <script>
   $(document).ready(function () {
-	  $('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="tooltip"]').tooltip();
     $('#rowId').parent().removeClass('white-bg');
     $("#notification").addClass("active");
 
@@ -282,6 +288,7 @@
       $('#immiResendButton').text('Resend');
     }
     $('#buttonType').val('resend');
+    $('#notificationAppId').prop('disabled', true);
     </c:if>
 
     $('#inlineRadio2').on('click', function () {
@@ -390,9 +397,19 @@
       });
     });
 
+    var today, datepicker;
+    <c:if test="${ empty notificationBO.scheduleDate}">
+    today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+    </c:if>
+    
+    <c:if test="${not empty notificationBO.scheduleDate}">
+    today=${notificationBO.scheduleDate};
+    </c:if>
+    
     $('.datepicker').datetimepicker({
       format: 'MM/DD/YYYY',
       ignoreReadonly: true,
+      minDate: today,
       useCurrent: false
     }).on('dp.change change', function (e) {
       validateTime();
@@ -432,7 +449,7 @@
         $('#timepicker1').val('');
         $('.timepicker').parent().addClass('has-error has-danger').find('.help-block.with-errors')
             .empty().append(
-            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time that has not already passed for the current date."));
+            	$("<ul><li> </li></ul>").attr("class","list-unstyled").text("Please select a time in the future"));
         valid = false;
       } else {
         $('.timepicker').parent().removeClass('has-error has-danger').find(
@@ -441,4 +458,8 @@
     }
     return valid;
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+  });
 </script>

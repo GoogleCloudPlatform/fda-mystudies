@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -14,13 +14,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.util.StringUtils;
 
 public class ErrorResponseUtil {
 
-  private static final Logger logger = LoggerFactory.getLogger(ErrorResponseUtil.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(ErrorResponseUtil.class.getName());
 
   static String email = "";
 
@@ -110,8 +111,7 @@ public class ErrorResponseUtil {
     ERROR_REQUIRED("StudyId is required"),
     STUDYID_NOT_EXIST("StudyId does not exist"),
     TOKEN_ALREADY_USE("Token already in use"),
-    INVALID_TOKEN("Invalid Token"),
-    UNKNOWN_TOKEN("Unknown token"),
+    INVALID_TOKEN("Sorry, this token is invalid. Please enter a valid token to continue."),
     UNAUTHORIZED_CLIENT("Unauthorized client"),
     UNAUTHORIZED("Unauthorized"),
     INTERNAL_SERER_ERROR("Internal Serer Error"),
@@ -159,7 +159,7 @@ public class ErrorResponseUtil {
       }
 
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getFailureResponse() :: ERROR ", e);
+      logger.error("MyStudiesUserRegUtil - getFailureResponse() :: ERROR ", e);
     }
   }
 
@@ -170,7 +170,7 @@ public class ErrorResponseUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
+      logger.error("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -187,7 +187,7 @@ public class ErrorResponseUtil {
           new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
               .parse(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(newDate));
     } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
+      logger.error("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
     }
     return futureDate;
   }
@@ -209,14 +209,14 @@ public class ErrorResponseUtil {
           sb.append(hex);
         }
       } catch (Exception e) {
-        logger.info("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
+        logger.error("MyStudiesUserRegUtil - addMinutes() :: ERROR ", e);
       }
     }
     return sb.toString();
   }
 
   public static String genarateEmailContent(String emailContent, Map<String, String> keyValue) {
-    logger.info("MyStudiesUserRegUtil - genarateEmailContent() start");
+    logger.entry("Begin genarateEmailContent()");
     try {
       if (!StringUtils.isEmpty(emailContent)) {
         for (Map.Entry<String, String> entry : keyValue.entrySet()) {
@@ -228,7 +228,7 @@ public class ErrorResponseUtil {
     } catch (Exception e) {
       logger.error("MyStudiesUserRegUtil - genarateEmailContent() - error() ", e);
     }
-    logger.info("MyStudiesUserRegUtil - genarateEmailContent() end");
+    logger.exit("genarateEmailContent() ends");
     return emailContent;
   }
 }

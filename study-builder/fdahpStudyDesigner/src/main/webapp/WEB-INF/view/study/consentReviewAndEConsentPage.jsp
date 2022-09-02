@@ -70,9 +70,9 @@
                  value="${consentBo.version}">
           <div id="menu1" class="tab-pane fade in active">
             <div class="mt-lg">
-              <div class="gray-xs-f mb-sm">Enable data-sharing permission
-                step for this study? (This will let participants choose whether
-                they want to allow their data to be shared with 3rd parties)
+              <div class="gray-xs-f mb-sm">Enable data-sharing permission step for this study? (This will let participants choose whether they want to allow their data to be shared with 3rd parties. This setting and section cannot be modified after the study is launched)
+                             <span class="ml-xs mr-md sprites_v3 filled-tooltip" data-toggle="tooltip" title="" 
+                  data-original-title="Enabling this step for a study allows participants to choose their preference on data-sharing during their initial enrollment into the study. This section cannot be modified after the study is launched."></span>
               </div>
               <div class="col-md-12 pl-none">
                 <div class="form-group custom-form">
@@ -80,9 +80,9 @@
                       type="radio" id="shareDataPermissionsYes" value="Yes"
                       name="shareDataPermissions"
                     ${consentBo.shareDataPermissions eq 'Yes' ? 'checked' : ''}>
-                    <label for="shareDataPermissionsYes">Yes</label>
-                  </span>
-                  <span class="radio radio-inline"><input type="radio"
+                    <label for="shareDataPermissionsYes">Yes </label>
+            		</span>
+                                  <span class="radio radio-inline"><input type="radio"
                                                           id="shareDataPermissionsNo"
                                                           value="No"
                                                           name="shareDataPermissions"
@@ -110,7 +110,7 @@
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
-                           placeholde="" id="titleId" name="title"
+                           placeholde="" id="titleId" name="title" data-error="Please fill out this field"
                            value="${consentBo.title}" maxlength="250"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -134,7 +134,7 @@
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
-                           placeholder="" maxlength="250" name="taglineDescription"
+                           placeholder="" maxlength="250" name="taglineDescription" data-error="Please fill out this field"
                            id="taglineDescriptionId"
                            value="${consentBo.taglineDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
@@ -156,7 +156,7 @@
                   </div>
                   <div class="form-group custom-form">
                     <input type="text" class="form-control requiredClass"
-                           placeholder="" maxlength="250" name="shortDescription"
+                           placeholder="" maxlength="250" name="shortDescription" data-error="Please fill out this field"
                            id="shortDescriptionId" value="${consentBo.shortDescription}"/>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -177,14 +177,14 @@
                   </div>
                   <div class="form-group custom-form">
                     <textarea class="form-control requiredClass" rows="5"
-                              maxlength="500" placeholder="" name="longDescription"
+                              maxlength="500" placeholder="" name="longDescription" data-error="Please fill out this field"
                               id="longDescriptionId">${consentBo.longDescription}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
                 </div>
-                <div class="col-md-12 p-none">
+                <div class="col-md-12 p-none" id="learnMoreText">
                   <div class="gray-xs-f mb-xs">
-                    Explanatory text that can be provided in a 'Learn More'
+                    Explanatory text that can be provided in a 'Learn more'
                     section
                     <span class="requiredStar">*</span>
                     <span class="filled-tooltip"
@@ -194,7 +194,7 @@
             		</span>
                   </div>
                   <div class="form-group">
-                    <textarea id="learnMoreTextId" name="learnMoreText"
+                    <textarea id="learnMoreTextId" name="learnMoreText" data-error="Please fill out this field"
                               required>${consentBo.learnMoreText}</textarea>
                     <div class="help-block with-errors red-txt"></div>
                   </div>
@@ -203,7 +203,7 @@
                   <a class="preview__text" href="javascript:void()"
                      data-toggle="modal" onclick="previewDataSharing();"><img
                       class="mr-xs" src="../images/icons/eye-icn.png" alt="">
-                    <span>See Screen Preview</span>
+                    <span>See screen preview</span>
                   </a>
                 </div>
               </div>
@@ -256,10 +256,29 @@
                 </small>
               </div>
             </div>
+            <c:if  test="${status ne 'Pre-launch'}"> 
+            <div class="pt-lg mt-xs pb-lg">
+        		<span class="checkbox checkbox-inline">
+          		<input type="checkbox" id="consentAgain" name="enrollAgain" <c:if test="${consentBo.enrollAgain eq 'true'}">checked</c:if>>	
+          		<label for="consentAgain">Enforce e-consent flow again for enrolled participants</label>
+          		</span>
+          		<span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> Check this box if you want enrolled participants to undergo consent in the mobile app again with the latest version of the consent document. New participants will always see the latest version of the consent document.">
+            	</span>	
+      		</div>
+      		</c:if>
             <div class="mt-xlg">
-              <div class="blue-lg-f text-uppercase">
-                CONSENT DOCUMENT
+              <div class="black-md-f">
+                Consent document
+                <small class="pt-lg mt-xs pb-lg">(last published version: ${lastPublishedVersion})</small>
                 <span id="requiredStarId" class="requiredStar">*</span>
+                <span class="filled-tooltip"
+	                   data-toggle="tooltip" data-placement="top"
+	                   data-html="true"
+	                   title="<span class='font24 text-weight-light pull-left'></span> The version of the consent document gets updated each time you mark this section complete and publish updates to the study.">
+            	</span>	
               </div>
               <div class="mt-lg">
                 <div class="cont_doc" id="autoCreateDivId"
@@ -400,7 +419,7 @@
 	$('.studyClass').addClass("active");
     //check the type of page action(view/edit)
     newLearnMoreConsentDocument();
-    if ('${permission}' == 'view') {
+    if ('${permission}' == 'view' ) {
       $('input[name="consentDocType"]').attr('disabled', 'disabled');
       $('#consentReviewFormId input').prop('disabled', true);
       $('#longDescriptionId').prop('disabled', true);
@@ -408,6 +427,25 @@
       $('#saveId,#doneId').hide();
     }
 
+    if ('${status}' == 'Active') {
+      //  $('input[name="consentDocType"]').attr('disabled', 'disabled');
+        $('#menu1 input').prop('disabled', true);
+        $('#learnMoreTextId').prop('disabled', true);
+        $('#learnMoreText').fadeTo('slow',.6);
+        $('#learnMoreText').append('<div style="position: absolute;top:0;left:0;width: 100%;height:100%;z-index:2;opacity:0.4;color: #2D2926;background: #dddddd;filter: alpha(opacity = 50)"></div>');
+        
+        $('#longDescriptionId').attr('disabled','disabled');  //note-editable 
+        $('.note-editing-area').attr('disabled','disabled');
+       // $('#longDescriptionId').prop('disabled', true);
+       // $('#newDivId .elaborateClass').addClass('linkDis');
+       // $('#saveId,#doneId').hide();
+      }
+    
+    if ('${isActive}' == 'consentReview') {
+    	 $('.consentReview a').tab('show');
+    } else  {
+    	$('.shareData a').tab('show');
+    }
     //auto select if consent Id is empty
 
     var consentId = "${consentBo.consentDocType}";
@@ -468,7 +506,7 @@
             isvalid = maxLenLearnMoreEditor();
           }
           isFromValid("#consentReviewFormId");
-          if ($('.custom-form').find('.has-error.has-danger').length < 1 && isvalid) {
+          if ($('.custom-form').find('.list-unstyled').length < 1 && isvalid) {
         	  var consentDocumentType = $('input[name="consentDocType"]:checked').val();
               if (consentDocumentType == "Auto") {
                 saveConsentReviewAndEConsentInfo("doneId");
@@ -481,7 +519,7 @@
                   $("#newDocumentDivId").parent().find(".help-block").empty();
                   $("#newDocumentDivId").parent().addClass('has-danger has-error').find(
                       ".help-block").append(
-                      '<ul class="list-unstyled"><li>Please fill out this field.</li></ul>');
+                      '<ul class="list-unstyled"><li>Please fill out this field</li></ul>');
                 }
               }
           } else {
@@ -563,7 +601,7 @@
               + "${consentInfo.displayTitle}"
               + "</strong></span><br/>"
               + "<span style='display: block; overflow-wrap: break-word; width: 100%;'>"
-              + "${consentInfo.elaborated}"
+              + '${consentInfo.elaborated}'
               + "</span><br/>";
           </c:forEach>
         }
@@ -634,19 +672,22 @@
       var dateTimeCB = $("#dateTimeCB").val();
       var consentDocumentContent = "";
       var consentDocType = $('input[name="consentDocType"]:checked').val();
-
       var shareDataPermissionsTxt = $('input[name="shareDataPermissions"]:checked').val();
       var title_txt = $("#titleId").val();
       var tagline_description = $("#taglineDescriptionId").val();
       var short_description = $("#shortDescriptionId").val();
       var long_description = $("#longDescriptionId").val();
       var learn_more_text = $('#learnMoreTextId').summernote('code');
-      learn_more_text = replaceSpecialCharacters(learn_more_text);
+      learn_more_text = $('#learnMoreTextId').text(learn_more_text).html();
       var allow_Permission = $('input[name="allowWithoutPermission"]:checked').val();
-
+      var enrollAgain;
+      <c:if test="${status ne 'Pre-launch'}">
+       enrollAgain = document.getElementById("consentAgain").checked;
+      </c:if>
+      
       if (consentDocType == "New") {
         consentDocumentContent = $('#newDocumentDivId').summernote('code');
-        consentDocumentContent = replaceSpecialCharacters(consentDocumentContent);
+        consentDocumentContent= $('#newDocumentDivId').text(consentDocumentContent).html();
       }
 
       if (item == "doneId") {
@@ -703,6 +744,9 @@
       if (null != allow_Permission) {
         consentInfo.allowWithoutPermission = allow_Permission;
       }
+      if (null != enrollAgain) {
+        consentInfo.enrollAgain = enrollAgain;
+      }
       var data = JSON.stringify(consentInfo);
       $.ajax({
         url: "/studybuilder/adminStudies/saveConsentReviewAndEConsentInfo.do?_S=${param._S}",
@@ -729,10 +773,18 @@
             }
             if (item == "doneId") {
               var a = document.createElement('a');
-              a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}";
+            	if ($(".consentReview").hasClass("active")) {
+            		a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}&isActive=consentReview";
+              	  
+                }else{
+                	a.href = "/studybuilder/adminStudies/consentReviewMarkAsCompleted.do?_S=${param._S}&isActive=shareData";
+                }
+              
               document.body.appendChild(a).click();
+              
+              
             } else {
-              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
               $(item).prop('disabled', false);
               $('#alertMsg').show();
               if ($('.fifthConsentReview').find('span').hasClass(
@@ -745,7 +797,7 @@
             $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
             $('#alertMsg').show();
           }
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         },
         global: false
       });
@@ -769,7 +821,7 @@
       callback: function (result) {
         if (result) {
           var a = document.createElement('a');
-          a.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
+          a.href = "/studybuilder/adminStudies/studyList.do";
           document.body.appendChild(a).click();
         } else {
           $(item).prop('disabled', false);
@@ -794,7 +846,7 @@
         }
         $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 70000 characters are allowed."));
+            "Maximum 70000 characters are allowed"));
       } else {
         $('#newDocumentDivId').parent().removeClass("has-danger").removeClass("has-error");
         $('#newDocumentDivId').parent().find(".help-block").empty();
@@ -804,7 +856,7 @@
       $('#newDocumentDivId').attr('required', true);
       $('#newDocumentDivId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-          "Please fill out this field."));
+          "Please fill out this field"));
 
     }
 
@@ -814,14 +866,15 @@
   function maxLenLearnMoreEditor() {
     var isValid = true;
     var value = $('#learnMoreTextId').summernote('code');
-    if (value != '<p><br></p>') {
-      if (value != '' && $.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 70000) {
+    var value = value.replaceAll('<p><br></p>', '');
+    if (value != "") {
+      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 70000) {
         if (isValid) {
           isValid = false;
         }
         $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
             ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-            "Maximum 70000 characters are allowed."));
+            "Maximum 70000 characters are allowed"));
       } else {
         $('#learnMoreTextId').parent().removeClass("has-danger").removeClass("has-error");
         $('#learnMoreTextId').parent().find(".help-block").empty();
@@ -831,7 +884,7 @@
       $('#learnMoreTextId').attr('required', true);
       $('#learnMoreTextId').parent().addClass('has-danger has-error').find(
           ".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-          "Please fill out this field."));
+          "Please fill out this field"));
 
     }
 
@@ -944,4 +997,16 @@
           "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
     });
   }
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+	function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/viewStudyQuestionnaires.do?_S=${param._S}";
+	    }, 5000);
+	}
 </script>

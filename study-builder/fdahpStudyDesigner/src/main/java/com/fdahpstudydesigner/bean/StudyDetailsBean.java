@@ -28,14 +28,20 @@ public class StudyDetailsBean {
       studyVersion = "",
       studyType = "",
       studyStatus = "",
-      studyCategory = "",
-      studyTagline = "",
-      studySponsor = "",
       studyEnrolling = "",
       appId = "",
       appName = "",
       appDescription = "",
-      logoImageUrl = "";
+      logoImageUrl = "",
+      contactEmail = "";
+
+  public String getContactEmail() {
+    return contactEmail;
+  }
+
+  public void setContactEmail(String contactEmail) {
+    this.contactEmail = contactEmail;
+  }
 
   public String getStudyId() {
     return studyId;
@@ -55,18 +61,6 @@ public class StudyDetailsBean {
 
   public String getStudyStatus() {
     return studyStatus;
-  }
-
-  public String getStudyCategory() {
-    return studyCategory;
-  }
-
-  public String getStudyTagline() {
-    return studyTagline;
-  }
-
-  public String getStudySponsor() {
-    return studySponsor;
   }
 
   public String getStudyEnrolling() {
@@ -95,18 +89,6 @@ public class StudyDetailsBean {
 
   public void setStudyStatus(String studyStatus) {
     this.studyStatus = studyStatus;
-  }
-
-  public void setStudyCategory(String studyCategory) {
-    this.studyCategory = studyCategory;
-  }
-
-  public void setStudyTagline(String studyTagline) {
-    this.studyTagline = studyTagline;
-  }
-
-  public void setStudySponsor(String studySponsor) {
-    this.studySponsor = studySponsor;
   }
 
   public void setStudyEnrolling(String studyEnrolling) {

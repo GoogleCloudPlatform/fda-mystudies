@@ -8,8 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETION_FAILED;
 
@@ -23,7 +21,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
@@ -45,15 +42,14 @@ import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,20 +75,25 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
   @Autowired UserDetailsRepository userDetailsRepository;
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
+  private XLogger logger =
+      XLoggerFactory.getXLogger(UserManagementProfileServiceImpl.class.getName());
 
   @Override
   @Transactional(readOnly = true)
   public UserProfileRespBean getParticipantInfoDetails(String userId, Integer appInfoId) {
-    logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
+    logger.entry("Begin getParticipantInfoDetails()");
     UserDetailsEntity userDetails = null;
     UserProfileRespBean userProfileRespBean = null;
+    String verificationDate = null;
 
     userDetails = userProfileManagementDao.getParticipantInfoDetails(userId);
     if (userDetails != null) {
       userProfileRespBean = new UserProfileRespBean();
       userProfileRespBean.getProfile().setEmailId(userDetails.getEmail());
+      verificationDate = userDetails.getVerificationDate();
+      userProfileRespBean
+          .getProfile()
+          .setVerificationTime(StringUtils.defaultIfEmpty(verificationDate, ""));
       userProfileRespBean
           .getSettings()
           .setRemoteNotifications(userDetails.getRemoteNotificationFlag());
@@ -104,14 +105,14 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userProfileRespBean.getSettings().setLocale(userDetails.getLocale());
     }
 
-    logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Ends ");
+    logger.exit("getParticipantInfoDetails() - Ends ");
     return userProfileRespBean;
   }
 
   @Override
   @Transactional()
   public ErrorBean updateUserProfile(String userId, UserRequestBean user) {
-    logger.info("UserManagementProfileServiceImpl updateUserProfile() - Starts ");
+    logger.entry("Begin updateUserProfile()");
     ErrorBean errorBean = null;
     UserDetailsEntity userDetails = null;
     AuthInfoEntity authInfo = null;
@@ -148,14 +149,14 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       errorBean = userProfileManagementDao.updateUserProfile(userId, userDetails, authInfo);
     }
 
-    logger.info("UserManagementProfileServiceImpl updateUserProfile() - Ends ");
+    logger.exit("updateUserProfile() - Ends ");
     return errorBean;
   }
 
   @Override
   @Transactional(readOnly = true)
   public UserDetailsEntity getParticipantDetailsByEmail(String email, String appInfoId) {
-    logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Starts ");
+    logger.entry("Begin getParticipantDetailsByEmail()");
     UserDetailsEntity userDetails = null;
 
     Optional<AppEntity> optApp = appRepository.findByAppId(appInfoId);
@@ -163,51 +164,51 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userDetails = userProfileManagementDao.getParticipantDetailsByEmail(email, optApp.get());
     }
 
-    logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Ends ");
+    logger.exit("getParticipantDetailsByEmail() - Ends ");
     return userDetails;
   }
 
   @Override
   @Transactional(readOnly = true)
   public LoginAttemptsEntity getLoginAttempts(String email) {
-    logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Starts ");
+    logger.entry("Begin getLoginAttempts()");
     LoginAttemptsEntity loginAttempts = null;
 
     loginAttempts = userProfileManagementDao.getLoginAttempts(email);
 
-    logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Ends ");
+    logger.exit("getLoginAttempts() - Ends ");
     return loginAttempts;
   }
 
   @Override
   @Transactional(readOnly = true)
   public void resetLoginAttempts(String email) {
-    logger.info("UserManagementProfileServiceImpl resetLoginAttempts() - Started ");
+    logger.entry("Begin resetLoginAttempts()");
 
     userProfileManagementDao.resetLoginAttempts(email);
 
-    logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Ends ");
+    logger.exit("getLoginAttempts() - Ends ");
   }
 
   @Override
   @Transactional(readOnly = true)
   public UserDetailsEntity getParticipantDetails(String id) {
-    logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Starts");
+    logger.entry("Begin getParticipantDetails()");
 
     UserDetailsEntity userDetails = userProfileManagementDao.getParticipantDetails(id);
 
-    logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Ends");
+    logger.exit("getParticipantDetails() - Ends");
     return userDetails;
   }
 
   @Override
   @Transactional()
   public UserDetailsEntity saveParticipant(UserDetailsEntity participant) {
-    logger.info("UserManagementProfileServiceImpl - saveParticipant() - Starts");
+    logger.entry("Begin saveParticipant()");
 
     UserDetailsEntity userDetails = userProfileManagementDao.saveParticipant(participant);
 
-    logger.info("UserManagementProfileServiceImpl - saveParticipant() - Ends");
+    logger.exit("saveParticipant() - Ends");
     return userDetails;
   }
 
@@ -223,7 +224,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     listOfUserDetails.forEach(
         userDetails -> {
           try {
-            userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId());
+            userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId(), false);
             userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
           } catch (ErrorCodeException e) {
             if (e.getErrorCode() == ErrorCode.USER_NOT_FOUND) {
@@ -244,7 +245,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Transactional()
   public String deactivateAccount(
       String userId, DeactivateAcctBean deactivateAcctBean, AuditLogEventRequest auditRequest) {
-    logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
+    logger.entry("Begin deActivateAcct()");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     String userDetailsId = String.valueOf(0);
     WithdrawFromStudyBean studyBean = null;
@@ -261,15 +262,14 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     userDetailsId = commonDao.getUserInfoDetails(userId);
 
     if (deactivateAcctBean != null
-        && deactivateAcctBean.getDeleteData() != null
-        && !deactivateAcctBean.getDeleteData().isEmpty()) {
-      for (StudyReqBean studyReqBean : deactivateAcctBean.getDeleteData()) {
+        && deactivateAcctBean.getStudyData() != null
+        && !deactivateAcctBean.getStudyData().isEmpty()) {
+      for (StudyReqBean studyReqBean : deactivateAcctBean.getStudyData()) {
         studyBean = new WithdrawFromStudyBean();
         participantId = commonDao.getParticipantId(userDetailsId, studyReqBean.getStudyId());
         studyReqBean.setStudyId(studyReqBean.getStudyId());
         if (participantId != null && !participantId.isEmpty())
           studyBean.setParticipantId(participantId);
-        studyBean.setDelete(studyReqBean.getDelete());
         studyBean.setStudyId(studyReqBean.getStudyId());
         deleteData.add(studyReqBean.getStudyId());
 
@@ -287,29 +287,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
                   studyBean.getParticipantId(),
                   studyBean.getStudyId(),
                   String.valueOf(optStudyEntity.get().getVersion()),
-                  studyBean.getDelete(),
                   auditRequest);
-        }
-
-        if (Boolean.valueOf(studyReqBean.getDelete())) {
-
-          Map<String, String> map =
-              Collections.singletonMap("delete_or_retain", CommonConstants.DELETE);
-
-          userMgmntAuditHelper.logEvent(
-              DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
-
-          if (retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-            userMgmntAuditHelper.logEvent(PARTICIPANT_DATA_DELETED, auditRequest);
-          }
-
-        } else {
-
-          Map<String, String> map =
-              Collections.singletonMap("delete_or_retain", CommonConstants.RETAIN);
-
-          userMgmntAuditHelper.logEvent(
-              DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
         }
       }
     } else {
@@ -324,7 +302,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userDetailsEntity.setStatus(UserStatus.DEACTIVATE_PENDING.getValue());
       userDetailsRepository.saveAndFlush(userDetailsEntity);
 
-      userManagementUtil.deleteUserInfoInAuthServer(userId);
+      userManagementUtil.deleteUserInfoInAuthServer(userId, false);
 
       // change the status from DEACTIVATE_PENDING to DEACTIVATED
       userProfileManagementDao.deactivateUserAccount(userId);
@@ -335,15 +313,15 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userMgmntAuditHelper.logEvent(USER_DELETION_FAILED, auditRequest);
     }
 
-    logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Ends");
+    logger.exit("deActivateAcct() - Ends");
     return message;
   }
 
   @Transactional()
   @Override
   public EmailResponse resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId) {
-    logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Starts");
+      String applicationId, String securityToken, String emailId, String appName) {
+    logger.entry("Begin resendConfirmationthroughEmail()");
     AppEntity appPropertiesDetails = null;
 
     String content = "";
@@ -365,23 +343,24 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       subject = appPropertiesDetails.getRegEmailSub();
     }
 
-    if (appPropertiesDetails != null) {
-      templateArgs.put("appName", appPropertiesDetails.getAppName());
+    Optional<AppEntity> optApp = appRepository.findByAppId(applicationId);
+    if (!optApp.isPresent()) {
+      throw new ErrorCodeException(
+          com.google.cloud.healthcare.fdamystudies.common.ErrorCode.APP_NOT_FOUND);
     }
-    // TODO(#496): replace with actual study's org name.
-    templateArgs.put("orgName", appConfig.getOrgName());
-    templateArgs.put("contactEmail", appConfig.getContactEmail());
+
+    String fromEmail =
+        (optApp.get().getFromEmailId() != null)
+            ? optApp.get().getFromEmailId()
+            : appConfig.getFromEmail();
+
+    templateArgs.put("appName", appName);
+    templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmail(),
-            new String[] {emailId},
-            null,
-            null,
-            subject,
-            content,
-            templateArgs);
-    logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Ends");
+            fromEmail, new String[] {emailId}, null, null, subject, content, templateArgs);
+    logger.exit("resendConfirmationthroughEmail() - Ends");
     return emailService.sendMimeMail(emailRequest);
   }
 

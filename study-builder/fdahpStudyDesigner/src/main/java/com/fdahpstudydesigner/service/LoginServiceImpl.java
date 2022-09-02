@@ -2,28 +2,31 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or
- * substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
- * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
- * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.service;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
@@ -57,7 +60,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -68,11 +72,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginServiceImpl implements LoginService, UserDetailsService {
 
-  private static Logger logger = Logger.getLogger(LoginServiceImpl.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(LoginServiceImpl.class.getName());
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @Autowired private HttpServletRequest request;
+
+  @Autowired private EmailNotification emailNotification;
 
   private LoginDAOImpl loginDAO;
 
@@ -80,7 +86,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   public String authAndAddPassword(
       String securityToken, String password, UserBO userBO2, SessionObject sesObj) {
     UserBO userBO = null;
-    logger.info("LoginServiceImpl - checkSecurityToken() - Starts");
+    logger.entry("begin checkSecurityToken()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     boolean isValid = false;
     boolean isIntialPasswordSetUp = false;
@@ -181,7 +187,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           dynamicContent =
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "newASPInitialPasswordSetupContent", keyValueForSubject);
-          EmailNotification.sendEmailNotification(
+          emailNotification.sendEmailNotification(
               "newASPInitialPasswordSetupSubject",
               dynamicContent,
               propMap.get("email.address.to"),
@@ -192,14 +198,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - checkSecurityToken() - ERROR ", e);
     }
-    logger.info("LoginServiceImpl - checkSecurityToken() - Ends");
+    logger.exit("checkSecurityToken() - Ends");
     return result;
   }
 
   @Override
   public String changePassword(
-      Integer userId, String newPassword, String oldPassword, SessionObject sesObj) {
-    logger.info("LoginServiceImpl - changePassword() - Starts");
+      String userId, String newPassword, String oldPassword, SessionObject sesObj) {
+    logger.entry("begin changePassword()");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String message = FdahpStudyDesignerConstants.FAILURE;
     String oldPasswordError = propMap.get("old.password.error.msg");
@@ -230,7 +236,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               countList.add(Character.toString(c));
             }
             if ((passwordMaxCharMatchCount != null)
-                && (countPassChar > passwordMaxCharMatchCount)) {
+                && (countPassChar >= passwordMaxCharMatchCount)) {
               isValidPassword = true;
               break;
             }
@@ -271,14 +277,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - changePassword() - ERROR ", e);
     }
-    logger.info("LoginServiceImpl - changePassword() - Ends");
+    logger.exit("changePassword() - Ends");
     return message;
   }
 
   @Override
   public UserBO checkSecurityToken(String securityToken) {
     UserBO userBO = null;
-    logger.info("LoginServiceImpl - checkSecurityToken() - Starts");
+    logger.entry("begin checkSecurityToken()");
     Date securityTokenExpiredDate = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     UserBO chkBO = null;
@@ -311,26 +317,26 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - checkSecurityToken() - ERROR ", e);
     }
-    logger.info("LoginServiceImpl - checkSecurityToken() - Ends");
+    logger.exit("checkSecurityToken() - Ends");
     return chkBO;
   }
 
   @Override
   public Boolean isFrocelyLogOutUser(SessionObject sessionObject) {
-    logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Starts");
+    logger.entry("begin isFrocelyLogOutUser()");
     Boolean isFrocelyLogOut = false;
     try {
       isFrocelyLogOut = loginDAO.isFrocelyLogOutUser(sessionObject.getUserId());
     } catch (Exception e) {
       logger.error("LoginServiceImpl - isFrocelyLogOutUser() - ERROR ", e);
     }
-    logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Ends");
+    logger.exit("isFrocelyLogOutUser() - Ends");
     return isFrocelyLogOut;
   }
 
   @Override
   public Boolean isUserEnabled(SessionObject sessionObject) {
-    logger.info("LoginServiceImpl - isUserEnabled() - Starts");
+    logger.entry("begin isUserEnabled()");
     Boolean isUserEnabled = true;
     try {
       if (sessionObject.isSuperAdmin()) {
@@ -344,7 +350,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - isUserEnabled() - ERROR ", e);
     }
-    logger.info("LoginServiceImpl - isUserEnabled() - Ends");
+    logger.exit("isUserEnabled() - Ends");
     return isUserEnabled;
   }
 
@@ -360,7 +366,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   public Boolean logUserLogOut(SessionObject sessionObject) {
-    logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Starts");
+    logger.entry("begin isFrocelyLogOutUser()");
     Boolean isLogged = false;
     try {
 
@@ -368,7 +374,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     } catch (Exception e) {
       logger.error("LoginServiceImpl - isFrocelyLogOutUser() - ERROR ", e);
     }
-    logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Ends");
+    logger.exit("isFrocelyLogOutUser() - Ends");
     return isLogged;
   }
 
@@ -379,7 +385,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       String oldEmail,
       String type,
       AuditLogEventRequest auditRequest) {
-    logger.info("LoginServiceImpl - sendPasswordResetLinkToMail - Starts");
+    logger.entry("begin sendPasswordResetLinkToMail");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String passwordResetToken = null;
     String message = propMap.get("user.forgot.error.msg");
@@ -408,7 +414,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           auditRequest.setUserId(String.valueOf(userdetails.getUserId()));
           auditLogEventHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
         }
-        if ("".equals(type) && userdetails.getEmailChanged()) {
+        if ("".equals(type) && userdetails.getEmailChanged().equals(1)) {
           userdetails = null;
         }
         UserAttemptsBo userAttempts = loginDAO.getUserAttempts(email);
@@ -456,7 +462,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               keyValueForSubject.put("$firstName", userdetails.getFirstName());
               keyValueForSubject2.put("$firstName", userdetails.getFirstName());
               keyValueForSubject.put("$lastName", userdetails.getLastName());
+              keyValueForSubject.put(
+                  "$passwordResetLinkExpirationInDay",
+                  String.valueOf(passwordResetLinkExpirationInDay));
+              keyValueForSubject2.put(
+                  "$passwordResetLinkExpirationInDay",
+                  String.valueOf(passwordResetLinkExpirationInDay));
               keyValueForSubject.put("$passwordResetLink", acceptLinkMail + passwordResetToken);
+
               customerCareMail = propMap.get("email.address.customer.service");
               keyValueForSubject.put("$customerCareMail", customerCareMail);
               keyValueForSubject2.put("$customerCareMail", customerCareMail);
@@ -472,14 +485,22 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "userRegistrationContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "userRegistrationSubject", dynamicContent, email, null, null);
+
+                Map<String, String> values = new HashMap<>();
+                values.put(StudyBuilderConstants.USER_ID, String.valueOf(userdetails.getUserId()));
+                if (!flag) {
+                  auditLogEventHelper.logEvent(
+                      NEW_USER_INVITATION_EMAIL_FAILED, auditRequest, values);
+                }
+
               } else if ("USER_UPDATE".equals(type) && userdetails.isEnabled()) {
                 dynamicContent =
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailForUserUpdateContent", keyValueForSubject2);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailForUserUpdateSubject", dynamicContent, email, null, null);
               } else if ("USER_EMAIL_UPDATE".equals(type)) {
                 // Email to old email address
@@ -487,7 +508,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailToOldEmailForUserEmailUpdateContent", keyValueForSubject2);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailToOldEmailForUserEmailUpdateSubject",
                         dynamicContent,
                         oldEmail,
@@ -498,7 +519,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailToNewEmailForUserEmailUpdateContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailToNewEmailForUserEmailUpdateSubject",
                         anotherdynamicContent,
                         email,
@@ -509,7 +530,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailForEnforcePasswordChangeContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailForEnforcePasswordChangeSubject", dynamicContent, email, null, null);
               } else if ("ReactivateMailAfterEnforcePassChange".equals(type)
                   && userdetails.isEnabled()) {
@@ -517,7 +538,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "mailForReactivatingUserAfterEnforcePassChangeContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "mailForReactivatingUserAfterEnforcePassChangeSubject",
                         dynamicContent,
                         email,
@@ -528,17 +549,23 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                     FdahpStudyDesignerUtil.genarateEmailContent(
                         "passwordResetLinkContent", keyValueForSubject);
                 flag =
-                    EmailNotification.sendEmailNotification(
+                    emailNotification.sendEmailNotification(
                         "passwordResetLinkSubject", dynamicContent, email, null, null);
                 StudyBuilderAuditEvent auditLogEvent =
                     flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
                 auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
+              } else if ("USER_UPDATE".equals(type) && !userdetails.isEnabled()) {
+                flag = true;
               }
-              if (flag) {
-                message = FdahpStudyDesignerConstants.SUCCESS;
-              }
+
+              message =
+                  flag ? FdahpStudyDesignerConstants.SUCCESS : FdahpStudyDesignerConstants.FAILURE;
+
               if ("".equals(type) && (!userdetails.isEnabled())) {
                 message = propMap.get("user.inactive.msg");
+              }
+              if ("".equals(type) && StringUtils.isEmpty(userdetails.getUserPassword())) {
+                message = propMap.get("user.not.found.msg");
               }
             }
           }
@@ -548,7 +575,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       logger.error("LoginServiceImpl - sendPasswordResetLinkToMail - ERROR ", e);
       auditLogEventHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
     }
-    logger.info("LoginServiceImpl - sendPasswordResetLinkToMail - Ends");
+    logger.exit("sendPasswordResetLinkToMail - Ends");
     return message;
   }
 
@@ -559,19 +586,19 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   public String validateEmailChangeVerification(String securityToken) {
     UserBO userBO = null;
-    logger.info("LoginServiceImpl - checkSecurityToken() - Starts");
+    logger.entry("begin checkSecurityToken()");
     String result = FdahpStudyDesignerConstants.FAILURE;
     try {
       userBO = loginDAO.getUserBySecurityToken(securityToken);
       if (null != userBO) {
-        userBO.setEmailChanged(false);
+        userBO.setEmailChanged(0);
         userBO.setTokenUsed(true);
         result = loginDAO.updateUser(userBO);
       }
     } catch (Exception e) {
       logger.error("LoginServiceImpl - checkSecurityToken() - ERROR ", e);
     }
-    logger.info("LoginServiceImpl - checkSecurityToken() - Ends");
+    logger.exit("checkSecurityToken() - Ends");
     return result;
   }
 
@@ -579,7 +606,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   // Send mail to user when account locked due to invalid login credentials
   public void sendLockedAccountPasswordResetLinkToMail(
       String email, AuditLogEventRequest auditRequest) {
-    logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Starts");
+    logger.entry("begin sendLockedAccountPasswordResetLinkToMail");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
       String acceptLinkMail = propMap.get("acceptLinkMail").trim();
@@ -587,7 +614,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           Integer.parseInt(propMap.get("accountlocked.resetLink.expiration.in.hour"));
       String passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
       UserBO userdetails = loginDAO.getValidUserByEmail(email);
-      if (null != userdetails && !userdetails.getEmailChanged()) {
+      if (null != userdetails && userdetails.getEmailChanged().equals(0)) {
         userdetails.setSecurityToken(passwordResetToken);
         userdetails.setTokenUsed(false);
         userdetails.setTokenExpiryDate(
@@ -607,33 +634,38 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               FdahpStudyDesignerUtil.genarateEmailContent(
                   "accountLockedContent", keyValueForSubject);
 
-          EmailNotification.sendEmailNotification(
-              "accountLockedSubject", dynamicContent, email, null, null);
-          auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
+          boolean response =
+              emailNotification.sendEmailNotification(
+                  "accountLockedSubject", dynamicContent, email, null, null);
+          StudyBuilderAuditEvent auditEvent =
+              response
+                  ? PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT
+                  : PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT;
+          auditLogEventHelper.logEvent(auditEvent, auditRequest);
         }
       }
     } catch (Exception e) {
       logger.error("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - ERROR ", e);
       auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
     }
-    logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Ends");
+    logger.exit("sendLockedAccountPasswordResetLinkToMail - Ends");
   }
 
   @Override
   public boolean isInactiveUser(String securityToken) {
-    logger.info("LoginServiceImpl - isActiveUser() - Starts");
+    logger.entry("begin isActiveUser()");
     UserBO user = loginDAO.getUserBySecurityToken(securityToken);
     boolean isInactiveUser = user != null && !user.isEnabled();
-    logger.info("LoginServiceImpl - isActiveUser() - Ends");
+    logger.exit("isActiveUser() - Ends");
     return isInactiveUser;
   }
 
   @Override
   public boolean isIntialPasswordSetUp(String securityToken) {
-    logger.info("LoginServiceImpl - isIntialPasswordSetUp() - Starts");
+    logger.entry("begin isIntialPasswordSetUp()");
     UserBO user = loginDAO.getUserBySecurityToken(securityToken);
     boolean isIntialPasswordSetUp = StringUtils.isBlank(user.getUserPassword());
-    logger.info("LoginServiceImpl - isIntialPasswordSetUp() - Ends");
+    logger.exit("isIntialPasswordSetUp() - Ends");
     return isIntialPasswordSetUp;
   }
 }

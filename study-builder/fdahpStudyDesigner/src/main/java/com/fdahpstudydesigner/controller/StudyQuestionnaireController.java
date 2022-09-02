@@ -1,9 +1,25 @@
 /*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -11,6 +27,7 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_QUESTIONNAIRE_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_DELETED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_MARKED_COMPLETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_IN_FORM_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.FORM_ID;
@@ -51,10 +68,11 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -67,7 +85,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class StudyQuestionnaireController {
-  private static Logger logger = Logger.getLogger(StudyQuestionnaireController.class.getName());
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(StudyQuestionnaireController.class.getName());
 
   @Autowired private StudyActiveTasksService studyActiveTasksService;
 
@@ -80,7 +99,7 @@ public class StudyQuestionnaireController {
   @RequestMapping("/adminStudies/copyQuestionnaire.do")
   public ModelAndView copyStudyQuestionnaire(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Starts");
+    logger.entry("begin saveOrUpdateFormQuestion");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     QuestionnaireBo copyQuestionnaireBo = null;
@@ -115,7 +134,7 @@ public class StudyQuestionnaireController {
         if (StringUtils.isNotEmpty(questionnaireId) && StringUtils.isNotEmpty(customStudyId)) {
           copyQuestionnaireBo =
               studyQuestionnaireService.copyStudyQuestionnaireBo(
-                  Integer.valueOf(questionnaireId), customStudyId, sesObj);
+                  questionnaireId, customStudyId, sesObj);
         }
         if (copyQuestionnaireBo != null) {
           request.getSession().setAttribute(sessionStudyCount + "actionType", "edit");
@@ -123,7 +142,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                  "Questionnaire copyied successfully.");
+                  "Questionnaire copied successfully");
           request
               .getSession()
               .setAttribute(
@@ -132,11 +151,7 @@ public class StudyQuestionnaireController {
           map.addAttribute("_S", sessionStudyCount);
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
           mav = new ModelAndView("redirect:/adminStudies/viewQuestionnaire.do", map);
         } else {
@@ -144,7 +159,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Questionnaire not copyied successfully.");
+                  "Questionnaire not copied successfully");
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/viewStudyQuestionnaires.do", map);
         }
@@ -152,13 +167,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateFormQuestion - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Ends");
+    logger.exit("saveOrUpdateFormQuestion - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/deleteFormQuestion.do", method = RequestMethod.POST)
   public void deleteFormQuestionInfo(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - deleteFormQuestionInfo - Starts");
+    logger.entry("begin deleteFormQuestionInfo");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -204,34 +219,30 @@ public class StudyQuestionnaireController {
         if (!formId.isEmpty() && !questionId.isEmpty()) {
           message =
               studyQuestionnaireService.deleteFromStepQuestion(
-                  Integer.valueOf(formId),
-                  Integer.valueOf(questionId),
-                  sesObj,
-                  customStudyId,
-                  auditRequest);
+                  formId, questionId, sesObj, customStudyId, auditRequest);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
 
             Map<String, String> values = new HashMap<>();
             QuestionnaireBo questionnaireDetails =
-                studyQuestionnaireService.getQuestionnaireById(Integer.valueOf(questionnairesId));
+                studyQuestionnaireService.getQuestionnaireById(questionnairesId);
             if (questionnaireDetails != null) {
               values.put(QUESTION_ID, questionnaireDetails.getShortTitle());
             }
             values.put(FORM_ID, stepShortTitle);
 
-            QuestionsBo questionBo =
-                studyQuestionnaireService.getQuestionById(Integer.valueOf(questionId));
+            QuestionsBo questionBo = studyQuestionnaireService.getQuestionById(questionId);
             if (questionBo != null) {
               values.put(STEP_ID, questionBo.getShortTitle());
             }
             auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_IN_FORM_DELETED, auditRequest, values);
+
             questionnairesStepsBo =
                 studyQuestionnaireService.getQuestionnaireStep(
-                    Integer.valueOf(formId),
+                    formId,
                     FdahpStudyDesignerConstants.FORM_STEP,
                     null,
                     customStudyId,
-                    Integer.valueOf(questionnairesId));
+                    questionnairesId);
             if (questionnairesStepsBo != null) {
               questionnairesStepsBo.setType(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE);
               studyQuestionnaireService.saveOrUpdateFromStepQuestionnaire(
@@ -259,11 +270,7 @@ public class StudyQuestionnaireController {
                         .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
             if (StringUtils.isNotEmpty(studyId)) {
               studyService.markAsCompleted(
-                  Integer.valueOf(studyId),
-                  FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                  false,
-                  sesObj,
-                  customStudyId);
+                  studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
             }
           }
         }
@@ -275,12 +282,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - deleteFormQuestionInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - deleteFormQuestionInfo - Ends");
+    logger.exit("deleteFormQuestionInfo - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/deleteQuestionnaire.do", method = RequestMethod.POST)
   public void deleteQuestionnaireInfo(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - deleteQuestionnaireInfo - Starts");
+    logger.entry("begin deleteQuestionnaireInfo");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.SUCCESS;
@@ -320,17 +327,14 @@ public class StudyQuestionnaireController {
         if (!studyId.isEmpty() && !questionnaireId.isEmpty()) {
           Map<String, String> values = new HashMap<>();
           QuestionnaireBo questionnaireDetails =
-              studyQuestionnaireService.getQuestionnaireById(Integer.valueOf(questionnaireId));
+              studyQuestionnaireService.getQuestionnaireById(questionnaireId);
           if (questionnaireDetails != null) {
             values.put(QUESTION_ID, questionnaireDetails.getShortTitle());
           }
 
           message =
               studyQuestionnaireService.deletQuestionnaire(
-                  Integer.valueOf(studyId),
-                  Integer.valueOf(questionnaireId),
-                  sesObj,
-                  customStudyId);
+                  studyId, questionnaireId, sesObj, customStudyId);
           if (message == FdahpStudyDesignerConstants.SUCCESS) {
             StudyBo studyBo = studyService.getStudyInfo(studyId);
             auditRequest.setStudyVersion(studyBo.getVersion().toString());
@@ -346,11 +350,7 @@ public class StudyQuestionnaireController {
           }
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
           boolean markAsComplete = true;
           actMsg =
@@ -370,13 +370,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - deleteQuestionnaireInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - deleteQuestionnaireInfo - Ends");
+    logger.exit("deleteQuestionnaireInfo - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/deleteQuestionnaireStep.do", method = RequestMethod.POST)
   public void deleteQuestionnaireStepInfo(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - deleteQuestionnaireStepInfo - Starts");
+    logger.entry("begin deleteQuestionnaireStepInfo");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
@@ -417,15 +417,10 @@ public class StudyQuestionnaireController {
         if (!stepId.isEmpty() && !questionnaireId.isEmpty() && !stepType.isEmpty()) {
           message =
               studyQuestionnaireService.deleteQuestionnaireStep(
-                  Integer.valueOf(stepId),
-                  Integer.valueOf(questionnaireId),
-                  stepType,
-                  sesObj,
-                  customStudyId);
+                  stepId, questionnaireId, stepType, sesObj, customStudyId);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             questionnaireBo =
-                studyQuestionnaireService.getQuestionnaireById(
-                    Integer.valueOf(questionnaireId), customStudyId);
+                studyQuestionnaireService.getQuestionnaireById(questionnaireId, customStudyId);
             if (questionnaireBo != null) {
               questionnaireBo.setStatus(false);
               questionnaireBo.setType(FdahpStudyDesignerConstants.CONTENT);
@@ -462,8 +457,7 @@ public class StudyQuestionnaireController {
                 jsonobject.put("isDone", isDone);
               }
               isAnchorQuestionnaire =
-                  studyQuestionnaireService.isAnchorDateExistByQuestionnaire(
-                      Integer.valueOf(questionnaireId));
+                  studyQuestionnaireService.isAnchorDateExistByQuestionnaire(questionnaireId);
               jsonobject.put("isAnchorQuestionnaire", isAnchorQuestionnaire);
             }
             String studyId =
@@ -473,11 +467,7 @@ public class StudyQuestionnaireController {
                         .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
             if (StringUtils.isNotEmpty(studyId)) {
               studyService.markAsCompleted(
-                  Integer.valueOf(studyId),
-                  FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                  false,
-                  sesObj,
-                  customStudyId);
+                  studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
             }
           }
         }
@@ -489,12 +479,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - deleteQuestionnaireStepInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - deleteQuestionnaireStepInfo - Ends");
+    logger.exit("deleteQuestionnaireStepInfo - Ends");
   }
 
   @RequestMapping("/adminStudies/formStep.do")
   public ModelAndView getFormStepPage(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getFormStepPage - Starts");
+    logger.entry("begin getFormStepPage");
     ModelAndView mav = new ModelAndView("formStepPage");
     String sucMsg = "";
     String errMsg = "";
@@ -633,7 +623,7 @@ public class StudyQuestionnaireController {
           request.getSession().removeAttribute(sessionStudyCount + "actionType");
           questionnaireBo =
               studyQuestionnaireService.getQuestionnaireById(
-                  Integer.valueOf(questionnaireId), studyBo.getCustomStudyId());
+                  questionnaireId, studyBo.getCustomStudyId());
           map.addAttribute("questionnaireBo", questionnaireBo);
           if ("edit".equals(actionType)) {
             map.addAttribute("actionType", "edit");
@@ -650,7 +640,7 @@ public class StudyQuestionnaireController {
         if ((formId != null) && !formId.isEmpty() && (null != studyBo)) {
           questionnairesStepsBo =
               studyQuestionnaireService.getQuestionnaireStep(
-                  Integer.valueOf(formId),
+                  formId,
                   FdahpStudyDesignerConstants.FORM_STEP,
                   questionnaireBo.getShortTitle(),
                   studyBo.getCustomStudyId(),
@@ -663,11 +653,7 @@ public class StudyQuestionnaireController {
             map.addAttribute("destinationStepList", destionationStepList);
             if (!questionnairesStepsBo.getStatus() && StringUtils.isNotEmpty(studyId)) {
               studyService.markAsCompleted(
-                  Integer.valueOf(studyId),
-                  FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                  false,
-                  sesObj,
-                  customStudyId);
+                  studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
             }
           }
           map.addAttribute("questionnairesStepsBo", questionnairesStepsBo);
@@ -689,14 +675,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getFormStepPage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getFormStepPage - Ends");
+    logger.exit("getFormStepPage - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/formQuestion.do")
   public ModelAndView getFormStepQuestionPage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getFormStepQuestionPage - Starts");
+    logger.entry("begin getFormStepQuestionPage");
     ModelAndView mav = new ModelAndView("questionPage");
     String sucMsg = "";
     String errMsg = "";
@@ -814,7 +800,7 @@ public class StudyQuestionnaireController {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           boolean isExists =
               studyQuestionnaireService.isAnchorDateExistsForStudy(
-                  Integer.valueOf(studyId), studyBo.getCustomStudyId());
+                  studyId, studyBo.getCustomStudyId());
           map.addAttribute("isAnchorDate", isExists);
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         }
@@ -835,7 +821,7 @@ public class StudyQuestionnaireController {
           request.getSession().removeAttribute(sessionStudyCount + "actionTypeForQuestionPage");
           questionnaireBo =
               studyQuestionnaireService.getQuestionnaireById(
-                  Integer.valueOf(questionnaireId), studyBo.getCustomStudyId());
+                  questionnaireId, studyBo.getCustomStudyId());
           map.addAttribute("questionnaireBo", questionnaireBo);
           if ("edit".equals(actionTypeForQuestionPage)) {
             map.addAttribute("actionTypeForQuestionPage", "edit");
@@ -872,7 +858,7 @@ public class StudyQuestionnaireController {
         if ((formId != null) && !formId.isEmpty()) {
           questionnairesStepsBo =
               studyQuestionnaireService.getQuestionnaireStep(
-                  Integer.valueOf(formId),
+                  formId,
                   FdahpStudyDesignerConstants.FORM_STEP,
                   questionnaireBo.getShortTitle(),
                   studyBo.getCustomStudyId(),
@@ -880,9 +866,7 @@ public class StudyQuestionnaireController {
           if ((questionId != null) && !questionId.isEmpty()) {
             questionsBo =
                 studyQuestionnaireService.getQuestionsById(
-                    Integer.valueOf(questionId),
-                    questionnaireBo.getShortTitle(),
-                    studyBo.getCustomStudyId());
+                    questionId, questionnaireBo.getShortTitle(), studyBo.getCustomStudyId());
             map.addAttribute("questionsBo", questionsBo);
             request.getSession().setAttribute(sessionStudyCount + "questionId", questionId);
             if (questionnairesStepsBo != null) {
@@ -919,14 +903,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getFormStepQuestionPage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getFormStepQuestionPage - Ends");
+    logger.exit("getFormStepQuestionPage - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/instructionsStep.do")
   public ModelAndView getInstructionsPage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getInstructionsPage - Starts");
+    logger.entry("begin getInstructionsPage");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     String sucMsg = "";
     String errMsg = "";
@@ -1054,7 +1038,7 @@ public class StudyQuestionnaireController {
           request.getSession().removeAttribute(sessionStudyCount + "actionType");
           questionnaireBo =
               studyQuestionnaireService.getQuestionnaireById(
-                  Integer.valueOf(questionnaireId), studyBo.getCustomStudyId());
+                  questionnaireId, studyBo.getCustomStudyId());
           if ("edit".equals(actionType)) {
             map.addAttribute("actionType", "edit");
             request.getSession().setAttribute(sessionStudyCount + "actionType", "edit");
@@ -1071,7 +1055,7 @@ public class StudyQuestionnaireController {
         if ((instructionId != null) && !instructionId.isEmpty() && (null != studyBo)) {
           instructionsBo =
               studyQuestionnaireService.getInstructionsBo(
-                  Integer.valueOf(instructionId),
+                  instructionId,
                   questionnaireBo.getShortTitle(),
                   studyBo.getCustomStudyId(),
                   questionnaireBo.getId());
@@ -1092,14 +1076,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getInstructionsPage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getInstructionsPage - Ends");
+    logger.exit("getInstructionsPage - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/viewQuestionnaire.do")
   public ModelAndView getQuestionnairePage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getQuestionnairePage - Starts");
+    logger.entry("begin getQuestionnairePage");
     ModelAndView mav = new ModelAndView("questionnairePage");
     ModelMap map = new ModelMap();
     String sucMsg = "";
@@ -1203,7 +1187,7 @@ public class StudyQuestionnaireController {
         if ((null != questionnaireId) && !questionnaireId.isEmpty()) {
           questionnaireBo =
               studyQuestionnaireService.getQuestionnaireById(
-                  Integer.valueOf(questionnaireId), studyBo.getCustomStudyId());
+                  questionnaireId, studyBo.getCustomStudyId());
           if (questionnaireBo != null) {
             map.addAttribute(
                 "customCount", questionnaireBo.getQuestionnaireCustomScheduleBo().size());
@@ -1236,7 +1220,7 @@ public class StudyQuestionnaireController {
               map.addAttribute("isDone", isDone);
               if (!isDone && StringUtils.isNotEmpty(studyId)) {
                 studyService.markAsCompleted(
-                    Integer.valueOf(studyId),
+                    studyId,
                     FdahpStudyDesignerConstants.QUESTIONNAIRE,
                     false,
                     sesObj,
@@ -1257,8 +1241,7 @@ public class StudyQuestionnaireController {
           request.getSession().setAttribute(sessionStudyCount + "questionnaireId", questionnaireId);
 
           boolean isAnchorQuestionnaire =
-              studyQuestionnaireService.isAnchorDateExistByQuestionnaire(
-                  Integer.valueOf(questionnaireId));
+              studyQuestionnaireService.isAnchorDateExistByQuestionnaire(questionnaireId);
           map.addAttribute("isAnchorQuestionnaire", isAnchorQuestionnaire);
         }
         if ("add".equals(actionType)) {
@@ -1271,14 +1254,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getQuestionnairePage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getQuestionnairePage - Ends");
+    logger.exit("getQuestionnairePage - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/questionStep.do")
   public ModelAndView getQuestionStepPage(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - getQuestionStepPage - starts");
+    logger.entry("begin getQuestionStepPage");
     ModelAndView mav = new ModelAndView("questionStepPage");
     String sucMsg = "";
     String errMsg = "";
@@ -1420,7 +1403,7 @@ public class StudyQuestionnaireController {
           request.getSession().removeAttribute(sessionStudyCount + "actionType");
           questionnaireBo =
               studyQuestionnaireService.getQuestionnaireById(
-                  Integer.valueOf(questionnaireId), studyBo.getCustomStudyId());
+                  questionnaireId, studyBo.getCustomStudyId());
           map.addAttribute("questionnaireBo", questionnaireBo);
           if ((questionnaireBo != null) && StringUtils.isNotEmpty(questionnaireBo.getFrequency())) {
             String frequency = questionnaireBo.getFrequency();
@@ -1451,7 +1434,7 @@ public class StudyQuestionnaireController {
         if ((questionId != null) && !questionId.isEmpty()) {
           questionnairesStepsBo =
               studyQuestionnaireService.getQuestionnaireStep(
-                  Integer.valueOf(questionId),
+                  questionId,
                   FdahpStudyDesignerConstants.QUESTION_STEP,
                   questionnaireBo.getShortTitle(),
                   studyBo.getCustomStudyId(),
@@ -1487,14 +1470,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - getQuestionStepPage - Error", e);
     }
-    logger.info("StudyQuestionnaireController - getQuestionStepPage - Ends");
+    logger.exit("getQuestionStepPage - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/reOrderFormQuestions.do", method = RequestMethod.POST)
   public void reOrderFromStepQuestionsInfo(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Starts");
+    logger.entry("begin reOrderQuestionnaireStepInfo");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -1526,7 +1509,7 @@ public class StudyQuestionnaireController {
           newOrderNumber = Integer.valueOf(newOrderNo);
           message =
               studyQuestionnaireService.reOrderFormStepQuestions(
-                  Integer.valueOf(formId), oldOrderNumber, newOrderNumber);
+                  formId, oldOrderNumber, newOrderNumber);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             String studyId =
                 (String)
@@ -1541,11 +1524,7 @@ public class StudyQuestionnaireController {
                             sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
             if (StringUtils.isNotEmpty(studyId)) {
               studyService.markAsCompleted(
-                  Integer.valueOf(studyId),
-                  FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                  false,
-                  sesObj,
-                  customStudyId);
+                  studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
             }
           }
         }
@@ -1557,7 +1536,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Ends");
+    logger.exit("reOrderQuestionnaireStepInfo - Ends");
   }
 
   @RequestMapping(
@@ -1565,7 +1544,7 @@ public class StudyQuestionnaireController {
       method = RequestMethod.POST)
   public void reOrderQuestionnaireStepInfo(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Starts");
+    logger.entry("begin reOrderQuestionnaireStepInfo");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -1604,11 +1583,9 @@ public class StudyQuestionnaireController {
           newOrderNumber = Integer.valueOf(newOrderNo);
           message =
               studyQuestionnaireService.reOrderQuestionnaireSteps(
-                  Integer.valueOf(questionnaireId), oldOrderNumber, newOrderNumber);
+                  questionnaireId, oldOrderNumber, newOrderNumber);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-            qTreeMap =
-                studyQuestionnaireService.getQuestionnaireStepList(
-                    Integer.valueOf(questionnaireId));
+            qTreeMap = studyQuestionnaireService.getQuestionnaireStepList(questionnaireId);
             if (qTreeMap != null) {
               boolean isDone = true;
               for (Entry<Integer, QuestionnaireStepBean> entry : qTreeMap.entrySet()) {
@@ -1650,11 +1627,7 @@ public class StudyQuestionnaireController {
                             sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
             if (StringUtils.isNotEmpty(studyId)) {
               studyService.markAsCompleted(
-                  Integer.valueOf(studyId),
-                  FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                  false,
-                  sesObj,
-                  customStudyId);
+                  studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
             }
           }
         }
@@ -1666,12 +1639,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - reOrderQuestionnaireStepInfo - Ends");
+    logger.exit("reOrderQuestionnaireStepInfo - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveFromStep.do")
   public void saveFormStep(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveFormStep - starts");
+    logger.entry("begin saveFormStep");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -1723,11 +1696,7 @@ public class StudyQuestionnaireController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
         }
       }
@@ -1738,12 +1707,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveFormStep - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveFormStep - Ends");
+    logger.exit("saveFormStep - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveInstructionStep.do")
   public void saveInstructionStep(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveInstructionStep - Starts");
+    logger.entry("begin saveInstructionStep");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -1808,11 +1777,7 @@ public class StudyQuestionnaireController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
         }
       }
@@ -1823,13 +1788,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveInstructionStep - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveInstructionStep - Ends");
+    logger.exit("saveInstructionStep - Ends");
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateFromQuestion.do")
   public ModelAndView saveOrUpdateFormQuestion(
       HttpServletRequest request, HttpServletResponse response, QuestionsBo questionsBo) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Starts");
+    logger.entry("begin saveOrUpdateFormQuestion");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     QuestionsBo addQuestionsBo = null;
@@ -1867,13 +1832,13 @@ public class StudyQuestionnaireController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Form Question updated successfully.");
+                    "Form question updated successfully");
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Form Question added successfully.");
+                    "Form question added successfully");
           }
           String studyId =
               (String)
@@ -1882,11 +1847,7 @@ public class StudyQuestionnaireController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/formStep.do", map);
@@ -1895,7 +1856,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Form not added successfully.");
+                  "Form not added successfully");
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/formQuestion.do", map);
         }
@@ -1903,7 +1864,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateFormQuestion - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormQuestion - Ends");
+    logger.exit("saveOrUpdateFormQuestion - Ends");
     return mav;
   }
 
@@ -1912,7 +1873,7 @@ public class StudyQuestionnaireController {
       HttpServletRequest request,
       HttpServletResponse response,
       QuestionnairesStepsBo questionnairesStepsBo) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Starts");
+    logger.entry("begin saveOrUpdateFormStepQuestionnaire");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     QuestionnairesStepsBo addQuestionnairesStepsBo = null;
@@ -1953,24 +1914,20 @@ public class StudyQuestionnaireController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
           if (questionnairesStepsBo.getStepId() != null) {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Form Step updated successfully.");
+                    "Form step updated successfully");
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Form Step added successfully.");
+                    "Form step added successfully");
           }
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/viewQuestionnaire.do", map);
@@ -1979,7 +1936,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Form not added successfully.");
+                  "Form not added successfully");
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/formStep.do", map);
         }
@@ -1987,14 +1944,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Ends");
+    logger.exit("saveOrUpdateFormStepQuestionnaire - Ends");
     return mav;
   }
 
   @RequestMapping("/adminStudies/saveOrUpdateInstructionStep.do")
   public ModelAndView saveOrUpdateInstructionStep(
       HttpServletRequest request, HttpServletResponse response, InstructionsBo instructionsBo) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateInstructionStep - Starts");
+    logger.entry("begin saveOrUpdateInstructionStep");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     InstructionsBo addInstructionsBo = null;
@@ -2048,13 +2005,9 @@ public class StudyQuestionnaireController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
-          if (instructionsBo.getId() != null) {
+          if (StringUtils.isNotEmpty(instructionsBo.getId())) {
             request
                 .getSession()
                 .setAttribute(
@@ -2082,7 +2035,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateInstructionStep - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateInstructionStep - Ends");
+    logger.exit("saveOrUpdateInstructionStep - Ends");
     return mav;
   }
 
@@ -2091,13 +2044,11 @@ public class StudyQuestionnaireController {
       method = RequestMethod.POST)
   public ModelAndView saveorUpdateQuestionnaireSchedule(
       HttpServletRequest request, HttpServletResponse response, QuestionnaireBo questionnaireBo) {
-    logger.info("StudyQuestionnaireController - saveorUpdateQuestionnaireSchedule - Starts");
+    logger.entry("begin saveorUpdateQuestionnaireSchedule");
     ModelAndView mav = new ModelAndView("questionnairePage");
     ModelMap map = new ModelMap();
     QuestionnaireBo addQuestionnaireBo = null;
     String customStudyId = "";
-    StudyBuilderAuditEvent eventEnum = null;
-    Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
@@ -2133,23 +2084,17 @@ public class StudyQuestionnaireController {
                   questionnaireBo, sesObj, customStudyId);
           if (addQuestionnaireBo != null) {
             if (questionnaireBo.getId() != null) {
-              values.put(QUESTION_ID, questionnaireBo.getId().toString());
-              eventEnum = STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
-              auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                      "Questionnaire Updated successfully.");
+                      "Questionnaire updated successfully");
             } else {
-              values.put("questionnaire_id", addQuestionnaireBo.getId().toString());
-              eventEnum = STUDY_NEW_QUESTIONNAIRE_CREATED;
-              auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                      "Questionnaire added successfully.");
+                      "Questionnaire added successfully");
             }
             String studyId =
                 (String)
@@ -2159,7 +2104,7 @@ public class StudyQuestionnaireController {
             if (StringUtils.isNotEmpty(studyId)) {
               String message =
                   studyService.markAsCompleted(
-                      Integer.valueOf(studyId),
+                      studyId,
                       FdahpStudyDesignerConstants.QUESTIONNAIRE,
                       false,
                       sesObj,
@@ -2168,8 +2113,8 @@ public class StudyQuestionnaireController {
                 StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
                 auditRequest.setStudyVersion(studyBo.getVersion().toString());
                 auditRequest.setAppId(studyBo.getAppId());
-                eventEnum = STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
-                auditLogEventHelper.logEvent(eventEnum, auditRequest);
+                auditLogEventHelper.logEvent(
+                    STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
               }
             }
             map.addAttribute("_S", sessionStudyCount);
@@ -2179,7 +2124,7 @@ public class StudyQuestionnaireController {
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                    "Questionnaire not added successfully.");
+                    "Questionnaire not added successfully");
             map.addAttribute("_S", sessionStudyCount);
             mav = new ModelAndView("redirect:/adminStudies/viewQuestionnaire.do", map);
           }
@@ -2188,7 +2133,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveorUpdateQuestionnaireSchedule - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveorUpdateQuestionnaireSchedule - Ends");
+    logger.exit("saveorUpdateQuestionnaireSchedule - Ends");
     return mav;
   }
 
@@ -2197,7 +2142,7 @@ public class StudyQuestionnaireController {
       HttpServletRequest request,
       HttpServletResponse response,
       QuestionnairesStepsBo questionnairesStepsBo) {
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Starts");
+    logger.entry("begin saveOrUpdateFormStepQuestionnaire");
     ModelAndView mav = new ModelAndView("instructionsStepPage");
     ModelMap map = new ModelMap();
     QuestionnairesStepsBo addQuestionnairesStepsBo = null;
@@ -2238,24 +2183,20 @@ public class StudyQuestionnaireController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
-          if (questionnairesStepsBo.getStepId() != null) {
+          if (StringUtils.isNotEmpty(questionnairesStepsBo.getStepId())) {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Question Step updated successfully.");
+                    "Question step updated successfully");
           } else {
             request
                 .getSession()
                 .setAttribute(
                     sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                    "Question Step added successfully.");
+                    "Question step added successfully");
           }
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/viewQuestionnaire.do", map);
@@ -2264,7 +2205,7 @@ public class StudyQuestionnaireController {
               .getSession()
               .setAttribute(
                   sessionStudyCount + FdahpStudyDesignerConstants.ERR_MSG,
-                  "Form not added successfully.");
+                  "Form not added successfully");
           map.addAttribute("_S", sessionStudyCount);
           mav = new ModelAndView("redirect:/adminStudies/questionStep.do", map);
         }
@@ -2272,7 +2213,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveOrUpdateFormStepQuestionnaire - Ends");
+    logger.exit("saveOrUpdateFormStepQuestionnaire - Ends");
     return mav;
   }
 
@@ -2281,7 +2222,7 @@ public class StudyQuestionnaireController {
       HttpServletRequest request,
       HttpServletResponse response,
       MultipartHttpServletRequest multipleRequest) {
-    logger.info("StudyQuestionnaireController - saveQuestion - Starts");
+    logger.entry("begin saveQuestion");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2321,7 +2262,7 @@ public class StudyQuestionnaireController {
           questionsBo = mapper.readValue(questionnaireStepInfo, QuestionsBo.class);
 
           if (questionsBo != null) {
-            if (questionsBo.getId() != null) {
+            if (StringUtils.isNotEmpty(questionsBo.getId())) {
               questionsBo.setModifiedBy(sesObj.getUserId());
               questionsBo.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
             } else {
@@ -2370,11 +2311,7 @@ public class StudyQuestionnaireController {
           message = FdahpStudyDesignerConstants.SUCCESS;
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
         }
       }
@@ -2385,12 +2322,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveQuestion - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveQuestion - Ends");
+    logger.exit("saveQuestion - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveQuestionnaireSchedule.do", method = RequestMethod.POST)
   public void saveQuestionnaireSchedule(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - saveQuestionnaireSchedule - Starts");
+    logger.entry("begin saveQuestionnaireSchedule");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2399,6 +2336,7 @@ public class StudyQuestionnaireController {
     QuestionnaireBo questionnaireBo = null;
     String customStudyId = "";
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -2418,7 +2356,7 @@ public class StudyQuestionnaireController {
                     request
                         .getSession()
                         .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
-            if (questionnaireBo.getId() != null) {
+            if (StringUtils.isNotEmpty(questionnaireBo.getId())) {
               questionnaireBo.setModifiedBy(sesObj.getUserId());
               questionnaireBo.setModifiedDate(FdahpStudyDesignerUtil.getCurrentDateTime());
               if (questionnaireBo.getStatus()) {
@@ -2426,7 +2364,7 @@ public class StudyQuestionnaireController {
                     .getSession()
                     .setAttribute(
                         sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                        "Questionnaire Updated successfully.");
+                        "Questionnaire updated successfully");
               }
             } else {
               questionnaireBo.setCreatedBy(sesObj.getUserId());
@@ -2436,7 +2374,7 @@ public class StudyQuestionnaireController {
                     .getSession()
                     .setAttribute(
                         sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
-                        "Questionnaire added successfully.");
+                        "Questionnaire added successfully");
               }
             }
             customStudyId =
@@ -2445,11 +2383,14 @@ public class StudyQuestionnaireController {
                         .getSession()
                         .getAttribute(
                             sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
+            StudyBo studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
+            auditRequest.setStudyId(customStudyId);
+            auditRequest.setStudyVersion(studyBo.getVersion().toString());
+            auditRequest.setAppId(studyBo.getAppId());
             updateQuestionnaireBo =
                 studyQuestionnaireService.saveOrUpdateQuestionnaire(
                     questionnaireBo, sesObj, customStudyId);
             if (updateQuestionnaireBo != null) {
-              // TODO:STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED
               jsonobject.put("questionnaireId", updateQuestionnaireBo.getId());
               if (updateQuestionnaireBo.getQuestionnairesFrequenciesBo() != null) {
                 jsonobject.put(
@@ -2458,11 +2399,23 @@ public class StudyQuestionnaireController {
               }
               if (StringUtils.isNotEmpty(studyId)) {
                 studyService.markAsCompleted(
-                    Integer.valueOf(studyId),
+                    studyId,
                     FdahpStudyDesignerConstants.QUESTIONNAIRE,
                     false,
                     sesObj,
                     customStudyId);
+              }
+              Map<String, String> values = new HashMap<>();
+              values.put("questionnaire_id", updateQuestionnaireBo.getId().toString());
+              StudyBuilderAuditEvent event =
+                  questionnaireBo.getId() != null
+                      ? STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED
+                      : STUDY_NEW_QUESTIONNAIRE_CREATED;
+              auditLogEventHelper.logEvent(event, auditRequest, values);
+
+              if (questionnaireBo.getStatus()) {
+                auditLogEventHelper.logEvent(
+                    STUDY_QUESTIONNAIRE_MARKED_COMPLETED, auditRequest, values);
               }
               message = FdahpStudyDesignerConstants.SUCCESS;
             }
@@ -2476,7 +2429,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveQuestionnaireSchedule - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveQuestionnaireSchedule - Ends");
+    logger.exit("saveQuestionnaireSchedule - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/saveQuestionStep.do", method = RequestMethod.POST)
@@ -2484,7 +2437,7 @@ public class StudyQuestionnaireController {
       HttpServletResponse response,
       MultipartHttpServletRequest multipleRequest,
       HttpServletRequest request) {
-    logger.info("StudyQuestionnaireController - saveQuestionStep - Starts");
+    logger.entry("begin saveQuestionStep");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2571,11 +2524,7 @@ public class StudyQuestionnaireController {
                       .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
           if (StringUtils.isNotEmpty(studyId)) {
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
           if (addQuestionnairesStepsBo.getQuestionsBo() != null) {
             jsonobject.put("questionId", addQuestionnairesStepsBo.getQuestionsBo().getId());
@@ -2598,14 +2547,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveQuestionStep - Error", e);
     }
-    logger.info("StudyQuestionnaireController - saveQuestionStep - Ends");
+    logger.exit("saveQuestionStep - Ends");
   }
 
   @RequestMapping(
       value = "/adminStudies/validateconditionalFormula.do",
       method = RequestMethod.POST)
   public void validateconditionalFormula(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateconditionalFormula - Starts");
+    logger.entry("begin validateconditionalFormula");
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
     ObjectMapper mapper = new ObjectMapper();
@@ -2658,13 +2607,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateconditionalFormula - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateconditionalFormula - Ends");
+    logger.exit("validateconditionalFormula - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateLineChartSchedule.do", method = RequestMethod.POST)
   public void validateQuestionnaireLineChartSchedule(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionnaireLineChartSchedule - Starts");
+    logger.entry("begin validateQuestionnaireLineChartSchedule");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2685,13 +2634,9 @@ public class StudyQuestionnaireController {
                 ? ""
                 : request.getParameter("frequency");
         if (!questionnaireId.isEmpty() && !frequency.isEmpty()) {
-          message =
-              studyQuestionnaireService.validateLineChartSchedule(
-                  Integer.valueOf(questionnaireId), frequency);
+          message = studyQuestionnaireService.validateLineChartSchedule(questionnaireId, frequency);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-            qTreeMap =
-                studyQuestionnaireService.getQuestionnaireStepList(
-                    Integer.valueOf(questionnaireId));
+            qTreeMap = studyQuestionnaireService.getQuestionnaireStepList(questionnaireId);
             questionnaireJsonObject = new JSONObject(mapper.writeValueAsString(qTreeMap));
             jsonobject.put("questionnaireJsonObject", questionnaireJsonObject);
           }
@@ -2705,13 +2650,13 @@ public class StudyQuestionnaireController {
       logger.error(
           "StudyQuestionnaireController - validateQuestionnaireLineChartSchedule - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionnaireLineChartSchedule - Ends");
+    logger.exit("validateQuestionnaireLineChartSchedule - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateQuestionnaireKey.do", method = RequestMethod.POST)
   public void validateQuestionnaireShortTitle(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionnaireShortTitle - Starts");
+    logger.entry("begin validateQuestionnaireShortTitle");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2758,7 +2703,7 @@ public class StudyQuestionnaireController {
         if (((studyId != null) && !studyId.isEmpty()) && !shortTitle.isEmpty()) {
           message =
               studyQuestionnaireService.checkQuestionnaireShortTitle(
-                  Integer.valueOf(studyId), shortTitle, customStudyId);
+                  studyId, shortTitle, customStudyId);
         }
       }
       jsonobject.put("message", message);
@@ -2768,7 +2713,7 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateQuestionnaireShortTitle - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionnaireShortTitle - Ends");
+    logger.exit("validateQuestionnaireShortTitle - Ends");
   }
 
   @RequestMapping(
@@ -2776,7 +2721,7 @@ public class StudyQuestionnaireController {
       method = RequestMethod.POST)
   public void validateQuestionnaireStepShortTitle(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionnaireStepShortTitle - Starts");
+    logger.entry("begin validateQuestionnaireStepShortTitle");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2822,11 +2767,7 @@ public class StudyQuestionnaireController {
         if (!questionnaireId.isEmpty() && !stepType.isEmpty() && !shortTitle.isEmpty()) {
           message =
               studyQuestionnaireService.checkQuestionnaireStepShortTitle(
-                  Integer.valueOf(questionnaireId),
-                  stepType,
-                  shortTitle,
-                  questionnaireShortTitle,
-                  customStudyId);
+                  questionnaireId, stepType, shortTitle, questionnaireShortTitle, customStudyId);
         }
       }
       jsonobject.put("message", message);
@@ -2836,12 +2777,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateQuestionnaireStepShortTitle - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionnaireStepShortTitle - Ends");
+    logger.exit("validateQuestionnaireStepShortTitle - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateQuestionKey.do", method = RequestMethod.POST)
   public void validateQuestionShortTitle(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionShortTitle - Starts");
+    logger.entry("begin validateQuestionShortTitle");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2883,10 +2824,7 @@ public class StudyQuestionnaireController {
         if (!questionnaireId.isEmpty() && !shortTitle.isEmpty()) {
           message =
               studyQuestionnaireService.checkFromQuestionShortTitle(
-                  Integer.valueOf(questionnaireId),
-                  shortTitle,
-                  questionnaireShortTitle,
-                  customStudyId);
+                  questionnaireId, shortTitle, questionnaireShortTitle, customStudyId);
         }
       }
       jsonobject.put("message", message);
@@ -2896,13 +2834,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateQuestionShortTitle - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionShortTitle - Ends");
+    logger.exit("validateQuestionShortTitle - Ends");
   }
 
   @RequestMapping(value = "/adminStudies/validateStatsShortName.do", method = RequestMethod.POST)
   public void validateQuestionStatsShortTitle(
       HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateQuestionStatsShortTitle - Starts");
+    logger.entry("begin validateQuestionStatsShortTitle()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2933,8 +2871,7 @@ public class StudyQuestionnaireController {
                 : request.getParameter("shortTitle");
         if (!studyId.isEmpty() && !shortTitle.isEmpty()) {
           message =
-              studyQuestionnaireService.checkStatShortTitle(
-                  Integer.valueOf(studyId), shortTitle, customStudyId);
+              studyQuestionnaireService.checkStatShortTitle(studyId, shortTitle, customStudyId);
         }
       }
       jsonobject.put("message", message);
@@ -2944,14 +2881,14 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateQuestionStatsShortTitle - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateQuestionStatsShortTitle - Ends");
+    logger.exit("validateQuestionStatsShortTitle() - Ends");
   }
 
   @RequestMapping(
       value = "/adminStudies/validateRepeatableQuestion.do",
       method = RequestMethod.POST)
   public void validateRepeatableQuestion(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateRepeatableQuestion - Starts");
+    logger.entry("begin validateRepeatableQuestion()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -2965,8 +2902,7 @@ public class StudyQuestionnaireController {
                 ? ""
                 : request.getParameter("formId");
         if (!formId.isEmpty()) {
-          message =
-              studyQuestionnaireService.validateRepetableFormQuestionStats(Integer.valueOf(formId));
+          message = studyQuestionnaireService.validateRepetableFormQuestionStats(formId);
         }
       }
       jsonobject.put("message", message);
@@ -2976,12 +2912,12 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateRepeatableQuestion - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateRepeatableQuestion - Ends");
+    logger.exit("validateRepeatableQuestion() - Ends");
   }
 
   @RequestMapping("/adminStudies/viewStudyQuestionnaires.do")
   public ModelAndView viewStudyQuestionnaires(HttpServletRequest request) {
-    logger.info("StudyQuestionnaireController - viewStudyQuestionnaires - Starts");
+    logger.entry("begin viewStudyQuestionnaires()");
     ModelAndView mav = new ModelAndView("redirect:viewBasicInfo.do");
     ModelMap map = new ModelMap();
     StudyBo studyBo = null;
@@ -3095,11 +3031,7 @@ public class StudyQuestionnaireController {
                         .getAttribute(
                             sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
             studyService.markAsCompleted(
-                Integer.valueOf(studyId),
-                FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                false,
-                sesObj,
-                customStudyId);
+                studyId, FdahpStudyDesignerConstants.QUESTIONNAIRE, false, sesObj, customStudyId);
           }
         }
         map.addAttribute("permission", permission);
@@ -3112,13 +3044,13 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - viewStudyQuestionnaires - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - viewStudyQuestionnaires - Ends");
+    logger.exit("viewStudyQuestionnaires() - Ends");
     return mav;
   }
 
   @RequestMapping(value = "/adminStudies/validateAnchorDateName.do", method = RequestMethod.POST)
   public void validateAnchorDateName(HttpServletRequest request, HttpServletResponse response) {
-    logger.info("StudyQuestionnaireController - validateAnchorDateName - Starts");
+    logger.entry("begin validateAnchorDateName()");
     String message = FdahpStudyDesignerConstants.FAILURE;
     JSONObject jsonobject = new JSONObject();
     PrintWriter out = null;
@@ -3166,6 +3098,6 @@ public class StudyQuestionnaireController {
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - validateAnchorDateName - ERROR", e);
     }
-    logger.info("StudyQuestionnaireController - validateAnchorDateName - Ends");
+    logger.exit("validateAnchorDateName() - Ends");
   }
 }

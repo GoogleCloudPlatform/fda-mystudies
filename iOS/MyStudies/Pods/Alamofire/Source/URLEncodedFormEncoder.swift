@@ -48,15 +48,21 @@ public final class URLEncodedFormEncoder {
         case brackets
         /// No brackets are appended to the key and the key is encoded as is.
         case noBrackets
+        /// Brackets containing the item index are appended. This matches the jQuery and Node.js behavior.
+        case indexInBrackets
 
         /// Encodes the key according to the encoding.
         ///
-        /// - Parameter key: The `key` to encode.
-        /// - Returns:       The encoded key.
-        func encode(_ key: String) -> String {
+        /// - Parameters:
+        ///     - key:      The `key` to encode.
+        ///     - index:   When this enum instance is `.indexInBrackets`, the `index` to encode.
+        ///
+        /// - Returns:          The encoded key.
+        func encode(_ key: String, atIndex index: Int) -> String {
             switch self {
             case .brackets: return "\(key)[]"
             case .noBrackets: return key
+            case .indexInBrackets: return "\(key)[\(index)]"
             }
         }
     }
@@ -495,7 +501,7 @@ enum URLEncodedFormComponent {
 
     /// Recursive backing method to `set(to:at:)`.
     private func set(_ context: inout URLEncodedFormComponent, to value: URLEncodedFormComponent, at path: [CodingKey]) {
-        guard path.count >= 1 else {
+        guard !path.isEmpty else {
             context = value
             return
         }
@@ -930,8 +936,8 @@ final class URLEncodedFormSerializer {
     }
 
     func serialize(_ array: [URLEncodedFormComponent], forKey key: String) -> String {
-        var segments: [String] = array.map { component in
-            let keyPath = arrayEncoding.encode(key)
+        var segments: [String] = array.enumerated().map { index, component in
+            let keyPath = arrayEncoding.encode(key, atIndex: index)
             return serialize(component, forKey: keyPath)
         }
         segments = alphabetizeKeyValuePairs ? segments.sorted() : segments
@@ -955,7 +961,7 @@ extension Array where Element == String {
     }
 }
 
-public extension CharacterSet {
+extension CharacterSet {
     /// Creates a CharacterSet from RFC 3986 allowed characters.
     ///
     /// RFC 3986 states that the following characters are "reserved" characters.
@@ -966,7 +972,7 @@ public extension CharacterSet {
     /// In RFC 3986 - Section 3.4, it states that the "?" and "/" characters should not be escaped to allow
     /// query strings to include a URL. Therefore, all "reserved" characters with the exception of "?" and "/"
     /// should be percent-escaped in the query string.
-    static let afURLQueryAllowed: CharacterSet = {
+    public static let afURLQueryAllowed: CharacterSet = {
         let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
         let subDelimitersToEncode = "!$&'()*+,;="
         let encodableDelimiters = CharacterSet(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")

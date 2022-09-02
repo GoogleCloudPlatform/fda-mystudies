@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -38,21 +39,23 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
 
-  private static Logger logger = Logger.getLogger(StudyActiveTasksServiceImpl.class);
+  private static XLogger logger =
+      XLoggerFactory.getXLogger(StudyActiveTasksServiceImpl.class.getName());
 
   @Autowired private StudyActiveTasksDAO studyActiveTasksDAO;
 
   @Override
   public String deleteActiveTask(
-      Integer activeTaskInfoId, Integer studyId, SessionObject sesObj, String customStudyId) {
-    logger.info("StudyServiceImpl - deleteActiveTask() - Starts");
+      String activeTaskInfoId, String studyId, SessionObject sesObj, String customStudyId) {
+    logger.entry("begin deleteActiveTask()");
     String message = null;
     ActiveTaskBo activeTaskBo = null;
     try {
@@ -63,21 +66,27 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     } catch (Exception e) {
       logger.error("StudyServiceImpl - deleteActiveTask() - Error", e);
     }
-    logger.info("StudyServiceImpl - deleteActiveTask() - Ends");
+    logger.exit("deleteActiveTask() - Ends");
     return message;
   }
 
   @Override
-  public ActiveTaskBo getActiveTaskById(Integer ativeTaskId, String customStudyId) {
-    logger.info("StudyActiveTasksServiceImpl - getActiveTaskById() - Starts");
+  public ActiveTaskBo getActiveTaskById(String ativeTaskId, String customStudyId) {
+    logger.entry("begin getActiveTaskById()");
     ActiveTaskBo activeTask = null;
     try {
       activeTask = studyActiveTasksDAO.getActiveTaskById(ativeTaskId, customStudyId);
       if (activeTask != null) {
+
+        List<ActiveTaskCustomScheduleBo> activeTaskCustomScheduleList =
+            studyActiveTasksDAO.getActivetaskCustomFrequencies(activeTask.getId());
+        List<ActiveTaskFrequencyBo> activeTaskFrequencyList =
+            studyActiveTasksDAO.getActiveTaskFrequency(activeTask.getId());
+
         if ((activeTask.getActiveTaskCustomScheduleBo() != null)
             && !activeTask.getActiveTaskCustomScheduleBo().isEmpty()) {
           for (ActiveTaskCustomScheduleBo activeTaskCustomScheduleBo :
-              activeTask.getActiveTaskCustomScheduleBo()) {
+              activeTaskCustomScheduleList) {
 
             if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyStartDate())) {
               activeTaskCustomScheduleBo.setFrequencyStartDate(
@@ -93,19 +102,29 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
                       FdahpStudyDesignerConstants.DB_SDF_DATE,
                       FdahpStudyDesignerConstants.UI_SDF_DATE));
             }
-            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyTime())) {
-              activeTaskCustomScheduleBo.setFrequencyTime(
+            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyStartTime())) {
+              activeTaskCustomScheduleBo.setFrequencyStartTime(
                   FdahpStudyDesignerUtil.getFormattedDate(
-                      activeTaskCustomScheduleBo.getFrequencyTime(),
+                      activeTaskCustomScheduleBo.getFrequencyStartTime(),
+                      FdahpStudyDesignerConstants.UI_SDF_TIME,
+                      FdahpStudyDesignerConstants.SDF_TIME));
+            }
+
+            if (StringUtils.isNotBlank(activeTaskCustomScheduleBo.getFrequencyEndTime())) {
+              activeTaskCustomScheduleBo.setFrequencyEndTime(
+                  FdahpStudyDesignerUtil.getFormattedDate(
+                      activeTaskCustomScheduleBo.getFrequencyEndTime(),
                       FdahpStudyDesignerConstants.UI_SDF_TIME,
                       FdahpStudyDesignerConstants.SDF_TIME));
             }
           }
         }
+
+        activeTask.setActiveTaskCustomScheduleBo(activeTaskCustomScheduleList);
+
         if ((activeTask.getActiveTaskFrequenciesList() != null)
             && !activeTask.getActiveTaskFrequenciesList().isEmpty()) {
-          for (ActiveTaskFrequencyBo activeTaskFrequencyBo :
-              activeTask.getActiveTaskFrequenciesList()) {
+          for (ActiveTaskFrequencyBo activeTaskFrequencyBo : activeTaskFrequencyList) {
             if (StringUtils.isNotBlank(activeTaskFrequencyBo.getFrequencyDate())) {
               activeTaskFrequencyBo.setFrequencyDate(
                   FdahpStudyDesignerUtil.getFormattedDate(
@@ -122,6 +141,8 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
             }
           }
         }
+
+        activeTask.setActiveTaskFrequenciesList(activeTaskFrequencyList);
         if ((activeTask.getActiveTaskFrequenciesBo() != null)
             && StringUtils.isNotBlank(activeTask.getActiveTaskFrequenciesBo().getFrequencyDate())) {
           activeTask
@@ -160,27 +181,27 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     } catch (Exception e) {
       logger.error("StudyActiveTasksServiceImpl - getActiveTaskById() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksServiceImpl - getActiveTaskById() - Ends");
+    logger.exit("getActiveTaskById() - Ends");
     return activeTask;
   }
 
   @Override
   public List<ActivetaskFormulaBo> getActivetaskFormulas() {
-    logger.info("StudyActiveTasksServiceImpl - getActivetaskFormulas() - Starts");
+    logger.entry("begin getActivetaskFormulas()");
     List<ActivetaskFormulaBo> activetaskFormulaList = new ArrayList<>();
     try {
       activetaskFormulaList = studyActiveTasksDAO.getActivetaskFormulas();
     } catch (Exception e) {
       logger.error("StudyActiveTasksServiceImpl - getActivetaskFormulas() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksServiceImpl - getActivetaskFormulas() - Ends");
+    logger.exit("getActivetaskFormulas() - Ends");
     return activetaskFormulaList;
   }
 
   @Override
   public List<ActiveTaskMasterAttributeBo> getActiveTaskMasterAttributesByType(
       String activeTaskType) {
-    logger.info("StudyActiveTasksServiceImpl - getActiveTaskMasterAttributesByType() - Starts");
+    logger.entry("begin getActiveTaskMasterAttributesByType()");
     List<ActiveTaskMasterAttributeBo> taskMasterAttributeBos = new ArrayList<>();
     try {
       taskMasterAttributeBos =
@@ -189,57 +210,57 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
       logger.error(
           "StudyActiveTasksServiceImpl - getActiveTaskMasterAttributesByType() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksServiceImpl - getActiveTaskMasterAttributesByType() - Ends");
+    logger.exit("getActiveTaskMasterAttributesByType() - Ends");
     return taskMasterAttributeBos;
   }
 
   @Override
   public List<ActiveTaskListBo> getAllActiveTaskTypes(String platformType) {
-    logger.info("StudyActiveTasksServiceImpl - getAllActiveTaskTypes() - Starts");
+    logger.entry("begin getAllActiveTaskTypes()");
     List<ActiveTaskListBo> activeTaskListBos = new ArrayList<>();
     try {
       activeTaskListBos = studyActiveTasksDAO.getAllActiveTaskTypes(platformType);
     } catch (Exception e) {
       logger.error("StudyActiveTasksServiceImpl - getAllActiveTaskTypes() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksServiceImpl - getAllActiveTaskTypes() - Ends");
+    logger.exit("getAllActiveTaskTypes() - Ends");
     return activeTaskListBos;
   }
 
   @Override
   public List<StatisticImageListBo> getStatisticImages() {
-    logger.info("StudyActiveTasksServiceImpl - getStatisticImages() - Starts");
+    logger.entry("begin getStatisticImages()");
     List<StatisticImageListBo> statisticImageListBos = new ArrayList<>();
     try {
       statisticImageListBos = studyActiveTasksDAO.getStatisticImages();
     } catch (Exception e) {
       logger.error("StudyActiveTasksServiceImpl - getStatisticImages() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksServiceImpl - getStatisticImages() - Ends");
+    logger.exit("getStatisticImages() - Ends");
     return statisticImageListBos;
   }
 
   @Override
   public List<ActiveTaskBo> getStudyActiveTasksByStudyId(String studyId, Boolean isLive) {
-    logger.info("StudyActiveTasksServiceImpl - getStudyActiveTasksByStudyId() - Starts");
+    logger.entry("begin getStudyActiveTasksByStudyId()");
     List<ActiveTaskBo> activeTasks = null;
     try {
       activeTasks = studyActiveTasksDAO.getStudyActiveTasksByStudyId(studyId, isLive);
     } catch (Exception e) {
       logger.error("StudyActiveTasksServiceImpl - getStudyActiveTasksByStudyId() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksServiceImpl - getStudyActiveTasksByStudyId() - Ends");
+    logger.exit("getStudyActiveTasksByStudyId() - Ends");
     return activeTasks;
   }
 
   @Override
   public ActiveTaskBo saveOrUpdateActiveTask(
       ActiveTaskBo activeTaskBo, SessionObject sessionObject, String customStudyId) {
-    logger.info("StudyActiveTasksServiceImpl - saveOrUpdateActiveTask() - Starts");
+    logger.entry("begin saveOrUpdateActiveTask()");
     ActiveTaskBo updateActiveTaskBo = null;
     try {
       if (activeTaskBo != null) {
-        if (activeTaskBo.getId() != null) {
+        if (StringUtils.isNotEmpty(activeTaskBo.getId())) {
           updateActiveTaskBo =
               studyActiveTasksDAO.getActiveTaskById(activeTaskBo.getId(), customStudyId);
           updateActiveTaskBo.setModifiedBy(sessionObject.getUserId());
@@ -297,13 +318,13 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     } catch (Exception e) {
       logger.error("StudyActiveTasksServiceImpl - saveOrUpdateActiveTask() - Error", e);
     }
-    logger.info("StudyActiveTasksServiceImpl - saveOrUpdateActiveTask() - Ends");
+    logger.exit("saveOrUpdateActiveTask() - Ends");
     return updateActiveTaskBo;
   }
 
   @Override
   public ActiveTaskBo saveOrUpdateActiveTask(ActiveTaskBo activeTaskBo, String customStudyId) {
-    logger.info("StudyQuestionnaireServiceImpl - saveORUpdateQuestionnaire - Starts");
+    logger.entry("begin saveOrUpdateActiveTask()");
     ActiveTaskBo addActiveTaskeBo = null;
     try {
       if (null != activeTaskBo) {
@@ -322,9 +343,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
         if (activeTaskBo.getScheduleType() != null) {
           addActiveTaskeBo.setScheduleType(activeTaskBo.getScheduleType());
         }
-        if (activeTaskBo.getAnchorDateId() != null) {
-          addActiveTaskeBo.setAnchorDateId(activeTaskBo.getAnchorDateId());
-        }
+        addActiveTaskeBo.setAnchorDateId(activeTaskBo.getAnchorDateId());
         if ((activeTaskBo.getFrequency() != null)
             && !activeTaskBo
                 .getFrequency()
@@ -427,7 +446,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
               if (activeTaskBo
                   .getFrequency()
                   .equalsIgnoreCase(FdahpStudyDesignerConstants.FREQUENCY_TYPE_ONE_TIME)) {
-                if (!activeTaskBo.getActiveTaskFrequenciesBo().getIsStudyLifeTime()) {
+                if (!activeTaskBo.getActiveTaskFrequenciesBo().getIsLaunchStudy()) {
                   if (StringUtils.isNotBlank(activeTaskBo.getActiveTaskLifetimeStart())
                       && !("NA").equalsIgnoreCase(activeTaskBo.getActiveTaskLifetimeStart())) {
                     addActiveTaskeBo.setActiveTaskLifetimeStart(
@@ -438,7 +457,9 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
                   } else {
                     addActiveTaskeBo.setActiveTaskLifetimeStart(null);
                   }
+                }
 
+                if (!activeTaskBo.getActiveTaskFrequenciesBo().getIsStudyLifeTime()) {
                   if (StringUtils.isNotBlank(activeTaskBo.getActiveTaskLifetimeEnd())
                       && !("NA").equalsIgnoreCase(activeTaskBo.getActiveTaskLifetimeEnd())) {
                     addActiveTaskeBo.setActiveTaskLifetimeEnd(
@@ -466,18 +487,18 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     } catch (Exception e) {
       logger.error("StudyActiveTaskServiceImpl - saveORUpdateQuestionnaire - Error", e);
     }
-    logger.info("StudyQuestionnaireServiceImpl - saveORUpdateQuestionnaire - Ends");
+    logger.exit("saveOrUpdateActiveTask() - Ends");
     return addActiveTaskeBo;
   }
 
   @Override
   public boolean validateActiveTaskAttrById(
-      Integer studyId,
+      String studyId,
       String activeTaskAttName,
       String activeTaskAttIdVal,
       String activeTaskAttIdName,
       String customStudyId) {
-    logger.info("StudyActiveTasksServiceImpl - validateActiveTaskAttrById() - Starts");
+    logger.entry("begin validateActiveTaskAttrById()");
     boolean valid = false;
     try {
       if ((studyId != null)
@@ -492,14 +513,14 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
       logger.error("StudyActiveTasksServiceImpl - validateActiveTaskAttrById() - ERROR ", e);
     }
 
-    logger.info("StudyActiveTasksServiceImpl - validateActiveTaskAttrById() - Starts");
+    logger.exit("validateActiveTaskAttrById()  - Ends");
     return valid;
   }
 
   @Override
   public List<ActiveStatisticsBean> validateActiveTaskStatIds(
       String customStudyId, List<ActiveStatisticsBean> activeStatisticsBeans) {
-    logger.info("StudyActiveTasksServiceImpl - validateActiveTaskStatIds() - Starts");
+    logger.entry("begin validateActiveTaskStatIds()");
     List<ActiveStatisticsBean> statisticsBeans = null;
     try {
       statisticsBeans =
@@ -507,7 +528,7 @@ public class StudyActiveTasksServiceImpl implements StudyActiveTasksService {
     } catch (Exception e) {
       logger.error("StudyActiveTasksServiceImpl - validateActiveTaskStatIds() - ERROR ", e);
     }
-    logger.info("StudyActiveTasksServiceImpl - validateActiveTaskStatIds() - Ends");
+    logger.exit("validateActiveTaskStatIds() - Ends");
     return statisticsBeans;
   }
 }

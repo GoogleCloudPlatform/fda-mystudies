@@ -335,7 +335,7 @@ public enum StudyBuilderAuditEvent {
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
-      "Settings section marked complete with enrollment setting '${enrollment_setting}', re-join setting '${rejoin_setting}' and data-retention setting '${dataretention_setting}'. ",
+      "Settings section marked complete with enrollment setting '${enrollment_setting}'. ",
       "STUDY_SETTINGS_MARKED_COMPLETE"),
 
   STUDY_DEACTIVATED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_DEACTIVATED"),
@@ -484,7 +484,108 @@ public enum StudyBuilderAuditEvent {
       PARTICIPANT_USER_DATASTORE,
       null,
       "Failed to send app/study notifications metadata.",
-      "NOTIFICATION_METADATA_SEND_OPERATION_FAILED");
+      "NOTIFICATION_METADATA_SEND_OPERATION_FAILED"),
+
+  STUDY_NEW_ACTIVE_TASK_CREATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New Active task created (activity ID - ${activetask_id}).",
+      "STUDY_NEW_ACTIVE_TASK_CREATED"),
+
+  STUDY_QUESTIONNAIRE_MARKED_COMPLETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Questionnaire marked completed (activity ID - ${questionnaire_id}).",
+      "STUDY_QUESTIONNAIRE_MARKED_COMPLETED"),
+
+  STUDY_COPIED_INTO_NEW(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_COPIED_INTO_NEW"),
+
+  STUDY_EXPORTED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_EXPORTED"),
+
+  STUDY_IMPORTED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_IMPORTED"),
+
+  STUDY_COPY_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_COPY_FAILED"),
+
+  STUDY_EXPORT_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_EXPORT_FAILED"),
+
+  STUDY_IMPORT_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_IMPORT_FAILED"),
+
+  APP_LIST_VIEWED(STUDY_BUILDER, STUDY_DATASTORE, null, "App list viewed", "APP_LIST_VIEWED"),
+
+  APP_RECORD_VIEWED(STUDY_BUILDER, STUDY_DATASTORE, null, "App record viewed", "APP_RECORD_VIEWED"),
+
+  NEW_APP_CREATION_INITIATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "NEW_APP_CREATION_INITIATED"),
+
+  APP_INFORMATION_SAVED_OR_UPDATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_INFORMATION_SAVED_OR_UPDATED"),
+
+  APP_INFORMATION_MARKED_COMPLETE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_INFORMATION_MARKED_COMPLETE"),
+
+  APP_SETTINGS_SAVED_OR_UPDATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_SETTINGS_SAVED_OR_UPDATED"),
+
+  APP_SETTINGS_MARKED_COMPLETE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_SETTINGS_MARKED_COMPLETE"),
+
+  APP_PROPERTIES_SAVED_OR_UPDATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_PROPERTIES_SAVED_OR_UPDATED"),
+
+  APP_PROPERTIES_MARKED_COMPLETE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_PROPERTIES_MARKED_COMPLETE"),
+
+  APP_DEVELOPER_CONFIGURATIONS_SAVED_OR_UPDATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_DEVELOPER_CONFIGURATIONS_SAVED_OR_UPDATED"),
+
+  APP_DEVELOPER_CONFIGURATIONS_MARKED_COMPLETE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_DEVELOPER_CONFIGURATIONS_MARKED_COMPLETE"),
+
+  APP_ASSOCIATED_STUDIES_VIEWED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "List of studies associated with the app, viewed",
+      "APP_ASSOCIATED_STUDIES_VIEWED"),
+
+  NEW_APP_RECORD_CREATED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "NEW_APP_RECORD_CREATED"),
+
+  APP_PUBLISHED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "App properties and configurations published/updated to the Participant Datastore",
+      "APP_PUBLISHED"),
+
+  IOS_APP_MARKED_AS_DISTRIBUTED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "iOS app marked as distributed",
+      "IOS_APP_MARKED_AS_DISTRIBUTED"),
+
+  ANDROID_APP_MARKED_AS_DISTRIBUTED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Android app marked as distributed",
+      "ANDROID_APP_MARKED_AS_DISTRIBUTED"),
+
+  APP_DEACTIVATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "App record deactivated. App record status: '${app_record_status}'",
+      "APP_RECORD_VIEWED"),
+
+  STUDY_DELETED	(
+		      STUDY_BUILDER,
+		      STUDY_DATASTORE,
+		      null,	
+		      "Study deleted before Publishing",
+		      "STUDY_DELETED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

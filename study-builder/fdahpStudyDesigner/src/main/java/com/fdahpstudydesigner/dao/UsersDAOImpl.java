@@ -1,6 +1,5 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,32 +24,36 @@
 package com.fdahpstudydesigner.dao;
 
 import com.fdahpstudydesigner.bean.UserIdAccessLevelInfo;
+import com.fdahpstudydesigner.bo.AppPermissionBO;
+import com.fdahpstudydesigner.bo.AppsBo;
 import com.fdahpstudydesigner.bo.RoleBO;
+import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UsersDAOImpl implements UsersDAO {
 
-  private static Logger logger = Logger.getLogger(UsersDAOImpl.class);
+  private static XLogger logger = XLoggerFactory.getXLogger(UsersDAOImpl.class.getName());
 
   HibernateTemplate hibernateTemplate;
 
@@ -63,8 +66,8 @@ public class UsersDAOImpl implements UsersDAO {
 
   @Override
   public String activateOrDeactivateUser(
-      int userId, int userStatus, int loginUser, SessionObject userSession) {
-    logger.info("UsersDAOImpl - activateOrDeactivateUser() - Starts");
+      String userId, int userStatus, String loginUser, SessionObject userSession) {
+    logger.entry("begin activateOrDeactivateUser()");
     String msg = FdahpStudyDesignerConstants.FAILURE;
     Session session = null;
     int count = 0;
@@ -109,24 +112,31 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - activateOrDeactivateUser() - Ends");
+    logger.exit("activateOrDeactivateUser() - Ends");
     return msg;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public UserIdAccessLevelInfo addOrUpdateUserDetails(
-      UserBO userBO, String permissions, String selectedStudies, String permissionValues) {
-    logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Starts");
+      UserBO userBO,
+      String permissions,
+      String selectedStudies,
+      String permissionValues,
+      String selectedApps,
+      String permissionValuesForApp) {
+    logger.entry("begin addOrUpdateUserDetails()");
     Session session = null;
-    Integer userId = 0;
+    String userId = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
     Query query = null;
     UserBO userBO2 = null;
     Set<UserPermissions> permissionSet = null;
     StudyPermissionBO studyPermissionBO = null;
     String[] selectedStudy = null;
+    String[] selectedApp = null;
     String[] permissionValue = null;
+    String[] permissionValueForApp = null;
     boolean updateFlag = false;
     UserIdAccessLevelInfo userIdAccessLevelInfo = null;
 
@@ -135,7 +145,7 @@ public class UsersDAOImpl implements UsersDAO {
       transaction = session.beginTransaction();
       userIdAccessLevelInfo = new UserIdAccessLevelInfo();
       if (null == userBO.getUserId()) {
-        userId = (Integer) session.save(userBO);
+        userId = (String) session.save(userBO);
         userIdAccessLevelInfo.setUserId(userId);
       } else {
         session.update(userBO);
@@ -159,7 +169,7 @@ public class UsersDAOImpl implements UsersDAO {
                     .setParameterList("permissions", permissionList)
                     .list());
         userBO2.setPermissionList(permissionSet);
-        userBO2.setAccessLevel(FdahpStudyDesignerUtil.getUserAccessLevel(permissionSet));
+        userBO2.setAccessLevel(userBO2.getRoleId().equals("1") ? "SUPERADMIN" : "STUDY ADMIN");
         session.update(userBO2);
         userIdAccessLevelInfo.setAccessLevel(userBO2.getAccessLevel());
       } else {
@@ -175,12 +185,25 @@ public class UsersDAOImpl implements UsersDAO {
         query.executeUpdate();
       }
 
-      if (!"".equals(selectedStudies) && !"".equals(permissionValues)) {
+      if (updateFlag && "".equals(selectedApps)) {
+        query =
+            session
+                .createSQLQuery(" delete from app_permission where user_id =:userId ")
+                .setParameter("userId", userId);
+        query.executeUpdate();
+      }
+
+      if ((StringUtils.isNotEmpty(selectedStudies) || StringUtils.isNotEmpty(selectedApps))
+          && (StringUtils.isNotEmpty(permissionValues)
+              || StringUtils.isNotEmpty(permissionValuesForApp))
+          && userBO2.getRoleId().equals("2")) {
         selectedStudy = selectedStudies.split(",");
         permissionValue = permissionValues.split(",");
+        permissionValueForApp = permissionValuesForApp.split(",");
+        selectedApp = selectedApps.split(",");
         List<String> selectedStudiesList = Arrays.asList(selectedStudies.split(","));
+        List<String> selectedAppsList = Arrays.asList(selectedApps.split(","));
         if (updateFlag) {
-
           query =
               session
                   .createSQLQuery(
@@ -188,28 +211,34 @@ public class UsersDAOImpl implements UsersDAO {
                   .setParameterList("selectedStudies", selectedStudiesList)
                   .setParameter("userId", userId);
           query.executeUpdate();
-        }
 
-        for (int i = 0; i < selectedStudy.length; i++) {
           query =
               session
-                  .createQuery(
-                      " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
-                          + " AND UBO.userId=:userId")
-                  .setParameter("userId", userId)
-                  .setParameter("studyId", Integer.valueOf(selectedStudy[i]));
-          studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
-          if (null != studyPermissionBO) {
-            studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
-            session.update(studyPermissionBO);
-          } else {
-            studyPermissionBO = new StudyPermissionBO();
-            studyPermissionBO.setStudyId(Integer.parseInt(selectedStudy[i]));
-            studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
-            studyPermissionBO.setUserId(userId);
-            session.save(studyPermissionBO);
+                  .createSQLQuery(
+                      " delete from app_permission where app_id not in (:selectedApps) and user_id =:userId")
+                  .setParameterList("selectedApps", selectedAppsList)
+                  .setParameter("userId", userId);
+          query.executeUpdate();
+        }
+        if (StringUtils.isNotEmpty(selectedStudies)) {
+          for (int i = 0; i < selectedStudy.length; i++) {
+            studyPermissionBO =
+                addStudyLevelPermissionsToStudyAdmin(
+                    session, userId, selectedStudy, permissionValue, i);
           }
         }
+
+        if (StringUtils.isNotEmpty(selectedApps)) {
+          for (int i = 0; i < selectedApp.length; i++) {
+            addAppLevelPermissionsToStudyAdmin(
+                session, userId, selectedApp, permissionValueForApp, i);
+          }
+        }
+
+      } else if (userBO2.getRoleId().equals("1")) {
+        addStudyPermissionsToSuperAdmin(session, userId);
+
+        addAppPermissionsToSuperAdmin(session, userId);
       }
       transaction.commit();
       msg = FdahpStudyDesignerConstants.SUCCESS;
@@ -221,15 +250,120 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - addOrUpdateUserDetails() - Ends");
+    logger.exit("addOrUpdateUserDetails() - Ends");
     if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
       return userIdAccessLevelInfo;
     } else return null;
   }
 
+  private void addAppPermissionsToSuperAdmin(Session session, String userId) {
+    Query query = null;
+    AppPermissionBO appPermissionBO = null;
+    query =
+        session.createQuery(" FROM AppsBo ABO WHERE ABO.version = 0 AND ABO.appStatus='Active' ");
+    List<AppsBo> appBOList = query.list();
+    if (CollectionUtils.isNotEmpty(appBOList)) {
+      for (int i = 0; i < appBOList.size(); i++) {
+        query =
+            session
+                .createQuery(
+                    " FROM AppPermissionBO ABO where ABO.appId=:appId AND ABO.userId=:userId")
+                .setParameter("userId", userId)
+                .setParameter("appId", appBOList.get(i).getId());
+        appPermissionBO = (AppPermissionBO) query.uniqueResult();
+        if (null != appPermissionBO) {
+          appPermissionBO.setViewPermission(true);
+          session.update(appPermissionBO);
+        } else {
+          appPermissionBO = new AppPermissionBO();
+          appPermissionBO.setAppId(appBOList.get(i).getId());
+          appPermissionBO.setViewPermission(true);
+          appPermissionBO.setUserId(userId);
+          session.save(appPermissionBO);
+        }
+      }
+    }
+  }
+
+  private void addStudyPermissionsToSuperAdmin(Session session, String userId) {
+    Query query;
+    StudyPermissionBO studyPermissionBO;
+    query = session.createQuery(" FROM StudyBo SBO WHERE SBO.version = 0");
+    List<StudyBo> studyBOList = query.list();
+    if (CollectionUtils.isNotEmpty(studyBOList)) {
+      for (int i = 0; i < studyBOList.size(); i++) {
+        query =
+            session
+                .createQuery(
+                    " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
+                        + " AND UBO.userId=:userId")
+                .setParameter("userId", userId)
+                .setParameter("studyId", studyBOList.get(i).getId());
+        studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
+        if (null != studyPermissionBO) {
+          studyPermissionBO.setViewPermission(true);
+          session.update(studyPermissionBO);
+        } else {
+          studyPermissionBO = new StudyPermissionBO();
+          studyPermissionBO.setStudyId(studyBOList.get(i).getId());
+          studyPermissionBO.setViewPermission(true);
+          studyPermissionBO.setUserId(userId);
+          session.save(studyPermissionBO);
+        }
+      }
+    }
+  }
+
+  private void addAppLevelPermissionsToStudyAdmin(
+      Session session, String userId, String[] selectedApp, String[] permissionValue, int i) {
+    Query query;
+    AppPermissionBO appPermissionBO;
+    query =
+        session
+            .createQuery(" FROM AppPermissionBO ABO where ABO.appId=:appId AND ABO.userId=:userId")
+            .setParameter("userId", userId)
+            .setParameter("appId", selectedApp[i]);
+    appPermissionBO = (AppPermissionBO) query.uniqueResult();
+    if (null != appPermissionBO) {
+      appPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
+      session.update(appPermissionBO);
+    } else {
+      appPermissionBO = new AppPermissionBO();
+      appPermissionBO.setAppId(selectedApp[i]);
+      appPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
+      appPermissionBO.setUserId(userId);
+      session.save(appPermissionBO);
+    }
+  }
+
+  private StudyPermissionBO addStudyLevelPermissionsToStudyAdmin(
+      Session session, String userId, String[] selectedStudy, String[] permissionValue, int i) {
+    Query query;
+    StudyPermissionBO studyPermissionBO;
+    query =
+        session
+            .createQuery(
+                " FROM StudyPermissionBO UBO where UBO.studyId=:studyId"
+                    + " AND UBO.userId=:userId")
+            .setParameter("userId", userId)
+            .setParameter("studyId", selectedStudy[i]);
+    studyPermissionBO = (StudyPermissionBO) query.uniqueResult();
+    if (null != studyPermissionBO) {
+      studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
+      session.update(studyPermissionBO);
+    } else {
+      studyPermissionBO = new StudyPermissionBO();
+      studyPermissionBO.setStudyId(selectedStudy[i]);
+      studyPermissionBO.setViewPermission("1".equals(permissionValue[i]) ? true : false);
+      studyPermissionBO.setUserId(userId);
+      session.save(studyPermissionBO);
+    }
+    return studyPermissionBO;
+  }
+
   @Override
-  public String enforcePasswordChange(Integer userId, String email) {
-    logger.info("UsersDAOImpl - enforcePasswordChange() - Starts");
+  public String enforcePasswordChange(String userId, String email) {
+    logger.entry("begin enforcePasswordChange()");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
     try {
@@ -288,14 +422,14 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - enforcePasswordChange() - Ends");
+    logger.exit("enforcePasswordChange() - Ends");
     return message;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<String> getActiveUserEmailIds() {
-    logger.info("UsersDAOImpl - getActiveUserEmailIds() - Starts");
+    logger.entry("begin getActiveUserEmailIds()");
     Session session = null;
     List<String> emails = null;
     try {
@@ -316,14 +450,14 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - getActiveUserEmailIds() - Ends");
+    logger.exit("getActiveUserEmailIds() - Ends");
     return emails;
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public List<Integer> getPermissionsByUserId(Integer userId) {
-    logger.info("UsersDAOImpl - getPermissionsByUserId() - Starts");
+  public List<Integer> getPermissionsByUserId(String userId) {
+    logger.entry("begin getPermissionsByUserId()");
     Session session = null;
     Query query = null;
     List<Integer> permissions = null;
@@ -342,13 +476,13 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - getPermissionsByUserId() - Ends");
+    logger.exit("getPermissionsByUserId() - Ends");
     return permissions;
   }
 
   @Override
   public List<String> getSuperAdminList() {
-    logger.info("UsersDAOImpl - getSuperAdminList() - Starts");
+    logger.entry("begin getSuperAdminList()");
     Session session = null;
     List<String> userSuperAdminList = null;
     Query query = null;
@@ -365,13 +499,13 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - getSuperAdminList() - Ends");
+    logger.exit("getSuperAdminList() - Ends");
     return userSuperAdminList;
   }
 
   @Override
   public UserBO getSuperAdminNameByEmailId(String emailId) {
-    logger.info("UsersDAOImpl - getSuperAdminNameByEmailId() - Starts");
+    logger.entry("begin getSuperAdminNameByEmailId()");
     Session session = null;
     UserBO userBo = null;
     Query query = null;
@@ -389,19 +523,19 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - getSuperAdminNameByEmailId() - Ends");
+    logger.exit("getSuperAdminNameByEmailId() - Ends");
     return userBo;
   }
 
   @Override
-  public UserBO getUserDetails(int userId) {
-    logger.info("UsersDAOImpl - getUserDetails() - Starts");
+  public UserBO getUserDetails(String userId) {
+    logger.entry("begin getUserDetails()");
     Session session = null;
     UserBO userBO = null;
     Query query = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.getNamedQuery("getUserById").setInteger("userId", userId);
+      query = session.getNamedQuery("getUserById").setString("userId", userId);
       userBO = (UserBO) query.uniqueResult();
       if ((userBO != null) && (userBO.getRoleId() != null)) {
         String roleName =
@@ -421,14 +555,14 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - getUserDetails() - Ends");
+    logger.exit("getUserDetails() - Ends");
     return userBO;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<UserBO> getUserList() {
-    logger.info("UsersDAOImpl - getUserList() - Starts");
+    logger.entry("begin getUserList()");
     Session session = null;
     List<UserBO> userList = null;
     List<Object[]> objList = null;
@@ -438,23 +572,21 @@ public class UsersDAOImpl implements UsersDAO {
       query =
           session.createSQLQuery(
               " SELECT u.user_id,u.first_name,u.last_name,u.email,r.role_name,u.status,"
-                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id and u.user_id "
-                  + "not in (select upm.user_id from user_permission_mapping upm where "
-                  + "upm.permission_id = (select up.permission_id from user_permissions up "
-                  + "where up.permissions ='ROLE_SUPERADMIN')) ORDER BY u.user_id DESC ");
+                  + "u.password,u.email_changed,u.access_level FROM users u,roles r WHERE r.role_id = u.role_id  "
+                  + " ORDER BY u.user_id DESC ");
       objList = query.list();
       if ((null != objList) && !objList.isEmpty()) {
         userList = new ArrayList<>();
         for (Object[] obj : objList) {
           UserBO userBO = new UserBO();
-          userBO.setUserId(null != obj[0] ? (Integer) obj[0] : 0);
+          userBO.setUserId(null != obj[0] ? (String) obj[0] : null);
           userBO.setFirstName(null != obj[1] ? String.valueOf(obj[1]) : "");
           userBO.setLastName(null != obj[2] ? String.valueOf(obj[2]) : "");
           userBO.setUserEmail(null != obj[3] ? String.valueOf(obj[3]) : "");
           userBO.setRoleName(null != obj[4] ? String.valueOf(obj[4]) : "");
           userBO.setEnabled(null != obj[5] ? (Boolean) obj[5] : false);
           userBO.setUserPassword(null != obj[6] ? String.valueOf(obj[6]) : "");
-          userBO.setEmailChanged(null != obj[7] ? (Boolean) obj[7] : false);
+          userBO.setEmailChanged(null != obj[7] ? Byte.toUnsignedInt((Byte) (obj[7])) : 0);
           userBO.setAccessLevel(null != obj[8] ? String.valueOf(obj[8]) : "");
           userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
           userList.add(userBO);
@@ -467,15 +599,15 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - getUserList() - Ends");
+    logger.exit("getUserList() - Ends");
     return userList;
   }
 
   @Override
-  public Integer getUserPermissionByUserId(Integer sessionUserId) {
-    logger.info("UsersDAOImpl - getUserPermissionByUserId() - Starts");
+  public String getUserPermissionByUserId(String sessionUserId) {
+    logger.entry("begin getUserPermissionByUserId()");
     Session session = null;
-    Integer userId = null;
+    String userId = null;
     Query query = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -487,23 +619,23 @@ public class UsersDAOImpl implements UsersDAO {
                       + "= (select up.permission_id from user_permissions up where "
                       + "up.permissions = 'ROLE_SUPERADMIN')) and u.user_id =:sessionUserId ")
               .setParameter("sessionUserId", sessionUserId);
-      userId = (Integer) query.uniqueResult();
+      userId = (String) query.uniqueResult();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserPermissionByUserId() - ERROR", e);
     }
-    logger.info("UsersDAOImpl - getUserPermissionByUserId() - Ends");
+    logger.exit("getUserPermissionByUserId() - Ends");
     return userId;
   }
 
   @Override
-  public RoleBO getUserRole(int roleId) {
-    logger.info("UsersDAOImpl - getUserRole() - Starts");
+  public RoleBO getUserRole(String roleId) {
+    logger.entry("begin getUserRole()");
     Session session = null;
     RoleBO roleBO = null;
     Query query = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.getNamedQuery("getUserRoleByRoleId").setInteger("roleId", roleId);
+      query = session.getNamedQuery("getUserRoleByRoleId").setString("roleId", roleId);
       roleBO = (RoleBO) query.uniqueResult();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserRole() - ERROR", e);
@@ -512,20 +644,20 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - getUserRole() - Ends");
+    logger.exit("getUserRole() - Ends");
     return roleBO;
   }
 
   @SuppressWarnings("unchecked")
   @Override
   public List<RoleBO> getUserRoleList() {
-    logger.info("UsersDAOImpl - getUserRoleList() - Starts");
+    logger.entry("begin getUserRoleList()");
     List<RoleBO> roleBOList = null;
     Query query = null;
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      query = session.createQuery(" FROM RoleBO RBO ");
+      query = session.createQuery(" FROM RoleBO RBO");
       roleBOList = query.list();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getUserRoleList() - ERROR", e);
@@ -534,7 +666,49 @@ public class UsersDAOImpl implements UsersDAO {
         session.close();
       }
     }
-    logger.info("UsersDAOImpl - getUserRoleList() - Ends");
+    logger.exit("getUserRoleList() - Ends");
     return roleBOList;
+  }
+
+  @Override
+  public String deleteByUserId(String userId) {
+    logger.entry("begin deleteByUserId()");
+    String message = FdahpStudyDesignerConstants.FAILURE;
+    Query query = null;
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      Transaction transaction = session.beginTransaction();
+
+      query =
+          session
+              .createSQLQuery(" delete from user_permission_mapping where user_id =:userId ")
+              .setParameter("userId", userId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(" delete from study_permission where user_id =:userId ")
+              .setParameter("userId", userId);
+      query.executeUpdate();
+      query =
+          session
+              .createSQLQuery(" delete from users where user_id =:userId ")
+              .setParameter("userId", userId);
+      query.executeUpdate();
+
+      transaction.commit();
+      message = FdahpStudyDesignerConstants.SUCCESS;
+    } catch (Exception e) {
+      if (null != transaction) {
+        transaction.rollback();
+      }
+      logger.error("UsersDAOImpl - deleteByUserId() - ERROR", e);
+    } finally {
+      if (null != session) {
+        session.close();
+      }
+    }
+    logger.exit("deleteByUserId() - Ends");
+    return message;
   }
 }

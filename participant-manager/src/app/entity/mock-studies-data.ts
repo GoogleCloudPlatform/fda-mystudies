@@ -4,7 +4,10 @@ import {
 } from '../site-coordinator/studies/shared/study.model';
 import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
-import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
+import {
+  SiteResponse,
+  UpdateTargetEnrollmentRequest,
+} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
 import {EnrollmentStatus, Status, StudyType} from '../shared/enums';
 import {Permission} from '../shared/permission-enums';
@@ -15,6 +18,7 @@ export const expectedSitesList = {
       id: '1',
       customId: 'TestStudy001',
       name: 'abcd',
+      appStatus: 'Active',
       sitesCount: 1,
       sites: [
         {
@@ -118,8 +122,10 @@ export const expectedStudiesDetails = {
     appId: '4028617973be410f0173be41229e0001',
     customAppId: 'mystudies-id-1',
     appName: 'mystudies-1',
+    appStatus: 'Active',
     targetEnrollment: 1,
     studyStatus: Status.Active,
+
     studyPermission: Permission.ViewAndEdit,
     registryParticipants: [
       {
@@ -187,6 +193,7 @@ export const expectedStudiesDetails = {
   message: 'Get participant registry successfully',
   code: 'MSG-0013',
   totalParticipantCount: 3,
+  appStatus: 'Active',
 } as StudyDetails;
 
 export const expectedStudyId = {id: '1'} as Study;
@@ -200,7 +207,7 @@ export const expectedTargetEnrollment: UpdateTargetEnrollmentRequest = {
 };
 export const expectedSiteResponse = {
   message: 'New site added successfully',
-} as ApiResponse;
+} as SiteResponse;
 
 export const expectedNewSite = {
   studyId: '1',

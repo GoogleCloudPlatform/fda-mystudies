@@ -1,6 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -153,7 +153,16 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
     StudyDatastoreConfigEvent studyDatastoreConfigEvent =
         new StudyDatastoreConfigEvent(
-            "get", url, STUDY_INFO, context, StudyHome.class, null, header, null, false, this);
+            "get",
+            url,
+            STUDY_INFO,
+            context,
+            StudyHome.class,
+            null,
+            header,
+            null,
+            false,
+            this);
 
     getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -199,7 +208,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   }
 
   private void setTextForView() {
-    title.setText(getContext().getResources().getString(R.string.resources));
+    title.setText(context.getResources().getString(R.string.resources));
   }
 
   private void setFont() {
@@ -717,7 +726,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             && !response.equalsIgnoreCase("")) {
           response = response;
         } else {
-          response = getContext().getString(R.string.unknown_error);
+          response = context.getString(R.string.unknown_error);
         }
       }
       return response;
@@ -810,8 +819,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         }
       } else {
         metadataProcess();
-        Toast.makeText(context, getContext().getString(R.string.unknown_error), Toast.LENGTH_SHORT)
-            .show();
+        Toast.makeText(context, context.getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
       }
     }
   }

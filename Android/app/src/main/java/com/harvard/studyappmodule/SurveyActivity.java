@@ -22,6 +22,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -69,8 +72,8 @@ import java.util.HashMap;
 
 public class SurveyActivity extends AppCompatActivity
     implements View.OnClickListener,
-        ActivityCompat.OnRequestPermissionsResultCallback,
-        ApiCall.OnAsyncRequestComplete {
+    ActivityCompat.OnRequestPermissionsResultCallback,
+    ApiCall.OnAsyncRequestComplete {
   private RelativeLayout dashboardButtonLayout;
   private AppCompatImageView dashboardButton;
   private AppCompatTextView dashboardButtonLabel;
@@ -196,7 +199,8 @@ public class SurveyActivity extends AppCompatActivity
     drawer.addDrawerListener(
         new DrawerLayout.DrawerListener() {
           @Override
-          public void onDrawerSlide(View drawerView, float slideOffset) {}
+          public void onDrawerSlide(View drawerView, float slideOffset) {
+          }
 
           @Override
           public void onDrawerOpened(View drawerView) {
@@ -210,10 +214,12 @@ public class SurveyActivity extends AppCompatActivity
           }
 
           @Override
-          public void onDrawerClosed(View drawerView) {}
+          public void onDrawerClosed(View drawerView) {
+          }
 
           @Override
-          public void onDrawerStateChanged(int newState) {}
+          public void onDrawerStateChanged(int newState) {
+          }
         });
   }
 
@@ -453,7 +459,7 @@ public class SurveyActivity extends AppCompatActivity
                     "Authorization",
                     "Bearer "
                         + SharedPreferenceHelper.readPreference(
-                            SurveyActivity.this, getString(R.string.auth), ""));
+                        SurveyActivity.this, getString(R.string.auth), ""));
                 header.put("correlationId", "" + FdaApplication.getRandomString());
                 header.put("appId", "" + BuildConfig.APP_ID);
                 header.put("mobilePlatform", "ANDROID");
@@ -464,7 +470,7 @@ public class SurveyActivity extends AppCompatActivity
                         Urls.AUTH_SERVICE
                             + "/"
                             + SharedPreferenceHelper.readPreference(
-                                SurveyActivity.this, getString(R.string.userid), "")
+                            SurveyActivity.this, getString(R.string.userid), "")
                             + Urls.LOGOUT,
                         LOGOUT_REPSONSECODE,
                         SurveyActivity.this,
@@ -773,18 +779,6 @@ public class SurveyActivity extends AppCompatActivity
     finish();
   }
 
-  //  @Override
-  //  protected void onResume() {
-  //    super.onResume();
-  //
-  //    if(AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-  //      IntentFilter filter = new IntentFilter();
-  //      filter.addAction(BuildConfig.APPLICATION_ID);
-  //      versionReceiver = new VersionReceiver();
-  //      registerReceiver(versionReceiver, filter);
-  //    }
-  //  }
-
   @Override
   protected void onStart() {
     super.onStart();
@@ -810,22 +804,6 @@ public class SurveyActivity extends AppCompatActivity
       e.printStackTrace();
     }
   }
-
-  //  @Override
-  //  protected void onPause() {
-  //    super.onPause();
-  //
-  //    try {
-  //      unregisterReceiver(versionReceiver);
-  //    } catch (Exception e) {
-  //      e.printStackTrace();
-  //    }
-  //    try {
-  //      alertDialog.dismiss();
-  //    } catch (Exception e) {
-  //      e.printStackTrace();
-  //    }
-  //  }
 
   public class VersionReceiver extends BroadcastReceiver {
     @Override

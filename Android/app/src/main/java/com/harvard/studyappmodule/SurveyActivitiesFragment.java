@@ -27,7 +27,6 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -200,8 +199,8 @@ public class SurveyActivitiesFragment extends Fragment
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
   String title = "";
-  private String name = "";
   Intent calculateRunHoldServiceeintent;
+  private String name = "";
   private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
@@ -328,7 +327,7 @@ public class SurveyActivitiesFragment extends Fragment
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.survey_activities_filter));
+                getString(R.string.survey_activities_filter));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
           }
@@ -784,7 +783,6 @@ public class SurveyActivitiesFragment extends Fragment
       } else {
         Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
-
     } else if (responseCode == UPDATE_STUDY_PREFERENCE) {
       // check for notification
       getResourceListWebservice();
@@ -1515,7 +1513,16 @@ public class SurveyActivitiesFragment extends Fragment
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
     StudyDatastoreConfigEvent studyDatastoreConfigEvent =
         new StudyDatastoreConfigEvent(
-            "get", url, STUDY_INFO, context, StudyHome.class, null, header, null, false, this);
+            "get",
+            url,
+            STUDY_INFO,
+            context,
+            StudyHome.class,
+            null,
+            header,
+            null,
+            false,
+            this);
 
     getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
@@ -2395,7 +2402,7 @@ public class SurveyActivitiesFragment extends Fragment
     @Override
     protected void onPostExecute(ArrayList<ActivitiesWS> result) {
       AppController.getHelperProgressDialog()
-          .updateMsg(getContext().getString(R.string.activity_loading_msg));
+          .updateMsg(context.getString(R.string.activity_loading_msg));
 
       SharedPreferenceHelper.writePreference(context, "runsCalculating", "false");
       if (AppController.isMyServiceRunning(context, CalculateRunHoldService.class)) {
@@ -2584,7 +2591,6 @@ public class SurveyActivitiesFragment extends Fragment
       studiestatus.put("completion", completion);
       studiestatus.put("adherence", adherence);
       if (consentDocumentData != null && consentDocumentData.getConsent() != null) {
-        Log.e("check", "consentDocumentData.getConsent() " + consentDocumentData.getConsent());
         studiestatus.put("userStudyVersion", consentDocumentData.getConsent().getVersion());
       }
 

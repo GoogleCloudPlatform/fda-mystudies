@@ -66,10 +66,9 @@ public class PdfDisplayActivity extends AppCompatActivity
   private DbServiceSubscriber db;
   private Realm realm;
   private String title;
-  private String dataShare;
-  PdfViewerView pdfViewer;
-
   private CustomFirebaseAnalytics analyticsInstance;
+  PdfViewerView pdfViewer;
+  private String dataShare;
   private NetworkChangeReceiver networkChangeReceiver;
   RelativeLayout shareBtn;
 
@@ -80,9 +79,9 @@ public class PdfDisplayActivity extends AppCompatActivity
     db = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     networkChangeReceiver = new NetworkChangeReceiver(this);
-
     pdfViewer = findViewById(R.id.pdfViewer);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+
 
     AppCompatTextView titletxt = (AppCompatTextView) findViewById(R.id.title);
     titletxt.setText(getResources().getString(R.string.consent_pdf1));
@@ -142,22 +141,22 @@ public class PdfDisplayActivity extends AppCompatActivity
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             // checking the permissions
             if ((ActivityCompat.checkSelfPermission(
-                        PdfDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED)
+                PdfDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
                 || (ActivityCompat.checkSelfPermission(
-                        PdfDisplayActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED)) {
+                PdfDisplayActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)) {
               String[] permission =
-                  new String[] {
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                  new String[]{
+                      Manifest.permission.READ_EXTERNAL_STORAGE,
+                      Manifest.permission.WRITE_EXTERNAL_STORAGE
                   };
               if (!hasPermissions(permission)) {
                 // just checking is it already denied?
                 Toast.makeText(
-                        PdfDisplayActivity.this,
-                        getResources().getString(R.string.permission_enable_message),
-                        Toast.LENGTH_LONG)
+                    PdfDisplayActivity.this,
+                    getResources().getString(R.string.permission_enable_message),
+                    Toast.LENGTH_LONG)
                     .show();
               } else {
                 sharePdf();
@@ -197,7 +196,7 @@ public class PdfDisplayActivity extends AppCompatActivity
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(this, getResources().getString(R.string.auth), ""));
+            .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
@@ -232,14 +231,14 @@ public class PdfDisplayActivity extends AppCompatActivity
   private void pdfWritingPermission() {
     // checking the permissions
     if ((ActivityCompat.checkSelfPermission(
-                PdfDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED)
+        PdfDisplayActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        != PackageManager.PERMISSION_GRANTED)
         || (ActivityCompat.checkSelfPermission(
-                PdfDisplayActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED)) {
+        PdfDisplayActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        != PackageManager.PERMISSION_GRANTED)) {
       String[] permission =
-          new String[] {
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+          new String[]{
+              Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
           };
       if (!hasPermissions(permission)) {
         ActivityCompat.requestPermissions(
@@ -273,9 +272,9 @@ public class PdfDisplayActivity extends AppCompatActivity
       case PERMISSION_REQUEST_CODE:
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
           Toast.makeText(
-                  PdfDisplayActivity.this,
-                  getResources().getString(R.string.permission_enable_message),
-                  Toast.LENGTH_LONG)
+              PdfDisplayActivity.this,
+              getResources().getString(R.string.permission_enable_message),
+              Toast.LENGTH_LONG)
               .show();
         } else {
           sharePdfCreation();

@@ -23,8 +23,6 @@ import android.security.KeyPairGeneratorSpec;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
-import android.util.Log;
-
 import com.harvard.R;
 import com.harvard.utils.Logger;
 import java.io.ByteArrayInputStream;
@@ -41,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Enumeration;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -78,7 +75,7 @@ public class RealmEncryptionHelper {
     prefsHelper = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
-  public void deleteEntry(String alias){
+  public void deleteEntry(String alias) {
     try {
       keyStore = KeyStore.getInstance(ANDROID_KEY_STORE);
       keyStore.load(null);

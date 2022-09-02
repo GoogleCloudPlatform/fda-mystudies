@@ -20,6 +20,8 @@
 import Foundation
 import IQKeyboardManagerSwift
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 // Contact us field description
 struct ContactUsFields {
@@ -48,13 +50,16 @@ class ContactUsViewController: UIViewController {
 
   var tableViewRowDetails: NSMutableArray?
   var previousContentHeight: Double = 0.0
-
+  private var reachability: Reachability!
+    
   // MARK: - ViewController LifeCycle
+    
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    self.navigationItem.title = NSLocalizedString("Contact Us", comment: "")
+    self.navigationItem.title = NSLocalizedString("Contact us", comment: "")
 
+      setupNotifiers()
     //  Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
 
@@ -79,25 +84,73 @@ class ContactUsViewController: UIViewController {
     self.tableView?.addGestureRecognizer(tapGestureRecognizer)
     _ = ContactUsFields.init()
   }
-
-  @objc func handleTapGesture(gesture: UIGestureRecognizer) {
-
-    let location = gesture.location(in: gesture.view)
-    if location.y > 245 {
-      let ip = IndexPath.init(row: 3, section: 0)
-      let cell = self.tableView?.cellForRow(at: ip) as! TextviewCell
-      cell.textView?.becomeFirstResponder()
-
+    
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
     }
-
-  }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonSubmit?.isEnabled = true
+        buttonSubmit?.layer.opacity = 1
+    }
+    
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+        buttonSubmit?.isEnabled = false
+        buttonSubmit?.layer.opacity = 0.5
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
+    
+    @objc func handleTapGesture(gesture: UIGestureRecognizer) {
+        
+        let location = gesture.location(in: gesture.view)
+        if location.y > 245 {
+            let ip = IndexPath.init(row: 3, section: 0)
+            let cell = self.tableView?.cellForRow(at: ip) as! TextviewCell
+            cell.textView?.becomeFirstResponder()
+            
+        }
+    }
 
   // MARK: - Button Actions
 
   /// Validations after clicking on submit button
   /// If all the validations satisfy send contact-us request
   @IBAction func buttonSubmitAciton(_ sender: UIButton) {
-
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ContactUs Submit"
+    ])
+    self.view.endEditing(true)
     if ContactUsFields.firstName.isEmpty && ContactUsFields.email.isEmpty
       && ContactUsFields
         .subject
@@ -108,26 +161,44 @@ class ContactUsViewController: UIViewController {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageAllFieldsAreEmpty, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Fill all fields alert"
+      ])
     } else if ContactUsFields.firstName.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageFirstNameBlank, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter first name alert"
+      ])
     } else if ContactUsFields.email.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageEmailBlank, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter email alert"
+      ])
     } else if ContactUsFields.subject.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageSubjectBlankCheck, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter subject alert"
+      ])
     } else if ContactUsFields.message.isEmpty {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageMessageBlankCheck, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter message alert"
+      ])
     } else if !(Utilities.isValidEmail(testStr: ContactUsFields.email)) {
       UIUtilities.showAlertWithMessage(
         alertMessage: NSLocalizedString(kMessageValidEmail, comment: "")
       )
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid email alert"
+      ])
     } else {
       UserServices().sendUserContactUsRequest(delegate: self)
     }

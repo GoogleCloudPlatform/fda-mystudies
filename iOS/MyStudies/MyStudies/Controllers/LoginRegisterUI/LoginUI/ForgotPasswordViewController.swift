@@ -19,12 +19,14 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 let kVerifyViewControllerSegue = "VerifyViewControllerSegue"
 let kVerficationMessageFromForgotPassword =
   """
-  Your registered email(xyz@gmail.com) is pending verification. Enter the Verification Code received \
-  on this email to complete verification and try the Forgot Password action again.
+  Your account(xyz@gmail.com) is pending verification. Enter the verification code sent \
+  to your registered email to complete this step and try requesting password help again.
   """
 
 class ForgotPasswordViewController: UIViewController {
@@ -37,12 +39,13 @@ class ForgotPasswordViewController: UIViewController {
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
   }
-
+  private var reachability: Reachability!
   // MARK: - ViewController Delegates
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    setupNotifiers()
     // Used to set border color for bottom view
     buttonSubmit?.layer.borderColor = kUicolorForButtonBackground
     self.title = NSLocalizedString(kForgotPasswordTitleText, comment: "")
@@ -55,8 +58,9 @@ class ForgotPasswordViewController: UIViewController {
     self.view?.addGestureRecognizer(gestureRecognizwe)
 
     self.addBackBarButton()
+    textFieldEmail?.delegate = self
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -71,11 +75,55 @@ class ForgotPasswordViewController: UIViewController {
     super.viewDidAppear(animated)
     textFieldEmail?.becomeFirstResponder()
   }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+      NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                             name: Notification.Name.reachabilityChanged, object: nil);
+        
+      do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+          } catch(let error) { }
+  }
+    
+  @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+  
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonSubmit?.isEnabled = true
+        buttonSubmit?.layer.opacity = 1
+    }
+  
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .bottom, title: nil, image: nil, completion: nil)
+        buttonSubmit?.isEnabled = false
+        buttonSubmit?.layer.opacity = 0.5
+    }
 
   // MARK: - Utility Methods
 
   /// Dismiss key board when clicked on Background.
   @objc func dismissKeyboard() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ForgotPassword KeyboardDone"
+    ])
     self.view.endEditing(true)
   }
 
@@ -98,12 +146,21 @@ class ForgotPasswordViewController: UIViewController {
   /// To check all the validations
   /// before making a logout webservice call.
   @IBAction func submitButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ForgotPassword Submit"
+    ])
     self.dismissKeyboard()
     if textFieldEmail?.text == "" {
       self.showAlertMessages(textMessage: kMessageEmailBlank)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Enter email alert"
+      ])
 
     } else if !(Utilities.isValidEmail(testStr: (textFieldEmail?.text)!)) {
       self.showAlertMessages(textMessage: kMessageValidEmail)
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "Valid email alert"
+      ])
     } else if let email = textFieldEmail?.text {
       requestPassword(with: email)
     }
@@ -141,6 +198,9 @@ class ForgotPasswordViewController: UIViewController {
           buttonTitle: NSLocalizedString(kTitleOk, comment: ""),
           viewControllerUsed: self
         ) {
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "ForgotPassword Ok Alert"
+          ])
           _ = self.navigationController?.popViewController(animated: true)
         }
       } else if let error = error {
@@ -175,6 +235,9 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
       title: NSLocalizedString(kAlertMessageText, comment: "") as NSString,
       message: NSLocalizedString(kAlertMessageResendEmail, comment: "") as NSString
     )
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resend email alert"
+    ])
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
@@ -201,6 +264,12 @@ extension ForgotPasswordViewController: UITextFieldDelegate {
       return false
     } else {
       return true
+    }
+  }
+  
+  func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+    if textField.text ?? "" != "" && !(Utilities.isValidEmail(testStr: textField.text ?? "")) {
+      self.showAlertMessages(textMessage: kMessageValidEmail)
     }
   }
 }

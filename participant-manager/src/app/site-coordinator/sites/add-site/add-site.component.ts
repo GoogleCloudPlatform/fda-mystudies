@@ -7,8 +7,8 @@ import {Study} from '../../studies/shared/study.model';
 import {AddSiteRequest} from '../shared/add.sites.request';
 import {LocationService} from '../../location/shared/location.service';
 import {ManageLocations} from '../../location/shared/location.model';
-import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Observable, of} from 'rxjs';
+import {Site, SiteResponse} from '../../studies/shared/site.model';
 @Component({
   selector: 'add-site',
   templateUrl: './add-site.component.html',
@@ -18,12 +18,14 @@ export class AddSiteComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   @Input() study = {} as Study;
-  @Output() closeModalEvent = new EventEmitter();
+  @Output() closeModalEvent = new EventEmitter<Site>();
   @Output() cancelEvent = new EventEmitter();
   newSite = {} as Study;
   site = {} as AddSiteRequest;
   location$: Observable<ManageLocations> = of();
   disableButton = false;
+  addedSite = {} as Site;
+  siteName = '';
   constructor(
     private readonly siteService: SitesService,
     private readonly toastr: ToastrService,
@@ -47,8 +49,11 @@ export class AddSiteComponent
     this.disableButton = true;
     this.subs.add(
       this.siteService.add(this.site).subscribe(
-        (successResponse: ApiResponse) => {
+        (successResponse: SiteResponse) => {
           this.disableButton = false;
+          this.addedSite.id = successResponse.siteId;
+          this.addedSite.name = successResponse.siteName;
+          this.addedSite.invited = 0;
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {
@@ -58,13 +63,13 @@ export class AddSiteComponent
         },
         () => {
           this.disableButton = false;
-          this.closeModal();
+          this.cancel();
         },
       ),
     );
   }
   closeModal(): void {
-    this.closeModalEvent.next();
+    this.closeModalEvent.emit(this.addedSite);
   }
   cancel(): void {
     this.cancelEvent.next();

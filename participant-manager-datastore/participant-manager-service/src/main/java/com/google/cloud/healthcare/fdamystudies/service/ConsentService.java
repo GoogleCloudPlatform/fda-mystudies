@@ -15,4 +15,7 @@ public interface ConsentService {
 
   public ConsentDocumentResponse getConsentDocument(
       String consentId, String userId, AuditLogEventRequest auditRequest);
+
+  public ConsentDocumentResponse getConsentDocumentFromConsentStore(
+      String consentId, String userId, AuditLogEventRequest auditRequest);
 }

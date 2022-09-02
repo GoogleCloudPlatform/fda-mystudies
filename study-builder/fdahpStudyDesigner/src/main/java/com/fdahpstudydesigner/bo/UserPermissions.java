@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,48 +24,37 @@
 
 package com.fdahpstudydesigner.bo;
 
-import java.util.Set;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "user_permissions")
-public class UserPermissions {
+public class UserPermissions implements Serializable {
 
+  private static final long serialVersionUID = 135353554543L;
+
+  @Column(name = "permissions", nullable = false, length = 45)
   private String permissions;
 
+  @Id
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "permission_id", updatable = false, nullable = false)
   private Integer userRoleId;
-
-  private Set<UserBO> users;
 
   public UserPermissions() {}
 
-  public UserPermissions(Set<UserBO> users, String permissions) {
-    this.setUsers(users);
-    this.setPermissions(permissions);
-  }
-
-  @Column(name = "permissions", nullable = false, length = 45)
   public String getPermissions() {
     return permissions;
   }
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "permission_id", unique = true, nullable = false)
   public Integer getUserRoleId() {
     return this.userRoleId;
-  }
-
-  @ManyToMany(fetch = FetchType.EAGER)
-  public Set<UserBO> getUsers() {
-    return users;
   }
 
   public void setPermissions(String permissions) {
@@ -73,9 +63,5 @@ public class UserPermissions {
 
   public void setUserRoleId(Integer userRoleId) {
     this.userRoleId = userRoleId;
-  }
-
-  public void setUsers(Set<UserBO> users) {
-    this.users = users;
   }
 }

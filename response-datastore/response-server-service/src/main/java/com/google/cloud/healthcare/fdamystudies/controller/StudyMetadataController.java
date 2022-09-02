@@ -20,12 +20,14 @@ import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,19 +35,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Study metadata",
+    value = "Study metadata",
+    description =
+        "Operations pertaining to study metadata, once study is published from study builder")
 @RestController
 public class StudyMetadataController {
   @Autowired private StudyMetadataService studyMetadataService;
 
   @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
-  private static final Logger logger = LoggerFactory.getLogger(StudyMetadataController.class);
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
+  private static final String STATUS_LOG = "status=%d";
+
+  private XLogger logger = XLoggerFactory.getXLogger(StudyMetadataController.class.getName());
+
+  @ApiOperation(
+      value =
+          "Add or update study metadata in response datastore"
+              + " when a study is published from study builder")
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
       @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request)
       throws ProcessResponseException, IllegalAccessException, IllegalArgumentException,
           InvocationTargetException, IntrospectionException {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     String studyIdToUpdate = null;
     studyIdToUpdate = studyMetadataBean.getStudyId();
     if (StringUtils.isBlank(studyIdToUpdate)
@@ -66,6 +82,7 @@ public class StudyMetadataController {
 
     studyMetadataService.saveStudyMetadata(studyMetadataBean);
     responseServerAuditLogHelper.logEvent(STUDY_METADATA_RECEIVED, auditRequest);
+    logger.exit(String.format(STATUS_LOG, HttpStatus.OK.value()));
     return new ResponseEntity<String>(HttpStatus.OK);
   }
 }

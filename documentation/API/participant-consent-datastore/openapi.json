@@ -1,0 +1,354 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Api Documentation",
+    "contact" : { },
+    "license" : {
+      "name" : "View License",
+      "url" : "https://github.com/GoogleCloudPlatform/fda-mystudies/blob/master/LICENSE.txt"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/participant-consent-datastore",
+  "tags" : [ {
+    "name" : "Consent",
+    "description" : "Operations pertaining to consent document"
+  }, {
+    "name" : "Get Health",
+    "description" : "Provides an indication about the health of the service"
+  }, {
+    "name" : "test-pdf-upload",
+    "description" : "Test PDF Upload"
+  } ],
+  "paths" : {
+    "/consentDocument" : {
+      "get" : {
+        "tags" : [ "Consent" ],
+        "summary" : "Returns a response related to consent document",
+        "operationId" : "getStudyConsentPdfUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "consentVersion",
+          "description" : "consentVersion",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "body",
+          "name" : "studyId",
+          "description" : "studyId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/healthCheck" : {
+      "get" : {
+        "tags" : [ "Get Health" ],
+        "summary" : "Provides an indication about the health of the service",
+        "description" : "Default response codes 400 and 401 are not applicable for this operation",
+        "operationId" : "healthUsingGET",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Service is Up and Running",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/testPDFDownload" : {
+      "get" : {
+        "tags" : [ "test-pdf-upload" ],
+        "summary" : "testPDFDownload",
+        "operationId" : "testPDFDownloadUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "fileName",
+          "in" : "header",
+          "description" : "fileName",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/testPDFUpload" : {
+      "post" : {
+        "tags" : [ "test-pdf-upload" ],
+        "summary" : "testPDFUpload",
+        "operationId" : "testPDFUploadUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "fileName",
+          "in" : "header",
+          "description" : "fileName",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/updateEligibilityConsentStatus" : {
+      "post" : {
+        "tags" : [ "Consent" ],
+        "summary" : "Update consent status and store the consent document in Google Cloud Storage (GCS)",
+        "operationId" : "updateEligibilityConsentStatusUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "consentStatusBean",
+          "description" : "consentStatusBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ConsentStatusBean"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "BaseResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "BaseResponse"
+    },
+    "ConsentReqBean" : {
+      "type" : "object",
+      "required" : [ "pdf", "status", "version" ],
+      "properties" : {
+        "pdf" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "version" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        }
+      },
+      "title" : "ConsentReqBean"
+    },
+    "ConsentStatusBean" : {
+      "type" : "object",
+      "required" : [ "consent", "siteId", "studyId" ],
+      "properties" : {
+        "consent" : {
+          "$ref" : "#/definitions/ConsentReqBean"
+        },
+        "eligibility" : {
+          "type" : "boolean"
+        },
+        "sharing" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "studyId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ConsentStatusBean"
+    },
+    "ValidationErrorResponse" : {
+      "type" : "object",
+      "properties" : {
+        "error_code" : {
+          "type" : "string"
+        },
+        "error_description" : {
+          "type" : "string"
+        },
+        "error_type" : {
+          "type" : "string"
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "title" : "ValidationErrorResponse"
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Violation"
+    }
+  }
+}

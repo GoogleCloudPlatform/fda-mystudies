@@ -19,15 +19,16 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(ParticipantStudiesInfoDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(ParticipantStudiesInfoDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
@@ -38,7 +39,7 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
   public List<ParticipantStudyEntity> getParticipantStudiesInfo(String userDetailsId) {
 
     List<ParticipantStudyEntity> participantStudiesList = null;
-    logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Started");
+    logger.entry("Begin getParticipantStudiesInfo()");
     if (userDetailsId != null) {
       Session session = this.sessionFactory.getCurrentSession();
 
@@ -62,7 +63,6 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
       }
       return map.values().stream().collect(Collectors.toList());
     } else {
-      logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Ended");
       return null;
     }
   }

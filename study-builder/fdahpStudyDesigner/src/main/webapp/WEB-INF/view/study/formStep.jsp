@@ -24,9 +24,9 @@
         <span class="mr-sm cur-pointer" onclick="goToBackPage(this);"><img
             src="../images/icons/back-b.png"
             alt=""/></span>
-        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit Form Step</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'add'}">Add Form Step</c:if>
-        <c:if test="${actionTypeForQuestionPage == 'view'}">View Form Step <c:set
+        <c:if test="${actionTypeForQuestionPage == 'edit'}">Edit form step</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'add'}">Add form step</c:if>
+        <c:if test="${actionTypeForQuestionPage == 'view'}">View form step <c:set
             var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span>':''}
         </c:if>
       </div>
@@ -113,7 +113,7 @@
               <div class="form-group">
                 <input autofocus="autofocus" type="text" custAttType="cust" class="form-control"
                        name="stepShortTitle" id="stepShortTitle"
-                       value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}" required
+                       value="${fn:escapeXml(questionnairesStepsBo.stepShortTitle)}" required data-error="Please fill out this field"
                        maxlength="15" <c:if
                     test="${not empty questionnairesStepsBo.isShorTitleDuplicate && (questionnairesStepsBo.isShorTitleDuplicate gt 0)}"> disabled</c:if>/>
                 <div class="help-block with-errors red-txt"></div>
@@ -158,7 +158,7 @@
                 </div>
                 <div class="form-group">
                   <select class="selectpicker" name="destinationStep" id="destinationStepId"
-                          value="${questionnairesStepsBo.destinationStep}" required>
+                          value="${questionnairesStepsBo.destinationStep}" required data-error="Please fill out this field">
                     <c:forEach items="${destinationStepList}" var="destinationStep">
                       <option
                           value="${destinationStep.stepId}" ${questionnairesStepsBo.destinationStep eq destinationStep.stepId ? 'selected' :''}>
@@ -205,7 +205,7 @@
             <div class="form-group mb-none col-md-4 p-none">
               <input type="text" class="form-control"
                      placeholder="Eg: I have more medications to add"
-                     name="repeatableText" id="repeatableText"
+                   name="repeatableText" id="repeatableText" data-error="Please fill out this field" 
                      value="${fn:escapeXml(questionnairesStepsBo.repeatableText)}"
                      <c:if test="${questionnairesStepsBo.repeatable ne 'Yes'}">disabled</c:if>
                      maxlength="30"
@@ -215,8 +215,8 @@
           </div>
           <div class="clearfix"></div>
           <div class="row mt-lg" id="addQuestionContainer">
-            <div class="col-md-6 p-none blue-md-f mt-xs text-uppercase">
-              Questions in the Form
+            <div class="col-md-6 p-none black-md-f mt-xs">
+              Questions in the form
             </div>
             <div class="col-md-6 p-none">
               <div class="dis-line form-group mb-md pull-right">
@@ -237,8 +237,7 @@
                     </td>
                     <td>
                       <div>
-                        <div class="dis-ellipsis"
-                             title="${fn:escapeXml(entry.value.title)}">${entry.value.title}</div>
+                        <div class="dis-ellipsis">${entry.value.title}</div>
                       </div>
                     </td>
                     <td>
@@ -265,16 +264,18 @@
                           <span class="ellipse" onmouseenter="ellipseHover(this);"></span>
                           <div class="ellipse-hover-icon"
                                onmouseleave="ellipseUnHover(this);">
-                            <span class="sprites_icon preview-g mr-sm"
-                                  onclick="viewQuestion(${entry.value.questionInstructionId});"></span>
+                            <span class="sprites_icon preview-g mr-sm"data-toggle="tooltip" data-placement="top" title="View"
+                                  onclick="viewQuestion('${entry.value.questionInstructionId}');"></span>
                             <span
                                 class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionTypeForQuestionPage eq 'view'}"> cursor-none-without-event </c:if>"
+                                data-toggle="tooltip" data-placement="top" title="Edit"
                                 <c:if
-                                    test="${actionTypeForQuestionPage ne 'view'}">onclick="editQuestion(${entry.value.questionInstructionId});"</c:if>></span>
+                                    test="${actionTypeForQuestionPage ne 'view'}">onclick="editQuestion('${entry.value.questionInstructionId}');"</c:if>></span>
                             <span
                                 class="sprites_icon delete <c:if test="${actionTypeForQuestionPage eq 'view'}"> cursor-none-without-event </c:if>"
+                                data-toggle="tooltip" data-placement="top" title="Delete"
                                 <c:if
-                                    test="${actionTypeForQuestionPage ne 'view'}">onclick="deletQuestion(${entry.value.stepId},${entry.value.questionInstructionId})"</c:if>></span>
+                                    test="${actionTypeForQuestionPage ne 'view'}">onclick="deletQuestion('${entry.value.stepId}','${entry.value.questionInstructionId}')"</c:if>></span>
                           </div>
                         </div>
                       </div>
@@ -330,7 +331,7 @@
                 $('#alertMsg').show();
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                     "Add atleast one question");
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
                 $('.formLevel a').tab('show');
               } else {
                 var repeatable = $('input[name="repeatable"]:checked').val();
@@ -358,7 +359,7 @@
                           $('#alertMsg').show();
                           $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                               "Add atleast one question");
-                          setTimeout(hideDisplayMessage, 4000);
+                          setTimeout(hideDisplayMessage, 5000);
                           $('.formLevel a').tab('show');
                         }
                       }
@@ -375,7 +376,7 @@
                       $('#alertMsg').show();
                       $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                           "Add atleast one question");
-                      setTimeout(hideDisplayMessage, 4000);
+                      setTimeout(hideDisplayMessage, 5000);
                       $('.formLevel a').tab('show');
                     }
                   }
@@ -442,7 +443,7 @@
       "info": false,
       "filter": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       rowReorder: reorder,
       "columnDefs": [{orderable: false, targets: [0, 1, 2]}],
@@ -494,7 +495,7 @@
             if (status == "SUCCESS") {
               $('#alertMsg').show();
               $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                  "Reorder done successfully");
+                  "Content items reordered");
               if ($('.sixthQuestionnaires').find('span').hasClass(
                   'sprites-icons-2 tick pull-right mt-xs')) {
                 $('.sixthQuestionnaires').find('span').removeClass(
@@ -505,11 +506,11 @@
               $("#alertMsg").removeClass('s-box').addClass('e-box').text(
                   "Unable to reorder consent");
             }
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           },
           error: function (xhr, status, error) {
             $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-            setTimeout(hideDisplayMessage, 4000);
+            setTimeout(hideDisplayMessage, 5000);
           }
         });
       }
@@ -557,6 +558,7 @@
   }
 
   function viewQuestion(questionId) {
+	  
     $("#questionId").val(questionId);
     $("#actionTypeForFormStep").val('view');
     document.formStepId.action = "/studybuilder/adminStudies/formQuestion.do?_S=${param._S}";
@@ -620,7 +622,7 @@
                   'sprites-icons-2 tick pull-right mt-xs');
             }
             $("#addQuestionId").removeClass("cursor-none");
-            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft.");
+            $("#alertMsg").removeClass('e-box').addClass('s-box').text("Content saved as draft");
             $(item).prop('disabled', false);
             $('#alertMsg').show();
             if ($("#saveBtn").text() == 'Next') {
@@ -646,13 +648,13 @@
             if (callback)
               callback(false);
           }
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         },
         error: function (xhr, status, error) {
           $(item).prop('disabled', false);
           $('#alertMsg').show();
           $("#alertMsg").removeClass('s-box').addClass('e-box').text("Something went Wrong");
-          setTimeout(hideDisplayMessage, 4000);
+          setTimeout(hideDisplayMessage, 5000);
         }
       });
     }
@@ -721,11 +723,11 @@
                   }
                   $('#alertMsg').show();
                 }
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               },
               error: function (xhr, status, error) {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               }
             });
           } else {
@@ -765,16 +767,16 @@
         }
         dynamicAction += '<span class="ellipse" onmouseenter="ellipseHover(this);"></span>' +
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
-            '  <span class="sprites_icon preview-g mr-sm"></span>';
+            '  <span class="sprites_icon preview-g mr-sm" data-toggle="tooltip" data-placement="top" title="View"></span>';
         if (value.status) {
-          dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editQuestion('
-              + parseInt(value.questionInstructionId) + ');"></span>';
+          dynamicAction += '<span class="sprites_icon edit-g mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion(&#34;'
+              + value.questionInstructionId + '&#34;);"></span>';
         } else {
-          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editQuestion('
-              + parseInt(value.questionInstructionId) + ');"></span>';
+          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" data-toggle="tooltip" data-placement="top" title="Edit" onclick="editQuestion(&#34;'
+              + value.questionInstructionId + '&#34;);"></span>';
         }
-        dynamicAction += '<span class="sprites_icon delete" onclick="deletQuestion(' + parseInt(value.stepId)
-            + ',' + parseInt(value.questionInstructionId) + ')"></span>' +
+        dynamicAction += '<span class="sprites_icon delete" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deletQuestion(&#34;' + value.stepId
+            + '&#34;,&#34;' + value.questionInstructionId + '&#34;)"></span>' +
             '</div>' +
             '</div></div>';
         datarow.push(dynamicAction);
@@ -792,6 +794,7 @@
       $('#helpNote').attr('data-original-title',
           'Please ensure you add one or more questions to this Form Step before attempting this action.');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function goToBackPage(item) {
@@ -865,7 +868,7 @@
               $(thisAttr).parent().find(".help-block").append(
             	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
                   shortTitle
-                  + " has already been used in the past."));
+                  + " has already been used in the past"));
               callback(false);
             }
           },
@@ -900,7 +903,7 @@
           if ('SUCCESS' == message) {
             callback(true);
             showErrMsg(
-                "The following attributes/properties cannot be used with questions that are added to a 'repeatable' type of form:  anchor date, chart for app dashboard, statistic for app dashboard.");
+                "The following attributes/properties cannot be used with questions that are added to a 'repeatable' type of form: Use response as anchor date, chart for app dashboard, statistic for app dashboard.");
           } else {
             callback(false);
           }
@@ -911,4 +914,8 @@
       callback(false);
     }
   }
+
+  $(document).on('mouseenter', '.dropdown-toggle',  function () {
+      $(this).removeAttr("title");
+});
 </script>

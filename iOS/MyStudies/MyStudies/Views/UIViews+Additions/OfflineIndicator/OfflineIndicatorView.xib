@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OfflineIndicatorView" customModule="FDA_MyStudies" customModuleProvider="target">
+            <connections>
+                <outlet property="closeButton" destination="58h-UO-0c9" id="KhG-IN-N7T"/>
+                <outlet property="detailedMessage" destination="ILv-3p-xPs" id="FML-J5-Bx3"/>
+                <outlet property="indicatorView" destination="yJQ-8x-cBh" id="TjH-9z-Qvm"/>
+                <outlet property="view" destination="LTV-Dj-evI" id="Ffr-KF-CUU"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="LTV-Dj-evI">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <view contentMode="scaleToFill" id="yJQ-8x-cBh">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="qbx-CT-Q3P">
+                            <rect key="frame" x="20" y="0.0" width="374" height="200"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You are offline" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Aa3-Vg-Kob">
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="inQ-v0-6dO"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can still use this section but may miss out on latest content updates." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ILv-3p-xPs">
+                                    <rect key="frame" x="0.0" y="40" width="374" height="110"/>
+                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="58h-UO-0c9">
+                                    <rect key="frame" x="0.0" y="160" width="374" height="40"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="40" id="Lc7-66-LNY"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="HiraMaruProN-W4" family="Hiragino Maru Gothic ProN" pointSize="24"/>
+                                    <state key="normal" title="X">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="closeButtonPressed:" destination="-1" eventType="touchUpInside" id="BrG-Fp-hcS"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="qbx-CT-Q3P" firstAttribute="top" secondItem="yJQ-8x-cBh" secondAttribute="top" id="GfV-zk-b7H"/>
+                        <constraint firstAttribute="bottom" secondItem="qbx-CT-Q3P" secondAttribute="bottom" id="LDG-oL-JPI"/>
+                        <constraint firstItem="qbx-CT-Q3P" firstAttribute="leading" secondItem="yJQ-8x-cBh" secondAttribute="leading" constant="20" id="Tn1-kb-Eya"/>
+                        <constraint firstAttribute="trailing" secondItem="qbx-CT-Q3P" secondAttribute="trailing" constant="20" id="tqt-Fz-b2v"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Bg4-Th-HOp"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="yJQ-8x-cBh" firstAttribute="centerX" secondItem="LTV-Dj-evI" secondAttribute="centerX" id="2Oz-zM-leC"/>
+                <constraint firstItem="yJQ-8x-cBh" firstAttribute="top" secondItem="LTV-Dj-evI" secondAttribute="top" id="RXK-Od-yWn"/>
+                <constraint firstItem="yJQ-8x-cBh" firstAttribute="leading" secondItem="Bg4-Th-HOp" secondAttribute="leading" id="aHk-Rs-J6g"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-251" y="29"/>
+        </view>
+    </objects>
+</document>

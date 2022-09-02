@@ -4,10 +4,10 @@
       <nav class="navbar navbar-expand-md p-none">
         <a
           [routerLink]="disableButton ? [] : ['/coordinator']"
-          class="navbar-brand"
+          class="navbar-brand cursor__none"
         >
           <img
-            class="mr-sm width__auto"
+            class="cursor__none mr-sm width__auto"
             src="assets/images/branding/landing-logo.png"
             alt="main logo"
           />
@@ -50,6 +50,7 @@
                   class="form-control"
                   id="fname"
                   placeholder="Enter first name"
+                  pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
                   formControlName="firstName"
                 />
                 <div
@@ -65,6 +66,13 @@
                   >
                     Enter a first name
                   </span>
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.firstName.errors?.pattern"
+                  >
+                    Please use characters from the following set only: A-Z a-z
+                    0-9 *()_+|:.-
+                  </span>
                 </div>
               </div>
             </div>
@@ -77,6 +85,7 @@
                   id="lname"
                   placeholder="Enter last name"
                   formControlName="lastName"
+                  pattern="^[A-Za-z0-9*()_+|:.-]*$"
                 />
                 <div
                   class="validation-error"
@@ -91,12 +100,63 @@
                   >
                     Enter a last name
                   </span>
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.lastName.errors?.pattern"
+                  >
+                    Please use characters from the following set only: A-Z a-z
+                    0-9 *()_+|:.-
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+      <!-- <div
+        class="col-xs-6 col-md-6 p-1 p-lg-0 cursor__pointer passCriteria"
+        data-toggle="tooltip"
+        title="{{ passCriteria }}"
+      >
+        <a class="subheader__title float-right">
+          <span>
+            <img
+              class="mr-xs helpout_svg cursor__pointer"
+              src="assets/svgs/help_outline.svg"
+              alt="Go back"
+            />
+          </span>
+
+          <span class="subheader__title font12">Password criteria</span>
+        </a>
+      </div> -->
+
+      <div class="col-xs-6 col-md-6 p-1 p-lg-0 float-right cursor__pointer">
+        <div class="form-group">
+          <div class="custom__labels">
+            <label class="mt-xs float-right pr-1">
+              <span
+                class="tool"
+                data-tip="Your password must be at least 8 characters long and contain lower case, upper case, numeric and special characters."
+                tabindex="1"
+              >
+                <a class="subheader__title float-right">
+                  <span>
+                    <img
+                      class="mr-xs helpout_svg cursor__pointer"
+                      src="assets/svgs/help_outline.svg"
+                      alt="Go back"
+                    />
+                  </span>
+
+                  <span class="subheader__title font12">Password criteria</span>
+                </a>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
       <h2 class="subheader__title mb-sm">Create password</h2>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="row">
@@ -104,32 +164,102 @@
             <div class="form-group">
               <label for="password">Password</label>
               <input
-                type="password"
+                [type]="fieldTextType ? 'text' : 'password'"
                 class="form-control"
                 id="password"
                 placeholder="Enter password"
+                class="form-control"
                 formControlName="password"
               />
+              <i
+                class="fa fa-fw field-icon toggle-password"
+                [ngClass]="{
+                  'fa-eye-slash': !fieldTextType,
+                  'fa-eye': fieldTextType
+                }"
+                (click)="toggleFieldTextType()"
+              ></i>
 
               <div
-                class="validation-error"
-                *ngIf="
-                  f.password.invalid && (f.password.dirty || f.password.touched)
-                "
+                class="validation-error help-block with-errors error__msg"
+                *ngIf="f.password.dirty || f.password.touched"
               >
-                <span
-                  class="help-block with-errors error__msg"
-                  *ngIf="f.password.errors?.validPassword"
+                <div *ngIf="f.password.dirty">
+                  <span
+                    [ngClass]="
+                      meterStatus == 'Weak'
+                        ? 'weakPwd'
+                        : meterStatus == 'Fair'
+                        ? 'fairPwd'
+                        : meterStatus == 'Good'
+                        ? 'goodPwd'
+                        : 'strongPwd'
+                    "
+                  >
+                    {{ meterStatus }}
+                  </span>
+                  <meter
+                    low="{{ passwordMeterLow }}"
+                    optimum="{{ passwordMeterOptimum }}"
+                    high="{{ passwordMeterHigh }}"
+                    value="{{ passwordMeterValue }}"
+                  ></meter>
+                </div>
+                <div
+                  *ngIf="
+                    submitted ||
+                    (f.password.invalid &&
+                      (f.password.dirty || f.password.touched))
+                  "
+                  class="help-block"
                 >
-                  Your password must be at least 8 characters long and contain
-                  lower case, upper case, numeric and special characters.
-                </span>
-                <span
-                  class="help-block with-errors error__msg"
-                  *ngIf="f.password.errors?.required"
-                >
-                  Enter a password
-                </span>
+                  <span
+                    class="help-block with-errors error__msg text-left"
+                    *ngIf="f.password.errors?.required"
+                  >
+                    Enter a password
+                  </span>
+                  <div
+                    class="text-left"
+                    *ngIf="f.password.errors?.passwordlength"
+                  >
+                    {{ getError("EC_0084") }}
+                  </div>
+                  <div
+                    class="text-left"
+                    *ngIf="f.password.errors?.consecutiveCharactErrorwhitespace"
+                  >
+                    {{ getError("EC_0081") }}
+                  </div>
+                  <div
+                    class="text-left"
+                    *ngIf="f.password.errors?.userNameError"
+                  >
+                    {{ getError("EC_0082") }}
+                  </div>
+                  <div
+                    class="text-left"
+                    *ngIf="f.password.errors?.serviceNameError"
+                  >
+                    {{ getError("EC_0083") }}
+                  </div>
+                  <!-- <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.password.errors?.validPassword"
+                  >
+                    Your password must be at least 8 characters long and contain
+                    lower case, upper case, numeric and special characters.
+                  </span> -->
+                  <span
+                    class="help-block float-left"
+                    *ngIf="
+                      f.password.invalid &&
+                      setupAccountForm.controls['password'].value.length == 0
+                    "
+                  >
+                    Enter a password
+                  </span>
+                </div>
               </div>
             </div>
           </div>

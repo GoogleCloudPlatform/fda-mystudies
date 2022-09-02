@@ -30,4 +30,5 @@ public class StudyStateBean {
   private String participantId = "";
   private String hashedToken = "";
   private String siteId = "";
+  private String dataSharingPermission;
 }

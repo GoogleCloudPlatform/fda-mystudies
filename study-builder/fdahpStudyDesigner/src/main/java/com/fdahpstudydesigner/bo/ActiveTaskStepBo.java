@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,10 +28,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "active_task_steps")
@@ -40,7 +41,7 @@ public class ActiveTaskStepBo implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @Column(name = "active_task_id")
-  private Integer activetaskId;
+  private String activetaskId;
 
   @Column(name = "active_task_stepscol")
   private String activeTaskStepscol;
@@ -52,13 +53,14 @@ public class ActiveTaskStepBo implements Serializable {
   private int sequenceNo;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "step_id")
-  private Integer stepId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "step_id", updatable = false, nullable = false)
+  private String stepId;
 
   public ActiveTaskStepBo() {}
 
-  public Integer getActivetaskId() {
+  public String getActivetaskId() {
     return activetaskId;
   }
 
@@ -74,11 +76,11 @@ public class ActiveTaskStepBo implements Serializable {
     return this.sequenceNo;
   }
 
-  public Integer getStepId() {
+  public String getStepId() {
     return this.stepId;
   }
 
-  public void setActivetaskId(Integer activetaskId) {
+  public void setActivetaskId(String activetaskId) {
     this.activetaskId = activetaskId;
   }
 
@@ -94,7 +96,7 @@ public class ActiveTaskStepBo implements Serializable {
     this.sequenceNo = sequenceNo;
   }
 
-  public void setStepId(Integer stepId) {
+  public void setStepId(String stepId) {
     this.stepId = stepId;
   }
 }

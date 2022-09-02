@@ -1,0 +1,482 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Api Documentation",
+    "contact" : { },
+    "license" : {
+      "name" : "View License",
+      "url" : "https://github.com/GoogleCloudPlatform/fda-mystudies/blob/master/LICENSE.txt"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/participant-enroll-datastore",
+  "tags" : [ {
+    "name" : "Enrollment",
+    "description" : "Operations pertaining to enroll flow in enrollment service"
+  }, {
+    "name" : "Get Health",
+    "description" : "Provides an indication about the health of the service"
+  }, {
+    "name" : "Participant Information",
+    "description" : "Operations pertaining to get participant details"
+  }, {
+    "name" : "Participant enrollment details",
+    "description" : "Operations related to Participant enrollment details "
+  } ],
+  "paths" : {
+    "/enroll" : {
+      "post" : {
+        "tags" : [ "Enrollment" ],
+        "summary" : "Enrolls into a study",
+        "operationId" : "enrollParticipantUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "enrollmentBean",
+          "description" : "enrollmentBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EnrollmentBean"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/healthCheck" : {
+      "get" : {
+        "tags" : [ "Get Health" ],
+        "summary" : "Provides an indication about the health of the service",
+        "description" : "Default response codes 400 and 401 are not applicable for this operation",
+        "operationId" : "healthUsingGET",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Service is Up and Running",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "string"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/participantInfo" : {
+      "get" : {
+        "tags" : [ "Participant Information" ],
+        "summary" : "Returns a response containing participant's enrollment details",
+        "operationId" : "getParticipantDetailsUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "participantId",
+          "in" : "query",
+          "description" : "participantId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "studyId",
+          "in" : "query",
+          "description" : "studyId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/studyState" : {
+      "get" : {
+        "tags" : [ "Participant enrollment details" ],
+        "summary" : "Returns a response containing participant study information.",
+        "operationId" : "getStudyStateUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/updateStudyState" : {
+      "post" : {
+        "tags" : [ "Participant enrollment details" ],
+        "summary" : "Updates enrollment status of a participant associated to particular study",
+        "operationId" : "updateStudyStateUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "studyStateReqBean",
+          "description" : "studyStateReqBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/StudyStateReqBean"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/validateEnrollmentToken" : {
+      "post" : {
+        "tags" : [ "Enrollment" ],
+        "summary" : " Validates enrollment token of the participant ",
+        "operationId" : "validateEnrollmentTokenUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "enrollmentBean",
+          "description" : "enrollmentBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EnrollmentBean"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "header",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/withdrawfromstudy" : {
+      "post" : {
+        "tags" : [ "Participant enrollment details" ],
+        "summary" : " Updates participant's enrollment status to withdrawn.",
+        "operationId" : "withdrawFromStudyUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "withdrawFromStudyBean",
+          "description" : "withdrawFromStudyBean",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/WithdrawFromStudyBean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "400" : {
+            "description" : "Invalid entries found in the submitted form. Please try again.",
+            "schema" : {
+              "$ref" : "#/definitions/ValidationErrorResponse"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized or Invalid token",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          },
+          "500" : {
+            "description" : "Sorry, an error has occurred and your request could not be processed. Please try again later.",
+            "schema" : {
+              "$ref" : "#/definitions/BaseResponse"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "BaseResponse" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "BaseResponse"
+    },
+    "EnrollmentBean" : {
+      "type" : "object",
+      "required" : [ "studyId" ],
+      "properties" : {
+        "studyId" : {
+          "type" : "string"
+        },
+        "token" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 8
+        }
+      },
+      "title" : "EnrollmentBean"
+    },
+    "StudiesBean" : {
+      "type" : "object",
+      "properties" : {
+        "adherence" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "bookmarked" : {
+          "type" : "boolean"
+        },
+        "completion" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "enrolledDate" : {
+          "type" : "string"
+        },
+        "participantId" : {
+          "type" : "string"
+        },
+        "siteId" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 64
+        },
+        "studyId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "StudiesBean"
+    },
+    "StudyStateReqBean" : {
+      "type" : "object",
+      "required" : [ "studies" ],
+      "properties" : {
+        "studies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StudiesBean"
+          }
+        }
+      },
+      "title" : "StudyStateReqBean"
+    },
+    "ValidationErrorResponse" : {
+      "type" : "object",
+      "properties" : {
+        "error_code" : {
+          "type" : "string"
+        },
+        "error_description" : {
+          "type" : "string"
+        },
+        "error_type" : {
+          "type" : "string"
+        },
+        "violations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        }
+      },
+      "title" : "ValidationErrorResponse"
+    },
+    "Violation" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Violation"
+    },
+    "WithdrawFromStudyBean" : {
+      "type" : "object",
+      "required" : [ "participantId", "studyId" ],
+      "properties" : {
+        "participantId" : {
+          "type" : "string"
+        },
+        "studyId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "WithdrawFromStudyBean"
+    }
+  }
+}

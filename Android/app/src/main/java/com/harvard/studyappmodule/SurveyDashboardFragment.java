@@ -448,7 +448,7 @@ public class SurveyDashboardFragment extends Fragment
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.survey_dashbord_day));
+                getString(R.string.survey_dashbord_day));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (!dateType.equalsIgnoreCase(DAY)) {
@@ -466,7 +466,7 @@ public class SurveyDashboardFragment extends Fragment
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.survey_dashbord_week));
+                getString(R.string.survey_dashbord_week));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (!dateType.equalsIgnoreCase(WEEK)) {
@@ -483,7 +483,7 @@ public class SurveyDashboardFragment extends Fragment
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.survey_dashbord_month));
+                getString(R.string.survey_dashbord_month));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             try {
@@ -504,7 +504,7 @@ public class SurveyDashboardFragment extends Fragment
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.survey_dashbord_change_date_left));
+                getString(R.string.survey_dashbord_change_date_left));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             nextDateLayout.setVisibility(View.VISIBLE);
@@ -582,7 +582,7 @@ public class SurveyDashboardFragment extends Fragment
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.survey_dashbord_change_date_right));
+                getString(R.string.survey_dashbord_change_date_right));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (dateType.equalsIgnoreCase(DAY)) {
@@ -689,8 +689,7 @@ public class SurveyDashboardFragment extends Fragment
           public void onClick(View view) {
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
-                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.trends));
+                CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.trends));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             if (dashboardData != null && dashboardData.getDashboard().getCharts().size() > 0) {
@@ -780,7 +779,9 @@ public class SurveyDashboardFragment extends Fragment
     }
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
-    String fname = ((SurveyActivity) context).getTitle1().replace("/", "\u2215") + "_Dashboard.png";
+    String fname = ((SurveyActivity) context).getTitle1()
+            .replace("/", "\u2215") + "_Dashboard.png";
+
     File file = new File(dir, fname);
     if (file.exists()) {
       file.delete();
@@ -1608,7 +1609,6 @@ public class SurveyDashboardFragment extends Fragment
                               + runId
                               + "_"
                               + stepKey);
-
                       stepRecordCustom.setStudyId(studyId);
                       stepRecordCustom.setActivityID(
                           studyId + "_STUDYID_" + responseInfoActiveTaskModel.getActivityId());

@@ -66,18 +66,18 @@ let kConsentViewPdfStoryboardId = "ConsentPdfViewerStepViewControllerIdentifier"
 /// Comprehenion Instruction Step Keys
 let kConsentComprehensionTestTitle = "Comprehension"
 let kConsentComprehensionTestText =
-  "Let's do a quick and simple test of your understanding of this Study."
+  "Let's do a quick and simple test of your understanding of this study."
 let kComprehensionInstructionStepIdentifier = "ComprehensionInstructionStep"
 
 /// Comprehension Completion Step Keys
-let kComprehensionCompletionTitle = "Great Job!"
+let kComprehensionCompletionTitle = "Great job!"
 let kComprehensionCompletionText =
-  "You answered all of the questions correctly. Tap on Next to proceed"
+  "You answered all of the questions correctly. Tap next to continue."
 let kComprehensionCompletionStepIdentifier = "ComprehensionCompletionStep"
 
 /// Consent Completion
 let kConsentCompletionMainTitle = "Consent confirmed"
-let kConsentCompletionSubTitle = "You can now start participating in the Study"
+let kConsentCompletionSubTitle = "You can now start participating in the study"
 let kSignaturePageContentText = "I agree to participate in this research study."
 
 /// Signature Page
@@ -142,17 +142,16 @@ class ConsentBuilder {
           let consentSection: ConsentSectionStep? = ConsentSectionStep()
           consentSection?.initWithDict(stepDict: sectionDict)
           consentSectionArray.append((consentSection?.createConsentSection())!)
-
-          if consentSection?.type != .custom {
-            consentHasVisualStep = true
-          }
+          consentHasVisualStep = true
         }
       }
 
       let consentSharingDict = (metaDataDict[kConsentSharing] as? [String: Any])!
 
-      if Utilities.isValidObject(someObject: consentSharingDict as AnyObject?) {
-        sharingConsent?.initWithSharingDict(dict: consentSharingDict)
+      if !StudyUpdates.studyConsentUpdated {
+        if Utilities.isValidObject(someObject: consentSharingDict as AnyObject?) {
+          sharingConsent?.initWithSharingDict(dict: consentSharingDict)
+        }
       }
       let reviewConsentDict = (metaDataDict[kConsentReview] as? [String: Any])!
 
@@ -444,6 +443,31 @@ struct SharingConsent {
       }
       if Utilities.isValidValue(someObject: dict[kConsentSharingSteplearnMore] as AnyObject) {
         learnMore = dict[kConsentSharingSteplearnMore] as? String
+        if let learnMoreString = learnMore {
+          learnMore = learnMoreString.stringByDecodingHTMLEntities
+          
+          
+          let regex = "<[^>]+>"
+                      if learnMore?.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+                          if let valReConversiontoHTMLfromHTML =
+                              learnMore?.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+                              
+                              if let attributedText =
+                                  valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+                                  self.learnMore = attributedText.attriString2Html
+                              } else if let attributedText =
+                                          learnMoreString.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                                        attributedText.length > 0 {
+                                  self.learnMore = attributedText.attriString2Html
+                              } else {
+                                  self.learnMore = learnMoreString
+                              }
+                          } else {
+                              self.learnMore = learnMoreString
+                          }
+                      }
+          
+        }
       }
 
       if Utilities.isValidValue(someObject: dict[kConsentSharingStepText] as AnyObject) {
@@ -492,11 +516,35 @@ struct ReviewConsent {
         someObject: dict[kConsentReviewStepSignatureContent] as AnyObject
       ) {
         signatureContent = dict[kConsentReviewStepSignatureContent] as? String
+        if let reviewHTML = signatureContent {
+          signatureContent = reviewHTML.stringByDecodingHTMLEntities
+          let regex = "<[^>]+>"
+                      if signatureContent?.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+                          if let valReConversiontoHTMLfromHTML =
+                              signatureContent?.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+                              
+                              if let attributedText =
+                                  valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+                                self.signatureContent = attributedText.attriString2Html
+                              } else if let attributedText =
+                                          reviewHTML.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                                        attributedText.length > 0 {
+                                  self.signatureContent = attributedText.attriString2Html
+                              } else {
+                                  self.signatureContent = reviewHTML
+                              }
+                          } else {
+                              self.signatureContent = reviewHTML
+                          }
+                      }
+        }
       }
       if Utilities.isValidValue(
         someObject: dict[kConsentReviewStepReasonForConsent] as AnyObject
       ) {
         reasonForConsent = dict[kConsentReviewStepReasonForConsent] as? String
+      } else {
+        reasonForConsent = kMessageconsentConfirmation
       }
     }
   }
@@ -562,3 +610,4 @@ class CustomCompletionStep: ORKCompletionStep {
     return true
   }
 }
+

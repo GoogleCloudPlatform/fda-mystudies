@@ -10,6 +10,7 @@ import {App} from '../shared/app-details';
 @Component({
   selector: 'user-details',
   templateUrl: './user-details.component.html',
+  styleUrls: ['./user-details.component.scss'],
 })
 export class UserDetailsComponent
   extends UnsubscribeOnDestroyAdapter

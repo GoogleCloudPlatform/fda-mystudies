@@ -8,7 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CONSENT_TYPE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PRIMARY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STUDY_ID;
+
+import com.google.api.services.healthcare.v1.model.Consent;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.mapper.ConsentManagementAPIs;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
@@ -22,24 +29,30 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class StudyStateDaoImpl implements StudyStateDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(StudyStateDaoImpl.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(StudyStateDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
+  @Autowired private ConsentManagementAPIs consentApis;
+
+  @Autowired ApplicationPropertyConfiguration appConfig;
+
   @Override
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
-    logger.info("StudyStateDaoImpl saveParticipantStudies() - Starts ");
+    logger.entry("Begin saveParticipantStudies()");
     Session session = this.sessionFactory.getCurrentSession();
     for (ParticipantStudyEntity participantStudy : participantStudiesList) {
       if (StringUtils.isEmpty(participantStudy.getId())) {
@@ -48,13 +61,13 @@ public class StudyStateDaoImpl implements StudyStateDao {
         session.update(participantStudy);
       }
     }
-    logger.info("StudyStateDaoImpl saveParticipantStudies() - Ends ");
+    logger.exit("saveParticipantStudies() - Ends ");
     return MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
   }
 
   @Override
   public String getEnrollTokenForParticipant(String participantRegistryId) {
-    logger.info("StudyStateDaoImpl getEnrollTokenForParticipant() - Starts ");
+    logger.entry("Begin getEnrollTokenForParticipant()");
     String enrolledToken = "";
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<ParticipantRegistrySiteEntity> criteriaQuery = null;
@@ -75,13 +88,13 @@ public class StudyStateDaoImpl implements StudyStateDao {
       enrolledToken = participantRegistrySite.getEnrollmentToken();
     }
 
-    logger.info("StudyStateDaoImpl getEnrollTokenForParticipant() - Ends ");
+    logger.exit("getEnrollTokenForParticipant() - Ends ");
     return enrolledToken;
   }
 
   @Override
-  public String withdrawFromStudy(String participantId, String studyId, boolean delete) {
-    logger.info("StudyStateDaoImpl withdrawFromStudy() - Ends ");
+  public String withdrawFromStudy(String participantId, String studyId) {
+    logger.entry("Begin withdrawFromStudy()");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     CriteriaBuilder criteriaBuilder = null;
 
@@ -119,10 +132,43 @@ public class StudyStateDaoImpl implements StudyStateDao {
       isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
       if (isUpdated > 0) {
         message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+        if (Boolean.valueOf(appConfig.getEnableConsentManagementAPI())) {
+          revokeConsent(studyEntity, participantId);
+        }
       }
     }
 
-    logger.info("StudyStateDaoImpl withdrawFromStudy() - Ends ");
+    logger.exit("withdrawFromStudy() - Ends ");
     return message;
+  }
+
+  /**
+   * revoke the consent
+   *
+   * @param studyEntity
+   * @param participantId
+   */
+  private void revokeConsent(StudyEntity studyEntity, String participantId) {
+    logger.entry("Begin revokeConsent()");
+    String parentName =
+        String.format(
+            "projects/%s/locations/%s/datasets/%s/consentStores/%s",
+            appConfig.getProjectId(),
+            appConfig.getRegionId(),
+            studyEntity.getCustomId(),
+            "CONSENT_" + studyEntity.getCustomId());
+
+    String filter1 = "Metadata(\"" + STUDY_ID + "\")=\"" + studyEntity.getCustomId() + "\"";
+    String filter2 = "user_id=\"" + participantId + "\"";
+    String filter3 = "Metadata(\"" + CONSENT_TYPE + "\")=\"" + PRIMARY + "\"";
+    String consentFilter = filter1 + " AND " + filter2 + " AND " + filter3;
+
+    List<Consent> list = consentApis.getListOfConsents(consentFilter, parentName);
+    if (CollectionUtils.isNotEmpty(list)) {
+      Consent consent = list.get(0);
+      // updating consent state to REVOKED
+      consentApis.revokeConsent(consent.getName());
+    }
+    logger.exit("revokeConsent() - Ends ");
   }
 }

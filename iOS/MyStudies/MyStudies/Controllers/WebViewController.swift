@@ -21,6 +21,8 @@ import Foundation
 import MessageUI
 import UIKit
 import WebKit
+import FirebaseAnalytics
+import Reachability
 
 class WebViewController: UIViewController {
 
@@ -38,6 +40,7 @@ class WebViewController: UIViewController {
   var pdfData: Data?
   var isEmailAvailable: Bool? = false
   var htmlString: String?
+  private var reachability: Reachability!
 
   var tempfileURL: URL?
 
@@ -47,6 +50,8 @@ class WebViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupNotifiers()
+    setNavigationBarColor()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -68,13 +73,50 @@ class WebViewController: UIViewController {
     loadContentOnWebView()
     setNeedsStatusBarAppearanceUpdate()
   }
-
+    
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     if let tempURL = self.tempfileURL {
       AKUtility.deleteFile(from: tempURL)
     }
   }
+    
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOffline() {
+        barItemShare?.isEnabled = false
+    }
+    
+    func setOnline() {
+        barItemShare?.isEnabled = true
+    }
 
   final private func loadContentOnWebView() {
 
@@ -103,12 +145,21 @@ class WebViewController: UIViewController {
   /// Dismiss ViewController
   @IBAction func cancelButtonClicked(_ sender: Any) {
     self.dismiss(animated: true, completion: nil)
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Cancel Website/Consent/Terms/PrivacyPolicy"
+    ])
   }
 
   @IBAction func buttonActionShare(_ sender: UIBarButtonItem) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Share Document"
+    ])
     self.shareDocument { [weak self] (status) in
       if !status {
         self?.view.makeToast(kResourceShareError)
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "Unable to ShareResourceAlert Ok"
+        ])
       }
     }
   }

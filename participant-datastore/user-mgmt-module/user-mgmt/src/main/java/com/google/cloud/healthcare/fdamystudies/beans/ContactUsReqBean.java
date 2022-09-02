@@ -26,4 +26,5 @@ public class ContactUsReqBean {
   @NotBlank private String firstName;
   @NotBlank private String email;
   private String appName;
+  private String appId;
 }

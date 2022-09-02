@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Google LLC
+ * Copyright 2020 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -10,12 +10,15 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CONSENT_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEFAULT_PERCENTAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PARTICIPANT_STUDY_ID;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PRIMARY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ENROLLMENT_TARGET_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.INVITATION_EMAIL_FAILED;
@@ -31,6 +34,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_DECOMMISSIONED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_PARTICIPANT_REGISTRY_VIEWED;
 
+import com.google.api.services.healthcare.v1.model.ConsentArtifact;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
@@ -61,9 +65,11 @@ import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.RandomAlphanumericGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.ConsentManagementAPIs;
 import com.google.cloud.healthcare.fdamystudies.mapper.ConsentMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
@@ -96,6 +102,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepositor
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantManagerUtil;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -117,7 +124,6 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -128,6 +134,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -140,7 +147,7 @@ public class SiteServiceImpl implements SiteService {
 
   private static final String CREATED = "created";
 
-  private static final int EMAIL_ADDRESS_COLUMN = 1;
+  private static final int EMAIL_ADDRESS_COLUMN = 0;
 
   private XLogger logger = XLoggerFactory.getXLogger(SiteServiceImpl.class.getName());
 
@@ -173,6 +180,12 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private InviteParticipantsEmailRepository invitedParticipantsEmailRepository;
 
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
+
+  @Autowired private ParticipantManagerUtil participantManagerUtil;
+
+  @Autowired ResourceLoader resourceLoader;
+
+  @Autowired ConsentManagementAPIs consentApis;
 
   @Override
   @Transactional
@@ -230,7 +243,8 @@ public class SiteServiceImpl implements SiteService {
         String.format(
             "Site %s added to locationId=%s and studyId=%s",
             siteResponse.getSiteId(), siteRequest.getLocationId(), siteRequest.getStudyId()));
-    return new SiteResponse(siteResponse.getSiteId(), MessageCode.ADD_SITE_SUCCESS);
+    return new SiteResponse(
+        siteResponse.getSiteId(), siteResponse.getSiteName(), MessageCode.ADD_SITE_SUCCESS);
   }
 
   private SiteResponse saveSiteWithSitePermissions(
@@ -737,13 +751,25 @@ public class SiteServiceImpl implements SiteService {
             .map(ParticipantStudyEntity::getId)
             .collect(Collectors.toList());
 
-    if (CollectionUtils.isNotEmpty(participantStudyIds)) {
-      List<StudyConsentEntity> studyConsents =
-          studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
+    String flag = appPropertyConfig.getEnableConsentManagementAPI();
+    if (StringUtils.isNotEmpty(flag) && Boolean.valueOf(flag)) {
+      if (CollectionUtils.isNotEmpty(participantStudyIds)) {
+        getConsentHistoryFromConsentStore(
+            participantDetail, participantStudyIds, study.getCustomId());
+      }
+    } else {
 
-      List<ConsentHistory> consentHistories =
-          studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
-      participantDetail.getConsentHistory().addAll(consentHistories);
+      if (CollectionUtils.isNotEmpty(participantStudyIds)) {
+        List<StudyConsentEntity> studyConsents =
+            studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
+
+        List<ConsentHistory> consentHistories =
+            studyConsents
+                .stream()
+                .map(ConsentMapper::toConsentHistory)
+                .collect(Collectors.toList());
+        participantDetail.getConsentHistory().addAll(consentHistories);
+      }
     }
 
     logger.exit(
@@ -756,6 +782,48 @@ public class SiteServiceImpl implements SiteService {
         MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS,
         participantDetail,
         participantDetailResponse.getTotalConsentHistoryCount());
+  }
+
+  /**
+   * Fetches consent history details from consent store
+   *
+   * @param participantDetail
+   * @param participantStudyIds
+   */
+  private void getConsentHistoryFromConsentStore(
+      ParticipantDetail participantDetail,
+      List<String> participantStudyIds,
+      String consentStoreId) {
+    logger.entry("begin getConsentHistoryFromConsentStore()");
+    String parentName =
+        String.format(
+            "projects/%s/locations/%s/datasets/%s/consentStores/%s",
+            appPropertyConfig.getProjectId(),
+            appPropertyConfig.getRegionId(),
+            consentStoreId,
+            "CONSENT_" + consentStoreId);
+
+    List<ConsentArtifact> consentArtifacts = new ArrayList<>();
+    for (String participantStudyId : participantStudyIds) {
+
+      String filter = "Metadata(\"" + PARTICIPANT_STUDY_ID + "\")=\"" + participantStudyId + "\"";
+      String primary = "Metadata(\"" + CONSENT_TYPE + "\")=\"" + PRIMARY + "\"";
+      List<ConsentArtifact> consentArtifactList =
+          consentApis.getListOfConsentArtifact(filter + " AND " + primary, parentName);
+      if (CollectionUtils.isNotEmpty(consentArtifactList)) {
+        consentArtifacts.addAll(consentArtifactList);
+      }
+    }
+
+    List<ConsentHistory> consentHistories =
+        (List<ConsentHistory>)
+            CollectionUtils.emptyIfNull(
+                consentArtifacts
+                    .stream()
+                    .map(a -> ConsentMapper.toConsentHistory(a, consentStoreId))
+                    .sorted(Comparator.comparing(ConsentHistory::getCreateTimeStamp).reversed())
+                    .collect(Collectors.toList()));
+    participantDetail.getConsentHistory().addAll(consentHistories);
   }
 
   private ErrorCode validateParticipantDetailsRequest(
@@ -855,7 +923,7 @@ public class SiteServiceImpl implements SiteService {
         continue;
       }
 
-      String token = RandomStringUtils.randomAlphanumeric(8);
+      String token = RandomAlphanumericGenerator.generateRandomAlphanumeric(8);
       participantRegistrySiteEntity.setEnrollmentToken(token);
       participantRegistrySiteEntity.setInvitationDate(new Timestamp(Instant.now().toEpochMilli()));
 
@@ -957,6 +1025,10 @@ public class SiteServiceImpl implements SiteService {
       while (rows.hasNext()) {
         Row r = rows.next();
 
+        if (r.getCell(EMAIL_ADDRESS_COLUMN) == null) {
+          continue;
+        }
+
         String email = r.getCell(EMAIL_ADDRESS_COLUMN).getStringCellValue();
         if (StringUtils.isBlank(email) || !Pattern.matches(EMAIL_REGEX, email)) {
           invalidEmails.add(email);
@@ -997,8 +1069,14 @@ public class SiteServiceImpl implements SiteService {
             CollectionUtils.emptyIfNull(
                 participantRegistrySiteEntities
                     .stream()
-                    .distinct()
+                    .filter(
+                        participant ->
+                            !participant
+                                    .getOnboardingStatus()
+                                    .equals(OnboardingStatus.DISABLED.getCode())
+                                || participant.getSite().equals(siteEntity))
                     .map(ParticipantRegistrySiteEntity::getEmail)
+                    .distinct()
                     .collect(Collectors.toList()));
 
     List<String> newEmails =
@@ -1184,7 +1262,11 @@ public class SiteServiceImpl implements SiteService {
 
     for (StudySiteInfo studySiteInfo : studySiteDetails) {
       if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
-        studiesMap.put(studySiteInfo.getStudyId(), StudyMapper.toStudyDetails(studySiteInfo));
+        StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
+        studyDetail.setLogoImageUrl(
+            participantManagerUtil.getImageResources(
+                studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
+        studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
       }
 
       StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
@@ -1228,7 +1310,11 @@ public class SiteServiceImpl implements SiteService {
     if (CollectionUtils.isNotEmpty(studySiteDetails)) {
       for (StudySiteInfo studySiteInfo : studySiteDetails) {
         if (!studiesMap.containsKey(studySiteInfo.getStudyId())) {
-          studiesMap.put(studySiteInfo.getStudyId(), StudyMapper.toStudyDetails(studySiteInfo));
+          StudyDetails studyDetail = StudyMapper.toStudyDetails(studySiteInfo);
+          studyDetail.setLogoImageUrl(
+              participantManagerUtil.getImageResources(
+                  studySiteInfo.getLogoImageUrl(), studySiteInfo.getCustomId()));
+          studiesMap.put(studySiteInfo.getStudyId(), studyDetail);
         }
         StudyDetails studyDetail = studiesMap.get(studySiteInfo.getStudyId());
         if (StringUtils.isNotEmpty(studySiteInfo.getSiteId())) {
@@ -1275,7 +1361,6 @@ public class SiteServiceImpl implements SiteService {
       site.setInvited(invitedCount);
       site.setEnrolled(enrolledCount);
     }
-
     if (site.getInvited() != null && site.getEnrolled() != null) {
       if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
         Double percentage =
@@ -1462,17 +1547,50 @@ public class SiteServiceImpl implements SiteService {
       templateArgs.put("study name", optStudy.get().getName());
       templateArgs.put("App Name", optStudy.get().getApp().getAppName());
       templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
-      templateArgs.put("contact email address", appPropertyConfig.getContactEmail());
+      templateArgs.put("contact email address", optStudy.get().getContactEmail());
+
+      if (optStudy.get().getApp().getPlayStoreUrl() != null) {
+        templateArgs.put("PLAY_STORE_LINK", optStudy.get().getApp().getPlayStoreUrl());
+      }
+      if (optStudy.get().getApp().getAppStoreUrl() != null) {
+        templateArgs.put("APP_STORE_LINK", optStudy.get().getApp().getAppStoreUrl());
+      }
+
+      String fromEmail =
+          (participantRegistrySiteEntity.getStudy().getApp().getFromEmailId() != null)
+              ? participantRegistrySiteEntity.getStudy().getApp().getFromEmailId()
+              : appPropertyConfig.getFromEmail();
+
       EmailRequest emailRequest =
           new EmailRequest(
-              appPropertyConfig.getFromEmail(),
+              fromEmail,
               new String[] {participantRegistrySiteEntity.getEmail()},
               null,
               null,
               appPropertyConfig.getParticipantInviteSubject(),
               appPropertyConfig.getParticipantInviteBody(),
               templateArgs);
-      EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
+
+      Map<String, String> inlineImages = new HashMap<>();
+
+      try {
+        inlineImages.put(
+            "image_play_store",
+            resourceLoader
+                .getResource("classpath:Logos/Play_Store_Logo.png")
+                .getFile()
+                .getAbsolutePath());
+
+        inlineImages.put(
+            "image_app_store",
+            resourceLoader
+                .getResource("classpath:Logos/App_Store_Logo.png")
+                .getFile()
+                .getAbsolutePath());
+
+      } catch (IOException e) {
+        logger.error("sendInvitationEmail() failed with an exception.", e);
+      }
 
       SiteEntity site = participantRegistrySiteEntity.getSite();
       Map<String, String> map =
@@ -1485,6 +1603,7 @@ public class SiteServiceImpl implements SiteService {
       auditRequest.setParticipantId(participantRegistrySiteEntity.getId());
       auditRequest.setStudyVersion(String.valueOf(site.getStudy().getVersion()));
 
+      EmailResponse emailResponse = emailService.sendMimeMailWithImages(emailRequest, inlineImages);
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
           .getMessage()
           .equals(emailResponse.getMessage())) {

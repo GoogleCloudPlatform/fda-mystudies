@@ -25,6 +25,7 @@
   rel="stylesheet" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script type="text/javascript" th:src="@{/js/autoLogin.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
 <style type="text/css">
 .child_text  { 
   color: #353a3e !important;
@@ -33,6 +34,14 @@
   text-align: center !important;
   margin-top: 100% !important;
  }
+ 
+.child_text_error  { 
+  color: #353a3e !important;
+  font-family: Muli,sans-serif !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  margin-top: 5% !important;
+}
 </style>
 </head>
 <body class="bg__aqua-gray">
@@ -52,6 +61,14 @@
         <div>
           <input type="submit" id="acceptConsent" value="Allow"
             style="display: none" />
+        </div>
+      </div>
+      <div >
+        <div id="errorImg" class="width__110" style="display: none;margin-top: 120px !important;">
+          <img th:src="@{/images/ErrorIcon.svg}" alt="error image " class="mb-md" />
+        </div>
+        <div id="errorMsg" class="loading_text_error child_text_error loading_div" style="display: none;" >
+          Something went wrong. Please try again.
         </div>
       </div>
     </div>

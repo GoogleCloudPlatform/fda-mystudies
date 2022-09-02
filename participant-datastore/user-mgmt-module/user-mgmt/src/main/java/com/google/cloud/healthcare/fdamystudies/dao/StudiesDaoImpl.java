@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -30,21 +30,21 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class StudiesDaoImpl implements StudiesDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(StudiesDaoImpl.class);
+  private static final XLogger logger = XLoggerFactory.getXLogger(StudiesDaoImpl.class.getName());
 
   @Autowired private SessionFactory sessionFactory;
 
   @Override
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
-    logger.info("StudiesDaoImpl - saveStudyMetadata() : Starts");
+    logger.entry("Begin saveStudyMetadata()");
     CriteriaBuilder builder = null;
     CriteriaQuery<StudyEntity> studyCriteria = null;
     Root<StudyEntity> studyRoot = null;
@@ -66,54 +66,35 @@ public class StudiesDaoImpl implements StudiesDao {
     studyCriteria.select(studyRoot).where(studyPredicate);
     studyInfo = session.createQuery(studyCriteria).uniqueResult();
 
-    appCriteria = builder.createQuery(AppEntity.class);
-    appRoot = appCriteria.from(AppEntity.class);
-    appPredicate[0] = builder.equal(appRoot.get("appId"), studyMetadataBean.getAppId());
-    appCriteria.select(appRoot).where(appPredicate);
-    appInfo = session.createQuery(appCriteria).uniqueResult();
-
     if (studyInfo != null) {
 
-      appInfo.setAppId(studyMetadataBean.getAppId());
-      appInfo.setAppName(studyMetadataBean.getAppName());
-      appInfo.setAppDescription(studyMetadataBean.getAppDescription());
-      appInfo.setModifiedBy(String.valueOf(0));
-      appInfo.setModified(Timestamp.from(Instant.now()));
-
-      studyInfo.setCustomId(studyMetadataBean.getStudyId());
       studyInfo.setName(studyMetadataBean.getStudyTitle());
       studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
       studyInfo.setType(studyMetadataBean.getStudyType());
       studyInfo.setStatus(studyMetadataBean.getStudyStatus());
-      studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-      studyInfo.setTagline(studyMetadataBean.getStudyTagline());
-      studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
       studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
-      studyInfo.setApp(appInfo);
       studyInfo.setModifiedBy(String.valueOf(0));
       studyInfo.setModified(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
+      studyInfo.setContactEmail(studyMetadataBean.getContactEmail());
       session.update(studyInfo);
     } else {
+
+      appCriteria = builder.createQuery(AppEntity.class);
+      appRoot = appCriteria.from(AppEntity.class);
+      appPredicate[0] = builder.equal(appRoot.get("appId"), studyMetadataBean.getAppId());
+      appCriteria.select(appRoot).where(appPredicate);
+      appInfo = session.createQuery(appCriteria).uniqueResult();
+
       List<AppPermissionEntity> appPermissionList = new ArrayList<>();
-      if (appInfo == null) {
-        appInfo = new AppEntity();
-        appInfo.setAppId(studyMetadataBean.getAppId());
-        appInfo.setAppName(studyMetadataBean.getAppName());
-        appInfo.setAppDescription(studyMetadataBean.getAppDescription());
-        appInfo.setCreatedBy(String.valueOf(0));
-        appInfo.setCreated(Timestamp.from(Instant.now()));
-        session.save(appInfo);
-      } else {
-        CriteriaQuery<AppPermissionEntity> appPermissionCriteria =
-            builder.createQuery(AppPermissionEntity.class);
-        Root<AppPermissionEntity> appPermissionRoot =
-            appPermissionCriteria.from(AppPermissionEntity.class);
-        Predicate[] appPermissionPredicate = new Predicate[1];
-        appPermissionPredicate[0] = builder.equal(appPermissionRoot.get("app"), appInfo);
-        appPermissionCriteria.select(appPermissionRoot).where(appPermissionPredicate);
-        appPermissionList = session.createQuery(appPermissionCriteria).getResultList();
-      }
+      CriteriaQuery<AppPermissionEntity> appPermissionCriteria =
+          builder.createQuery(AppPermissionEntity.class);
+      Root<AppPermissionEntity> appPermissionRoot =
+          appPermissionCriteria.from(AppPermissionEntity.class);
+      Predicate[] appPermissionPredicate = new Predicate[1];
+      appPermissionPredicate[0] = builder.equal(appPermissionRoot.get("app"), appInfo);
+      appPermissionCriteria.select(appPermissionRoot).where(appPermissionPredicate);
+      appPermissionList = session.createQuery(appPermissionCriteria).getResultList();
 
       studyInfo = new StudyEntity();
       studyInfo.setCustomId(studyMetadataBean.getStudyId());
@@ -121,14 +102,12 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
       studyInfo.setType(studyMetadataBean.getStudyType());
       studyInfo.setStatus(studyMetadataBean.getStudyStatus());
-      studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-      studyInfo.setTagline(studyMetadataBean.getStudyTagline());
-      studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
       studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
       studyInfo.setApp(appInfo);
       studyInfo.setCreatedBy(String.valueOf(0));
       studyInfo.setCreated(Timestamp.from(Instant.now()));
       studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
+      studyInfo.setContactEmail(studyMetadataBean.getContactEmail());
       String generatedStudyid = (String) session.save(studyInfo);
 
       for (AppPermissionEntity appPermission : appPermissionList) {
@@ -173,7 +152,7 @@ public class StudiesDaoImpl implements StudiesDao {
     }
 
     errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
-    logger.info("StudiesDaoImpl - saveStudyMetadata() : ends");
+    logger.exit("saveStudyMetadata() : ends");
     return errorBean;
   }
 }

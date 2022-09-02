@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
 
 class GraphChartTableViewCell: UITableViewCell {
   @IBOutlet weak var graphView: ORKGraphChartView!
@@ -81,20 +82,20 @@ class LineChartCell: GraphChartTableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringStartDate
     )
-    attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedStartDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringEndDate
     )
-    attributedEndDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedEndDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     attributedStartDate.append(attributedEndDate)
 
@@ -112,20 +113,20 @@ class LineChartCell: GraphChartTableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringStartDate2
     )
-    attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedStartDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringEndDate
     )
-    attributedEndDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedEndDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     attributedStartDate.append(attributedEndDate)
 
@@ -242,6 +243,9 @@ class LineChartCell: GraphChartTableViewCell {
 
   // MARK: - Actions
   @IBAction func buttonForwardAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LineChart Forward"
+    ])
 
     let timeRange = currentChart.dataSourceTimeRange!
     let chartTimeRange = ChartTimeRange(rawValue: timeRange)!
@@ -423,14 +427,96 @@ class LineChartCell: GraphChartTableViewCell {
   }
 
   func getNextSetOfFrequencyRuns() -> [[String: Any]] {
-
+    let valCharActivity = charActivity
+    var valFinalRuns = charActivity?.frequencyRuns
+    var valAnchoredScheduledRuns: [[String : Any]]?
+    
+    let schedulingType = charActivity?.schedulingType
+    let frequencyType = charActivity?.frequencyType
+    if schedulingType == .anchorDate && frequencyType == Frequency.scheduled {
+      valFinalRuns = charActivity?.anchorRuns
+    } else {
+      valFinalRuns = charActivity?.frequencyRuns
+    }
+    if schedulingType == .anchorDate && frequencyType == Frequency.scheduled {
+      for timing in valFinalRuns! {
+        
+        var runStartDate: Date?
+        var runEndDate: Date?
+        var enrollmentDate = Study.currentStudy?.userParticipateState.joiningDate
+        
+        // update start date
+        var startDateStringEnrollment = Utilities.formatterShort?.string(from: enrollmentDate!)
+        let startTimeEnrollment = "00:00:00"
+        startDateStringEnrollment =
+          (startDateStringEnrollment ?? "") + " "
+          + startTimeEnrollment
+        enrollmentDate = Utilities.findDateFromString(
+          dateString: startDateStringEnrollment ?? ""
+        )
+        
+        valCharActivity?.anchorDate?.anchorDateValue = enrollmentDate
+        
+        if schedulingType == .anchorDate {
+          let startDays = timing["startDays"] as? Int ?? 0
+          let endDays = timing["endDays"] as? Int ?? 0
+          _ = timing["time"] as? String ?? "00:00:00"
+          
+          if let anchorDate = valCharActivity!.anchorDate?.anchorDateValue {
+            
+            let startDateInterval = TimeInterval(60 * 60 * 24 * (startDays))
+            let endDateInterval = TimeInterval(60 * 60 * 24 * (endDays))
+            
+            runStartDate = anchorDate.addingTimeInterval(startDateInterval)
+            runEndDate = anchorDate.addingTimeInterval(endDateInterval)
+            
+            // update start date
+            var startDateString = Utilities.formatterShort?.string(from: runStartDate!)
+            let startTime = timing["startTime"] as? String ?? "00:00:00"
+            startDateString = (startDateString ?? "") + " " + startTime
+            let startdate = Utilities.findDateFromString(dateString: startDateString ?? "")
+            
+            // update end date
+            var endDateString = Utilities.formatterShort?.string(from: runEndDate!)
+            let endTime = timing["endTime"] as? String ?? "23:59:59"
+            endDateString = (endDateString ?? "") + " " + endTime
+            let endDate = Utilities.findDateFromString(dateString: endDateString ?? "")
+            
+            runStartDate = startdate
+            runEndDate = endDate
+            
+            let offset = UserDefaults.standard.value(forKey: "offset") as? Int
+            let updatedStartTime = runStartDate?.addingTimeInterval(TimeInterval(offset!))
+            let activityEndTime = runEndDate?.addingTimeInterval(TimeInterval(offset!))
+            
+            let st1 = Utilities.getStringFromDate(date: updatedStartTime!)
+            let st2 = Utilities.getStringFromDate(date: activityEndTime!)
+            
+            let updatedStartTimeFormat = st1!
+            let activityEndTimeFormat = st2!
+            
+            if activityEndTime! > updatedStartTime! {
+              if valAnchoredScheduledRuns == nil {
+                valAnchoredScheduledRuns = [["endTime" : activityEndTimeFormat, "startTime" : updatedStartTimeFormat]]
+              } else {
+                valAnchoredScheduledRuns?.append(["endTime" : activityEndTimeFormat, "startTime" : updatedStartTimeFormat])
+              }
+            }
+          }
+        }
+      }
+    }
+    if valAnchoredScheduledRuns != nil {
+      valFinalRuns = valAnchoredScheduledRuns
+    }
+    
     var frequencyRunsSet: [[String: Any]] = []
     for index in frequencyPageIndex...((frequencyPageIndex + frequencyPageSize) - 1) {
-      if index < ((charActivity?.frequencyRuns?.count)!) && index >= 0 {
-        let run = charActivity?.frequencyRuns?[index]
+      if index < ((valFinalRuns?.count)!) && index >= 0 {
+        let run = valFinalRuns?[index]
         frequencyRunsSet.append(run!)
       }
-
+      
     }
     return frequencyRunsSet
   }
@@ -623,10 +709,7 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleHoursOfDayForDate(date: Date) {
 
-    let dataList: [DBStatisticsData] = currentChart.statList.filter({
-      $0.startDate! >= date.startOfDay && $0.startDate! <= date.endOfDay!
-    })
-
+    let dataList: [DBStatisticsData] = Array(currentChart.statList.sorted(byKeyPath: "startDate", ascending: true))
     var points: [ORKValueRange] = []
     xAxisTitles = []
     plotPoints = []
@@ -674,11 +757,8 @@ class LineChartCell: GraphChartTableViewCell {
   }
 
   func handleRunsForDate(startDate: Date, endDate: Date, runs: [[String: Any]]) {
-
-    var dataList: [DBStatisticsData] = currentChart.statList.filter({
-      $0.startDate! >= startDate && $0.startDate! <= endDate
-    })
-
+    var dataList: [DBStatisticsData] = Array(currentChart.statList.sorted(byKeyPath: "startDate", ascending: true))
+    
     if !currentChart.scrollable, dataList.count > frequencyPageSize {
       // If the chart is not scrollable, only show the latest responses based on the page size.
       let frequencyPageSizeData = dataList.suffix(from: dataList.count - frequencyPageSize)
@@ -727,7 +807,7 @@ class LineChartCell: GraphChartTableViewCell {
   // MARK: - FORMATERS
   private static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "dd, MMM yyyy"
+    formatter.dateFormat = "MMM dd, yyyy"
     formatter.timeZone = TimeZone.init(abbreviation: "GMT")
     return formatter
   }()

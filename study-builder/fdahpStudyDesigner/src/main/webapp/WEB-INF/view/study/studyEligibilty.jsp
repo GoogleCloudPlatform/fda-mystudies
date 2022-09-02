@@ -33,7 +33,7 @@
         <c:if test="${empty permission}">
           <div class="dis-line form-group mb-none mr-sm">
             <button type="button" class="btn btn-default gray-btn submitEle"
-                    actType="save">Save
+                     actType="save" id="saveBtn">Save
             </button>
           </div>
 
@@ -66,7 +66,7 @@
         </div>
         <span class="radio radio-info radio-inline p-45"><input
             type="radio" id="inlineRadio1" value="1" class="eligibilityOptCls"
-            name="eligibilityMechanism" required
+            name="eligibilityMechanism" required data-error="Please fill out this field" 
             <c:if test="${eligibility.eligibilityMechanism eq 1}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
           <label for="inlineRadio1">Token validation</label>
@@ -74,7 +74,7 @@
         <span class="radio radio-inline p-45"><input type="radio"
                                                      id="inlineRadio2" value="2"
                                                      class="eligibilityOptCls"
-                                                     name="eligibilityMechanism" required
+                                                     name="eligibilityMechanism" required data-error="Please fill out this field" 
                                                      <c:if
                                                          test="${eligibility.eligibilityMechanism eq 2}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>>
@@ -83,7 +83,7 @@
         <span class="radio radio-inline"><input type="radio"
                                                 id="inlineRadio3" value="3"
                                                 class="eligibilityOptCls"
-                                                name="eligibilityMechanism" required
+                                                name="eligibilityMechanism" required data-error="Please fill out this field" 
                                                 <c:if
                                                     test="${eligibility.eligibilityMechanism eq 3}">checked</c:if>
         <c:if test="${liveStatus}"> disabled</c:if>> <label
@@ -109,8 +109,8 @@
             </span>
           </div>
           <div class="form-group elaborateClass">
-            <textarea class="form-control" rows="5" id="comment"
-                      maxlength="230" required
+            <textarea class="form-control" rows="1" id="comment"
+                      maxlength="230" required data-error="Please fill out this field" 
                       name="instructionalText">${eligibility.instructionalText}</textarea>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -129,11 +129,14 @@
                class="filled-tooltip"></span>
             </span>
           </div>
-          <div class="dis-line form-group mb-none mr-sm">
+          <div class="dis-line form-group mb-none">
             <c:if test="${empty permission}">
+            <span id="spanAddQaId" class="tool-tip" data-toggle="tooltip"	
+                  data-placement="bottom" data-original-title="">
               <button type="button" class="btn btn-primary blue-btn"
                       id="addQaId">+ Add question
               </button>
+              </span>
             </c:if>
           </div>
         </div>
@@ -156,8 +159,7 @@
               <tr id="">
                 <td>${etQusAns.sequenceNo}</td>
                 <td>
-                  <span class="dis-ellipsis"
-                        title="${fn:escapeXml(etQusAns.question)}">${etQusAns.question}</span>
+                  <span class="dis-ellipsis">${etQusAns.question}</span>
                 </td>
                 <td>
                   <span class="sprites_icon preview-g mr-lg viewIcon"
@@ -192,11 +194,7 @@
 <script type="text/javascript">
   var viewPermission = "${permission}";
   var permission = "${permission}";
-  var chkDone = $
-  {
-    chkDone
-  }
-  ;
+  var chkDone = ${chkDone};
   var eligibilityMechanism = '${eligibility.eligibilityMechanism}';
   console.log("viewPermission:" + viewPermission);
   var reorder = true;
@@ -218,18 +216,12 @@
 
             <c:if test="${empty eligibility.id}">
             $('#addQaId').prop('disabled', true);
+            $("#saveBtn").html("Next");	
+            $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
             $('.viewIcon, .editIcon, .deleteIcon').addClass('cursor-none');
             </c:if>
 
-            if (emVal != "1") {
-              if (eligibilityTestSize === 0) {
-                $("#doneBut").attr("disabled", true);
-                $('#spancomId').attr('data-original-title',
-                    'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
-              }
-            }
-
-            if ((!chkDone) && eligibilityMechanism != "1") {
+            if (!chkDone && eligibilityMechanism != "1") {
               $('#doneBut').prop('disabled', true);
               $('#spancomId')
                   .attr(
@@ -237,6 +229,14 @@
                       'Please ensure individual list items are marked Done, before marking the section as Complete');
               $('[data-toggle="tooltip"]').tooltip();
             }
+
+            if (emVal != "1") {	
+                if (eligibilityTestSize === 0) {	
+                  $("#doneBut").attr("disabled", true);	
+                  $('#spancomId').attr('data-original-title',	
+                      'Please add 1 or more questions to the test');	
+                }	
+             }
             initActions();
             $('.submitEle').click(
                 function (e) {
@@ -260,9 +260,12 @@
                     }
                     $('#eleFormId').submit();
                   } else {
+                	  var eligibilityVal = $("input[name='eligibilityMechanism']:checked").val();
+                	  if (eligibilityVal == 3) {
+                	  $('#comment').removeAttr("required")
+                	  }
                     if (isFromValid('#eleFormId')) {
                       if (${liveStatus}) {
-                        var eligibilityVal = $("input[name='eligibilityMechanism']:checked").val();
                         if (eligibilityVal == 1) {
                           $("#inlineRadio1").prop("disabled", false);
                         } else if (eligibilityVal == 2) {
@@ -287,7 +290,7 @@
                   "info": false,
                   "filter": false,
                   language: {
-                    "zeroRecords": "No content created yet.",
+                    "zeroRecords": "No content created yet",
                   },
                   rowReorder: reorder,
                   "columnDefs": [{
@@ -361,7 +364,7 @@
                                       .addClass(
                                           's-box')
                                       .text(
-                                          "Reorder done successfully");
+                                          "Content items reordered");
                                   $(
                                       '#alertMsg')
                                       .show();
@@ -393,7 +396,7 @@
                                 }
                                 setTimeout(
                                     hideDisplayMessage,
-                                    4000);
+                                    5000);
                               },
                               error: function (
                                   xhr,
@@ -408,7 +411,7 @@
                                         error);
                                 setTimeout(
                                     hideDisplayMessage,
-                                    4000);
+                                    5000);
                               }
                             });
                       }
@@ -421,13 +424,13 @@
                           && eligibilityMechanism != $(
                               this).val()) {
                         $('#forceContinueMsgId').show();
-                        $('#addQaId').prop('disabled',
-                            true);
+                        $('#addQaId').prop('disabled', true);	
+                        $("#saveBtn").html("Next");	
+                        $('#spanAddQaId').attr('data-original-title', 'Please click on Next to start adding questions');
                         $(
                             '.viewIcon, .editIcon, .deleteIcon')
                             .addClass('cursor-none');
-                        if (!chkDone
-                            && $(this).val() != '1') {
+                        if (!chkDone && $(this).val() != '1') {
                           $('#doneBut').prop(
                               'disabled', true);
                           $('#spancomId')
@@ -437,8 +440,9 @@
                         }
                       } else {
                         $('#forceContinueMsgId').hide();
-                        $('#doneBut, #addQaId').prop(
-                            'disabled', false);
+                        $('#doneBut, #addQaId').prop('disabled', false);	
+                        $("#saveBtn").html("Save");	
+                        $("#spanAddQaId").removeAttr("data-original-title");
                         $('#spancomId').attr(
                             'data-original-title',
                             '');
@@ -446,8 +450,7 @@
                             '.viewIcon, .editIcon, .deleteIcon')
                             .removeClass(
                                 'cursor-none');
-                        if (!chkDone
-                            && $(this).val() != '1') {
+                        if (!chkDone && $(this).val() != '1') {
                           $('#doneBut').prop(
                               'disabled', true);
                           $('#spancomId')
@@ -461,33 +464,31 @@
                             .slideUp('fast');
                         $('#instructionTextDivId')
                             .slideDown('fast');
-                        $('#doneBut').prop('disabled',
-                            false);
+                        $('#doneBut').prop('disabled',false);	
+                        $('#spancomId').removeAttr('data-original-title');
                       } else if ($('#inlineRadio3:checked').length > 0) {
                         $('#instructionTextDivId')
                             .slideUp('fast');
                         $('#eligibilityQusDivId')
                             .slideDown('fast');
                         if (!chkDone)
-                          $('#doneBut').prop(
-                              'disabled', true);
+                          $('#doneBut').prop('disabled', true);
                       } else {
                         $('#eligibilityQusDivId')
                             .slideDown('fast');
                         $('#instructionTextDivId')
                             .slideDown('fast');
                         if (!chkDone)
-                          $('#doneBut').prop(
-                              'disabled', true);
+                          $('#doneBut').prop('disabled', true);
                       }
 
                       emVal = $("input[name='eligibilityMechanism']:checked").val();
-                      eligibilityTestSize =${eligibilityTestList.size()};
-                      if (emVal != "1") {
-                        if (eligibilityTestSize === 0) {
-                          $("#doneBut").attr("disabled", true);
-                          $('#spancomId').attr('data-original-title',
-                              'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+                      if (emVal != "1") {	
+                          if ($('#consent_list tbody tr').length == 1	
+                                  && $('#consent_list tbody tr td').length == 1) {	
+                            $("#doneBut").attr("disabled", true);	
+                            $('#spancomId').attr('data-original-title',	
+                                'Please add 1 or more questions to the test');
                         }
                       }
 
@@ -563,11 +564,13 @@
                             reloadEligibiltyTestDataTable(data.eligibiltyTestList);
                             if ($('#consent_list tbody tr').length == 1
                                 && $('#consent_list tbody tr td').length == 1) {
+                            	eligibilityTestSize--;
                               chkDone = false;
-                              $('#doneBut').prop(
-                                  'disabled',
-                                  true);
-                            }
+                              $('#doneBut').prop('disabled', true);
+                              }else if(chkDone){	
+                                $("#doneBut").attr("disabled", false);	
+                                $('#spancomId').removeAttr('data-original-title');	
+                              }
                           } else {
                             $("#alertMsg")
                                 .removeClass(
@@ -580,7 +583,7 @@
                           }
                           setTimeout(
                               hideDisplayMessage,
-                              4000);
+                              5000);
                         },
                         error: function (xhr, status,
                                          error) {
@@ -590,7 +593,7 @@
                               .text(error);
                           setTimeout(
                               hideDisplayMessage,
-                              4000);
+                              5000);
                         }
                       });
                 }
@@ -600,6 +603,7 @@
 
   function reloadEligibiltyTestDataTable(eligibiltyTestList) {
     $('#consent_list').DataTable().clear();
+    chkDone=true;
     if (eligibiltyTestList != null && eligibiltyTestList.length > 0) {
       $
           .each(
@@ -620,16 +624,20 @@
                       .push("<span class='dis-ellipsis' title='" + DOMPurify.sanitize(obj.question) + "'>"
                           + DOMPurify.sanitize(obj.question) + "</span>");
                 }
+                if(!DOMPurify.sanitize(obj.status)){	
+                    chkDone=false;	
+                }
                 var actions = '<span class="sprites_icon preview-g mr-lg viewIcon" data-toggle="tooltip" data-placement="top" title="View" etId="'
-                    + parseInt(obj.id) + '"></span> '
+                    + obj.id + '"></span> '
                     + '<span class="'
                     + (DOMPurify.sanitize(obj.status) ? "edit-inc"
                         : "edit-inc-draft")
                     + ' mr-md mr-lg  editIcon" data-toggle="tooltip" data-placement="top" title="Edit"  etId="'
-                    + parseInt(obj.id)
+                    + obj.id
                     + '"></span>'
-                    + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns('
-                datarow.push(actions);
+                    + '<span class="sprites_icon copy delete deleteIcon" data-toggle="tooltip" data-placement="top" title="Delete" onclick="deleteEligibiltyTestQusAns(&#34;'
+                    + obj.id + '&#34;,this)"></span> '
+                     datarow.push(actions);
                 $('#consent_list').DataTable().row.add(datarow);
               });
       $('#consent_list').DataTable().draw();
@@ -638,8 +646,9 @@
       $('#consent_list').DataTable().draw();
       $("#doneBut").attr("disabled", true);
       $('#spancomId').attr('data-original-title',
-          'Please ensure you add one or more Eligibility Test before attempting to mark this section as Complete.');
+      'Please add 1 or more questions to the test');
     }
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
   function initActions() {
@@ -655,4 +664,21 @@
       addOrEditOrViewQA("edit", $(this).attr('etId'));
     });
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+  function showSucMsg(message) {
+	  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+	  $('#alertMsg').show('5000');
+	  if('${param.buttonText}' == 'completed'){
+		    window.setTimeout(function(){
+		        window.location.href = "/studybuilder/adminStudies/consentListPage.do?_S=${param._S}";
+		    }, 5000);
+	  }else{
+	  	setTimeout(hideDisplayMessage, 5000);
+	  }
+   }
 </script>

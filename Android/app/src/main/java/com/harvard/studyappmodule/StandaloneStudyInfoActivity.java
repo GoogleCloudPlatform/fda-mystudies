@@ -753,6 +753,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           startActivity(intent);
         }
       }
+
     } else if (requestCode == CONSENT_RESPONSECODE) {
       if (resultCode == RESULT_OK) {
         Intent intent =
@@ -777,9 +778,9 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       } else {
         if (force) {
           Toast.makeText(
-                  StandaloneStudyInfoActivity.this,
-                  "Please update the app to continue using",
-                  Toast.LENGTH_SHORT)
+              StandaloneStudyInfoActivity.this,
+              "Please update the app to continue using",
+              Toast.LENGTH_SHORT)
               .show();
           moveTaskToBack(true);
           if (Build.VERSION.SDK_INT < 21) {
@@ -968,12 +969,11 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null) alertDialog.dismiss();
+      if (alertDialog != null) {
+        alertDialog.dismiss();
+      }
     } catch (Exception e) {
       e.printStackTrace();
-    }
-    if (networkChangeReceiver != null) {
-      unregisterReceiver(networkChangeReceiver);
     }
   }
 

@@ -20,6 +20,8 @@ import MessageUI
 import ResearchKit
 import UIKit
 import WebKit
+import FirebaseAnalytics
+import Reachability
 
 let kPdfMimeType = "application/pdf"
 let kUTF8Encoding = "UTF-8"
@@ -43,7 +45,7 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   @IBOutlet weak var webView: WKWebView!
   @IBOutlet weak var buttonEmailPdf: UIBarButtonItem?
   @IBOutlet weak var buttonNext: UIButton?
-
+  private var reachability: Reachability!
   var pdfData: Data?
   var consentTempURL: URL?
 
@@ -62,17 +64,19 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   }
 
   override func goForward() {
+    NotificationCenter.default.post(name: Notification.Name("GoForward"), object: nil)
+
     super.goForward()
   }
 
   // MARK: - View controller Lifecycle
-
   override func viewDidLoad() {
     super.viewDidLoad()
     webView.navigationDelegate = self
     webView.contentScaleFactor = 1.0
+      setupNotifiers()
   }
-
+  
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     loadPDF()
@@ -85,6 +89,50 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
     }
   }
 
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+      
+    }
+  }
+    
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    buttonEmailPdf?.isEnabled = true
+    ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+    self.view.hideAllToasts()
+  }
+  
+  func setOffline() {
+    ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+    self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                        position: .center, title: nil, image: nil, completion: nil)
+    buttonEmailPdf?.isEnabled = false
+  }
+  
   /// Load PDF from the Data on WebView.
   private func loadPDF() {
     self.title = kConsent.uppercased()
@@ -124,10 +172,16 @@ class ConsentPdfViewerStepViewController: ORKStepViewController {
   // MARK: - Button Actions
 
   @IBAction func buttonActionNext(sender: UIBarButtonItem?) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConsentPdfViewerStep Done"
+    ])
     self.goForward()
   }
 
   @IBAction func buttonActionEmailPdf(sender: UIBarButtonItem?) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "ConsentPdfViewerStep SharePdf"
+    ])
     self.sendConsentByMail()
   }
 
@@ -155,6 +209,9 @@ extension ConsentPdfViewerStepViewController: WKNavigationDelegate {
         title: buttonTitleOK,
         style: .default,
         handler: { (_) in
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "Ok Alert"
+          ])
           self.dismiss(animated: true, completion: nil)
 
         }

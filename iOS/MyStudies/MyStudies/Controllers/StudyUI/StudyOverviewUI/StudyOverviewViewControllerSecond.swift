@@ -20,6 +20,7 @@
 import Foundation
 import SDWebImage
 import UIKit
+import FirebaseAnalytics
 
 class StudyOverviewViewControllerSecond: UIViewController {
 
@@ -30,6 +31,7 @@ class StudyOverviewViewControllerSecond: UIViewController {
   @IBOutlet var buttonVisitWebsite: UIButton?
   @IBOutlet var labelTitle: UILabel?
   @IBOutlet var labelDescription: UILabel?
+  @IBOutlet var textViewDescription: UITextView?
   @IBOutlet var imageViewStudy: UIImageView?
 
   // MARK: - Properties
@@ -48,6 +50,8 @@ class StudyOverviewViewControllerSecond: UIViewController {
       let url = URL.init(string: overviewSectionDetail.imageURL!)
       imageViewStudy?.sd_setImage(with: url, placeholderImage: nil)
     }
+    textViewDescription?.isEditable = false
+    UITextView.appearance().linkTextAttributes = [.foregroundColor: UIColor.blue]
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -95,18 +99,44 @@ class StudyOverviewViewControllerSecond: UIViewController {
       )
 
       if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
-        self.labelDescription?.attributedText = attributedText
-
+        let detailText = overviewSectionDetail.text ?? ""
+        let regex = "<[^>]+>"
+        self.textViewDescription?.dataDetectorTypes = [.link, .phoneNumber]
+        self.textViewDescription?.text = detailText
+        if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+          if let valReConversiontoHTMLfromHTML =
+              detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+            
+            if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString,
+               attributedText.length > 0 {
+              textViewDescription?.attributedText = attributedText
+            } else if let attributedText =
+                        detailText.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                      attributedText.length > 0 {
+              textViewDescription?.attributedText = attributedText
+            } else {
+              textViewDescription?.text = detailText
+            }
+          } else {
+            textViewDescription?.text = detailText
+          }
+        } else {
+          self.textViewDescription?.attributedText =
+            detailText.stringByDecodingHTMLEntities.htmlToAttriString
+        }
       } else {
-        self.labelDescription?.text = ""
+        self.textViewDescription?.text = ""
       }
     }
-    self.labelDescription?.textAlignment = .center
+    self.textViewDescription?.textAlignment = .center
   }
 
   // MARK: - Button Actions
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverview JoinStudy"
+    ])
 
     if User.currentUser.userType == UserType.anonymousUser {
       let leftController =
@@ -123,6 +153,9 @@ class StudyOverviewViewControllerSecond: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: UIButton) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverview Website"
+    ])
 
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =

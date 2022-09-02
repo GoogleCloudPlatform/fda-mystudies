@@ -102,7 +102,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                context.getString(R.string.consent_review_agree_text));
+                getContext().getString(R.string.consent_review_agree_text));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             submitBar.getPositiveActionView().setEnabled(false);
@@ -116,7 +116,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                context.getString(R.string.consent_review_disagree_text));
+                getContext().getString(R.string.consent_review_disagree_text));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             callbacks.onCancelStep();
@@ -137,7 +137,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
                 Bundle eventProperties = new Bundle();
                 eventProperties.putString(
                     CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    context.getString(R.string.consent_agree_agree));
+                    getContext().getString(R.string.consent_agree_agree));
                 analyticsInstance.logEvent(
                     CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 stepResult.setResult(true);
@@ -153,7 +153,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
                 Bundle eventProperties = new Bundle();
                 eventProperties.putString(
                     CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    context.getString(R.string.consent_agree_cancel));
+                    getContext().getString(R.string.consent_agree_cancel));
                 submitBar.getPositiveActionView().setEnabled(true);
                 analyticsInstance.logEvent(
                     CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);

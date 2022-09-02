@@ -83,7 +83,7 @@ extension String {
 }
 
 extension String {
-  var htmlToAttributedString: NSAttributedString? {
+  var htmlToAttriString: NSAttributedString? {
     do {
       guard let data = data(using: .utf8) else {
         return nil
@@ -101,7 +101,7 @@ extension String {
     }
   }
   var htmlToString: String {
-    return htmlToAttributedString?.string ?? ""
+    return htmlToAttriString?.string ?? ""
   }
 }
 
@@ -187,5 +187,22 @@ extension String {
     // Copy remaining characters to `result`:
     result.append(contentsOf: self[position...])
     return result
+  }
+  
+  func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
+      guard let range = self.range(of: target) else { return self }
+      return self.replacingCharacters(in: range, with: replacement)
+  }
+}
+
+extension NSAttributedString {
+  var attriString2Html: String? {
+    do {
+      let htmlData = try self.data(from: NSRange(location: 0, length: self.length),
+                                   documentAttributes:[.documentType: NSAttributedString.DocumentType.html])
+      return String.init(data: htmlData, encoding: String.Encoding.utf8)
+    } catch {
+      return nil
+    }
   }
 }

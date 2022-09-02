@@ -1,4 +1,10 @@
 /*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
@@ -16,43 +22,40 @@ package com.harvard.utils;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class CustomFirebaseAnalytics {
 
-    private static volatile CustomFirebaseAnalytics instance;
-    private static FirebaseAnalytics firebaseAnalytics;
+  private static volatile CustomFirebaseAnalytics instance;
+  private static FirebaseAnalytics firebaseAnalytics;
 
-    public static CustomFirebaseAnalytics getInstance(Context context) {
+  public static CustomFirebaseAnalytics getInstance(Context context) {
+    if (instance == null) {
+      synchronized (CustomFirebaseAnalytics.class) {
         if (instance == null) {
-            synchronized (CustomFirebaseAnalytics.class) {
-                if (instance == null){
-                    instance = new CustomFirebaseAnalytics();
-                }
-            }
+          instance = new CustomFirebaseAnalytics();
         }
-        firebaseAnalytics = FirebaseAnalytics.getInstance(context);
-        return instance;
+      }
     }
+    firebaseAnalytics = FirebaseAnalytics.getInstance(context);
+    return instance;
+  }
 
-    public static class Param {
+  public static class Param {
 
-        public static final String BUTTON_CLICK_REASON = "button_click_reason";
+    public static final String BUTTON_CLICK_REASON = "button_click_reason";
 
-        protected Param() {
-        }
-    }
+    protected Param() {}
+  }
 
-    public static class Event {
+  public static class Event {
 
-        public static final String ADD_BUTTON_CLICK = "add_button_click";
+    public static final String ADD_BUTTON_CLICK = "add_button_click";
 
-        protected Event() {
-        }
-    }
+    protected Event() {}
+  }
 
-    public void logEvent(String eventName, Bundle eventProperties) {
-        firebaseAnalytics.logEvent(eventName, eventProperties);
-    }
+  public void logEvent(String eventName, Bundle eventProperties) {
+    firebaseAnalytics.logEvent(eventName, eventProperties);
+  }
 }

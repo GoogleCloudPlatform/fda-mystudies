@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020-2021 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.fdahpstudydesigner.common;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
@@ -21,15 +29,17 @@ public class StudyBuilderAuditEventHelper {
       StudyBuilderAuditEvent eventEnum,
       AuditLogEventRequest auditRequest,
       Map<String, String> values) {
-    String description = eventEnum.getDescription();
-    if (values != null) {
-      description = PlaceholderReplacer.replaceNamedPlaceholders(description, values);
-    }
-    auditRequest.setDescription(description);
+    if (eventEnum != null) {
+      String description = eventEnum.getDescription();
+      if (values != null) {
+        description = PlaceholderReplacer.replaceNamedPlaceholders(description, values);
+      }
+      auditRequest.setDescription(description);
 
-    auditRequest =
-        AuditEventMapper.fromAuditLogEventEnumAndCommonPropConfig(eventEnum, auditRequest);
-    auditService.postAuditLogEvent(auditRequest);
+      auditRequest =
+          AuditEventMapper.fromAuditLogEventEnumAndCommonPropConfig(eventEnum, auditRequest);
+      auditService.postAuditLogEvent(auditRequest);
+    }
   }
 
   public void logEvent(

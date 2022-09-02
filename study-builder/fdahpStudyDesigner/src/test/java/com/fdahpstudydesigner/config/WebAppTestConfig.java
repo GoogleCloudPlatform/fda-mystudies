@@ -13,6 +13,8 @@ import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.service.AuditEventServiceImpl;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.service.LoginServiceImpl;
+import com.fdahpstudydesigner.util.Mail;
+import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -44,5 +46,13 @@ public class WebAppTestConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public LoginService loginService() {
     return new LoginServiceImpl();
+  }
+
+  @Bean
+  @Primary
+  public Mail email() {
+    Mail mail = mock(Mail.class);
+    Mockito.when(mail.sendemail()).thenReturn(true);
+    return mail;
   }
 }

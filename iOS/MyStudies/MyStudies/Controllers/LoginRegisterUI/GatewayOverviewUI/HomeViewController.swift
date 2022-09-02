@@ -20,6 +20,8 @@
 import Foundation
 import SlideMenuControllerSwift
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 class HomeViewController: UIViewController {
 
@@ -33,6 +35,7 @@ class HomeViewController: UIViewController {
   @IBOutlet var buttonGetStarted: UIButton?
 
   var websiteName: String!
+  private var reachability: Reachability!
 
   // MARK: - ViewController Lifecycle
 
@@ -44,6 +47,7 @@ class HomeViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+      setupNotifiers()
     /// Added to change next screen
     pageControlView?.addTarget(
       self,
@@ -56,7 +60,7 @@ class HomeViewController: UIViewController {
 
     buttonLink.setTitle(title, for: .normal)
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -64,6 +68,55 @@ class HomeViewController: UIViewController {
     self.navigationController?.setNavigationBarHidden(true, animated: true)
 
   }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+  }
+    
+  @objc func reachabilityChanged(note: Notification) {
+      let reachability = note.object as! Reachability
+      switch reachability.connection {
+      case .cellular:
+          setOnline()
+          break
+      case .wifi:
+          setOnline()
+          break
+      case .none:
+          setOffline()
+          break
+      case .unavailable:
+          setOffline()
+            break
+      }
+    }
+  
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonSignin.isEnabled = true
+        buttonSignin.layer.opacity = 1
+        buttonLink.isEnabled = true
+        buttonLink.layer.opacity = 1
+    }
+  
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .top, title: nil, image: nil, completion: nil)
+        buttonSignin.isEnabled = false
+        buttonSignin.layer.opacity = 0.5
+        buttonLink.isEnabled = false
+        buttonLink.layer.opacity = 0.5
+    }
+  
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
 
   // MARK: - UI Utils
 
@@ -129,6 +182,11 @@ class HomeViewController: UIViewController {
 
   /// Calls menu view.
   @IBAction func getStartedButtonClicked(_ sender: UIButton) {
+
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Get Started"
+    ])
+    
     self.createMenuView()
   }
 
@@ -161,6 +219,10 @@ class HomeViewController: UIViewController {
   /// To initialize WebViewController using
   /// Main storyboard.
   @IBAction func linkButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Open Website"
+    ])
+    
     guard let websiteLink = URL(string: Branding.websiteLink) else { return }
     let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
     let webViewController =
@@ -169,6 +231,7 @@ class HomeViewController: UIViewController {
       ) as! UINavigationController
     let webView = webViewController.viewControllers[0] as! WebViewController
     webView.requestLink = websiteLink.absoluteString
+    
     self.navigationController?.present(webViewController, animated: true, completion: nil)
   }
 
@@ -187,7 +250,6 @@ class HomeViewController: UIViewController {
   /// To navigate back to Signin.
   /// - Parameter segue: The segue which is connected to 1 controller to another.
   @IBAction func unwindForSignIn(_ segue: UIStoryboardSegue) {
-
     DispatchQueue.main.asyncAfter(deadline: .now()) {
       self.buttonSignin.sendActions(for: .touchUpInside)
     }
@@ -229,5 +291,33 @@ extension HomeViewController: PageViewControllerDelegate {
         }
       )
     }
+  }
+}
+
+extension HomeViewController {
+  /// To set HomeViewController as Root ViewController
+  static func setRootView() {
+    
+    let storyboard = UIStoryboard(name: kStoryboardIdentifierLogin, bundle: nil)
+    let homeVC =
+      storyboard.instantiateViewController(
+        withIdentifier: kStoryboardIdentifierHomeView
+      ) as! HomeViewController
+    
+    let navC = UINavigationController.init(rootViewController: homeVC)
+    navC.navigationBar.isHidden = true
+    guard let window = UIApplication.shared.keyWindow else { return }
+    guard let rootViewController = window.rootViewController else { return }
+    
+    homeVC.view.frame = rootViewController.view.frame
+    homeVC.view.layoutIfNeeded()
+    
+    UIView.transition(
+      with: window,
+      duration: 0.5,
+      options: .transitionCrossDissolve,
+      animations: { window.rootViewController = navC },
+      completion: { _ in }
+    )
   }
 }

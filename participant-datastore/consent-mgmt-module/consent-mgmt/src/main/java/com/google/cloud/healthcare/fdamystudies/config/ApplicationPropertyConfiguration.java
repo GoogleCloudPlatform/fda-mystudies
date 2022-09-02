@@ -8,22 +8,23 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
-import lombok.ToString;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ToString
+@Data
 public class ApplicationPropertyConfiguration {
 
   @Value("${bucketName}")
   private String bucketName;
 
-  public String getBucketName() {
-    return bucketName;
-  }
+  @Value("${projectId}")
+  private String projectId;
 
-  public void setBucketName(String bucketName) {
-    this.bucketName = bucketName;
-  }
+  @Value("${regionId}")
+  private String regionId;
+
+  @Value("${enableConsentManagementAPI}")
+  private String enableConsentManagementAPI;
 }

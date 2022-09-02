@@ -20,15 +20,18 @@
 import SlideMenuControllerSwift
 import Toast_Swift
 import UIKit
+import FirebaseAnalytics
 
+let kStoryboardIdentifierLogin = "Login"
+let kStoryboardIdentifierHomeView = "HomeViewController"
 let kLeftMenuSubtitle = "subTitle"
 let kLeftMenuTitle = "menuTitle"
 let kLeftMenuIconName = "iconName"
 let kLeftMenuCellTitleHome = "Home"
 let kLeftMenuCellTitleResources = "Resources"
-let kLeftMenuCellTitleProfile = "My Account"
-let kLeftMenuCellTitleSignIn = "Sign In"
-let kLeftMenuCellTitleNewUser = "New User?"
+let kLeftMenuCellTitleProfile = "My account"
+let kLeftMenuCellTitleSignIn = "Sign in"
+let kLeftMenuCellTitleNewUser = "New user?"
 let kLeftMenuCellSubTitleValue = "Sign up"
 let kAlertMessageReachoutText = "This feature will be available in the next sprint."
 
@@ -36,10 +39,10 @@ let kAlertMessageForSignOut = "Are you sure you want to sign out?"
 let kAlertMessageSignOutSync =
   """
   Are you sure you want to sign out? \
-  Incomplete activities and activities completed while offline must be re-started when you next sign in.
+  Incomplete activities and activities that were completed in offline mode must be re-started when you next sign in.
   """
 
-let kAlertSignOutLaterTitle = "Sign Out later"
+let kAlertSignOutLaterTitle = "Sign out later"
 
 // MARK: Segue Identifiers
 let kLoginStoryboardIdentifier = "Login"
@@ -131,6 +134,10 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     }
 
     self.labelVersion.text = "V" + "\(Utilities.getAppVersion())"
+    
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
+    ])
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -147,6 +154,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         withIdentifier: String(describing: StudyListViewController.classForCoder())
       )
       as? UINavigationController)!
+//    NotificationCenter.default.post(name: Notification.Name("LeftMenu Home"), object: nil)
 
     self.notificationController =
       (storyboard.instantiateViewController(
@@ -180,6 +188,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   /// This method will setup the Menu in case of Standalone app.
   final private func setupStandaloneMenu() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Menu Clicked"
+    ])
 
     let studyStoryBoard = UIStoryboard.init(name: kStudyStoryboard, bundle: Bundle.main)
     // for standalone
@@ -196,6 +207,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         withIdentifier: String(describing: StudyListViewController.classForCoder())
       )
       as? UINavigationController
+//    NotificationCenter.default.post(name: Notification.Name("LeftMenu Home"), object: nil)
+
 
     self.studyHomeViewController =
       studyStoryBoard.instantiateViewController(
@@ -280,7 +293,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     if user.userType == .loggedInUser {
       menus.append(
         [
-          "menuTitle": "My Account",
+          "menuTitle": "My account",
           "iconName": "profile_menu1",
           "menuType": LeftMenu.profileReachOut,
         ])
@@ -288,14 +301,14 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       if shouldAllowToGiveFeedback {
         menus.append(
           [
-            "menuTitle": "Reach Out",
+            "menuTitle": "Reach out",
             "iconName": "reachout_menu1",
             "menuType": LeftMenu.reachOutSignIn,
           ])
       }
       menus.append(
         [
-          "menuTitle": "Sign Out",
+          "menuTitle": "Sign out",
           "iconName": "ic_signout_menu",
           "menuType": LeftMenu.signOut,
         ])
@@ -303,7 +316,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       if shouldAllowToGiveFeedback {
         menus.append(
           [
-            "menuTitle": "Reach Out",
+            "menuTitle": "Reach out",
             "iconName": "reachout_menu1",
             "menuType": LeftMenu.profileReachOut,
           ])
@@ -311,14 +324,14 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
       menus.append(
         [
-          "menuTitle": "Sign In",
+          "menuTitle": "Sign in",
           "iconName": "signin_menu1",
           "menuType": LeftMenu.reachOutSignIn,
         ])
 
       menus.append(
         [
-          "menuTitle": "New User?",
+          "menuTitle": "New user?",
           "iconName": "newuser_menu1",
           "subTitle": "Sign up",
           "menuType": LeftMenu.signup,
@@ -343,6 +356,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
     )
 
     self.tableView.reloadData()
+    UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
 
   }
 
@@ -357,11 +371,15 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
       if isStandalone {
         if Study.currentStudy?.userParticipateState.status == .enrolled {
+          Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+            buttonClickReasonsKey: "LeftMenu Home"
+          ])
           self.slideMenuController()?.changeMainViewController(
             self.studyTabBarController,
             close: true
           )
         } else {
+          NotificationCenter.default.post(name: Notification.Name("LeftMenu Home"), object: nil)
           self.slideMenuController()?.changeMainViewController(
             self.studyHomeViewController,
             close: true
@@ -369,6 +387,8 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         }
 
       } else {
+        NotificationCenter.default.post(name: Notification.Name("LeftMenu Home"), object: nil)
+
         self.slideMenuController()?.changeMainViewController(
           self.studyListViewController,
           close: true
@@ -419,6 +439,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
         close: true
       )
     case .signOut:
+      Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+        buttonClickReasonsKey: "LeftMenu Sign-Out"
+      ])
       buttonActionSignOut()
     }
   }
@@ -439,9 +462,15 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           errorAlertActionTitle2: NSLocalizedString(kAlertSignOutLaterTitle, comment: ""),
           viewControllerUsed: self,
           action1: {
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Sign-Out1"
+            ])
             LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
           },
           action2: {
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Sign-Out Cancel1"
+            ])
             // Cancel Action.
           }
         )
@@ -454,9 +483,15 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
           errorAlertActionTitle2: NSLocalizedString(kTitleCancel, comment: ""),
           viewControllerUsed: self,
           action1: {
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Sign-Out2"
+            ])
             LeftMenuViewController.updatePushTokenToEmptyString(delegate: self)
           },
           action2: {
+            Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+              buttonClickReasonsKey: "Sign-Out Cancel2"
+            ])
             // Cancel Action.
           }
         )
@@ -506,6 +541,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
     UIApplication.shared.keyWindow?.removeProgressIndicatorFromWindow()
     self.navigationController?.popToRootViewController(animated: true)
+    if !Utilities.isStandaloneApp() {
+      HomeViewController.setRootView()
+    }
   }
 
 }

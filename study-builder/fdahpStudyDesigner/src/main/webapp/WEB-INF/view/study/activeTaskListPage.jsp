@@ -81,24 +81,23 @@
             <tr id="row${activeTasksInfo.id}">
               <td style="display: none;">${activeTasksInfo.createdDate}</td>
               <td>
-                <div class="dis-ellipsis pr-100"
-                     title="${fn:escapeXml(activeTasksInfo.displayName)}">${activeTasksInfo.displayName}</div>
+                <div class="dis-ellipsis pr-100">${activeTasksInfo.displayName}</div>
               </td>
               <td>${activeTasksInfo.type}</td>
-              <td>${activeTasksInfo.frequency  == 'Manually Schedule' ? 'Custom Schedule' : activeTasksInfo.frequency}</td>
+              <td>${activeTasksInfo.frequency  == 'Manually Schedule' ? 'Custom schedule' : activeTasksInfo.frequency}</td>
               <td>
                 <span class="sprites_icon preview-g mr-lg" data-toggle="tooltip"
                       data-placement="top"
                       title="View"
-                      onclick="viewTaskInfo(${activeTasksInfo.id});"></span>
+                      onclick="viewTaskInfo('${activeTasksInfo.id}');"></span>
                 <span
                     class="${activeTasksInfo.action?'edit-inc':'edit-inc-draft mr-md'} mr-lg <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Edit" id="editTask"
-                    onclick="editTaskInfo(${activeTasksInfo.id});"></span>
+                    onclick="editTaskInfo('${activeTasksInfo.id}');"></span>
                 <span
                     class="sprites_icon copy delete <c:if test="${not empty permission}"> cursor-none </c:if>"
                     data-toggle="tooltip" data-placement="top" title="Delete" id="delTask"
-                    onclick="deleteTaskInfo(${activeTasksInfo.id});"></span>
+                    onclick="deleteTaskInfo('${activeTasksInfo.id}');"></span>
               </td>
             </tr>
           </c:forEach>
@@ -144,7 +143,7 @@
       "order": [[0, "desc"]],
       "info": false,
       language: {
-        "zeroRecords": "No content created yet.",
+        "zeroRecords": "No content created yet",
       },
       "lengthChange": false,
       "searching": false,
@@ -217,7 +216,7 @@
                     $('#spancomId').removeAttr('data-original-title');
                   }
                   $("#alertMsg").removeClass('e-box').addClass('s-box').text(
-                      "ActiveTask deleted successfully");
+                      "Active task deleted successfully");
                   $('#alertMsg').show();
                   if ($('.sixthTask').find('span').hasClass(
                       'sprites-icons-2 tick pull-right mt-xs')) {
@@ -229,11 +228,11 @@
                       "Unable to delete resource");
                   $('#alertMsg').show();
                 }
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               },
               error: function (xhr, status, error) {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(error);
-                setTimeout(hideDisplayMessage, 4000);
+                setTimeout(hideDisplayMessage, 5000);
               }
             });
           }
@@ -246,6 +245,24 @@
   function markAsCompleted() {
     $("#completeInfoForm").submit();
   }
+
+  var sucMsg = '${sucMsg}';
+  if (sucMsg.length > 0) {
+    showSucMsg(sucMsg);
+  }
+
+function showSucMsg(message) {
+  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+  $('#alertMsg').show('5000');
+  if('${param.buttonText}' == 'completed'){
+	    window.setTimeout(function(){
+	        window.location.href = "/studybuilder/adminStudies/getResourceList.do?_S=${param._S}";
+	
+	    }, 5000);
+  }else{
+  	setTimeout(hideDisplayMessage, 5000);
+  }
+}
 </script>     
         
         

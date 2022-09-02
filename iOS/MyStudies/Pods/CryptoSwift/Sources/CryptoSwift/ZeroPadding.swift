@@ -1,7 +1,7 @@
 //
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2021 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -19,6 +19,7 @@ struct ZeroPadding: PaddingProtocol {
   init() {
   }
 
+  @inlinable
   func add(to bytes: Array<UInt8>, blockSize: Int) -> Array<UInt8> {
     let paddingCount = blockSize - (bytes.count % blockSize)
     if paddingCount > 0 {
@@ -27,6 +28,7 @@ struct ZeroPadding: PaddingProtocol {
     return bytes
   }
 
+  @inlinable
   func remove(from bytes: Array<UInt8>, blockSize _: Int?) -> Array<UInt8> {
     for (idx, value) in bytes.reversed().enumerated() {
       if value != 0 {

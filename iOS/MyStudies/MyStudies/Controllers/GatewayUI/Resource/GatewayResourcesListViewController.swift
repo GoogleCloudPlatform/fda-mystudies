@@ -18,11 +18,15 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 class GatewayResourcesListViewController: UIViewController {
 
   @IBOutlet var tableView: UITableView?
-
+  private var tableRows: [TableRow] = []
+  private var reachability: Reachability!
+  
   /// Load the collection of `Resources` from plist file and assign it to Gateway.
   func loadResources() {
 
@@ -47,25 +51,124 @@ class GatewayResourcesListViewController: UIViewController {
 
   // MARK: - ViewController Lifecycle.
   override func viewDidLoad() {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "LeftMenu Resources"
+    ])
     super.viewDidLoad()
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")
+      setupNotifiers()
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.setNavigationBarItem()
+    populateRows()
     self.loadResources()
   }
 
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+    }
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    self.view.hideAllToasts()
+  }
+  
+  func setOffline() {
+    self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
+  }
+  
+  
   func handleResourcesReponse() {
     self.tableView?.reloadData()
   }
-
+  
+  func handelTerms() {
+    let link: String = Branding.termsAndConditionURL
+    let title: String = kNavigationTitleTerms
+    
+    guard !link.isEmpty else { return }
+    let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+        as? UINavigationController)!
+    let webview = (webViewController.viewControllers[0] as? WebViewController)!
+    webview.requestLink = link
+    webview.title = title
+    self.navigationController?.present(webViewController, animated: true, completion: nil)
+  }
+  
+  func handelPrivacy() {
+    let link: String = Branding.privacyPolicyURL
+    let title: String = kNavigationTitlePrivacyPolicy
+    
+    guard !link.isEmpty else { return }
+    let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+        as? UINavigationController)!
+    let webview = (webViewController.viewControllers[0] as? WebViewController)!
+    webview.requestLink = link
+    webview.title = title
+    self.navigationController?.present(webViewController, animated: true, completion: nil)
+  }
+  
+  func populateRows() {
+    if !Utilities.isStandaloneApp() {
+      let linkTerm: String = Branding.termsAndConditionURL
+      let linkPrivacy: String = Branding.privacyPolicyURL
+      if linkTerm != "" && linkPrivacy != "" {
+        tableRows.append(.terms)
+        tableRows.append(.privacy)
+      } else if linkTerm != "" {
+        tableRows.append(.terms)
+      } else if linkPrivacy != "" {
+        tableRows.append(.privacy)
+      }
+    }
+  }
 }
 // MARK: TableView Data source
 extension GatewayResourcesListViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if !Utilities.isStandaloneApp() {
+      let linkTerm: String = Branding.termsAndConditionURL
+      let linkPrivacy: String = Branding.privacyPolicyURL
+      if linkTerm != "" && linkPrivacy != "" {
+        return (Gateway.instance.resources?.count)! + 2
+      } else if linkTerm != "" {
+        return (Gateway.instance.resources?.count)! + 1
+      } else if linkPrivacy != "" {
+        return (Gateway.instance.resources?.count)! + 1
+      }
+      return (Gateway.instance.resources?.count)!
+    }
     return (Gateway.instance.resources?.count)!
   }
 
@@ -75,9 +178,13 @@ extension GatewayResourcesListViewController: UITableViewDataSource {
       tableView.dequeueReusableCell(withIdentifier: "resourcesCell", for: indexPath)
       as! ResourcesListCell
 
+    if indexPath.row < (Gateway.instance.resources?.count)! {
     let resource = Gateway.instance.resources?[indexPath.row]
     cell.labelResourceTitle?.text = resource?.title
-
+    } else {
+    let rowType = tableRows[(indexPath.row - (Gateway.instance.resources?.count)!)]
+    cell.populateCellData(data: rowType.title)
+    }
     return cell
   }
 }
@@ -88,6 +195,7 @@ extension GatewayResourcesListViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
 
+    if indexPath.row < (Gateway.instance.resources?.count)! {
     let resource = Gateway.instance.resources?[indexPath.row]
     let storyboard = UIStoryboard(name: kStudyStoryboard, bundle: nil)
     let resourceDetail =
@@ -97,6 +205,13 @@ extension GatewayResourcesListViewController: UITableViewDelegate {
       as! GatewayResourceDetailViewController
     resourceDetail.resource = resource
     self.navigationController?.pushViewController(resourceDetail, animated: true)
+    } else {
+      if tableRows[(indexPath.row - (Gateway.instance.resources?.count)!)] == .terms {
+        handelTerms()
+      } else {
+        handelPrivacy()
+      }
+    }
 
   }
 }
@@ -117,4 +232,21 @@ extension GatewayResourcesListViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     self.removeProgressIndicator()
   }
+}
+
+private enum TableRow {
+  case terms, privacy
+  
+  var title: String {
+    switch self {
+    case .terms:
+      return LocalizableString.resourceTerms.localizedString
+    case .privacy:
+      return LocalizableString.resourcePrivacy.localizedString
+    }
+  }
+}
+
+protocol ResourceAppLevel {
+  var title: String { get }
 }

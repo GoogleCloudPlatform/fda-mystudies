@@ -15,6 +15,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.W
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.USER_ID;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -36,6 +37,8 @@ import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -43,8 +46,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,10 +59,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(
+    tags = "Study Information",
+    value = "Study info related API's",
+    description =
+        "Operations related to /updateStudyState, /studyState and /withdrawfromstudy endpoints ")
 @RestController
 public class StudyStateController {
 
-  private static final Logger logger = LoggerFactory.getLogger(StudyStateController.class);
+  private static final XLogger logger =
+      XLoggerFactory.getXLogger(StudyStateController.class.getName());
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @Autowired private StudyStateService studyStateService;
 
@@ -68,6 +82,7 @@ public class StudyStateController {
 
   @Autowired private StudyRepository studyRepository;
 
+  @ApiOperation(value = "update enrollment status of a participant associated to particular study")
   @PostMapping(
       value = "/updateStudyState",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -77,16 +92,31 @@ public class StudyStateController {
       @Valid @RequestBody StudyStateReqBean studyStateReqBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("StudyStateController updateStudyState() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     StudyStateRespBean studyStateRespBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-
     List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
     UserDetailsEntity user = commonService.getUserInfoDetails(userId);
+
+    logger.info(
+        "userId="
+            + userId
+            + "study Request="
+            + ReflectionToStringBuilder.toString(studyStateReqBean));
+
+    try {
+      ObjectMapper mapper = new ObjectMapper();
+      // Converting the Object to JSONString
+      String jsonString = mapper.writeValueAsString(studyStateReqBean);
+      logger.info("userId=" + userId + "study Request=" + jsonString);
+    } catch (Exception e) {
+
+    }
 
     if (user != null) {
       List<ParticipantStudyEntity> existParticipantStudies =
           studyStateService.getParticipantStudiesList(user, studiesBeenList);
+
       studyStateRespBean =
           studyStateService.saveParticipantStudies(
               studiesBeenList, existParticipantStudies, auditRequest, user);
@@ -99,6 +129,7 @@ public class StudyStateController {
         if (StringUtils.equals(studyInfo.getStatus(), EnrollmentStatus.NOT_ELIGIBLE.getStatus())) {
           enrollAuditEventHelper.logEvent(USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
         }
+        logger.exit(String.format(STATUS_LOG, studyStateRespBean.getCode()));
       }
     } else {
       MyStudiesUserRegUtil.getFailureResponse(
@@ -109,10 +140,10 @@ public class StudyStateController {
       return null;
     }
 
-    logger.info("StudyStateController updateStudyState() - Ends ");
     return new ResponseEntity<>(studyStateRespBean, HttpStatus.OK);
   }
 
+  @ApiOperation(value = "fetch participant's study information")
   @GetMapping(value = "/studyState", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getStudyState(
       @RequestHeader(USER_ID) String userId,
@@ -122,7 +153,7 @@ public class StudyStateController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     try {
-      logger.info("(C)...StudyStateController.getStudyState()...Started");
+      logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
       StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
 
       List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
@@ -142,6 +173,7 @@ public class StudyStateController {
     }
   }
 
+  @ApiOperation(value = "withdraw participant from study")
   @PostMapping(
       value = "/withdrawfromstudy",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -150,7 +182,7 @@ public class StudyStateController {
       @Valid @RequestBody WithdrawFromStudyBean withdrawFromStudyBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    logger.info("StudyStateController withdrawFromStudy() - Starts ");
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     WithDrawFromStudyRespBean respBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -166,15 +198,13 @@ public class StudyStateController {
         studyStateService.withdrawFromStudy(
             withdrawFromStudyBean.getParticipantId(),
             withdrawFromStudyBean.getStudyId(),
-            withdrawFromStudyBean.isDelete(),
             auditRequest);
     if (respBean != null) {
-      logger.info("StudyStateController withdrawFromStudy() - Ends ");
       respBean.setCode(ErrorCode.EC_200.code());
       respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
 
       enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
-
+      logger.exit(String.format(STATUS_LOG, respBean.getCode()));
       return new ResponseEntity<>(respBean, HttpStatus.OK);
     } else {
       MyStudiesUserRegUtil.getFailureResponse(

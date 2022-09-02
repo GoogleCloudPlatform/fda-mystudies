@@ -90,6 +90,8 @@
     <script src="/studybuilder/js/ajaxRequestInterceptor.js"></script>
     <script type="text/javascript" src="/studybuilder/js/loader.js"></script>
     <script type="text/javascript" src="/studybuilder/vendor/dompurify/purify.min.js"></script>
+    <script type="text/javascript" src="/studybuilder/js/summernote-bs4.js"></script>
+    
     <script>
       $(window).on('keydown keypress mousedown', function (event) {
         event = (event || window.event);
@@ -104,7 +106,8 @@
     </script>
 
   </head>
-  <body class="loading" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="">
+  <body class="loading" onload="noBack();" onpageshow="if (event.persisted) noBack();" onunload="" id="body"
+  onLoad="noBack();" onpageshow="if (event.persisted) noBack();" onUnload="">
     <div id="loader">
       <span></span>
     </div>
@@ -115,7 +118,8 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none">
       <div class="md-container white-bg ">
         <div class="row" id="rowId">
-          <tiles:insertAttribute name="menu"/>
+          <tiles:insertAttribute name="menu" ignore="true" />
+          <tiles:insertAttribute name="appsMenu" ignore="true" />
           <tiles:insertAttribute name="body"/>
         </div>
       </div>
@@ -191,6 +195,112 @@
       var serverDate = function () {
         return new Date(mytime.getFullYear(), mytime.getMonth(), mytime.getDate());
       }
+      
+      var serverTime = function () {
+    	  var hours = serverDateTime().getHours();
+    	  var minutes = serverDateTime().getMinutes();
+    	  var ampm = hours >= 12 ? 'pm' : 'am';
+    	  hours = hours % 12;
+    	  hours = hours ? hours : 12; // the hour '0' should be '12'
+    	  minutes = minutes < 10 ? '0'+minutes : minutes;
+    	  var strTime = hours + ':' + minutes + ' ' + ampm;
+    	  return strTime;
+    	}
     </script>
+    
+    
+     <script type="text/javascript">
+
+    
+     $(document).ready(function() {
+            window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+        });
+   
+$(document).ready(function(){
+  if (jQuery) {  
+    // jQuery is loaded  
+    // alert("Yeah!");
+      window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+  } else {
+    // jQuery is not loaded
+    alert("Doesn't Work");
+      window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+  }
+});
+
+
+window.onload = function() {
+    if (window.jQuery) {  
+        // jQuery is loaded  
+        //alert("window!");
+         window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+    } else {
+        // jQuery is not loaded
+        alert("Doesn't Work");
+         window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+    }
+}
+
+
+$(function() {
+  window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+});
+
+
+$(window).bind("load", function() {
+   
+   window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+            
+            
+            $(document).load(function () {
+ window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+});
+
+
+   
+});
+
+</script>
+
+
+<script type="text/javascript">
+    window.history.forward();
+    function noBack()
+    {
+        
+        window.history.pushState(null, "", window.location.href);        
+            window.onpopstate = function() {
+                window.history.pushState(null, "", window.location.href);
+            };
+    }
+</script>
+
+
+    
+    
   </body>
 </html>

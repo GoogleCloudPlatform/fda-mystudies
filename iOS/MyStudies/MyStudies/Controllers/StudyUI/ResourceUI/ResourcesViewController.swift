@@ -19,14 +19,17 @@
 
 import Foundation
 import UIKit
+import FirebaseAnalytics
+import Reachability
 
 let kConsentPdfKey = "consent"
+let kDataSharingScreenShotKey = "dataSharingScreenShot"
 
 let kUnwindToStudyListIdentifier = "unwindeToStudyListResourcesIdentifier"
 
 private enum TableRow: ResourceRow {
 
-  case about, consent, leave
+  case about, consent, dataSharingImage, terms, privacy, leave
 
   var title: String {
     switch self {
@@ -34,6 +37,12 @@ private enum TableRow: ResourceRow {
       return LocalizableString.aboutStudy.localizedString
     case .consent:
       return Branding.consentPDFTitle
+    case .dataSharingImage:
+      return "Data sharing image"
+    case .terms:
+      return LocalizableString.resourceTerms.localizedString
+    case .privacy:
+      return LocalizableString.resourcePrivacy.localizedString
     case .leave:
       return Branding.leaveStudyTitle
     }
@@ -66,9 +75,13 @@ class ResourcesViewController: UIViewController {
   var shouldDeleteData: Bool? = false
 
   var leaveStudy: String = TableRow.leave.title
+  var resourceTerms: String = TableRow.terms.title
+  var resourcePrivacy: String = TableRow.privacy.title
   var aboutTheStudy: String = TableRow.about.title
   var consentPDF: String = TableRow.consent.title
-
+  private lazy var tableViewSections: [[String: Any]]! = []
+  private lazy var selectedIndexPath: IndexPath? = nil
+  private var reachability: Reachability!
   private var tableRows: [ResourceRow] = []
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -77,16 +90,26 @@ class ResourcesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+      setupNotifiers()
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resources"
+    ])
 
     self.navigationItem.title = NSLocalizedString("Resources", comment: "")
 
-    if StudyUpdates.studyConsentUpdated {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkConsentStatus(controller: self)
     }
     tableRows = getStaticResources()
+    setNavigationBarColor()
+    let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    if appDelegate.notificationDetails != nil, User.currentUser.userType == .loggedInUser {
+      appDelegate.notificationDetails = nil
+      StudyUpdates.studyResourcesUpdated = true
+    }
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -130,10 +153,80 @@ class ResourcesViewController: UIViewController {
     super.viewDidAppear(animated)
   }
 
-  // MARK: - Utils
+    // MARK: - Utils
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .bottom, title: nil, image: nil, completion: nil)
+    }
+    
+    func setOnline() {
+        self.view.hideAllToasts()
+    }
 
   private func getStaticResources() -> [ResourceRow] {
-    return [TableRow.about, TableRow.consent, TableRow.leave]
+    if Utilities.isStandaloneApp() {
+      let linkTerm: String = Branding.termsAndConditionURL
+      let linkPrivacy: String = Branding.privacyPolicyURL
+      
+      var mainResource: [ResourceRow] = [TableRow.about, TableRow.consent]
+      
+      let valDataSharing = Study.currentStudy?.userParticipateState.dataSharingPermission ?? ""
+      if (valDataSharing == "Provided" || valDataSharing == "Not Provided") {
+        mainResource.append(TableRow.dataSharingImage)
+      }
+      
+      if linkTerm != "" && linkPrivacy != "" {
+        let val = [TableRow.terms, TableRow.privacy, TableRow.leave]
+        mainResource.append(contentsOf: val)
+        return mainResource
+      } else if linkTerm != "" {
+        let val = [TableRow.terms, TableRow.leave]
+        mainResource.append(contentsOf: val)
+        return mainResource
+      } else if linkPrivacy != "" {
+        let val =  [TableRow.privacy, TableRow.leave]
+        mainResource.append(contentsOf: val)
+        return mainResource
+      }
+      let val =  [TableRow.leave]
+      mainResource.append(contentsOf: val)
+      return mainResource
+    }
+    var mainResourceGateway: [ResourceRow] = [TableRow.about, TableRow.consent]
+    let valDataSharing = Study.currentStudy?.userParticipateState.dataSharingPermission ?? ""
+    if (valDataSharing == "Provided" || valDataSharing == "Not Provided") {
+      mainResourceGateway.append(TableRow.dataSharingImage)
+    }
+    let val =  [TableRow.leave]
+    mainResourceGateway.append(contentsOf: val)
+    return mainResourceGateway
   }
 
   func checkForResourceUpdate() {
@@ -158,6 +251,22 @@ class ResourcesViewController: UIViewController {
       ResourcesViewController.scheduleNotificationForResources()
     }
   }
+  
+  func userDidNavigateFromNotification() {
+    let activityId = NotificationHandler.instance.studyId
+    let rowDetail = tableViewSections[0]
+    let activities = rowDetail["activities"] as? [Activity] ?? []
+    if let index = activities.firstIndex(where: { $0.studyId == activityId }),
+      let tableView = self.tableView
+    {
+      let indexPath = IndexPath(row: index, section: 2)
+      self.selectedIndexPath = indexPath
+      tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
+      tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    NotificationHandler.instance.reset()
+  }
+
 
   func checkIfResourcePresent() {
     if DBHandler.isResourcesEmpty((Study.currentStudy?.studyId)!) {
@@ -196,6 +305,9 @@ class ResourcesViewController: UIViewController {
   }
 
   @IBAction func homeButtonAction(_ sender: AnyObject) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "Resource Home"
+    ])
     self.navigationController?.navigationBar.isHidden = false
     self.performSegue(withIdentifier: kUnwindToStudyListIdentifier, sender: self)
 
@@ -238,7 +350,24 @@ class ResourcesViewController: UIViewController {
       }
 
     }
+    let valDataSharing = Study.currentStudy?.userParticipateState.dataSharingPermission ?? ""
+    if (valDataSharing == "Provided" || valDataSharing == "Not Provided") {
+      tableRows = [TableRow.about, TableRow.consent, TableRow.dataSharingImage] + resources
+    } else {
     tableRows = [TableRow.about, TableRow.consent] + resources
+    }
+    if Utilities.isStandaloneApp() {
+      let linkTerm: String = Branding.termsAndConditionURL
+      let linkPrivacy: String = Branding.privacyPolicyURL
+      if linkTerm != "" && linkPrivacy != "" {
+        tableRows.append(TableRow.terms)
+        tableRows.append(TableRow.privacy)
+      } else if linkTerm != "" {
+        tableRows.append(TableRow.terms)
+      } else if linkPrivacy != "" {
+        tableRows.append(TableRow.privacy)
+      }
+    }
     tableRows.append(TableRow.leave)
     tableView?.isHidden = false
     tableView?.reloadData()
@@ -247,6 +376,36 @@ class ResourcesViewController: UIViewController {
     DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
   }
 
+  func handelTerms() {
+    let link: String = Branding.termsAndConditionURL
+    let title: String = kNavigationTitleTerms
+    
+    guard !link.isEmpty else { return }
+    let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+        as? UINavigationController)!
+    let webview = (webViewController.viewControllers[0] as? WebViewController)!
+    webview.requestLink = link
+    webview.title = title
+    self.navigationController?.present(webViewController, animated: true, completion: nil)
+  }
+  
+  func handelPrivacy() {
+    let link: String = Branding.privacyPolicyURL
+    let title: String = kNavigationTitlePrivacyPolicy
+    
+    guard !link.isEmpty else { return }
+    let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
+    let webViewController =
+      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+        as? UINavigationController)!
+    let webview = (webViewController.viewControllers[0] as? WebViewController)!
+    webview.requestLink = link
+    webview.title = title
+    self.navigationController?.present(webViewController, animated: true, completion: nil)
+  }
+  
   func handleLeaveStudy() {
 
     var withdrawalMessage = Study.currentStudy?.withdrawalConfigration?.message
@@ -254,68 +413,92 @@ class ResourcesViewController: UIViewController {
     var withdrawalType = Study.currentStudy?.withdrawalConfigration?.type
 
     if withdrawalMessage == nil {
-      withdrawalMessage = "Are you sure you want to " + leaveStudy + "?"
+      withdrawalMessage = Utilities.isStandaloneApp() ? kResourceLeaveStandaloneStudy : kResourceLeaveGatewayStudy
     }
 
     if withdrawalType == nil || withdrawalType == .notAvailable {
 
       withdrawlInformationNotFound = true
       withdrawalType = .notAvailable
-      WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!,
-        delegate: self
+      noWithdrawInfoAlert(withdrawalMessage ?? "Are you sure you want to leave the study?")
+    } else {
+      UIUtilities.showAlertMessageWithTwoActionsAndHandler(
+        NSLocalizedString((leaveStudy + " ?"), comment: ""),
+        errorMessage: NSLocalizedString(withdrawalMessage!, comment: ""),
+        errorAlertActionTitle: NSLocalizedString("Cancel", comment: ""),
+        errorAlertActionTitle2: NSLocalizedString("Proceed", comment: ""),
+        viewControllerUsed: self,
+        action1: {},
+        action2: {
+          
+          switch withdrawalType! as StudyWithdrawalConfigrationType {
+          
+          case .askUser:
+            
+            UIUtilities.showAlertMessageWithThreeActionsAndHandler(
+              kImportantNoteMessage,
+              errorMessage: kRetainDataOnLeaveStudy,
+              errorAlertActionTitle: "Retain my data",
+              errorAlertActionTitle2: "Delete my data",
+              viewControllerUsed: self,
+              action1: {
+                // Retain Action
+                Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                  buttonClickReasonsKey: "Retain Alert Action"
+                ])
+                
+                self.shouldDeleteData = false
+                self.withdrawalFromStudy(deleteResponse: false)
+                
+              },
+              action2: {
+                Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+                  buttonClickReasonsKey: "Delete Alert Action"
+                ])
+                
+                // Delete action
+                self.shouldDeleteData = true
+                self.withdrawalFromStudy(deleteResponse: true)
+                
+              }
+            )
+            
+          case .deleteData:
+            self.shouldDeleteData = true
+            self.withdrawalFromStudy(deleteResponse: true)
+            
+          case .noAction:
+            self.shouldDeleteData = false
+            self.withdrawalFromStudy(deleteResponse: false)
+            
+          default: break
+          }
+        }
       )
-      return
     }
 
+  }
+  
+  func noWithdrawInfoAlert(_ withdrawalMessage: String) {
     UIUtilities.showAlertMessageWithTwoActionsAndHandler(
-      NSLocalizedString((leaveStudy + " ?"), comment: ""),
-      errorMessage: NSLocalizedString(withdrawalMessage!, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("Cancel", comment: ""),
-      errorAlertActionTitle2: NSLocalizedString("Proceed", comment: ""),
+      "",
+      errorMessage: NSLocalizedString(withdrawalMessage, comment: ""),
+      errorAlertActionTitle: NSLocalizedString("Yes", comment: ""),
+      errorAlertActionTitle2: NSLocalizedString("Cancel", comment: ""),
       viewControllerUsed: self,
-      action1: {},
+      action1: {
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeaveStudy Alert OK"
+        ])
+        self.shouldDeleteData = false
+        self.withdrawalFromStudy(deleteResponse: false)
+      },
       action2: {
-
-        switch withdrawalType! as StudyWithdrawalConfigrationType {
-
-        case .askUser:
-
-          UIUtilities.showAlertMessageWithThreeActionsAndHandler(
-            kImportantNoteMessage,
-            errorMessage: kRetainDataOnLeaveStudy,
-            errorAlertActionTitle: "Retain my data",
-            errorAlertActionTitle2: "Delete my data",
-            viewControllerUsed: self,
-            action1: {
-              // Retain Action
-
-              self.shouldDeleteData = false
-              self.withdrawalFromStudy(deleteResponse: false)
-
-            },
-            action2: {
-
-              // Delete action
-              self.shouldDeleteData = true
-              self.withdrawalFromStudy(deleteResponse: true)
-
-            }
-          )
-
-        case .deleteData:
-          self.shouldDeleteData = true
-          self.withdrawalFromStudy(deleteResponse: true)
-
-        case .noAction:
-          self.shouldDeleteData = false
-          self.withdrawalFromStudy(deleteResponse: false)
-
-        default: break
-        }
+        Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+          buttonClickReasonsKey: "LeaveStudy Alert Cancel"
+        ])
       }
     )
-
   }
 
   func navigateToStudyHome() {
@@ -454,12 +637,64 @@ class ResourcesViewController: UIViewController {
       Logger.sharedInstance.error(error.localizedDescription)
     }
   }
+  
+  func saveConsentPdfToLocalDataSharing(base64dataString: String) {
+
+    let consentData = NSData(base64Encoded: base64dataString, options: .ignoreUnknownCharacters)
+
+    var fullPath: String!
+    let path = AKUtility.baseFilePath + "/study"
+    let fileName: String = "ConsentDataSharingPdf" + "_" + "\((Study.currentStudy?.studyId)!)" + ".pdf"
+
+    fullPath = path + "/" + fileName
+
+    if !FileManager.default.fileExists(atPath: path) {
+      try? FileManager.default.createDirectory(
+        atPath: path,
+        withIntermediateDirectories: true,
+        attributes: nil
+      )
+    }
+
+    do {
+
+      if FileManager.default.fileExists(atPath: fullPath) {
+        try FileManager.default.removeItem(atPath: fullPath)
+      }
+
+      FileManager.default.createFile(
+        atPath: fullPath,
+        contents: consentData as Data?,
+        attributes: [:]
+      )
+
+      let defaultPath = fullPath
+
+      fullPath = "file://" + "\(fullPath!)"
+
+      do {
+        try consentData?.write(to: URL(string: fullPath!)!)
+      } catch {
+        Logger.sharedInstance.error(error)
+      }
+
+      FileDownloadManager.encyptFile(pathURL: URL(string: defaultPath!)!)
+
+      Study.currentStudy?.signedConsentDataSPdfFilePath = fileName
+      DBHandler.saveConsentScreenShotInformation(study: Study.currentStudy!)
+
+      self.pushToResourceDetails(with: fileName)
+
+    } catch let error as NSError {
+      Logger.sharedInstance.error(error.localizedDescription)
+    }
+  }
 
   func withdrawalFromStudy(deleteResponse: Bool) {
-    let participantId = Study.currentStudy?.userParticipateState.participantId
+    let participantId = Study.currentStudy?.userParticipateState.participantId ?? ""
     EnrollServices().withdrawFromStudy(
       studyId: (Study.currentStudy?.studyId)!,
-      participantId: participantId!,
+      participantId: participantId,
       deleteResponses: deleteResponse,
       delegate: self
     )
@@ -478,7 +713,7 @@ class ResourcesViewController: UIViewController {
 
     for activityStatus in userActivityStatusList {
       let index = currentUser.participatedActivites.firstIndex(
-        where: { $0.activityId == activityStatus.activityId })
+        where: { $0.activityId == activityStatus.activityId && $0.studyId == activityStatus.studyId })
       currentUser.participatedActivites.remove(at: index!)
     }
 
@@ -535,8 +770,6 @@ class ResourcesViewController: UIViewController {
 
       self.removeProgressIndicator()
       self.withdrawlInformationNotFound = false
-      self.handleLeaveStudy()
-
     } else {
       self.checkForResourceUpdate()
     }
@@ -587,6 +820,9 @@ extension ResourcesViewController: UITableViewDelegate {
       case .about:
         self.checkDatabaseForStudyInfo(study: currentStudy)
       case .consent:
+        
+        UserDefaults.standard.set("consent", forKey: "consent")
+        UserDefaults.standard.synchronize()
         if let consentPath = Study.currentStudy?.signedConsentFilePath, !consentPath.isEmpty {
           self.pushToResourceDetails(with: consentPath)
         } else {
@@ -598,6 +834,18 @@ extension ResourcesViewController: UITableViewDelegate {
         }
       case .leave:
         self.handleLeaveStudy()
+      case .terms:
+        handelTerms()
+      case .privacy:
+        handelPrivacy()
+      case .dataSharingImage:
+        UserDefaults.standard.set("DataSPdf", forKey: "consent")
+        UserDefaults.standard.synchronize()
+        ConsentServices().getConsentPDFForStudy(
+          studyId: currentStudy.studyId ?? "",
+          consentVersion: currentStudy.signedConsentVersion ?? "",
+          delegate: self
+        )
       }
     } else if let resource = self.tableRows[indexPath.row] as? Resource {
       resourceLink = resource.file?.getFileLink()
@@ -663,6 +911,8 @@ extension ResourcesViewController: NMWebServiceDelegate {
 
     case ConsentServerMethods.consentDocument.method.methodName:
       self.removeProgressIndicator()
+      let val = UserDefaults.standard.value(forKey: "consent") as? String ?? ""
+      if val != "DataSPdf" {
       let consentDict: [String: Any] = ((response as? [String: Any])![kConsentPdfKey] as? [String: Any])!
 
       if Utilities.isValidObject(someObject: consentDict as AnyObject?) {
@@ -680,6 +930,33 @@ extension ResourcesViewController: NMWebServiceDelegate {
             base64dataString: (consentDict[kConsentPdfContent] as? String)!
           )
         }
+      }
+      
+      //datasharing
+//      let consentScreenshotDict: [String: Any] = ((response as? [String: Any])![kConsentPdfKey] as? [String: Any])!
+    }
+      else {
+      let consentDict2: String = ((response as? [String: Any])![kDataSharingScreenShotKey] as? String) ?? ""
+      
+//      let consentDict2: String = (consentDict[kDataSharingScreenShotKey] as? String ?? "")
+
+      if consentDict2 != "" {
+
+//        if Utilities.isValidValue(someObject: consentDict2[kConsentVersion] as AnyObject?) {
+//          Study.currentStudy?.signedConsentVersion =
+//            consentDict2[kConsentVersion]
+//            as? String
+//        } else {
+//          Study.currentStudy?.signedConsentVersion = "No_Version"
+//        }
+
+        
+        
+          self.saveConsentPdfToLocalDataSharing(
+            base64dataString: consentDict2
+          )
+        
+      }
       }
 
     default:

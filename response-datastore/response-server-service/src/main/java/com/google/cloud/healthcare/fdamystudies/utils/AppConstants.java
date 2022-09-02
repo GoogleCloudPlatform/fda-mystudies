@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -44,6 +44,7 @@ public class AppConstants {
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String STUDY_ID_PARAM = "studyId";
   public static final String ACTIVITY_ID_KEY = "activityId";
+  public static final String ACTIVITY_RUN_ID_KEY = "activityRunId";
   public static final String ACTIVITY_VERSION_PARAM = "activityVersion";
   public static final String ERROR_STR = "Error";
   public static final String OPTIONS_METHOD = "OPTIONS";
@@ -55,7 +56,7 @@ public class AppConstants {
   public static final String PARTICIPANT_METADATA_KEY = "Participants";
   public static final String ACTIVITIES_COLLECTION_NAME = "Activities";
   public static final String SUCCESS_MSG = "SUCCESS";
-  public static final String COMPLETED = "Completed";
+  public static final String COMPLETED = "completed";
   public static final String WITHDRAWAL_STATUS_KEY = "withdrawalStatus";
   public static final int FS_BATCH_COMMIT_LIMIT = 500;
 
@@ -70,4 +71,11 @@ public class AppConstants {
   public static final String DETAIL_MESSAGE = "detailMessage";
   public static final String BASIC_PREFIX = "Basic ";
   public static final String COMMA_STR = ",";
+
+  public static final String DATE_FORMAT_RESPONSE_MOBILE = "yyyy-MM-dd'T'HH:mm:ss.SSSXX";
+  public static final String DATE_FORMAT_RESPONSE_FHIR = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+  public static final String PATIENT_TYPE = "Patient";
+  public static final String QUESTIONNAIRE_RESPONSE_TYPE = "QuestionnaireResponse";
+  public static final String QUESTIONNAIRE_TYPE_FHIR = "Questionnaire";
 }

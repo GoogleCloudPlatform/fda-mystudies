@@ -29,6 +29,8 @@ import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +50,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+@Api(
+    tags = "Sites",
+    value = "Site related api's",
+    description = "Operations pertaining to Sites in participant manager")
 @RestController
 public class SiteController {
 
@@ -59,6 +65,7 @@ public class SiteController {
 
   @Autowired private SiteService siteService;
 
+  @ApiOperation(value = "Creates a new site for a study based on permission")
   @PostMapping(
       value = "/sites",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -79,6 +86,7 @@ public class SiteController {
     return ResponseEntity.status(siteResponse.getHttpStatusCode()).body(siteResponse);
   }
 
+  @ApiOperation(value = "Add a new participant for a site")
   @PostMapping(
       value = "/sites/{siteId}/participants",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -98,6 +106,7 @@ public class SiteController {
     return ResponseEntity.status(participantResponse.getHttpStatusCode()).body(participantResponse);
   }
 
+  @ApiOperation(value = "Returns a list of site participants with onboarding status")
   @GetMapping(value = "/sites/{siteId}/participants", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ParticipantRegistryResponse> getSiteParticipant(
       @PathVariable String siteId,
@@ -120,6 +129,7 @@ public class SiteController {
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
 
+  @ApiOperation(value = "Activate/Deactivate's site for a study")
   @PutMapping(
       value = "/sites/{siteId}/decommission",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -139,6 +149,7 @@ public class SiteController {
         .body(decomissionSiteResponse);
   }
 
+  @ApiOperation(value = "Returns participant details with enrollment history")
   @GetMapping("/sites/{participantRegistrySiteId}/participant")
   public ResponseEntity<ParticipantDetailResponse> getParticipantDetails(
       @PathVariable String participantRegistrySiteId,
@@ -155,6 +166,7 @@ public class SiteController {
     return ResponseEntity.status(participantDetails.getHttpStatusCode()).body(participantDetails);
   }
 
+  @ApiOperation(value = "Send/Resend's invitation to participants")
   @PostMapping("/sites/{siteId}/participants/invite")
   public ResponseEntity<InviteParticipantResponse> inviteParticipants(
       @Valid @RequestBody InviteParticipantRequest inviteParticipantRequest,
@@ -175,6 +187,7 @@ public class SiteController {
         .body(inviteParticipantResponse);
   }
 
+  @ApiOperation(value = "Imports participants from a file")
   @PostMapping(
       value = "/sites/{siteId}/participants/import",
       produces = MediaType.APPLICATION_JSON_VALUE)
@@ -192,6 +205,7 @@ public class SiteController {
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
 
+  @ApiOperation(value = "Updates onbording status for a participant")
   @PatchMapping("/sites/{siteId}/participants/status")
   public ResponseEntity<ParticipantStatusResponse> updateOnboardingStatus(
       @PathVariable String siteId,
@@ -210,6 +224,7 @@ public class SiteController {
     return ResponseEntity.status(response.getHttpStatusCode()).body(response);
   }
 
+  @ApiOperation(value = "Returns a response containing list of sites based on permission")
   @GetMapping("/sites")
   public ResponseEntity<SiteDetailsResponse> getSites(
       @RequestHeader(name = USER_ID_HEADER) String userId,

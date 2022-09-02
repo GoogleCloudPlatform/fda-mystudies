@@ -162,29 +162,6 @@ template "project_secrets" {
         {
           secret_id = "manual-fcm-api-url"
         },
-        # AppId for the mobile app. This needs to be in the app_info table in participant database.
-        {
-          secret_id = "manual-mobile-app-appid"
-        },
-        # bundleID used for the Android App.
-        {
-          secret_id = "manual-android-bundle-id"
-        },
-        # Found under settings > cloud messaging in the android app defined in your firebase project.
-        {
-          secret_id = "manual-android-server-key"
-        },
-        # bundleID used to build and distribute the iOS App.
-        {
-          secret_id = "manual-ios-bundle-id"
-        },
-        # certificate and password generated for APNs.
-        {
-          secret_id = "manual-ios-certificate"
-        },
-        {
-          secret_id = "manual-ios-certificate-password"
-        },
         {
           secret_id = "manual-ios-deeplink-url"
         },
@@ -538,6 +515,10 @@ resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" {
   allow {
     protocol = "tcp"
     ports    = ["8080"]
+  }
+  allow {
+    protocol = "tcp"
+    ports    = ["10256"]
   }
 
   # Load Balancer Health Check IP ranges.
@@ -908,8 +889,12 @@ template "project_data" {
             member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           },
           {
-            role   = "roles/storage.objectViewer"
-            member = "allUsers"
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:study-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          },
+          {
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
@@ -918,6 +903,10 @@ template "project_data" {
           #6# iam_members = [{
           #6#   role   = "roles/storage.objectViewer"
           #6#   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          #6# },
+          #6# {
+          #6#   role   = "roles/storage.objectAdmin"
+          #6#   member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
           #6# }]
         },
       ]
@@ -1011,12 +1000,6 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-terms-url",
       "manual-privacy-url",
       "manual-fcm-api-url",
-      "manual-mobile-app-appid",
-      "manual-android-bundle-id",
-      "manual-android-server-key",
-      "manual-ios-bundle-id",
-      "manual-ios-certificate",
-      "manual-ios-certificate-password",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
       "auto-auth-server-encryptor-password",
@@ -1046,6 +1029,7 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     consent_bucket_name               = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
     study_resources_bucket_name       = "{{.prefix}}-{{.env}}-mystudies-study-resources"
+    study_export_import_bucket_name   = "{{.prefix}}-{{.env}}-mystudies-sql-import"
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
     base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
     studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"

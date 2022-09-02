@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.SearchView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;

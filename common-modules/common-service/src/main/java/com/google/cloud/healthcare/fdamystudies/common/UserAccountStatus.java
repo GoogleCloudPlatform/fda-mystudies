@@ -13,7 +13,8 @@ public enum UserAccountStatus {
   PENDING_CONFIRMATION(1),
   ACCOUNT_LOCKED(2),
   PASSWORD_RESET(3),
-  DEACTIVATED(4);
+  DEACTIVATED(4),
+  SUPER_ADMIN(5);
 
   private int status = 1;
 

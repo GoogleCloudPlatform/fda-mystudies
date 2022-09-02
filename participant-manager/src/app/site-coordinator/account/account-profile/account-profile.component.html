@@ -32,6 +32,7 @@
                   id="firstName"
                   placeholder="Enter first name"
                   formControlName="firstName"
+                  pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
                 />
                 <div
                   *ngIf="
@@ -45,6 +46,13 @@
                   >
                     Enter a first name
                   </span>
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.firstName.errors?.pattern"
+                  >
+                    Please use characters from the following set only: A-Z a-z
+                    0-9 *()_+|:.-
+                  </span>
                 </div>
               </div>
             </div>
@@ -57,6 +65,7 @@
                   id="lastName"
                   placeholder="Enter last name"
                   formControlName="lastName"
+                  pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
                 />
                 <div
                   *ngIf="
@@ -70,6 +79,13 @@
                   >
                     Enter a last name
                   </span>
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.lastName.errors?.pattern"
+                  >
+                    Please use characters from the following set only: A-Z a-z
+                    0-9 *()_+|:.-
+                  </span>
                 </div>
               </div>
             </div>
@@ -80,7 +96,7 @@
         <div>
           <button
             type="submit"
-            class="btn bt__add mr-sm"
+            class="btn bt__add mr-sm btn_mb_2"
             [disabled]="!profileForm.valid || profileForm.pristine"
           >
             Update
@@ -89,13 +105,17 @@
             name="cancel"
             (click)="cancel()"
             type="button"
-            class="btn bt__cancel"
+            class="btn bt__cancel btn_mb_2"
           >
             Cancel
           </button>
         </div>
         <div>
-          <button (click)="signOut()" type="button" class="primary__btn bt__so">
+          <button
+            (click)="signOut()"
+            type="button"
+            class="primary__btn bt__so btn_mb_2"
+          >
             Sign out
           </button>
         </div>

@@ -1352,13 +1352,11 @@ public class StudyActivity extends AppCompatActivity
               .setExitAnimations(StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
               .build();
       Apps apps = dbServiceSubscriber.getApps(realm);
-      customTabsIntent.intent.setData(
-          Uri.parse(
-              Urls.LOGIN_URL
-                  .replace("$FromEmail", apps.getFromEmail())
-                  .replace("$SupportEmail", apps.getSupportEmail())
-                  .replace("$AppName", apps.getAppName())
-                  .replace("$ContactEmail", apps.getContactUsEmail())));
+      customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
+          .replace("$FromEmail", apps.getFromEmail())
+          .replace("$SupportEmail", apps.getSupportEmail())
+          .replace("$AppName", apps.getAppName())
+          .replace("$ContactEmail", apps.getContactUsEmail())));
       startActivity(customTabsIntent.intent);
     }
 
@@ -1471,7 +1469,8 @@ public class StudyActivity extends AppCompatActivity
         positiveButton = "Yes";
         negativeButton = "Skip";
       }
-      alertDialogBuilder = new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
+      alertDialogBuilder =
+          new AlertDialog.Builder(StudyActivity.this, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle("Upgrade");
       alertDialogBuilder
           .setMessage(msg)

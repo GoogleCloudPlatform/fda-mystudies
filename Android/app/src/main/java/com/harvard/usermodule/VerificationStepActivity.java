@@ -296,25 +296,23 @@ public class VerificationStepActivity extends AppCompatActivity
 
   private void signin() {
     SharedPreferenceHelper.writePreference(
-        VerificationStepActivity.this, getString(R.string.logintype), "signUp");
+            VerificationStepActivity.this, getString(R.string.logintype), "signUp");
     CustomTabsIntent customTabsIntent =
-        new CustomTabsIntent.Builder()
-            .setToolbarColor(getResources().getColor(R.color.colorAccent))
-            .setShowTitle(true)
-            .setCloseButtonIcon(
-                BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
-            .setStartAnimations(
-                VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
-            .setExitAnimations(
-                VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
-            .build();
+            new CustomTabsIntent.Builder()
+                    .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                    .setShowTitle(true)
+                    .setCloseButtonIcon(
+                            BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                    .setStartAnimations(
+                            VerificationStepActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+                    .setExitAnimations(
+                            VerificationStepActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+                    .build();
     StringBuilder loginUrl = new StringBuilder();
     DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
     Realm realm = AppController.getRealmobj(VerificationStepActivity.this);
     Apps apps = dbServiceSubscriber.getApps(realm);
-    loginUrl
-        .append(Urls.LOGIN_URL)
-        .toString()
+    loginUrl.append(Urls.LOGIN_URL).toString()
         .replace("$FromEmail", apps.getFromEmail())
         .replace("$AppName", apps.getAppName())
         .replace("$SupportEmail", apps.getSupportEmail())

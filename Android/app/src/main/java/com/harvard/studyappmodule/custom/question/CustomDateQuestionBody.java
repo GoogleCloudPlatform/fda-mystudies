@@ -21,8 +21,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import androidx.appcompat.view.ContextThemeWrapper;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import androidx.appcompat.view.ContextThemeWrapper;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.AnswerFormatCustom;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
@@ -54,8 +53,7 @@ public class CustomDateQuestionBody implements StepBody {
   private Calendar calendar;
   private DateFormat dateformatter;
   private CustomFirebaseAnalytics analyticsInstance;
-  private Context context;
-
+  Context context;
   private boolean hasChosenDate;
 
   public CustomDateQuestionBody(Step step, StepResult result) {
@@ -201,11 +199,13 @@ public class CustomDateQuestionBody implements StepBody {
     final ContextThemeWrapper contextWrapper =
             new ContextThemeWrapper(tv.getContext(), R.style.Theme_Backbone);
     if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.Date) {
-      final DatePickerDialog datePickerDialog = new DatePickerDialog(contextWrapper, new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        }
-      },
+      final DatePickerDialog datePickerDialog =
+          new DatePickerDialog(
+              contextWrapper,
+              new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {}
+              },
               calendar.get(Calendar.YEAR),
               calendar.get(Calendar.MONTH),
               calendar.get(Calendar.DAY_OF_MONTH));
@@ -354,12 +354,14 @@ public class CustomDateQuestionBody implements StepBody {
       timePickerDialog.show();
 
     } else if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.DateAndTime) {
-      final DatePickerDialog datePickerDialog = new DatePickerDialog(contextWrapper, new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(
-                DatePicker dview, int year, int monthOfYear, int dayOfMonth) {
-        }
-      },
+      final DatePickerDialog datePickerDialog =
+          new DatePickerDialog(
+              contextWrapper,
+              new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(
+                    DatePicker dview, int year, int monthOfYear, int dayOfMonth) {}
+              },
               calendar.get(Calendar.YEAR),
               calendar.get(Calendar.MONTH),
               calendar.get(Calendar.DAY_OF_MONTH));

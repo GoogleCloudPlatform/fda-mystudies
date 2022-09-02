@@ -51,14 +51,14 @@
      <style>
    
 .arrow {
-  width: 13px;
-  height: 13px;
+  width: 0px !important;
+  height: 0px !important;
   display: inline-block;
   position: relative;
   bottom: -8px;
   left: 0px;
   transition: 0.4s ease;
-  margin-top: 8px;
+  margin-top: 7px ;
   text-align: left;
   transform: rotate(45deg);
   float: right;
@@ -124,7 +124,7 @@
         <!--container-->
         <div class="landing__content">
           <div class="manage-content-parent">
-          <div class="lg-space-center" style="margin-top: 20px !important;margin-bottom: 30px !important;">
+          <div class="lg-space-center" style="margin-top: 20px ;margin-bottom: 30px ;">
               <div class="lg-space-txt">
                 Study Builder
               </div>
@@ -135,6 +135,15 @@
               </div>
               <div class='lg-icons'>
                 <ul class="lg-icons-list">
+                 <li class="appListId">
+                    <a class='' href='javascript:void(0)'>
+                      <img class="mt-xlg" src="../images/icons/manageApss.png" alt="">
+                    </a>
+                    <div class='appList'>Manage<br> apps<br>
+                      <span>&nbsp;</span>
+                    </div>
+                  </li>
+                  
                   <li class="studyListId">
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/studies-w.png" alt="">
@@ -151,7 +160,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/notifications-w.png" alt="">
                     </a>
-                    <div class='studyList'>Send<br> Notifications<br>
+                    <div class='studyList'>Send App-Wide<br> Notifications<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -159,7 +168,7 @@
                     <a class='' href='javascript:void(0)'>
                       <img class="mt-xlg" src="../images/icons/user-w.png" alt="">
                     </a>
-                    <div>Manage<br> Users<br>
+                    <div>Manage<br> Admins<br>
                       <span>&nbsp;</span>
                     </div>
                   </li>
@@ -247,18 +256,27 @@
         });
 
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_STUDIES')}">
-        $(".studyListId").addClass('cursor-none');
+        $(".studyListId").addClass('hide');
         $(".studyListId").unbind();
         </c:if>
         <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_VIEW')}">
-        $(".userListId").addClass('cursor-none');
+        $(".userListId").addClass('hide');
         $(".userListId").unbind();
-        </c:if>
-        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW')}">
-        $(".notificationListId").addClass('cursor-none');
+        </c:if>   
+        
+        <c:if test="${not fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS') && not fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN')}">
+        $(".appListId").addClass('hide');
+        $(".appListId").unbind();
+        $(".notificationListId").addClass('hide');
         $(".notificationListId").unbind();
-        </c:if>
+        </c:if> 
+       
 
+        $(".appListId").click(function () {
+            document.studyListForm.action = "/studybuilder/adminApps/appList.do";
+            document.studyListForm.submit();
+          });
+        
         $(".studyListId").click(function () {
           document.studyListForm.action = "/studybuilder/adminStudies/studyList.do";
           document.studyListForm.submit();

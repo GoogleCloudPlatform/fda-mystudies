@@ -62,7 +62,7 @@
               name="firstName"
               #firstName="ngModel"
               required
-              pattern=".*[^ ].*"
+              pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
             />
             <div
               class="validation-error"
@@ -80,7 +80,8 @@
                 class="help-block with-errors error__msg"
                 *ngIf="firstName.errors?.pattern"
               >
-                Please fill out this field
+                Please use characters from the following set only: A-Z a-z 0-9
+                *()_+|:.-
               </span>
             </div>
           </div>
@@ -103,6 +104,7 @@
               class="form-control"
               id="lname"
               placeholder="Enter last name"
+              pattern="^(?!\s)[A-Za-z0-9\s*()_+|:.-]*$"
             />
 
             <div
@@ -118,7 +120,8 @@
                 class="help-block with-errors error__msg"
                 *ngIf="lastName.errors?.pattern"
               >
-                Please fill out this field
+                Please use characters from the following set only: A-Z a-z 0-9
+                *()_+|:.-
               </span>
             </div>
           </div>

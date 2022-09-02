@@ -67,6 +67,7 @@ static const CGFloat shadowHeight = 0.75;
         self.cancelButtonStyle = ORKNavigationContainerButtonStyleTextBold;
         [self setUpConstraints];
         [self updateContinueAndSkipEnabled];
+        [self setNeedsUpdateConstraints];
     }
     return self;
 }
@@ -83,7 +84,7 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (void)setupContinueButton {
-    if (!_continueButton) {
+   if (!_continueButton) {
         _continueButton = [[ORKContinueButton alloc] initWithTitle:@"" isDoneButton:NO];
     }
     _continueButton.alpha = 0;
@@ -394,6 +395,10 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (void)skipButtonAction:(id)sender {
+  
+  NSDictionary *userDict = @{@"ORKAction":@"ORKSkip"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
+  
     [self skipAction:sender];
 
     // Disable button for 0.5s
@@ -407,10 +412,15 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (void)cancelButtonAction:(id)sender {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKCancel"};
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
     [self cancelAction:sender];
 }
 
 - (void)continueButtonAction:(id)sender {
+  NSDictionary *userDict = @{@"ORKAction":@"ORKProceed"};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ORKAction" object: nil userInfo: userDict];
+
     if (_useNextForSkip && _skipButtonItem && !_continueButtonItem) {
         [self skipAction:sender];
     } else {
@@ -463,6 +473,13 @@ static const CGFloat shadowHeight = 0.75;
 }
 
 - (CGFloat)skipButtonAlpha {
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *myString = [prefs stringForKey:@"isOptionalTextChoice"];
+    if ([myString isEqualToString:@"true"]) {
+        return 1.0;
+    } else if ([myString isEqualToString:@"false"]) {
+        return 0.0;
+    }
     return ([self skipButtonHidden] ? 0.0 : 1.0);
 }
 

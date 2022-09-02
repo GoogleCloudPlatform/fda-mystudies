@@ -135,16 +135,8 @@ class ActivityStepResult {
       stepDict?[kActivityStepResultType] = ActvityStepResultType.formOrActiveTask.rawValue
 
     case .active:
-
-      if self.step?.resultType != nil {
-
-        stepDict?[kActivityStepResultType] =
-          (self.step?.resultType as? String)!
-            == "fetalKickCounter" ? "grouped" : (self.step?.resultType)
-
-      } else {
-        stepDict?[kActivityStepResultType] = "grouped"
-      }
+      stepDict?[kActivityStepResultType] = "grouped"
+      
     default: break
 
     }
@@ -222,12 +214,20 @@ class ActivityStepResult {
           var j: Int! = 0
           var isAddMore: Bool? = false
 
-          if (stepResult.results?.count)!
-            > (self.step as? ActivityFormStep)!.itemsArray
-            .count
-          {
-            isAddMore = true
+          if self.step as? ActivityFormStep != nil {
+            if (stepResult.results?.count)!
+                > (self.step as? ActivityFormStep)!.itemsArray
+                .count
+            {
+              isAddMore = true
+            }
           }
+//          else if (stepResult.results?.count)!
+//                      > (self.step as? ActivityStep)!.itemsArray
+//                      .count
+//          {
+//            isAddMore = true
+//          }
           var localArray: [[String: Any]] = [[String: Any]]()
 
           for (i, result) in stepResult.results!.enumerated() {

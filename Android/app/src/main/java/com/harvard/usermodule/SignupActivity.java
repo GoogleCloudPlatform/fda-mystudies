@@ -380,7 +380,7 @@ public class SignupActivity extends AppCompatActivity
         && email.getText().toString().isEmpty()
         && confirmPassword.getText().toString().isEmpty()) {
       Toast.makeText(
-              this, getResources().getString(R.string.enter_all_field_empty), Toast.LENGTH_SHORT)
+          this, getResources().getString(R.string.enter_all_field_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (email.getText().toString().isEmpty()) {
       Toast.makeText(this, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT)
@@ -396,21 +396,21 @@ public class SignupActivity extends AppCompatActivity
     } else if (checkPasswordContainsEmailID(
         email.getText().toString(), password.getText().toString())) {
       Toast.makeText(
-              this, getResources().getString(R.string.password_contain_email), Toast.LENGTH_SHORT)
+          this, getResources().getString(R.string.password_contain_email), Toast.LENGTH_SHORT)
           .show();
     } else if (confirmPassword.getText().toString().isEmpty()) {
       Toast.makeText(
-              this, getResources().getString(R.string.confirm_password_empty), Toast.LENGTH_SHORT)
+          this, getResources().getString(R.string.confirm_password_empty), Toast.LENGTH_SHORT)
           .show();
     } else if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
       Toast.makeText(
-              this, getResources().getString(R.string.password_mismatch_error), Toast.LENGTH_SHORT)
+          this, getResources().getString(R.string.password_mismatch_error), Toast.LENGTH_SHORT)
           .show();
     } else if (!agree.isChecked()) {
       Toast.makeText(
-              this,
-              getResources().getString(R.string.terms_and_condition_validation),
-              Toast.LENGTH_SHORT)
+          this,
+          getResources().getString(R.string.terms_and_condition_validation),
+          Toast.LENGTH_SHORT)
           .show();
     } else {
       AppController.getHelperProgressDialog().showProgress(SignupActivity.this, "", "", false);
@@ -459,7 +459,7 @@ public class SignupActivity extends AppCompatActivity
 
       } else {
         Toast.makeText(
-                this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
+            this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
             .show();
       }
     } else if (responseCode == UPDATE_USER_PROFILE) {
@@ -469,12 +469,12 @@ public class SignupActivity extends AppCompatActivity
           signup(registrationData);
         } else {
           Toast.makeText(
-                  this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
+              this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
               .show();
         }
       } else {
         Toast.makeText(
-                this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
+            this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
             .show();
       }
     }

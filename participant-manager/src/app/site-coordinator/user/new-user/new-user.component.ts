@@ -19,6 +19,7 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
 @Component({
   selector: 'user-new',
   templateUrl: './new-user.component.html',
+  styleUrls: ['./new-user.component.scss'],
 })
 export class AddNewUserComponent
   extends UnsubscribeOnDestroyAdapter
@@ -182,7 +183,7 @@ export class AddNewUserComponent
       );
     } else {
       this.toastr.error(
-        'Please assign the user at least one permission from the permissions set shown.',
+        'Please assign the admin at least one permission from the permissions set shown.',
       );
       return;
     }

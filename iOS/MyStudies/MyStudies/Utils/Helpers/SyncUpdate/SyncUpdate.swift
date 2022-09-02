@@ -104,6 +104,7 @@ class SyncUpdate {
     guard let realm = DBHandler.getRealmObject(),
       let syncObj = lastSyncedObject
     else { return }
+    print("syncObj---\(syncObj)")
     // Delete Synced object from DB
     try? realm.write {
       realm.delete(syncObj)

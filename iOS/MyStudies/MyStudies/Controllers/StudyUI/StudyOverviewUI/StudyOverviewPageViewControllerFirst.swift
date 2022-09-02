@@ -23,6 +23,7 @@ import MediaPlayer
 import ResearchKit
 import SDWebImage
 import UIKit
+import FirebaseAnalytics
 
 class StudyOverviewViewControllerFirst: UIViewController {
 
@@ -33,6 +34,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
   @IBOutlet var buttonVisitWebsite: UIButton?
   @IBOutlet var labelTitle: UILabel?
   @IBOutlet var labelDescription: UILabel?
+  @IBOutlet var textViewDescription: UITextView?
   @IBOutlet var imageViewStudy: UIImageView?
 
   // MARK: - Properties
@@ -58,6 +60,8 @@ class StudyOverviewViewControllerFirst: UIViewController {
     } else {
       buttonWatchVideo?.isHidden = true
     }
+    textViewDescription?.isEditable = false
+    UITextView.appearance().linkTextAttributes = [.foregroundColor: UIColor.blue]
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -104,11 +108,36 @@ class StudyOverviewViewControllerFirst: UIViewController {
       )
 
       if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
-        self.labelDescription?.attributedText = attributedText
+        let detailText = overviewSectionDetail.text ?? ""
+        let regex = "<[^>]+>"
+        self.textViewDescription?.dataDetectorTypes = [.link, .phoneNumber]
+        self.textViewDescription?.text = detailText
+        if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+          if let valReConversiontoHTMLfromHTML =
+              detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+            
+            if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString,
+               attributedText.length > 0 {
+              textViewDescription?.attributedText = attributedText
+            } else if let attributedText =
+                        detailText.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                      attributedText.length > 0 {
+              textViewDescription?.attributedText = attributedText
+            } else {
+              textViewDescription?.text = detailText
+            }
+          } else {
+            textViewDescription?.text = detailText
+          }
+        } else {
+          self.textViewDescription?.attributedText =
+          detailText.stringByDecodingHTMLEntities.htmlToAttriString
+        }
       } else {
-        self.labelDescription?.text = ""
+        self.textViewDescription?.text = ""
       }
-      self.labelDescription?.textAlignment = .center
+      self.textViewDescription?.textAlignment = .center
+      self.textViewDescription?.textColor = .white
     }
 
     setNeedsStatusBarAppearanceUpdate()
@@ -142,6 +171,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   // MARK: - Button Actions
 
   @IBAction func watchVideoButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverViewFirst watch video"
+    ])
 
     guard let urlString = overviewSectionDetail.link,
       let url = URL(string: urlString)
@@ -170,6 +202,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 
   @IBAction func buttonActionJoinStudy(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverViewFirst Join Study"
+    ])
 
     if User.currentUser.userType == UserType.anonymousUser {
       let leftController =
@@ -180,6 +215,9 @@ class StudyOverviewViewControllerFirst: UIViewController {
   }
 
   @IBAction func visitWebsiteButtonAction(_ sender: Any) {
+    Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
+      buttonClickReasonsKey: "StudyOverviewFirst visit website"
+    ])
 
     if overViewWebsiteLink != nil {
 

@@ -22,7 +22,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEven
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.DATA_SHARING_CONSENT_VALUE_RETRIEVED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_ACTIVITY_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_ID_INVALID;
-import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_RESPONSE_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_RESPONSE_DATA_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.WITHDRAWAL_INFORMATION_RETRIEVED;
@@ -399,68 +398,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE,
         WITHDRAWAL_INFORMATION_UPDATED,
         PARTICIPANT_ACTIVITY_DATA_DELETED);
-  }
-
-  @Test
-  public void shouldDeleteParticipantFromStudy() throws Exception {
-    // Step-1 deleteActivityResponseDataForParticipant
-    doNothing()
-        .when(responsesDaoMock)
-        .deleteActivityResponseDataForParticipant(
-            STUDY_COLLECTION_NAME_VALUE,
-            STUDY_ID_VALUE,
-            ACTIVITY_COLLECTION_NAME_VALUE,
-            participantBo.getParticipantId());
-
-    // Step-2 call API to delete participant from study
-    ActivityResponseBean activityResponseBean = setActivityResponseBean();
-    HttpHeaders headers = TestUtils.newCommonHeaders();
-    headers.add(USER_ID_HEADER, VALID_USER_ID);
-    mockMvc
-        .perform(
-            post(ApiEndpoint.WITHDRAW.getPath())
-                .contextPath(getContextPath())
-                .content(JsonUtils.asJsonString(activityResponseBean))
-                .headers(headers)
-                .queryParam("deleteResponses", "true")
-                .queryParam("participantId", participantBo.getParticipantId())
-                .queryParam("studyId", STUDY_ID_VALUE)
-                .queryParam("studyVersion", STUDY_VERSION))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message", is(SUCCESS)));
-
-    // Step 3: verify deleted values
-    List<ParticipantActivitiesEntity> participantActivitiesList =
-        participantActivitiesRepository.findByStudyIdAndParticipantId(
-            STUDY_ID_VALUE, participantBo.getParticipantId());
-    assertTrue(participantActivitiesList.isEmpty());
-
-    verify(responsesDaoMock)
-        .deleteActivityResponseDataForParticipant(
-            studyCollectionNameCaptor.capture(),
-            studyIdCaptor.capture(),
-            activityCollectionNameCaptor.capture(),
-            participantIdCaptor.capture());
-
-    // Step 4: assert argument capture
-    assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
-    assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
-    assertEquals(ACTIVITY_COLLECTION_NAME_VALUE, activityCollectionNameCaptor.getValue());
-    assertEquals(participantBo.getParticipantId(), participantIdCaptor.getValue());
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setStudyId(STUDY_ID_VALUE);
-    auditRequest.setStudyVersion(STUDY_VERSION);
-    auditRequest.setParticipantId(participantBo.getParticipantId());
-    auditRequest.setUserId(VALID_USER_ID);
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(PARTICIPANT_RESPONSE_DATA_DELETED.getEventCode(), auditRequest);
-    auditEventMap.put(PARTICIPANT_ACTIVITY_DATA_DELETED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(
-        auditEventMap, PARTICIPANT_RESPONSE_DATA_DELETED, PARTICIPANT_ACTIVITY_DATA_DELETED);
   }
 
   @Test

@@ -1047,12 +1047,14 @@ public class DbServiceSubscriber {
       Apps apps = getApps(realm);
       Apps tempApps = null;
       realm.beginTransaction();
-      if (apps != null)
-         tempApps = realm.copyFromRealm(apps);
+      if (apps != null) {
+        tempApps = realm.copyFromRealm(apps);
+      }
       realm.deleteAll();
       realm.commitTransaction();
-      if (tempApps != null)
+      if (tempApps != null) {
         saveApps(context, tempApps);
+      }
       closeRealmObj(realm);
     } catch (Exception e) {
       Logger.log(e);

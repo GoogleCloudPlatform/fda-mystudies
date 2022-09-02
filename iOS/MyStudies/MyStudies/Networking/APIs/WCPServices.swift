@@ -74,6 +74,7 @@ let kContactusFirstname = "firstName"
 // MARK: - Study updates constants
 let kStudyUpdates = "updates"
 let kStudyCurrentVersion = "currentVersion"
+let kEnrollAgain = "enrollAgain"
 let kStudyConsent = "consent"
 let kStudyActivities = "activities"
 let kStudyResources = "resources"
@@ -220,7 +221,9 @@ class WCPServices: NSObject {
   func getNotification(skip: Int, delegate: NMWebServiceDelegate) {
     self.delegate = delegate
     let method = WCPMethods.notifications.method
-    let headerParams = [kNotificationSkip: "\(skip)"]
+    let user = User.currentUser
+    let headerParams = [kNotificationSkip: "\(skip)",
+                        kVerificationTime: user.verificationTime ?? ""]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
 
@@ -231,9 +234,16 @@ class WCPServices: NSObject {
   func getStudyUpdates(study: Study, delegate: NMWebServiceDelegate) {
     self.delegate = delegate
     let method = WCPMethods.studyUpdates.method
+    
+    var valUserStudyVersion = study.version ?? "0"
+      if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&
+          Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "0") {
+        valUserStudyVersion = Study.currentStudy?.userParticipateState.userStudyVersion ?? ""
+      }
+    
     let headerParams = [
       kStudyId: study.studyId!,
-      kStudyVersion: study.version!,
+      kStudyVersion: valUserStudyVersion ,
     ]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }
@@ -560,10 +570,11 @@ extension WCPServices: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     delegate?.startedRequest(manager, requestName: requestName)
+      print("-------Request name:", requestName)
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-
+    print("-------Request name:", response)
     let methodName = WCPMethods(rawValue: requestName as String)!
 
     switch methodName {
