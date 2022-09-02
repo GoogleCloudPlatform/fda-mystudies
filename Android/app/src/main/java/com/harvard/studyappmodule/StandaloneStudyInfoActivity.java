@@ -926,6 +926,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
 
     header.put("deviceType", android.os.Build.MODEL);
     header.put("deviceOS", Build.VERSION.RELEASE);
+    header.put("mobilePlatform","ANDROID");
+
 
     ParticipantEnrollmentDatastoreConfigEvent participantDatastoreConfigEvent =
         new ParticipantEnrollmentDatastoreConfigEvent(
@@ -994,6 +996,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           isUpgrade(true, latestVersion, force);
         }
       } else {
+        // commented because if impleting the offline indicator
+
         //        Toast.makeText(StandaloneStudyInfoActivity.this, "Error detected",
         // Toast.LENGTH_SHORT).show();
         //        if (Build.VERSION.SDK_INT < 21) {

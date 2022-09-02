@@ -119,11 +119,6 @@ public class SignupFragment extends Fragment
     termsAndConditionData = new TermsAndConditionData();
     termsAndConditionData.setPrivacy(dbServiceSubscriber.getApps(realm).getPrivacyPolicyUrl());
     termsAndConditionData.setTerms(dbServiceSubscriber.getApps(realm).getTermsUrl());
-    //    if(!AppController.isNetworkAvailable(context)) {
-    //      offlineIndicatior.setVisibility(View.VISIBLE);
-    //      submitBtn.setClickable(false);
-    //      submitBtn.setAlpha(0.5F);
-    //    }
     dbServiceSubscriber.closeRealmObj(realm);
     return view;
   }
