@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -862,6 +863,10 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
               AppController.getHelperSharedPreference()
                   .readPreference(context, getResources().getString(R.string.userid), ""));
 
+          header.put("deviceType", android.os.Build.MODEL);
+          header.put("deviceOS", Build.VERSION.RELEASE);
+          header.put("mobilePlatform","ANDROID");
+
           ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
               new ParticipantEnrollmentDatastoreConfigEvent(
                   "get",
@@ -908,12 +913,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             AppController.getHelperSharedPreference()
                 .readPreference(context, getString(R.string.userid), ""));
         dbServiceSubscriber.saveStudyPreferencesToDB(context, studies);
-        //        StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
-        //        if (studyData == null) {
-        //          dbServiceSubscriber.saveStudyPreferencesToDB(context, studies);
-        //        } else {
-        //          studies = studyData;
-        //       }
         RealmList<Studies> userPreferenceStudies = studies.getStudies();
         if (userPreferenceStudies != null) {
           for (int i = 0; i < userPreferenceStudies.size(); i++) {
@@ -992,7 +991,18 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         }
       }
       if (version != null && (!latestConsentVersion.equalsIgnoreCase(version))) {
-        callConsentMetaDataWebservice();
+        if (!consentPdfData.getConsent().getVersion().equalsIgnoreCase(latestConsentVersion)) {
+          callConsentMetaDataWebservice();
+        } else {
+          AppController.getHelperProgressDialog().dismissDialog();
+          Intent intent = new Intent(context, SurveyActivity.class);
+          intent.putExtra("studyId", studyId);
+          intent.putExtra("to", calledFor);
+          intent.putExtra("from", from);
+          intent.putExtra("activityId", activityId);
+          intent.putExtra("localNotification", localNotification);
+          context.startActivity(intent);
+        }
       } else if (enrollAgain
           && latestConsentVersion != null
           && consentPdfData != null

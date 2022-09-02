@@ -219,8 +219,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                         }
                       }
                       if (!isStudyAvailable) {
-                        Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
-                            .show();
+                        Intent intent =
+                            new Intent(context.getApplicationContext(), StudyActivity.class);
+                        context.startActivity(intent);
                       }
                     } else {
                       Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT)

@@ -98,8 +98,6 @@ public class GatewayActivity extends AppCompatActivity
     }
     if (!AppController.isNetworkAvailable(this)) {
       offlineIndicatior.setVisibility(View.VISIBLE);
-      //      signInButtonLayout.setClickable(false);
-      //      signInButtonLayout.setAlpha(0.5F);
     }
   }
 
@@ -157,16 +155,13 @@ public class GatewayActivity extends AppCompatActivity
           isUpgrade(true, latestVersion, force);
         }
       } else {
+        // commented because if impleting the offline indicator
+
         //        Toast.makeText(GatewayActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
         //        if (Build.VERSION.SDK_INT < 21) {
         //          finishAffinity();
         //        } else {
         //          finishAndRemoveTask();
-        //        }
-        //        if(!AppController.isNetworkAvailable(GatewayActivity.this)) {
-        //          offlineIndicatior.setVisibility(View.VISIBLE);
-        ////          signInButtonLayout.setClickable(false);
-        ////          signInButtonLayout.setAlpha(0.5F);
         //        }
       }
     }

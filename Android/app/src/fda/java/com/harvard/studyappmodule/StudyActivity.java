@@ -1279,6 +1279,7 @@ public class StudyActivity extends AppCompatActivity
                   StudyActivity.this, "Please update the app to continue using", Toast.LENGTH_SHORT)
               .show();
           moveTaskToBack(true);
+          // commented because if impleting the offline indicator
           //          if (Build.VERSION.SDK_INT < 21) {
           //            finishAffinity();
           //          } else {
@@ -1437,6 +1438,8 @@ public class StudyActivity extends AppCompatActivity
           isUpgrade(true, latestVersion, force);
         }
       } else {
+        // commented because if impleting the offline indicator
+
         //        Toast.makeText(StudyActivity.this, "Error detected", Toast.LENGTH_SHORT).show();
         //        if (Build.VERSION.SDK_INT < 21) {
         //          finishAffinity();
