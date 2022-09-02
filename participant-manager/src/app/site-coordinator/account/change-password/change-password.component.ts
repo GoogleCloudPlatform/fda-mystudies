@@ -39,7 +39,7 @@ export class ChangePasswordComponent
   passwordLength = '';
   userName = '';
   dataServiceProcessed = false;
-  
+
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -88,13 +88,11 @@ special characters.`);
     //   this.hideClickable = visible;
     // });
 
-    if((this.changePasswordTitle) === 'Set up password') {  
+    if (this.changePasswordTitle === 'Set up password') {
       this.displayHeader.setDisplayHeaderStatus(false);
-    } else { 
+    } else {
       this.displayHeader.setDisplayHeaderStatus(true);
     }
-
-
   }
   getError(err: ErrorCode): string {
     return getErrorMessage(err);

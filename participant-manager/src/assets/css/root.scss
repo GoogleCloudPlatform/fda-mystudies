@@ -1751,17 +1751,16 @@ input::-webkit-calendar-picker-indicator {
 
 /* angular upgradtion CSS fixed here */
 
-.table>:not(:first-child) {
+.table > :not(:first-child) {
   border-top: 1px solid var(--periwinkle-gray) !important;
 }
 
-.table-striped>tbody>tr:nth-of-type(odd)>* {
+.table-striped > tbody > tr:nth-of-type(odd) > * {
   --bs-table-accent-bg: transparent;
   color: transparent;
 }
 
-input[type=password]::-ms-reveal,
-input[type=password]::-ms-clear
-{
-    display: none;
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }
