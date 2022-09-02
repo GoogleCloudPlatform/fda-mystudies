@@ -636,7 +636,12 @@ class ActivitiesViewController: UIViewController {
         activityStatus.incompletedRuns = activity.incompletedRuns
         activityStatus.totalRuns = activity.totalRuns
         activityStatus.activityVersion = activity.version
-        
+        activity.userParticipationStatus.status = status
+              
+              
+              print("\n---------Activity ststus: \(String(describing: activity.actvityId)) \n", activity.userParticipationStatus.status.description)
+              print("\n---------Expected Activity ststus: \n", status.description)
+              print("\n---------User Activity ststus: \n", activityStatus.status.description)
         /// Update participationStatus to DB
         DBHandler.updateParticipationStatus(for: activity)
         
