@@ -915,12 +915,6 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             AppController.getHelperSharedPreference()
                 .readPreference(context, getString(R.string.userid), ""));
         dbServiceSubscriber.saveStudyPreferencesToDB(context, studies);
-        //        StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
-        //        if (studyData == null) {
-        //          dbServiceSubscriber.saveStudyPreferencesToDB(context, studies);
-        //        } else {
-        //          studies = studyData;
-        //       }
         RealmList<Studies> userPreferenceStudies = studies.getStudies();
         if (userPreferenceStudies != null) {
           for (int i = 0; i < userPreferenceStudies.size(); i++) {
@@ -998,8 +992,19 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
           version = studyData.getStudies().get(i).getUserStudyVersion();
         }
       }
-      if ((version != null && (!latestConsentVersion.equalsIgnoreCase(version))) && enrollAgain) {
-        callConsentMetaDataWebservice();
+      if (version != null && (!latestConsentVersion.equalsIgnoreCase(version))) {
+        if (!consentPdfData.getConsent().getVersion().equalsIgnoreCase(latestConsentVersion)) {
+          callConsentMetaDataWebservice();
+        } else {
+          AppController.getHelperProgressDialog().dismissDialog();
+          Intent intent = new Intent(context, SurveyActivity.class);
+          intent.putExtra("studyId", studyId);
+          intent.putExtra("to", calledFor);
+          intent.putExtra("from", from);
+          intent.putExtra("activityId", activityId);
+          intent.putExtra("localNotification", localNotification);
+          context.startActivity(intent);
+        }
       } else if (enrollAgain
           && latestConsentVersion != null
           && consentPdfData != null

@@ -995,6 +995,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           isUpgrade(true, latestVersion, force);
         }
       } else {
+        // commented because if impleting the offline indicator
+
         //        Toast.makeText(StandaloneStudyInfoActivity.this, "Error detected",
         // Toast.LENGTH_SHORT).show();
         //        if (Build.VERSION.SDK_INT < 21) {

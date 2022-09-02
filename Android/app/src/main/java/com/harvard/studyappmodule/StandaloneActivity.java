@@ -253,22 +253,7 @@ public class StandaloneActivity extends AppCompatActivity
         studies.setUserId(
             AppController.getHelperSharedPreference()
                 .readPreference(StandaloneActivity.this, getString(R.string.userid), ""));
-
-        //        StudyData studyData = dbServiceSubscriber.getStudyPreferencesListFromDB(realm);
-        //        if (studyData == null) {
-        //          int size = studies.getStudies().size();
-        //          for (int i = 0; i < size; i++) {
-        //            if
-        // (!studies.getStudies().get(i).getStudyId().equalsIgnoreCase(AppConfig.StudyId)) {
-        //              studies.getStudies().remove(i);
-        //              size = size - 1;
-        //              i--;
-        //            }
-        //          }
         dbServiceSubscriber.saveStudyPreferencesToDB(this, studies);
-        //        } else {
-        //          studies = studyData;
-        //        }
 
         AppController.getHelperSharedPreference()
             .writePreference(
