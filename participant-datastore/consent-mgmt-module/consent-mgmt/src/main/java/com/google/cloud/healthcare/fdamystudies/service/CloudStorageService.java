@@ -16,6 +16,7 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,7 +32,7 @@ public class CloudStorageService implements FileStorageService {
 
   private XLogger logger = XLoggerFactory.getXLogger(CloudStorageService.class.getName());
 
-  @Autowired private Storage storageService;
+  // @Autowired private Storage storageService;
 
   private static final String PATH_SEPARATOR = "/";
 
@@ -46,8 +47,14 @@ public class CloudStorageService implements FileStorageService {
       BlobInfo blobInfo = BlobInfo.newBuilder(appConfig.getBucketName(), absoluteFileName).build();
       byte[] bytes = null;
 
+      Storage storageService =
+          StorageOptions.newBuilder()
+              .setProjectId(appConfig.getDataProjectId())
+              .build()
+              .getService();
+
       try (WriteChannel writer = storageService.writer(blobInfo)) {
-        bytes = Base64.getDecoder().decode(content.replaceAll("\n", ""));
+        bytes = Base64.getDecoder().decode(content.replace("\n", ""));
 
         writer.write(ByteBuffer.wrap(bytes, 0, bytes.length));
       } catch (IOException e) {
@@ -61,6 +68,13 @@ public class CloudStorageService implements FileStorageService {
   @Override
   public String getDocumentContent(String filepath) {
     if (StringUtils.isNotBlank(filepath)) {
+
+      Storage storageService =
+          StorageOptions.newBuilder()
+              .setProjectId(appConfig.getDataProjectId())
+              .build()
+              .getService();
+
       Blob blob = storageService.get(BlobId.of(appConfig.getBucketName(), filepath));
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       blob.downloadTo(outputStream);

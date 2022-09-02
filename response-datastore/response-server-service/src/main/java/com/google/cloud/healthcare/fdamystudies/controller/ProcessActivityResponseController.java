@@ -59,8 +59,8 @@ import com.google.cloud.healthcare.fdamystudies.service.StudyMetadataService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareAPIs;
-import com.google.cloud.healthcare.fdamystudies.utils.getResponsefhirApi;
+import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareApis;
+import com.google.cloud.healthcare.fdamystudies.utils.GetResponsefhirApi;
 import com.google.gson.Gson;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -100,8 +100,8 @@ public class ProcessActivityResponseController {
   @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
   @Autowired private ApplicationConfiguration appConfig;
-  @Autowired private getResponsefhirApi getresponsefhirApi;
-  @Autowired private FhirHealthcareAPIs fhirhealthcareApis;
+  @Autowired private GetResponsefhirApi getresponsefhirApi;
+  @Autowired private FhirHealthcareApis fhirhealthcareApis;
 
   private static final String BEGIN_REQUEST_LOG = "%s request";
 
@@ -143,6 +143,8 @@ public class ProcessActivityResponseController {
               + activityId
               + "\n Activity Version: "
               + activityVersion);
+      logger.debug("DiscardFHIR : \n : " + appConfig.getDiscardFhirAfterDid());
+      logger.debug("EnableFHI : \n : " + appConfig.getEnableFhirManagementApi());
       if (StringUtils.isBlank(applicationId)
           || StringUtils.isBlank(secureEnrollmentToken)
           || StringUtils.isBlank(studyId)
@@ -280,7 +282,9 @@ public class ProcessActivityResponseController {
         withdrawMap.put("withdrawn_status", String.valueOf(withdrawalStatus));
         responseServerAuditLogHelper.logEvent(
             WITHDRAWAL_INFORMATION_RETRIEVED, auditRequest, withdrawMap);
+
         if (!withdrawalStatus) {
+
           activityResponseProcessorService.saveActivityResponseDataForParticipant(
               activityMetadatFromWcp, questionnaireActivityResponseBean, auditRequest);
           savedResponseData = true;
@@ -475,8 +479,8 @@ public class ProcessActivityResponseController {
 
         // enableFHIRManagementAPI value  = FHIR
         // discardFHIRAfterDID false
-        if (appConfig.getEnableFHIRManagementAPI().contains("FHIR")
-            && appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("false")) {
+        if (appConfig.getEnableFhirManagementApi().contains("fhir")
+            && appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
           String datasetPathforFHIR =
               String.format(
                   DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
@@ -501,14 +505,12 @@ public class ProcessActivityResponseController {
                     .fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
             storedResponseBean = getresponsefhirApi.initStoredResponseBean();
             storedResponseBean =
-                getresponsefhirApi.convertFHIRReesponseDataToBean(
+                getresponsefhirApi.convertFhirResponseDataToBean(
                     participantId, searchResponseFhirbean, storedResponseBean);
             return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
           }
           return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
-
-        } else if (appConfig.getEnableFHIRManagementAPI().contains("FHIR")
-            && appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("true")) {
+        } else if (appConfig.getEnableFhirManagementApi().contains("did")) {
           String datasetPathforDID =
               String.format(
                   DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
@@ -532,7 +534,7 @@ public class ProcessActivityResponseController {
                     .fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
             storedResponseBean = getresponsefhirApi.initStoredResponseBean();
             storedResponseBean =
-                getresponsefhirApi.convertFHIRReesponseDataToBean(
+                getresponsefhirApi.convertFhirResponseDataToBean(
                     participantId, searchResponseFhirbean, storedResponseBean);
             return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
           }

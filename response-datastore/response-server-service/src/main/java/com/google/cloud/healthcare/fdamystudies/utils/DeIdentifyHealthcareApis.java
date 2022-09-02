@@ -29,19 +29,32 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Sensitive information de-identified in Fhir
+ *
+ * @author
+ */
 @Component
-public class DeIdentifyHealthcareAPIs {
+public class DeIdentifyHealthcareApis {
 
-  private XLogger logger = XLoggerFactory.getXLogger(DeIdentifyHealthcareAPIs.class.getName());
-  @Autowired private FhirHealthcareAPIs fhirHealthcareAPIs;
+  private XLogger logger = XLoggerFactory.getXLogger(DeIdentifyHealthcareApis.class.getName());
+  @Autowired private FhirHealthcareApis fhirHealthcareApis;
 
   private static final String FHIR_STORES = "/fhirStores/";
 
   private static final String FIELDS_TO_BE_DEIDENTIFIED =
-      "identifier.type.text,item.definition,item.answer.valueString,item.answer.valueDecimal,item.answer.valueTime,item.item.definition,item.item.answer.valueString,item.item.answer.valueDecimal,item.item.answer.valueTime";
+      "identifier.type.text,item.definition,item.answer.valueString,item.answer.valueDecimal,item.answer.valueTime,"
+          + "item.item.definition,item.item.answer.valueString,item.item.answer.valueDecimal,item.item.answer.valueTime";
 
   private static final String INSPECT_AND_TRANSFORM = "INSPECT_AND_TRANSFORM";
-
+  /**
+   * Fhir store with sensitive information de-identified.
+   *
+   * @param srcDataStoreName
+   * @param destDataStoreName
+   * @param resourceId
+   * @throws ProcessResponseException
+   */
   public void deIdentification(
       String srcDataStoreName, String destDataStoreName, List<String> resourceId)
       throws ProcessResponseException {
@@ -67,6 +80,7 @@ public class DeIdentifyHealthcareAPIs {
               .setDestinationStore(destDataStoreName)
               .setConfig(deidentifyConfig)
               .setResourceFilter(fhirFilter);
+      logger.entry("begin deIdentification()" + deidentifyRequest.toString());
       FhirStores.Deidentify request =
           client
               .projects()
@@ -74,8 +88,10 @@ public class DeIdentifyHealthcareAPIs {
               .datasets()
               .fhirStores()
               .deidentify(srcDataStoreName, deidentifyRequest);
+      logger.entry("begin deIdentification()" + request.toString());
 
       Operation operation = request.execute();
+      logger.entry("begin deIdentification()" + operation.toString());
       while (operation.getDone() == null || !operation.getDone()) {
         // Update the status of the operation with another request.
         Thread.sleep(500); // Pause for 500ms between requests.
@@ -93,7 +109,7 @@ public class DeIdentifyHealthcareAPIs {
       logger.exit("deIdentification() - Ends ");
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
+      // throw new ProcessResponseException(e.getMessage());
     }
   }
 
@@ -120,7 +136,7 @@ public class DeIdentifyHealthcareAPIs {
               "[{\"op\": \"replace\", \"path\": \"/item/"
                   + count
                   + "/answer/0/valueString\", \"value\": \"[LOCATION]\"}]";
-          fhirHealthcareAPIs.fhirResourcePatch(RESOURCE_NAME, data);
+          fhirHealthcareApis.fhirResourcePatch(RESOURCE_NAME, data);
         } else if (questionnaireItems.getDefinition().equalsIgnoreCase("grouped")) {
           List<ItemsQuestionnaireResponse> innerItem = questionnaireItems.getItem();
           if (CollectionUtils.isNotEmpty(innerItem)) {
@@ -133,7 +149,7 @@ public class DeIdentifyHealthcareAPIs {
                         + "/item/"
                         + innerCount
                         + "/answer/0/valueString\", \"value\": \"[LOCATION]\"}]";
-                fhirHealthcareAPIs.fhirResourcePatch(RESOURCE_NAME, data);
+                fhirHealthcareApis.fhirResourcePatch(RESOURCE_NAME, data);
               }
               innerCount++;
             }

@@ -263,7 +263,7 @@ public class StudyServiceImpl implements StudyService {
       Integer limit,
       Integer offset,
       String orderByCondition,
-      String searchTerm) {
+      String searchValue) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
 
@@ -303,7 +303,7 @@ public class StudyServiceImpl implements StudyService {
         limit,
         offset,
         orderByCondition,
-        searchTerm,
+        searchValue,
         auditRequest);
   }
 
@@ -314,7 +314,7 @@ public class StudyServiceImpl implements StudyService {
       Integer limit,
       Integer offset,
       String orderByCondition,
-      String searchTerm,
+      String searchValue,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
@@ -327,13 +327,13 @@ public class StudyServiceImpl implements StudyService {
               limit,
               offset,
               orderByCondition,
-              StringUtils.defaultString(searchTerm));
+              StringUtils.defaultString(searchValue));
 
       participantCount =
           studyRepository.countOpenStudyParticipants(
               studyAppDetails.getStudyId(),
               excludeParticipantStudyStatus,
-              StringUtils.defaultString(searchTerm));
+              StringUtils.defaultString(searchValue));
 
     } else if (studyAppDetails.getStudyType().equalsIgnoreCase(CommonConstants.CLOSE_STUDY)) {
       studyParticipantDetails =
@@ -342,11 +342,11 @@ public class StudyServiceImpl implements StudyService {
               limit,
               offset,
               orderByCondition,
-              StringUtils.defaultString(searchTerm));
+              StringUtils.defaultString(searchValue));
 
       participantCount =
           studyRepository.countParticipants(
-              studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
+              studyAppDetails.getStudyId(), StringUtils.defaultString(searchValue));
     }
 
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {

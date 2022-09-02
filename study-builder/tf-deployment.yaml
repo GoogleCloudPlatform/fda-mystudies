@@ -127,6 +127,11 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: project_id
+            - name: DATA_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: data_project_id
             - name: REGION_ID
               valueFrom:
                 secretKeyRef:

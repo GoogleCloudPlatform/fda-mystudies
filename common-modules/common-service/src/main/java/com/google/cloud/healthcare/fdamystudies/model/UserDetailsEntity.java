@@ -120,6 +120,15 @@ public class UserDetailsEntity implements Serializable {
   @ToString.Exclude
   @Column(name = "user_id", length = SMALL_LENGTH)
   private String userId;
+  
+  @Column(name = "device_type")
+  private String deviceType;
+
+  @Column(name = "device_os")
+  private String deviceOS;
+
+  @Column(name = "mobile_platform")
+  private String mobilePlatform;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userDetails")
   private List<ParticipantStudyEntity> participantStudies = new ArrayList<>();

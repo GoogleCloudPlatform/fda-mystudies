@@ -68,7 +68,7 @@ export class SiteCoordinatorComponent implements OnInit {
   }
   public onKeyUp(event: KeyboardEvent): void {
     if (event.key === 'Enter' && this.searchBar) {
-      this.searchParameter.setSearchParameter(this.filterQuery);
+      this.searchParameter.setSearchParameter(encodeURI(this.filterQuery));
       void this.searchBar.search(this.filterQuery);
     } else if (this.searchBar && this.filterQuery === '') {
       this.searchParameter.setSearchParameter('');

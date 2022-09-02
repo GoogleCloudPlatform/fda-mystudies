@@ -199,7 +199,7 @@ public class ConsentManagementAPIs {
     }
   }
 
-  public void datasetCreateHealthcareAPI(String datasetId) throws IOException {
+  public void createDatasetInHealthcareAPI(String datasetId) throws IOException {
 
     logger.entry("Begin datasetCreateHealthcareAPI()");
     String projectId = configMap.get("projectId");
@@ -211,7 +211,6 @@ public class ConsentManagementAPIs {
 
       // Configure the dataset to be created.
       Dataset dataset = new Dataset();
-      // dataset.setTimeZone(regionId);
 
       // Create request and configure any parameters.
       String parentName = String.format("projects/%s/locations/%s", projectId, regionId);
@@ -222,7 +221,7 @@ public class ConsentManagementAPIs {
       // Execute the request, wait for the operation to complete, and process the results.
 
       Operation operation = request.execute();
-      System.out.println(operation.toPrettyString());
+
       while (operation.getDone() == null || !operation.getDone()) {
         // Update the status of the operation with another request.
         Thread.sleep(500); // Pause for 500ms between requests.
@@ -235,7 +234,7 @@ public class ConsentManagementAPIs {
                 .get(operation.getName())
                 .execute();
       }
-      System.out.println("Dataset created. Response content: " + operation.getResponse());
+
     } catch (Exception ex) {
       logger.entry("Error datasetCreateHealthcareAPI(): ", ex);
     }

@@ -240,6 +240,9 @@ class ActivitiesViewController: UIViewController {
     }
   
     func setOffline() {
+        if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
+          self.refreshControl?.endRefreshing()
+        }
         if let viewController = self.presentedViewController as? ORKTaskViewController {
             viewController.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
                                 position: .center, title: nil, image: nil, completion: nil)

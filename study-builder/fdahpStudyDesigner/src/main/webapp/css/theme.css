@@ -127,7 +127,7 @@ a:hover{
 }
 
 .mt-xlg {
-	margin-top: 30px !important;
+	margin-top: 20px !important;
 }
 
 .mt-xxlg {
@@ -309,7 +309,7 @@ a:hover{
 }
 
 .pb-lg {
-	padding-bottom: 20px !important;
+	padding-bottom: 10px !important;
 }
 
 .pb-xl {
@@ -423,6 +423,13 @@ a:hover{
     font-weight: 500;
 }
 
+.gray-xs-e{
+	 font-size: 14px;
+    line-height: 16px;
+    color: #2d2926;;
+    font-weight: 500;
+}
+
 .black-xs-f{    
     font-size: 14px;
     line-height: 16px;
@@ -450,6 +457,15 @@ a:hover{
     font-size: 16px;
     line-height: 20px;
     font-weight: 600;
+    color: #2d2926;
+}
+
+black-md{
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    line-height: 16px;
+    font-weight: 500;
     color: #2d2926;
 }
 

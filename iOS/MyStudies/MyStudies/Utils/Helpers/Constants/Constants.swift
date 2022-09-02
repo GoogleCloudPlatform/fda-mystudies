@@ -299,6 +299,10 @@ let kMessage = "message"
 let kVisualStepId = "visual"
 let kConfirmation = "Confirmation"
 
+let kOffline1 = "You may require internet connection to move forward with this flow. Kindly "
+
+let kOffline = "\(kOffline1)check the internet and try enrolling again later."
+
 public func log<T>(
   _ object: T?,
   filename: String = #file,

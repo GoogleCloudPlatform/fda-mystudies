@@ -354,6 +354,9 @@ static NSString *const _SignatureStepIdentifier = @"signatureStep";
 #pragma mark ORKStepViewControllerDelegate
 
 - (void)stepViewController:(ORKStepViewController *)stepViewController didFinishWithNavigationDirection:(ORKStepViewControllerNavigationDirection)direction {
+    ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
+    [strongDelegate stepViewControllerResultWillChange:self];
+//    [strongDelegate stepViewController:self didFinishWithNavigationDirection:direction];
     if (_currentPageIndex == NSNotFound) {
         return;
     }
@@ -380,7 +383,6 @@ static NSString *const _SignatureStepIdentifier = @"signatureStep";
 
 - (void)goToPage:(NSInteger)page animated:(BOOL)animated {
     UIViewController *viewController = [self viewControllerForIndex:page];
-    
     if (!viewController) {
         ORK_Log_Debug(@"No view controller!");
         return;
@@ -460,7 +462,12 @@ static NSString *const _SignatureStepIdentifier = @"signatureStep";
 }
 
 #pragma mark ORKConsentReviewControllerDelegate
-
+- (void)consentReviewControllerWillAcknowledge:(ORKConsentReviewController *)consentReviewController {
+    ORKStrongTypeOf(self.delegate) strongDelegate = self.delegate;
+    if ([strongDelegate respondsToSelector:@selector(stepViewControllerResultWillChange:)]) {
+        [strongDelegate stepViewControllerResultWillChange:self];
+    }
+}
 - (void)consentReviewControllerDidAcknowledge:(ORKConsentReviewController *)consentReviewController {
     _documentReviewed = YES;
     [self notifyDelegateOnResultChange];

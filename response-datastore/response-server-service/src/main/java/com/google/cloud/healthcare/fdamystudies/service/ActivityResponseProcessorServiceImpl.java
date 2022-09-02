@@ -44,11 +44,12 @@ import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.ResponsesDao;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
-import com.google.cloud.healthcare.fdamystudies.utils.DeIdentifyHealthcareAPIs;
-import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareAPIs;
+import com.google.cloud.healthcare.fdamystudies.utils.DeIdentifyHealthcareApis;
+import com.google.cloud.healthcare.fdamystudies.utils.FhirHealthcareApis;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -61,7 +62,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,9 +97,9 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
   @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
-  @Autowired private FhirHealthcareAPIs fhirHealthcareAPIs;
+  @Autowired private FhirHealthcareApis fhirHealthcareAPIs;
 
-  @Autowired private DeIdentifyHealthcareAPIs deIdentifyHealthcareAPIs;
+  @Autowired private DeIdentifyHealthcareApis deIdentifyHealthcareApis;
 
   @Autowired private CommonDao commonDao;
 
@@ -210,9 +214,10 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     responsesDao.updateWithdrawalStatusForParticipant(studyCollectionName, studyId, participantId);
     SearchPatientFhirResponseBean searchPatientFhirResponseBean =
         updateStatusOfPatientInFHIR(studyId, participantId);
-    /*if (appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("false")) {*/
-    updateStatusOfPatientInDID(searchPatientFhirResponseBean, studyId);
-    /*}*/
+
+    if (appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
+      updateStatusOfPatientInDID(searchPatientFhirResponseBean, studyId);
+    }
   }
 
   private void updateStatusOfPatientInDID(
@@ -220,7 +225,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       throws ProcessResponseException {
     if (searchPatientFhirResponseBean != null
         && searchPatientFhirResponseBean.getTotal() == 1
-        && appConfig.getEnableFHIRManagementAPI().equalsIgnoreCase("FHIR_DID")) {
+        && appConfig.getEnableFhirManagementApi().equalsIgnoreCase("fhir&did")) {
       String srcDatasetPathforFHIR =
           String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
       String datasetPathforDID =
@@ -232,11 +237,11 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               + "/"
               + searchPatientFhirResponseBean.getEntry().get(0).getResource().getId());
 
-      deIdentifyHealthcareAPIs.deIdentification(
+      deIdentifyHealthcareApis.deIdentification(
           srcDatasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId,
           datasetPathforDID + FHIR_STORES + "DID_" + studyId,
           resourceIds);
-      if (appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("true")) {
+      if (appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("true")) {
         String resourceNameOfPatient =
             srcDatasetPathforFHIR
                 + FHIR_STORES
@@ -253,19 +258,24 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
   public SearchPatientFhirResponseBean updateStatusOfPatientInFHIR(
       String studyId, String participantId) throws ProcessResponseException {
+    logger.entry("begin updateStatusOfPatientInFHIR()");
     SearchPatientFhirResponseBean searchPatientFhirResponseBean = null;
-    try {
-      if (appConfig.getEnableFHIRManagementAPI().contains("FHIR")) {
-        String searchJson = null;
-        logger.entry("begin updateStatusOfPatientInFHIR()");
+    SearchPatientFhirResponseBean searchPatientDidResponseBean = null;
 
-        String datasetPathforFHIR =
-            String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
+    try {
+
+      logger.debug("updateStatusOfPatientInFHIR1 ");
+      String datasetPathforFHIR =
+          String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
+      if (appConfig.getEnableFhirManagementApi().contains("fhir")) {
+        String searchJson = null;
 
         searchJson =
             fhirHealthcareAPIs.fhirResourceSearchPost(
                 datasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId + "/fhir/" + PATIENT_TYPE,
                 "identifier=" + participantId);
+        logger.debug("updateStatusOfPatientInFHIR2 ");
+
         searchPatientFhirResponseBean =
             new Gson().fromJson(searchJson, SearchPatientFhirResponseBean.class);
 
@@ -281,12 +291,47 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                   + "/"
                   + searchPatientFhirResponseBean.getEntry().get(0).getResource().getId();
           String data = "[{\"op\": \"replace\", \"path\": \"/active\", \"value\": false}]";
+
+          logger.debug(
+              "updateStatusOfPatientInFHIR3: "
+                  + searchPatientFhirResponseBean.getEntry().get(0).getResource().getId());
           fhirHealthcareAPIs.fhirResourcePatch(RESOURCE_NAME, data);
+          logger.debug("updateStatusOfPatientInFHIR4 : fhirResourcePatch ");
+        }
+      }
+
+      if (appConfig.getEnableFhirManagementApi().contains("did")) {
+        String searchDidJson = null;
+
+        searchDidJson =
+            fhirHealthcareAPIs.fhirResourceSearchPost(
+                datasetPathforFHIR + FHIR_STORES + "DID_" + studyId + "/fhir/" + PATIENT_TYPE,
+                "identifier=" + participantId);
+        searchPatientDidResponseBean =
+            new Gson().fromJson(searchDidJson, SearchPatientFhirResponseBean.class);
+
+        logger.debug("updateStatusOfPatientInFHIR5 : ");
+
+        if (searchPatientDidResponseBean != null && searchPatientDidResponseBean.getTotal() == 1) {
+          final String RESOURCE_NAME =
+              datasetPathforFHIR
+                  + FHIR_STORES
+                  + "DID_"
+                  + studyId
+                  + "/fhir/"
+                  + PATIENT_TYPE
+                  + "/"
+                  + searchPatientFhirResponseBean.getEntry().get(0).getResource().getId();
+          String data = "[{\"op\": \"replace\", \"path\": \"/active\", \"value\": false}]";
+          fhirHealthcareAPIs.fhirResourcePatch(RESOURCE_NAME, data);
+
+          logger.debug("updateStatusOfPatientInFHIR6 : fhirResourcePatch did ");
         }
       }
     } catch (Exception e) {
-      throw new ProcessResponseException(
-          "updateStatusOfPatientInFHIR() method: Unable to update the status of Patient status in FHIR");
+      logger.error(
+          "updateStatusOfPatientInFHIR() method: Unable to update the status of Patient status in FHIR ",
+          e);
     }
     logger.exit("updateStatusOfPatientInFHIR() - ends ");
     return searchPatientFhirResponseBean;
@@ -479,7 +524,9 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   private void saveActivityResponseData(
       ActivityResponseBean questionnaireActivityResponseBean, String rawResponseData)
       throws Exception {
-    logger.entry("begin saveActivityResponseData()");
+    logger.debug("begin saveActivityResponseData()");
+    logger.debug("DiscardFHIR : \n : " + appConfig.getDiscardFhirAfterDid());
+    logger.debug("EnableFHI : \n : " + appConfig.getEnableFhirManagementApi());
     // Add Timestamp to bean
     questionnaireActivityResponseBean.setCreatedTimestamp(
         String.valueOf(System.currentTimeMillis()));
@@ -507,14 +554,11 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
     String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
     logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
-    if (appConfig.getEnableFHIRManagementAPI().contains("FHIR")
-        && appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("false")) {
-      processToFhirResponse(questionnaireActivityResponseBean);
+    String fhirJson = "";
+    if (appConfig.getEnableFhirManagementApi().contains("fhir")
+        && appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
+      fhirJson = processToFhirResponse(questionnaireActivityResponseBean);
 
-    } else if (appConfig.getEnableFHIRManagementAPI().contains("FHIR")
-        && appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("true")) {
-      String fhirJson = processToFhirResponse(questionnaireActivityResponseBean);
-      processToDIDResponse(fhirJson, questionnaireActivityResponseBean);
     } else {
       responsesDao.saveActivityResponseData(
           studyId,
@@ -522,95 +566,111 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
           AppConstants.ACTIVITIES_COLLECTION_NAME,
           dataToStoreActivityResults);
     }
+
+    if (appConfig.getEnableFhirManagementApi().contains("did")) {
+      logger.info(" did Enabled " + appConfig.getEnableFhirManagementApi());
+      if (StringUtils.isBlank(fhirJson)) {
+        fhirJson = processToFhirResponse(questionnaireActivityResponseBean);
+      }
+      processToDIDResponse(fhirJson, questionnaireActivityResponseBean);
+      logger.info("did end");
+    }
     logger.exit("saveActivityResponseData() - ends ");
   }
 
   public void processToDIDResponse(
       String fhirJson, ActivityResponseBean questionnaireActivityResponseBean) throws Exception {
     logger.entry("begin processToDIDResponse()");
-
     String studyId = null;
 
-    if (StringUtils.isNotBlank(fhirJson)
-        && appConfig.getEnableFHIRManagementAPI().equalsIgnoreCase("FHIR_DID")) {
+    try {
+      if (StringUtils.isNotBlank(fhirJson)
+          && appConfig.getEnableFhirManagementApi().contains("did")) {
+        logger.info("did start");
+        studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
+        String srcDatasetPathforFHIR =
+            String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
+        FHIRQuestionnaireResponseBean fhirQuestionnaireResponseBean =
+            new Gson().fromJson(fhirJson, FHIRQuestionnaireResponseBean.class);
+        String datasetPathforDID =
+            String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
 
-      studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
-      String srcDatasetPathforFHIR =
-          String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
-      FHIRQuestionnaireResponseBean fhirQuestionnaireResponseBean =
-          new Gson().fromJson(fhirJson, FHIRQuestionnaireResponseBean.class);
-      String datasetPathforDID =
-          String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
+        //  createFhirStore(datasetPathforDID, "DID_" + studyId);
 
-      createFhirStore(datasetPathforDID, "DID_" + studyId);
+        String identifierValue =
+            questionnaireActivityResponseBean.getMetadata().getStudyId()
+                + "@"
+                + questionnaireActivityResponseBean.getSiteId()
+                + "@"
+                + questionnaireActivityResponseBean.getParticipantId()
+                + "@"
+                + questionnaireActivityResponseBean.getMetadata().getActivityId()
+                + "@"
+                + questionnaireActivityResponseBean.getMetadata().getActivityRunId();
+        logger.info("fhirResourceSearchPost");
+        String searchQuestionnaireJson =
+            fhirHealthcareAPIs.fhirResourceSearchPost(
+                datasetPathforDID
+                    + FHIR_STORES
+                    + "DID_"
+                    + studyId
+                    + "/fhir/"
+                    + QUESTIONNAIRE_RESPONSE_TYPE,
+                "identifier=" + identifierValue);
 
-      String identifierValue =
-          questionnaireActivityResponseBean.getMetadata().getStudyId()
-              + "@"
-              + questionnaireActivityResponseBean.getSiteId()
-              + "@"
-              + questionnaireActivityResponseBean.getParticipantId()
-              + "@"
-              + questionnaireActivityResponseBean.getMetadata().getActivityId()
-              + "@"
-              + questionnaireActivityResponseBean.getMetadata().getActivityRunId();
+        // to avoid duplicate response submission
+        SearchQuestionnaireResponseFhirBean searchPatientFhirResponseBean =
+            new Gson().fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
+        if (searchPatientFhirResponseBean != null && searchPatientFhirResponseBean.getTotal() > 0) {
+          return;
+        }
 
-      String searchQuestionnaireJson =
-          fhirHealthcareAPIs.fhirResourceSearchPost(
-              datasetPathforDID
+        List<String> resourceIds = new ArrayList<>();
+        resourceIds.add(
+            fhirQuestionnaireResponseBean.getResourceType()
+                + "/"
+                + fhirQuestionnaireResponseBean.getId());
+        resourceIds.add(fhirQuestionnaireResponseBean.getSource().getReference());
+        logger.entry("begin processToDIDResponse()" + srcDatasetPathforFHIR);
+        logger.entry("begin processToDIDResponse()" + datasetPathforDID);
+        logger.entry("begin deIdentification() :");
+        deIdentifyHealthcareApis.deIdentification(
+            srcDatasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId,
+            datasetPathforDID + FHIR_STORES + "DID_" + studyId,
+            resourceIds);
+        logger.entry("deIdentification Created  :");
+        commonDao.updateDidStatus(
+            fhirQuestionnaireResponseBean.getResourceType()
+                + "/"
+                + fhirQuestionnaireResponseBean.getId());
+        deIdentifyHealthcareApis.updateDIDResponseLocation(
+            datasetPathforDID, studyId, fhirQuestionnaireResponseBean);
+        if (appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("true")) {
+          String datasetPathforFHIR =
+              String.format(
+                  DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
+          String resourceNameForQuestionnaireResponse =
+              datasetPathforFHIR
                   + FHIR_STORES
-                  + "DID_"
+                  + "FHIR_"
                   + studyId
                   + "/fhir/"
-                  + QUESTIONNAIRE_RESPONSE_TYPE,
-              "identifier=" + identifierValue);
-
-      // to avoid duplicate response submission
-      SearchQuestionnaireResponseFhirBean searchPatientFhirResponseBean =
-          new Gson().fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
-      if (searchPatientFhirResponseBean != null && searchPatientFhirResponseBean.getTotal() > 0) {
-        return;
+                  + QUESTIONNAIRE_RESPONSE_TYPE
+                  + "/"
+                  + fhirQuestionnaireResponseBean.getId();
+          fhirHealthcareAPIs.fhirResourceDelete(resourceNameForQuestionnaireResponse);
+          /*String resourceNameForPatient =
+              datasetPathforFHIR
+                  + FHIR_STORES
+                  + questionnaireActivityResponseBean.getMetadata().getStudyId()
+                  + "/fhir/"
+                  + fhirQuestionnaireResponseBean.getSource().getReference();
+          fhirHealthcareAPIs.fhirResourceDelete(resourceNameForPatient);*/
+        }
       }
-
-      List<String> resourceIds = new ArrayList<>();
-      resourceIds.add(
-          fhirQuestionnaireResponseBean.getResourceType()
-              + "/"
-              + fhirQuestionnaireResponseBean.getId());
-      resourceIds.add(fhirQuestionnaireResponseBean.getSource().getReference());
-
-      deIdentifyHealthcareAPIs.deIdentification(
-          srcDatasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId,
-          datasetPathforDID + FHIR_STORES + "DID_" + studyId,
-          resourceIds);
-
-      commonDao.updateDidStatus(
-          fhirQuestionnaireResponseBean.getResourceType()
-              + "/"
-              + fhirQuestionnaireResponseBean.getId());
-      deIdentifyHealthcareAPIs.updateDIDResponseLocation(
-          datasetPathforDID, "DID_" + studyId, fhirQuestionnaireResponseBean);
-      if (appConfig.getDiscardFHIRAfterDID().equalsIgnoreCase("true")) {
-        String datasetPathforFHIR =
-            String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
-        String resourceNameForQuestionnaireResponse =
-            datasetPathforFHIR
-                + FHIR_STORES
-                + "FHIR_"
-                + studyId
-                + "/fhir/"
-                + QUESTIONNAIRE_RESPONSE_TYPE
-                + "/"
-                + fhirQuestionnaireResponseBean.getId();
-        fhirHealthcareAPIs.fhirResourceDelete(resourceNameForQuestionnaireResponse);
-        /*String resourceNameForPatient =
-            datasetPathforFHIR
-                + FHIR_STORES
-                + questionnaireActivityResponseBean.getMetadata().getStudyId()
-                + "/fhir/"
-                + fhirQuestionnaireResponseBean.getSource().getReference();
-        fhirHealthcareAPIs.fhirResourceDelete(resourceNameForPatient);*/
-      }
+    } catch (JsonSyntaxException | ProcessResponseException e) {
+      logger.error(
+          "ActivityResponseProcessorServiceImpl : \n processToDIDResponse:" + e.getMessage());
     }
   }
 
@@ -620,162 +680,222 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     String getFhirJson = null;
     String studyId = null;
 
-    if (appConfig.getEnableFHIRManagementAPI().contains("FHIR")) {
+    if (appConfig.getEnableFhirManagementApi().contains("fhir")) {
       logger.entry("begin processToFhirResponse()");
 
-      studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
-      List<ItemsQuestionnaireResponse> listOfItems = new LinkedList<>();
-      String datasetPathforFHIR =
-          String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
+      try {
+        studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
+        List<ItemsQuestionnaireResponse> listOfItems = new LinkedList<>();
+        String datasetPathforFHIR =
+            String.format(DATASET_PATH, appConfig.getProjectId(), appConfig.getRegionId(), studyId);
 
-      String identifierValue =
-          questionnaireActivityResponseBean.getMetadata().getStudyId()
-              + "@"
-              + questionnaireActivityResponseBean.getSiteId()
-              + "@"
-              + questionnaireActivityResponseBean.getParticipantId()
-              + "@"
-              + questionnaireActivityResponseBean.getMetadata().getActivityId()
-              + "@"
-              + questionnaireActivityResponseBean.getMetadata().getActivityRunId();
+        String identifierValue =
+            questionnaireActivityResponseBean.getMetadata().getStudyId()
+                + "@"
+                + questionnaireActivityResponseBean.getSiteId()
+                + "@"
+                + questionnaireActivityResponseBean.getParticipantId()
+                + "@"
+                + questionnaireActivityResponseBean.getMetadata().getActivityId()
+                + "@"
+                + questionnaireActivityResponseBean.getMetadata().getActivityRunId();
 
-      String searchQuestionnaireJson =
-          fhirHealthcareAPIs.fhirResourceSearchPost(
-              datasetPathforFHIR
-                  + FHIR_STORES
-                  + "FHIR_"
-                  + questionnaireActivityResponseBean.getMetadata().getStudyId()
-                  + "/fhir/"
-                  + QUESTIONNAIRE_RESPONSE_TYPE,
-              "identifier=" + identifierValue);
+        String searchQuestionnaireJson =
+            fhirHealthcareAPIs.fhirResourceSearchPost(
+                datasetPathforFHIR
+                    + FHIR_STORES
+                    + "FHIR_"
+                    + questionnaireActivityResponseBean.getMetadata().getStudyId()
+                    + "/fhir/"
+                    + QUESTIONNAIRE_RESPONSE_TYPE,
+                "identifier=" + identifierValue);
 
-      // to avoid duplicate response submission
-      SearchQuestionnaireResponseFhirBean searchQuestionFhirResponseBean =
-          new Gson().fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
-      if (searchQuestionFhirResponseBean != null && searchQuestionFhirResponseBean.getTotal() > 0) {
-        return new Gson().toJson(searchQuestionFhirResponseBean.getEntry().get(0).getResource());
-      }
-
-      for (QuestionnaireActivityStepsBean tmpBean :
-          questionnaireActivityResponseBean.getData().getResults()) {
-
-        ItemsQuestionnaireResponse items = new ItemsQuestionnaireResponse();
-        List<Answer> answerList = new LinkedList<>();
-        Map<String, Object> map = new HashedMap<>();
-        map.put(RESPONSE_RESULT_TYPE, tmpBean.getResultType());
-        map.put(WCP_RESULT_TYPE, tmpBean.getWcpResultType());
-        map.put(SKIPPED, tmpBean.getSkipped());
-        map.put(QUESTIONNAIRE_TYPE, questionnaireActivityResponseBean.getData().getResultType());
-        map.put(QUESTION_KEY, tmpBean.getKey());
-
-        toFHIRFormatQuestionnaireResponse(
-            tmpBean, false, items, map, answerList, questionnaireActivityResponseBean.getType());
-
-        items.setLinkId(tmpBean.getKey());
-        if (questionnaireActivityResponseBean.getType().equals("questionnaire")) {
-          items.setText(
-              tmpBean.getResultType().equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)
-                  ? tmpBean.getKey()
-                  : tmpBean.getTitle());
-        } else {
-          items.setText(questionnaireActivityResponseBean.getMetadata().getName());
+        // to avoid duplicate response submission
+        SearchQuestionnaireResponseFhirBean searchQuestionFhirResponseBean =
+            new Gson().fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);
+        if (searchQuestionFhirResponseBean != null
+            && searchQuestionFhirResponseBean.getTotal() > 0) {
+          return new Gson().toJson(searchQuestionFhirResponseBean.getEntry().get(0).getResource());
         }
 
-        items.setDefinition(tmpBean.getResultType());
-        listOfItems.add(items);
-      }
+        for (QuestionnaireActivityStepsBean tmpBean :
+            questionnaireActivityResponseBean.getData().getResults()) {
 
-      FHIRQuestionnaireResponseBean questFHIResponseBean = new FHIRQuestionnaireResponseBean();
-      questFHIResponseBean.setResourceType("QuestionnaireResponse");
-      questFHIResponseBean.setStatus("completed");
+          ItemsQuestionnaireResponse items = new ItemsQuestionnaireResponse();
+          List<Answer> answerList = new LinkedList<>();
+          Map<String, Object> map = new HashedMap<>();
+          map.put(RESPONSE_RESULT_TYPE, tmpBean.getResultType());
+          map.put(WCP_RESULT_TYPE, tmpBean.getWcpResultType());
+          map.put(SKIPPED, tmpBean.getSkipped());
+          map.put(QUESTIONNAIRE_TYPE, questionnaireActivityResponseBean.getData().getResultType());
+          map.put(QUESTION_KEY, tmpBean.getKey());
 
-      questFHIResponseBean.setItem(listOfItems);
+          toFHIRFormatQuestionnaireResponse(
+              tmpBean, false, items, map, answerList, questionnaireActivityResponseBean.getType());
 
-      String searchPostForQuestionaire =
-          datasetPathforFHIR
-              + FHIR_STORES
-              + "FHIR_"
-              + questionnaireActivityResponseBean.getMetadata().getStudyId()
-              + "/fhir/"
-              + QUESTIONNAIRE_TYPE_FHIR;
-      String searchJson =
-          fhirHealthcareAPIs.fhirResourceSearchPost(
-              searchPostForQuestionaire,
-              "identifier="
-                  + questionnaireActivityResponseBean.getMetadata().getActivityId()
-                  + "&"
-                  + "version="
-                  + questionnaireActivityResponseBean.getMetadata().getVersion());
+          items.setLinkId(tmpBean.getKey());
 
-      SearchQuestionnaireFhirBean searchQuestionnaireFhirBean =
-          new Gson().fromJson(searchJson, SearchQuestionnaireFhirBean.class);
-      String resourceId = searchQuestionnaireFhirBean.getEntry().get(0).getResource().getId();
-      String searchVersionHistoryJson =
-          fhirHealthcareAPIs.fhirResourceGetHistory(searchPostForQuestionaire + "/" + resourceId);
+          if (questionnaireActivityResponseBean.getType().equals("questionnaire")) {
+            items.setText(
+                tmpBean.getResultType().equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)
+                    ? tmpBean.getKey()
+                    : tmpBean.getTitle());
+          } else {
+            items.setText(questionnaireActivityResponseBean.getMetadata().getName());
+          }
 
-      SearchQuestionnaireFhirBean searchVersionQuestionnaireFhirBean =
-          new Gson().fromJson(searchVersionHistoryJson, SearchQuestionnaireFhirBean.class);
+          items.setDefinition(tmpBean.getResultType());
+          listOfItems.add(items);
+        }
 
-      QuestionnaireEntry questionnaireEntry =
-          searchVersionQuestionnaireFhirBean
-              .getEntry()
-              .stream()
-              .filter(
-                  version ->
-                      version
-                          .getResource()
-                          .getVersion()
-                          .equals(questionnaireActivityResponseBean.getMetadata().getVersion()))
-              .filter(status -> status.getResource().getStatus().equals("active"))
-              .findAny()
-              .orElse(null);
+        FHIRQuestionnaireResponseBean questFHIResponseBean = new FHIRQuestionnaireResponseBean();
+        questFHIResponseBean.setResourceType("QuestionnaireResponse");
+        questFHIResponseBean.setStatus("completed");
 
-      if (questionnaireEntry != null) {
-        questFHIResponseBean.setQuestionnaire(
-            FHIR_STORES
+        questFHIResponseBean.setItem(listOfItems);
+        logger.debug("processToFhirResponse4" + questFHIResponseBean.toString());
+        String searchPostForQuestionaire =
+            datasetPathforFHIR
+                + FHIR_STORES
                 + "FHIR_"
                 + questionnaireActivityResponseBean.getMetadata().getStudyId()
                 + "/fhir/"
-                + QUESTIONNAIRE_TYPE_FHIR
-                + "/"
-                + resourceId
-                + "/_history/"
-                + questionnaireEntry.getResource().getMeta().getVersionId());
+                + QUESTIONNAIRE_TYPE_FHIR;
+        logger.debug("processToFhirResponse4.1" + searchPostForQuestionaire);
+        String searchJson =
+            fhirHealthcareAPIs.fhirResourceSearchPost(
+                searchPostForQuestionaire,
+                "identifier="
+                    + questionnaireActivityResponseBean.getMetadata().getActivityId()
+                    + "&"
+                    + "version="
+                    + questionnaireActivityResponseBean.getMetadata().getVersion());
+
+        logger.debug("processToFhirResponse5" + searchJson);
+
+        SearchQuestionnaireFhirBean searchQuestionnaireFhirBean =
+            new Gson().fromJson(searchJson, SearchQuestionnaireFhirBean.class);
+        String metaVersion = questionnaireActivityResponseBean.getMetadata().getVersion();
+        for (int i = 0; i < 10; i++) {
+          logger.debug("processToFhirResponse5.4" + searchQuestionnaireFhirBean.getEntry());
+          if (searchQuestionnaireFhirBean.getEntry() == null
+              || searchQuestionnaireFhirBean.getEntry().isEmpty()) {
+            metaVersion =
+                Float.valueOf(String.format("%.02f", Float.parseFloat(metaVersion) + 0.1f))
+                    .toString();
+            searchJson =
+                fhirHealthcareAPIs.fhirResourceSearchPost(
+                    searchPostForQuestionaire,
+                    "identifier="
+                        + questionnaireActivityResponseBean.getMetadata().getActivityId()
+                        + "&"
+                        + "version="
+                        + metaVersion);
+
+            logger.debug("processToFhirResponse5.3" + searchJson);
+            logger.debug("processToFhirResponse5.4" + metaVersion);
+            searchQuestionnaireFhirBean =
+                new Gson().fromJson(searchJson, SearchQuestionnaireFhirBean.class);
+          } else {
+            break;
+          }
+        }
+
+        logger.debug("processToFhirResponse5.1" + searchQuestionnaireFhirBean.toString());
+        String resourceId = searchQuestionnaireFhirBean.getEntry().get(0).getResource().getId();
+        logger.debug("processToFhirResponse5.2" + resourceId);
+        String searchVersionHistoryJson =
+            fhirHealthcareAPIs.fhirResourceGetHistory(searchPostForQuestionaire + "/" + resourceId);
+        logger.debug("processToFhirResponse6" + searchVersionHistoryJson);
+
+        SearchQuestionnaireFhirBean searchVersionQuestionnaireFhirBean =
+            new Gson().fromJson(searchVersionHistoryJson, SearchQuestionnaireFhirBean.class);
+        logger.debug("processToFhirResponse6.1" + searchVersionQuestionnaireFhirBean.toString());
+
+        QuestionnaireEntry questionnaireEntry =
+            searchVersionQuestionnaireFhirBean
+                .getEntry()
+                .stream()
+                .filter(
+                    version ->
+                        version
+                            .getResource()
+                            .getVersion()
+                            .equals(questionnaireActivityResponseBean.getMetadata().getVersion()))
+                .filter(status -> status.getResource().getStatus().equals("active"))
+                .findAny()
+                .orElse(null);
+        logger.debug(
+            "processToFhirResponse7"
+                + questionnaireActivityResponseBean.getMetadata().getVersion().toString());
+
+        if (questionnaireEntry != null) {
+
+          questFHIResponseBean.setQuestionnaire(
+              FHIR_STORES
+                  + "FHIR_"
+                  + questionnaireActivityResponseBean.getMetadata().getStudyId()
+                  + "/fhir/"
+                  + QUESTIONNAIRE_TYPE_FHIR
+                  + "/"
+                  + resourceId
+                  + "/_history/"
+                  + questionnaireEntry.getResource().getMeta().getVersionId());
+
+          logger.debug(
+              "processToFhirResponse7.1"
+                  + questionnaireEntry.getResource().getMeta().getVersionId().toString());
+        }
+
+        getPatientReference(
+            questionnaireActivityResponseBean.getMetadata().getStudyId(),
+            questionnaireActivityResponseBean.getParticipantId(),
+            datasetPathforFHIR,
+            questFHIResponseBean);
+
+        if (StringUtils.isNotBlank(
+            questionnaireActivityResponseBean.getData().getSubmittedTime())) {
+          questFHIResponseBean.setAuthored(
+              AppUtil.convertDateToOtherFormat(
+                  questionnaireActivityResponseBean.getData().getSubmittedTime(),
+                  AppConstants.DATE_FORMAT_RESPONSE_MOBILE,
+                  AppConstants.DATE_FORMAT_RESPONSE_FHIR));
+        }
+
+        Map<String, Object> identifierType = new HashedMap<>();
+        identifierType.put(
+            "text", questionnaireActivityResponseBean.getMetadata().getActivityType());
+        Identifier identifier = new Identifier();
+        identifier.setValue(identifierValue);
+        identifier.setUse("official");
+        identifier.setType(identifierType);
+        questFHIResponseBean.setIdentifier(identifier);
+
+        final String DATASET_NAME =
+            datasetPathforFHIR
+                + FHIR_STORES
+                + "FHIR_"
+                + questionnaireActivityResponseBean.getMetadata().getStudyId();
+
+        if (questFHIResponseBean != null && new Gson().toJson(questFHIResponseBean) != null) {
+          logger.debug(
+              "method name :processToFhirResponse()"
+                  + "questFHIResponseBean"
+                  + questFHIResponseBean.toString());
+          getFhirJson =
+              fhirHealthcareAPIs.fhirResourceCreate(
+                  DATASET_NAME,
+                  QUESTIONNAIRE_RESPONSE_TYPE,
+                  new Gson().toJson(questFHIResponseBean));
+          commonDao.saveToFHIREntity(
+              getFhirJson, questionnaireActivityResponseBean.getMetadata().getStudyId());
+          logger.exit("processToFhirResponse() - ends ");
+        } else {
+          logger.exit("unable to create fhirResource- ");
+        }
+      } catch (Exception e) {
+        logger.error("ActivityResponseProcessorServiceImpl : \n processToFhirResponse:", e);
       }
-
-      getPatientReference(
-          questionnaireActivityResponseBean.getMetadata().getStudyId(),
-          questionnaireActivityResponseBean.getParticipantId(),
-          datasetPathforFHIR,
-          questFHIResponseBean);
-
-      if (StringUtils.isNotBlank(questionnaireActivityResponseBean.getData().getSubmittedTime())) {
-        questFHIResponseBean.setAuthored(
-            AppUtil.convertDateToOtherFormat(
-                questionnaireActivityResponseBean.getData().getSubmittedTime(),
-                AppConstants.DATE_FORMAT_RESPONSE_MOBILE,
-                AppConstants.DATE_FORMAT_RESPONSE_FHIR));
-      }
-
-      Map<String, Object> identifierType = new HashedMap<>();
-      identifierType.put("text", questionnaireActivityResponseBean.getMetadata().getActivityType());
-      Identifier identifier = new Identifier();
-      identifier.setValue(identifierValue);
-      identifier.setUse("official");
-      identifier.setType(identifierType);
-      questFHIResponseBean.setIdentifier(identifier);
-      System.out.println(new Gson().toJson(questFHIResponseBean));
-      final String DATASET_NAME =
-          datasetPathforFHIR
-              + FHIR_STORES
-              + "FHIR_"
-              + questionnaireActivityResponseBean.getMetadata().getStudyId();
-      getFhirJson =
-          fhirHealthcareAPIs.fhirResourceCreate(
-              DATASET_NAME, QUESTIONNAIRE_RESPONSE_TYPE, new Gson().toJson(questFHIResponseBean));
-      commonDao.saveToFHIREntity(
-          getFhirJson, questionnaireActivityResponseBean.getMetadata().getStudyId());
-      logger.exit("processToFhirResponse() - ends ");
     }
     return getFhirJson;
   }
@@ -792,9 +912,11 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         fhirHealthcareAPIs.fhirResourceSearchPost(
             datasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId + "/fhir/" + PATIENT_TYPE,
             "identifier=" + participantId);
-
+    logger.debug("processToFhirResponsegetPatientReference" + searchJson);
     SearchPatientFhirResponseBean searchPatientFhirResponseBean =
         new Gson().fromJson(searchJson, SearchPatientFhirResponseBean.class);
+    logger.debug(
+        "processToFhirResponsegetPatientReference" + searchPatientFhirResponseBean.toString());
     if (searchPatientFhirResponseBean != null && searchPatientFhirResponseBean.getTotal() == 1) {
       questFHIResponseBean.setSource(
           new Reference(
@@ -853,15 +975,15 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     PropertyDescriptor[] propDescriptor = beanInfo.getPropertyDescriptors();
     Answer ans = new Answer();
     ActivityValueGroupBean acitivtyValueGroup = null;
-
+    logger.debug("bean" + bean.toString());
     for (PropertyDescriptor pd : propDescriptor) {
       String propertyName = pd.getName();
       Method getterMethod = pd.getReadMethod();
       Object propertyValue = getterMethod.invoke(bean);
       if (!propertyName.equals(AppConstants.PROPERTY_NAME_CLASS)) {
-
         if (propertyName.equals("actvityValueGroup")) {
           acitivtyValueGroup = (ActivityValueGroupBean) propertyValue;
+          logger.debug("propertyValue27" + acitivtyValueGroup);
         }
 
         if (value
@@ -869,15 +991,17 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
             || (acitivtyValueGroup != null && !acitivtyValueGroup.getValueGroup().isEmpty())) {
           if (!(propertyValue instanceof String)) {
             if (propertyValue instanceof ActivityValueGroupBean) {
+              logger.debug("propertyValue29" + propertyValue);
               toFHIRFormatQuestionnaireResponse(propertyValue, true, items, map, answerList, type);
             } else if (propertyValue instanceof List) {
+              logger.debug("propertyValue30" + propertyValue);
               ArrayList<Object> pvalueList = (ArrayList<Object>) propertyValue;
               List<ItemsQuestionnaireResponse> listOfItems1 = new LinkedList<>();
               List<Answer> answer = new LinkedList<>();
               for (Object valueObj : pvalueList) {
-
+                logger.debug("propertyValue31" + valueObj);
                 if (valueObj instanceof QuestionnaireActivityStepsBean) {
-
+                  logger.debug("propertyValue32" + valueObj);
                   ItemsQuestionnaireResponse nestedItem = new ItemsQuestionnaireResponse();
                   nestedItem.setLinkId(((QuestionnaireActivityStepsBean) valueObj).getKey());
                   nestedItem.setText(
@@ -907,9 +1031,19 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                       && StringUtils.isNotBlank((String) valueObj)
                       && !skipped) {
                     ans = new Answer();
+                    logger.debug("valueObj" + valueObj.toString());
                     ans = fhirAnswerValue(map, valueObj, ans);
                     answer.add(ans);
                     items.setAnswer(answer);
+                  } else {
+                    if (valueObj != null || ObjectUtils.isNotEmpty(valueObj)) {
+                      ans = new Answer();
+                      logger.debug("othervalueObj" + valueObj);
+                      List<Answer> a1 = new LinkedList<>();
+                      a1 = fhirAnswerValueForOther(map, valueObj, a1);
+                      // answer.add(ans);
+                      items.setAnswer(a1);
+                    }
                   }
                 }
                 if (type.equals("task")) {
@@ -925,6 +1059,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
             } else {
               if (!responseResultType.equalsIgnoreCase(AppConstants.GROUPED_FIELD_KEY)
                   && !skipped) {
+                logger.debug("valueObj1" + propertyValue.toString());
                 ans = fhirAnswerValue(map, propertyValue, ans);
                 answerList = new LinkedList<>();
                 answerList.add(ans);
@@ -939,6 +1074,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                 map.put(WCP_RESULT_TYPE, "Integer");
                 propertyValue = Double.parseDouble((String) propertyValue);
               }
+              logger.debug("valueObj2" + propertyValue.toString());
               ans = fhirAnswerValue(map, propertyValue, ans);
               answerList = new LinkedList<>();
               answerList.add(ans);
@@ -951,11 +1087,50 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     logger.exit("toFHIRFormatQuestionnaireResponse() - ends ");
   }
 
+  private List<Answer> fhirAnswerValueForOther(
+      Map<String, Object> map, Object propertyValue, List<Answer> a1) throws Exception {
+    logger.entry("begin fhirAnswerValue()");
+    logger.debug("fhirAnswerValue()" + propertyValue.toString());
+    String responseResultType = (String) map.get(RESPONSE_RESULT_TYPE);
+    if (responseResultType.equals("textChoice")) {
+      logger.debug("fhirAnswerValue()textChoice1" + propertyValue);
+      try {
+        logger.debug("fhirAnswerValue()otherChoice3" + propertyValue);
+        JSONObject jsonObject = new JSONObject(propertyValue.toString());
+        logger.debug("fhirAnswerValue()otherChoice4" + jsonObject);
+        if (jsonObject.has("other")) {
+          String otheroptionvalue = jsonObject.get("other").toString();
+          logger.debug("fhirAnswerValue()otherChoice5" + otheroptionvalue);
+          Answer answerMap = new Answer();
+          answerMap.setValueString(otheroptionvalue);
+          logger.debug("fhirAnswerValue()otherChoice6" + answerMap.toString());
+          a1.add(answerMap);
+        }
+        if (jsonObject.has("text")) {
+          String otheroptiontext = jsonObject.get("text").toString();
+          logger.debug("fhirAnswerValue()otherChoice7" + otheroptiontext);
+          if (!otheroptiontext.equalsIgnoreCase("null")) {
+            Answer answerMap = new Answer();
+            answerMap.setValueString(otheroptiontext);
+            logger.debug("fhirAnswerValue()otherChoice8" + answerMap.toString());
+            a1.add(answerMap);
+          }
+        }
+
+      } catch (JSONException e) {
+        logger.error(
+            "fhirAnswerValue() method: Unable to getvalue of otheroption object" + e.getMessage());
+      }
+    }
+    logger.exit("fhirAnswerValue() - ends ");
+    return a1;
+  }
+
   @SuppressWarnings("deprecation")
   private Answer fhirAnswerValue(Map<String, Object> map, Object propertyValue, Answer answerMap)
       throws Exception {
     logger.entry("begin fhirAnswerValue()");
-
+    logger.debug("fhirAnswerValue()" + propertyValue.toString());
     String responseResultType = (String) map.get(RESPONSE_RESULT_TYPE);
     String wcpResultType = (String) map.get(WCP_RESULT_TYPE);
 
@@ -1014,15 +1189,12 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   public void createFhirStore(String datasetPath, String studyId) throws ProcessResponseException {
 
     try {
-      fhirHealthcareAPIs.fhirStoreGet(datasetPath + FHIR_STORES + "FHIR_" + studyId);
+      fhirHealthcareAPIs.fhirStoreGet(datasetPath + FHIR_STORES + studyId);
     } catch (Exception e) {
       if (e instanceof GoogleJsonResponseException
           && ((GoogleJsonResponseException) e).getStatusCode() == 404
           && ((GoogleJsonResponseException) e).getStatusMessage().equals("Not Found")) {
         fhirHealthcareAPIs.fhirStoreCreate(datasetPath, studyId);
-      } else {
-        throw new ProcessResponseException(
-            ((GoogleJsonResponseException) e).getDetails().getMessage());
       }
     }
   }

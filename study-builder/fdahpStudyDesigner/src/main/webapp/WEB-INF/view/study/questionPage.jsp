@@ -1073,7 +1073,7 @@
           <div class="row mt-lg">
             <div class="col-md-6 pl-none">
               <div class="col-md-12 col-lg-12 p-none">
-                <div class="gray-xs-f mb-xs">Placeholder (1 to 40 characters)
+                <div class="gray-xs-f mb-xs">Placeholder (1 to 50 characters)
                   <span
                       class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       title="Enter an input hint to the user"></span>

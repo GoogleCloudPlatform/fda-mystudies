@@ -984,6 +984,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     header.put("deviceType", android.os.Build.MODEL);
     header.put("deviceOS", Build.VERSION.RELEASE);
     header.put("mobilePlatform","ANDROID");
+
     ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
         new ParticipantEnrollmentDatastoreConfigEvent(
             "get",

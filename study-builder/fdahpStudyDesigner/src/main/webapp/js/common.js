@@ -236,13 +236,13 @@ $(document)
 			                    if (charCode == 16)
 			                      isShift = false;
 			                    if (!isShift && $(this).val()) {
-			                      var regularExpression = /^[A-Za-z0-9_.-]*$/;
+			                      var regularExpression = /^[A-Za-z0-9_]*$/;
 			                      if (!regularExpression.test($(this)
 			                          .val())) {
 			                        var newVal = $(this)
 			                            .val()
 			                            .replace(
-			                                /[^A-Za-z0-9_.-]/g,
+			                                /[^A-Za-z0-9_]/g,
 			                                '');
 			                        e.preventDefault();
 			                        $(this).val(newVal);
@@ -254,7 +254,7 @@ $(document)
 			                            .empty()
 			                            .append($("<ul><li> </li></ul>")
 			                            .attr("class","list-unstyled")
-			                            .text("Please use characters from the following set only: A-Z a-z 0-9 _.-"));
+			                            .text("Please use characters from the following set only: A-Z a-z 0-9 _"));
 			                      }
 			                    }
 			                  });
