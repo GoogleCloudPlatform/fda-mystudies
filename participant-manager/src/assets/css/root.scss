@@ -163,7 +163,7 @@ html {
     font-weight: 700;
   }
   .table td {
-    border-top: 1px solid var(--periwinkle-gray);
+    border-top: 1px solid var(--periwinkle-gray) !important;
     color: var(--space-gray);
     font-size: 87.5%;
     padding: 75% 30px;
@@ -1747,4 +1747,21 @@ input::-webkit-calendar-picker-indicator {
     width: 100% !important;
     max-width: 100% !important;
   }
+}
+
+/* angular upgradtion CSS fixed here */
+
+.table>:not(:first-child) {
+  border-top: 1px solid var(--periwinkle-gray) !important;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  --bs-table-accent-bg: transparent;
+  color: transparent;
+}
+
+input[type=password]::-ms-reveal,
+input[type=password]::-ms-clear
+{
+    display: none;
 }

@@ -38,7 +38,8 @@ export class ChangePasswordComponent
   consecutiveCharacter = '';
   passwordLength = '';
   userName = '';
-
+  dataServiceProcessed = false;
+  
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -83,9 +84,17 @@ export class ChangePasswordComponent
       (this.passCriteria = `Your password must be at least 8 characters long    
 and contain lower case, upper case, numeric and
 special characters.`);
-    this.displayHeader.showHeaders$.subscribe((visible) => {
-      this.hideClickable = visible;
-    });
+    // this.displayHeader.showHeaders$.subscribe((visible) => {
+    //   this.hideClickable = visible;
+    // });
+
+    if((this.changePasswordTitle) === 'Set up password') {  
+      this.displayHeader.setDisplayHeaderStatus(false);
+    } else { 
+      this.displayHeader.setDisplayHeaderStatus(true);
+    }
+
+
   }
   getError(err: ErrorCode): string {
     return getErrorMessage(err);
@@ -111,6 +120,7 @@ special characters.`);
       });
   }
   cancel(): void {
+    this.displayHeader.setDisplayHeaderStatus(true);
     void this.router.navigate(['/coordinator/studies/sites']);
   }
   onChange(): void {
