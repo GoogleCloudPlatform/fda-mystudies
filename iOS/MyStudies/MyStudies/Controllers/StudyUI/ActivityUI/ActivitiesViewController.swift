@@ -949,20 +949,32 @@ class ActivitiesViewController: UIViewController {
 
   /// Send Request To Get ActivityStates.
   func sendRequestToGetActivityStates() {
-    ResponseServices().getUserActivityState(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+      if let studyId = Study.currentStudy?.studyId {
+          ResponseServices().getUserActivityState(studyId: studyId, delegate: self)
+      }
+//    ResponseServices().getUserActivityState(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   /// Send Request To Get ActivityList.
   func sendRequesToGetActivityList() {
-    WCPServices().getStudyActivityList(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+      if let studyId = Study.currentStudy?.studyId {
+          WCPServices().getStudyActivityList(studyId: studyId, delegate: self)
+      }
+//    WCPServices().getStudyActivityList(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   func sendRequestToGetDashboardInfo() {
-    WCPServices().getStudyDashboardInfo(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+      if let studyId = Study.currentStudy?.studyId {
+          WCPServices().getStudyDashboardInfo(studyId: studyId, delegate: self)
+      }
+//    WCPServices().getStudyDashboardInfo(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   func sendRequestToGetResourcesInfo() {
-    WCPServices().getResourcesForStudy(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+      if let studyId = Study.currentStudy?.studyId {
+          WCPServices().getResourcesForStudy(studyId: studyId, delegate: self)
+      }
+//    WCPServices().getResourcesForStudy(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   // MARK: - Button Actions
