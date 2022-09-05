@@ -557,8 +557,12 @@ print("1notificationDetails---\(notificationDetails)")
   func checkConsentStatus(controller: UIViewController) {
     
     self.selectedController = controller
+      var isRetryViewHidden = true
+      if let retryView = self.retryView {
+          isRetryViewHidden = retryView.isHidden
+      }
     
-    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain && isRetryViewHidden {
       // Study consent is updated: Please Present Consent UI.
       //      guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
       //      var topController: UIViewController = navigationController
