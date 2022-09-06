@@ -1016,7 +1016,7 @@ class ActivityQuestionStep: ActivityStep {
   }
   
   func getTextChoicesSingleSelection(dataArray: [Any]) -> ([ORKTextChoice]?, OtherChoice?) {
-print("1getTextChoicesSingleSelection---\(getTextChoicesSingleSelection)")
+print("1getTextChoicesSingleSelection---")
     var textChoiceArray: [ORKTextChoice] = []
     var otherChoice: OtherChoice?
 

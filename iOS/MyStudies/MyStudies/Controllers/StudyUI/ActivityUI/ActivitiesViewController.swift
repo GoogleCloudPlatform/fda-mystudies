@@ -79,10 +79,11 @@ class ActivitiesViewController: UIViewController {
   }
 
   fileprivate func presentUpdatedConsent() {
+    print("22StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appDelegate.checkConsentStatus(controller: self)
   }
-
+  
   // MARK: - Viewcontroller Lifecycle
 
   override func viewDidLoad() {
@@ -104,12 +105,14 @@ class ActivitiesViewController: UIViewController {
 
     self.navigationController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.gray
 
+    print("1StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     if (Study.currentStudy?.studyId) != nil {
       if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
         NotificationHandler.instance.activityId = ""
         if StudyUpdates.studyVersion != nil {
           Study.currentStudy?.newVersion = StudyUpdates.studyVersion
         }
+        print("21StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
         presentUpdatedConsent()
       }
     }
@@ -148,20 +151,24 @@ class ActivitiesViewController: UIViewController {
     if !appDelegate.iscomingFromForgotPasscode {
       if !fromConsentViewDidload && Utilities.isStandaloneApp() {
         if (Study.currentStudy?.studyId) != nil {
+          print("2StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
           if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
             NotificationHandler.instance.activityId = ""
             if StudyUpdates.studyVersion != nil {
               Study.currentStudy?.newVersion = StudyUpdates.studyVersion
             }
+            print("23StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
             presentUpdatedConsent()
           } else {
             WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
           }
           
         } else {
+          print("3StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
           WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
         }
       } else {
+        print("4StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
         WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
       }
     }
@@ -347,6 +354,7 @@ class ActivitiesViewController: UIViewController {
   @objc func refresh(sender: AnyObject) {
     UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
     UserDefaults.standard.synchronize()
+    print("5StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
   }
 
@@ -913,6 +921,7 @@ class ActivitiesViewController: UIViewController {
 
   /// Handler for studyUpdateResponse.
   func handleStudyUpdatesResponse() {
+    print("6StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     guard let currentStudy = Study.currentStudy else { return }
     Study.currentStudy?.newVersion = StudyUpdates.studyVersion
     
@@ -929,10 +938,14 @@ class ActivitiesViewController: UIViewController {
     } else {
       DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
     //Consent Updated
+      print("7StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+//      print("8StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+      print("24StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
       presentUpdatedConsent()
 
     } else if StudyUpdates.studyInfoUpdated {
+      print("9StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
       WCPServices().getStudyInformation(
         studyId: currentStudy.studyId,
         delegate: self
@@ -1275,19 +1288,23 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
-
+      print("65StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+      print("10StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
       // Handle response for study updates.
 //      if Study.currentStudy?.version == StudyUpdates.studyVersion {
       if Study.currentStudy?.version == StudyUpdates.studyVersion &&
                 Study.currentStudy?.userParticipateState.userStudyVersion == Study.currentStudy?.version {
-
+        print("11StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
         self.loadActivitiesFromDatabase()
         print("7removeProgressIndicator---")
 //        self.removeProgressIndicator()
         if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
           self.refreshControl?.endRefreshing()
         }
+        UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+        UserDefaults.standard.synchronize()
       } else {
+        print("12StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
         Study.currentStudy?.newVersion = StudyUpdates.studyVersion
         self.handleStudyUpdatesResponse()
       }
