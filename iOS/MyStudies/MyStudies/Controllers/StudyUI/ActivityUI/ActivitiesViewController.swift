@@ -1350,7 +1350,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       }
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
-        _ = self.updateNewRunCountStatusToComplete(with: false)
+//        _ = self.updateNewRunCountStatusToComplete(with: false)
       } else {
         self.lastActivityResponse = nil
       }
