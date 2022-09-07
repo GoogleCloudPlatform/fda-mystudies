@@ -108,8 +108,8 @@ class ConsentServices: NSObject {
     
     UserDefaults.standard.setValue("", forKey: "consentEnrolledStatus")
     UserDefaults.standard.synchronize()
-    
-    if val != "Yet to enroll" || userDataSharing == "Not Applicable"  ||
+//    val != "Yet to enroll"
+    if !(val == "Yet to enroll" || val == "Withdrawn") || userDataSharing == "Not Applicable"  ||
         userDataSharing.caseInsensitiveCompare("Not Applicable") == ComparisonResult.orderedSame {
       params =
         [
