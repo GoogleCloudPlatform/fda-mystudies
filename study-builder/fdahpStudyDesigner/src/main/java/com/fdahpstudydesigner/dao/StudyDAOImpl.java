@@ -9579,8 +9579,6 @@ public class StudyDAOImpl implements StudyDAO {
         for (QuestionnairesStepsBo questionnairesStepsBo : existedQuestionnairesStepsBoList) {
           List<EnableWhenBranching> enableWhenBranchinglist = new ArrayList<>();
           ItemsQuestionnaire items = new ItemsQuestionnaire();
-          List<AnswerOption> answerOptions = new ArrayList<>();
-          List<Initial> initials = new ArrayList<>();
           items.setLinkId(questionnairesStepsBo.getStepShortTitle());
           logger.debug("firststep", questionnairesStepsBo.getStepShortTitle());
           QuestionsBo questionsBo =
@@ -9611,7 +9609,7 @@ public class StudyDAOImpl implements StudyDAO {
             logger.debug("enabledvalue", items);
             items =
                 toQuestionDetails(
-                    session, questionnairesStepsBo, items, answerOptions, initials, questionsBo);
+                    session, questionnairesStepsBo, items, questionsBo);
           } else if (questionnairesStepsBo.getStepType().equalsIgnoreCase("Instruction")) {
             items.setDefinition(FdahpStudyDesignerConstants.INSTRUCTION_ACTIVITY);
             InstructionsBo instructionsBo =
@@ -9657,8 +9655,6 @@ public class StudyDAOImpl implements StudyDAO {
                         session,
                         questionnairesStepsBo,
                         itemsForForm,
-                        answerOptions,
-                        initials,
                         questionsBoForForm);
                 listOfitemsForForm.add(itemsForForm);
               }
@@ -10361,10 +10357,10 @@ public class StudyDAOImpl implements StudyDAO {
       Session session,
       QuestionnairesStepsBo questionnairesStepsBo,
       ItemsQuestionnaire items,
-      List<AnswerOption> answerOptions,
-      List<Initial> initials,
       QuestionsBo questionsBo) {
 
+    List<AnswerOption> answerOptions = new ArrayList<>();
+    List<Initial> initials = new ArrayList<>();
     if (questionsBo.getQuestion().equalsIgnoreCase("null")) {
       items.setText("");
     } else {
@@ -10486,8 +10482,14 @@ public class StudyDAOImpl implements StudyDAO {
       default:
         break;
     }
-    items.setAnswerOption(answerOptions);
-    items.setInitial(initials);
+
+   if (!answerOptions.isEmpty()) {
+      items.setAnswerOption(answerOptions);
+    }
+    if (!initials.isEmpty()) {
+      items.setInitial(initials);
+    }
+	
     return items;
   }
 
