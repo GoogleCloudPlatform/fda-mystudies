@@ -555,10 +555,14 @@ print("1notificationDetails---\(notificationDetails)")
   /// Check the  current Consent Status for Updated Version
   /// - Parameter controller: Instance of `UIVIewController`
   func checkConsentStatus(controller: UIViewController) {
-    
+    print("51StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     self.selectedController = controller
+      var isRetryViewHidden = true
+      if let retryView = self.retryView {
+          isRetryViewHidden = retryView.isHidden
+      }
     
-    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain && isRetryViewHidden {
       // Study consent is updated: Please Present Consent UI.
       //      guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
       //      var topController: UIViewController = navigationController
@@ -1511,7 +1515,7 @@ print("1notificationDetails---\(notificationDetails)")
 
   /// Handler for Study Update Info
   func handleStudyUpdatedInformation() {
-
+    print("67StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     if Study.currentStudy != nil {
 
       Study.currentStudy?.newVersion = StudyUpdates.studyVersion
@@ -1580,6 +1584,7 @@ print("1notificationDetails---\(notificationDetails)")
 
             if !self.isPasscodePresented! {
               // Check for Consent Updated
+              print("43StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
               self.checkConsentStatus(controller: self.selectedController!)
             }
 
@@ -1817,6 +1822,7 @@ extension AppDelegate: NMWebServiceDelegate {
         currentStudy.version = currentStudy.newVersion
       }
     } else if requestName as String == WCPMethods.studyUpdates.rawValue {
+      print("66StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
       self.handleStudyUpdatedInformation()
 
     } else if requestName as String == RegistrationMethods.updateUserProfile.description {
@@ -2368,6 +2374,7 @@ extension AppDelegate: ORKPasscodeDelegate {
         }
 
         if self.selectedController != nil {
+          print("44StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
           self.checkConsentStatus(controller: self.selectedController!)
         }
       }
