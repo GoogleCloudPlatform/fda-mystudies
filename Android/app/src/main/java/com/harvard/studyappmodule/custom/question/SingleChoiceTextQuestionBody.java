@@ -216,7 +216,11 @@ public class SingleChoiceTextQuestionBody<T>
 
         if (item.getValue().toString().equalsIgnoreCase(otherOptionValue)) {
           otherText.setVisibility(View.VISIBLE);
-          otherText.setText(otherOptionModel.getText());
+          if(otherOptionModel.getText().isEmpty()) {
+            otherText.setText(null);
+          } else {
+            otherText.setText(otherOptionModel.getText());
+          }
         }
       }
 
@@ -236,7 +240,7 @@ public class SingleChoiceTextQuestionBody<T>
                           checkedChangeListenerArrayList.get(selectedcheckbox.get(i).getId()));
                 }
                 otherText.setVisibility(View.GONE);
-                otherText.setText("");
+                otherText.setText(null);
                 selectedcheckbox.clear();
                 currentSelected.clear();
                 currentSelected.remove(new Gson().toJson(otherOptionModel));
@@ -261,7 +265,7 @@ public class SingleChoiceTextQuestionBody<T>
                   otherOptionModel.setOther(null);
                   otherOptionModel.setText(null);
                   otherText.setVisibility(View.GONE);
-                  otherText.setText("");
+                  otherText.setText(null);
                 }
               }
             }
@@ -271,7 +275,11 @@ public class SingleChoiceTextQuestionBody<T>
     }
 
     if (otherOptionModel != null && otherOptionModel.getText() != null) {
-      otherText.setText(otherOptionModel.getText());
+      if(otherOptionModel.getText().isEmpty()) {
+        otherText.setText(null);
+      } else {
+        otherText.setText(otherOptionModel.getText());
+      }
       otherText.setVisibility(View.VISIBLE);
     }
 
@@ -299,7 +307,11 @@ public class SingleChoiceTextQuestionBody<T>
       if (otherOptionModel != null) {
         if (otherOptionText) {
           if (currentSelected.contains(otherOptionValue)) {
-            otherOptionModel.setText(otherText.getText().toString());
+            if (otherText.getText().toString().isEmpty()) {
+              otherText.setText(null);
+            } else {
+              otherOptionModel.setText(otherText.getText().toString());
+            }
             currentSelected.add((T) new Gson().toJson(otherOptionModel));
           } else {
             otherOptionModel.setText(otherText.getText().toString());
