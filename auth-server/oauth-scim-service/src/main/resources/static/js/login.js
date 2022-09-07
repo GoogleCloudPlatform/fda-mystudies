@@ -39,3 +39,12 @@ function validateField(elementId) {
 function validateform() {
   return validateField("email") && validateField("password");
 }
+
+$(".toggle-password").click(function () {
+
+	    $(this).toggleClass("fa-eye-slash fa-eye");
+	    
+	    var input = $("#password");
+	    input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
+	});
+	
