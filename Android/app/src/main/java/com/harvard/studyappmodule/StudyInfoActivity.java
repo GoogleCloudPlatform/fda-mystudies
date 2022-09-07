@@ -657,7 +657,6 @@ public class StudyInfoActivity extends AppCompatActivity
             .readPreference(StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
     header.put("deviceType", android.os.Build.MODEL);
     header.put("deviceOS", Build.VERSION.RELEASE);
-
     header.put("mobilePlatform","ANDROID");
 
     ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
