@@ -89,6 +89,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add(Constants.USER_DEVICE_OS, Constants.USER_DEVICE_OS);
+    headers.add(Constants.USER_DEVICE_TYPE, Constants.USER_DEVICE_TYPE);
+    headers.add(Constants.USER_MOBILE_PLATFORM, Constants.USER_MOBILE_PLATFORM);
     headers.add("Authorization", VALID_BEARER_TOKEN);
     mockMvc
         .perform(
@@ -197,6 +200,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add(Constants.USER_DEVICE_OS, Constants.USER_DEVICE_OS);
+    headers.add(Constants.USER_DEVICE_TYPE, Constants.USER_DEVICE_TYPE);
+    headers.add(Constants.USER_MOBILE_PLATFORM, Constants.USER_MOBILE_PLATFORM);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
     mockMvc
@@ -223,6 +229,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
+    headers.add(Constants.USER_DEVICE_OS, Constants.USER_DEVICE_OS);
+    headers.add(Constants.USER_DEVICE_TYPE, Constants.USER_DEVICE_TYPE);
+    headers.add(Constants.USER_MOBILE_PLATFORM, Constants.USER_MOBILE_PLATFORM);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
     mockMvc
@@ -242,6 +251,9 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add(Constants.USER_DEVICE_OS, Constants.USER_DEVICE_OS);
+    headers.add(Constants.USER_DEVICE_TYPE, Constants.USER_DEVICE_TYPE);
+    headers.add(Constants.USER_MOBILE_PLATFORM, Constants.USER_MOBILE_PLATFORM);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
     String requestJson =

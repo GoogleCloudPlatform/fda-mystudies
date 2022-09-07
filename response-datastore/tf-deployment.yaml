@@ -114,11 +114,11 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: fhir_enabled
-            - name: BIGQUERY_ENABLED
+            - name: INGEST_DATA_TO_BIGQUERY
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: bigquery_enabled                   
+                  key: ingest_data_to_bigquery                   
             - name: DISCARD_FHIR_RESPONSE
               valueFrom:
                 secretKeyRef:

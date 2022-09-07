@@ -1017,6 +1017,10 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
     return [ORKTextChoice choiceWithText:text detailText:nil value:value exclusive:NO];
 }
 
++ (instancetype)choiceWithTextExclusive:(NSString *)text value:(id<NSCopying, NSCoding, NSObject>)value {
+    return [ORKTextChoice choiceWithText:text detailText:nil value:value exclusive:YES];
+}
+
 - (instancetype)initWithText:(NSString *)text detailText:(NSString *)detailText value:(id<NSCopying,NSCoding,NSObject>)value exclusive:(BOOL)exclusive {
     return [self initWithText:text primaryTextAttributedString:nil detailText:detailText detailTextAttributedString:nil value:value exclusive:exclusive];
 }

@@ -17,6 +17,10 @@ package com.harvard.studyappmodule.custom.question;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.SearchView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

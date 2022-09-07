@@ -129,7 +129,7 @@ public class FhirHealthcareAPIs {
                 "Exception creating FHIR resource: %s\n", response.getStatusLine().toString()));
         responseEntity.writeTo(System.err);
         logger.debug("Exception creating FHIR resource: " + response.getStatusLine().toString());
-        throw new Exception();
+
       } else {
         if (response.getEntity() != null) {
           fhirResponseJson = EntityUtils.toString(responseEntity);
@@ -171,7 +171,6 @@ public class FhirHealthcareAPIs {
           String.format(
               "Exception creating FHIR resource: %s\n", response.getStatusLine().toString()));
       responseEntity.writeTo(System.err);
-      // throw new RuntimeException();
     } else {
       if (response.getEntity() != null) {
         json1 = EntityUtils.toString(responseEntity);

@@ -82,6 +82,18 @@ typedef NS_ENUM(NSInteger, ORKStepViewControllerNavigationDirection) {
 - (void)stepViewController:(ORKStepViewController *)stepViewController didFinishWithNavigationDirection:(ORKStepViewControllerNavigationDirection)direction;
 
 /**
+ Tells the delegate when a substantial change will occurr to the result.
+ 
+ The result is always available in the step view controller. Although the result is continuously changing
+ while the step view controller is active (because the time stamp in the result property is different each time it's called), this method is called only when a substantive change
+ to the result will occur.
+ 
+ In your implementation of this delegate method, you can collect the value of `result` from the step view controller.
+ 
+ @param stepViewController     The step view controller providing the callback.
+ */
+- (void)stepViewControllerResultWillChange:(ORKStepViewController *)stepViewController;
+/**
  Tells the delegate when a substantial change has occurred to the result.
  
  The result is always available in the step view controller. Although the result is continuously changing

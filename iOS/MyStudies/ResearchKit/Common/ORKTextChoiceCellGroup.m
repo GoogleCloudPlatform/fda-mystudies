@@ -58,7 +58,7 @@
         _beginningIndexPath = indexPath;
         _helper = [[ORKChoiceAnswerFormatHelper alloc] initWithAnswerFormat:answerFormat];
         _singleChoice = answerFormat.style == ORKChoiceAnswerStyleSingleChoice;
-        _immediateNavigation = immediateNavigation;
+      _immediateNavigation = NO;// immediateNavigation;
         _cells = [NSMutableDictionary new];
         [self setAnswer:answer];
     }
@@ -109,7 +109,7 @@
 - (void)didSelectCellAtIndex:(NSUInteger)index {
     ORKChoiceViewCell *touchedCell = [self cellAtIndex:index withReuseIdentifier:nil];
         
-    if (!_singleChoice) {
+    if (_singleChoice) {
         touchedCell.selectedItem = YES;
         for (ORKChoiceViewCell *cell in _cells.allValues) {
             if (cell != touchedCell) {

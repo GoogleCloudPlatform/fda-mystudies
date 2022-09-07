@@ -687,6 +687,7 @@ class ActivityStepResult {
         self.value = date
       } else {
         self.skipped = true
+        self.value = nil
       }
 
     case ORKQuestionType.text.rawValue:

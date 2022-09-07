@@ -13,6 +13,9 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.R
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.DEVICE_OS;
+import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.DEVICE_TYPE;
+import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.USER_ID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -147,6 +150,9 @@ public class StudyStateController {
   @GetMapping(value = "/studyState", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getStudyState(
       @RequestHeader(USER_ID) String userId,
+      @RequestHeader(DEVICE_TYPE) String deviceType,
+      @RequestHeader(DEVICE_OS) String deviceOS,
+      @RequestHeader(MOBILE_PLATFORM) String mobilePlatform,
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
@@ -156,7 +162,8 @@ public class StudyStateController {
       logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
       StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
 
-      List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
+      List<StudyStateBean> studies =
+          studyStateService.getStudiesState(userId, deviceType, deviceOS, mobilePlatform);
       studyStateResponse.setStudies(studies);
       studyStateResponse.setMessage(AppConstants.SUCCESS);
 

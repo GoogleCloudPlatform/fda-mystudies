@@ -126,6 +126,7 @@ public class UserServiceImpl implements UserService {
     // save user account details
     UserEntity userEntity = UserMapper.fromUserRequest(userRequest);
     ObjectNode userInfo = getObjectNode();
+
     setPasswordAndPasswordHistoryFields(
         userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
 
@@ -636,13 +637,38 @@ public class UserServiceImpl implements UserService {
     UserEntity userEntity = optUser.get();
     Integer status =
         userRequest.getStatus() == null ? userEntity.getStatus() : userRequest.getStatus();
+
     String email = StringUtils.defaultIfEmpty(userRequest.getEmail(), userEntity.getEmail());
 
     String tempRegId = null;
     if (userRequest.getStatus() != null
         && UserAccountStatus.ACTIVE.getStatus() == userRequest.getStatus()) {
       tempRegId = IdGenerator.id();
+    } else if (userRequest.getStatus() != null
+        && UserAccountStatus.PASSWORD_RESET.getStatus() == userEntity.getStatus()
+        && UserAccountStatus.DEACTIVATED.getStatus() == userRequest.getStatus()) {
+
+      ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
+      JsonNode passwordNode = userInfo.get(PASSWORD);
+
+      logger.debug("passwordNode before: " + userInfo.toPrettyString());
+      ((ObjectNode) passwordNode)
+          .put(EXPIRE_TIMESTAMP, DateTimeUtils.getSystemDateTimestamp(0, 0, 0));
+
+      ArrayNode passwordHistory =
+          userInfo.hasNonNull(PASSWORD_HISTORY)
+              ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
+              : createArrayNode();
+      passwordHistory.add(passwordNode);
+
+      userInfo.set(PASSWORD, passwordNode);
+      userInfo.set(PASSWORD_HISTORY, passwordHistory);
+
+      logger.debug("userInfo after update: " + userInfo.toPrettyString());
+      userEntity.setUserInfo(userInfo);
+      repository.saveAndFlush(userEntity);
     }
+
     repository.updateEmailStatusAndTempRegId(email, status, tempRegId, userEntity.getUserId());
     logger.exit(MessageCode.UPDATE_USER_DETAILS_SUCCESS);
     return new UpdateEmailStatusResponse(MessageCode.UPDATE_USER_DETAILS_SUCCESS, tempRegId);

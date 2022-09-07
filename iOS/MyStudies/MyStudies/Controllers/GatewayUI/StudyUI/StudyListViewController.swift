@@ -59,6 +59,84 @@ class StudyListViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+//    UserDefaults.standard.set("1stAugtestDev 0", forKey: "performActivityTaskBasedOnStudyStatus")
+//    UserDefaults.standard.synchronize()
+    
+    print("777userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity1"))")
+    print("888userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity2"))")
+    
+    let val31 = UserDefaults.standard.value(forKey: "newactivity1") as? String ?? ""
+    
+   let val4 = ((UserDefaults.standard.value(forKey: "newactivity2") as? String) ?? "").contains("A new activity")
+    
+    let val4b = ((UserDefaults.standard.value(forKey: "newactivity3") as? String) ?? "").contains("A new activity")
+    
+    let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    let val4c = "\(appdelegate.notificationDetails)"
+    let val4d = "\(appdelegate.notificationDetails)".contains("A new activity")
+    
+    let val5b = ((UserDefaults.standard.value(forKey: "newactivity4") as? String) ?? "").contains("A new activity")
+    
+    
+//    if val4 && val31 == "" {
+      if val4 {
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity2") as? String) ?? "").components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    }
+    else if val4b {
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity3") as? String) ?? "").components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    } else if val4d {
+      let val5 = val4c.components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    } else if val5b {
+      let val5 = ((UserDefaults.standard.value(forKey: "newactivity4") as? String) ?? "").components(separatedBy: "\"studyId\": ")
+      if val5.count > 1 {
+       print("8881userInfoDetails---\(val5[1])")
+        let val6 = val5[1]
+        let val7 = val6.components(separatedBy: ",")
+        if val7.count > 1 {
+          print("8882userInfoDetails---\("\(val7[0] ?? "") 0")")
+          UserDefaults.standard.set("\(val7[0] ?? "") 0", forKey: "performActivityTaskBasedOnStudyStatus")
+          UserDefaults.standard.synchronize()
+        }
+      }
+    }
+    
+    UserDefaults.standard.set("", forKey: "newactivity2")
+    UserDefaults.standard.set("", forKey: "newactivity1")
+    UserDefaults.standard.set("", forKey: "newactivity3")
+    UserDefaults.standard.set("", forKey: "newactivity4")
+    UserDefaults.standard.synchronize()
+    
+    
     addNavigationTitle()
     isComingFromFilterScreen = false
     DispatchQueue.main.async { [weak self] in
@@ -93,6 +171,8 @@ class StudyListViewController: UIViewController {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+  
+    
     if isComingFromFilterScreen {
       isComingFromFilterScreen = false
       return
@@ -152,39 +232,39 @@ class StudyListViewController: UIViewController {
     checkBlockerScreen()
       
       DispatchQueue.main.async {
-          
+
 //          self.performTaskBasedOnStudyStatus()
-          
+
       let val1 = UserDefaults.standard.value(forKey: "performTaskBasedOnStudyStatus") as? String ?? ""
       UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
       UserDefaults.standard.synchronize()
       print("valvalval---\(val1)")
       let val = val1.components(separatedBy: " ")
 //      var initialVC: UIViewController?
-          
+
           UserDefaults.standard.set("325---\(val[0])---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
           UserDefaults.standard.synchronize()
-          
+
       if !(val[0] == "" || val[0] == nil) {
           if let study = Gateway.instance.studies?.filter { $0.studyId == val[0] }.last {
               UserDefaults.standard.set("525,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
               UserDefaults.standard.synchronize()
-              
+
           print("study--\(study)")
           Study.updateCurrentStudy(study: study)
               let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
               appdelegate.notificationDetails = nil
         self.performTaskBasedOnStudyStatus()
       print("181userInfoDetails---")
-      
+
       // push tabbar and switch to activty tab
 //      if let initialVC = initialVC {
 //        print("23userInfoDetails---")
         UserDefaults.standard.set("323,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
         UserDefaults.standard.synchronize()
-          
-          
-          
+
+
+
 //          let tabVal = Int(val[1]) ?? 0
 //          if tabVal != 0 {
 //        self.pushToTabbar(
@@ -192,7 +272,7 @@ class StudyListViewController: UIViewController {
 //          selectedTab: tabVal ?? 0
 //        )
 //      }
-              
+
           }
       }
       }
@@ -501,6 +581,55 @@ class StudyListViewController: UIViewController {
         self.previousStudyList = studies
         self.allStudyList = studies
         Gateway.instance.studies = studies
+        
+        DispatchQueue.main.async {
+            
+  //          self.performTaskBasedOnStudyStatus()
+            
+        let val1 = UserDefaults.standard.value(forKey: "performActivityTaskBasedOnStudyStatus") as? String ?? ""
+        UserDefaults.standard.set("", forKey: "performActivityTaskBasedOnStudyStatus")
+        UserDefaults.standard.synchronize()
+        print("valvalval---\(val1)")
+        let val = val1.components(separatedBy: " ")
+  //      var initialVC: UIViewController?
+            
+            UserDefaults.standard.set("325---\(val[0])---,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+            UserDefaults.standard.synchronize()
+            
+        if !(val[0] == "" || val[0] == nil) {
+            if let study = Gateway.instance.studies?.filter { $0.studyId == val[0] }.last {
+                UserDefaults.standard.set("525,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+                UserDefaults.standard.synchronize()
+                
+            print("study--\(study)")
+            Study.updateCurrentStudy(study: study)
+                let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
+                appdelegate.notificationDetails = nil
+          self.performTaskBasedOnStudyStatus()
+        print("181userInfoDetails---")
+        
+        // push tabbar and switch to activty tab
+  //      if let initialVC = initialVC {
+  //        print("23userInfoDetails---")
+          UserDefaults.standard.set("323,\(UserDefaults.standard.value(forKey: "userInfoDetails") ?? "")", forKey: "userInfoDetails")
+          UserDefaults.standard.synchronize()
+            
+            
+            
+  //          let tabVal = Int(val[1]) ?? 0
+  //          if tabVal != 0 {
+  //        self.pushToTabbar(
+  //          viewController: self,
+  //          selectedTab: tabVal ?? 0
+  //        )
+  //      }
+                
+            }
+        }
+        }
+        
+        
+        
 
         // Applying Filters
         let previousStudyFilters = StudyFilterHandler.instance.previousAppliedFilters
