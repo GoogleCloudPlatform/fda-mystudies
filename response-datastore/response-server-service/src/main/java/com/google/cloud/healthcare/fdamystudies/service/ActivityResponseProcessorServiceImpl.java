@@ -1035,15 +1035,20 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                     ans = fhirAnswerValue(map, valueObj, ans);
                     answer.add(ans);
                     items.setAnswer(answer);
+                    logger.debug("items1: " + items.toString());
                   } else {
                     if (valueObj != null || ObjectUtils.isNotEmpty(valueObj)) {
-                      ans = new Answer();
-                      logger.debug("othervalueObj" + valueObj);
                       List<Answer> a1 = new LinkedList<>();
+                      logger.debug("othervalueObj" + valueObj);
                       a1 = fhirAnswerValueForOther(map, valueObj, a1);
-                      // answer.add(ans);
-                      items.setAnswer(a1);
+
+                      for (int i = 0; i < a1.size(); i++) {
+                        answer.add(a1.get(i));
+                      }
                     }
+
+                    items.setAnswer(answer);
+                    logger.debug("items2: " + items.toString());
                   }
                 }
                 if (type.equals("task")) {
