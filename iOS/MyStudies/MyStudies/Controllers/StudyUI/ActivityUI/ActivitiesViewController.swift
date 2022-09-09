@@ -1271,8 +1271,9 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       self.refreshControl?.endRefreshing()
       StudyUpdates.studyActivitiesUpdated = false
       // Update StudymetaData for Study
-      DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
-
+        if let currentStudy = Study.currentStudy {
+            DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
+        }
     } else if requestName as String == WCPMethods.activity.method.methodName {
       print("4removeProgressIndicator---")
       self.removeProgressIndicator()

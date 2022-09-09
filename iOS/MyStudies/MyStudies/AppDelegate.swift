@@ -598,10 +598,9 @@ print("1notificationDetails---\(notificationDetails)")
                 } catch(let error) { }
               if self.reachability.connection != .unavailable {
 //                  self.addAndRemoveProgress(add: true)
-                  WCPServices().getEligibilityConsentMetadata(
-                    studyId: (Study.currentStudy?.studyId)!,
-                    delegate: self as NMWebServiceDelegate
-                  )
+                  if let studyId = Study.currentStudy?.studyId {
+                      WCPServices().getEligibilityConsentMetadata( studyId: studyId, delegate: self as NMWebServiceDelegate)
+                  }
               } else {
                   if controller.isKind(of: ActivitiesViewController.self) {
                       self.addAndRemoveProgress(add: false)
