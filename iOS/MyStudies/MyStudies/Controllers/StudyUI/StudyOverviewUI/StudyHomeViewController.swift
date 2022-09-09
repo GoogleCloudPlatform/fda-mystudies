@@ -1144,7 +1144,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
-      print("---------Step did finish")
+//      print("---------Step did finish")
     consentRestorationData = nil
 
     if taskViewController.task?.identifier == kPasscodeTaskIdentifier {
@@ -1227,7 +1227,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
-      print("---------Step will appear")
+//      print("---------Step will appear")
     if (taskViewController.result.results?.count)! > 1 {
       if activityBuilder?.actvityResult?.result?.count
         == taskViewController.result.results?
@@ -1253,7 +1253,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     {
 
         if stepIndentifer == kReviewTitle {
-            print("--------Review controller")
+//            print("--------Review controller")
             if reachability.connection == .unavailable {
                 setOffline()
             }
@@ -1386,7 +1386,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       }
   }
   func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
-      print("---------Result change result")
+//      print("---------Result change result")
 //      if let identifier =
 //    taskViewController.currentStepViewController?.step?.identifier {
 //          if reachability.connection == .unavailable && identifier == "Review"{
@@ -1413,7 +1413,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
 //      }
   }
   public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {
-      print("---------Result fail step")
+//      print("---------Result fail step")
   }
   
   func captureScreen() -> UIImage {
@@ -1453,7 +1453,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
             }
           )
       }
-      print("---------Current step")
+//      print("---------Current step")
     // CurrentStep is TokenStep
     let val = captureScreen()
     
