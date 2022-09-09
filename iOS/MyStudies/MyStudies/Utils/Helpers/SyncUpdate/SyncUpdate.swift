@@ -34,7 +34,9 @@ class SyncUpdate {
   @objc func updateData(isReachable: Bool) {
     if isReachable {
       // Start syncing Data.
-      DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+      print("6syncObj---")
+      DispatchQueue.main.asyncAfter(deadline: .now()) {
+        print("7syncObj---")
         self.syncDataToServer()
       }
     }
@@ -42,13 +44,16 @@ class SyncUpdate {
 
   /// SyncData to server, called to sync responses stored in offline mode to server.
   func syncDataToServer() {
-
+    print("4syncObj---")
     guard let realm = DBHandler.getRealmObject(),
       let toBeSyncedData = realm.objects(DBDataOfflineSync.self).sorted(
         byKeyPath: "date",
         ascending: true
       ).first
-    else { return }
+    else {
+      print("4asyncObj---")
+      return }
+    print("4bsyncObj---\(toBeSyncedData)")
     lastSyncedObject = toBeSyncedData
     // Request params
     var params: [String: Any]?
@@ -101,12 +106,14 @@ class SyncUpdate {
   }
 
   private func deleteSyncedObject() {
+    print("1syncObj---")
     guard let realm = DBHandler.getRealmObject(),
       let syncObj = lastSyncedObject
     else { return }
-    print("syncObj---\(syncObj)")
+    print("2syncObj---\(syncObj)")
     // Delete Synced object from DB
     try? realm.write {
+      print("3syncObj---")
       realm.delete(syncObj)
     }
   }
@@ -115,13 +122,24 @@ class SyncUpdate {
 // MARK: - Webservices Delegates
 extension SyncUpdate: NMWebServiceDelegate {
 
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
+  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
+    
+    UserDefaults.standard.setValue("started", forKey: "sync")
+    UserDefaults.standard.synchronize()
+    
+  }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
+    UserDefaults.standard.setValue("finished", forKey: "sync")
+    UserDefaults.standard.synchronize()
+    print("5syncObj---")
     deleteSyncedObject()
     syncDataToServer()
   }
 
-  func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {}
+  func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
+    UserDefaults.standard.setValue("finished", forKey: "sync")
+    UserDefaults.standard.synchronize()
+  }
 
 }

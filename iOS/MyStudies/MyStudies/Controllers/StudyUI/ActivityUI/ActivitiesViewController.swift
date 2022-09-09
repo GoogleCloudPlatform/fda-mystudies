@@ -286,7 +286,7 @@ class ActivitiesViewController: UIViewController {
   
   /// Checks for Activity updates from WCP.
   func checkForActivitiesUpdates() {
-
+    print("2fetchActivityAnchorDateResponse---")
     if StudyUpdates.studyActivitiesUpdated {
 
       self.sendRequestToGetActivityStates()
@@ -359,6 +359,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   func fetchActivityAnchorDateResponse() {
+    print("1fetchActivityAnchorDateResponse---")
     guard let currentStudy = Study.currentStudy else { return }
     AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { [weak self] (_) in
       self?.loadActivitiesFromDatabase()
@@ -1263,7 +1264,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     if requestName as String == ResponseMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
     } else if requestName as String == WCPMethods.activityList.method.methodName {
-
+      print("3fetchActivityAnchorDateResponse---")
       // get DashboardInfo
       self.sendRequestToGetDashboardInfo()
       self.fetchActivityAnchorDateResponse()
@@ -1279,7 +1280,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == WCPMethods.studyDashboard.method.methodName {
       print("5removeProgressIndicator---")
-      self.removeProgressIndicator()
+//      self.removeProgressIndicator()
       self.sendRequestToGetResourcesInfo()
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {

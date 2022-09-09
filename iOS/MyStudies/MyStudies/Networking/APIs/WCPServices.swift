@@ -324,7 +324,7 @@ class WCPServices: NSObject {
   /// - Parameter response: Webservice response
   func handleResourceForStudy(response: [String: Any]) {
 
-    let resources = response[kResources] as! [[String: Any]]
+    if let resources = response[kResources] as? [[String: Any]] {
     var listOfResources: [Resource]! = []
     for resource in resources {
       let resourceObj = Resource()
@@ -342,7 +342,7 @@ class WCPServices: NSObject {
 
     // assign to Gateway
     Study.currentStudy?.resources = listOfResources
-
+    }
   }
 
   /// Handles `Study` dashboard response
@@ -543,7 +543,7 @@ class WCPServices: NSObject {
   }
 
   func handleStudyUpdates(response: [String: Any]) {
-
+    print("62StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     if Utilities.isValidObject(someObject: response as AnyObject?) {
       _ = StudyUpdates(detail: response)
     }
@@ -570,11 +570,11 @@ extension WCPServices: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
     delegate?.startedRequest(manager, requestName: requestName)
-      print("-------Request name:", requestName)
+//      print("-------Request name:", requestName)
   }
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    print("-------Request name:", response)
+//    print("-------Request name:", response)
     let methodName = WCPMethods(rawValue: requestName as String)!
 
     switch methodName {

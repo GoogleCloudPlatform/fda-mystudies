@@ -286,16 +286,23 @@ class ActivitiesTableViewCell: UITableViewCell {
       let dailyStartDate = ActivitiesTableViewCell.dailyActivityFormatter.string(
         from: startDate!
       )
+      if endDate != nil {
       let endDate = ActivitiesTableViewCell.dailyActivityFormatter.string(from: endDate!)
       labelTime?.text = runStartTime + "\n" + dailyStartDate + " to " + endDate
+      } else {
+        labelTime?.text = runStartTime + "\n" + dailyStartDate + " to " 
+      }
 
     case .weekly:
       var weeklyStartTime = ActivitiesTableViewCell.weeklyformatter.string(from: startDate!)
       weeklyStartTime = weeklyStartTime.replacingOccurrences(of: "+", with: "every")
       weeklyStartTime = weeklyStartTime.replacingOccurrences(of: ";", with: "\n")
+      if endDate != nil {
       let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
-
-      labelTime?.text = weeklyStartTime + " to " + endDate
+        labelTime?.text = weeklyStartTime + " to " + endDate
+      } else {
+      labelTime?.text = weeklyStartTime + " to "
+      }
 
     case .monthly:
       var monthlyStartTime = ActivitiesTableViewCell.monthlyformatter.string(from: startDate!)
@@ -525,7 +532,7 @@ class ActivitiesTableViewCell: UITableViewCell {
       
       let updatedEndTime = runEndDate?.addingTimeInterval(TimeInterval(offset!))
       
-      if activityEndTime! > updatedStartTime! {
+      if activityEndTime != nil && activityEndTime! > updatedStartTime! {
         if !(updatedEndTime! < updatedStartTime!) {
           // append in activityRun array
           let activityRun = ActivityRun()
