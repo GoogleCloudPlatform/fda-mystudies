@@ -249,6 +249,7 @@ class AnchorDateHandler {
                    if let latestDateValue = latestDate {
                       if latestDateValue.compare(date) == .orderedAscending {
                         latestDate = date
+                        latestDateString = anchorDateString
                       }
                    } else {
                     latestDate = date
@@ -263,6 +264,7 @@ class AnchorDateHandler {
                     if let latestDateValue = latestDate {
                       if latestDateValue.compare(date) == .orderedAscending {
                         latestDate = date
+                        latestDateString = anchorDateString
                       }
                     } else {
                       latestDate = date
