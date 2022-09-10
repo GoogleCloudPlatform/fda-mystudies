@@ -176,6 +176,7 @@ class AnchorDateHandler {
     let method = ResponseMethods.getParticipantResponse.method
 
     let sourceActivityID = emptyAnchorDateDetail.sourceActivityId ?? ""
+//    let sourceActivityRunId = emptyAnchorDateDetail.activity.currentRunId ?? ""
     let appID = AppConfiguration.appID
     let studyID = self.study.studyId ?? ""
     let tokenIdentifier = study.userParticipateState.tokenIdentifier ?? ""
@@ -189,6 +190,9 @@ class AnchorDateHandler {
     urlString += "&studyId" + "=" + studyID
     urlString += "&siteId" + "=" + siteID
     urlString += "&activityId" + "=" + sourceActivityID
+      if emptyAnchorDateDetail.activity != nil, let sourceActivityRunId = emptyAnchorDateDetail.activity.currentRunId {
+          urlString += "&activityRunId" + "=" + sourceActivityRunId
+      }
     urlString += "&activityVersion" + "=" + activityVersion
     urlString += "&participantId" + "=" + participantId
     urlString += "&questionKey"
