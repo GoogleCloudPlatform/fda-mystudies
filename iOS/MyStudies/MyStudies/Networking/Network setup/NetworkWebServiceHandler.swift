@@ -378,7 +378,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       session.dataTask(with: request!) { (data, response, error) -> Void in
         print("8aresponse---\(data)---\(response)---\(error)")
         
-        if let err = error?._code, let reqName = requestName, (err == -1004 || err == -1003 || err == -1001) &&
+        if let err = error?._code, let reqName = requestName, (err >= -2000 && err <= -1000 ) &&
             (reqName == "updateStudyState" || reqName == "participant/process-response" ) {  //Could not connect to the server.
           print("8eresponse---")
         }

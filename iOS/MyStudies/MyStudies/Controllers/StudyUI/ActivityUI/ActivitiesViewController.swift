@@ -77,6 +77,8 @@ class ActivitiesViewController: UIViewController {
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
   }
+  
+//  weak var delegateComprehension: ActivitiesComprehensionFailureDelegate?
 
   fileprivate func presentUpdatedConsent() {
     print("22StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
@@ -142,12 +144,17 @@ class ActivitiesViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
+    print("viewWillAppear---")
       UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
       UserDefaults.standard.synchronize()
 
     let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appDelegate.iscomingFromForgotPasscode
+    
+    if Utilities.isStandaloneApp() {
+      appDelegate.delegateComprehension = self
+    }
+    
     if !appDelegate.iscomingFromForgotPasscode {
       if !fromConsentViewDidload && Utilities.isStandaloneApp() {
         if (Study.currentStudy?.studyId) != nil {
@@ -204,6 +211,10 @@ class ActivitiesViewController: UIViewController {
         NotificationHandler.instance.appOpenFromNotification = false
         self.refresh(sender: self)
     }
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    print("viewDidAppear---")
   }
 
   // MARK: - Utility functions
@@ -1905,4 +1916,20 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     }
   }
 
+}
+
+extension ActivitiesViewController: ActivitiesComprehensionFailureDelegate {
+  func didTapOnActivityRetry() {
+    // Create Consent Task on Retry
+    print("3didTapOnRetry---")
+      UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+      UserDefaults.standard.synchronize()
+      print("5StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+      WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
+    
+  }
+}
+
+protocol ActivitiesComprehensionFailureDelegate: class {
+  func didTapOnActivityRetry()
 }

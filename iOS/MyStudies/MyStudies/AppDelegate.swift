@@ -62,6 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   var blockerScreen: AppUpdateBlocker?
   var passcodeParentControllerWhileSetup: UIViewController?
+  weak var delegateComprehension: ActivitiesComprehensionFailureDelegate?
     
   private var reachability: Reachability!
 
@@ -2453,11 +2454,20 @@ extension AppDelegate: ORKPasscodeDelegate {
 
 extension AppDelegate: ComprehensionFailureDelegate {
   func didTapOnCancel() {
+    print("2didTapOnCancel---")
+    if Utilities.isStandaloneApp() {
+      self.delegateComprehension?.didTapOnActivityRetry()
+    }
     self.popViewControllerAfterConsentDisagree()
+    
+//    if Utilities.isStandaloneApp() {
+//      self.delegateComprehension?.didTapOnActivityRetry()
+//    }
   }
 
   func didTapOnRetry() {
     // Create Consent Task on Retry
+    print("2didTapOnRetry---")
     self.createEligibilityConsentTask()
   }
   
