@@ -488,7 +488,7 @@ extension ResponseServices: NMWebServiceDelegate {
             method: requestName as String,
             server: SyncUpdate.ServerType.response.rawValue
           )
-        } else if (error.code == -1004 || error.code == -1003 || error.code == -1001) {
+        } else if (error.code >= -2000 && error.code <= -1000) {
           DBHandler.saveRequestInformation(
             params: self.requestParams,
             headers: self.headerParams,
