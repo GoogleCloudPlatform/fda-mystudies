@@ -355,10 +355,10 @@ class StudyHomeViewController: UIViewController {
     
     UserDefaults.standard.setValue("\(Study.currentStudy?.userParticipateState.status.description ?? "")", forKey: "consentEnrolledStatus")
     UserDefaults.standard.synchronize()
-    
+    guard let studyId = Study.currentStudy?.studyId, let consentToken = ConsentBuilder.currentConsent?.consentResult?.token else { return }
     EnrollServices().enrollForStudy(
-      studyId: (Study.currentStudy?.studyId)!,
-      token: (ConsentBuilder.currentConsent?.consentResult?.token)!,
+      studyId: studyId,
+      token: consentToken,
       delegate: self
     )
 
@@ -659,17 +659,17 @@ class StudyHomeViewController: UIViewController {
       navigationController?.pushViewController(signInController, animated: true)
 
     } else {
-      let currentStudy = Study.currentStudy!
+      guard let currentStudy = Study.currentStudy else { return }
       let participatedStatus = currentStudy.userParticipateState.status
 
       switch currentStudy.status {
       case .active:
-
+        guard let studyId = Study.currentStudy?.studyId else { return }
         if participatedStatus == .yetToEnroll || participatedStatus == .notEligible {
           // check if enrolling is allowed
           if currentStudy.studySettings.enrollingAllowed {
             WCPServices().getEligibilityConsentMetadata(
-              studyId: (Study.currentStudy?.studyId)!,
+              studyId: studyId,
               delegate: self as NMWebServiceDelegate
             )
           } else {
@@ -684,7 +684,7 @@ class StudyHomeViewController: UIViewController {
           }
         } else if participatedStatus == .withdrawn {
           WCPServices().getEligibilityConsentMetadata(
-            studyId: (Study.currentStudy?.studyId)!,
+            studyId: studyId,
             delegate: self as NMWebServiceDelegate
           )
         }
@@ -774,8 +774,9 @@ class StudyHomeViewController: UIViewController {
         {
           // check if enrolling is allowed
           if study.studySettings.enrollingAllowed {
+            guard let studyId = Study.currentStudy?.studyId else { return }
             WCPServices().getEligibilityConsentMetadata(
-              studyId: (Study.currentStudy?.studyId)!,
+              studyId: studyId,
               delegate: self as NMWebServiceDelegate
             )
           } else {
@@ -801,8 +802,9 @@ class StudyHomeViewController: UIViewController {
     } else {
       if study.status == .active {
         if study.studySettings.enrollingAllowed {
+          guard let studyId = Study.currentStudy?.studyId else { return }
           WCPServices().getEligibilityConsentMetadata(
-            studyId: (Study.currentStudy?.studyId)!,
+            studyId: studyId,
             delegate: self as NMWebServiceDelegate
           )
         } else {
@@ -823,8 +825,9 @@ class StudyHomeViewController: UIViewController {
       let siteID = response["siteId"] as? String ?? ""
       let tokenIdentifier = response["hashedToken"] as? String ?? ""
       // update token
+      guard let studyId = Study.currentStudy?.studyId else { return }
       let currentUserStudyStatus = User.currentUser.updateStudyStatus(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: studyId,
         status: .enrolled
       )
       currentUserStudyStatus.tokenIdentifier = tokenIdentifier
@@ -1013,8 +1016,8 @@ extension StudyHomeViewController: NMWebServiceDelegate {
       == ConsentServerMethods.updateEligibilityConsentStatus.method
       .methodName
     {
-
-      if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
+      guard let studyId = Study.currentStudy?.studyId else { return }
+      if User.currentUser.getStudyStatus(studyId: studyId)
         == UserStudyStatus
         .StudyStatus.enrolled
       {

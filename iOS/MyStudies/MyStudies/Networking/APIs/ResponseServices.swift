@@ -400,10 +400,11 @@ class ResponseServices: NSObject {
     let user = User.currentUser
     if let activites = response[kActivites] as? [[String: Any]] {
       if Study.currentStudy != nil {
+        guard let studyId = Study.currentStudy?.studyId else { return }
         for activity in activites {
           let participatedActivity = UserActivityStatus(
             detail: activity,
-            studyId: (Study.currentStudy?.studyId)!
+            studyId: studyId
           )
           user.participatedActivites.append(participatedActivity)
         }
