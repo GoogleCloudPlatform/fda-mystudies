@@ -355,7 +355,8 @@ class StudyHomeViewController: UIViewController {
     
     UserDefaults.standard.setValue("\(Study.currentStudy?.userParticipateState.status.description ?? "")", forKey: "consentEnrolledStatus")
     UserDefaults.standard.synchronize()
-    guard let studyId = Study.currentStudy?.studyId, let consentToken = ConsentBuilder.currentConsent?.consentResult?.token else { return }
+    guard let studyId = Study.currentStudy?.studyId,
+            let consentToken = ConsentBuilder.currentConsent?.consentResult?.token else { return }
     EnrollServices().enrollForStudy(
       studyId: studyId,
       token: consentToken,

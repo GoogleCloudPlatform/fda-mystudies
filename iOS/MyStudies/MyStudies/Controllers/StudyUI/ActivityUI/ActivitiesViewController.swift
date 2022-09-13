@@ -1154,7 +1154,9 @@ extension ActivitiesViewController: UITableViewDelegate {
                 if found {
                   self.createActivity()
                 } else {
-                  guard let studyId = Study.currentStudy?.studyId, let actvityId = Study.currentActivity?.actvityId, let version = Study.currentActivity?.version else { return }
+                  guard let studyId = Study.currentStudy?.studyId,
+                          let actvityId = Study.currentActivity?.actvityId,
+                          let version = Study.currentActivity?.version else { return }
                   // Fetch ActivityMetaData from Server
                   WCPServices().getStudyActivityMetadata(
                     studyId: studyId,
