@@ -636,12 +636,13 @@ class DBHandler: NSObject {
         activityUpdated = true
       }
     }
-
+    
+    guard let studyId = Study.currentStudy?.studyId else { return }
     // keys for alerts
     if activityUpdated {
       let ud = UserDefaults.standard
-      let halfCompletionKey = "50pcShown" + (Study.currentStudy?.studyId)!
-      let fullCompletionKey = "100pcShown" + (Study.currentStudy?.studyId)!
+      let halfCompletionKey = "50pcShown" + studyId
+      let fullCompletionKey = "100pcShown" + studyId
       ud.set(false, forKey: halfCompletionKey)
       ud.set(false, forKey: fullCompletionKey)
     }
@@ -2222,9 +2223,10 @@ class DBHandler: NSObject {
     // delete activites and its metadata
     let dbActivities = realm.objects(DBActivity.self).filter("studyId == %@", studyId)
     dbActivities.forEach { (dbActivity) in
+      guard let studyId = dbActivity.studyId, let activityId = dbActivity.actvityId else { return }
       DBHandler.deleteMetaDataForActivity(
-        activityId: (dbActivity.actvityId)!,
-        studyId: (dbActivity.studyId)!
+        activityId: activityId,
+        studyId: studyId
       )
 
       try? realm.write {

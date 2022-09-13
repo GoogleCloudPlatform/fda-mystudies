@@ -797,7 +797,8 @@ class StudyListViewController: UIViewController {
   /// Get the `Study` overview from DB if available and navigate.
   /// - Parameter study: Instance of `Study`.
   func checkDatabaseForStudyInfo(study: Study) {
-    DBHandler.loadStudyOverview(studyId: (study.studyId)!) { overview in
+    guard let studyId = study.studyId else { return }
+    DBHandler.loadStudyOverview(studyId: studyId) { overview in
       if overview != nil {
         study.overview = overview
         self.navigateToStudyHome()
