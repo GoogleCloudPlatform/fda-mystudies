@@ -189,6 +189,14 @@ class AnchorDateHandler {
     urlString += "&studyId" + "=" + studyID
     urlString += "&siteId" + "=" + siteID
     urlString += "&activityId" + "=" + sourceActivityID
+    let sourceActivity = self.study.activities.filter {
+        $0.actvityId == sourceActivityID
+    }.first
+    if let sourceRunId = sourceActivity?.currentRunId {
+        urlString += "&activityRunId" + "=" + String(sourceRunId)
+    } else {
+        urlString += "&activityRunId" + "="
+    }
     urlString += "&activityVersion" + "=" + activityVersion
     urlString += "&participantId" + "=" + participantId
     urlString += "&questionKey"
@@ -227,93 +235,55 @@ class AnchorDateHandler {
           let status = NetworkConstants.checkResponseHeaders(response)
           let statusCode = status.0
           if statusCode == 200 || statusCode == 0 {
+            guard let responseDict = data.toJSONDictionary(),
+              let rows = responseDict["rows"] as? [JSONDictionary]
+            else {
+              completion()
+              return
+            }
+            var latestDate: Date?
+            var latestDateString: String?
 
-//            guard let responseDict = data.toJSONDictionary(),
-//              let rows = responseDict["rows"] as? [JSONDictionary],
-//              let latestResponse = rows.last
-//            else {
-//              completion()
-//              return
-//            }
-              guard let responseDict = data.toJSONDictionary(),
-                let rows = responseDict["rows"] as? [JSONDictionary]
-              else {
-                completion()
-                return
-              }
-              var latestDate: Date?
-              var latestDateString: String?
-
-              for row in rows {
-                  if let data = row["data"] as? [JSONDictionary],
-                    let userResponseDict = data.first(where: { $0[emptyAnchorDateDetail.sourceKey] != nil }),
-                    let anchorDateObject = userResponseDict[emptyAnchorDateDetail.sourceKey]
-                      as? [String: String],
-                    let anchorDateString = anchorDateObject["value"]
-                  {
-                      if let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString) {
-                          
-                          if let latestDateValue = latestDate {
-                              if latestDateValue.compare(date) == .orderedAscending {
-                                  latestDate = date
-                              }
-                          } else {
-                              latestDate = date
-                              latestDateString = anchorDateString
-                          }
-                          
+            for row in rows {
+              if let data = row["data"] as? [JSONDictionary],
+                let userResponseDict = data.first(where: { $0[emptyAnchorDateDetail.sourceKey] != nil }),
+                let anchorDateObject = userResponseDict[emptyAnchorDateDetail.sourceKey] as? [String: String],
+                let anchorDateString = anchorDateObject["value"] {
+                if let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString) {
+                   if let latestDateValue = latestDate {
+                      if latestDateValue.compare(date) == .orderedAscending {
+                        latestDate = date
+                        latestDateString = anchorDateString
                       }
-                      
-                  } else if let data = row["data"] as? [JSONDictionary],
-                            let userResponseDict = data.first(where: { $0["Created"] != nil }),
-                            let anchorDateObject = userResponseDict["Created"]
-                              as? [String: String],
-                            let anchorDateString = anchorDateObject["value"]
-                  {
-                      if let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString) {
-                          if let latestDateValue = latestDate {
-                              if latestDateValue.compare(date) == .orderedAscending {
-                                  latestDate = date
-                              }
-                          } else {
-                              latestDate = date
-                              latestDateString = anchorDateString
-                          }
-                          
+                   } else {
+                    latestDate = date
+                    latestDateString = anchorDateString
+                   }
+                }
+              } else if let data = row["data"] as? [JSONDictionary],
+                  let userResponseDict = data.first(where: { $0["anchorDate"] != nil }),
+                  let anchorDateObject = userResponseDict["anchorDate"] as? [String: String],
+                  let anchorDateString = anchorDateObject["value"] {
+                  if let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString) {
+                    if let latestDateValue = latestDate {
+                      if latestDateValue.compare(date) == .orderedAscending {
+                        latestDate = date
+                        latestDateString = anchorDateString
                       }
+                    } else {
+                      latestDate = date
+                      latestDateString = anchorDateString
+                    }
                   }
               }
-              if let latestDateValue = latestDate {
-                  emptyAnchorDateDetail.anchorDate = latestDateValue
-              }
-              if let latestDateStringValue = latestDateString {
-                  emptyAnchorDateDetail.anchorRawDate = latestDateStringValue
-              }
-              completion()
-              
-//            if let data = latestResponse["data"] as? [JSONDictionary],
-//              let userResponseDict = data.first(where: { $0[emptyAnchorDateDetail.sourceKey] != nil }),
-//              let anchorDateObject = userResponseDict[emptyAnchorDateDetail.sourceKey]
-//                as? [String: String],
-//              let anchorDateString = anchorDateObject["value"]
-//            {
-//              let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString)
-//              emptyAnchorDateDetail.anchorDate = date
-//              emptyAnchorDateDetail.anchorRawDate = anchorDateString
-//              completion()
-//            } else if let data = latestResponse["data"] as? [JSONDictionary],
-//                      let userResponseDict = data.first(where: { $0["Created"] != nil }),
-//                      let anchorDateObject = userResponseDict["Created"]
-//                        as? [String: String],
-//                      let anchorDateString = anchorDateObject["value"]
-//            {
-//                      let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString)
-//                      emptyAnchorDateDetail.anchorDate = date
-//                      emptyAnchorDateDetail.anchorRawDate = anchorDateString
-//                      completion()
-//            } else {
-//              completion()
-//            }
+            }
+            if let latestDateValue = latestDate {
+              emptyAnchorDateDetail.anchorDate = latestDateValue
+            }
+            if let latestDateStringValue = latestDateString {
+              emptyAnchorDateDetail.anchorRawDate = latestDateStringValue
+            }
+            completion()
           } else {
             completion()
           }
