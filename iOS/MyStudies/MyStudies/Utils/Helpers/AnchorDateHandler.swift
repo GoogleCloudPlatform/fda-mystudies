@@ -190,9 +190,14 @@ class AnchorDateHandler {
     urlString += "&studyId" + "=" + studyID
     urlString += "&siteId" + "=" + siteID
     urlString += "&activityId" + "=" + sourceActivityID
-      if emptyAnchorDateDetail.activity != nil, let sourceActivityRunId = emptyAnchorDateDetail.activity.currentRunId {
-          urlString += "&activityRunId" + "=" + sourceActivityRunId
-      }
+    let sourceActivity = self.study.activities.filter {
+        $0.actvityId == sourceActivityID
+    }.first
+    if let sourceRunId = sourceActivity?.currentRunId {
+        urlString += "&activityRunId" + "=" + String(sourceRunId)
+    } else {
+        urlString += "&activityRunId" + "="
+    }
     urlString += "&activityVersion" + "=" + activityVersion
     urlString += "&participantId" + "=" + participantId
     urlString += "&questionKey"
@@ -257,8 +262,8 @@ class AnchorDateHandler {
                    }
                 }
               } else if let data = row["data"] as? [JSONDictionary],
-                  let userResponseDict = data.first(where: { $0["Created"] != nil }),
-                  let anchorDateObject = userResponseDict["Created"] as? [String: String],
+                  let userResponseDict = data.first(where: { $0["anchorDate"] != nil }),
+                  let anchorDateObject = userResponseDict["anchorDate"] as? [String: String],
                   let anchorDateString = anchorDateObject["value"] {
                   if let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString) {
                     if let latestDateValue = latestDate {
