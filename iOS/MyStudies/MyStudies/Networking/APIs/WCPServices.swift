@@ -335,11 +335,13 @@ class WCPServices: NSObject {
     }
 
     // save in database
-    DBHandler.saveResourcesForStudy(
-      studyId: (Study.currentStudy?.studyId)!,
-      resources: listOfResources
-    )
-
+    if let studyId = Study.currentStudy?.studyId {
+      DBHandler.saveResourcesForStudy(
+        studyId: studyId,
+        resources: listOfResources
+      )
+    }
+        
     // assign to Gateway
     Study.currentStudy?.resources = listOfResources
     }
@@ -365,9 +367,10 @@ class WCPServices: NSObject {
         }
 
         StudyDashboard.instance.statistics = listOfStats
+        guard let studyId = Study.currentStudy?.studyId else { return }
         // save stats in database
         DBHandler.saveDashBoardStatistics(
-          studyId: (Study.currentStudy?.studyId)!,
+          studyId: studyId,
           statistics: listOfStats
         )
 
@@ -384,7 +387,7 @@ class WCPServices: NSObject {
 
         // save charts in database
         DBHandler.saveDashBoardCharts(
-          studyId: (Study.currentStudy?.studyId)!,
+          studyId: studyId,
           charts: listOfCharts
         )
       }
@@ -445,10 +448,10 @@ class WCPServices: NSObject {
 
         // update anchorDate to current study
         Study.currentStudy?.anchorDate = studyAndhorDate
-
+        guard let studyId = Study.currentStudy?.studyId else { return }
         DBHandler.saveAnchorDateDetail(
           anchorDate: studyAndhorDate,
-          studyId: (Study.currentStudy?.studyId)!
+          studyId: studyId
         )
       }
 
@@ -463,14 +466,16 @@ class WCPServices: NSObject {
 
         // update anchorDate to current study
         Study.currentStudy?.withdrawalConfigration = studyWithdrawalConfig
+        guard let studyId = Study.currentStudy?.studyId else { return }
         DBHandler.saveWithdrawalConfigration(
           withdrawalConfigration: studyWithdrawalConfig,
-          studyId: (Study.currentStudy?.studyId)!
+          studyId: studyId
         )
       }
 
       // save in database
-      DBHandler.saveStudyOverview(overview: overview, studyId: (Study.currentStudy?.studyId)!)
+      guard let studyId = Study.currentStudy?.studyId else { return }
+      DBHandler.saveStudyOverview(overview: overview, studyId: studyId)
     }
 
   }
@@ -485,11 +490,12 @@ class WCPServices: NSObject {
     if Utilities.isValidObject(someObject: activities as AnyObject?) {
 
       if Study.currentStudy != nil {
+        guard let studyId = Study.currentStudy?.studyId else { return }
         var activityList: [Activity] = []
         for activityDict in activities {
 
           let activity = Activity.init(
-            studyId: (Study.currentStudy?.studyId)!,
+            studyId: studyId,
             infoDict: activityDict
           )
           activityList.append(activity)
@@ -497,7 +503,8 @@ class WCPServices: NSObject {
         // save to current study object
         Study.currentStudy?.activities = activityList
         // save in database
-        DBHandler.saveActivities(activities: (Study.currentStudy?.activities)!)
+        guard let activities = Study.currentStudy?.activities else { return }
+        DBHandler.saveActivities(activities: activities)
       }
     }
   }

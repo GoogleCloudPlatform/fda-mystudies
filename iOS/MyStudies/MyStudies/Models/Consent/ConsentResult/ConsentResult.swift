@@ -70,10 +70,10 @@ class ConsentResult {
         {
 
           signatureStepResult?.apply(to: self.consentDocument!)
-
+          guard let studyId = Study.currentStudy?.studyId else { return }
           if self.consentPdfData?.count == 0 {
             self.consentPath =
-              "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
+              "Consent" + "_" + "\(studyId)"
               + ".pdf"
 
             self.consentDocument?.makePDF(
@@ -86,7 +86,7 @@ class ConsentResult {
                 let path = AKUtility.baseFilePath + "/study"
                 let fileName: String =
                   "Consent" + "_"
-                  + "\((Study.currentStudy?.studyId)!)"
+                  + "\(studyId)"
                   + ".pdf"
 
                 self.consentPath = fileName
@@ -132,7 +132,7 @@ class ConsentResult {
             var fullPath: String!
             let path = AKUtility.baseFilePath + "/study"
             let fileName: String =
-              "Consent" + "_" + "\((Study.currentStudy?.studyId)!)"
+              "Consent" + "_" + "\(studyId)"
               + ".pdf"
 
             self.consentPath = fileName

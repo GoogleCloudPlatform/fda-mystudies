@@ -593,8 +593,9 @@ class ActivitiesViewController: UIViewController {
         ) { (_, notificationlist) in
           Study.currentStudy?.activitiesLocalNotificationUpdated = true
           DBHandler.saveRegisteredLocaNotifications(notificationList: notificationlist)
+          guard let studyId = Study.currentStudy?.studyId else { return }
           DBHandler.updateLocalNotificationScheduleStatus(
-            studyId: (Study.currentStudy?.studyId)!,
+            studyId: studyId,
             status: true
           )
           LocalNotification.refreshAllLocalNotification()
@@ -1153,12 +1154,14 @@ extension ActivitiesViewController: UITableViewDelegate {
                 if found {
                   self.createActivity()
                 } else {
-
+                  guard let studyId = Study.currentStudy?.studyId,
+                          let actvityId = Study.currentActivity?.actvityId,
+                          let version = Study.currentActivity?.version else { return }
                   // Fetch ActivityMetaData from Server
                   WCPServices().getStudyActivityMetadata(
-                    studyId: (Study.currentStudy?.studyId)!,
-                    activityId: (Study.currentActivity?.actvityId)!,
-                    activityVersion: (Study.currentActivity?.version)!,
+                    studyId: studyId,
+                    activityId: actvityId,
+                    activityVersion: version,
                     delegate: self
                   )
                 }
@@ -1466,11 +1469,12 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     case ORKTaskViewControllerFinishReason.discarded:
 
       let study = Study.currentStudy
-      let activity = Study.currentActivity
-      activity?.currentRun.restortionData = nil
+      guard let activity = Study.currentActivity else { return }
+      activity.currentRun.restortionData = nil
+      guard let studyId = study?.studyId else { return }
       DBHandler.updateActivityRestortionDataFor(
-        activity: activity!,
-        studyId: (study?.studyId)!,
+        activity: activity,
+        studyId: studyId,
         restortionData: nil
       )
 
@@ -1495,17 +1499,17 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           .restorationData
         
         let study = Study.currentStudy
-        let activity = Study.currentActivity
+        guard let activity = Study.currentActivity else { return }
         
-        if activity?.type != .activeTask {
-          
+        if activity.type != .activeTask {
+          guard let studyId = study?.studyId else { return }
           // Update RestortionData for Activity in DB
           DBHandler.updateActivityRestortionDataFor(
-            activity: activity!,
-            studyId: (study?.studyId)!,
+            activity: activity,
+            studyId: studyId,
             restortionData: taskViewController.restorationData!
           )
-          activity?.currentRun.restortionData = taskViewController.restorationData!
+          activity.currentRun.restortionData = taskViewController.restorationData!
         }
       }
       self.checkForActivitiesUpdates()
@@ -1714,17 +1718,18 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
       } else {
 
         let study = Study.currentStudy
-        let activity = Study.currentActivity
+        guard let activity = Study.currentActivity else { return }
 
-        if activity?.type != .activeTask {
+        if activity.type != .activeTask {
 
           // Update RestortionData for Activity in DB
+          
           DBHandler.updateActivityRestortionDataFor(
-            activity: activity!,
+            activity: activity,
             studyId: (study?.studyId)!,
             restortionData: taskViewController.restorationData!
           )
-          activity?.currentRun.restortionData = taskViewController.restorationData!
+          activity.currentRun.restortionData = taskViewController.restorationData!
         }
 
         let orkStepResult: ORKStepResult? =
@@ -1732,9 +1737,9 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
             (taskViewController.result.results?.count)! - 2
           ] as! ORKStepResult?
         let activityStepResult: ActivityStepResult? = ActivityStepResult()
-        if (activity?.activitySteps?.count)! > 0 {
+        if (activity.activitySteps?.count)! > 0 {
 
-          let activityStepArray = activity?.activitySteps?.filter({
+          let activityStepArray = activity.activitySteps?.filter({
             $0.key == orkStepResult?.identifier
           })
           if (activityStepArray?.count)! > 0 {
@@ -1749,7 +1754,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         /// check for anchor date.
         if study?.anchorDate != nil
           && study?.anchorDate?.anchorDateActivityId
-            == activity?
+            == activity
             .actvityId
         {
 
@@ -1767,7 +1772,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           if let value1 = activityStepResult?.value as? NSNumber {
             let value = value1.floatValue
             DBHandler.saveStatisticsDataFor(
-              activityId: (activity?.actvityId)!,
+              activityId: (activity.actvityId)!,
               key: (activityStepResult?.key)!,
               data: value,
               fkDuration: 0,
@@ -1780,7 +1785,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
         let activityId: String? = ud.value(forKey: "FetalKickActivityId") as! String?
         // Go forward if fetal kick task is running
-        if activity?.type == .activeTask
+        if activity.type == .activeTask
           && ud.bool(forKey: "FKC")
           && activityId != nil
           && activityId == Study.currentActivity?.actvityId
