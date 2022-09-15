@@ -258,7 +258,7 @@ public class SingleChoiceTextQuestionBody<T>
                   otherText.setVisibility(View.VISIBLE);
                   otherText.requestFocus();
 
-                  otherOptionModel.setOther(item.getText().toString());
+                  otherOptionModel.setOther(item.getValue().toString());
                 }
               } else {
                 selectedcheckbox.remove(checkBox);
