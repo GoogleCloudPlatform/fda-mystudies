@@ -172,9 +172,9 @@ class EligibilityStepViewController: ORKStepViewController {
     let token = tokenTextField.text
 
     if (token?.isEmpty) == false {
-
+      guard let studyId = Study.currentStudy?.studyId else { return }
       EnrollServices().verifyEnrollmentToken(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: studyId,
         token: token!,
         delegate: self
       )

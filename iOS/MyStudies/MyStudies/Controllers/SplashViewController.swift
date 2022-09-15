@@ -55,6 +55,8 @@ class SplashViewController: UIViewController {
 //    UserDefaults.standard.set("", forKey: "newactivity1")
 //    UserDefaults.standard.set("", forKey: "newactivity3")
 //    UserDefaults.standard.set("", forKey: "newactivity4")
+    UserDefaults.standard.set("", forKey: "sync")
+    UserDefaults.standard.synchronize()
     ud.synchronize()
   }
 

@@ -126,20 +126,20 @@ class ResourcesViewController: UIViewController {
     self.navigationController?.setNavigationBarHidden(false, animated: true)
 
     self.tabBarController?.tabBar.isHidden = false
-
+    guard let studyId = Study.currentStudy?.studyId else { return }
     if Study.currentStudy?.withdrawalConfigration?.message == nil
       && (Study.currentStudy?.withdrawalConfigration?.type == nil
         || Study.currentStudy?
           .withdrawalConfigration?.type == .notAvailable)
     {
       WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: studyId,
         delegate: self
       )
 
     } else if StudyUpdates.studyInfoUpdated {
       WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: studyId,
         delegate: self
       )
 
@@ -230,10 +230,10 @@ class ResourcesViewController: UIViewController {
   }
 
   func checkForResourceUpdate() {
-
+    guard let studyId = Study.currentStudy?.studyId else { return }
     if StudyUpdates.studyResourcesUpdated {
       WCPServices().getResourcesForStudy(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: studyId,
         delegate: self
       )
     } else {
@@ -269,9 +269,10 @@ class ResourcesViewController: UIViewController {
 
 
   func checkIfResourcePresent() {
-    if DBHandler.isResourcesEmpty((Study.currentStudy?.studyId)!) {
+    guard let studyId = Study.currentStudy?.studyId else { return }
+    if DBHandler.isResourcesEmpty(studyId) {
       WCPServices().getResourcesForStudy(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: studyId,
         delegate: self
       )
     } else {
@@ -533,8 +534,8 @@ class ResourcesViewController: UIViewController {
   }
 
   func checkDatabaseForStudyInfo(study: Study) {
-
-    DBHandler.loadStudyOverview(studyId: (study.studyId)!) { (overview) in
+    guard let studyId = study.studyId else { return }
+    DBHandler.loadStudyOverview(studyId: studyId) { (overview) in
       if overview != nil {
         study.overview = overview
         self.navigateToStudyHome()
@@ -587,12 +588,12 @@ class ResourcesViewController: UIViewController {
   }
 
   func saveConsentPdfToLocal(base64dataString: String) {
-
+    guard let studyId = Study.currentStudy?.studyId else { return }
     let consentData = NSData(base64Encoded: base64dataString, options: .ignoreUnknownCharacters)
 
     var fullPath: String!
     let path = AKUtility.baseFilePath + "/study"
-    let fileName: String = "Consent" + "_" + "\((Study.currentStudy?.studyId)!)" + ".pdf"
+    let fileName: String = "Consent" + "_" + "\(studyId)" + ".pdf"
 
     fullPath = path + "/" + fileName
 
@@ -639,12 +640,12 @@ class ResourcesViewController: UIViewController {
   }
   
   func saveConsentPdfToLocalDataSharing(base64dataString: String) {
-
+    guard let studyId = Study.currentStudy?.studyId else { return }
     let consentData = NSData(base64Encoded: base64dataString, options: .ignoreUnknownCharacters)
 
     var fullPath: String!
     let path = AKUtility.baseFilePath + "/study"
-    let fileName: String = "ConsentDataSharingPdf" + "_" + "\((Study.currentStudy?.studyId)!)" + ".pdf"
+    let fileName: String = "ConsentDataSharingPdf" + "_" + "\(studyId)" + ".pdf"
 
     fullPath = path + "/" + fileName
 
@@ -691,9 +692,10 @@ class ResourcesViewController: UIViewController {
   }
 
   func withdrawalFromStudy(deleteResponse: Bool) {
+    guard let studyId = Study.currentStudy?.studyId else { return }
     let participantId = Study.currentStudy?.userParticipateState.participantId ?? ""
     EnrollServices().withdrawFromStudy(
-      studyId: (Study.currentStudy?.studyId)!,
+      studyId: studyId,
       participantId: participantId,
       deleteResponses: deleteResponse,
       delegate: self
@@ -706,9 +708,10 @@ class ResourcesViewController: UIViewController {
     // Delete the resources documents.
     AKUtility.deleteDirectoryFromDocuments(name: ResourceDetailViewController.resouceDirectory)
 
+    guard let studyId = Study.currentStudy?.studyId else { return }
     let currentUser = User.currentUser
     let userActivityStatusList: [UserActivityStatus] = currentUser.participatedActivites.filter({
-      $0.studyId == (Study.currentStudy?.studyId)!
+      $0.studyId == studyId
     })
 
     for activityStatus in userActivityStatusList {
@@ -728,7 +731,7 @@ class ResourcesViewController: UIViewController {
     // Update status to false so notification can be registered again
     Study.currentStudy?.activitiesLocalNotificationUpdated = false
     DBHandler.updateLocalNotificationScheduleStatus(
-      studyId: (Study.currentStudy?.studyId)!,
+      studyId: studyId,
       status: false
     )
 
