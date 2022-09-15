@@ -136,9 +136,9 @@ import org.researchstack.backbone.task.Task;
 
 public class SurveyActivitiesFragment extends Fragment
     implements ApiCall.OnAsyncRequestComplete,
-        ActivityCompat.OnRequestPermissionsResultCallback,
-        CustomActivitiesDailyDialogClass.DialogClick,
-        NetworkChangeReceiver.NetworkChangeCallback {
+    ActivityCompat.OnRequestPermissionsResultCallback,
+    CustomActivitiesDailyDialogClass.DialogClick,
+    NetworkChangeReceiver.NetworkChangeCallback {
   private static final int UPDATE_USERPREFERENCE_RESPONSECODE = 102;
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private static final int GET_PREFERENCES = 112;
@@ -202,6 +202,7 @@ public class SurveyActivitiesFragment extends Fragment
   Intent calculateRunHoldServiceeintent;
   private String name = "";
   private NetworkChangeReceiver networkChangeReceiver;
+  private ActivityData activityDataRunId;
 
   @Override
   public void onAttach(Context context) {
@@ -695,8 +696,8 @@ public class SurveyActivitiesFragment extends Fragment
           "Authorization",
           "Bearer "
               + AppController.getHelperSharedPreference()
-                  .readPreference(
-                      context, getContext().getResources().getString(R.string.auth), ""));
+              .readPreference(
+                  context, getContext().getResources().getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
@@ -750,6 +751,8 @@ public class SurveyActivitiesFragment extends Fragment
             dbServiceSubscriber.getActivityPreference(
                 ((SurveyActivity) context).getStudyId(), realm);
       }
+
+      activityDataRunId = activityData1;
 
       calculateStartAnsEndDateForActivities();
 
@@ -946,7 +949,7 @@ public class SurveyActivitiesFragment extends Fragment
                   String endTime = "";
                   if (activityListData.getActivities().get(i).getAnchorDate() != null
                       && activityListData.getActivities().get(i).getAnchorDate().getStart()
-                          != null) {
+                            != null) {
                     if (!activityListData
                         .getActivities()
                         .get(i)
@@ -1007,7 +1010,7 @@ public class SurveyActivitiesFragment extends Fragment
                     Calendar calendar;
                     if (activityListData.getActivities().get(i).getAnchorDate() != null
                         && activityListData.getActivities().get(i).getAnchorDate().getStart()
-                            != null) {
+                          != null) {
                       calendar = Calendar.getInstance();
                       try {
                         date = simpleDateFormat.parse(arrayList.get(j).getAnchorDate());
@@ -1036,7 +1039,7 @@ public class SurveyActivitiesFragment extends Fragment
                     }
                     if (activityListData.getActivities().get(i).getAnchorDate() != null
                         && activityListData.getActivities().get(i).getAnchorDate().getEnd()
-                            != null) {
+                          != null) {
                       calendar = Calendar.getInstance();
                       try {
                         date = simpleDateFormat.parse(arrayList.get(j).getAnchorDate());
@@ -1977,7 +1980,7 @@ public class SurveyActivitiesFragment extends Fragment
                               + activitiesArrayList.get(i).getActivityId()
                               + "_"
                               + runIds.get(
-                                  activityIds.indexOf(activitiesArrayList.get(i).getActivityId())));
+                              activityIds.indexOf(activitiesArrayList.get(i).getActivityId())));
                     }
                   }
                 }
@@ -2906,8 +2909,8 @@ public class SurveyActivitiesFragment extends Fragment
                     != PackageManager.PERMISSION_GRANTED)) {
               String[] permission =
                   new String[] {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                      Manifest.permission.ACCESS_FINE_LOCATION,
+                      Manifest.permission.ACCESS_COARSE_LOCATION
                   };
               if (!hasPermissions(permission)) {
                 ActivityCompat.requestPermissions(
@@ -3104,14 +3107,20 @@ public class SurveyActivitiesFragment extends Fragment
     }
 
     @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-    }
+    protected void onPreExecute() { super.onPreExecute(); }
 
     @Override
     protected String doInBackground(String... params) {
 
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
+      String actvityRunId = null;
+
+      for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
+        if(anchorDateSchedulingDetails.getSourceActivityId().equalsIgnoreCase(
+            activityDataRunId.getActivities().get(i).getActivityId())) {
+          actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
+        }
+      }
 
       if (connectionDetector.isConnectingToInternet()) {
         Realm realm = AppController.getRealmobj(context);
@@ -3124,7 +3133,7 @@ public class SurveyActivitiesFragment extends Fragment
             "Authorization",
             "Bearer "
                 + SharedPreferenceHelper.readPreference(
-                    context, getContext().getString(R.string.auth), ""));
+                context, getContext().getString(R.string.auth), ""));
         header.put(
             "userId",
             SharedPreferenceHelper.readPreference(
@@ -3153,7 +3162,9 @@ public class SurveyActivitiesFragment extends Fragment
                     + "&questionKey="
                     + anchorDateSchedulingDetails.getSourceKey()
                     + "&activityVersion="
-                    + anchorDateSchedulingDetails.getActivityVersion(),
+                    + anchorDateSchedulingDetails.getActivityVersion()
+                    + "&activityRunId="
+                    + actvityRunId,
                 header,
                 "");
         dbServiceSubscriber.closeRealmObj(realm);
@@ -3233,21 +3244,24 @@ public class SurveyActivitiesFragment extends Fragment
                 String key = entry.getKey();
                 String valueobj = gson.toJson(entry.getValue());
                 Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
-                value = vauleMap.get("value");
-                try {
-                  Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
-                  value = AppController.getDateFormatForApi().format(anchordate);
-                } catch (ParseException e) {
-                  Logger.log(e);
+                if (key.equalsIgnoreCase("anchorDate")){
+                  value = vauleMap.get("value");
+                  try {
+                    Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
+                    value = AppController.getDateFormatForApi().format(anchordate);
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
                 }
+
               }
             }
-
             // updating results back to DB
             StepRecordCustom stepRecordCustom = new StepRecordCustom();
             JSONObject jsonObject2 = new JSONObject();
             jsonObject2.put("answer", "" + value);
             stepRecordCustom.setResult(jsonObject2.toString());
+            stepRecordCustom.setStudyId(anchorDateSchedulingDetails.getStudyId());
             stepRecordCustom.setActivityID(
                 anchorDateSchedulingDetails.getStudyId()
                     + "_STUDYID_"
