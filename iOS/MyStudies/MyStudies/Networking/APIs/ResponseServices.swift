@@ -400,10 +400,11 @@ class ResponseServices: NSObject {
     let user = User.currentUser
     if let activites = response[kActivites] as? [[String: Any]] {
       if Study.currentStudy != nil {
+        guard let studyId = Study.currentStudy?.studyId else { return }
         for activity in activites {
           let participatedActivity = UserActivityStatus(
             detail: activity,
-            studyId: (Study.currentStudy?.studyId)!
+            studyId: studyId
           )
           user.participatedActivites.append(participatedActivity)
         }
@@ -482,6 +483,13 @@ extension ResponseServices: NMWebServiceDelegate {
         if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
           // Save in database if fails due to network
           // Ignore save for Sync request as the object already avaiable in the DB.
+          DBHandler.saveRequestInformation(
+            params: self.requestParams,
+            headers: self.headerParams,
+            method: requestName as String,
+            server: SyncUpdate.ServerType.response.rawValue
+          )
+        } else if (error.code >= -2000 && error.code <= -1000) {
           DBHandler.saveRequestInformation(
             params: self.requestParams,
             headers: self.headerParams,

@@ -322,12 +322,13 @@ public class SurveyScheduler {
   private void setMonthlyRun(ActivitiesWS activity, int offset) {
     if (startTime != null) {
       Calendar startCalendar = Calendar.getInstance();
-      if (joiningTime.after(startTime)) {
-        startCalendar.setTime(joiningTime);
-      } else {
-        startCalendar.setTime(startTime);
-      }
+//      if (joiningTime.after(startTime)) {
+//        startCalendar.setTime(joiningTime);
+//      } else {
+//        startCalendar.setTime(startTime);
+//      }
 
+      startCalendar.setTime(startTime);
       Calendar startTimeCalender = Calendar.getInstance();
       startTimeCalender.setTime(startTime);
 

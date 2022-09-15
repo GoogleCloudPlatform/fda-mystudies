@@ -62,6 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   var blockerScreen: AppUpdateBlocker?
   var passcodeParentControllerWhileSetup: UIViewController?
+  weak var delegateComprehension: ActivitiesComprehensionFailureDelegate?
     
   private var reachability: Reachability!
 
@@ -249,7 +250,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
       if Utilities.isValidObject(someObject: notification as AnyObject) {  // Launched from Remote Notification
 
         notificationDetails = notification as? [String: Any]
-
+print("1notificationDetails---\(notificationDetails)")
+        
+        UserDefaults.standard.set("\(notificationDetails)", forKey: "newactivity3")
+        UserDefaults.standard.synchronize()
+        
         let ud = UserDefaults.standard
         ud.set(true, forKey: kShowNotification)
         ud.synchronize()
@@ -551,10 +556,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   /// Check the  current Consent Status for Updated Version
   /// - Parameter controller: Instance of `UIVIewController`
   func checkConsentStatus(controller: UIViewController) {
-    
+    print("51StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     self.selectedController = controller
+      var isRetryViewHidden = true
+      if let retryView = self.retryView {
+          isRetryViewHidden = retryView.isHidden
+      }
     
-    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+    if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain && isRetryViewHidden {
       // Study consent is updated: Please Present Consent UI.
       //      guard let navigationController = self.window?.rootViewController as? UINavigationController else { return }
       //      var topController: UIViewController = navigationController
@@ -589,13 +598,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                   self.reachability = try Reachability()
                 } catch(let error) { }
               if self.reachability.connection != .unavailable {
-                  self.addAndRemoveProgress(add: true)
-                  WCPServices().getEligibilityConsentMetadata(
-                    studyId: (Study.currentStudy?.studyId)!,
-                    delegate: self as NMWebServiceDelegate
-                  )
+//                  self.addAndRemoveProgress(add: true)
+                  if let studyId = Study.currentStudy?.studyId {
+                      WCPServices().getEligibilityConsentMetadata( studyId: studyId, delegate: self as NMWebServiceDelegate)
+                  }
               } else {
                   if controller.isKind(of: ActivitiesViewController.self) {
+                      self.addAndRemoveProgress(add: false)
+                      controller.removeProgressIndicator()
                       ReachabilityIndicatorManager.shared.presentIndicator(viewController: controller, isOffline: true)
                   }
               }
@@ -693,6 +703,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   /// Handler for local & remote notification
   /// - Parameter userInfoDetails: contains the info for notification
   func handleLocalAndRemoteNotification(userInfoDetails: JSONDictionary?) {
+    
+    let studyId2 = userInfoDetails?[kStudyId] as? String ?? ""
+    
+    UserDefaults.standard.set("\(studyId2)", forKey: "newactivity1")
+    
+    let userInfoDetails2 = userInfoDetails
+    
+    UserDefaults.standard.set("\(userInfoDetails)", forKey: "newactivity2")
+    UserDefaults.standard.synchronize()
+    
+    
     var initialVC: UIViewController?
     notificationDetails = nil//NEEEW
     NotificationHandler.instance.reset()
@@ -1494,7 +1515,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
   /// Handler for Study Update Info
   func handleStudyUpdatedInformation() {
-
+    print("67StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     if Study.currentStudy != nil {
 
       Study.currentStudy?.newVersion = StudyUpdates.studyVersion
@@ -1563,6 +1584,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
             if !self.isPasscodePresented! {
               // Check for Consent Updated
+              print("43StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
               self.checkConsentStatus(controller: self.selectedController!)
             }
 
@@ -1781,10 +1803,14 @@ extension AppDelegate {
 // MARK: Webservices delegates
 
 extension AppDelegate: NMWebServiceDelegate {
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
-
+  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
+      if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
+          self.addAndRemoveProgress(add: true)
+      }
+  }
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
     if requestName as String == WCPMethods.eligibilityConsent.method.methodName {
+      self.addAndRemoveProgress(add: false)
       self.createEligibilityConsentTask()
 
     } else if requestName as String
@@ -1796,6 +1822,7 @@ extension AppDelegate: NMWebServiceDelegate {
         currentStudy.version = currentStudy.newVersion
       }
     } else if requestName as String == WCPMethods.studyUpdates.rawValue {
+      print("66StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
       self.handleStudyUpdatedInformation()
 
     } else if requestName as String == RegistrationMethods.updateUserProfile.description {
@@ -1950,14 +1977,100 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
       }
     }
   }
-
+    func taskViewController(_ taskViewController: ORKTaskViewController, willChange result: ORKTaskResult) {
+        if let identifier =
+            taskViewController.currentStepViewController?.step?.identifier {
+            do {
+                self.reachability = try Reachability()
+              } catch(let error) { }
+            if reachability.connection == .unavailable && identifier == "Review" {
+                taskViewController.view.hideAllToasts()
+                UIUtilities.showAlertMessageWithActionHandler(
+                  "You are offline",
+                  message:
+                    kOffline,
+                  buttonTitle: kTitleOk,
+                  viewControllerUsed: taskViewController,
+                  action: {
+                      taskViewController.dismiss(
+                        animated: true,
+                        completion: nil
+                      )
+                  }
+                )
+            }
+        }
+    }
+    func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
+        print("---------Result change result")
+//        if let identifier =
+      //taskViewController.currentStepViewController?.step?.identifier {
+            do {
+                self.reachability = try Reachability()
+              } catch(let error) { }
+            if reachability.connection == .unavailable {
+                taskViewController.view.hideAllToasts()
+                UIUtilities.showAlertMessageWithActionHandler(
+                  "You are offline",
+                  message:
+                    kOffline,
+                  buttonTitle: kTitleOk,
+                  viewControllerUsed: taskViewController,
+                  action: {
+                      taskViewController.dismiss(
+                        animated: true,
+                        completion: nil
+                      )
+                  }
+                )
+            }
+//        }
+    }
   // MARK: - StepViewController Delegate
 
-  public func stepViewController(
-    _ stepViewController: ORKStepViewController,
-    didFinishWith direction: ORKStepViewControllerNavigationDirection
-  ) {}
+    public func stepViewController(
+      stepViewController: ORKStepViewController,
+      didFinishWith _: ORKStepViewControllerNavigationDirection
+    ) {
 
+        print("\n---------step navigation next button")
+        if reachability.connection == .unavailable {
+
+            stepViewController.view.hideAllToasts()
+            UIUtilities.showAlertMessageWithActionHandler(
+              "You are offline",
+              message: kOffline,
+              buttonTitle: kTitleOk,
+              viewControllerUsed: stepViewController,
+              action: {
+                  stepViewController.dismiss(
+                    animated: true,
+                    completion: nil
+                  )
+              }
+            )
+
+            
+        }
+    }
+  func taskViewController(_ taskViewController: ORKTaskViewController, stepViewControllerWillDisappear stepViewController: ORKStepViewController,
+                          navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+      if reachability.connection == .unavailable {
+          taskViewController.view.hideAllToasts()
+          UIUtilities.showAlertMessageWithActionHandler(
+            "You are offline",
+            message: kOffline,
+            buttonTitle: kTitleOk,
+            viewControllerUsed: taskViewController,
+            action: {
+              taskViewController.dismiss(
+                animated: true,
+                completion: nil
+                )
+            }
+          )
+      }
+  }
   public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
   }
 
@@ -1980,7 +2093,7 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             taskViewController.view.hideAllToasts()
             UIUtilities.showAlertMessageWithActionHandler(
               "You are offline",
-              message: "You may require internet connection to move forward with this flow. Kindly check the internet and try again later.",
+              message: kOffline,
               buttonTitle: kTitleOk,
               viewControllerUsed: taskViewController,
               action: {
@@ -2034,9 +2147,11 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
             as? ORKConsentSignatureResult
 
           if consentSignatureResult?.consented == false {  // Disgreed
-            taskViewController.dismiss(animated: true, completion: nil)
-
-            self.popViewControllerAfterConsentDisagree()
+              if reachability.connection != .unavailable {
+                  taskViewController.dismiss(animated: true, completion: nil)
+                  self.popViewControllerAfterConsentDisagree()
+              }
+            
             return nil
 
           } else if reachability.connection != .unavailable {  // Consented
@@ -2259,6 +2374,7 @@ extension AppDelegate: ORKPasscodeDelegate {
         }
 
         if self.selectedController != nil {
+          print("44StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
           self.checkConsentStatus(controller: self.selectedController!)
         }
       }
@@ -2338,11 +2454,20 @@ extension AppDelegate: ORKPasscodeDelegate {
 
 extension AppDelegate: ComprehensionFailureDelegate {
   func didTapOnCancel() {
+    print("2didTapOnCancel---")
+    if Utilities.isStandaloneApp() {
+      self.delegateComprehension?.didTapOnActivityRetry()
+    }
     self.popViewControllerAfterConsentDisagree()
+    
+//    if Utilities.isStandaloneApp() {
+//      self.delegateComprehension?.didTapOnActivityRetry()
+//    }
   }
 
   func didTapOnRetry() {
     // Create Consent Task on Retry
+    print("2didTapOnRetry---")
     self.createEligibilityConsentTask()
   }
   
@@ -2392,6 +2517,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     let userInfo = response.notification.request.content.userInfo
     UIApplication.shared.applicationIconBadgeNumber = 0
+    
+    UserDefaults.standard.set("\(userInfo as? JSONDictionary ?? [:])", forKey: "newactivity4")
+            UserDefaults.standard.synchronize()
 
     if UIApplication.shared.applicationState == UIApplication.State.background
       || UIApplication.shared.applicationState == UIApplication.State.active

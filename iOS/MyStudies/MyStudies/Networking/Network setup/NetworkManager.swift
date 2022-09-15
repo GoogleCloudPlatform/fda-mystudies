@@ -106,7 +106,15 @@ class NetworkManager {
     } else {
       networkAvailability = false
     }
+    var val1 = UserDefaults.standard.value(forKey: "sync") as? String ?? "finished"
+//    val1 = val1 ? " ":
+    if networkAvailability && (val1 == "finished" || val1 == "") {
+      print("8syncObj---\(val1)")
+//     let val2 = val1 + 1
+//      UserDefaults.standard.setValue("\(val2)", forKey: "sync")
+//      UserDefaults.standard.synchronize()
     SyncUpdate.sharedInstance.updateData(isReachable: networkAvailability)
+    }
   }
 
   /// Compose request

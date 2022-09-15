@@ -164,6 +164,7 @@ class DBStatisticsData: Object {
 
 class DBResources: Object {
 
+  @objc dynamic var order: Int = 0
   @objc dynamic var studyId: String?
   @objc dynamic var level: String?
   @objc dynamic var key: String?

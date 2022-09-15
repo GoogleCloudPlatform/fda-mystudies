@@ -158,11 +158,11 @@ class SignInViewController: UIViewController {
         switch reachability.connection {
         case .cellular:
             self.view.hideAllToasts()
-            loadContent()
+//            loadContent()
             break
         case .wifi:
             self.view.hideAllToasts()
-            loadContent()
+//            loadContent()
             break
         case .none:
             self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
@@ -230,6 +230,7 @@ class SignInViewController: UIViewController {
   }
 
   fileprivate func handleDataCallback(_ url: URL) {
+    print("handleDataCallback---\(url)---\(url["code"])")
     if let code = url["code"],
       let userID = url["userId"],
       let status = Int(url["accountStatus"] ?? ""),
@@ -276,6 +277,7 @@ class SignInViewController: UIViewController {
   /// Grants the user for access token.
   /// - Parameter code: Login authentication code from callback.
   private func grantVerifiedUser(with code: String) {
+    print("grantVerifiedUser---\(code)")
     HydraAPI.grant(user: User.currentUser, with: code) { [weak self] (status, error) in
       if status {
         if self?.viewLoadFrom == .signUp {
@@ -537,6 +539,8 @@ extension SignInViewController: WKNavigationDelegate {
     decidePolicyFor navigationAction: WKNavigationAction,
     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
   ) {
+    print("navigationAction.request.url---\(navigationAction.request.url)")
+    print("navigationAction.request.url.scheme---\(navigationAction.request.url?.scheme)")
     if let url = navigationAction.request.url, url.scheme == "app" {
       decisionHandler(.cancel)
       // Handle the callbacks
