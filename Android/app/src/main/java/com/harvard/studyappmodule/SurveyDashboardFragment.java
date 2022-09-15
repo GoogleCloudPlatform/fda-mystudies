@@ -47,12 +47,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -69,6 +71,7 @@ import com.harvard.studyappmodule.studymodel.ResponseInfoActiveTaskModel;
 import com.harvard.studyappmodule.studymodel.Statistics;
 import com.harvard.studyappmodule.surveyscheduler.SurveyScheduler;
 import com.harvard.studyappmodule.surveyscheduler.model.CompletionAdherence;
+import com.harvard.usermodule.webservicemodel.ActivityData;
 import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
@@ -81,9 +84,11 @@ import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
+
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
@@ -96,6 +101,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,6 +167,7 @@ public class SurveyDashboardFragment extends Fragment
   private ArrayList<String> arrayListDup;
   private CustomFirebaseAnalytics analyticsInstance;
   private NetworkChangeReceiver networkChangeReceiver;
+  private ActivityData activityDataRunId;
 
   // NOTE: Regarding Day, Week and Month functionality
   //  currently day functionality next, previous are working
@@ -712,12 +719,12 @@ public class SurveyDashboardFragment extends Fragment
   private void screenshotWritingPermission(View view) {
     // checking the permissions
     if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED)
+        != PackageManager.PERMISSION_GRANTED)
         || (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED)) {
+        != PackageManager.PERMISSION_GRANTED)) {
       String[] permission =
-          new String[] {
-            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+          new String[]{
+              Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
           };
       if (!hasPermissions(permission)) {
         ActivityCompat.requestPermissions((Activity) context, permission, PERMISSION_REQUEST_CODE);
@@ -1177,12 +1184,12 @@ public class SurveyDashboardFragment extends Fragment
               new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
               dashboardData
-                      .getDashboard()
-                      .getStatistics()
-                      .get(i)
-                      .getDataSource()
-                      .getActivity()
-                      .getActivityId()
+                  .getDashboard()
+                  .getStatistics()
+                  .get(i)
+                  .getDataSource()
+                  .getActivity()
+                  .getActivityId()
                   + ","
                   + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
@@ -1206,12 +1213,12 @@ public class SurveyDashboardFragment extends Fragment
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
                 dashboardData
-                        .getDashboard()
-                        .getStatistics()
-                        .get(i)
-                        .getDataSource()
-                        .getActivity()
-                        .getActivityId()
+                    .getDashboard()
+                    .getStatistics()
+                    .get(i)
+                    .getDataSource()
+                    .getActivity()
+                    .getActivityId()
                     + ","
                     + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
           }
@@ -1221,12 +1228,12 @@ public class SurveyDashboardFragment extends Fragment
               new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
               dashboardData
-                      .getDashboard()
-                      .getCharts()
-                      .get(i)
-                      .getDataSource()
-                      .getActivity()
-                      .getActivityId()
+                  .getDashboard()
+                  .getCharts()
+                  .get(i)
+                  .getDataSource()
+                  .getActivity()
+                  .getActivityId()
                   + ","
                   + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
@@ -1250,12 +1257,12 @@ public class SurveyDashboardFragment extends Fragment
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
                 dashboardData
-                        .getDashboard()
-                        .getCharts()
-                        .get(i)
-                        .getDataSource()
-                        .getActivity()
-                        .getActivityId()
+                    .getDashboard()
+                    .getCharts()
+                    .get(i)
+                    .getDataSource()
+                    .getActivity()
+                    .getActivityId()
                     + ","
                     + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey());
           }
@@ -1265,10 +1272,10 @@ public class SurveyDashboardFragment extends Fragment
       studies = dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
       if (arrayList.size() > 0) {
         new ResponseData(
-                ((SurveyActivity) context).getStudyId(),
-                arrayList.get(0),
-                studies.getParticipantId(),
-                0)
+            ((SurveyActivity) context).getStudyId(),
+            arrayList.get(0),
+            studies.getParticipantId(),
+            0)
             .execute();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
@@ -1395,6 +1402,15 @@ public class SurveyDashboardFragment extends Fragment
 
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
 
+      String actvityRunId = null;
+
+      for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
+        if (responseInfoActiveTaskModel.getActivityId().equalsIgnoreCase(
+            activityDataRunId.getActivities().get(i).getActivityId())) {
+          actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
+        }
+      }
+
       if (connectionDetector.isConnectingToInternet()) {
         Realm realm = AppController.getRealmobj(context);
 
@@ -1407,7 +1423,7 @@ public class SurveyDashboardFragment extends Fragment
             "Authorization",
             "Bearer "
                 + SharedPreferenceHelper.readPreference(
-                    context, getContext().getString(R.string.auth), ""));
+                context, getContext().getString(R.string.auth), ""));
         header.put(
             "userId",
             SharedPreferenceHelper.readPreference(
@@ -1432,7 +1448,9 @@ public class SurveyDashboardFragment extends Fragment
                     + "&questionKey="
                     + responseInfoActiveTaskModel.getKey()
                     + "&activityVersion="
-                    + responseInfoActiveTaskModel.getActivityVersion(),
+                    + responseInfoActiveTaskModel.getActivityVersion()
+                    + "&activityRunId="
+                    + actvityRunId,
                 header,
                 "");
         dbServiceSubscriber.closeRealmObj(realm);
@@ -1475,6 +1493,8 @@ public class SurveyDashboardFragment extends Fragment
       id = responseInfoActiveTaskModel.getActivityId();
       stepKey = responseInfoActiveTaskModel.getKey();
       ActivityListData activityListData = dbServiceSubscriber.getActivities(studyId, realm);
+      activityDataRunId = dbServiceSubscriber.getActivityPreference((
+          (SurveyActivity) context).getStudyId(), realm);
       if (activityListData != null) {
         RealmList<ActivitiesWS> activitiesWSes = activityListData.getActivities();
         for (int i = 0; i < activitiesWSes.size(); i++) {
@@ -1515,10 +1535,10 @@ public class SurveyDashboardFragment extends Fragment
             if (exception.contains("Query or table not found")) {
               if (arrayList.size() > (position + 1)) {
                 new ResponseData(
-                        ((SurveyActivity) context).getStudyId(),
-                        arrayList.get((position + 1)),
-                        studies.getParticipantId(),
-                        position + 1)
+                    ((SurveyActivity) context).getStudyId(),
+                    arrayList.get((position + 1)),
+                    studies.getParticipantId(),
+                    position + 1)
                     .execute();
               } else {
                 addViewStatisticsValues();
@@ -1546,7 +1566,8 @@ public class SurveyDashboardFragment extends Fragment
               Date completedDate = null;
               for (int j = 0; j < jsonArray1.length(); j++) {
                 JSONObject jsonObjectData = (JSONObject) jsonArray1.get(j);
-                Type type = new TypeToken<Map<String, Object>>() {}.getType();
+                Type type = new TypeToken<Map<String, Object>>() {
+                }.getType();
                 Map<String, Object> map = gson.fromJson(String.valueOf(jsonObjectData), type);
                 StepRecordCustom stepRecordCustom = new StepRecordCustom();
                 if (completedDate == null) {
@@ -1706,10 +1727,10 @@ public class SurveyDashboardFragment extends Fragment
             }
             if (arrayList.size() > (position + 1)) {
               new ResponseData(
-                      ((SurveyActivity) context).getStudyId(),
-                      arrayList.get((position + 1)),
-                      studies.getParticipantId(),
-                      position + 1)
+                  ((SurveyActivity) context).getStudyId(),
+                  arrayList.get((position + 1)),
+                  studies.getParticipantId(),
+                  position + 1)
                   .execute();
             } else {
               addViewStatisticsValues();
@@ -1719,10 +1740,10 @@ public class SurveyDashboardFragment extends Fragment
             Logger.log(e);
             if (arrayList.size() > (position + 1)) {
               new ResponseData(
-                      ((SurveyActivity) context).getStudyId(),
-                      arrayList.get((position + 1)),
-                      studies.getParticipantId(),
-                      position + 1)
+                  ((SurveyActivity) context).getStudyId(),
+                  arrayList.get((position + 1)),
+                  studies.getParticipantId(),
+                  position + 1)
                   .execute();
             } else {
               addViewStatisticsValues();
@@ -1732,10 +1753,10 @@ public class SurveyDashboardFragment extends Fragment
         } else {
           if (arrayList.size() > (position + 1)) {
             new ResponseData(
-                    ((SurveyActivity) context).getStudyId(),
-                    arrayList.get((position + 1)),
-                    studies.getParticipantId(),
-                    position + 1)
+                ((SurveyActivity) context).getStudyId(),
+                arrayList.get((position + 1)),
+                studies.getParticipantId(),
+                position + 1)
                 .execute();
           } else {
             addViewStatisticsValues();
