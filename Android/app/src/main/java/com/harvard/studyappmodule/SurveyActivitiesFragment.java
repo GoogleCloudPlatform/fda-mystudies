@@ -950,7 +950,7 @@ public class SurveyActivitiesFragment extends Fragment
                   String endTime = "";
                   if (activityListData.getActivities().get(i).getAnchorDate() != null
                       && activityListData.getActivities().get(i).getAnchorDate().getStart()
-                      != null) {
+                            != null) {
                     if (!activityListData
                         .getActivities()
                         .get(i)
@@ -1011,7 +1011,7 @@ public class SurveyActivitiesFragment extends Fragment
                     Calendar calendar;
                     if (activityListData.getActivities().get(i).getAnchorDate() != null
                         && activityListData.getActivities().get(i).getAnchorDate().getStart()
-                        != null) {
+                          != null) {
                       calendar = Calendar.getInstance();
                       try {
                         date = simpleDateFormat.parse(arrayList.get(j).getAnchorDate());
@@ -1040,7 +1040,7 @@ public class SurveyActivitiesFragment extends Fragment
                     }
                     if (activityListData.getActivities().get(i).getAnchorDate() != null
                         && activityListData.getActivities().get(i).getAnchorDate().getEnd()
-                        != null) {
+                          != null) {
                       calendar = Calendar.getInstance();
                       try {
                         date = simpleDateFormat.parse(arrayList.get(j).getAnchorDate());
@@ -1261,21 +1261,21 @@ public class SurveyActivitiesFragment extends Fragment
                     // custom runs
                     if (activityListData.getActivities().get(i).getStartTime().equalsIgnoreCase("")
                         && activityListData
-                        .getActivities()
-                        .get(i)
-                        .getEndTime()
-                        .equalsIgnoreCase("")) {
+                            .getActivities()
+                            .get(i)
+                            .getEndTime()
+                            .equalsIgnoreCase("")) {
                       Calendar startCalendar;
                       Calendar endCalendar;
                       for (int k = 0;
-                           k
-                               < activityListData
-                               .getActivities()
-                               .get(i)
-                               .getFrequency()
-                               .getAnchorRuns()
-                               .size();
-                           k++) {
+                          k
+                              < activityListData
+                                  .getActivities()
+                                  .get(i)
+                                  .getFrequency()
+                                  .getAnchorRuns()
+                                  .size();
+                          k++) {
                         startCalendar = Calendar.getInstance();
                         endCalendar = Calendar.getInstance();
 
@@ -1305,12 +1305,12 @@ public class SurveyActivitiesFragment extends Fragment
                                 dateSimpleDateFormat.format(startCalendar.getTime())
                                     + "T"
                                     + activityListData
-                                    .getActivities()
-                                    .get(i)
-                                    .getFrequency()
-                                    .getAnchorRuns()
-                                    .get(k)
-                                    .getStartTime()
+                                        .getActivities()
+                                        .get(i)
+                                        .getFrequency()
+                                        .getAnchorRuns()
+                                        .get(k)
+                                        .getStartTime()
                                     + ".000"
                                     + timezoneSimpleDateFormat.format(startCalendar.getTime()));
 
@@ -1340,12 +1340,12 @@ public class SurveyActivitiesFragment extends Fragment
                                 dateSimpleDateFormat.format(endCalendar.getTime())
                                     + "T"
                                     + activityListData
-                                    .getActivities()
-                                    .get(i)
-                                    .getFrequency()
-                                    .getAnchorRuns()
-                                    .get(k)
-                                    .getEndTime()
+                                        .getActivities()
+                                        .get(i)
+                                        .getFrequency()
+                                        .getAnchorRuns()
+                                        .get(k)
+                                        .getEndTime()
                                     + ".000"
                                     + timezoneSimpleDateFormat.format(endCalendar.getTime()));
 
@@ -1436,8 +1436,8 @@ public class SurveyActivitiesFragment extends Fragment
                   realm);
           if (activitiesWS != null
               && !activitiesWS
-              .getActivityVersion()
-              .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
+                  .getActivityVersion()
+                  .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
             activityUpdated = true;
             // update ActivityWS DB with new version
             dbServiceSubscriber.updateActivitiesWsVersion(
@@ -1463,8 +1463,8 @@ public class SurveyActivitiesFragment extends Fragment
                 realm);
         if (activitiesWS != null
             && !activitiesWS
-            .getActivityVersion()
-            .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
+                .getActivityVersion()
+                .equalsIgnoreCase(activityListData.getActivities().get(j).getActivityVersion())) {
           activityUpdated = true;
           // update ActivityWS DB with new version
           dbServiceSubscriber.updateActivitiesWsVersion(
@@ -1535,10 +1535,10 @@ public class SurveyActivitiesFragment extends Fragment
       for (int i = 0; i < studyVideoAdapter.items.size(); i++) {
         if (studyVideoAdapter.items.get(i).getActivityId() != null
             && studyVideoAdapter
-            .items
-            .get(i)
-            .getActivityId()
-            .equalsIgnoreCase(((SurveyActivity) context).activityId)) {
+                .items
+                .get(i)
+                .getActivityId()
+                .equalsIgnoreCase(((SurveyActivity) context).activityId)) {
           position = i;
           break;
         }
@@ -1555,19 +1555,19 @@ public class SurveyActivitiesFragment extends Fragment
         Toast.makeText(context, R.string.study_Joined_paused, Toast.LENGTH_SHORT).show();
       } else {
         if (studyVideoAdapter
-            .status
-            .get(position)
-            .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
+                .status
+                .get(position)
+                .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_CURRENT)
             && (studyVideoAdapter
-            .currentRunStatusForActivities
-            .get(position)
-            .getStatus()
-            .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)
-            || studyVideoAdapter
-            .currentRunStatusForActivities
-            .get(position)
-            .getStatus()
-            .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START))) {
+                    .currentRunStatusForActivities
+                    .get(position)
+                    .getStatus()
+                    .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)
+                || studyVideoAdapter
+                    .currentRunStatusForActivities
+                    .get(position)
+                    .getStatus()
+                    .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START))) {
           if (studyVideoAdapter.currentRunStatusForActivities.get(position).isRunIdAvailable()) {
             getActivityInfo(
                 studyVideoAdapter.items.get(position).getActivityId(),
@@ -1735,10 +1735,10 @@ public class SurveyActivitiesFragment extends Fragment
                 activityAvailable = true;
                 if (activityListDataDB.getActivities().get(i).getStartTime().equalsIgnoreCase("")
                     && !activityListData
-                    .getActivities()
-                    .get(j)
-                    .getStartTime()
-                    .equalsIgnoreCase("")) {
+                        .getActivities()
+                        .get(j)
+                        .getStartTime()
+                        .equalsIgnoreCase("")) {
                   dbServiceSubscriber.saveActivityStartTime(
                       activityListDataDB.getActivities().get(i),
                       realm,
@@ -1771,10 +1771,10 @@ public class SurveyActivitiesFragment extends Fragment
                 activityAvailable = true;
                 if (activityListData.getActivities().get(j).getState().equalsIgnoreCase(DELETE)
                     && activityListDataDB
-                    .getActivities()
-                    .get(i)
-                    .getState()
-                    .equalsIgnoreCase(ACTIVE)) {
+                        .getActivities()
+                        .get(i)
+                        .getState()
+                        .equalsIgnoreCase(ACTIVE)) {
                   RealmResults<ActivityRun> activityRuns =
                       dbServiceSubscriber.getAllActivityRunFromDB(
                           ((SurveyActivity) context).getStudyId(),
@@ -1844,8 +1844,8 @@ public class SurveyActivitiesFragment extends Fragment
 
             if (!activitiesArrayList.get(i).getStartTime().equalsIgnoreCase("")) {
               if ((activitiesArrayList.get(i).getEndTime().equalsIgnoreCase("")
-                  && activitiesArrayList.get(i).getAnchorDate() != null
-                  && activitiesArrayList.get(i).getAnchorDate().getEnd() != null)
+                      && activitiesArrayList.get(i).getAnchorDate() != null
+                      && activitiesArrayList.get(i).getAnchorDate().getEnd() != null)
                   || !activitiesArrayList.get(i).getEndTime().equalsIgnoreCase("")) {
                 try {
                   starttime =
@@ -2014,8 +2014,8 @@ public class SurveyActivitiesFragment extends Fragment
                 if (AppController.isWithinRange(starttime, endtime)) {
                   if (activityStatus.getCurrentRunId() == activityStatus.getTotalRun()
                       && activityStatus
-                      .getStatus()
-                      .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
+                          .getStatus()
+                          .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_COMPLETED)) {
                     completedactivityList.add(activitiesArrayList.get(i));
                     completedActivityStatus.add(activityStatus);
                     completedStatus.add(STATUS_COMPLETED);
@@ -2122,13 +2122,13 @@ public class SurveyActivitiesFragment extends Fragment
       ArrayList<String> otherStatusList = new ArrayList<>();
       for (int i = 0; i < currentactivityList.size(); i++) {
         if (currentActivityStatus
-            .get(i)
-            .getStatus()
-            .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START)
+                .get(i)
+                .getStatus()
+                .equalsIgnoreCase(SurveyActivitiesFragment.YET_To_START)
             || currentActivityStatus
-            .get(i)
-            .getStatus()
-            .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)) {
+                .get(i)
+                .getStatus()
+                .equalsIgnoreCase(SurveyActivitiesFragment.IN_PROGRESS)) {
           yetToStartOrResumeList.add(currentactivityList.get(i));
           yetToStartOrResumeActivityStatusList.add(currentActivityStatus.get(i));
           yetToStartOrResumeStatusList.add(currentStatus.get(i));
@@ -2264,10 +2264,10 @@ public class SurveyActivitiesFragment extends Fragment
           activitiesWS.setStudyLifeTime(activitiesArrayList.get(k).isStudyLifeTime());
           activitiesWS.setSchedulingType(activitiesArrayList.get(k).getSchedulingType());
           if (activitiesArrayList
-              .get(k)
-              .getFrequency()
-              .getType()
-              .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)
+                  .get(k)
+                  .getFrequency()
+                  .getType()
+                  .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)
               && activitiesArrayList.get(k).getAnchorDate() != null) {
             SchedulingAnchorDate schedulingAnchorDate = new SchedulingAnchorDate();
             schedulingAnchorDate.setSourceType(
@@ -2565,7 +2565,7 @@ public class SurveyActivitiesFragment extends Fragment
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-            .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
+                .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
@@ -2894,11 +2894,11 @@ public class SurveyActivitiesFragment extends Fragment
           }
           if (locationPermission) {
             if ((ActivityCompat.checkSelfPermission(
-                context, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)
+                        context, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED)
                 || (ActivityCompat.checkSelfPermission(
-                context, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)) {
+                        context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED)) {
               String[] permission =
                   new String[] {
                       Manifest.permission.ACCESS_FINE_LOCATION,
@@ -2976,7 +2976,7 @@ public class SurveyActivitiesFragment extends Fragment
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-            .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
+                .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()

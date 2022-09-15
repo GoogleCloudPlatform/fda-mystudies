@@ -325,8 +325,8 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
         if (dbServiceSubscriber.getStudyResource(getIntent().getStringExtra(STUDYID), realm)
             == null) {
         } else if (dbServiceSubscriber
-            .getStudyResource(getIntent().getStringExtra(STUDYID), realm)
-            .getResources()
+                .getStudyResource(getIntent().getStringExtra(STUDYID), realm)
+                .getResources()
             == null) {
         } else {
           StudyHome studyHome = null;

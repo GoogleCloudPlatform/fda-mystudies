@@ -367,10 +367,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
           if (resourceArrayList.get(i).getAvailability() != null
               && resourceArrayList.get(i).getAvailability().getAvailableDate() != null
               && !resourceArrayList
-              .get(i)
-              .getAvailability()
-              .getAvailableDate()
-              .equalsIgnoreCase("")) {
+                  .get(i)
+                  .getAvailability()
+                  .getAvailableDate()
+                  .equalsIgnoreCase("")) {
             try {
               Calendar expiryDate = Calendar.getInstance();
               expiryDate.setTime(
@@ -392,9 +392,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
 
               Calendar currentday = Calendar.getInstance();
               if ((currentday.getTime().before(expiryDate.getTime())
-                  || currentday.getTime().equals(expiryDate.getTime()))
+                      || currentday.getTime().equals(expiryDate.getTime()))
                   && (currentday.getTime().after(availableDate.getTime())
-                  || currentday.getTime().equals(availableDate.getTime()))) {
+                      || currentday.getTime().equals(availableDate.getTime()))) {
                 resources.add(resourceArrayList.get(i));
               }
             } catch (ParseException e) {
@@ -442,10 +442,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                         Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
                     if (resourceArrayList.get(i).getAvailability().getStartTime() == null
                         || resourceArrayList
-                        .get(i)
-                        .getAvailability()
-                        .getStartTime()
-                        .equalsIgnoreCase("")) {
+                            .get(i)
+                            .getAvailability()
+                            .getStartTime()
+                            .equalsIgnoreCase("")) {
                       startCalender.set(Calendar.HOUR_OF_DAY, 0);
                       startCalender.set(Calendar.MINUTE, 0);
                       startCalender.set(Calendar.SECOND, 0);
@@ -490,10 +490,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
 
                     if (resourceArrayList.get(i).getAvailability().getEndTime() == null
                         || resourceArrayList
-                        .get(i)
-                        .getAvailability()
-                        .getEndTime()
-                        .equalsIgnoreCase("")) {
+                            .get(i)
+                            .getAvailability()
+                            .getEndTime()
+                            .equalsIgnoreCase("")) {
                       endCalender.set(Calendar.HOUR_OF_DAY, 23);
                       endCalender.set(Calendar.MINUTE, 59);
                       endCalender.set(Calendar.SECOND, 59);
@@ -508,9 +508,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     Calendar currentday = Calendar.getInstance();
 
                     if ((currentday.getTime().after(startCalender.getTime())
-                        || currentday.getTime().equals(startCalender.getTime()))
+                            || currentday.getTime().equals(startCalender.getTime()))
                         && (currentday.getTime().before(endCalender.getTime())
-                        || currentday.getTime().equals(endCalender.getTime()))) {
+                            || currentday.getTime().equals(endCalender.getTime()))) {
                       resources.add(resourceArrayList.get(i));
                     }
                   } catch (JSONException | ParseException e) {
@@ -544,10 +544,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                 }
                 if (resourceArrayList.get(i).getAvailability().getStartTime() == null
                     || resourceArrayList
-                    .get(i)
-                    .getAvailability()
-                    .getStartTime()
-                    .equalsIgnoreCase("")) {
+                        .get(i)
+                        .getAvailability()
+                        .getStartTime()
+                        .equalsIgnoreCase("")) {
                   startCalender.set(Calendar.HOUR_OF_DAY, 0);
                   startCalender.set(Calendar.MINUTE, 0);
                   startCalender.set(Calendar.SECOND, 0);
@@ -577,21 +577,13 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     }
                   }
                 }
-//                if (notificationsDb == null) {
-////                  setRemainder(
-////                      startCalender,
-////                      AppController.getSourceActivityId(resourceArrayList.get(i)),
-////                      ((SurveyActivity) context).getStudyId(),
-////                      resourceArrayList.get(i).getNotificationText(),
-////                      resourceArrayList.get(i).getResourcesId());
-//                }
 
                 if (resourceArrayList.get(i).getAvailability().getEndTime() == null
                     || resourceArrayList
-                    .get(i)
-                    .getAvailability()
-                    .getEndTime()
-                    .equalsIgnoreCase("")) {
+                        .get(i)
+                        .getAvailability()
+                        .getEndTime()
+                        .equalsIgnoreCase("")) {
                   endCalender.set(Calendar.HOUR_OF_DAY, 23);
                   endCalender.set(Calendar.MINUTE, 59);
                   endCalender.set(Calendar.SECOND, 59);
@@ -606,9 +598,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                 Calendar currentday = Calendar.getInstance();
 
                 if ((currentday.getTime().after(startCalender.getTime())
-                    || currentday.getTime().equals(startCalender.getTime()))
+                        || currentday.getTime().equals(startCalender.getTime()))
                     && (currentday.getTime().before(endCalender.getTime())
-                    || currentday.getTime().equals(endCalender.getTime()))) {
+                        || currentday.getTime().equals(endCalender.getTime()))) {
                   resources.add(resourceArrayList.get(i));
                 }
               } catch (ParseException e) {
@@ -625,10 +617,12 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     } else {
       addStaticVal();
     }
+
     for (int i = 0; i < resources.size(); i++) {
       boolean status = false;
       try {
-        if (resources.get(i) != null && resources.get(i).getAvailability().getSourceActivityId() != null) {
+        if (resources.get(i) != null
+            && resources.get(i).getAvailability().getSourceActivityId() != null) {
           status = true;
         }
       } catch (Exception e) {
@@ -663,6 +657,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         }
       }
     }
+
     studyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     studyRecyclerView.setNestedScrollingEnabled(false);
     ResourcesListAdapter resourcesListAdapter = new ResourcesListAdapter(context, resources, this);
@@ -697,8 +692,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       String actvityRunId = null;
 
       for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
-        if (anchorDateSchedulingDetails.getSourceActivityId().equalsIgnoreCase(
-            activityDataRunId.getActivities().get(i).getActivityId())) {
+        if (anchorDateSchedulingDetails
+            .getSourceActivityId()
+            .equalsIgnoreCase(activityDataRunId.getActivities().get(i).getActivityId())) {
           actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
         }
       }
@@ -714,7 +710,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             "Authorization",
             "Bearer "
                 + SharedPreferenceHelper.readPreference(
-                context, getContext().getString(R.string.auth), ""));
+                    context, getContext().getString(R.string.auth), ""));
         header.put(
             "userId",
             SharedPreferenceHelper.readPreference(
@@ -971,7 +967,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-            .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
+                .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
@@ -1065,7 +1061,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-            .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
+                .readPreference(context, getContext().getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
