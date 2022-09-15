@@ -11,17 +11,25 @@
 <head>
 <title>Sign in</title>
 
+
+<meta name="viewport" content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no;user-scalable=0;"/>	
+
+
 <link rel="stylesheet"
   href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <link rel="stylesheet" th:href="@{/css/utilities.css}">
 <link rel="stylesheet" th:href="@{/css/login.scss}">
 <link rel="stylesheet"
   href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap">
 <!-- Bootstrap core CSS -->
-<link
-  href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"
-  rel="stylesheet" />
+<!-- 	<link		 -->
+<!--   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"		 -->
+<!--   rel="stylesheet" /> -->
+<link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"  rel="stylesheet" />
 <!-- Custom styles for this template -->
 <link
   href="https://getbootstrap.com/docs/4.0/examples/sticky-footer/sticky-footer.css"
@@ -30,23 +38,22 @@
   rel="icon"
   type="image/x-icon"
   th:href="@{/images/favicon_pm.png}"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
 
-<!--  plugin adde due to eye icon funactionality -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" ></script>
-
-  <script>
-  $(document).ready(function(){  
-	  $(".toggle-password").click(function () {
-
-	    $(this).toggleClass("fa-eye-slash fa-eye");
-	    
-	    var input = $("#password");
-	    input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')
-	});
-  
-  });
+	<!--  plugin adde due to eye icon funactionality -->	
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" ></script>	
+  <script>	
+  $(document).ready(function(){  	
+	  $(".toggle-password").click(function () {	
+	    $(this).toggleClass("fa-eye-slash fa-eye");	
+	    	
+	    var input = $("#password");	
+	    input.attr('type') === 'password' ? input.attr('type','text') : input.attr('type','password')	
+	});	
+  	
+  });	
   </script>
   
 <style type="text/css">
@@ -69,48 +76,41 @@
     filter: none !important;
   }
 
-
-.visibility__hidden {
-  visibility: hidden !important;
+.visibility__hidden {	
+  visibility: hidden !important;	
+}	
+/* eye icon css added here */	
+.field_icon {	
+    float: right;	
+    margin-left: -20px;	
+    margin-right: 10%;	
+    margin-top: -12%;	
+    padding: 5px;	
+    position: relative;	
+    z-index: 2;	
+    color: var(--light-blue);	
+    cursor: pointer;	
+    background: #fff;	
+}	
+ 	
+ .fa-eye:before {	
+    content: "\f06e";	
+} 	
+input[type="password"]::-ms-reveal,	
+input[type="password"]::-ms-clear {	
+  display: none;	
+}	
+::-ms-reveal {	
+    display: none;	
+}	
+input::-ms-clear, input::-ms-reveal {	
+    display: none;	
+}	
+@media only screen and (max-width: 500px) and (min-width: 200px) {	
+  .toggle-password {	
+  display:none !important;	
+  }	
 }
-/* eye icon css added here */
-
-.field_icon {
-    float: right;
-    margin-left: -20px;
-    margin-right: 10%;
-    margin-top: -12%;
-    padding: 5px;
-    position: relative;
-    z-index: 2;
-    color: var(--light-blue);
-    cursor: pointer;
-    background: #fff;
-}
- 
- .fa-eye:before {
-    content: "\f06e";
-} 
-
-input[type="password"]::-ms-reveal,
-input[type="password"]::-ms-clear {
-  display: none;
-}
-::-ms-reveal {
-    display: none;
-}
-
-input::-ms-clear, input::-ms-reveal {
-    display: none;
-}
-
-@media only screen and (max-width: 500px) and (min-width: 200px) {
-  .toggle-password {
-  display:none !important;
-  }
-}
-
-
   
 </style>
 </head>
@@ -146,21 +146,15 @@ input::-ms-clear, input::-ms-reveal {
                         <div class="err__msg" id="email_error"
                           style="display: none">Enter an email</div>
                       </div>
-                      <div class="input__field">
-                        <label>Password</label> <input type="password"
-                          th:field="*{password}" name="password"
-                          id="password"
-                          placeholder="Enter your password"
-                          required="required" minlength="8"
-                          maxlength="64" value=""
-                          onblur="validateField('password');" />
-                          
-                            <span toggle="#password-field" class="fa fa-fw fa-eye-slash field_icon toggle-password"></span>
-                            
-                        <div class="err__msg" id="password_error"
-                          style="display: none">Please enter valid
-                          password</div>
-                      </div>
+                           <div class="input__field">	
+                        <label>Password</label> 	
+                        <input type="password" th:field="*{password}" name="password" id="password"	
+                          placeholder="Enter your password" required="required" minlength="8"maxlength="64" value=""	
+                          onblur="validateField('password');" />	
+                          <span toggle="#password-field" class="fa fa-fw fa-eye-slash field_icon toggle-password"></span>	
+                        <div class="err__msg" id="password_error"	
+                          style="display: none">Please enter valid password</div>
+                          </div>
                     </div>
                     <div class="input__field">
                       </div>
@@ -168,7 +162,7 @@ input::-ms-clear, input::-ms-reveal {
                         class="input__feild mob_mt display-flex-center login__btn__container">
                         <div class="pl-none">
                           <button type="submit"
-                            class="btn btn-primary width__auto blue__btn">Sign
+                            class="btn btn-primary width__auto blue__btn" >Sign
                             in</button>
 							
                         </div>

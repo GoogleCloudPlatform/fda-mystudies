@@ -20,6 +20,7 @@ public class AppConstants {
   public static final String RESPONSE_DATA_QUERY_NAME_LEGACY = "firestore_response_query";
   public static final String TRUE_STR = "true";
   public static final String VALUE_KEY_STR = "value";
+  public static final String ANCHOR_DATE_VALUE = "anchorDate";
   public static final String PARTICIPANT_ID_KEY = "participantId";
   public static final String PARTICIPANT_ID_RESPONSE = "ParticipantId";
   public static final String CREATED_TS_KEY = "createdTimestamp";

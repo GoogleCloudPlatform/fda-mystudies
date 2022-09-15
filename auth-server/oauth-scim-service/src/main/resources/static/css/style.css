@@ -569,3 +569,9 @@ body#body-container {
 .mob_mt { margin-top:10px; }
 }
 
+@media screen and (max-width: 500px) {
+  input, select, textarea {
+    font-size: 13px;
+  }
+}
+
