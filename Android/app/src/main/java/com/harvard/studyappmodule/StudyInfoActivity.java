@@ -206,6 +206,7 @@ public class StudyInfoActivity extends AppCompatActivity
           @Override
           public void onClick(View view) {
             Bundle eventProperties = new Bundle();
+            String studyStatusCheck = "";
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON, getString(R.string.join_study));
             analyticsInstance.logEvent(
@@ -273,7 +274,18 @@ public class StudyInfoActivity extends AppCompatActivity
                           .replace("$ContactEmail", apps.getContactUsEmail())));
               startActivity(customTabsIntent.intent);
             } else {
-              new CallConsentMetaData(true).execute();
+              if (userPreferenceStudies!=null){
+                for (int i = 0; i < userPreferenceStudies.size(); i++) {
+                  if (userPreferenceStudies.get(i).getStudyId().equalsIgnoreCase(studyId)) {
+                    studyStatusCheck = userPreferenceStudies.get(i).getStatus();
+                  }
+                }
+              }
+              if (studyStatusCheck.equalsIgnoreCase("enrolled")) {
+                new CallConsentMetaData(false).execute();
+              } else {
+                new CallConsentMetaData(true).execute();
+              }
             }
           }
         });
@@ -650,8 +662,8 @@ public class StudyInfoActivity extends AppCompatActivity
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(
-                    StudyInfoActivity.this, getResources().getString(R.string.auth), ""));
+            .readPreference(
+                StudyInfoActivity.this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
@@ -889,7 +901,7 @@ public class StudyInfoActivity extends AppCompatActivity
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(this, getResources().getString(R.string.auth), ""));
+            .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()

@@ -104,7 +104,6 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   private Realm realm;
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private CustomFirebaseAnalytics analyticsInstance;
-  private ActivityData activityDataRunId;
 
   @Override
   public void onAttach(Context context) {
@@ -685,14 +684,19 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     @Override
     protected void onPreExecute() {
       super.onPreExecute();
-      activityDataRunId = dbServiceSubscriber.getActivityPreference((
-          (SurveyActivity) context).getStudyId(), realm);
+//      activityDataRunId = dbServiceSubscriber.getActivityPreference((
+//          (SurveyActivity) context).getStudyId(), realm);
     }
 
     @Override
     protected String doInBackground(String... params) {
 
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
+      Realm realm = AppController.getRealmobj(context);
+       ActivityData activityDataRunId = realm
+           .where(ActivityData.class)
+           .equalTo("studyId", anchorDateSchedulingDetails.getStudyId())
+           .findFirst();
 
       String actvityRunId = null;
 
@@ -704,7 +708,6 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       }
 
       if (connectionDetector.isConnectingToInternet()) {
-        Realm realm = AppController.getRealmobj(context);
         HashMap<String, String> header = new HashMap<>();
         header.put(
             getContext().getString(R.string.clientToken),
