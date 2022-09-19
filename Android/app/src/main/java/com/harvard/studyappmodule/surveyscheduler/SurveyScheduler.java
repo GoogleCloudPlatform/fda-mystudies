@@ -96,9 +96,9 @@ public class SurveyScheduler {
     }
 
     return Integer.parseInt(
-        AppController.getHelperSharedPreference()
-            .readPreference(
-                context, context.getResources().getString(R.string.startOffset), ""))
+            AppController.getHelperSharedPreference()
+                .readPreference(
+                    context, context.getResources().getString(R.string.startOffset), ""))
         - currentOffset;
   }
 
@@ -343,19 +343,19 @@ public class SurveyScheduler {
         Date startDate = startCalendar.getTime();
         Calendar startCalendarTime = Calendar.getInstance();
         startCalendarTime.setTime(startDate);
-        if (DateFormat.format("MMM",  startDate).equals("Feb") &&
-            (DateFormat.format("dd", startDate).equals("28")
+        if (DateFormat.format("MMM", startDate).equals("Feb")
+            && (DateFormat.format("dd", startDate).equals("28")
                 || DateFormat.format("dd", startDate).equals("29"))) {
-          if(DateFormat.format("dd", startDate).equals("28"))
+          if (DateFormat.format("dd", startDate).equals("28"))
             startCalendar.set(Calendar.DAY_OF_MONTH, 58);
-          else if(DateFormat.format("dd", startDate).equals("29"))
+          else if (DateFormat.format("dd", startDate).equals("29"))
             startCalendar.set(Calendar.DAY_OF_MONTH, 59);
-        } else if(DateFormat.format("dd", endTime).equals("31")) {
+        } else if (DateFormat.format("dd", endTime).equals("31")) {
           if (DateFormat.format("dd", endTime).equals("31")
               && (DateFormat.format("MMM", startDate).equals("Apr")
-              || DateFormat.format("MMM", startDate).equals("Jun")
-              || DateFormat.format("MMM", startDate).equals("Sep")
-              || DateFormat.format("MMM", startDate).equals("Nov"))) {
+                  || DateFormat.format("MMM", startDate).equals("Jun")
+                  || DateFormat.format("MMM", startDate).equals("Sep")
+                  || DateFormat.format("MMM", startDate).equals("Nov"))) {
             startCalendar.set(Calendar.DAY_OF_MONTH, 60);
           } else {
             startCalendarTime.setTimeInMillis(startCalendarTime.getTimeInMillis());
@@ -513,7 +513,7 @@ public class SurveyScheduler {
               Calendar.DATE,
               -7
                   + (startTimeCalender.get(Calendar.DAY_OF_WEEK)
-                  - startCalendar.get(Calendar.DAY_OF_WEEK)));
+                      - startCalendar.get(Calendar.DAY_OF_WEEK)));
         }
         startCalendar.set(Calendar.HOUR_OF_DAY, startTimeCalender.get(Calendar.HOUR_OF_DAY));
         startCalendar.set(Calendar.MINUTE, startTimeCalender.get(Calendar.MINUTE));

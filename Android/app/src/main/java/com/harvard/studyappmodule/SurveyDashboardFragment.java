@@ -719,12 +719,12 @@ public class SurveyDashboardFragment extends Fragment
   private void screenshotWritingPermission(View view) {
     // checking the permissions
     if ((ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED)
+            != PackageManager.PERMISSION_GRANTED)
         || (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        != PackageManager.PERMISSION_GRANTED)) {
+            != PackageManager.PERMISSION_GRANTED)) {
       String[] permission =
-          new String[]{
-              Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+          new String[] {
+            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
           };
       if (!hasPermissions(permission)) {
         ActivityCompat.requestPermissions((Activity) context, permission, PERMISSION_REQUEST_CODE);
@@ -1184,12 +1184,12 @@ public class SurveyDashboardFragment extends Fragment
               new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
               dashboardData
-                  .getDashboard()
-                  .getStatistics()
-                  .get(i)
-                  .getDataSource()
-                  .getActivity()
-                  .getActivityId()
+                      .getDashboard()
+                      .getStatistics()
+                      .get(i)
+                      .getDataSource()
+                      .getActivity()
+                      .getActivityId()
                   + ","
                   + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
@@ -1213,12 +1213,12 @@ public class SurveyDashboardFragment extends Fragment
             arrayList.add(responseInfoActiveTaskModel);
             arrayListDup.add(
                 dashboardData
-                    .getDashboard()
-                    .getStatistics()
-                    .get(i)
-                    .getDataSource()
-                    .getActivity()
-                    .getActivityId()
+                        .getDashboard()
+                        .getStatistics()
+                        .get(i)
+                        .getDataSource()
+                        .getActivity()
+                        .getActivityId()
                     + ","
                     + dashboardData.getDashboard().getStatistics().get(i).getDataSource().getKey());
           }
@@ -1228,12 +1228,12 @@ public class SurveyDashboardFragment extends Fragment
               new ResponseInfoActiveTaskModel();
           if (!arrayListDup.contains(
               dashboardData
-                  .getDashboard()
-                  .getCharts()
-                  .get(i)
-                  .getDataSource()
-                  .getActivity()
-                  .getActivityId()
+                      .getDashboard()
+                      .getCharts()
+                      .get(i)
+                      .getDataSource()
+                      .getActivity()
+                      .getActivityId()
                   + ","
                   + dashboardData.getDashboard().getCharts().get(i).getDataSource().getKey())) {
             responseInfoActiveTaskModel.setActivityId(
@@ -1272,10 +1272,10 @@ public class SurveyDashboardFragment extends Fragment
       studies = dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
       if (arrayList.size() > 0) {
         new ResponseData(
-            ((SurveyActivity) context).getStudyId(),
-            arrayList.get(0),
-            studies.getParticipantId(),
-            0)
+                ((SurveyActivity) context).getStudyId(),
+                arrayList.get(0),
+                studies.getParticipantId(),
+                0)
             .execute();
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
@@ -1428,7 +1428,7 @@ public class SurveyDashboardFragment extends Fragment
             "Authorization",
             "Bearer "
                 + SharedPreferenceHelper.readPreference(
-                context, getContext().getString(R.string.auth), ""));
+                    context, getContext().getString(R.string.auth), ""));
         header.put(
             "userId",
             SharedPreferenceHelper.readPreference(
@@ -1538,10 +1538,10 @@ public class SurveyDashboardFragment extends Fragment
             if (exception.contains("Query or table not found")) {
               if (arrayList.size() > (position + 1)) {
                 new ResponseData(
-                    ((SurveyActivity) context).getStudyId(),
-                    arrayList.get((position + 1)),
-                    studies.getParticipantId(),
-                    position + 1)
+                        ((SurveyActivity) context).getStudyId(),
+                        arrayList.get((position + 1)),
+                        studies.getParticipantId(),
+                        position + 1)
                     .execute();
               } else {
                 addViewStatisticsValues();
@@ -1730,10 +1730,10 @@ public class SurveyDashboardFragment extends Fragment
             }
             if (arrayList.size() > (position + 1)) {
               new ResponseData(
-                  ((SurveyActivity) context).getStudyId(),
-                  arrayList.get((position + 1)),
-                  studies.getParticipantId(),
-                  position + 1)
+                      ((SurveyActivity) context).getStudyId(),
+                      arrayList.get((position + 1)),
+                      studies.getParticipantId(),
+                      position + 1)
                   .execute();
             } else {
               addViewStatisticsValues();
@@ -1743,10 +1743,10 @@ public class SurveyDashboardFragment extends Fragment
             Logger.log(e);
             if (arrayList.size() > (position + 1)) {
               new ResponseData(
-                  ((SurveyActivity) context).getStudyId(),
-                  arrayList.get((position + 1)),
-                  studies.getParticipantId(),
-                  position + 1)
+                      ((SurveyActivity) context).getStudyId(),
+                      arrayList.get((position + 1)),
+                      studies.getParticipantId(),
+                      position + 1)
                   .execute();
             } else {
               addViewStatisticsValues();
@@ -1756,10 +1756,10 @@ public class SurveyDashboardFragment extends Fragment
         } else {
           if (arrayList.size() > (position + 1)) {
             new ResponseData(
-                ((SurveyActivity) context).getStudyId(),
-                arrayList.get((position + 1)),
-                studies.getParticipantId(),
-                position + 1)
+                    ((SurveyActivity) context).getStudyId(),
+                    arrayList.get((position + 1)),
+                    studies.getParticipantId(),
+                    position + 1)
                 .execute();
           } else {
             addViewStatisticsValues();
