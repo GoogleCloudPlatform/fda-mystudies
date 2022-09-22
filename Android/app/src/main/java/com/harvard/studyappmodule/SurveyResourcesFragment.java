@@ -697,6 +697,21 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     protected String doInBackground(String... params) {
 
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
+      Realm realm = AppController.getRealmobj(context);
+       ActivityData activityDataRunId = realm
+           .where(ActivityData.class)
+           .equalTo("studyId", anchorDateSchedulingDetails.getStudyId())
+           .findFirst();
+
+      String actvityRunId = null;
+
+      for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
+        if (anchorDateSchedulingDetails
+            .getSourceActivityId()
+            .equalsIgnoreCase(activityDataRunId.getActivities().get(i).getActivityId())) {
+          actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
+        }
+      }
 
       String actvityRunId = null;
 
@@ -709,7 +724,6 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       }
 
       if (connectionDetector.isConnectingToInternet()) {
-        Realm realm = AppController.getRealmobj(context);
         HashMap<String, String> header = new HashMap<>();
         header.put(
             getContext().getString(R.string.clientToken),

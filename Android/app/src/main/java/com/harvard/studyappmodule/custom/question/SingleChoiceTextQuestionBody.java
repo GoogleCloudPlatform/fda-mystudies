@@ -220,7 +220,7 @@ public class SingleChoiceTextQuestionBody<T>
 
         if (item.getValue().toString().equalsIgnoreCase(otherOptionValue)) {
           otherText.setVisibility(View.VISIBLE);
-          if(otherOptionModel.getText().isEmpty()) {
+          if(otherOptionModel.getText() == "" && otherOptionModel.getText().isEmpty()) {
             otherText.setText(null);
           } else {
             otherText.setText(otherOptionModel.getText());
@@ -244,7 +244,7 @@ public class SingleChoiceTextQuestionBody<T>
                           checkedChangeListenerArrayList.get(selectedcheckbox.get(i).getId()));
                 }
                 otherText.setVisibility(View.GONE);
-                otherText.setText(null);
+                otherText.setText("");
                 selectedcheckbox.clear();
                 currentSelected.clear();
                 currentSelected.remove(new Gson().toJson(otherOptionModel));
@@ -269,7 +269,7 @@ public class SingleChoiceTextQuestionBody<T>
                   otherOptionModel.setOther(null);
                   otherOptionModel.setText(null);
                   otherText.setVisibility(View.GONE);
-                  otherText.setText(null);
+                  otherText.setText("");
                 }
               }
             }

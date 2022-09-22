@@ -38,6 +38,7 @@ import android.os.Environment;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -1402,6 +1403,21 @@ public class SurveyDashboardFragment extends Fragment
     protected String doInBackground(String... params) {
 
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
+      Realm realm = AppController.getRealmobj(context);
+
+       ActivityData activityDataRunId = realm.where(ActivityData.class).equalTo("studyId", studyId).findFirst();
+
+      String actvityRunId = null;
+      try {
+        for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
+          if (responseInfoActiveTaskModel.getActivityId().equalsIgnoreCase(
+              activityDataRunId.getActivities().get(i).getActivityId())) {
+            actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
+          }
+        }
+      } catch (Exception e) {
+        Log.e("check", "doInBackground: " + e.getMessage());
+      }
 
       String actvityRunId = null;
 
@@ -1413,7 +1429,6 @@ public class SurveyDashboardFragment extends Fragment
       }
 
       if (connectionDetector.isConnectingToInternet()) {
-        Realm realm = AppController.getRealmobj(context);
 
         HashMap<String, String> header = new HashMap<>();
         header.put(
