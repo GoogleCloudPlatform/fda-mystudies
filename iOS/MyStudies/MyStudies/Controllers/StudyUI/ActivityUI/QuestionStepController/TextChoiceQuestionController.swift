@@ -216,10 +216,13 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
         if let choice = choice as? String {
           self.answers?.append(choice)
-        } else if let choiceDict = choice as? JSONDictionary,
-          let otherChoice = choiceDict["text"] as? String
-        {
-          self.answers?.append(otherChoice)
+        } else if let choiceDict = choice as? JSONDictionary {
+            if let otherChoice = choiceDict["text"] as? String {
+                self.answers?.append(otherChoice)
+            } else if let otherChoice = choiceDict["other"] as? String {
+                self.answers?.append(otherChoice)
+            }
+          
         }
       }
 
@@ -274,9 +277,9 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     
     self.otherChoice = step.otherChoice
     
-    if let indexOfOtherChoiceValue = self.answers?.firstIndex(of: self.otherChoice.value) {
-      self.answers?.remove(at: indexOfOtherChoiceValue)
-    }
+//    if let indexOfOtherChoiceValue = self.answers?.firstIndex(of: self.otherChoice.value) {
+//      self.answers?.remove(at: indexOfOtherChoiceValue)
+//    }
     /// Update the selected result here
     if let answers = self.answers {
       for answer in answers {
