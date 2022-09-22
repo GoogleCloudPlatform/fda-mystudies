@@ -274,7 +274,7 @@ public class StudyInfoActivity extends AppCompatActivity
                           .replace("$ContactEmail", apps.getContactUsEmail())));
               startActivity(customTabsIntent.intent);
             } else {
-              if (userPreferenceStudies!=null){
+              if (userPreferenceStudies != null) {
                 for (int i = 0; i < userPreferenceStudies.size(); i++) {
                   if (userPreferenceStudies.get(i).getStudyId().equalsIgnoreCase(studyId)) {
                     studyStatusCheck = userPreferenceStudies.get(i).getStatus();

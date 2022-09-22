@@ -222,7 +222,7 @@ public class MultiChoiceTextQuestionBody<T>
 
         if (item.getValue().toString().equalsIgnoreCase(otherOptionValue)) {
           otherText.setVisibility(View.VISIBLE);
-          if(otherOptionModel.getText().isEmpty()) {
+          if(otherOptionModel.getText() == "" && otherOptionModel.getText().isEmpty()) {
             otherText.setText(null);
           } else {
             otherText.setText(otherOptionModel.getText());
@@ -247,7 +247,7 @@ public class MultiChoiceTextQuestionBody<T>
                             checkedChangeListenerArrayList.get(selectedcheckbox.get(i).getId()));
                   }
                   otherText.setVisibility(View.GONE);
-                  otherText.setText(null);
+                  otherText.setText("");
 
                   selectedcheckbox.clear();
                   currentSelected.clear();
@@ -280,7 +280,7 @@ public class MultiChoiceTextQuestionBody<T>
                   otherText.setVisibility(View.VISIBLE);
                   otherText.requestFocus();
 
-                  otherOptionModel.setOther(item.getText());
+                  otherOptionModel.setOther(item.getValue().toString());
                 }
 
               } else {
@@ -292,7 +292,7 @@ public class MultiChoiceTextQuestionBody<T>
                   otherOptionModel.setOther(null);
                   otherOptionModel.setText(null);
                   otherText.setVisibility(View.GONE);
-                  otherText.setText(null);
+                  otherText.setText("");
                 }
               }
             }

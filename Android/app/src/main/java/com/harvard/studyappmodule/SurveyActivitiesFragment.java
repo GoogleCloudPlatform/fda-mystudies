@@ -950,7 +950,7 @@ public class SurveyActivitiesFragment extends Fragment
                   String endTime = "";
                   if (activityListData.getActivities().get(i).getAnchorDate() != null
                       && activityListData.getActivities().get(i).getAnchorDate().getStart()
-                            != null) {
+                          != null) {
                     if (!activityListData
                         .getActivities()
                         .get(i)
@@ -1011,7 +1011,7 @@ public class SurveyActivitiesFragment extends Fragment
                     Calendar calendar;
                     if (activityListData.getActivities().get(i).getAnchorDate() != null
                         && activityListData.getActivities().get(i).getAnchorDate().getStart()
-                          != null) {
+                            != null) {
                       calendar = Calendar.getInstance();
                       try {
                         date = simpleDateFormat.parse(arrayList.get(j).getAnchorDate());
@@ -1040,7 +1040,7 @@ public class SurveyActivitiesFragment extends Fragment
                     }
                     if (activityListData.getActivities().get(i).getAnchorDate() != null
                         && activityListData.getActivities().get(i).getAnchorDate().getEnd()
-                          != null) {
+                            != null) {
                       calendar = Calendar.getInstance();
                       try {
                         date = simpleDateFormat.parse(arrayList.get(j).getAnchorDate());
