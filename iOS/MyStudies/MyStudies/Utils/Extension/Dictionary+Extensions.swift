@@ -31,4 +31,19 @@ extension Dictionary {
       return error.localizedDescription
     }
   }
+  func toJSONStringRaw() -> NSString {
+    if #available(iOS 13.0, *) {
+      do {
+        let jsonData = try JSONSerialization.data(
+            withJSONObject: self,
+            options: [.withoutEscapingSlashes]
+          )
+          return NSString(data: jsonData, encoding: 1) ?? NSString.init(string: "")
+        } catch {
+          return NSString.init(string: error.localizedDescription)
+        }
+      } else {
+        return NSString.init(string: "")
+      }
+  }
 }

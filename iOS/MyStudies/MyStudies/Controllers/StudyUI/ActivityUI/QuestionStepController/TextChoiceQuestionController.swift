@@ -124,35 +124,33 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
     if self.isOtherCellSelected {
       var otherChoiceDict: [String: Any]!
+//        otherChoiceDict = ["other": otherChoice.value]
       if self.otherChoice.isShowOtherField {
         if otherChoice.otherChoiceText == "" {
           otherChoiceDict = [
-            "other": otherChoice.otherTitle,
-            "otherValue": otherChoice.value,
+            "other": otherChoice.value,
           ]
-          } else {
+
+        } else {
         otherChoiceDict = [
-          "other": otherChoice.otherTitle,
+          "other": otherChoice.value,
           "text": otherChoice.otherChoiceText,
-          "otherValue": otherChoice.value,
         ]
         }
       } else {
         if otherChoice.otherChoiceText == "" {
         otherChoiceDict = [
-          "other": otherChoice.otherTitle,
-          "otherValue": otherChoice.value,
+          "other": otherChoice.value,
         ]
         } else {
           otherChoiceDict = [
-            "other": otherChoice.otherTitle,
-            "otherValue": otherChoice.value,
+            "other": otherChoice.value,
             "text": otherChoice.otherChoiceText,
           ]
           }
       }
       choices.append(otherChoiceDict as Any)
-      choices.append(otherChoice.value)
+//      choices.append(otherChoice.value)
     }
 
     if self.answerFormat?.style == .multipleChoice {

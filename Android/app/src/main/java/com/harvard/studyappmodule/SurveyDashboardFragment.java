@@ -168,6 +168,7 @@ public class SurveyDashboardFragment extends Fragment
   private ArrayList<String> arrayListDup;
   private CustomFirebaseAnalytics analyticsInstance;
   private NetworkChangeReceiver networkChangeReceiver;
+  private ActivityData activityDataRunId;
 
   // NOTE: Regarding Day, Week and Month functionality
   //  currently day functionality next, previous are working
@@ -1418,6 +1419,15 @@ public class SurveyDashboardFragment extends Fragment
         Log.e("check", "doInBackground: " + e.getMessage());
       }
 
+      String actvityRunId = null;
+
+      for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
+        if (responseInfoActiveTaskModel.getActivityId().equalsIgnoreCase(
+            activityDataRunId.getActivities().get(i).getActivityId())) {
+          actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
+        }
+      }
+
       if (connectionDetector.isConnectingToInternet()) {
 
         HashMap<String, String> header = new HashMap<>();
@@ -1499,6 +1509,8 @@ public class SurveyDashboardFragment extends Fragment
       id = responseInfoActiveTaskModel.getActivityId();
       stepKey = responseInfoActiveTaskModel.getKey();
       ActivityListData activityListData = dbServiceSubscriber.getActivities(studyId, realm);
+      activityDataRunId = dbServiceSubscriber.getActivityPreference((
+          (SurveyActivity) context).getStudyId(), realm);
       if (activityListData != null) {
         RealmList<ActivitiesWS> activitiesWSes = activityListData.getActivities();
         for (int i = 0; i < activitiesWSes.size(); i++) {

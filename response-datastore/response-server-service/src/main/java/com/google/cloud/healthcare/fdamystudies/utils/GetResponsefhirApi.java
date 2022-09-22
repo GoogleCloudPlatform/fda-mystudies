@@ -11,6 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.utils;
 import com.google.api.services.healthcare.v1.CloudHealthcare;
 import com.google.api.services.healthcare.v1.CloudHealthcareScopes;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.healthcare.fdamystudies.bean.Answer;
+import com.google.cloud.healthcare.fdamystudies.bean.ItemsQuestionnaireResponse;
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireResponseEntry;
 import com.google.cloud.healthcare.fdamystudies.bean.ResponseRows;
 import com.google.cloud.healthcare.fdamystudies.bean.SavedActivityResponse;
@@ -97,6 +99,7 @@ public class GetResponsefhirApi {
       String participantId,
       SearchQuestionnaireResponseFhirBean searchResponseFhirbean,
       StoredResponseBean storedResponseBean) {
+
     logger.entry("begin convertResponseDataToBean()");
     List<ResponseRows> responsesList = new ArrayList<>();
     for (QuestionnaireResponseEntry activityResponseMap : searchResponseFhirbean.getEntry()) {
@@ -109,8 +112,9 @@ public class GetResponsefhirApi {
       responsesRow.getData().add(mapPartId);
 
       // Add Created Timestamp
-      Map<Object, Object> mapTS = new HashMap<>();
-      Map<Object, Object> mapTsValue = new HashMap<>();
+      Map<Object, Object> mapTs = new HashMap<>();
+      Map<Object, Object> mapTsValueFortimestamp = new HashMap<>();
+      //  Map<Object, Object> mapTsValue = new HashMap<>();
 
       // Format timestamp to date
       String timestampFromResponse = null;
@@ -119,17 +123,144 @@ public class GetResponsefhirApi {
 
         /*DateFormat simpleDateFormat = new SimpleDateFormat(AppConstants.ISO_DATE_FORMAT_RESPONSE);
         String formattedDate = simpleDateFormat.format(timestampFromResponse);*/
-        mapTsValue.put(AppConstants.VALUE_KEY_STR, timestampFromResponse);
-
+        mapTsValueFortimestamp.put(AppConstants.VALUE_KEY_STR, timestampFromResponse);
+        mapTs.put(AppConstants.CREATED_RESPONSE, mapTsValueFortimestamp);
       } catch (NumberFormatException ne) {
         logger.error(
             "Could not format createdTimestamp field to long. createdTimestamp value is: "
                 + timestampFromResponse);
-        mapTsValue.put(AppConstants.VALUE_KEY_STR, String.valueOf(timestampFromResponse));
+        // mapTsValue.put(AppConstants.VALUE_KEY_STR, String.valueOf(timestampFromResponse));
       }
+      // new structure for responsefhir
+      List<ItemsQuestionnaireResponse> items = activityResponseMap.getResource().getItem();
+      for (ItemsQuestionnaireResponse item : items) {
+        List<Answer> answers = item.getAnswer();
+        for (Answer answer : answers) {
+          Answer answerFromResponse = null;
+          boolean b1 = !answer.getItem().isEmpty();
+          // for activetask response
+          if (!answer.getItem().isEmpty()) {
+            List<ItemsQuestionnaireResponse> activetaskitems = answer.getItem();
+            for (ItemsQuestionnaireResponse activetaskitem : activetaskitems) {
+              answerFromResponse = activetaskitem.getAnswer().get(0);
+              if (answerFromResponse.getValueBoolean() != null) {
+                Map<Object, Object> mapTsValue = new HashMap<>();
+                Boolean valueBoolean = answerFromResponse.getValueBoolean();
+                mapTsValue.put(AppConstants.VALUE_KEY_STR, valueBoolean);
+                mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+              } else if (answerFromResponse.getValueDate() != null) {
+                Map<Object, Object> mapTsValue = new HashMap<>();
+                String valueDate = answerFromResponse.getValueDate();
+                mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDate);
+                mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+              } else if (answerFromResponse.getValueDateTime() != null) {
+                Map<Object, Object> mapTsValue = new HashMap<>();
+                String valueDateTime = answerFromResponse.getValueDateTime();
+                mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDateTime);
+                mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+              } else if (answerFromResponse.getValueDecimal() != null) {
+                Map<Object, Object> mapTsValue = new HashMap<>();
+                Double valueDecimal = answerFromResponse.getValueDecimal();
+                mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDecimal);
+                mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+              } else if (answerFromResponse.getValueInteger() != null) {
+                Map<Object, Object> mapTsValue = new HashMap<>();
+                Integer valueInteger = answerFromResponse.getValueInteger();
+                mapTsValue.put(AppConstants.VALUE_KEY_STR, valueInteger);
+                mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+              } else if (answerFromResponse.getValueString() != null) {
+                Map<Object, Object> mapTsValue = new HashMap<>();
+                String valueString = answerFromResponse.getValueString();
+                mapTsValue.put(AppConstants.VALUE_KEY_STR, valueString);
+                mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+              } else if (answerFromResponse.getValueTime() != null) {
+                Map<Object, Object> mapTsValue = new HashMap<>();
+                String valueTime = answerFromResponse.getValueTime();
+                mapTsValue.put(AppConstants.VALUE_KEY_STR, valueTime);
+                mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+              }
+            }
+          } else {
+            // for questionnaireresponse
+            answerFromResponse = item.getAnswer().get(0);
+            Map<Object, Object> mapTsValue = new HashMap<>();
 
-      mapTS.put(AppConstants.CREATED_RESPONSE, mapTsValue);
-      responsesRow.getData().add(mapTS);
+            if (answerFromResponse.getValueBoolean() != null) {
+              Boolean valueBoolean = answerFromResponse.getValueBoolean();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueBoolean);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResponse.getValueDate() != null) {
+              String valueDate = answerFromResponse.getValueDate();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDate);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResponse.getValueDateTime() != null) {
+              String valueDateTime = answerFromResponse.getValueDateTime();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDateTime);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResponse.getValueDecimal() != null) {
+
+              Double valueDecimal = answerFromResponse.getValueDecimal();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDecimal);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResponse.getValueInteger() != null) {
+              Integer valueInteger = answerFromResponse.getValueInteger();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueInteger);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResponse.getValueString() != null) {
+              String valueString = answerFromResponse.getValueString();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueString);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResponse.getValueTime() != null) {
+              String valueTime = answerFromResponse.getValueTime();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueTime);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            }
+          }
+        }
+        // for resource
+        boolean b1 = !item.getItem().isEmpty();
+        if (!item.getItem().isEmpty()) {
+          System.out.println("item:answer is not empty");
+          List<ItemsQuestionnaireResponse> resourceitems = item.getItem();
+          for (ItemsQuestionnaireResponse resouceItem : resourceitems) {
+            Answer answerFromResouce = resouceItem.getAnswer().get(0);
+            Map<Object, Object> mapTsValue = new HashMap<>();
+
+            if (answerFromResouce.getValueBoolean() != null) {
+              Boolean valueBoolean = answerFromResouce.getValueBoolean();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueBoolean);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResouce.getValueDate() != null) {
+              String valueDate = answerFromResouce.getValueDate();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDate);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResouce.getValueDateTime() != null) {
+              String valueDateTime = answerFromResouce.getValueDateTime();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDateTime);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResouce.getValueDecimal() != null) {
+
+              Double valueDecimal = answerFromResouce.getValueDecimal();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDecimal);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResouce.getValueInteger() != null) {
+              Integer valueInteger = answerFromResouce.getValueInteger();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueInteger);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResouce.getValueString() != null) {
+              String valueString = answerFromResouce.getValueString();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueString);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            } else if (answerFromResouce.getValueTime() != null) {
+              String valueTime = answerFromResouce.getValueTime();
+              mapTsValue.put(AppConstants.VALUE_KEY_STR, valueTime);
+              mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+            }
+          }
+        }
+      }
+      // ends here
+      responsesRow.getData().add(mapTs);
       SavedActivityResponse savedActivityResponse =
           new Gson().fromJson(new Gson().toJson(activityResponseMap), SavedActivityResponse.class);
       List<Object> results = savedActivityResponse.getResults();

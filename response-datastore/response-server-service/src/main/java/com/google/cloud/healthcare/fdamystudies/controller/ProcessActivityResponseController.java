@@ -437,6 +437,7 @@ public class ProcessActivityResponseController {
       @RequestParam("participantId") String participantId,
       @RequestParam(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY) String tokenIdentifier,
       @RequestParam("activityId") String activityId,
+      @RequestParam("activityRunId") String activityRunId,
       @RequestParam("questionKey") String questionKey,
       @RequestHeader String userId,
       HttpServletRequest request) {
@@ -488,17 +489,43 @@ public class ProcessActivityResponseController {
           if (getresponsefhirApi.getfhirResource(
                   datasetPathforFHIR + FHIR_STORES + "FHIR_" + studyId)
               != null) {
-            String identifierValue =
-                studyId + "@" + siteId + "@" + participantId + "@" + activityId + "@";
-            String searchQuestionnaireJson =
-                fhirhealthcareApis.fhirResourceSearchPost(
-                    datasetPathforFHIR
-                        + FHIR_STORES
-                        + "FHIR_"
-                        + studyId
-                        + "/fhir/"
-                        + QUESTIONNAIRE_RESPONSE_TYPE,
-                    "identifier.contains(" + identifierValue + ")");
+            String identifierValue = "";
+            String searchQuestionnaireJson = "";
+            if (!activityRunId.isEmpty()) {
+              identifierValue =
+                  studyId
+                      + "@"
+                      + siteId
+                      + "@"
+                      + participantId
+                      + "@"
+                      + activityId
+                      + "@"
+                      + activityRunId;
+
+              searchQuestionnaireJson =
+                  fhirhealthcareApis.fhirResourceSearchPost(
+                      datasetPathforFHIR
+                          + FHIR_STORES
+                          + "FHIR_"
+                          + studyId
+                          + "/fhir/"
+                          + QUESTIONNAIRE_RESPONSE_TYPE,
+                      "identifier=" + identifierValue);
+
+            } else {
+              identifierValue =
+                  studyId + "@" + siteId + "@" + participantId + "@" + activityId + "@";
+              searchQuestionnaireJson =
+                  fhirhealthcareApis.fhirResourceSearchPost(
+                      datasetPathforFHIR
+                          + FHIR_STORES
+                          + "FHIR_"
+                          + studyId
+                          + "/fhir/"
+                          + QUESTIONNAIRE_RESPONSE_TYPE,
+                      "identifier.contains(" + identifierValue + ")");
+            }
 
             SearchQuestionnaireResponseFhirBean searchResponseFhirbean =
                 new Gson()
@@ -517,18 +544,43 @@ public class ProcessActivityResponseController {
           StoredResponseBean storedResponseBean = null;
           if (getresponsefhirApi.getfhirResource(datasetPathforDID + FHIR_STORES + "DID_" + studyId)
               != null) {
-            String identifierValue =
-                studyId + "@" + siteId + "@" + participantId + "@" + activityId + "@";
-            String searchQuestionnaireJson =
-                fhirhealthcareApis.fhirResourceSearchPost(
-                    datasetPathforDID
-                        + FHIR_STORES
-                        + "DID_"
-                        + studyId
-                        + "/fhir/"
-                        + QUESTIONNAIRE_RESPONSE_TYPE,
-                    "identifier.contains(" + identifierValue + ")");
+            String identifierValue = "";
+            String searchQuestionnaireJson = "";
+            if (!activityRunId.isEmpty()) {
+              identifierValue =
+                  studyId
+                      + "@"
+                      + siteId
+                      + "@"
+                      + participantId
+                      + "@"
+                      + activityId
+                      + "@"
+                      + activityRunId;
 
+              searchQuestionnaireJson =
+                  fhirhealthcareApis.fhirResourceSearchPost(
+                      datasetPathforDID
+                          + FHIR_STORES
+                          + "FHIR_"
+                          + studyId
+                          + "/fhir/"
+                          + QUESTIONNAIRE_RESPONSE_TYPE,
+                      "identifier=" + identifierValue);
+
+            } else {
+              identifierValue =
+                  studyId + "@" + siteId + "@" + participantId + "@" + activityId + "@";
+              searchQuestionnaireJson =
+                  fhirhealthcareApis.fhirResourceSearchPost(
+                      datasetPathforDID
+                          + FHIR_STORES
+                          + "DID_"
+                          + studyId
+                          + "/fhir/"
+                          + QUESTIONNAIRE_RESPONSE_TYPE,
+                      "identifier.contains(" + identifierValue + ")");
+            }
             SearchQuestionnaireResponseFhirBean searchResponseFhirbean =
                 new Gson()
                     .fromJson(searchQuestionnaireJson, SearchQuestionnaireResponseFhirBean.class);

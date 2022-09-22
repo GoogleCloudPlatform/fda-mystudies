@@ -293,7 +293,8 @@ class StudyAnchorDate {
         return
       }
       self.date = date
-      DBHandler.saveAnchorDate(date: self.date!, studyId: (Study.currentStudy?.studyId)!)
+      guard let studyId = Study.currentStudy?.studyId else { return }
+      DBHandler.saveAnchorDate(date: self.date!, studyId: studyId)
     }
   }
 

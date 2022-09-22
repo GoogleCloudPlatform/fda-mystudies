@@ -20,6 +20,7 @@ import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PATIEN
 import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.QUESTIONNAIRE_RESPONSE_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.QUESTIONNAIRE_TYPE_FHIR;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
@@ -980,7 +981,14 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       String propertyName = pd.getName();
       Method getterMethod = pd.getReadMethod();
       Object propertyValue = getterMethod.invoke(bean);
+      logger.debug("propertyValue22" + propertyValue);
+      logger.debug("propertyValue23" + propertyName);
+      logger.debug("propertyValue24" + getterMethod);
       if (!propertyName.equals(AppConstants.PROPERTY_NAME_CLASS)) {
+        logger.debug("propertyValue25" + propertyValue);
+        logger.debug("propertyValue26" + propertyName);
+        logger.debug("propertyValue27" + getterMethod);
+        logger.debug("propertyValue28" + propertyName.toString());
         if (propertyName.equals("actvityValueGroup")) {
           acitivtyValueGroup = (ActivityValueGroupBean) propertyValue;
           logger.debug("propertyValue27" + acitivtyValueGroup);
@@ -1035,17 +1043,24 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
                     ans = fhirAnswerValue(map, valueObj, ans);
                     answer.add(ans);
                     items.setAnswer(answer);
+                    logger.debug("items1: " + items.toString());
                   } else {
                     if (valueObj != null || ObjectUtils.isNotEmpty(valueObj)) {
-                      ans = new Answer();
-                      logger.debug("othervalueObj" + valueObj);
+
                       List<Answer> a1 = new LinkedList<>();
+                      logger.debug("othervalueObj" + valueObj);
                       a1 = fhirAnswerValueForOther(map, valueObj, a1);
-                      // answer.add(ans);
-                      items.setAnswer(a1);
+                      
+                      for (int i = 0; i < a1.size(); i++) {
+                        answer.add(a1.get(i));
+                      }
+
+                      items.setAnswer(answer);
+                      logger.debug("items2: " + items.toString());
                     }
                   }
                 }
+
                 if (type.equals("task")) {
                   Answer ansList = new Answer();
                   ansList.setItem(listOfItems1);
@@ -1089,37 +1104,42 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
   private List<Answer> fhirAnswerValueForOther(
       Map<String, Object> map, Object propertyValue, List<Answer> a1) throws Exception {
-    logger.entry("begin fhirAnswerValue()");
-    logger.debug("fhirAnswerValue()" + propertyValue.toString());
+    logger.debug("begin fhirAnswerValue()");
     String responseResultType = (String) map.get(RESPONSE_RESULT_TYPE);
     if (responseResultType.equals("textChoice")) {
       logger.debug("fhirAnswerValue()textChoice1" + propertyValue);
       try {
-        logger.debug("fhirAnswerValue()otherChoice3" + propertyValue);
-        JSONObject jsonObject = new JSONObject(propertyValue.toString());
+
+        ObjectMapper Obj = new ObjectMapper();
+
+        // Converting the Java object into a JSON string
+        String jsonStr = Obj.writeValueAsString(propertyValue);
+
+        logger.debug("fhirAnswerValue()otherChoice3" + jsonStr);
+        JSONObject jsonObject = new JSONObject(String.valueOf(jsonStr));
         logger.debug("fhirAnswerValue()otherChoice4" + jsonObject);
         if (jsonObject.has("other")) {
-          String otheroptionvalue = jsonObject.get("other").toString();
+          String otheroptionvalue = String.valueOf(jsonObject.get("other"));
           logger.debug("fhirAnswerValue()otherChoice5" + otheroptionvalue);
-          Answer answerMap = new Answer();
-          answerMap.setValueString(otheroptionvalue);
-          logger.debug("fhirAnswerValue()otherChoice6" + answerMap.toString());
-          a1.add(answerMap);
+          Answer otherAns = new Answer();
+          otherAns.setValueString(otheroptionvalue);
+          logger.debug("fhirAnswerValue()otherChoice6" + otherAns.toString());
+          a1.add(otherAns);
         }
+
         if (jsonObject.has("text")) {
-          String otheroptiontext = jsonObject.get("text").toString();
+          String otheroptiontext = String.valueOf(jsonObject.get("text"));
           logger.debug("fhirAnswerValue()otherChoice7" + otheroptiontext);
           if (!otheroptiontext.equalsIgnoreCase("null")) {
-            Answer answerMap = new Answer();
-            answerMap.setValueString(otheroptiontext);
-            logger.debug("fhirAnswerValue()otherChoice8" + answerMap.toString());
-            a1.add(answerMap);
+            Answer textAns = new Answer();
+            textAns.setValueString(otheroptiontext);
+            logger.debug("fhirAnswerValue()otherChoice8" + textAns.toString());
+            a1.add(textAns);
           }
         }
 
       } catch (JSONException e) {
-        logger.error(
-            "fhirAnswerValue() method: Unable to getvalue of otheroption object" + e.getMessage());
+        logger.error("fhirAnswerValue() method: Unable to getvalue of otheroption object", e);
       }
     }
     logger.exit("fhirAnswerValue() - ends ");
@@ -1179,7 +1199,34 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
             AppUtil.convertDateToOtherFormat(
                 (String) propertyValue, DATE_FORMAT_RESPONSE_MOBILE, DATE_FORMAT_RESPONSE_FHIR));
       }
-    } else if (propertyValue instanceof String) {
+    } /* else if (responseResultType.equals("textChoice")) {
+        logger.debug("fhirAnswerValue()textChoice1" + propertyValue);
+        if (propertyValue instanceof String) {
+          answerMap.setValueString((String) propertyValue);
+          logger.debug("fhirAnswerValue()textChoice2" + answerMap.toString());
+        } else {
+          try {
+            logger.debug("fhirAnswerValue()otherChoice3" + propertyValue);
+            JSONObject jsonObject = new JSONObject(propertyValue.toString());
+            logger.debug("fhirAnswerValue()otherChoice4" + jsonObject);
+            String otheroptionvalue = jsonObject.get("other").toString();
+            logger.debug("fhirAnswerValue()otherChoice5" + otheroptionvalue);
+            answerMap.setValueString(otheroptionvalue);
+            logger.debug("fhirAnswerValue()otherChoice6" + answerMap.toString());
+            if (jsonObject.has("text")) {
+              String otheroptiontext = jsonObject.get("text").toString();
+              logger.debug("fhirAnswerValue()otherChoice7" + otheroptiontext);
+              answerMap.setValueString(otheroptiontext);
+              logger.debug("fhirAnswerValue()otherChoice8" + answerMap.toString());
+            }
+
+          } catch (JSONException e) {
+            logger.error(
+                "fhirAnswerValue() method: Unable to getvalue of otheroption object"
+                    + e.getMessage());
+          }
+        }
+      }*/ else if (propertyValue instanceof String) {
       answerMap.setValueString((String) propertyValue);
     }
     logger.exit("fhirAnswerValue() - ends ");
