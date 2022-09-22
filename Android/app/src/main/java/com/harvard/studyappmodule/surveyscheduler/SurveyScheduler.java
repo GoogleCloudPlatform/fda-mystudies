@@ -16,6 +16,9 @@
 package com.harvard.studyappmodule.surveyscheduler;
 
 import android.content.Context;
+import android.text.format.DateFormat;
+import android.util.Log;
+
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -322,11 +325,11 @@ public class SurveyScheduler {
   private void setMonthlyRun(ActivitiesWS activity, int offset) {
     if (startTime != null) {
       Calendar startCalendar = Calendar.getInstance();
-//      if (joiningTime.after(startTime)) {
-//        startCalendar.setTime(joiningTime);
-//      } else {
-//        startCalendar.setTime(startTime);
-//      }
+      if (joiningTime.after(startTime)) {
+        startCalendar.setTime(joiningTime);
+      } else {
+        startCalendar.setTime(startTime);
+      }
 
       startCalendar.setTime(startTime);
       Calendar startTimeCalender = Calendar.getInstance();
@@ -340,17 +343,40 @@ public class SurveyScheduler {
         Date startDate = startCalendar.getTime();
         Calendar startCalendarTime = Calendar.getInstance();
         startCalendarTime.setTime(startDate);
-        startCalendarTime.setTimeInMillis(startCalendarTime.getTimeInMillis());
-        startCalendar.set(Calendar.DAY_OF_MONTH, startTimeCalender.get(Calendar.DAY_OF_MONTH));
-        startCalendar.set(Calendar.HOUR_OF_DAY, startTimeCalender.get(Calendar.HOUR_OF_DAY));
-        startCalendar.set(Calendar.MINUTE, startTimeCalender.get(Calendar.MINUTE));
-        startCalendar.set(Calendar.SECOND, startTimeCalender.get(Calendar.SECOND));
-        startCalendar.add(Calendar.MONTH, 1);
+        if (DateFormat.format("MMM", startDate).equals("Feb")
+            && (DateFormat.format("dd", startDate).equals("28")
+                || DateFormat.format("dd", startDate).equals("29"))) {
+          if (DateFormat.format("dd", startDate).equals("28"))
+            startCalendar.set(Calendar.DAY_OF_MONTH, 58);
+          else if (DateFormat.format("dd", startDate).equals("29"))
+            startCalendar.set(Calendar.DAY_OF_MONTH, 59);
+        } else if (DateFormat.format("dd", endTime).equals("31")) {
+          if (DateFormat.format("dd", endTime).equals("31")
+              && (DateFormat.format("MMM", startDate).equals("Apr")
+                  || DateFormat.format("MMM", startDate).equals("Jun")
+                  || DateFormat.format("MMM", startDate).equals("Sep")
+                  || DateFormat.format("MMM", startDate).equals("Nov"))) {
+            startCalendar.set(Calendar.DAY_OF_MONTH, 60);
+          } else {
+            startCalendarTime.setTimeInMillis(startCalendarTime.getTimeInMillis());
+            startCalendar.set(Calendar.DAY_OF_MONTH, startTimeCalender.get(Calendar.DAY_OF_MONTH));
+            startCalendar.set(Calendar.HOUR_OF_DAY, startTimeCalender.get(Calendar.HOUR_OF_DAY));
+            startCalendar.set(Calendar.MINUTE, startTimeCalender.get(Calendar.MINUTE));
+            startCalendar.set(Calendar.SECOND, startTimeCalender.get(Calendar.SECOND));
+            startCalendar.add(Calendar.MONTH, 1);
+          }
+        } else {
+          startCalendarTime.setTimeInMillis(startCalendarTime.getTimeInMillis());
+          startCalendar.set(Calendar.DAY_OF_MONTH, startTimeCalender.get(Calendar.DAY_OF_MONTH));
+          startCalendar.set(Calendar.HOUR_OF_DAY, startTimeCalender.get(Calendar.HOUR_OF_DAY));
+          startCalendar.set(Calendar.MINUTE, startTimeCalender.get(Calendar.MINUTE));
+          startCalendar.set(Calendar.SECOND, startTimeCalender.get(Calendar.SECOND));
+          startCalendar.add(Calendar.MONTH, 1);
+        }
         Date endDate = new Date(startCalendar.getTimeInMillis() - 1000);
         if (endDate.after(endCalendar.getTime())) {
           endDate = endCalendar.getTime();
         }
-
         Calendar endCalendarTime = Calendar.getInstance();
         endCalendarTime.setTime(endDate);
         endCalendarTime.setTimeInMillis(endCalendarTime.getTimeInMillis());
