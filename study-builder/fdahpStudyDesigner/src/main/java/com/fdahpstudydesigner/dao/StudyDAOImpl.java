@@ -9607,9 +9607,7 @@ public class StudyDAOImpl implements StudyDAO {
             items.setEnableWhen(enableWhenBranchinglist);
 
             logger.debug("enabledvalue", items);
-            items =
-                toQuestionDetails(
-                    session, questionnairesStepsBo, items, questionsBo);
+            items = toQuestionDetails(session, questionnairesStepsBo, items, questionsBo);
           } else if (questionnairesStepsBo.getStepType().equalsIgnoreCase("Instruction")) {
             items.setDefinition(FdahpStudyDesignerConstants.INSTRUCTION_ACTIVITY);
             InstructionsBo instructionsBo =
@@ -9652,10 +9650,7 @@ public class StudyDAOImpl implements StudyDAO {
                 itemsForForm.setLinkId(questionsBoForForm.getShortTitle());
                 itemsForForm =
                     toQuestionDetails(
-                        session,
-                        questionnairesStepsBo,
-                        itemsForForm,
-                        questionsBoForForm);
+                        session, questionnairesStepsBo, itemsForForm, questionsBoForForm);
                 listOfitemsForForm.add(itemsForForm);
               }
             }
@@ -10456,7 +10451,15 @@ public class StudyDAOImpl implements StudyDAO {
         if (questionReponseTypeBo.getValidationRegex() != null) {
           Extension textExtension = new Extension();
           textExtension.setUrl("http://hl7.org/fhir/StructureDefinition/regex");
-          textExtension.setValueString(questionReponseTypeBo.getValidationRegex());
+          // textExtension.setValueString(questionReponseTypeBo.getValidationRegex());
+          if (questionReponseTypeBo.getValidationCondition().equalsIgnoreCase("disallow")
+              && questionReponseTypeBo
+                  .getValidationCharacters()
+                  .equalsIgnoreCase("allcharacters")) {
+            textExtension.setValueString("[]");
+          } else {
+            textExtension.setValueString(questionReponseTypeBo.getValidationRegex());
+          }
           textExtensions.add(textExtension);
         }
         items.setExtension(textExtensions);
@@ -10483,13 +10486,13 @@ public class StudyDAOImpl implements StudyDAO {
         break;
     }
 
-   if (!answerOptions.isEmpty()) {
+    if (!answerOptions.isEmpty()) {
       items.setAnswerOption(answerOptions);
     }
     if (!initials.isEmpty()) {
       items.setInitial(initials);
     }
-	
+
     return items;
   }
 
