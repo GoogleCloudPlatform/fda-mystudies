@@ -52,6 +52,9 @@
               [ngClass]="{
                 'custom_not-allowed': user.status === userStatus.Deactivated
               }"
+
+              [ngClass]="{'select_disabled': user.status === userStatus.Deactivated}"
+              
               [readonly]="user.status === userStatus.Deactivated"
               placeholder="Enter first name"
               type="text"

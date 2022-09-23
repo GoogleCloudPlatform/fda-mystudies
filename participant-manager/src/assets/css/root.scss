@@ -1764,3 +1764,35 @@ input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none;
 }
+
+@media only screen and (max-width: 500px) and (min-width: 200px) {
+  #body-container .usr_dtls_search__ {
+    min-width: 220px 
+}
+}
+
+.select_disabled .ng-select-container .ng-value-container .ng-placeholder {
+  margin-top: 7px !important;
+  cursor: not-allowed;
+}
+
+.select_disabled.ng-select-disabled .ng-arrow-wrapper {
+  top: 0px !important;
+  cursor: not-allowed;
+}
+
+.ng-select.ng-select-disabled>.ng-select-container:hover {
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+}
+.select_disabled {
+  cursor: not-allowed;
+}
+.select_disabled.ng-select-multiple .ng-select-container .ng-value-container .ng-input {
+  cursor: not-allowed;
+}
+.select_disabled.ng-select-disabled>.ng-select-container {
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+  pointer-events: none;
+}
