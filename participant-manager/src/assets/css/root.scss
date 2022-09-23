@@ -1767,8 +1767,8 @@ input[type="password"]::-ms-clear {
 
 @media only screen and (max-width: 500px) and (min-width: 200px) {
   #body-container .usr_dtls_search__ {
-    min-width: 220px 
-}
+    min-width: 220px;
+  }
 }
 
 .select_disabled .ng-select-container .ng-value-container .ng-placeholder {
@@ -1781,19 +1781,21 @@ input[type="password"]::-ms-clear {
   cursor: not-allowed;
 }
 
-.ng-select.ng-select-disabled>.ng-select-container:hover {
+.ng-select.ng-select-disabled > .ng-select-container:hover {
   background-color: #f9f9f9;
   cursor: not-allowed;
 }
 .select_disabled {
   cursor: not-allowed;
 }
-.select_disabled.ng-select-multiple .ng-select-container .ng-value-container .ng-input {
+.select_disabled.ng-select-multiple
+  .ng-select-container
+  .ng-value-container
+  .ng-input {
   cursor: not-allowed;
 }
-.select_disabled.ng-select-disabled>.ng-select-container {
+.select_disabled.ng-select-disabled > .ng-select-container {
   background-color: #f9f9f9;
   cursor: not-allowed;
   pointer-events: none;
 }
-
