@@ -72,6 +72,7 @@ class ActivityStepResult {
 
   var endTime: Date?
   var skipped: Bool?
+  var stepSkipped: Bool?
 
   /// stores the result value of step, it can be of any type
   var value: Any?
@@ -92,6 +93,7 @@ class ActivityStepResult {
     self.startTime = Date.init(timeIntervalSinceNow: 0)
     self.endTime = Date.init(timeIntervalSinceNow: 0)
     self.skipped = false
+    self.stepSkipped = false
     self.questionStep = nil
     self.subTypeForForm = ""
 
@@ -153,30 +155,49 @@ class ActivityStepResult {
 
       stepDict?[kActivityEndTime] = Utilities.getStringFromDate(date: self.endTime!)
     }
+      
+      if let key = self.key, key == "formsteptitle" {
+          print("Skipped = ", self.skipped)
+          print("Value = \n", self.value)
+      } else {
+          print("Key = ", self.key)
+          print("Skipped = ", self.skipped)
+          print("Value = \n", self.value)
+      }
 
-    if self.value != nil {
-      stepDict?[kActivityStepResultValue] = self.value
+      if self.value != nil {
+//      stepDict?[kActivityStepResultValue] = self.value
       // checking if step is skippable
+          
+      let skipped = self.stepSkipped ?? false
       if self.value is [Any] || self.value is [String: Any] {
+        
+//        if Utilities.isValidObject(someObject: self.value as AnyObject) && skipped == false {
+        if skipped == false {
 
-        if Utilities.isValidObject(someObject: self.value as AnyObject) {
           stepDict?[kActivityStepSkipped] = false
+          stepDict?[kActivityStepResultValue] = self.value
 
         } else {
           stepDict?[kActivityStepSkipped] = true
+          stepDict?[kActivityStepResultValue] = []
         }
 
       } else {
-        if Utilities.isValidValue(someObject: self.value as AnyObject) {
-          stepDict?[kActivityStepSkipped] = false
+//        if Utilities.isValidValue(someObject: self.value as AnyObject) && skipped == false {
+        if skipped == false {
 
+          stepDict?[kActivityStepSkipped] = false
+          stepDict?[kActivityStepResultValue] = self.value
         } else {
           stepDict?[kActivityStepSkipped] = true
+          stepDict?[kActivityStepResultValue] = ""
         }
       }
     } else {
-      stepDict?[kActivityStepSkipped] = self.skipped ?? true
-      stepDict?[kActivityStepResultValue] = self.value
+      stepDict?[kActivityStepSkipped] = self.stepSkipped ?? true
+      stepDict?[kActivityStepResultValue] = ""
+//      stepDict?[kActivityStepResultValue] = self.value
     }
     return stepDict
   }
