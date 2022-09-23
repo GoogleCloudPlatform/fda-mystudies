@@ -83,20 +83,20 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringStartDate
     )
-    attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedStartDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     let attributedEndDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringEndDate
     )
-    attributedEndDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedEndDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
 
     attributedStartDate.append(attributedEndDate)
 
@@ -110,11 +110,11 @@ class StudyDashboardStatisticsTableViewCell: UITableViewCell {
     let attributedStartDate: NSMutableAttributedString = NSMutableAttributedString(
       string: stringDate
     )
-    attributedStartDate.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: color,
-      range: NSRange(location: 0, length: 2)
-    )
+//    attributedStartDate.addAttribute(
+//      NSAttributedString.Key.foregroundColor,
+//      value: color,
+//      range: NSRange(location: 0, length: 2)
+//    )
     return attributedStartDate
   }
 
