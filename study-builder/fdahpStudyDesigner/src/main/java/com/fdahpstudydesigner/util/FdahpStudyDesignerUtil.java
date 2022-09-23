@@ -696,8 +696,7 @@ public class FdahpStudyDesignerUtil {
   public static String getRegExpression(
       String validCondition, String validCharacters, String exceptCharacters) {
     String regEx = "";
-    if (((validCharacters != null) && StringUtils.isNotEmpty(validCharacters))
-        && ((validCondition != null) && StringUtils.isNotEmpty(validCondition))) {
+    if ((StringUtils.isNotEmpty(validCharacters)) && (StringUtils.isNotEmpty(validCondition))) {
       if (validCondition.equalsIgnoreCase(FdahpStudyDesignerConstants.ALLOW)) {
         regEx += "[";
         if (validCharacters.equalsIgnoreCase(FdahpStudyDesignerConstants.ALLCHARACTERS)) {
@@ -742,7 +741,7 @@ public class FdahpStudyDesignerUtil {
         }
       } else {
         if (validCharacters.equalsIgnoreCase(FdahpStudyDesignerConstants.ALLCHARACTERS)) {
-          if ((exceptCharacters != null) && StringUtils.isNotEmpty(exceptCharacters)) {
+          if (StringUtils.isNotEmpty(exceptCharacters)) {
             String[] exceptChar = exceptCharacters.split("");
             StringBuilder except = new StringBuilder();
             String escapeSplChar = "";
@@ -769,7 +768,7 @@ public class FdahpStudyDesignerUtil {
             regEx = except + regEx;
 
           } else {
-            regEx += "[.]";
+            regEx += "^([A-Za-z]*, )$";
           }
 
         } else if (validCharacters.equalsIgnoreCase(FdahpStudyDesignerConstants.ALPHABETS)) {
