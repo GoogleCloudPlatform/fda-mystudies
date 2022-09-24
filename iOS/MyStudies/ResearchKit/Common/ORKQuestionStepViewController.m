@@ -581,7 +581,7 @@ typedef NS_ENUM(NSInteger, ORKQuestionSection) {
     [self saveAnswer:ORKNullAnswerValue()];
     ORKSurveyAnswerCell *cell = self.answerCell;
     cell.answer = ORKNullAnswerValue();
-    
+    self.result.stepSkipped = true;
     [super skipForward];
 }
 

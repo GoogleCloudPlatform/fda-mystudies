@@ -303,6 +303,8 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
     // otherwise there is a minor visual glitch, where the original buttons are displayed on the UI for a short period. This is not placed after
     // the delegate responds to the stepViewControllerWillAppear, so that the target from the button's item can be used, if the intention is to
     // only modify the title of the button.
+    // Set step skip
+    self.result.stepSkipped = false;
     [self setupButtons];
     
     if ([self.delegate respondsToSelector:@selector(stepViewControllerWillAppear:)]) {
@@ -313,7 +315,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
         @throw [NSException exceptionWithName:NSGenericException reason:@"Cannot present step view controller without a step" userInfo:nil];
     }
     _hasBeenPresented = YES;
-    _stepSkipped = FALSE;
     
     // Set presentedDate on first time viewWillAppear
     if (!self.presentedDate) {
@@ -322,6 +323,8 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
     
     // clear dismissedDate
     self.dismissedDate = nil;
+    
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -488,7 +491,6 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (void)skip:(UIView *)sender {
-    _stepSkipped = TRUE;
     if (self.isBeingReviewed && !self.readOnlyMode) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
                                                                        message:nil

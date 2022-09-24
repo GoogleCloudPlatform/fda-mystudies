@@ -93,7 +93,6 @@ class ActivityStepResult {
     self.startTime = Date.init(timeIntervalSinceNow: 0)
     self.endTime = Date.init(timeIntervalSinceNow: 0)
     self.skipped = false
-    self.stepSkipped = false
     self.questionStep = nil
     self.subTypeForForm = ""
 
@@ -107,7 +106,7 @@ class ActivityStepResult {
     if Utilities.isValidValue(someObject: stepResult.identifier as AnyObject?) {
       self.key = stepResult.identifier
     }
-
+    self.stepSkipped = stepResult.stepSkipped
     self.startTime = stepResult.startDate
     self.endTime = stepResult.endDate
 

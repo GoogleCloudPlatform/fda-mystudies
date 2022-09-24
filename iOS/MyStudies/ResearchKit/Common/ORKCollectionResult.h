@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 ORK_CLASS_AVAILABLE
 @interface ORKCollectionResult : ORKResult
 
+
+@property (nonatomic, assign) BOOL stepSkipped;
 /**
  An array of `ORKResult` objects that are the children of the result.
  

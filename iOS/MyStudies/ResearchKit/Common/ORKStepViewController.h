@@ -229,7 +229,6 @@ ORK_CLASS_AVAILABLE
  */
 @property (nonatomic, strong, nullable) ORKStep *step;
 
-@property (nonatomic, assign) BOOL stepSkipped;
 
 /**
  The delegate of the step view controller.
