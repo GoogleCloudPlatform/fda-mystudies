@@ -16,6 +16,8 @@
 package com.harvard.studyappmodule.activitybuilder;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
@@ -35,7 +37,7 @@ public class ActivityBuilder extends OrderedTask {
 
   private static boolean branching;
   private static DbServiceSubscriber dbServiceSubscriber;
-  private static String identifier;
+  private static String mIdentifier;
   private static RealmList<Steps> activityQuestionStep;
   private static Context context;
 
@@ -50,7 +52,7 @@ public class ActivityBuilder extends OrderedTask {
       ActivityObj activityParam,
       boolean branchingObj,
       DbServiceSubscriber dbServiceSubscriberParam) {
-    identifier = identifierParam;
+    mIdentifier = identifierParam;
     activityQuestionStep = activityParam.getSteps();
     branching = branchingObj;
     dbServiceSubscriber = dbServiceSubscriberParam;
@@ -301,7 +303,7 @@ public class ActivityBuilder extends OrderedTask {
               || stepsData.getResultType().equalsIgnoreCase("textChoice")) {
             Realm realm = AppController.getRealmobj(context);
             StepRecordCustom stepRecordCustom =
-                dbServiceSubscriber.getResultFromDB(identifier + "_" + pair.getKey(), realm);
+                dbServiceSubscriber.getResultFromDB(mIdentifier + "_" + pair.getKey(), realm);
             for (int j = 0; j < stepRecordCustom.getTextChoices().size(); j++) {
               if (stepRecordCustom.getTextChoices().get(j).getValue().equalsIgnoreCase(answer)) {
                 answer = stepRecordCustom.getTextChoices().get(j).getText();
@@ -339,7 +341,11 @@ public class ActivityBuilder extends OrderedTask {
   @Override
   public Step getStepBeforeStep(Step step, TaskResult taskResult) {
 
+
+    taskResult.getResults().remove(step.getIdentifier());
+    dbServiceSubscriber.deleteStepRecord(context,step.getIdentifier());
     if (branching) {
+
       String identifier = "";
       for (int i = 0; i < activityQuestionStep.size(); i++) {
         for (int k = 0; k < activityQuestionStep.get(i).getDestinations().size(); k++) {
@@ -350,12 +356,22 @@ public class ActivityBuilder extends OrderedTask {
               .getDestination()
               .equalsIgnoreCase(step.getIdentifier())) {
             Map<String, StepResult> map = taskResult.getResults();
+            if (taskResult.getResults().size() == 0
+                && activityQuestionStep.get(i).getType().equalsIgnoreCase("instruction")) {
+              if (activityQuestionStep.get(i).getKey() != null) {
+                identifier = activityQuestionStep.get(i).getKey();
+              }
+            }
             for (Map.Entry<String, StepResult> pair : map.entrySet()) {
-              if (pair.getKey().equalsIgnoreCase(activityQuestionStep.get(i).getKey())) {
+              if(activityQuestionStep.get(i).getResultType() == null ||
+                  activityQuestionStep.get(i).getResultType().isEmpty()) {
+                identifier = activityQuestionStep.get(i).getKey();
+              } else if (pair.getKey().equalsIgnoreCase(activityQuestionStep.get(i).getKey())) {
                 if (activityQuestionStep.get(i).getResultType().equalsIgnoreCase("textScale")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("imageChoice")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("textChoice")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("boolean")) {
+
                   try {
                     if (pair.getValue() != null) {
                       String answer = getAnswer(pair);
@@ -371,7 +387,7 @@ public class ActivityBuilder extends OrderedTask {
                           Realm realm = AppController.getRealmobj(context);
                           StepRecordCustom stepRecordCustom =
                               dbServiceSubscriber.getResultFromDB(
-                                  identifier + "_" + activityQuestionStep.get(i).getKey(), realm);
+                                  mIdentifier + "_" + activityQuestionStep.get(i).getKey(), realm);
                           for (int j = 0; j < stepRecordCustom.getTextChoices().size(); j++) {
                             if (stepRecordCustom
                                 .getTextChoices()
@@ -409,15 +425,23 @@ public class ActivityBuilder extends OrderedTask {
                         .equalsIgnoreCase("continuousScale")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("numeric")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("timeInterval")
-                    || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("height")) {
+                    || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("height")
+                    || activityQuestionStep.get(i).getResultType().isEmpty()) {
                   try {
                     if (pair.getValue() != null) {
+                      String answer = getAnswer(pair);
+                      identifier = getidentifier(answer, activityQuestionStep, i, k);
+                      if(identifier == "") {
+                        identifier = pair.getKey();
+                      }
+                    } else {
                       String answer = getAnswer(pair);
                       identifier = getidentifier(answer, activityQuestionStep, i, k);
                     }
                   } catch (Exception e) {
                     Logger.log(e);
                     int nextIndex = steps.indexOf(step) - 1;
+                    Log.e("check","nextIndex is "+nextIndex);
 
                     if (nextIndex >= 0) {
                       return steps.get(nextIndex);
@@ -431,6 +455,7 @@ public class ActivityBuilder extends OrderedTask {
       }
       for (int j = 0; j < steps.size(); j++) {
         if (steps.get(j).getIdentifier().equalsIgnoreCase(identifier)) {
+          Log.e("check","end data "+identifier);
           return steps.get(j);
         }
       }
