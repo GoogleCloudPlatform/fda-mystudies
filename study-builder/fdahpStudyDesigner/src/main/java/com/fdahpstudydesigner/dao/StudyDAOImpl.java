@@ -10536,6 +10536,15 @@ public class StudyDAOImpl implements StudyDAO {
     }
     if (reponseTypeBo != null && StringUtils.isNotEmpty(reponseTypeBo.getOtherText())) {
       AnswerOption option = new AnswerOption();
+      if (reponseTypeBo.getSelectionStyle() != null
+          && reponseTypeBo.getSelectionStyle().equals("Multiple")) {
+        List<Extension> extensionsForTextChoice = new ArrayList<>();
+        Extension extension = new Extension();
+        extension.setUrl("http://hl7.org/fhir/StructureDefinition/questionnaire-optionExclusive");
+        extension.setValueBoolean(reponseTypeBo.getOtherExclusive().equals("Yes"));
+        extensionsForTextChoice.add(extension);
+        option.setExtension(extensionsForTextChoice);
+      }
       option.setValueString(reponseTypeBo.getOtherText());
       options.add(option);
     }

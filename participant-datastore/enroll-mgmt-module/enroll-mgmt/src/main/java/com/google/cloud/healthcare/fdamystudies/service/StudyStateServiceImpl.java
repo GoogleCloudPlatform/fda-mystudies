@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE_NA;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
@@ -117,6 +117,7 @@ public class StudyStateServiceImpl implements StudyStateService {
     } else if (CollectionUtils.isEmpty(siteIds) && optStudy.get().getType().equals(CLOSE_STUDY)) {
       participantStudyIds =
           participantStudyRepository.findByEmailAndStudyCustomIds(user.getEmail(), customStudyIds);
+
     } else {
       participantStudyIds =
           participantStudyRepository.findByEmailAndSiteIds(user.getEmail(), siteIds);
@@ -125,6 +126,7 @@ public class StudyStateServiceImpl implements StudyStateService {
     if (CollectionUtils.isNotEmpty(participantStudyIds)) {
       participantStudies = participantStudyRepository.findAllById(participantStudyIds);
     }
+
     logger.exit("getParticipantStudiesList() - Ends ");
     return participantStudies;
   }
@@ -154,7 +156,7 @@ public class StudyStateServiceImpl implements StudyStateService {
     try {
       for (StudiesBean studyBean : studiesBeenList) {
         String participantId =
-            studyBean.getParticipantId() != null ? studyBean.getParticipantId() : NOT_APPLICABLE;
+            studyBean.getParticipantId() != null ? studyBean.getParticipantId() : NOT_APPLICABLE_NA;
         auditRequest.setParticipantId(participantId);
 
         ParticipantStudyEntity participantStudyEntity = null;

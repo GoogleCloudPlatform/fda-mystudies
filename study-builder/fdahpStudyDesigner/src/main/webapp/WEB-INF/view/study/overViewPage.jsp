@@ -285,7 +285,7 @@
                           <button id="" type="button"
                                   class="btn btn-default gray-btn uploadImgbtn">Upload
                           </button>
-                          <input id="" class="dis-none uploadImg"
+                          <input id="uploadImgId" class="dis-none uploadImg"
                                  data-imageId='${spbSt.count}' type="file"
                                  name="multipartFiles" accept=".png, .jpg, .jpeg"
                                  onchange="readURL(this);"
@@ -477,6 +477,7 @@
       $(this).css("visibility", "hidden");
       $(this).parent().parent().find(".thumb img").attr("src",
           "/studybuilder/images/dummy-img.jpg");
+      $("#uploadImgId").val("");
       $(this).parent().parent().find(".imagePathCls").val('');
     });
 

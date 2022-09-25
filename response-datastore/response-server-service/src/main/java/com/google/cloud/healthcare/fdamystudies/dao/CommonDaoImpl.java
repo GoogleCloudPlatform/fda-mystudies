@@ -43,7 +43,11 @@ public class CommonDaoImpl implements CommonDao {
     Predicate[] participantBoPredicates = new Predicate[1];
     List<ParticipantInfoEntity> participantBoList = null;
     ParticipantInfoEntity participantBO = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+    Session session = null;
+
+    try {
+
+      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
       criteriaBuilder = session.getCriteriaBuilder();
       participantBoCriteriaQuery = criteriaBuilder.createQuery(ParticipantInfoEntity.class);
       participantBoRoot = participantBoCriteriaQuery.from(ParticipantInfoEntity.class);
@@ -56,6 +60,11 @@ public class CommonDaoImpl implements CommonDao {
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getParticipantInfoDetails() - error ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("getParticipantActivities() - Ends ");
     }
     logger.exit("getParticipantInfoDetails() - Ends ");
     return participantBO;
@@ -70,7 +79,10 @@ public class CommonDaoImpl implements CommonDao {
     Predicate[] predicates = new Predicate[1];
     List<StudyEntity> studyList = null;
     StudyEntity studyInfo = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+    Session session = null;
+
+    try {
+      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
       criteriaBuilder = session.getCriteriaBuilder();
       criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
       root = criteriaQuery.from(StudyEntity.class);
@@ -82,6 +94,11 @@ public class CommonDaoImpl implements CommonDao {
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getStudyDetails() - error ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("getStudyDetails() - Ends ");
     }
 
     return studyInfo;
@@ -89,7 +106,7 @@ public class CommonDaoImpl implements CommonDao {
 
   @Override
   public void saveToFHIREntity(String getFhirJson, String studyId) {
-    logger.entry("begin saveParticipantActivities()");
+    logger.entry("begin saveToFHIREntity()");
 
     Transaction transaction = null;
     Session session = null;
@@ -113,8 +130,18 @@ public class CommonDaoImpl implements CommonDao {
 
     } catch (Exception e) {
       logger.error("CommonDaoImpl getParticipantInfoDetails() - error ", e);
+    } finally {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("saveToFHIREntity() - Ends ");
     }
-    logger.exit("getParticipantInfoDetails() - Ends ");
+
+    logger.exit("saveToFHIREntity() - Ends ");
   }
 
   @Override
@@ -156,8 +183,10 @@ public class CommonDaoImpl implements CommonDao {
     CriteriaQuery<FHIRresponseEntity> criteriaQuery = null;
     Root<FHIRresponseEntity> root = null;
     Predicate[] predicates = new Predicate[1];
+    Session session = null;
 
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+    try {
+      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
       criteriaBuilder = session.getCriteriaBuilder();
       criteriaQuery = criteriaBuilder.createQuery(FHIRresponseEntity.class);
       root = criteriaQuery.from(FHIRresponseEntity.class);
@@ -166,6 +195,11 @@ public class CommonDaoImpl implements CommonDao {
       fhirList = session.createQuery(criteriaQuery).getResultList();
     } catch (Exception e) {
       logger.error("CommonDaoImpl getFhirDetails() - error ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("getFhirDetails() - Ends ");
     }
     return fhirList;
   }
