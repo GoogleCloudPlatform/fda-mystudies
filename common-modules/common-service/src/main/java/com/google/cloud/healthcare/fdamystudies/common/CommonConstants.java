@@ -25,7 +25,11 @@ public final class CommonConstants {
 
   public static final String DEACTIVATED = "Deactivated";
 
-  public static final String NOT_APPLICABLE = "NA";
+  public static final String NOT_APPLICABLE_NA = "NA";
+
+  public static final String NOT_PROVIDED_STATUS = "Not provided";
+
+  public static final String NOT_APPLICABLE_STATUS = "Not applicable";
 
   public static final String OPEN_STUDY = "OPEN";
 

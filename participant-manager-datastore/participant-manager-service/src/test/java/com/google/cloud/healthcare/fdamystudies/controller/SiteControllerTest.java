@@ -11,7 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE_NA;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
@@ -1426,7 +1426,7 @@ public class SiteControllerTest extends BaseMockIT {
                 "$.participantDetails.enrollmentStatus",
                 is(EnrollmentStatus.ENROLLED.getDisplayValue())))
         .andExpect(jsonPath("$.participantDetails.enrollmentDate").isNotEmpty())
-        .andExpect(jsonPath("$.participantDetails.withdrawalDate", is(NOT_APPLICABLE)))
+        .andExpect(jsonPath("$.participantDetails.withdrawalDate", is(NOT_APPLICABLE_NA)))
         .andExpect(
             jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
         .andExpect(
@@ -1480,8 +1480,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
         .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(1)))
         .andExpect(jsonPath("$.participantDetails.invitationDate").isNotEmpty())
-        .andExpect(jsonPath("$.participantDetails.enrollmentDate", is(NOT_APPLICABLE)))
-        .andExpect(jsonPath("$.participantDetails.withdrawalDate", is(NOT_APPLICABLE)))
+        .andExpect(jsonPath("$.participantDetails.enrollmentDate", is(NOT_APPLICABLE_NA)))
+        .andExpect(jsonPath("$.participantDetails.withdrawalDate", is(NOT_APPLICABLE_NA)))
         .andExpect(
             jsonPath(
                 "$.participantDetails.enrollmentStatus",
@@ -1533,8 +1533,8 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.participantDetails.enrollmentStatus",
                 is(EnrollmentStatus.YET_TO_ENROLL.getDisplayValue())))
-        .andExpect(jsonPath("$.participantDetails.enrollmentDate", is(NOT_APPLICABLE)))
-        .andExpect(jsonPath("$.participantDetails.withdrawalDate", is(NOT_APPLICABLE)))
+        .andExpect(jsonPath("$.participantDetails.enrollmentDate", is(NOT_APPLICABLE_NA)))
+        .andExpect(jsonPath("$.participantDetails.withdrawalDate", is(NOT_APPLICABLE_NA)))
         .andExpect(
             jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
         .andExpect(
