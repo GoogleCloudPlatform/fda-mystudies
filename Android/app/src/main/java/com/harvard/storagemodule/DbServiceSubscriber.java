@@ -1547,6 +1547,18 @@ public class DbServiceSubscriber {
     });
   }
 
+  public void deleteStepRecord(Context context, String stepId){
+    realm = AppController.getRealmobj(context);
+    StepRecordCustom stepRecordCustom = realm.where(StepRecordCustom.class).equalTo("stepId",stepId).findFirst();
+
+    realm.beginTransaction();
+    if(stepRecordCustom != null){
+      stepRecordCustom.deleteFromRealm();
+    }
+    realm.commitTransaction();
+    closeRealmObj(realm);
+  }
+
   public void saveActivityStartTime(ActivitiesWS activitiesWS, Realm realm, String startTime) {
     realm.beginTransaction();
     activitiesWS.setStartTime(startTime);

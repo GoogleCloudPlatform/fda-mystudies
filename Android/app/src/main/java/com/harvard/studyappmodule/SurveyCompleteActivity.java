@@ -643,7 +643,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
   @Override
   public void onBackPressed() {
-//    super.onBackPressed();
+    super.onBackPressed();
   }
 
   @Override
