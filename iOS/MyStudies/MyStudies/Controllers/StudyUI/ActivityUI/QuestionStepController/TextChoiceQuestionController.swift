@@ -170,7 +170,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
   lazy private(set) var selectedChoices: [ORKTextChoice] = []
   lazy var searchChoices: [ORKTextChoice] = []
-  lazy var answers: [String]? = []
+  lazy var answers: [[String: String]]? = []
 
   private(set) var isOtherCellSelected = false
 
@@ -215,12 +215,12 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       for choice in choices {
 
         if let choice = choice as? String {
-          self.answers?.append(choice)
+            self.answers?.append(["value": choice])
         } else if let choiceDict = choice as? JSONDictionary {
             if let otherChoice = choiceDict["text"] as? String {
-                self.answers?.append(otherChoice)
+                self.answers?.append(["otherChoiceText": otherChoice])
             } else if let otherChoice = choiceDict["other"] as? String {
-                self.answers?.append(otherChoice)
+                self.answers?.append(["otherValue": otherChoice])
             }
           
         }
@@ -283,13 +283,15 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     /// Update the selected result here
     if let answers = self.answers {
       for answer in answers {
-        if let selectedChoice = self.textChoices.filter({ $0.value as! String == answer })
+        if let answerValue = answer["value"], let selectedChoice = self.textChoices.filter({ $0.value as! String == answerValue })
             .first
         {
           self.selectedChoices.append(selectedChoice)
         } else {  // unable to find the answer in textchoices, perhaps other choice was selected
           self.isOtherCellSelected = true
-          self.otherChoice.otherChoiceText = answer
+          if let otherChoiceText = answer["otherChoiceText"] {
+              self.otherChoice.otherChoiceText = otherChoiceText
+          }
         }
       }
       self.answers = nil
