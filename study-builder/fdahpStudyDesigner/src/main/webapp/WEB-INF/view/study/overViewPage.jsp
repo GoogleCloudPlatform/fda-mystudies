@@ -478,6 +478,12 @@
       $(this).parent().parent().find(".thumb img").attr("src",
           "/studybuilder/images/dummy-img.jpg");
       $("#uploadImgId").val("");
+      var pagecount = $(".overview-panel > div").length;     
+      pagecount=pagecount-1;
+    	  var st3=$("#uploadImgId"+ pagecount
+    	          + "").val();
+    	  $("#uploadImgId"+ pagecount
+    	          + "").val("");
       $(this).parent().parent().find(".imagePathCls").val('');
     });
 
@@ -549,7 +555,8 @@
           "<div class='form-group mb-none mt-sm'>" +
           "<button class='btn btn-default gray-btn uploadImgbtn'style='vertical-align: bottom; margin-top:6px !important' type=button>Upload</button>"
           +
-          "<input class='dis-none uploadImg' data-imageId='" + count
+          "<input id='uploadImgId" + count
+          + "' class='dis-none uploadImg' data-imageId='" + count
           + "' accept='.png, .jpg, .jpeg' name='multipartFiles' onchange=readURL(this) type=file>"
           +
           "<input type='hidden' class='imagePathCls' name='imagePath' /><div class='help-block with-errors red-txt wid180'></div>"
