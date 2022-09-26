@@ -363,10 +363,7 @@ public class ActivityBuilder extends OrderedTask {
               }
             }
             for (Map.Entry<String, StepResult> pair : map.entrySet()) {
-              if(activityQuestionStep.get(i).getResultType() == null ||
-                  activityQuestionStep.get(i).getResultType().isEmpty()) {
-                identifier = activityQuestionStep.get(i).getKey();
-              } else if (pair.getKey().equalsIgnoreCase(activityQuestionStep.get(i).getKey())) {
+                if (pair.getKey().equalsIgnoreCase(activityQuestionStep.get(i).getKey())) {
                 if (activityQuestionStep.get(i).getResultType().equalsIgnoreCase("textScale")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("imageChoice")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("textChoice")
@@ -426,13 +423,15 @@ public class ActivityBuilder extends OrderedTask {
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("numeric")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("timeInterval")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("height")
-                    || activityQuestionStep.get(i).getResultType().isEmpty()) {
+                    || activityQuestionStep.get(i).getResultType().isEmpty()
+                    || activityQuestionStep.get(i).getResultType() == null
+                    || activityQuestionStep.get(i).getType().equalsIgnoreCase("instruction")) {
                   try {
                     if (pair.getValue() != null) {
                       String answer = getAnswer(pair);
                       identifier = getidentifier(answer, activityQuestionStep, i, k);
                       if(identifier == "") {
-                        identifier = pair.getKey();
+                        identifier = activityQuestionStep.get(i).getKey();
                       }
                     } else {
                       String answer = getAnswer(pair);
@@ -441,7 +440,6 @@ public class ActivityBuilder extends OrderedTask {
                   } catch (Exception e) {
                     Logger.log(e);
                     int nextIndex = steps.indexOf(step) - 1;
-                    Log.e("check","nextIndex is "+nextIndex);
 
                     if (nextIndex >= 0) {
                       return steps.get(nextIndex);
@@ -455,7 +453,6 @@ public class ActivityBuilder extends OrderedTask {
       }
       for (int j = 0; j < steps.size(); j++) {
         if (steps.get(j).getIdentifier().equalsIgnoreCase(identifier)) {
-          Log.e("check","end data "+identifier);
           return steps.get(j);
         }
       }
