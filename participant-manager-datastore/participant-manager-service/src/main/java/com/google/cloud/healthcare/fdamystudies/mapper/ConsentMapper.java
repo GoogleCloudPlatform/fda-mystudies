@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CONSENT_DATE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DATA_SHARING;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE_NA;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_PROVIDED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PDF_PATH;
 
@@ -39,7 +40,7 @@ public final class ConsentMapper {
       consentHistory.setDataSharingPermissions(NOT_PROVIDED_STATUS);
     } else if (StringUtils.isNotEmpty(studyConsent.getSharing())
         && studyConsent.getSharing().equalsIgnoreCase(DataSharingStatus.NOT_APPLICABLE.value())) {
-      consentHistory.setDataSharingPermissions(NOT_PROVIDED_STATUS);
+      consentHistory.setDataSharingPermissions(NOT_APPLICABLE_STATUS);
     } else {
       consentHistory.setDataSharingPermissions(studyConsent.getSharing());
     }
@@ -81,7 +82,7 @@ public final class ConsentMapper {
             .getMetadata()
             .get(DATA_SHARING)
             .equalsIgnoreCase(DataSharingStatus.NOT_APPLICABLE.value())) {
-      consentHistory.setDataSharingPermissions(NOT_PROVIDED_STATUS);
+      consentHistory.setDataSharingPermissions(NOT_APPLICABLE_STATUS);
     } else {
       consentHistory.setDataSharingPermissions(consentArtifact.getMetadata().get(DATA_SHARING));
     }
