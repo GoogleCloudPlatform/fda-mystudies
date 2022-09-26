@@ -313,6 +313,7 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
         @throw [NSException exceptionWithName:NSGenericException reason:@"Cannot present step view controller without a step" userInfo:nil];
     }
     _hasBeenPresented = YES;
+    _stepSkipped = FALSE;
     
     // Set presentedDate on first time viewWillAppear
     if (!self.presentedDate) {
@@ -487,6 +488,7 @@ static const CGFloat iPadStepTitleLabelFontSize = 50.0;
 }
 
 - (void)skip:(UIView *)sender {
+    _stepSkipped = TRUE;
     if (self.isBeingReviewed && !self.readOnlyMode) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
                                                                        message:nil
