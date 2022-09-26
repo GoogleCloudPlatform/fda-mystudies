@@ -113,6 +113,9 @@ class ActivityStepResult {
 
     if (stepResult.results?.count)! > 1 || (self.step != nil && self.step is ActivityFormStep) {
       self.type = .form
+      
+      
+      
     } else {
       if activityType == .activeTask {
         self.type = .active
@@ -123,6 +126,100 @@ class ActivityStepResult {
   }
 
   /// Creates ActivityStepDictionary from step instance and returns ResultDictionary for storing data to Api/Local
+  func getActivityActivityViewCStepResultDict() -> [String: Any]? {
+
+    var stepDict: [String: Any]? = [String: Any]()
+
+    switch self.type! as ActivityStepType {
+
+    case .instruction: stepDict?[kActivityStepResultType] = "null"
+
+    case .question: stepDict?[kActivityStepResultType] = self.step?.resultType
+
+    case .form:
+      stepDict?[kActivityStepResultType] = ActvityStepResultType.formOrActiveTask.rawValue
+
+    case .active:
+      stepDict?[kActivityStepResultType] = "grouped"
+      
+    default: break
+
+    }
+
+    if Utilities.isValidValue(someObject: self.key as AnyObject?) {
+
+      stepDict?[kActivityStepKey] = self.key!
+    }
+    if self.startTime != nil && (Utilities.getStringFromDate(date: self.startTime!) != nil) {
+
+      stepDict?[kActivityStartTime] = Utilities.getStringFromDate(date: self.startTime!)
+    }
+    if self.endTime != nil && (Utilities.getStringFromDate(date: self.endTime!) != nil) {
+
+      stepDict?[kActivityEndTime] = Utilities.getStringFromDate(date: self.endTime!)
+    }
+
+    if self.value != nil {
+      stepDict?[kActivityStepResultValue] = self.value
+      // checking if step is skippable
+      if self.value is [Any] || self.value is [String: Any] {
+        
+        let valType = self.type! as ActivityStepType
+        if valType == .form {
+        let val1 = self.value as? [[[String : Any]]] ?? []
+        if val1.count > 0 {
+        let val2 = val1[0]
+        let val3 = val2.count
+          if val3 > 0 {
+            var valSkipCount = 0
+            for val4 in val2 {
+              let firstSkipped = val4["skipped"] as? Bool ?? false
+              if firstSkipped {
+                valSkipCount += 1
+//                stepDict?[kActivityStepSkipped] = self.skipped ?? true
+//          //      stepDict?[kActivityStepResultValue] = self.value
+//                stepDict?[kActivityStepResultValue] = ""
+//                return stepDict
+              }
+            }
+            if valSkipCount >= val3 {
+              stepDict?[kActivityStepSkipped] = self.skipped ?? true
+        //      stepDict?[kActivityStepResultValue] = self.value
+              stepDict?[kActivityStepResultValue] = ""
+              return stepDict
+            }
+            
+          }
+        }
+        }
+
+        if Utilities.isValidObject(someObject: self.value as AnyObject) {
+          stepDict?[kActivityStepSkipped] = false
+          stepDict?[kActivityStepResultValue] = self.value
+
+        } else {
+          stepDict?[kActivityStepSkipped] = true
+          stepDict?[kActivityStepResultValue] = []
+        }
+
+      } else {
+        if Utilities.isValidValue(someObject: self.value as AnyObject) {
+          stepDict?[kActivityStepSkipped] = false
+          stepDict?[kActivityStepResultValue] = self.value
+
+        } else {
+          stepDict?[kActivityStepSkipped] = true
+          stepDict?[kActivityStepResultValue] = ""
+        }
+      }
+    } else {
+      stepDict?[kActivityStepSkipped] = self.skipped ?? true
+//      stepDict?[kActivityStepResultValue] = self.value
+      stepDict?[kActivityStepResultValue] = ""
+    }
+    return stepDict
+  }
+  
   func getActivityStepResultDict() -> [String: Any]? {
 
     var stepDict: [String: Any]? = [String: Any]()
@@ -155,26 +252,13 @@ class ActivityStepResult {
 
       stepDict?[kActivityEndTime] = Utilities.getStringFromDate(date: self.endTime!)
     }
-      
-      if let key = self.key, key == "formsteptitle" {
-          print("Skipped = ", self.skipped)
-          print("Value = \n", self.value)
-      } else {
-          print("Key = ", self.key)
-          print("Skipped = ", self.skipped)
-          print("Value = \n", self.value)
-      }
 
-      if self.value != nil {
-//      stepDict?[kActivityStepResultValue] = self.value
+    if self.value != nil {
+      stepDict?[kActivityStepResultValue] = self.value
       // checking if step is skippable
-          
-      let skipped = self.stepSkipped ?? false
       if self.value is [Any] || self.value is [String: Any] {
-        
-//        if Utilities.isValidObject(someObject: self.value as AnyObject) && skipped == false {
-        if skipped == false {
 
+        if Utilities.isValidObject(someObject: self.value as AnyObject) {
           stepDict?[kActivityStepSkipped] = false
           stepDict?[kActivityStepResultValue] = self.value
 
@@ -184,22 +268,126 @@ class ActivityStepResult {
         }
 
       } else {
-//        if Utilities.isValidValue(someObject: self.value as AnyObject) && skipped == false {
-        if skipped == false {
-
+        if Utilities.isValidValue(someObject: self.value as AnyObject) {
           stepDict?[kActivityStepSkipped] = false
           stepDict?[kActivityStepResultValue] = self.value
+
         } else {
           stepDict?[kActivityStepSkipped] = true
           stepDict?[kActivityStepResultValue] = ""
         }
       }
     } else {
-      stepDict?[kActivityStepSkipped] = self.stepSkipped ?? true
-      stepDict?[kActivityStepResultValue] = ""
+      stepDict?[kActivityStepSkipped] = self.skipped ?? true
 //      stepDict?[kActivityStepResultValue] = self.value
+      stepDict?[kActivityStepResultValue] = ""
     }
     return stepDict
+  }
+  
+  
+  func checkResultValue(stepResult: ORKStepResult, activityType: ActivityType) -> Bool {
+
+    if (stepResult.results?.count)! > 0 {
+
+      if activityType == .questionnaire {
+        // for question Step
+
+        if stepResult.results?.count == 1 && self.type != .form {
+
+          return true
+        } else {
+          // for form step result
+
+          self.value = [ActivityStepResult]()
+          var formResultArray: [Any] = [Any]()
+          var j: Int! = 0
+          var isAddMore: Bool? = false
+
+          if self.step as? ActivityFormStep != nil {
+            if (stepResult.results?.count)!
+                > (self.step as? ActivityFormStep)!.itemsArray
+                .count
+            {
+              isAddMore = true
+            }
+          }
+          var localArray: [[String: Any]] = [[String: Any]]()
+
+          for (i, result) in stepResult.results!.enumerated() {
+
+            let activityStepResult: ActivityStepResult? = ActivityStepResult()
+            activityStepResult?.startTime = self.startTime
+            activityStepResult?.endTime = self.endTime
+            activityStepResult?.skipped = self.skipped
+
+            let activityStep = ActivityStep()
+            activityStepResult?.step = activityStep
+
+            j = (i == 0 ? 0 : i % (self.step as? ActivityFormStep)!.itemsArray.count)
+
+            // Checking if formStep is RepeatableFormStep
+            if isAddMore! {
+              if j == 0 {
+                localArray.removeAll()
+                localArray = [[String: Any]]()
+              }
+
+              let stepDict = (((self.step as? ActivityFormStep)!.itemsArray) as [[String: Any]])[j]
+
+              activityStepResult?.key = stepDict["key"] as! String?
+
+            } else {
+              activityStepResult?.key = result.identifier
+            }
+            let itemDict = (self.step as? ActivityFormStep)!.itemsArray[j] as [String: Any]
+            activityStepResult?.step?.resultType = (itemDict["resultType"] as? String)!
+            if (result as? ORKQuestionResult) != nil {
+
+              let questionResult: ORKQuestionResult? = (result as? ORKQuestionResult)
+
+              if Utilities.isValidValue(
+                someObject: (activityStepResult?.step?.resultType as? String as AnyObject)
+              ) {
+                self.subTypeForForm =
+                  activityStepResult?.step?.resultType
+                  as? String
+
+              } else {
+                self.subTypeForForm = ""
+              }
+
+              self.setValue(questionstepResult: questionResult!)
+
+              activityStepResult?.value = self.value
+              localArray.append((activityStepResult?.getActivityStepResultDict()!)!)
+
+              // checking if more steps added in RepeatableFormStep
+              if isAddMore! {
+                if j + 1 == (self.step as? ActivityFormStep)!.itemsArray.count {
+                  if localArray.count > 0 {
+                    formResultArray.append(localArray)
+                  }
+                }
+              }
+            }
+          }
+
+          if isAddMore! {
+            self.value = formResultArray
+
+          } else {
+            if localArray.count > 0 {
+              formResultArray.append(localArray)
+            }
+            self.value = formResultArray
+          }
+        }
+
+      }
+      return true
+    }
+    return false
   }
 
   /// Saves the result of Current Step
