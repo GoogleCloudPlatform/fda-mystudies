@@ -285,7 +285,6 @@ class ActivityStepResult {
     return stepDict
   }
   
-  
   func checkResultValue(stepResult: ORKStepResult, activityType: ActivityType) -> Bool {
 
     if (stepResult.results?.count)! > 0 {
@@ -496,6 +495,7 @@ class ActivityStepResult {
                 }
               }
             }
+            self.value = nil
           }
 
           if isAddMore! {
