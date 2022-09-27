@@ -15,11 +15,7 @@
               </a>
             </div>
             <div class="pl-1">
-              <div class="mb-xs">
-                Participant
-                <span class="visibility__hidden">_</span>
-                details
-              </div>
+              <div class="mb-xs">Participant details</div>
               <div
                 class="display-inline-flex overflow__auto mob_display-inline"
               >
@@ -330,10 +326,10 @@
           <tr>
             <th>Date of enrollment</th>
             <th>Date of withdrawal</th>
-            <th>Last enrollment status</th>
-            <th class="xs-none d-none d-sm-none">&nbsp;</th>
-            <th class="xs-none d-none d-sm-none">&nbsp;</th>
-            <th class="xs-none d-none d-sm-none">&nbsp;</th>
+            <th>Last enrollment</th>
+            <th class="xs-none">&nbsp; </th>
+            <th class="xs-none">&nbsp; </th>
+            <th class="xs-none">&nbsp; </th>
           </tr>
         </thead>
         <tbody class="custom__tbody">
@@ -363,9 +359,9 @@
                 {{ enrollmentDetails.enrollmentStatus }}
               </span>
             </td>
-            <td class="xs-none d-none d-sm-none">&nbsp;</td>
-            <td class="xs-none d-none d-sm-none">&nbsp;</td>
-            <td class="xs-none d-none d-sm-none">&nbsp;</td>
+            <td class="xs-none">&nbsp; </td>
+            <td class="xs-none">&nbsp; </td>
+            <td class="xs-none">&nbsp; </td>
           </tr>
         </tbody>
 
@@ -382,9 +378,7 @@
       </table>
 
       <h2 class="subheader__title text-weight-semibold mb-sm">
-        Consent
-        <span class="visibility__hidden">_</span>
-        history
+        Consent history
       </h2>
 
       <div class="cards1 m-none">
@@ -397,7 +391,7 @@
           <thead class="custom__thead">
             <tr>
               <span
-                class="sort__by__text mobile__view mr-sm pt-2"
+                class="sort__by__text mobile__view mr-sm"
                 style="background: transparent"
               >
                 Sort by:
@@ -453,7 +447,6 @@
               </td>
             </tr>
           </tbody>
-
           <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4" class="mob_tbl_footer_text_center">
@@ -461,7 +454,6 @@
               </td>
             </tr>
           </tfoot>
-
           <tfoot>
             <tr
               *ngIf="participant.participantDetails.consentHistory.length === 0"

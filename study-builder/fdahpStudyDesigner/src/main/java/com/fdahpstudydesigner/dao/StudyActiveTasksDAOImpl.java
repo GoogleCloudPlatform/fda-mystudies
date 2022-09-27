@@ -230,7 +230,9 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       if (activeTaskBo != null) {
         query =
             session
-                .createQuery("from ActiveTaskAtrributeValuesBo where activeTaskId=:activeTaskId")
+                .createQuery(
+                    "from ActiveTaskAtrributeValuesBo where activeTaskId=:activeTaskId"
+                        + " ORDER BY activeTaskMasterAttrId")
                 .setParameter("activeTaskId", activeTaskBo.getId());
         activeTaskAtrributeValuesBos = query.list();
         if (StringUtils.isNotEmpty(customStudyId)) {

@@ -166,13 +166,15 @@ public class StudyServiceImpl implements StudyService {
       Long invitedCount = getCount(studyInvitedCountMap, study.getId());
       studyDetail.setEnrolled(enrolledCount);
       studyDetail.setInvited(invitedCount);
-      if (studyDetail.getInvited() != 0
-          && (studyDetail.getType().equals(OPEN_STUDY)
-              || studyDetail.getInvited() >= studyDetail.getEnrolled())) {
-        Double percentage =
-            (Double.valueOf(studyDetail.getEnrolled()) * 100)
-                / Double.valueOf(studyDetail.getInvited());
-        studyDetail.setEnrollmentPercentage(percentage);
+      if (studyDetail.getInvited() != null && studyDetail.getEnrolled() != null) {
+        if (studyDetail.getInvited() != 0
+            && (studyDetail.getType().equals(OPEN_STUDY)
+                || studyDetail.getInvited() >= studyDetail.getEnrolled())) {
+          Double percentage =
+              (Double.valueOf(studyDetail.getEnrolled()) * 100)
+                  / Double.valueOf(studyDetail.getInvited());
+          studyDetail.setEnrollmentPercentage(percentage);
+        }
       }
       studyDetailsList.add(studyDetail);
     }
@@ -261,7 +263,7 @@ public class StudyServiceImpl implements StudyService {
       Integer limit,
       Integer offset,
       String orderByCondition,
-      String searchTerm) {
+      String searchValue) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
 
@@ -301,7 +303,7 @@ public class StudyServiceImpl implements StudyService {
         limit,
         offset,
         orderByCondition,
-        searchTerm,
+        searchValue,
         auditRequest);
   }
 
@@ -312,7 +314,7 @@ public class StudyServiceImpl implements StudyService {
       Integer limit,
       Integer offset,
       String orderByCondition,
-      String searchTerm,
+      String searchValue,
       AuditLogEventRequest auditRequest) {
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
@@ -325,13 +327,13 @@ public class StudyServiceImpl implements StudyService {
               limit,
               offset,
               orderByCondition,
-              StringUtils.defaultString(searchTerm));
+              StringUtils.defaultString(searchValue));
 
       participantCount =
           studyRepository.countOpenStudyParticipants(
               studyAppDetails.getStudyId(),
               excludeParticipantStudyStatus,
-              StringUtils.defaultString(searchTerm));
+              StringUtils.defaultString(searchValue));
 
     } else if (studyAppDetails.getStudyType().equalsIgnoreCase(CommonConstants.CLOSE_STUDY)) {
       studyParticipantDetails =
@@ -340,11 +342,11 @@ public class StudyServiceImpl implements StudyService {
               limit,
               offset,
               orderByCondition,
-              StringUtils.defaultString(searchTerm));
+              StringUtils.defaultString(searchValue));
 
       participantCount =
           studyRepository.countParticipants(
-              studyAppDetails.getStudyId(), StringUtils.defaultString(searchTerm));
+              studyAppDetails.getStudyId(), StringUtils.defaultString(searchValue));
     }
 
     for (StudyParticipantDetails participantDetails : studyParticipantDetails) {

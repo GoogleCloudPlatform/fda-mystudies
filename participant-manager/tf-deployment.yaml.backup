@@ -1,0 +1,38 @@
+# Copyright 2020-2021 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: participant-manager
+  labels:
+    app: participant-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: participant-manager
+  template:
+    metadata:
+      labels:
+        app: participant-manager
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: participant-manager
+          image: gcr.io/<PREFIX>-<ENV>-apps/participant-manager:latest
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              port: 80
+              path: /participant-manager/index.html
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "50m"

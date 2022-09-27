@@ -7,6 +7,8 @@
  */
 package com.fdahpstudydesigner.util;
 
+import java.text.SimpleDateFormat;
+
 public class FdahpStudyDesignerConstants {
 
   public static final String ACTION = "action";
@@ -503,6 +505,47 @@ public class FdahpStudyDesignerConstants {
 
   public static final String VIEW_ASSOCIATED_STUDIES_MESSAGE =
       "Studies seen in the list are based on the permissions you have in the Study Builder";
+
+  public static final String FAILURE_CONSENT_STORE_MESSAGE =
+      "Sorry, an error has occurred and your request could not be processed. Please try again later";
+
+  public static final String DEFAULT_MIN_TIME = "00:00:00";
+  public static final String DEFAULT_MAX_TIME = "23:59:59";
+  public static final String RESULT_TYPE_GROUPED = "grouped";
+
+  public static final String SDF_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+  public static final String SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN =
+      "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+  public static final String SDF_DATE_PATTERN = "yyyy-MM-dd";
+
+  public static SimpleDateFormat SDF_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  public static SimpleDateFormat SDF_DATE_TIME_12 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+  public static SimpleDateFormat SDF_DATE = new SimpleDateFormat("yyyy-MM-dd");
+  public static SimpleDateFormat SDF_TIME_24 = new SimpleDateFormat("HH:mm:ss");
+  public static SimpleDateFormat SDF_TIME_12 = new SimpleDateFormat("hh:mm a");
+
+  public static final String SSM_INITIAL = "Initial_Span_spatial";
+  public static final String SSM_MINIMUM = "Minimum_Span_spatial";
+  public static final String SSM_MAXIMUM = "Maximum_Span_spatial";
+  public static final String SSM_PLAY_SPEED = "Play_Speed_spatial";
+  public static final String SSM_MAX_TEST = "Maximum_Tests_spatial";
+  public static final String SSM_MAX_CONSECUTIVE_FAILURES = "Maximum_Consecutive_Failuress_spatial";
+  public static final String SSM_REQUIRE_REVERSAL = "Require_reversal_spatial";
+  public static final String SSM_SCORE = "Score_spatial";
+  public static final String SSM_NO_OF_GAMES = "Number_of_Games_spatial";
+  public static final String SSM_NO_OF_FAILURES = "Number_of_Failures_spatial";
+
+  public static final String LENGTH_OF_WALK_RUN = "length_of_walk_period_run";
+  public static final String LENGTH_OF_REST_RUN = "length_of_rest_period_run";
+  public static final String AUDIO_PROMPT_INTERVAL_RUN = "Audio_prompt_interval_run";
+
+  public static final String LENGTH_OF_WALK_STEP = "length_of_walk_period_step";
+  public static final String LENGTH_OF_REST_STEP = "length_of_rest_period_step";
+  public static final String AUDIO_PROMPT_INTERVAL_STEP = "Audio_prompt_interval_step";
+
+  public static final String LENGTH_OF_WALK = "length_of_walk_period";
+  public static final String LENGTH_OF_REST_WALK = "length_of_rest_period_walk";
+  public static final String AUDIO_PROMPT_INTERVAL_WALK = "Audio_prompt_interval_walk";
 
   private FdahpStudyDesignerConstants() {
     // Do nothing

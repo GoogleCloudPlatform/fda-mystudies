@@ -25,8 +25,10 @@ public enum Permission {
 
   public static Permission fromValue(Integer value) {
     for (Permission e : Permission.values()) {
-      if (e.value == value) {
-        return e;
+      if (null != e.value) {
+        if (e.value.equals(value)) {
+          return e;
+        }
       }
     }
     return NO_PERMISSION;

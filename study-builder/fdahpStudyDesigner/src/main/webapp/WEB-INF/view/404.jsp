@@ -43,8 +43,8 @@
 
     <!-- Vendor -->
 
-    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
-    <script src="/studybuilder/vendor/summernote/popper.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/studybuilder/vendor/summernote/jquery.popper.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
   
    

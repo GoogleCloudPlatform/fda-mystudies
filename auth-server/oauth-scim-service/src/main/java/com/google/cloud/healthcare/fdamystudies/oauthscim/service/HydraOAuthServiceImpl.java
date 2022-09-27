@@ -100,17 +100,25 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
     String grantType = paramMap.getFirst(GRANT_TYPE);
+
+    logger.debug("grantType: " + grantType);
     if (REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType)) {
       headers.set(AUTHORIZATION, encodedAuthorization);
+      logger.debug("grantType: REFRESH_TOKEN || AUTHORIZATION_CODE: " + grantType);
     }
 
     HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);
     ResponseEntity<JsonNode> response =
         getRestTemplate().postForEntity(tokenEndpoint, requestEntity, JsonNode.class);
 
+    logger.debug("Hydra response ");
     if ((REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType))
         && response.getBody().hasNonNull(REFRESH_TOKEN)) {
       String refreshToken = getTextValue(response.getBody(), REFRESH_TOKEN);
+
+      logger.debug("Hydra recieved refreshToken " + refreshToken);
+      logger.debug("Hydra recieved paramMap.getFirst(USER_ID) " + paramMap.getFirst(USER_ID));
+
       UserResponse userResponse =
           userService.revokeAndReplaceRefreshToken(
               paramMap.getFirst(USER_ID), refreshToken, auditRequest);
@@ -126,6 +134,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   @Override
   public ResponseEntity<JsonNode> revokeToken(
       MultiValueMap<String, String> paramMap, HttpHeaders headers) {
+    logger.debug("revokeToken started ");
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
     headers.add(AUTHORIZATION, encodedAuthorization);
     HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);

@@ -23,6 +23,7 @@ public class ConsentStudyResponseBean {
   private String message;
   private ConsentResponseBean consent = new ConsentResponseBean();
   private String sharing;
+  private String dataSharingScreenShot;
 
   public ConsentStudyResponseBean(String message) {
     this.message = message;
@@ -51,4 +52,11 @@ public class ConsentStudyResponseBean {
   public void setSharing(String sharing) {
     this.sharing = sharing;
   }
+  public String getDataSharingScreenShot() {
+	    return dataSharingScreenShot;
+	  }
+
+	  public void setDataSharingScreenShot(String dataSharingScreenShot) {
+	    this.dataSharingScreenShot = dataSharingScreenShot;
+	  }
 }

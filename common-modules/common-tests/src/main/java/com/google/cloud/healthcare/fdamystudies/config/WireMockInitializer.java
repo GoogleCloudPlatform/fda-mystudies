@@ -30,15 +30,15 @@ public class WireMockInitializer
   }
 
   private WireMockServer getWiremockServerInstance() {
-    if (wireMockServer == null) {
-      wireMockServer =
+    if (WireMockInitializer.wireMockServer == null) {
+      WireMockInitializer.wireMockServer =
           new WireMockServer(
               new WireMockConfiguration()
                   .port(WIREMOCK_PORT)
                   .fileSource(new ClasspathFileSourceWithoutLeadingSlash()));
-      wireMockServer.start();
+      WireMockInitializer.wireMockServer.start();
     }
-    return wireMockServer;
+    return WireMockInitializer.wireMockServer;
   }
 
   /*

@@ -464,9 +464,9 @@ public class ActivityMetaDataDao {
                     StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                     StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
         metadata.setName(
-            StringUtils.isEmpty(activeTaskDto.getShortTitle())
+            StringUtils.isEmpty(activeTaskDto.getDisplayName())
                 ? ""
-                : activeTaskDto.getShortTitle());
+                : activeTaskDto.getDisplayName());
         metadata.setStudyId(studyId);
         metadata.setVersion(
             activeTaskDto.getVersion() == null
@@ -662,9 +662,7 @@ public class ActivityMetaDataDao {
                     StudyMetaDataConstants.SDF_DATE_TIME_PATTERN,
                     StudyMetaDataConstants.SDF_DATE_TIME_TIMEZONE_MILLISECONDS_PATTERN));
         metadata.setName(
-            StringUtils.isEmpty(questionnaireDto.getShortTitle())
-                ? ""
-                : questionnaireDto.getShortTitle());
+            StringUtils.isEmpty(questionnaireDto.getTitle()) ? "" : questionnaireDto.getTitle());
         metadata.setStudyId(studyId);
         metadata.setVersion(
             questionnaireDto.getVersion() == null

@@ -18,4 +18,16 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${bucketName}")
   private String bucketName;
+
+  @Value("${projectId}")
+  private String projectId;
+
+  @Value("${regionId}")
+  private String regionId;
+
+  @Value("${enableConsentManagementAPI}")
+  private String enableConsentManagementAPI;
+
+  @Value("${dataProjectId}")
+  private String dataProjectId;
 }

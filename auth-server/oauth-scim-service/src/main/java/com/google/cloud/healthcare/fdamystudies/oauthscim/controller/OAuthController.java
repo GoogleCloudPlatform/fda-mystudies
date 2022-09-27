@@ -85,6 +85,8 @@ public class OAuthController {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
+    logger.debug("oauth2/token entry ");
+    logger.debug("getToken() paramMap value: " + paramMap.toString());
     String grantType = StringUtils.defaultString(paramMap.getFirst(GRANT_TYPE));
     // validate required params
     ValidationErrorResponse errors = null;

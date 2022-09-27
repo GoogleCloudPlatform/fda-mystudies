@@ -92,7 +92,7 @@ export class AccountProfileComponent
   }
 
   cancel(): void {
-    void this.router.navigate(['coordinator/studies']);
+    void this.router.navigate(['coordinator/studies/sites']);
   }
 
   signOut(): void {

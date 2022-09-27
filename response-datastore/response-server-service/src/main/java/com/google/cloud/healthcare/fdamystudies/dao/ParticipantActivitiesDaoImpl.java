@@ -33,10 +33,12 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
       String studyId, String participantId) throws ProcessActivityStateException {
     logger.entry("begin getParticipantActivities()");
     List<ParticipantActivitiesEntity> participantActivitiesList = null;
+    Session session = null;
 
     if (studyId != null && participantId != null) {
-      try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+      try {
 
+        session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
         Query<ParticipantActivitiesEntity> query =
             session.createQuery(
                 "from ParticipantActivitiesEntity "
@@ -52,6 +54,11 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
         logger.error("getParticipantActivities: (ERROR) ", e);
         throw new ProcessActivityStateException(
             "Exception getting activity state data" + e.getMessage());
+      } finally {
+        if (session != null) {
+          session.close();
+        }
+        logger.exit("getParticipantActivities() - Ends ");
       }
     } else {
       throw new ProcessActivityStateException("Required input parameter is null");

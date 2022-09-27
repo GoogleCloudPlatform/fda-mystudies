@@ -14,4 +14,6 @@ import javax.transaction.SystemException;
 public interface UserRegAdminUserDao {
 
   UserDetailsEntity getRecord(String userId) throws SystemException;
+
+  void updateUserDetails(UserDetailsEntity userDetailsEntity);
 }

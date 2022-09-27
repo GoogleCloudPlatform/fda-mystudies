@@ -279,10 +279,12 @@ Superadmins can manage users of the Participant Manager and in addition, can man
               class="wrap pb-1 text-initial"
             >
               Add an app
-              <ng-select
+              <ng-select 
                 [ngClass]="{
-                  'custom_not-allowed': user.status === userStatus.Deactivated
-                }"
+                  'custom_not-allowed': user.status === userStatus.Deactivated }"
+                 
+                  [ngClass]="{'select_disabled': user.status === userStatus.Deactivated}"
+
                 [disabled]="user.status === userStatus.Deactivated"
                 type="checkbox"
                 [items]="appDetails.apps"

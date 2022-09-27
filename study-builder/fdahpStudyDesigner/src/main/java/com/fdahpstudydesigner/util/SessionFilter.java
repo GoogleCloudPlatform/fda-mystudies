@@ -15,12 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 public class SessionFilter implements Filter {
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
+  String studybuilderBaseUrl = configMap.get("studybuilder.base.url");
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     HttpServletRequest req = (HttpServletRequest) request;
     HttpServletResponse res = (HttpServletResponse) response;
+    req.setCharacterEncoding("UTF-8");
+    res.setCharacterEncoding("UTF-8");
+    res.setHeader("Access-Control-Allow-Origin", studybuilderBaseUrl);
     Cookie[] allCookies = req.getCookies();
     if (allCookies != null) {
       for (Cookie cookie : allCookies) {
@@ -28,7 +32,11 @@ public class SessionFilter implements Filter {
           String secure = configMap.getOrDefault("secure.cookie", String.valueOf(true));
           cookie.setSecure(Boolean.valueOf(secure));
           // We don't have setHttpOnly() method in servlet 2.5 version
-          res.addCookie(cookie);
+          cookie.setHttpOnly(true);
+          res.setHeader(
+              "Set-Cookie",
+              "JSESSIONID=" + cookie.getValue() + "; " + "Secure; HttpOnly; SameSite=Strict;");
+          // res.addCookie(cookie);
         }
       }
     }

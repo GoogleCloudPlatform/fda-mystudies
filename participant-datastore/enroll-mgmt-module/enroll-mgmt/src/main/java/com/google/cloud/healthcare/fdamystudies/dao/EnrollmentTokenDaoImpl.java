@@ -12,7 +12,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.ConsentManagementAPIs;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantStatusHistoryMapper;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantEnrollmentHistoryEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
@@ -51,6 +53,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
+
+  @Autowired private ConsentManagementAPIs consentApis;
+
+  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
   public StudyEntity getStudyDetails(String studyId) {
@@ -261,6 +267,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setWithdrawalDate(null);
               session.update(participants);
               countAddParticipant = String.valueOf(1);
+
             } else {
               participants = new ParticipantStudyEntity();
               participants.setSite(siteEntity);
@@ -272,6 +279,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setEnrolledDate(Timestamp.from(Instant.now()));
               countAddParticipant = (String) session.save(participants);
             }
+
             if (StringUtils.isNotEmpty(countAddParticipant)) {
               isUpdated = true;
               participantregistrySite.setEnrollmentTokenUsed(true);
@@ -362,4 +370,83 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     logger.exit("enrollParticipant() - Ends ");
     return participantBeans;
   }
+
+  /**
+   * create or update consent
+   *
+   * @param studyEntity
+   * @param participantregistrySite
+   * @param participantEntity
+   * @throws IOException
+   */
+  /*private void createOrUpdateConsents(
+      StudyEntity studyEntity,
+      ParticipantRegistrySiteEntity participantregistrySite,
+      ParticipantStudyEntity participantEntity)
+      throws IOException {
+    logger.entry("Begin createOrUpdateConsents()");
+    String parentName =
+        String.format(
+            "projects/%s/locations/%s/datasets/%s/consentStores/%s",
+            appConfig.getProjectId(),
+            appConfig.getRegionId(),
+            appConfig.getDatasetId(),
+            appConfig.getConsentstoreId());
+
+    String filter1 = "Metadata(\"" + STUDY_ID + "\")=\"" + studyEntity.getCustomId() + "\"";
+    String filter2 =
+        "Metadata(\""
+            + PARTICIPANT_REGISTRY_SITE_ID
+            + "\")=\""
+            + participantregistrySite.getId()
+            + "\"";
+    String consentFilter = filter1 + " AND " + filter2;
+
+    List<Consent> list = consentApis.getListOfConsents(consentFilter, parentName);
+    if (CollectionUtils.isEmpty(list)) {
+      List<ConsentArtifact> consentArtifacts =
+          consentApis.getListOfConsentArtifact(filter1, parentName);
+
+      if (CollectionUtils.isNotEmpty(consentArtifacts)) {
+        ConsentArtifact consentArtifact = consentArtifacts.get(0);
+        Map<String, String> metadata = getMetadata(studyEntity, participantEntity);
+
+        consentApis.createConsents(
+            metadata, consentArtifact.getUserId(), parentName, consentArtifact.getName());
+      }
+    } else {
+      Consent consent = list.get(0);
+      Map<String, String> metadata = getMetadata(studyEntity, participantEntity);
+
+      String state = consent.getState();
+      if (state == "ACTIVE") {
+        consentApis.updateConsents(metadata, consent.getName());
+      } else {
+        List<ConsentArtifact> consentArtifacts =
+            consentApis.getListOfConsentArtifact(filter1, parentName);
+
+        if (CollectionUtils.isNotEmpty(consentArtifacts)) {
+          ConsentArtifact consentArtifact = consentArtifacts.get(0);
+
+          consentApis.createConsents(
+              metadata, consentArtifact.getUserId(), parentName, consentArtifact.getName());
+        }
+      }
+    }
+    logger.exit("createOrUpdateConsents() - Ends ");
+  }*/
+
+  /*  private Map<String, String> getMetadata(
+      StudyEntity studyEntity, ParticipantStudyEntity participantEntity) {
+    Map<String, String> metadata = new HashedMap<String, String>();
+    metadata.put(STUDY_ID, studyEntity.getCustomId());
+    metadata.put(
+        PARTICIPANT_REGISTRY_SITE_ID, participantEntity.getParticipantRegistrySite().getId());
+    metadata.put(ENROLLED, participantEntity.getEnrolledDate().toString());
+    metadata.put(SITE_ID, participantEntity.getSite().getId());
+    metadata.put(USER_ID, participantEntity.getUserDetails().getUserId());
+    metadata.put(PARTICIPANT_ID, participantEntity.getParticipantId());
+    metadata.put(STATUS, participantEntity.getStatus());
+    return metadata;
+  }*/
 }

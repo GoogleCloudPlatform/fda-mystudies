@@ -22,7 +22,6 @@
 
 package com.fdahpstudydesigner.scheduler;
 
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_METADATA_SEND_OPERATION_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
@@ -141,9 +140,11 @@ public class FDASchedulerService {
     logger.exit("createAuditLogs() - Ends");
   }
 
-  @Scheduled(cron = "0 * * * * ?")
+  @Scheduled(cron = "0 0/10 * * * ?")
   public void sendPushNotification() {
-    logger.entry("begin sendPushNotification()");
+
+    // TODO: uncomment logger statements
+    // logger.entry("begin sendPushNotification()");
     List<PushNotificationBean> pushNotificationBeans;
     List<PushNotificationBean> pushNotificationBeanswithAppId =
         new ArrayList<PushNotificationBean>();
@@ -152,6 +153,7 @@ public class FDASchedulerService {
     String time;
     ObjectMapper objectMapper = new ObjectMapper();
     String responseString = "";
+
     try {
 
       date = FdahpStudyDesignerUtil.getCurrentDate();
@@ -163,6 +165,7 @@ public class FDASchedulerService {
       pushNotificationBeans =
           notificationDAO.getPushNotificationList(
               FdahpStudyDesignerUtil.getTimeStamp(date, time).toString());
+      // pushNotificationToSaveInHistory = pushNotificationBeans;
       if ((pushNotificationBeans != null) && !pushNotificationBeans.isEmpty()) {
         for (PushNotificationBean p : pushNotificationBeans) {
           if (p.getAppId() == null) {
@@ -190,7 +193,7 @@ public class FDASchedulerService {
             }
           }
         }
-        List<PushNotificationBean> pushNotification = new ArrayList<>();
+        List<PushNotificationBean> pushNotification = new ArrayList<PushNotificationBean>();
         for (PushNotificationBean finalPushNotificationBean : finalPushNotificationBeans) {
           StudyBo studyDetails =
               studyDAO.getStudyByLatestVersion(finalPushNotificationBean.getCustomStudyId());
@@ -207,10 +210,10 @@ public class FDASchedulerService {
           pushNotification.add(finalPushNotificationBean);
 
           JSONArray arrayToJson = new JSONArray(objectMapper.writeValueAsString(pushNotification));
-          logger.info("FDASchedulerService - sendPushNotification " + arrayToJson);
+          //  logger.info("FDASchedulerService - sendPushNotification " + arrayToJson);
           JSONObject json = new JSONObject();
           json.put("notifications", arrayToJson);
-          logger.info("FDASchedulerService - sendPushNotification " + arrayToJson);
+          //   logger.info("FDASchedulerService - sendPushNotification " + arrayToJson);
 
           HttpParams httpParams = new BasicHttpParams();
           HttpConnectionParams.setConnectionTimeout(httpParams, 30000);
@@ -229,11 +232,11 @@ public class FDASchedulerService {
           }
 
           if (response.getStatusLine().getStatusCode() != HttpStatus.OK.value()) {
-            logger.error(
-                String.format(
-                    "Push notification API failed with status=%d",
-                    response.getStatusLine().getStatusCode()));
-            logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
+            //   logger.error(
+            //       String.format(
+            //           "Push notification API failed with status=%d",
+            //          response.getStatusLine().getStatusCode()));
+            //  logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
           } else {
             updateNotification(finalPushNotificationBean);
             logSendNotificationFailedEvent(NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
@@ -242,12 +245,42 @@ public class FDASchedulerService {
         }
       }
     } catch (Exception e) {
-      logger.error("FDASchedulerService - sendPushNotification - ERROR", e.getCause());
-      e.printStackTrace();
+      //   logger.error("FDASchedulerService - sendPushNotification - ERROR", e.getCause());
+      //   e.printStackTrace();
 
-      logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
+      //  logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
     }
-    logger.exit("sendPushNotification() - Ends");
+    // logger.exit("sendPushNotification() - Ends");
+  }
+
+  private void updateNotification(PushNotificationBean pushNotificationBean) {
+    String sb = "";
+    Session session = hibernateTemplate.getSessionFactory().openSession();
+    Transaction trans = session.beginTransaction();
+    if (null != pushNotificationBean) {
+      if ((pushNotificationBean.getNotificationSubType() == null)
+          || ((pushNotificationBean.getNotificationSubType() != null)
+              && !FdahpStudyDesignerConstants.RESOURCE.equals(
+                  pushNotificationBean.getNotificationSubType())
+              && !FdahpStudyDesignerConstants.STUDY_EVENT.equals(
+                  pushNotificationBean.getNotificationSubType()))) {
+        NotificationHistoryBO historyBO = new NotificationHistoryBO();
+        historyBO.setNotificationId(pushNotificationBean.getNotificationId());
+        historyBO.setNotificationSentDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+        session.save(historyBO);
+      }
+      sb =
+          "update NotificationBO NBO set NBO.notificationSent = true  where NBO.notificationId = :notificationId";
+      session
+          .createQuery(sb)
+          .setParameter("notificationId", pushNotificationBean.getNotificationId())
+          .executeUpdate();
+    }
+
+    trans.commit();
+    if (session.isOpen()) {
+      session.close();
+    }
   }
 
   private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {
@@ -274,34 +307,5 @@ public class FDASchedulerService {
     StringEntity requestEntity = new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
     post.setEntity(requestEntity);
     return client.execute(post);
-  }
-
-  private void updateNotification(PushNotificationBean pushNotificationBean) {
-    String sb = "";
-    Session session = hibernateTemplate.getSessionFactory().openSession();
-    Transaction trans = session.beginTransaction();
-    if (null != pushNotificationBean) {
-      if ((pushNotificationBean.getNotificationSubType() == null)
-          || ((pushNotificationBean.getNotificationSubType() != null)
-              && !FdahpStudyDesignerConstants.RESOURCE.equals(
-                  pushNotificationBean.getNotificationSubType())
-              && !FdahpStudyDesignerConstants.STUDY_EVENT.equals(
-                  pushNotificationBean.getNotificationSubType()))) {
-        NotificationHistoryBO historyBO = new NotificationHistoryBO();
-        historyBO.setNotificationId(pushNotificationBean.getNotificationId());
-        historyBO.setNotificationSentDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
-        session.save(historyBO);
-      }
-      sb =
-          "update NotificationBO NBO set NBO.notificationSent = true  where NBO.notificationId = :notificationId";
-      session
-          .createQuery(sb)
-          .setParameter("notificationId", pushNotificationBean.getNotificationId())
-          .executeUpdate();
-    }
-    trans.commit();
-    if (session.isOpen()) {
-      session.close();
-    }
   }
 }

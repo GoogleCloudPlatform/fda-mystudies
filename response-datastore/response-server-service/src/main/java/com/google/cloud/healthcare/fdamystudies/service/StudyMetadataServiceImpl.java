@@ -81,12 +81,19 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     String studyCollectionName = AppUtil.makeStudyCollectionName(studyMetadataBean.getStudyId());
 
     logger.info("saveStudyMetadata() : \n Study Collection Name: " + studyCollectionName);
+    if(appConfig.getEnableFhirManagementApi().equalsIgnoreCase("false")) {
     responsesDao.saveStudyMetadata(
         studyCollectionName, studyMetadataBean.getStudyId(), dataToStore);
     logger.exit(
         "saveStudyMetadata() : \n Study Collection Name: "
             + studyCollectionName
             + " added successfully");
+    }else {
+    	logger.exit(
+    	        "saveStudyMetadata() : \n Study Collection Name: "
+    	            + studyCollectionName
+    	            + " response is npt created in Firestore beacuse HealthcareApi is enabled");
+    }
   }
 
   @Override

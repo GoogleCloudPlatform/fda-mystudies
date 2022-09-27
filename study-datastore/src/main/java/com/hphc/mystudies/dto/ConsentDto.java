@@ -130,10 +130,6 @@ public class ConsentDto implements Serializable {
   @Column(name = "need_comprehension_test")
   private String needComprehensionTest;
 
-  @Deprecated
-  @Column(name = "aggrement_of_consent")
-  private String aggrementOfConsent;
-
   @Column(name = "enroll_again")
   private Boolean enrollAgain;
 
@@ -343,14 +339,6 @@ public class ConsentDto implements Serializable {
 
   public void setNeedComprehensionTest(String needComprehensionTest) {
     this.needComprehensionTest = needComprehensionTest;
-  }
-
-  public String getAggrementOfConsent() {
-    return aggrementOfConsent;
-  }
-
-  public void setAggrementOfConsent(String aggrementOfConsent) {
-    this.aggrementOfConsent = aggrementOfConsent;
   }
 
   public Boolean getEnrollAgain() {
