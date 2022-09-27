@@ -5,6 +5,7 @@
 //  https://opensource.org/licenses/MIT.
 
 import Foundation
+import UIKit
 
 class ConsentServices: NSObject {
 
@@ -13,6 +14,9 @@ class ConsentServices: NSObject {
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
   var method: Method!
+  
+  let kConsentSharingImagePDF = "ConsentpdfSharingImage.pdf"
+  let kConsentSharingImage = "ConsentSharingImage"
 
   // MARK: Requests
 
@@ -49,11 +53,47 @@ class ConsentServices: NSObject {
     if let isShareData = consentResult?.isShareDataWithPublic {
       userDataSharing = isShareData ? "Provided" : "Not Provided"
     } else {
-      userDataSharing = "Not Applicable"
+      let valDataSharing = Study.currentStudy?.userParticipateState.dataSharingPermission ?? ""
+      if valDataSharing != "" {
+      userDataSharing = valDataSharing
+      } else {
+        userDataSharing = "Not Applicable"
+      }
     }
 
     let base64data =
       consentResult?.consentPdfData?
+      .base64EncodedString() ?? ""
+    
+    
+    //Use image name from bundle to create NSData
+//    let image : UIImage = UIImage(named:"imageNameHere")!
+//    //Now use image to create into NSData format
+//    let imageData:NSData = UIImagePNGRepresentation(image)!
+
+//    //OR next possibility
+//
+//    //Use image's path to create NSData
+//    let url:NSURL = NSURL(string : "urlHere")!
+//    //Now use image to create into NSData format
+//    let imageData:NSData = NSData.init(contentsOfURL: url)!
+
+    
+//    let img = UIImage(named:"leftIconBlue2") ?? UIImage()
+    let img = loadImageFromDocumentDirectory(fileName: kConsentSharingImage) ?? UIImage()
+    
+    let base64data2 = convertImageToBase64String(img: img)
+    
+    
+    
+    var pdfURL = (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)).last! as URL
+    pdfURL = pdfURL.appendingPathComponent(kConsentSharingImagePDF) as URL
+
+    let database64pdfdataImage = try? Data(contentsOf: pdfURL)
+    
+    
+    let base64dataPdfImage =
+    database64pdfdataImage?
       .base64EncodedString() ?? ""
 
     let consent =
@@ -63,18 +103,68 @@ class ConsentServices: NSObject {
         kConsentpdf: base64data,
       ] as [String: Any]
 
-    let params =
+    var params: [String : Any] = [:]
+    let val = UserDefaults.standard.value(forKey: "consentEnrolledStatus") as? String ?? ""
+    
+    UserDefaults.standard.setValue("", forKey: "consentEnrolledStatus")
+    UserDefaults.standard.synchronize()
+//    val != "Yet to enroll"
+    if !(val == "Yet to enroll" || val == "Withdrawn") || userDataSharing == "Not Applicable"  ||
+        userDataSharing.caseInsensitiveCompare("Not Applicable") == ComparisonResult.orderedSame {
+      params =
+        [
+          kStudyId: Study.currentStudy?.studyId ?? "",
+          kEligibility: eligibilityStatus,
+          "siteId": Study.currentStudy?.userParticipateState.siteID ?? "",
+          kConsent: consent,
+          kConsentSharing: userDataSharing,
+//          "dataSharingScreenShot": base64dataPdfImage,
+        ] as [String: Any]
+    } else {
+    params =
       [
         kStudyId: Study.currentStudy?.studyId ?? "",
         kEligibility: eligibilityStatus,
         "siteId": Study.currentStudy?.userParticipateState.siteID ?? "",
         kConsent: consent,
         kConsentSharing: userDataSharing,
+        "dataSharingScreenShot": base64dataPdfImage,// base64dataImage,
       ] as [String: Any]
+    }
     let method = ConsentServerMethods.updateEligibilityConsentStatus.method
 
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
+  
+  func loadImageFromDocumentDirectory(fileName: String) -> UIImage? {
+
+          let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+          let fileURL = documentsUrl.appendingPathComponent(fileName)
+          do {
+              let imageData = try Data(contentsOf: fileURL)
+              return UIImage(data: imageData)
+          } catch {}
+          return nil
+      }
+  
+  func convertImageToBase64String (img: UIImage) -> String {
+      return img.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
+  }
+
+  
+//  func captureScreen() -> UIImage {
+//
+//      UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, false, 0);
+//
+//      self.view.drawViewHierarchyInRect(view.bounds, afterScreenUpdates: true)
+//
+//      let image: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+//
+//      UIGraphicsEndImageContext()
+//
+//      return image
+//  }
+
 
   /// Creates a request to get Consent pdf
   /// - Parameters:

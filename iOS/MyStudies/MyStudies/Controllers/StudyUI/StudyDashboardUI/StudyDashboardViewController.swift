@@ -20,6 +20,7 @@
 import Foundation
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kMessageForSharingDashboard =
   "This action will create a shareable image file of the dashboard currently seen in this section. Proceed?"
@@ -36,11 +37,13 @@ class StudyDashboardViewController: UIViewController {
 
   @IBOutlet var labelStudyTitle: UILabel?
   @IBOutlet var buttonHome: UIButton!
+  @IBOutlet var shareButton: UIButton!
 
   var dataSourceKeysForResponse: [[String: String]] = []
   lazy var tableViewRowDetails = NSMutableArray()
   lazy var todayActivitiesArray = NSMutableArray()
   lazy var statisticsArray = NSMutableArray()
+    private var reachability: Reachability!
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .lightContent
@@ -71,7 +74,7 @@ class StudyDashboardViewController: UIViewController {
   // MARK: - ViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-
+      setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "StudyDashboard"
     ])
@@ -97,7 +100,7 @@ class StudyDashboardViewController: UIViewController {
       appDelegate.checkConsentStatus(controller: self)
     }
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -123,6 +126,45 @@ class StudyDashboardViewController: UIViewController {
   }
 
   // MARK: - Utils
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+          
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+    }
+      
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+              setOnline()
+              break
+        case .wifi:
+              setOnline()
+              break
+        case .none:
+              setOffline()
+              break
+        case .unavailable:
+              setOffline()
+              break
+        }
+    }
+  
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .bottom, title: nil, image: nil, completion: nil)
+        shareButton.isEnabled = false
+        shareButton.layer.opacity = 0.5
+    }
+  
+    func setOnline() {
+        self.view.hideAllToasts()
+        shareButton.isEnabled = true
+        shareButton.layer.opacity = 1
+    }
 
   private func loadStatsFromDB(for study: Study) {
     DBHandler.loadStatisticsForStudy(studyId: study.studyId) { (statiticsList) in
@@ -144,15 +186,16 @@ class StudyDashboardViewController: UIViewController {
     if !(UserDefaults.standard.bool(forKey: key)) {
       DBHandler.deleteStatisticsForStudy(studyId: study.studyId)
       StudyDashboard.instance.dashboardResponse = []
-      
-      self.addProgressIndicator(with: kDashSetupMessage)
-      responseDataFetch?.checkUpdates { [unowned self] in
-        
-        DispatchQueue.main.async {
-          self.loadStatsFromDB(for: study)
-          self.removeProgressIndicator()
+        if reachability.connection != .unavailable {
+            self.addProgressIndicator(with: kDashSetupMessage)
+            responseDataFetch?.checkUpdates { [unowned self] in
+              
+              DispatchQueue.main.async {
+                self.loadStatsFromDB(for: study)
+                self.removeProgressIndicator()
+              }
+            }
         }
-      }
     } else {
       loadStatsFromDB(for: study)
     }
@@ -412,7 +455,6 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
-
     switch reason {
     case ORKTaskViewControllerFinishReason.completed:
       ConsentBuilder.currentConsent?.consentResult?.consentDocument =
@@ -438,7 +480,6 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
-
     if (taskViewController.result.results?.count)! > 1,
       activityBuilder?.actvityResult?.result?.count == taskViewController.result.results?.count
     {
@@ -490,11 +531,9 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection
-  ) {
-  }
+  ) { }
 
-  public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
-  }
+  public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) { }
 
   public func stepViewControllerDidFail(
     _ stepViewController: ORKStepViewController,
@@ -506,7 +545,6 @@ extension StudyDashboardViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
-
     // CurrentStep is TokenStep
     if step.identifier == kEligibilityTokenStep {  // For EligibilityToken Step
       let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)

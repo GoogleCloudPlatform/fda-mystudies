@@ -23,6 +23,7 @@ import UIKit
 import GoogleUtilities
 import GoogleDataTransport
 import FirebaseAnalytics
+import Reachability
 
 let kVerifyMessageFromSignUp =
   "An email has been sent to xyz@gmail.com. Please type in the verification code received in the email to complete account setup."
@@ -51,7 +52,7 @@ class SignUpViewController: UIViewController {
 
   // MARK: - Properties
   var tableViewRowDetails: NSMutableArray?
-
+  private var reachability: Reachability!
   lazy var agreedToTerms: Bool = false
   lazy var confirmPassword = ""
   var user: User!
@@ -66,7 +67,7 @@ class SignUpViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "New User"
     ])
@@ -104,7 +105,7 @@ class SignUpViewController: UIViewController {
     self.agreeToTermsAndConditions()
     setNavigationBarColor()
   }
-
+    
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.navigationController?.navigationBar.backgroundColor = .white
@@ -134,6 +135,55 @@ class SignUpViewController: UIViewController {
     }
   }
 
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {}
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    self.view.hideAllToasts()
+    buttonSubmit?.isEnabled = true
+    buttonSubmit?.layer.opacity = 1
+    termsAndCondition?.isUserInteractionEnabled = true
+  }
+  
+  func setOffline() {
+    self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+    buttonSubmit?.isEnabled = false
+    buttonSubmit?.layer.opacity = 0.5
+    termsAndCondition?.isUserInteractionEnabled = false
+  }
+  
+  override func showOfflineIndicator() -> Bool {
+    return true
+  }
+    
   // MARK: - Utility Methods
 
   ///  Attributed string for Terms & Privacy Policy.

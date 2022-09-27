@@ -119,6 +119,24 @@ class ConsentSectionStep {
         self.html = stepDict[kConsentStepHTML] as? String
         if let html = self.html {
           self.html = html.stringByDecodingHTMLEntities
+          let regex = "<[^>]+>"
+          if self.html?.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+            if let valReConversiontoHTMLfromHTML = html.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+              
+              if let attributedText =
+                  valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+                self.html = attributedText.attriString2Html
+              } else if let attributedText =
+                          html.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                        attributedText.length > 0 {
+                self.html = attributedText.attriString2Html
+              } else {
+                self.html = html
+              }
+            } else {
+              self.html = html
+            }
+          }
         }
       }
       if Utilities.isValidValue(someObject: stepDict[kConsentStepURL] as AnyObject) {
