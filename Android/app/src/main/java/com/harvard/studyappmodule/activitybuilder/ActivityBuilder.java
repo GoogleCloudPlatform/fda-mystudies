@@ -339,6 +339,8 @@ public class ActivityBuilder extends OrderedTask {
   @Override
   public Step getStepBeforeStep(Step step, TaskResult taskResult) {
 
+    taskResult.getResults().remove(step.getIdentifier());
+    dbServiceSubscriber.deleteStepRecord(context, step.getIdentifier());
     if (branching) {
       String identifier = "";
       for (int i = 0; i < activityQuestionStep.size(); i++) {
@@ -361,13 +363,13 @@ public class ActivityBuilder extends OrderedTask {
                       String answer = getAnswer(pair);
                       if (!answer.equalsIgnoreCase("")) {
                         if (activityQuestionStep
-                                .get(i)
-                                .getResultType()
-                                .equalsIgnoreCase("imageChoice")
+                            .get(i)
+                            .getResultType()
+                            .equalsIgnoreCase("imageChoice")
                             || activityQuestionStep
-                                .get(i)
-                                .getResultType()
-                                .equalsIgnoreCase("textChoice")) {
+                            .get(i)
+                            .getResultType()
+                            .equalsIgnoreCase("textChoice")) {
                           Realm realm = AppController.getRealmobj(context);
                           StepRecordCustom stepRecordCustom =
                               dbServiceSubscriber.getResultFromDB(
@@ -404,9 +406,9 @@ public class ActivityBuilder extends OrderedTask {
                   }
                 } else if (activityQuestionStep.get(i).getResultType().equalsIgnoreCase("scale")
                     || activityQuestionStep
-                        .get(i)
-                        .getResultType()
-                        .equalsIgnoreCase("continuousScale")
+                    .get(i)
+                    .getResultType()
+                    .equalsIgnoreCase("continuousScale")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("numeric")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("timeInterval")
                     || activityQuestionStep.get(i).getResultType().equalsIgnoreCase("height")) {

@@ -205,10 +205,10 @@ public class ContinuousScaleQuestion<T> implements StepBody {
     if (stepSection != 0) {
       value =
           Double.parseDouble("" + min)
-              + Double.parseDouble("" + (int) seekBar.getLeftSeekBar().getProgress())
-              / Double.parseDouble("" + (stepSection * 10));
+              + Double.parseDouble("" + (int)seekBar.getLeftSeekBar().getProgress())
+                  / Double.parseDouble("" + (stepSection * 10));
     } else {
-      value = Double.parseDouble("" + min) + Double.parseDouble("" + (int) seekBar.getLeftSeekBar().getProgress());
+      value = Double.parseDouble("" + min) + Double.parseDouble("" + (int)seekBar.getLeftSeekBar().getProgress());
     }
     NumberFormat nf = NumberFormat.getInstance();
     nf.setMaximumFractionDigits(stepSection);

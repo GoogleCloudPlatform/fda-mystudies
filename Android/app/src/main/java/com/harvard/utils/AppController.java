@@ -22,8 +22,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,10 +34,13 @@ import android.os.Looper;
 import android.security.KeyPairGeneratorSpec;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -107,14 +112,26 @@ public class AppController {
   public static int SchemaVersion = 2;
   private static CustomFirebaseAnalytics analyticsInstance;
 
-  public static final String STARTING_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
+  public static final String STARTING_TAGS =
+      "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)>";
   public static final String ENDDING_TAGS = "</\\w+>";
-  public static final String SELFCLOSINGS_TAGS = "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/>";
+  public static final String SELFCLOSINGS_TAGS =
+      "<\\w+((\\s+\\w+(\\s*=\\s*(?:\".*?\"|'.*?'|[^'\">\\s]+))?)+\\s*|\\s*)/>";
   public static final String HTML_ENTITIES = "&[a-zA-Z][a-zA-Z0-9]+;";
-  public static final Pattern html_Pattern = Pattern
-          .compile("(" + STARTING_TAGS + ".*" + ENDDING_TAGS + ")|(" + SELFCLOSINGS_TAGS + ")|(" + HTML_ENTITIES + ")", Pattern.DOTALL);
+  public static final Pattern html_Pattern =
+      Pattern.compile(
+          "("
+              + STARTING_TAGS
+              + ".*"
+              + ENDDING_TAGS
+              + ")|("
+              + SELFCLOSINGS_TAGS
+              + ")|("
+              + HTML_ENTITIES
+              + ")",
+          Pattern.DOTALL);
   public static String PASSWORD_PATTERN =
-          "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~])(?=\\S+$).{8,64}$";
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
     if (sharedPreferenceHelper == null) {
@@ -205,7 +222,8 @@ public class AppController {
   }
 
   public static void getHelperHideKeyboardContext(Context context, View view) {
-    InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+    InputMethodManager imm =
+        (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
   }
 
@@ -278,7 +296,8 @@ public class AppController {
   }
 
   private static byte[] getkey(Context context, String keyName) {
-    RealmEncryptionHelper realmEncryptionHelper = RealmEncryptionHelper.initHelper(context, keyName);
+    RealmEncryptionHelper realmEncryptionHelper =
+        RealmEncryptionHelper.initHelper(context, keyName);
     byte[] key = realmEncryptionHelper.getEncryptKey();
     String s = bytesToHex(key);
     Log.wtf("realm key for " + keyName, "" + s);
@@ -286,8 +305,16 @@ public class AppController {
   }
 
   public static void checkIfAppNameChangeAndMigrate(Context context) {
-    if (!context.getString(R.string.app_name).equalsIgnoreCase(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)))) {
-      byte[] key = getkey(context, SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
+    if (!context
+        .getString(R.string.app_name)
+        .equalsIgnoreCase(
+            SharedPreferenceHelper.readPreference(
+                context, "appname", context.getString(R.string.app_name)))) {
+      byte[] key =
+          getkey(
+              context,
+              SharedPreferenceHelper.readPreference(
+                  context, "appname", context.getString(R.string.app_name)));
       RealmConfiguration config =
           new RealmConfiguration.Builder()
               .encryptionKey(key)
@@ -295,7 +322,10 @@ public class AppController {
               .migration(new RealmMigrationHelper())
               .build();
       Realm realm = Realm.getInstance(config);
-      RealmEncryptionHelper.getInstance().deleteEntry(SharedPreferenceHelper.readPreference(context, "appname", context.getString(R.string.app_name)));
+      RealmEncryptionHelper.getInstance()
+          .deleteEntry(
+              SharedPreferenceHelper.readPreference(
+                  context, "appname", context.getString(R.string.app_name)));
       byte[] NewKey = getkey(context, context.getString(R.string.app_name));
       realm.writeEncryptedCopyTo(new File(context.getFilesDir(), "temp.realm"), NewKey);
       realm.close();
@@ -312,7 +342,8 @@ public class AppController {
             .build();
     Realm.removeDefaultConfiguration();
     Realm.setDefaultConfiguration(config);
-    SharedPreferenceHelper.writePreference(context, "appname", context.getString(R.string.app_name));
+    SharedPreferenceHelper.writePreference(
+        context, "appname", context.getString(R.string.app_name));
   }
 
   public static void clearDBfile() {
@@ -328,7 +359,6 @@ public class AppController {
   public static SimpleDateFormat getDateFormatForApi() {
     return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   }
-
 
   public static SimpleDateFormat getDateFormatUtcNoZone() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -357,11 +387,11 @@ public class AppController {
   }
 
   public static SimpleDateFormat getDateFormatForOtherFreq() {
-    return new SimpleDateFormat("hh:mma, MMM dd, yyyy");
+    return new SimpleDateFormat("hh:mm a, MMM dd, yyyy");
   }
 
   public static SimpleDateFormat getDateFormatForOneTime() {
-    return new SimpleDateFormat("hh:mma 'on' MMM dd, yyyy");
+    return new SimpleDateFormat("hh:mm a 'on' MMM dd, yyyy");
   }
 
   public static SimpleDateFormat getDateFormatForResourceAvailability() {
@@ -382,7 +412,7 @@ public class AppController {
   }
 
   public static SimpleDateFormat getDateFormatForDashboardAndChartCurrentDayOut() {
-    return new SimpleDateFormat("dd, MMM yyyy");
+    return new SimpleDateFormat("MMM dd, yyyy"); // MMM dd, yyyy // changed for 4632 issue
   }
 
   public static SimpleDateFormat getDateFormatYearFormat() {
@@ -402,7 +432,7 @@ public class AppController {
   }
 
   public static SimpleDateFormat getHourAmPmFormat1() {
-    return new SimpleDateFormat("hh:mmaa");
+    return new SimpleDateFormat("hh:mm aa");
   }
 
   public static SimpleDateFormat getDdFormat() {
@@ -414,7 +444,7 @@ public class AppController {
   }
 
   public static SimpleDateFormat getHourAmPmMonthDayYearFormat() {
-    return new SimpleDateFormat("hh:mmaa, MMM dd, yyyy");
+    return new SimpleDateFormat("hh:mm aa, MMM dd, yyyy");
   }
 
   public static void showPasscodeActivity(Context context1, Class context2) {
@@ -550,10 +580,11 @@ public class AppController {
                 @Override
                 public void onClick(View v) {
                   Bundle eventProperties = new Bundle();
-                  eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                          context.getString(R.string.custom_data_question_cancel));
-                  analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
-                          eventProperties);
+                  eventProperties.putString(
+                      CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                      context.getString(R.string.custom_data_question_cancel));
+                  analyticsInstance.logEvent(
+                      CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                   alertDialog.dismiss();
                   ((SplashActivity) context).loadsplash();
                 }
@@ -574,10 +605,11 @@ public class AppController {
             @Override
             public void onClick(View v) {
               Bundle eventProperties = new Bundle();
-              eventProperties.putString(CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                      context.getString(R.string.upgrade));
-              analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK,
-                      eventProperties);
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.upgrade));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               final String appPackageName = context.getPackageName();
               try {
                 ((Activity) context)
@@ -1012,14 +1044,14 @@ public class AppController {
     dbServiceSubscriber.deleteDb(context);
     try {
       NotificationModuleSubscriber notificationModuleSubscriber =
-              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
       notificationModuleSubscriber.cancleActivityLocalNotification(context);
       notificationModuleSubscriber.cancleResourcesLocalNotification(context);
     } catch (Exception e) {
       Logger.log(e);
     }
     NotificationModuleSubscriber notificationModuleSubscriber =
-            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+        new NotificationModuleSubscriber(dbServiceSubscriber, realm);
     notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
     dbServiceSubscriber.closeRealmObj(realm);
 
@@ -1095,7 +1127,7 @@ public class AppController {
       return (new Date().after(starttime) || new Date().equals(starttime));
     } else {
       return (new Date().after(starttime) || new Date().equals(starttime))
-              && new Date().before(endtime);
+          && new Date().before(endtime);
     }
   }
 
@@ -1116,7 +1148,7 @@ public class AppController {
       stringBuilder.append("<p>");
       stringBuilder.append(input);
       stringBuilder.append("</p>");
-      formattedText =  stringBuilder.toString();
+      formattedText = stringBuilder.toString();
     }
     return formattedText;
   }
@@ -1162,15 +1194,12 @@ public class AppController {
     return new String(hexChars);
   }
 
-
   public static void renameFile(Context context, String oldName, String newName) {
     File dir = context.getFilesDir();
     if (dir.exists()) {
       File from = new File(dir, oldName);
       File to = new File(dir, newName);
-      if (from.exists()) {
-        from.renameTo(to);
-      }
+      if (from.exists()) from.renameTo(to);
     }
   }
 
@@ -1178,5 +1207,52 @@ public class AppController {
     ArrayList<String> excludedList = new ArrayList<>();
     excludedList.add("appname");
     return excludedList;
+  }
+
+  public static String getStringBase64(Bitmap bitmap) {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    bitmap.compress(Bitmap.CompressFormat.PNG, 70, byteArrayOutputStream);
+    byte[] byteArray = byteArrayOutputStream.toByteArray();
+    return Base64.encodeToString(byteArray, Base64.DEFAULT);
+  }
+
+  public static boolean isNetworkAvailable(Context context) {
+    ConnectivityManager connectivityManager =
+        (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+  }
+
+  public static void offlineAlart(Context context) {
+    androidx.appcompat.app.AlertDialog.Builder alertDialog =
+        new androidx.appcompat.app.AlertDialog.Builder(
+            context, R.style.Style_Dialog_Rounded_Corner);
+    alertDialog.setTitle("              You are offline");
+    alertDialog.setMessage(
+        "You can still use this section but may miss out on latest content updates");
+    alertDialog.setCancelable(false);
+    alertDialog.setPositiveButton(
+        "OK",
+        new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialogInterface, int i) {
+            // Bundle eventProperties = new Bundle();
+            //          eventProperties.putString(
+            //              CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+            //              getString(R.string.app_update_next_time_ok));
+            //          analyticsInstance.logEvent(
+            //              CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+            dialogInterface.dismiss();
+          }
+        });
+    final androidx.appcompat.app.AlertDialog dialog = alertDialog.create();
+    dialog.show();
+
+    final Button positiveButton =
+        dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE);
+    LinearLayout.LayoutParams positiveButtonLL =
+        (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+    positiveButtonLL.gravity = Gravity.CENTER;
+    positiveButton.setLayoutParams(positiveButtonLL);
   }
 }

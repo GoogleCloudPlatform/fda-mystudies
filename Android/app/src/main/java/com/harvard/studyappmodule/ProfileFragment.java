@@ -19,7 +19,6 @@ package com.harvard.studyappmodule;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -125,6 +124,9 @@ public class ProfileFragment extends Fragment
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     callUserProfileWebService();
     bindEvents();
+    if (!AppController.isNetworkAvailable(context)) {
+      AppController.offlineAlart(context);
+    }
     return view;
   }
 

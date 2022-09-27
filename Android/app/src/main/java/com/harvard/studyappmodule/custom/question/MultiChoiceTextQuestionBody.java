@@ -17,6 +17,11 @@ package com.harvard.studyappmodule.custom.question;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.SearchView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +31,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
@@ -220,7 +222,11 @@ public class MultiChoiceTextQuestionBody<T>
 
         if (item.getValue().toString().equalsIgnoreCase(otherOptionValue)) {
           otherText.setVisibility(View.VISIBLE);
-          otherText.setText(otherOptionModel.getText());
+          if(otherOptionModel.getText() == "" && otherOptionModel.getText().isEmpty()) {
+            otherText.setText(null);
+          } else {
+            otherText.setText(otherOptionModel.getText());
+          }
         }
       }
 
@@ -262,7 +268,7 @@ public class MultiChoiceTextQuestionBody<T>
                   }
 
                   otherText.setVisibility(View.GONE);
-                  otherText.setText("");
+                  otherText.setText(null);
 
                   selectedcheckbox.clear();
                   currentSelected.clear();
@@ -274,7 +280,7 @@ public class MultiChoiceTextQuestionBody<T>
                   otherText.setVisibility(View.VISIBLE);
                   otherText.requestFocus();
 
-                  otherOptionModel.setOther(item.getText());
+                  otherOptionModel.setOther(item.getValue().toString());
                 }
 
               } else {
@@ -296,7 +302,11 @@ public class MultiChoiceTextQuestionBody<T>
     }
 
     if (otherOptionModel != null && otherOptionModel.getText() != null) {
-      otherText.setText(otherOptionModel.getText());
+      if(otherOptionModel.getText().isEmpty()) {
+        otherText.setText(null);
+      } else {
+        otherText.setText(otherOptionModel.getText());
+      }
       otherText.setVisibility(View.VISIBLE);
     }
 
@@ -324,7 +334,11 @@ public class MultiChoiceTextQuestionBody<T>
       if (otherOptionModel != null) {
         if (otherOptionText) {
           if (currentSelected.contains(otherOptionValue)) {
-            otherOptionModel.setText(otherText.getText().toString());
+            if (otherText.getText().toString().isEmpty()) {
+              otherText.setText(null);
+            } else {
+              otherOptionModel.setText(otherText.getText().toString());
+            }
             currentSelected.add((T) new Gson().toJson(otherOptionModel));
           } else {
             otherOptionModel.setText(otherText.getText().toString());

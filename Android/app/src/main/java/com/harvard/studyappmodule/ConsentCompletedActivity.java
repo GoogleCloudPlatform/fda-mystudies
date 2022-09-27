@@ -18,7 +18,9 @@ package com.harvard.studyappmodule;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
@@ -39,6 +41,7 @@ import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.PdfViewerView;
 import io.realm.Realm;
 import java.io.File;
@@ -49,7 +52,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javax.crypto.CipherInputStream;
 
-public class ConsentCompletedActivity extends AppCompatActivity {
+public class ConsentCompletedActivity extends AppCompatActivity
+    implements NetworkChangeReceiver.NetworkChangeCallback {
 
   private static final int PERMISSION_REQUEST_CODE = 1000;
   private TextView consentCompleteTxt;
@@ -64,6 +68,9 @@ public class ConsentCompletedActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   private Realm realm;
   private CustomFirebaseAnalytics analyticsInstance;
+  private PdfViewerView pdfView;
+  private boolean checkStatus;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +79,7 @@ public class ConsentCompletedActivity extends AppCompatActivity {
     dbServiceSubscriber = new DbServiceSubscriber();
     realm = AppController.getRealmobj(this);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
 
     initializeXmlId();
     try {
@@ -214,9 +222,17 @@ public class ConsentCompletedActivity extends AppCompatActivity {
     if (sharingFile != null && sharingFile.exists()) {
       LayoutInflater li = LayoutInflater.from(ConsentCompletedActivity.this);
       View promptsView = li.inflate(R.layout.pdfdisplayview, null);
-      PdfViewerView pdfView = (PdfViewerView) promptsView.findViewById(R.id.pdfViewer);
+      pdfView = (PdfViewerView) promptsView.findViewById(R.id.pdfViewer);
       TextView share = (TextView) promptsView.findViewById(R.id.share);
       AlertDialog.Builder db = new AlertDialog.Builder(ConsentCompletedActivity.this);
+      if (!checkStatus) {
+        share.setAlpha(0.3F);
+        share.setClickable(false);
+        share.setEnabled(false);
+      } else {
+        share.setAlpha(1F);
+        share.setEnabled(true);
+      }
       db.setView(promptsView);
       final File finalMSharingFile = sharingFile;
       share.setOnClickListener(
@@ -306,10 +322,35 @@ public class ConsentCompletedActivity extends AppCompatActivity {
 
   @Override
   protected void onDestroy() {
+    try {
+      pdfView.destroyPdfRender();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     dbServiceSubscriber.closeRealmObj(realm);
     if (sharingFile != null && sharingFile.exists()) {
       sharingFile.delete();
     }
     super.onDestroy();
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    checkStatus = status;
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
   }
 }

@@ -12,61 +12,42 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.studyappmodule.studymodel;
+package com.harvard.utils;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
-public class ConsentPDF extends RealmObject {
-  private String message;
+public class NetworkChangeReceiver<T, V> extends BroadcastReceiver {
 
-  private String sharing;
+  private NetworkChangeCallback callback;
 
-  private String dataSharingScreenShot;
-
-  @PrimaryKey
-  private String studyId;
-
-  private ConsentData consent;
-
-  public String getStudyId() {
-    return studyId;
+  public NetworkChangeReceiver(V v) {
+    this.callback = (NetworkChangeCallback) v;
   }
 
-  public void setStudyId(String studyId) {
-    this.studyId = studyId;
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    boolean status = isNetworkAvailable(context);
+    if (callback != null) {
+      callback.onNetworkChanged(status);
+    }
   }
 
-  public String getMessage() {
-    return message;
+  private boolean isNetworkAvailable(Context context) {
+    try {
+      ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+      return (activeNetworkInfo != null && ((NetworkInfo) activeNetworkInfo).isConnectedOrConnecting());
+    } catch (NullPointerException e) {
+      return false;
+    }
   }
 
-  public void setMessage(String message) {
-    this.message = message;
+  public interface NetworkChangeCallback {
+    void onNetworkChanged(boolean status);
   }
-
-  public String getSharing() {
-    return sharing;
-  }
-
-  public void setSharing(String sharing) {
-    this.sharing = sharing;
-  }
-
-  public ConsentData getConsent() {
-    return consent;
-  }
-
-  public void setConsent(ConsentData consent) {
-    this.consent = consent;
-  }
-
-  public String getDataSharingScreenShot() {
-    return dataSharingScreenShot;
-  }
-
-  public void setDataSharingScreenShot(String dataSharingScreenShot) {
-    this.dataSharingScreenShot = dataSharingScreenShot;
-  }
-
 }
+

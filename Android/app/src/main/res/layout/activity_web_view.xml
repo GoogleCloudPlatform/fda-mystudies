@@ -42,7 +42,24 @@
                 android:layout_centerVertical="true"
                 android:text=""
                 android:textColor="@color/colorPrimaryBlack" />
+            <RelativeLayout
+                android:id="@+id/shareBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
 
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/shareIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/share1_blue" />
+            </RelativeLayout>
 
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>

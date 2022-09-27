@@ -47,17 +47,21 @@ public class SurveyStepLayoutCustom extends FixedSubmitBarLayoutCustom implement
   private LinearLayout container;
   private StepBody stepBody;
   private CustomFirebaseAnalytics analyticsInstance;
+  private Context context;
 
   public SurveyStepLayoutCustom(Context context) {
     super(context);
+    this.context=context;
   }
 
   public SurveyStepLayoutCustom(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.context=context;
   }
 
   public SurveyStepLayoutCustom(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    this.context=context;
   }
 
   public SurveyStepLayoutCustom(
@@ -78,7 +82,7 @@ public class SurveyStepLayoutCustom extends FixedSubmitBarLayoutCustom implement
     this.questionStep = (QuestionStep) step;
     this.stepResult = result;
 
-    analyticsInstance = CustomFirebaseAnalytics.getInstance(getContext());
+    analyticsInstance = CustomFirebaseAnalytics.getInstance(context);
     initializeStep();
   }
 
@@ -213,7 +217,7 @@ public class SurveyStepLayoutCustom extends FixedSubmitBarLayoutCustom implement
     Bundle eventProperties = new Bundle();
     eventProperties.putString(
         CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-        getContext().getString(R.string.rsb_step_skip));
+        context.getString(R.string.rsb_step_skip));
     analyticsInstance.logEvent(CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
     if (callbacks != null) {
       callbacks.onSaveStep(StepCallbacks.ACTION_NEXT, getStep(), stepBody.getStepResult(true));

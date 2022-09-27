@@ -3,8 +3,8 @@
 <!-- Update `app_name` with a user-facing name for your application, for example, "Demo App"-->
 <!-- Update `package_name` with the `ApplicationID` that you specified in `Android/app/build.gradle` -->
 <!DOCTYPE resources [
-    <!ENTITY app_name "YOUR_APP_NAME">
-    <!ENTITY package_name "YOUR_PACKAGE_NAME">
+    <!ENTITY app_name "FDA MyStudies">
+    <!ENTITY package_name "com.google.FDAMyStudies">
     ]>
 
 <resources>

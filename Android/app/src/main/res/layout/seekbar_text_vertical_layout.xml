@@ -66,16 +66,16 @@
                 app:rsb_tick_mark_text_margin="-25dp"
                 />
 
-            <LinearLayout
-                android:id="@+id/scaleValue"
-                android:layout_width="wrap_content"
-                android:layout_toRightOf="@+id/seekbar"
-                android:layout_height="280dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/scaleValue"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/seekbar"
+            android:layout_height="280dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical">
 
-            </LinearLayout>
+        </LinearLayout>
 
             <TextView
                 android:id="@+id/currentvalue"
