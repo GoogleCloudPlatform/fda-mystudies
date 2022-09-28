@@ -219,8 +219,9 @@ The deployment process takes the following approach:
 
 ### Configure your deployment’s databases
 
+1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project (the location selected here does not need to match the region configured in your `deployment.hcl` file) 
 1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
-    - Uncomment the blocks for steps 5.1 through 5.2 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
+    - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
          ```bash
          sed -e 's/#5# //g' -i.backup $GIT_ROOT/deployment/mystudies.hcl
          ```
