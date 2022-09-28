@@ -185,6 +185,7 @@ class ResponseServices: NSObject {
         kParticipantId: userStudyStatus?.participantId ?? "",
         "activityVersion": activity.version ?? "",
         "questionKey": "",
+        "activityRunId": "",
         JSONKey.tokenID: userStudyStatus?.tokenIdentifier ?? "",
       ] as [String: Any]
 
