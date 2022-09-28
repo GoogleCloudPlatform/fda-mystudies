@@ -13,11 +13,13 @@ This document describes the architecture of FDA MyStudies. It outlines the vario
 
 ## Architecture
 
-![Applications diagram](images/apps-reference-architecture.svg)
+![Applications diagram](images/apps-reference-architecture.svg.png)
 
-The diagram above illustrates the various applications that comprise the FDA MyStudies platform. The Android and iOS mobile applications are not shown. The diagram below illustrates how these applications fit into a production deployment that considers security, devops and data governance.
+The diagram above illustrates the various applications that comprise the FDA MyStudies platform along with the Google Managed Services used in the new release. The GCP-managed services used are Cloud Healthcare API  and Google BigQuery.
+Google Cloud Healthcare APIs facilitate end-users for exchanging the data between healthcare applications and solutions hosted on the Google Cloud Platform, the users get an environment for building clinical and analytics solutions on the Google Cloud Platform. For the current release, FDA MyStudies collects and stores response data in the FHIR data stores and Consent information in the consent data stores. The data stored in the HealthCare DataStores is ingested into BigQuery for future analytics and query. The data in BigQuery is compartmentalized under DataSets  for each study.
+The Android and iOS mobile applications are not shown. The diagram below illustrates how these applications fit into a production deployment that considers security, devops and data governance.
 
-![Deployment diagram](images/deployment-reference-architecture.svg)
+![Deployment diagram](images/deployment-reference-architecture.png)
 
 ## Terminology
 
@@ -27,6 +29,12 @@ Some of the terms used in this document include:
 1.  *Administrator*: Users of the `Study builder` UI and `Participant manager` UI are referred to as administrators. These administrators could be researchers, clinical coordinators, sponsor personnel or site investigators and staff. 
 1.  *Study content*: All the content that is required to carry out a study, which could include study eligibility criteria, consent forms, questionnaires or response types.
 1.  *Response data*: The responses provided by a participant to questionnaires and activities that are presented as part of a study.
+1.  *HealthCare APIs*: Google Healthcare API is a fully managed, highly scalable, enterprise-grade development environment for building clinical and analytics solutions securely on Google Cloud for storing, maintaining, and backing up personal health information(PHI)
+2.  *FHIR*: Fast Healthcare Interoperability Resources (FHIR) is a healthcare data standard with an application programming interface (API) for representing and exchanging electronic health records (EHR)
+3.  *DID*: De-identification(DID) is the process of removing identifying information from data. The GCP DID API detects sensitive data in FHIR resources, such as protected health information (PHI), and then uses a de-identification transformation to mask, delete, or otherwise obscure the data. 
+4.  *Consent*: The GCP Consent Management API stores the consent information application receives from users, keep track of what data is permitted for each use case, and helps the application utilize data only as directed by users. 
+5.  *BigQuery*: Google BigQuery is a cloud-based enterprise data warehouse that offers rapid SQL queries and interactive analysis of massive datasets.
+
 
 ## Platform components
 
@@ -94,6 +102,17 @@ The mobile application retrieves the list of study activities and the study sche
 
 
 If a participant sends a message with the mobile application’s contact form, that message is posted to the `Participant datastore`, which then sends an email to the configured destination. The `Participant datastore` can send participation reminders or other types of notifications to study participants through the mobile applications. When participants navigate to the dashboarding section of the mobile application, the mobile application will make a request to the `Response datastore` for the necessary study responses that are used to populate the configured dashboard. 
+## GCP Managed Services 
+
+**Brief**: For the new release, Cloud HealthCareAPIs(FHIR, DID & Consent) are used for accessing and storing healthcare data in the Google Cloud Platform. Using Cloud Healthcare API the data collected is moved to BigQuery for operations such as scalable analytics with BigQuery. 
+
+i)FHIR(Fast Healthcare Interoperability Resources) API is used for storing study response data for the FDA MyStudies Platform. FHIR API helps transform data from Platform JSON format into FHIR format, for the current release R4 version of FHIR is used. The data stored in FHIR datastores is moved to BigQuery and this makes data available for other functions such as data analytics.
+
+ii)DID(Data de-identification ) API is used to remove protected health information (PHI) information from data. For the current requirement, the DID API removes the sensitive data in FHIR resources, such as protected health information (PHI). De-identification doesn't impact the original dataset, FHIR store, or the original data. The data is stored in a separate DataSet
+
+iii) The Consent Management API is used for storing the consent information application receives from users, keeps track of what data is permitted for each use case, and helps the application utilize data only as directed by users in consent stores. The consent data is stored in the cloud by creating a data set for each study. The FDA MyStudies platform uses the Consent  APIs for fetching the consent from the end-user in the platform. The consent information is captured and sent back to the consent artifacts on mobile
+
+iv) BigQuery: GCP’s serverless, highly scalable cloud data warehouse is used for ingesting the HealthCare data collected using GCP HealthCare APIs(FHIR, DID & Consent) and data from the cloud object storage. The data stored in BigQuery is used for analytics
 
 ## Deployment and operation
 

@@ -24,8 +24,8 @@ Project | Name | Purpose
 ---------|------------|---------------
 Devops | `{PREFIX}-{ENV}-devops` | This project executes the Terraform CICD pipeline that keeps your infrastructure aligned with the state defined in the [`deployment/terraform/`](/deployment/terraform/) directory of your GitHub repository
 Apps | `{PREFIX}-{ENV}-apps` | This project stores the container images for each of your FDA MyStudies applications, updates those images with CICD pipelines that monitor changes you make to the application directories of your GitHub repository, and administers the Kubernetes cluster that operates those images ([**Figure 2**](#figure-2-application-architecture) diagrams each the applications and how they related to their data sources)
-Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications, and the blob storage buckets that hold study resources and consent documents
-Firebase | `{PREFIX}-{ENV}-firebase` | This project contains the NoSQL database that stores the study response data
+Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications, Cloud Healthcare API that allows storing, maintaining, and backing up personal health information(PHI), and the blob storage buckets that hold study resources and consent documents
+Firebase | `{PREFIX}-{ENV}-firebase` | This project manages Android mobile development platform
 Networks | `{PREFIX}-{ENV}-networks` | This project manages the network policies and firewalls 
 Secrets | `{PREFIX}-{ENV}-secrets` | This project manages the deployment’s secrets, such as client ids and client secrets
 Audit | `{PREFIX}-{ENV}-audit` | This project stores the audit logs for the FDA MyStudies platform and applications
@@ -46,10 +46,10 @@ Application | URL | Notes
 More information about the purpose of each application can be found in the [*Platform Overview*](/documentation/architecture.md) guide. Detailed information about configuration and operation of each application can be found in their [respective READMEs](/documentation/README.md).
 
 #### Figure 1: Overall architecture of the semi-automated deployment
-![Architecture](/documentation/images/deployment-reference-architecture.svg "Architecture")
+![Architecture](/documentation/images/deployment-reference-architecture.png "Architecture")
 
 #### Figure 2: Application architecture
-![Applications](/documentation/images/apps-reference-architecture.svg "Applications")
+![Applications](/documentation/images/apps-reference-architecture.svg.png "Applications")
 
 The deployment process takes the following approach:
 1. Create a copy of the FDA MyStudies repository that you will use for your deployment
@@ -219,9 +219,8 @@ The deployment process takes the following approach:
 
 ### Configure your deployment’s databases
 
-1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project (the location selected here does not need to match the region configured in your `deployment.hcl` file) 
 1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
-    - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
+    - Uncomment the blocks for steps 5.1 through 5.2 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
          ```bash
          sed -e 's/#5# //g' -i.backup $GIT_ROOT/deployment/mystudies.hcl
          ```
