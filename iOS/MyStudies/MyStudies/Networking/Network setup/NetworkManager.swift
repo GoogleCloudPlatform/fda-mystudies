@@ -64,6 +64,7 @@ class NetworkManager {
   static var instance: NetworkManager?
   var networkAvailability: Bool = true
   var reachability: Reachability?
+  var isTokenRefreshing = false
 
   /// Checks network availability and returns bool value
   class func isNetworkAvailable() -> Bool {

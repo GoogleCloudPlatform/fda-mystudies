@@ -191,7 +191,12 @@ class ConsentServices: NSObject {
   }
 
   func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {
+      
+    guard !APIService.instance.isTokenRefreshing else { return }
+      
+      APIService.instance.isTokenRefreshing = true
     HydraAPI.refreshToken { (status, error) in
+        APIService.instance.isTokenRefreshing = false
       if status {
         self.handleUpdateTokenResponse()
       } else if let error = error {
