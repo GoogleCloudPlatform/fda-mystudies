@@ -29,7 +29,7 @@ class CustomInstructionStepTest: XCTestCase {
     Test&lt;/i&gt;&lt;/span&gt;&lt;/p&gt;
     """
     
-    let attributedText = richText.stringByDecodingHTMLEntities.htmlToAttributedString
+    let attributedText = richText.stringByDecodingHTMLEntities.htmlToAttriString
     
     XCTAssertNotNil(attributedText)
   }

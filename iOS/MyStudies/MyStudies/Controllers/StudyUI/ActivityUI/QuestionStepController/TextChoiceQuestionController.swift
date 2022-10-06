@@ -124,20 +124,33 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
     if self.isOtherCellSelected {
       var otherChoiceDict: [String: Any]!
+//        otherChoiceDict = ["other": otherChoice.value]
       if self.otherChoice.isShowOtherField {
+        if otherChoice.otherChoiceText == "" {
+          otherChoiceDict = [
+            "other": otherChoice.value,
+          ]
+
+        } else {
         otherChoiceDict = [
-          "other": otherChoice.otherTitle, "text": otherChoice.otherChoiceText,
-          "otherValue": otherChoice.value,
-        ]
-      } else {
-        otherChoiceDict = [
-          "other": otherChoice.otherTitle,
-          "otherValue": otherChoice.value,
+          "other": otherChoice.value,
           "text": otherChoice.otherChoiceText,
         ]
+        }
+      } else {
+        if otherChoice.otherChoiceText == "" {
+        otherChoiceDict = [
+          "other": otherChoice.value,
+        ]
+        } else {
+          otherChoiceDict = [
+            "other": otherChoice.value,
+            "text": otherChoice.otherChoiceText,
+          ]
+          }
       }
       choices.append(otherChoiceDict as Any)
-      choices.append(otherChoice.value)
+//      choices.append(otherChoice.value)
     }
 
     if self.answerFormat?.style == .multipleChoice {
@@ -157,7 +170,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
 
   lazy private(set) var selectedChoices: [ORKTextChoice] = []
   lazy var searchChoices: [ORKTextChoice] = []
-  lazy var answers: [String]? = []
+  lazy var answers: [[String: String]]? = []
 
   private(set) var isOtherCellSelected = false
 
@@ -202,11 +215,14 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       for choice in choices {
 
         if let choice = choice as? String {
-          self.answers?.append(choice)
-        } else if let choiceDict = choice as? JSONDictionary,
-          let otherChoice = choiceDict["text"] as? String
-        {
-          self.answers?.append(otherChoice)
+            self.answers?.append(["value": choice])
+        } else if let choiceDict = choice as? JSONDictionary {
+            if let otherChoice = choiceDict["text"] as? String {
+                self.answers?.append(["otherChoiceText": otherChoice])
+            } else if let otherChoice = choiceDict["other"] as? String {
+                self.answers?.append(["otherValue": otherChoice])
+            }
+          
         }
       }
 
@@ -261,19 +277,21 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     
     self.otherChoice = step.otherChoice
     
-    if let indexOfOtherChoiceValue = self.answers?.firstIndex(of: self.otherChoice.value) {
-      self.answers?.remove(at: indexOfOtherChoiceValue)
-    }
+//    if let indexOfOtherChoiceValue = self.answers?.firstIndex(of: self.otherChoice.value) {
+//      self.answers?.remove(at: indexOfOtherChoiceValue)
+//    }
     /// Update the selected result here
     if let answers = self.answers {
       for answer in answers {
-        if let selectedChoice = self.textChoices.filter({ $0.value as! String == answer })
+        if let answerValue = answer["value"], let selectedChoice = self.textChoices.filter({ $0.value as! String == answerValue })
             .first
         {
           self.selectedChoices.append(selectedChoice)
         } else {  // unable to find the answer in textchoices, perhaps other choice was selected
           self.isOtherCellSelected = true
-          self.otherChoice.otherChoiceText = answer
+          if let otherChoiceText = answer["otherChoiceText"] {
+              self.otherChoice.otherChoiceText = otherChoiceText
+          }
         }
       }
       self.answers = nil

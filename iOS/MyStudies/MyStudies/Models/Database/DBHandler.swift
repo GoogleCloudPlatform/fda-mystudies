@@ -169,9 +169,11 @@ class DBHandler: NSObject {
             dbStudy?.participatedId = studyStatus.participantId
             dbStudy?.siteID = studyStatus.siteID
             dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+            dbStudy?.dataSharingPermission = studyStatus.dataSharingPermission
             dbStudy?.joiningDate = studyStatus.joiningDate
             dbStudy?.completion = studyStatus.completion
             dbStudy?.adherence = studyStatus.adherence
+            dbStudy?.userStudyVersion = studyStatus.userStudyVersion
           }
           if dbStudy?.participatedStatus
             == UserStudyStatus.StudyStatus.enrolled
@@ -216,9 +218,11 @@ class DBHandler: NSObject {
       dbStudy.participatedId = userStudyStatus.participantId
       dbStudy.siteID = userStudyStatus.siteID
       dbStudy.tokenIdentifier = userStudyStatus.tokenIdentifier
+      dbStudy.dataSharingPermission = userStudyStatus.dataSharingPermission
       dbStudy.joiningDate = userStudyStatus.joiningDate
       dbStudy.completion = userStudyStatus.completion
       dbStudy.adherence = userStudyStatus.adherence
+      dbStudy.userStudyVersion = userStudyStatus.userStudyVersion
     }
     dbStudy.withdrawalConfigrationMessage = study.withdrawalConfigration?.message
     dbStudy.withdrawalConfigrationType = study.withdrawalConfigration?.type?.rawValue
@@ -249,6 +253,7 @@ class DBHandler: NSObject {
       study.status = StudyStatus(rawValue: dbStudy.status!)!
       study.signedConsentVersion = dbStudy.signedConsentVersion
       study.signedConsentFilePath = dbStudy.signedConsentFilePath
+      study.signedConsentDataSPdfFilePath = dbStudy.signedConsentDataSPdfFilePath
       study.activitiesLocalNotificationUpdated = dbStudy.activitiesLocalNotificationUpdated
 
       // Settings
@@ -267,7 +272,9 @@ class DBHandler: NSObject {
       participatedStatus.participantId = dbStudy.participatedId
       participatedStatus.siteID = dbStudy.siteID ?? ""
       participatedStatus.tokenIdentifier = dbStudy.tokenIdentifier ?? ""
+      participatedStatus.dataSharingPermission = dbStudy.dataSharingPermission
       participatedStatus.adherence = dbStudy.adherence
+      participatedStatus.userStudyVersion = dbStudy.userStudyVersion
       participatedStatus.completion = dbStudy.completion
       participatedStatus.joiningDate = dbStudy.joiningDate
 
@@ -457,6 +464,27 @@ class DBHandler: NSObject {
     }
 
   }
+  
+  class func updateMetaDataEnrolledToUpdateForStudy(study: Study, updateDetails: StudyUpdates?) {
+
+    let realm = DBHandler.getRealmObject()!
+    let studies = realm.objects(DBStudy.self).filter("studyId == %@", study.studyId ?? "")
+    let dbStudy = studies.last
+
+    try? realm.write {
+//      dbStudy?.updateResources = StudyUpdates.studyResourcesUpdated
+//      dbStudy?.updateConsent = StudyUpdates.studyConsentUpdated
+//      dbStudy?.updateStudyEnrollAgain = StudyUpdates.studyEnrollAgain
+//      dbStudy?.updateActivities = StudyUpdates.studyActivitiesUpdated
+//      dbStudy?.updateInfo = StudyUpdates.studyInfoUpdated
+      if StudyUpdates.studyVersion != nil {
+        dbStudy?.version = StudyUpdates.studyVersion
+      } else {
+        dbStudy?.version = dbStudy?.updatedVersion
+      }
+    }
+
+  }
 
   /// This method will update the participation status of the study.
   /// - Parameter study: Instance of the study participated.
@@ -472,9 +500,11 @@ class DBHandler: NSObject {
         dbStudy?.participatedId = studyStatus.participantId
         dbStudy?.siteID = studyStatus.siteID
         dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
+        dbStudy?.dataSharingPermission = studyStatus.dataSharingPermission
         dbStudy?.joiningDate = studyStatus.joiningDate
         dbStudy?.completion = studyStatus.completion
         dbStudy?.adherence = studyStatus.adherence
+        dbStudy?.userStudyVersion = studyStatus.userStudyVersion
       }
     }
   }
@@ -512,6 +542,19 @@ class DBHandler: NSObject {
     try? realm.write {
       dbStudy?.signedConsentFilePath = study.signedConsentFilePath
       dbStudy?.signedConsentVersion = study.signedConsentVersion
+    }
+  }
+  
+  ///  Saves study consent screenshot Info to DB.
+  /// - Parameter study: Instance of the study for which consent information to be saved.
+  class func saveConsentScreenShotInformation(study: Study) {
+
+    let realm = DBHandler.getRealmObject()!
+    let studies = realm.objects(DBStudy.self).filter("studyId == %@", study.studyId ?? "")
+    let dbStudy = studies.last
+
+    try? realm.write {
+      dbStudy?.signedConsentDataSPdfFilePath = study.signedConsentDataSPdfFilePath
     }
   }
 
@@ -593,12 +636,13 @@ class DBHandler: NSObject {
         activityUpdated = true
       }
     }
-
+    
+    guard let studyId = Study.currentStudy?.studyId else { return }
     // keys for alerts
     if activityUpdated {
       let ud = UserDefaults.standard
-      let halfCompletionKey = "50pcShown" + (Study.currentStudy?.studyId)!
-      let fullCompletionKey = "100pcShown" + (Study.currentStudy?.studyId)!
+      let halfCompletionKey = "50pcShown" + studyId
+      let fullCompletionKey = "100pcShown" + studyId
       ud.set(false, forKey: halfCompletionKey)
       ud.set(false, forKey: fullCompletionKey)
     }
@@ -783,7 +827,7 @@ class DBHandler: NSObject {
           let resultsArray = ((quesResults!["value"] as? [[Any]])?.first) as? [[String: Any]]
           dictionary = resultsArray!.filter { $0["key"] as! String == sourceKey }.first!
         } else {
-          dictionary = results.filter { $0["key"] as! String == sourceKey }.first!
+          dictionary = results.filter { $0["key"] as! String == sourceKey }.first ?? [:]
         }
         
         guard let userInputDate = dictionary["value"] as? String else {
@@ -1709,6 +1753,7 @@ class DBHandler: NSObject {
     let dbResourcesArray = realm.objects(DBResources.self).filter { $0.studyId == studyId }
 
     var dbResourcesList: [DBResources] = []
+    var index = 0
     for resource in resources {
 
       var dbResource: DBResources?
@@ -1719,13 +1764,14 @@ class DBHandler: NSObject {
 
           dbResource = DBHandler.getDBResource(resource: resource)
           dbResource?.studyId = studyId
+          dbResource?.order = index
           dbResourcesList.append(dbResource!)
         } else {
 
           try? realm.write {
 
             dbResource?.title = resource.title
-
+            dbResource?.order = index
             dbResource?.audience = resource.audience?.rawValue
             dbResource?.endDate = resource.endDate
             dbResource?.startDate = resource.startDate
@@ -1745,8 +1791,10 @@ class DBHandler: NSObject {
 
         dbResource = DBHandler.getDBResource(resource: resource)
         dbResource?.studyId = studyId
+        dbResource?.order = index
         dbResourcesList.append(dbResource!)
       }
+        index += 1
     }
 
     let newlist = resources
@@ -1814,6 +1862,8 @@ class DBHandler: NSObject {
         $0.studyId == studyId
           && $0.startDate == nil
           && $0.sourceType == "ActivityResponse"
+      }.sorted {
+        $0.order < $1.order
       }
     return dbResources
   }
@@ -1851,6 +1901,8 @@ class DBHandler: NSObject {
         $0.studyId == studyId
           && ($0.povAvailable == false
             || $0.startDate != nil)
+      }.sorted {
+        $0.order < $1.order
       }
 
     var resourceList: [Resource] = []
@@ -1872,6 +1924,8 @@ class DBHandler: NSObject {
         $0.studyId == studyId
           && $0.povAvailable == true
           && $0.startDate == nil
+      }.sorted {
+          $0.order < $1.order
       }
 
     if activityId != nil {
@@ -2169,9 +2223,10 @@ class DBHandler: NSObject {
     // delete activites and its metadata
     let dbActivities = realm.objects(DBActivity.self).filter("studyId == %@", studyId)
     dbActivities.forEach { (dbActivity) in
+      guard let studyId = dbActivity.studyId, let activityId = dbActivity.actvityId else { return }
       DBHandler.deleteMetaDataForActivity(
-        activityId: (dbActivity.actvityId)!,
-        studyId: (dbActivity.studyId)!
+        activityId: activityId,
+        studyId: studyId
       )
 
       try? realm.write {
