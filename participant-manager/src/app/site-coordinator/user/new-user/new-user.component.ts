@@ -225,12 +225,10 @@ export class AddNewUserComponent
   }
   openModal(template: TemplateRef<any>): void {
     let idpUser = false;
-
     let userEmail = this.userEmail;
     userEmail.forEach((element: any) => {
       if (this.user.email === element) {
         idpUser = true;
-
         this.idpUserStatus();
         this.add();
       }
@@ -238,9 +236,10 @@ export class AddNewUserComponent
 
     if (!idpUser == true) {
       this.modalRef.hide();
+      this.add();
     }
     else{
-      this.modalRef = this.modalService.show(template);
+      this.modalRef.hide();
     }
   }
 }
