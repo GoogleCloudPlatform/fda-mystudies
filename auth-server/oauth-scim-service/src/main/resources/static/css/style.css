@@ -71,7 +71,7 @@ a, a:hover {
   position: absolute;
   top: -11px;
   left: 40px;
-  font-size: 11px;
+  font-size: 12px;
   padding: 3px 10px;
   border-radius: 3px;
 }
@@ -135,7 +135,7 @@ footer {
   color: var(--white);
   background-color: var(--blue) !important;
   border-color: var(--blue) !important;
-  font-size: 16px !important;
+  font-size: 18px !important;
   padding: 6px 20px !important;
 }
 
@@ -147,7 +147,7 @@ footer {
 
 .blue__link {
   color: var(--light-blue) !important;
-  font-size: 80%;
+  font-size: 85%;
   text-decoration: none;
   cursor: pointer;
   font-weight: 600;
@@ -351,10 +351,10 @@ body#body-container {
 
 @media ( min-width : 300px) {
   .centered__div__mobile {
-    width: 270px;
+    width: 290px;
   }
   .input__field input {
-    font-size: 12px;
+    font-size: 14px;
   }
   .costom_ml {
     margin-left: 20px;
@@ -375,7 +375,7 @@ body#body-container {
 
 @media ( min-width : 375px) {
   .centered__div__mobile {
-    width: 330px;
+    width: 350px;
   }
   .input__field input {
     font-size: 14px;

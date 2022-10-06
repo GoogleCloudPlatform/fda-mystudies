@@ -23,6 +23,34 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
+.study-selected-item {
+  padding: 10px 0px;
+  border-bottom: 1px solid #cfd4d7;
+}
+
+.app-selected-item {
+  padding: 10px 0px !important;
+  border-bottom: 1px solid #cfd4d7 !important;
+}
+
+.bootstrap-select.btn-group .dropdown-menu {
+	min-height: 100%  !important;
+}
+
+.bootstrap-select.btn-group .dropdown-menu.inner
+{
+	min-height: 100% important;
+    height: 100%;
+}
+
+.changeView div.dropdown-menu ul.dropdown-menu {
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 100% !important;
+    height: 100% !important;
+}
 button#deleteUser {
     background: #cf0036 !important;
     border-color: #cf0036 !important;
@@ -37,7 +65,17 @@ input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
 
+.dropdown-menu>.inner { 
+overflow-y: hidden !important;
+}
 
+.changeView3 div.dropdown-menu ul.dropdown-menu {
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 100% !important;
+    height: 100% !important;
+}
 </style>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mt-md mb-md">
@@ -129,7 +167,7 @@ input::-webkit-calendar-picker-indicator {
 
 </div>
 
-<form:form
+<form:form class="display_contents"
     action="/studybuilder/adminUsersEdit/addOrUpdateUserDetails.do"
     data-toggle="validator" id="userForm" role="form" method="post"
     autocomplete="off">
@@ -157,7 +195,7 @@ input::-webkit-calendar-picker-indicator {
         <!-- Edit User Layout-->
 
         <div class="blue-md-f text-uppercase mb-md">Admin Information</div>
-        <div class="col-md-12 p-none">
+        <div class="col-md-12 row p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
@@ -188,7 +226,7 @@ input::-webkit-calendar-picker-indicator {
         </div>
 
 
-        <div class="col-md-12 p-none">
+        <div class="col-md-12 row p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="gray-xs-f mb-xs">
@@ -227,7 +265,7 @@ input::-webkit-calendar-picker-indicator {
 
         <div class="clearfix"></div>
         <!-- Assign Role Section -->
-        <div class="col-md-12 p-none">
+        <div class="col-md-12 row p-none">
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="blue-md-f mt-lg mb-md">
@@ -277,6 +315,7 @@ input::-webkit-calendar-picker-indicator {
 
         <div class="clearfix"></div>
         <!-- Assign Permissions -->
+        <div style="width: 100%;">
         <div class="blue-md-f text-uppercase mt-lg perm-assign">Assigned Permissions</div>
         <div class="pull-right mb-xs">
           <span class="gray-xs-f">View only</span>
@@ -313,7 +352,7 @@ input::-webkit-calendar-picker-indicator {
                     class="selectpicker col-md-6 p-none changeView3 <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
                     title="- Select and add apps -" multiple id="multipleApps" >
                      <c:if test="${empty apps}">
-                     <option value="" id="">No app records found
+                     <option value="" selected id="">No app records found
                      </option>
                       </c:if>
                   <c:forEach items="${apps}" var="app">
@@ -374,7 +413,7 @@ input::-webkit-calendar-picker-indicator {
             </div>
           </div>
         </div>
-        
+      
    <!--  Manage studies div  -->     
           <!-- Gray Widget-->
         <div class="edit-user-list-widget mt-xxlg">
@@ -401,7 +440,7 @@ input::-webkit-calendar-picker-indicator {
                     class="selectpicker col-md-6 p-none changeView <c:if test="${actionPage eq 'VIEW_PAGE'}">linkDis</c:if>"
                     title="- Select and add studies -" multiple id="multiple">
                   <c:forEach items="${studyBOList}" var="study">
-                    <option value="${study.id}"
+                    <option value="${study.id}" title="${study.name}&nbsp;(${study.customStudyId})"
                             id="selectStudies${study.id}">${study.name}&nbsp;(${study.customStudyId})
                     </option>
                   </c:forEach>
@@ -458,7 +497,7 @@ input::-webkit-calendar-picker-indicator {
             </div>
           </div>
         </div>
-        
+      </div>
       </div>
     </div>
   </div>
@@ -543,9 +582,16 @@ input::-webkit-calendar-picker-indicator {
    $(".selectpicker").selectpicker('deselectAll');
    var tot_items = $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
    var count = $(".app-selected-item").length;
+   var tot_study = $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").length;
+   var selected_study = $(".study-selected-item").length;
    if (count == tot_items) {
  	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
      $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
+     	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
+   } 
+   if (selected_study == tot_study) {
+ 	  $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
+     $(".study-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
      	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
    }
     </c:if> 
@@ -988,7 +1034,7 @@ input::-webkit-calendar-picker-indicator {
         saveUser();
         enforce=enforce+1;
       }
-      if(enforce==2){
+      if(enforce==3){
      	 $('#enforcePasswordId').show();
      }
     });
@@ -1241,6 +1287,7 @@ input::-webkit-calendar-picker-indicator {
 	    setTimeout(hideDisplayMessage, 10000);
 	  }
   
+  //funtion for validateAdminStatus for deleting
   function validateAdminStatus(obj) {
 	    var buttonText = obj.id;
 	    var messageText = "";

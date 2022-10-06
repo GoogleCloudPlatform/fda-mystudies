@@ -25,6 +25,7 @@ package com.hphc.mystudies.util;
 
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.hphc.mystudies.bean.FailureResponse;
@@ -802,6 +803,18 @@ public class StudyMetaDataUtil {
     }
     LOGGER.exit("getStandardFileNameForResponses() :: ends");
     return fileName;
+  }
+
+  public static String getSignedUrl(
+      String bucketName, String filePath, int signedUrlDurationInHours) {
+    try {
+      BlobInfo blobInfo = BlobInfo.newBuilder(bucketName, filePath).build();
+      Storage storage = StorageOptions.getDefaultInstance().getService();
+      return storage.signUrl(blobInfo, signedUrlDurationInHours, TimeUnit.HOURS).toString();
+    } catch (Exception e) {
+      LOGGER.error("Unable to generate signed url", e);
+    }
+    return null;
   }
 
   public static String getResources(String bucketName, String filepath, String dataFormat) {

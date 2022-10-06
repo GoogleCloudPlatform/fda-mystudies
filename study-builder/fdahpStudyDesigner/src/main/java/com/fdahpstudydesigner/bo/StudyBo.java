@@ -2,24 +2,22 @@
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Copyright 2020-2021 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
  *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as
+ * Contract no. HHSF22320140030I/HHSF22301006T (the "Prime Contract").
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package com.fdahpstudydesigner.bo;
@@ -60,7 +58,7 @@ import org.springframework.web.multipart.MultipartFile;
   @NamedQuery(name = "getStudy", query = " From StudyBo SBO WHERE SBO.id=:id"),
   @NamedQuery(
       name = "StudyBo.getStudyBycustomAppId",
-      query = " From StudyBo SBO WHERE appId=:customAppId and status<>:status and version=0"),
+      query = " From StudyBo SBO WHERE appId=:customAppId and status<>:status"),
   @NamedQuery(
       name = "StudyBo.getStudyCountBycustomAppId",
       query = " From StudyBo SBO WHERE appId=:customAppId and version=0")
@@ -68,14 +66,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class StudyBo implements Serializable {
 
   private static final long serialVersionUID = 2147840266295837728L;
-
-  @Deprecated
-  @Column(name = "allow_rejoin")
-  private String allowRejoin;
-
-  @Deprecated
-  @Column(name = "allow_rejoin_text")
-  private String allowRejoinText;
 
   @Transient private String buttonText;
 
@@ -152,10 +142,6 @@ public class StudyBo implements Serializable {
   @Column(name = "research_sponsor")
   private String researchSponsor;
 
-  @Deprecated
-  @Column(name = "retain_participant")
-  private String retainParticipant;
-
   @Column(name = "sequence_number")
   private Integer sequenceNumber;
 
@@ -210,11 +196,8 @@ public class StudyBo implements Serializable {
   @Column(name = "destination_custom_study_id")
   private String destinationCustomStudyId;
 
-  @Column(name = "export_signed_url", length = 1012)
+  @Column(name = "export_signed_url")
   private String exportSignedUrl;
-
-  @Column(name = "is_cloud_storage_moved", columnDefinition = "int default 0")
-  private Integer isCloudStorageMoved;
 
   @Transient private byte[] exportSqlByte;
 
@@ -236,6 +219,9 @@ public class StudyBo implements Serializable {
   public void setDestinationCustomStudyId(String destinationCustomStudyId) {
     this.destinationCustomStudyId = destinationCustomStudyId;
   }
+
+  @Column(name = "isCloudStorageMoved", columnDefinition = "int default 0")
+  private Integer isCloudStorageMoved;
 
   public String getButtonText() {
     return buttonText;

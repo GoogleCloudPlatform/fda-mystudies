@@ -6,5 +6,5 @@ export interface StudyDetails {
   message: string;
   code: string;
   totalParticipantCount: number;
-  appStatus: Status;
+  appStatus?: Status;
 }

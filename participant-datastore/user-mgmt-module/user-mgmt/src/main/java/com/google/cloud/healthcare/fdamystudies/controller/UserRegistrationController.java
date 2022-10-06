@@ -50,8 +50,8 @@ public class UserRegistrationController {
   @PostMapping("/register")
   public ResponseEntity<UserRegistrationResponse> registerUser(
       @Valid @RequestBody UserRegistrationForm user,
-      @RequestHeader("appId") String appId,
       @RequestHeader String appName,
+      @RequestHeader("appId") String appId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);

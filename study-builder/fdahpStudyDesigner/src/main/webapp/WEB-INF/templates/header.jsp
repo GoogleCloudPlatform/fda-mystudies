@@ -1,3 +1,5 @@
+<%@ page language="java" pageEncoding="UTF-8" %>
+<%@ page contentType = "text/html:charset=UTF-8" %>
 <%@page import="com.fdahpstudydesigner.util.SessionObject" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -5,13 +7,48 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <c:url value="/j_spring_security_logout" var="logoutUrl"/>
 
+<style>
+.navbar-inverse{
+padding:0px;
+}
+/*.navbar-inverse::before{
+display:table;
+}*/
+.container-fluid{
+flex-wrap:initial !important;
+}
+/*.container-fluid::before{
+display:table;
+}*/
+.container-fluid > div {
+display:flex !important;
+}
+.navbar-toggle{
+display:contents;
+}
+.navbar-nav {
+/*display:contents;*/
+display: -webkit-box;
+}
 
+.dropdown-toggle::after{
+display:none;
+}
+
+.navbar-nav .dropdown-menu {
+    position: absolute;
+
+}
+.navbar-collapse > div {
+display:flex;
+}
+</style>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none white-bg hd_con">
   <div class="md-container">
     <!-- Navigation Menu-->
     <nav class="navbar navbar-inverse">
-      <div class=" display__flex__center justyfy__space__between ">
-        <div class="navbar-header display__flex__center mr-lg">
+      <div class="container-fluid p-none">
+        <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse"
                   data-target="#myNavbar">
             <span class="icon-bar"></span>
@@ -21,6 +58,11 @@
           <a class="navbar-brand pt-none pb-none display__flex__center p-none pr-lg"
              href="javascript:void(0)"
              id="landingScreen"><img src="/studybuilder/images/logo/logo_innerScreens.png"/></a>
+            </div>
+
+            <div class="collapse navbar-collapse p-none" id="myNavbar">
+              <div>
+
           <ul class="nav navbar-nav ml-none">
                 <c:if test="${fn:contains(sessionObject.userPermissions,'ROLE_SUPERADMIN') || 
       fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_APPS')}">
@@ -49,15 +91,15 @@
             </c:if>
           </ul>
         </div>
-        <div class="collapse navbar-collapse p-none" id="myNavbar">
+      </div>
+        <div>
 
 
           <ul class="nav navbar-nav navbar-right">
             <li id="myAccount" class="dropdown ml-lg userLi">
               <a class="dropdown-toggle blue-link" data-toggle="dropdown"
                  href="javascript:void(0)">${sessionObject.firstName} ${sessionObject.lastName}
-                &nbsp;<i
-                    class="fa fa-angle-down" aria-hidden="true"></i>
+                &nbsp;
               </a>
               <ul class="dropdown-menu pb-none pt-none profileBox">
 

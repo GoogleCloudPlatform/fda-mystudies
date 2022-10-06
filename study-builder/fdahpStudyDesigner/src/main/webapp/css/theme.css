@@ -9,7 +9,7 @@
 /*
 
 Name: 			theme.css
-Written by: 	BTC - Madhu D V
+Written by: 	BTC - Maari Vanaraj
 Version: 		1.0
 
 */
@@ -29,6 +29,7 @@ body {
 	overflow-x: hidden;
 	min-height: 100vh !important;
     height: 100% !important;
+	
 }
 
 a:hover{
@@ -126,12 +127,14 @@ a:hover{
 }
 
 .mt-xlg {
-	margin-top: 30px !important;
+	margin-top: 20px !important;
 }
+
 
 .mt-xxlg {
 	margin-top: 40px !important;
 }
+
 
 /* spacement bottom	*/
 .mb-none {
@@ -308,7 +311,7 @@ a:hover{
 }
 
 .pb-lg {
-	padding-bottom: 20px !important;
+	padding-bottom: 10px !important;
 }
 
 .pb-xl {
@@ -421,6 +424,12 @@ a:hover{
     color: #7c868d;
     font-weight: 500;
 }
+.gray-xs-e{
+	 font-size: 14px;
+    line-height: 16px;
+    color: #2d2926;;
+    font-weight: 500;
+}
 
 .black-xs-f{    
     font-size: 14px;
@@ -449,6 +458,14 @@ a:hover{
     font-size: 16px;
     line-height: 20px;
     font-weight: 600;
+    color: #2d2926;
+}
+black-md{
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    line-height: 16px;
+    font-weight: 500;
     color: #2d2926;
 }
 
@@ -1120,3 +1137,69 @@ font-size: 12px;
 .switch-green > .deactivate_switch-input:checked ~ .deactivate_switch-label {
   background:  #c5c5c5;
 }
+
+.study-selected-item {
+  padding: 10px 0px;
+  border-bottom: 1px solid #cfd4d7;
+}
+
+.app-selected-item {
+  padding: 10px 0px !important;
+  border-bottom: 1px solid #cfd4d7 !important;
+}
+
+.hide {
+	display: none !important;
+}
+
+.btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus, .btn-default:active:focus, .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover,.bootstrap-select .dropdown-toggle:focus{
+    color: #2d2926;
+    background-color: #fff;
+    border-color: #c9d2d6;
+    outline: none !important;
+     box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.bootstrap-select>.dropdown-toggle.bs-placeholder, .bootstrap-select>.dropdown-toggle.bs-placeholder:active, .bootstrap-select>.dropdown-toggle.bs-placeholder:focus, .bootstrap-select>.dropdown-toggle.bs-placeholder:hover{
+    color: #999 !important;
+    background-color: #fff;
+    border-color: #c9d2d6;
+     box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.btn-default.active, .btn-default:active, .open>.dropdown-toggle.btn-default{
+    color: #2d2926 !important;
+    background-color: #fff;
+    border-color: #c9d2d6 !important;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.dropdown_chk_box .btn-default.active.focus, .dropdown_chk_box .btn-default.active:focus, .dropdown_chk_box .btn-default.active:hover, .dropdown_chk_box .btn-default:active.focus, .dropdown_chk_box .btn-default:active:focus, .dropdown_chk_box .btn-default:active:hover, .open>.dropdown-toggle.btn-default.focus, .open>.dropdown-toggle.btn-default:focus, .open>.dropdown-toggle.btn-default:hover, .bootstrap-select .dropdown-toggle:focus {
+    color: #2d2926 !important;
+    background-color: #fff;
+    border-color: #c9d2d6 !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none;
+}
+
+.btn-light {
+    color: #212529;
+    background-color: #fff !important;
+    border-color: #f8f9fa;
+}
+
+.btn-light:hover, .btn-light:focus {
+    color: #212529;
+    background-color: #fff !important;
+    border-color: #dae0e5;
+}
+
+.btn-default:hover{
+    color: #2d2926;
+    background-color: #fff !important;
+    border-color: #c9d2d6;
+}
+

@@ -45,4 +45,5 @@ public class StudiesBean {
   private Integer adherence;
   private String participantId;
   private String siteId;
+  private String userStudyVersion;
 }
