@@ -19,9 +19,9 @@ package com.harvard.studyappmodule;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
-import android.view.View;
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -29,6 +29,7 @@ import com.harvard.studyappmodule.consent.ConsentBuilder;
 import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
+import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
@@ -135,8 +136,11 @@ public class EnrollmentValidatedActivity extends AppCompatActivity
   }
 
   public void updateuserpreference() {
-    AppController.getHelperProgressDialog().showProgress(EnrollmentValidatedActivity.this, "", "", false);
 
+    AppController.getHelperProgressDialog().showProgress(EnrollmentValidatedActivity.this,
+        "", "", false);
+    ConsentDocumentData consentDocumentData =
+        dbServiceSubscriber.getConsentDocumentFromDB(getIntent().getStringExtra("studyId"), realm);
     HashMap<String, String> header = new HashMap();
     header.put(
             "Authorization",
@@ -159,6 +163,7 @@ public class EnrollmentValidatedActivity extends AppCompatActivity
         studiestatus.put("siteId", getIntent().getStringExtra("siteId"));
       }
       studiestatus.put("status", StudyFragment.YET_TO_JOIN);
+      studiestatus.put("userStudyVersion", consentDocumentData.getConsent().getVersion());
     } catch (JSONException e) {
       Logger.log(e);
     }
@@ -192,7 +197,8 @@ public class EnrollmentValidatedActivity extends AppCompatActivity
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     dbServiceSubscriber.updateStudyPreferenceDB(
-            this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "", "", "");
+            this, getIntent().getStringExtra("studyId"),
+        StudyFragment.YET_TO_JOIN, "", "", "", "", "");
   }
 
   @Override
@@ -200,7 +206,8 @@ public class EnrollmentValidatedActivity extends AppCompatActivity
     AppController.getHelperProgressDialog().dismissDialog();
 
     dbServiceSubscriber.updateStudyPreferenceDB(
-            this, getIntent().getStringExtra("studyId"), StudyFragment.YET_TO_JOIN, "", "", "", "", "");
+            this, getIntent().getStringExtra("studyId"),
+        StudyFragment.YET_TO_JOIN, "", "", "", "", "");
   }
 
   @Override

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -7,56 +7,56 @@
               android:orientation="vertical"
               tools:context="com.harvard.usermodule.SignupProcessCompleteActivity">
 
-    <ScrollView
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:scrollbars="none">-->
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:layout_centerInParent="true">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/validatedlabel"
+            style="@style/TextType1"
+            android:layout_centerHorizontal="true"
+            android:text="@string/validated"
+            android:textColor="@color/colorPrimaryBlack" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/validatedlabel"
-                style="@style/TextType1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="90dp"
-                android:text="@string/validated"
-                android:textColor="@color/colorPrimaryBlack"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/complete_txt_label"
+            style="@style/TextType2"
+            android:layout_below="@id/validatedlabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:text="@string/enrollvalidated"
+            android:textColor="@color/colorPrimaryBlack" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/complete_txt_label"
-                style="@style/TextType2"
-                android:layout_below="@id/validatedlabel"
-                android:layout_centerHorizontal="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:text="@string/enrollvalidated"
-                android:textColor="@color/colorPrimaryBlack"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/success_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/complete_txt_label"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/success_icn1" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/success_img"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/complete_txt_label"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/success_icn1"/>
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/continueButton"
-                style="@style/TextType2"
-                android:layout_below="@id/success_img"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/rectangle_black_white"
-                android:gravity="center"
-                android:text="@string/continue_txt"
-                android:textColor="@color/colorPrimary"/>
-        </RelativeLayout>
-    </ScrollView>
-</LinearLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/continueButton"
+            style="@style/TextType2"
+            android:layout_below="@id/success_img"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rectangle_black_white"
+            android:gravity="center"
+            android:text="@string/continue_txt"
+            android:textColor="@color/colorPrimary" />
+    </RelativeLayout>
+<!--    </ScrollView>-->
+</RelativeLayout>
 
