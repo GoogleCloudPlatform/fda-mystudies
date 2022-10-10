@@ -133,6 +133,7 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: study_export_import_bucket_name
+            # GOOGLE HEALTH CARE API              
             - name: PROJECT_ID
               valueFrom:
                 secretKeyRef:

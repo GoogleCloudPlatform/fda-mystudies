@@ -126,16 +126,12 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
-            - name: INSTITUTION_RESOURCES_BUCKET_NAME
+            # GOOGLE HEALTH CARE API                  
+            - name: DATA_PROJECT_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: institution_resources_bucket_name
-            - name: PROJECT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: project_id
+                  key: data_project_id                  
             - name: REGION_ID
               valueFrom:
                 secretKeyRef:
@@ -146,6 +142,11 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: consent_enabled                  
+            - name: INSTITUTION_RESOURCES_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: institution_resources_bucket_name                  
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:

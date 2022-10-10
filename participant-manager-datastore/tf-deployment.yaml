@@ -114,22 +114,12 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
-            # GOOGLE IDENTITY PLATFORM
-            - name: IDP_ENABLED_PM
+            # GOOGLE HEALTH CARE API
+            - name: DATA_PROJECT_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: idp_enabled_pm
-            - name: MFA_ENABLED_PM
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: mfa_enabled_pm
-            - name: PROJECT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: project_id
+                  key: data_project_id
             - name: REGION_ID
               valueFrom:
                 secretKeyRef:
