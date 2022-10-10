@@ -1041,7 +1041,7 @@ resource "kubernetes_secret" "shared_secrets" {
     region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
     consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
     fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
-    discard_fhir_response             = data.google_secret_manager_secret_version.secrets["manual-discard-fhir-response-enabled"].secret_data
+    discard_fhir                      = data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data
     ingest_data_to_bigquery           = data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data	
   }
 }
