@@ -178,7 +178,7 @@ template "project_secrets" {
           secret_id = "manual-fhir-enabled"
         },
         {
-          secret_id = "manual-discard-fhir-response-enabled"
+          secret_id = "manual-discard-fhir"
         },
         {
           secret_id = "manual-ingest-data-to-bigquery"
@@ -999,7 +999,7 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-region-id",
       "manual-consent-enabled",
       "manual-fhir-enabled",
-      "manual-discard-fhir-response-enabled",
+      "manual-discard-fhir",
       "manual-ingest-data-to-bigquery",	  
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",

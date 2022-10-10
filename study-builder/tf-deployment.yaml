@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: study-builder
-          image: gcr.io/btcsoft-dev-apps/study-builder:latest
+          image: gcr.io/<PREFIX>-<ENV>-apps/study-builder:latest
           env:
             # DB ACCESS
             - name: DB_USER
@@ -118,7 +118,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: study_resources_bucket_name
+                  key: study_export_import_bucket_name
             - name: ORG_NAME
               valueFrom:
                 secretKeyRef:
@@ -182,7 +182,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=btcsoft-dev-data:us-east1:mystudies=tcp:3306",
+            "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
