@@ -19,6 +19,7 @@
 
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 // MARK: - ActivitySchedules Class
 class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
@@ -380,7 +381,7 @@ class ActivitySchedules: UIView, UITableViewDelegate, UITableViewDataSource {
 
 static let formatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd, yyyy"
+    formatter.dateFormat = "hh:mm a, MMM dd, yyyy"
     return formatter
   }()
 }
@@ -442,7 +443,13 @@ class ResponseDataFetch: NMWebServiceDelegate {
   }
 
   func sendRequestToGetDashboardInfo() {
-    WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
+      do {
+          let reachability = try Reachability()
+          if reachability.connection != .unavailable {
+              WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
+          }
+      } catch(let error) { }      
+//    WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
   }
 
   func getDataKeysForCurrentStudy() {

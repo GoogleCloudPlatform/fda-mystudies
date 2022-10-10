@@ -973,7 +973,7 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
 + (BOOL)supportsSecureCoding {
     return YES;
 }
-
+//new
 - (ORKQuestionType)questionType {
     return (_style == ORKChoiceAnswerStyleSingleChoice) ? ORKQuestionTypeSingleChoice : ORKQuestionTypeMultipleChoice;
 }
@@ -1015,6 +1015,10 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
 
 + (instancetype)choiceWithText:(NSString *)text value:(id<NSCopying, NSCoding, NSObject>)value {
     return [ORKTextChoice choiceWithText:text detailText:nil value:value exclusive:NO];
+}
+
++ (instancetype)choiceWithTextExclusive:(NSString *)text value:(id<NSCopying, NSCoding, NSObject>)value {
+    return [ORKTextChoice choiceWithText:text detailText:nil value:value exclusive:YES];
 }
 
 - (instancetype)initWithText:(NSString *)text detailText:(NSString *)detailText value:(id<NSCopying,NSCoding,NSObject>)value exclusive:(BOOL)exclusive {
@@ -1194,16 +1198,18 @@ static NSArray *ork_processTextChoices(NSArray<ORKTextChoice *> *textChoices) {
 }
 
 - (ORKAnswerFormat *)impliedAnswerFormat {
-    if (!_yes.length) {
-        _yes = ORKLocalizedString(@"BOOL_YES", nil);
-    }
-    if (!_no.length) {
-        _no = ORKLocalizedString(@"BOOL_NO", nil);
-    }
-    
-    return [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleSingleChoice
-                                            textChoices:@[[ORKTextChoice choiceWithText:_yes value:@(YES)],
-                                                          [ORKTextChoice choiceWithText:_no value:@(NO)]]];
+  if (!_yes.length) {
+      _yes = ORKLocalizedString(@"BOOL_YES", nil);
+  }
+  if (!_no.length) {
+      _no = ORKLocalizedString(@"BOOL_NO", nil);
+  }
+  
+  return [ORKAnswerFormat choiceAnswerFormatWithStyle:ORKChoiceAnswerStyleMultipleChoice
+                                          textChoices:@[
+    [ORKTextChoice choiceWithText:_yes detailText:@("") value:@(YES) exclusive:(YES)],
+    [ORKTextChoice choiceWithText:_no detailText:@("") value:@(NO) exclusive:(YES)]
+                                                        ]];
 }
 
 - (Class)questionResultClass {

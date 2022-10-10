@@ -5,7 +5,7 @@
 
 <!-- Start left Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-2 col-lc p-none">
+<div class="col-sm-2.5 col-lc p-none">
   <div class="left-content-container">
     <ul class="menuNav">
       <li>
@@ -89,7 +89,7 @@
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if></li>
       <li class="sub sixthTask commonCls ">
-        Active tasks
+        Active Tasks
         <c:if test="${studyBo.studySequenceBo.studyExcActiveTask}">
           <span class="sprites-icons-2 tick pull-right mt-xs"></span>
         </c:if>
@@ -126,7 +126,7 @@
       <c:if test="${empty permission}">
       $('.cancelBut').prop('disabled', true);
       bootbox.confirm({
-        closeButton: false,
+        closeButton: true,
         message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
         buttons: {
           'cancel': {
@@ -224,7 +224,7 @@
     <c:if test="${(empty studyBo.status || studyBo.status eq 'Pre-launch') && ((empty studyBo.studySequenceBo) || not studyBo.studySequenceBo.basicInfo)}">
     $('.commonCls').addClass('cursor-none-without-event');
     </c:if>
-    <c:if test="${(empty studyBo.status || studyBo.status eq 'Pre-launch') && studyBo.studySequenceBo.basicInfo && not studyBo.studySequenceBo.settingAdmins}">
+    <c:if test="${(empty studyBo.status ||studyBo.status eq 'Pre-launch') && studyBo.studySequenceBo.basicInfo && not studyBo.studySequenceBo.settingAdmins}">
     $('.commonCls').not('.second').addClass('cursor-none-without-event');
     </c:if>
     $(window).on('load resize', function () {
@@ -269,4 +269,5 @@
   function slideUpStudyMenu() {
     $(".slideUp.active").ScrollTo();
   }
+  
 </script>

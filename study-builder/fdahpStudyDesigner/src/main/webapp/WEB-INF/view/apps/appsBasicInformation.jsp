@@ -16,7 +16,7 @@ margin-top:16px !important;
 <!-- ============================================================== -->
 
       
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <form:form
       action="/studybuilder/adminApps/saveOrUpdateAppInfo.do?${_csrf.parameterName}=${_csrf.token}&_S=${param._S}"
       data-toggle="validator" role="form" id="appsBasicInfoFormId" method="post"

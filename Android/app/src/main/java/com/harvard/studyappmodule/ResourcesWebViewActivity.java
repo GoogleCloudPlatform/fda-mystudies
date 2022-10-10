@@ -19,14 +19,17 @@ package com.harvard.studyappmodule;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.text.Html;
 import android.util.Base64;
 import android.view.View;
@@ -38,12 +41,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import com.harvard.BuildConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.PdfViewerView;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import io.realm.Realm;
@@ -55,8 +60,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javax.crypto.CipherInputStream;
 
-
-public class ResourcesWebViewActivity extends AppCompatActivity {
+public class ResourcesWebViewActivity extends AppCompatActivity
+    implements NetworkChangeReceiver.NetworkChangeCallback {
   private AppCompatTextView titleTv;
   private RelativeLayout backBtn;
   private WebView webView;
@@ -74,8 +79,9 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   private DbServiceSubscriber dbServiceSubscriber;
   String resourceId;
   Resource resource;
-  private CustomFirebaseAnalytics analyticsInstance;
   PdfViewerView pdfViewer;
+  private CustomFirebaseAnalytics analyticsInstance;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +89,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
 
     CreateFilePath = "/data/data/" + getPackageName() + "/files/";
     initializeXmlId();
@@ -99,11 +106,11 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     // removing space b/w the string : name of the pdf
     try {
       title = intentTitle.replaceAll("\\s+", "");
-      title = title.replace("/", "\u2215");
     } catch (Exception e) {
       title = intentTitle;
       Logger.log(e);
     }
+    title = title.replace("/", "\u2215");
     fileName = title + studyId;
 
     if (intentType.equalsIgnoreCase("pdf")) {
@@ -192,7 +199,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
               } else {
                 shareIntent.setType("text/html");
                 shareIntent.putExtra(
-                    Intent.EXTRA_TEXT,Html.fromHtml(resource.getContent()).toString());
+                    Intent.EXTRA_TEXT, Html.fromHtml(resource.getContent()).toString());
                 shareIntent.putExtra(
                     Intent.EXTRA_HTML_TEXT, Html.fromHtml(resource.getContent()).toString());
               }
@@ -304,6 +311,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   @Override
   protected void onDestroy() {
     super.onDestroy();
+    pdfViewer.destroyPdfRender();
     try {
       File file = new File(CreateFilePath + fileName + ".pdf");
       if (file.exists()) {
@@ -323,11 +331,35 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     dbServiceSubscriber.closeRealmObj(realm);
   }
 
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      shareBtn.setClickable(false);
+      shareBtn.setAlpha(0.3F);
+    } else {
+      shareBtn.setClickable(true);
+      shareBtn.setAlpha(1F);
+    }
+  }
+
+  @Override
+  protected void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
+  }
+
   class CreateFileFromBase64 extends AsyncTask<String, String, String> {
 
-    /**
-     * Before starting background thread Show Progress Bar Dialog.
-     */
+    /** Before starting background thread Show Progress Bar Dialog. */
     String downloadUrl = "";
 
     String filePath = "";
@@ -343,12 +375,10 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     protected void onPreExecute() {
       super.onPreExecute();
       AppController.getHelperProgressDialog()
-              .showProgress(ResourcesWebViewActivity.this, "", "", false);
+          .showProgress(ResourcesWebViewActivity.this, "", "", false);
     }
 
-    /**
-     * Downloading file in background thread.
-     */
+    /** Downloading file in background thread. */
     @Override
     protected String doInBackground(String... url1) {
       int count;
@@ -369,9 +399,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       return null;
     }
 
-    /**
-     * After completing background task Dismiss the progress dialog.
-     */
+    /** After completing background task Dismiss the progress dialog. */
     @Override
     protected void onPostExecute(String url) {
       try {

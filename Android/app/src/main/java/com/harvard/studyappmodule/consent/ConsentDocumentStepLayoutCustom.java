@@ -37,17 +37,21 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
   private ConsentDocumentStep step;
   private StepResult<Boolean> stepResult;
   private CustomFirebaseAnalytics analyticsInstance;
+  private Context context;
 
   public ConsentDocumentStepLayoutCustom(Context context) {
     super(context);
+    this.context = context;
   }
 
   public ConsentDocumentStepLayoutCustom(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.context = context;
   }
 
   public ConsentDocumentStepLayoutCustom(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
+    this.context = context;
   }
 
   @Override
@@ -98,7 +102,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.consent_review_agree_text));
+                context.getString(R.string.consent_review_agree_text));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             submitBar.getPositiveActionView().setEnabled(false);
@@ -112,7 +116,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
             Bundle eventProperties = new Bundle();
             eventProperties.putString(
                 CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                getContext().getString(R.string.consent_review_disagree_text));
+                context.getString(R.string.consent_review_disagree_text));
             analyticsInstance.logEvent(
                 CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
             callbacks.onCancelStep();
@@ -133,7 +137,7 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
                 Bundle eventProperties = new Bundle();
                 eventProperties.putString(
                     CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getContext().getString(R.string.consent_agree_agree));
+                    context.getString(R.string.consent_agree_agree));
                 analyticsInstance.logEvent(
                     CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
                 stepResult.setResult(true);
@@ -149,7 +153,8 @@ public class ConsentDocumentStepLayoutCustom extends LinearLayout implements Ste
                 Bundle eventProperties = new Bundle();
                 eventProperties.putString(
                     CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
-                    getContext().getString(R.string.consent_agree_cancel));
+                    context.getString(R.string.consent_agree_cancel));
+                submitBar.getPositiveActionView().setEnabled(true);
                 analyticsInstance.logEvent(
                     CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
               }

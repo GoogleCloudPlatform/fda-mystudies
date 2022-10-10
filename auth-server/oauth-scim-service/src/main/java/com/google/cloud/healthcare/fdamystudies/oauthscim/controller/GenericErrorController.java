@@ -51,6 +51,10 @@ public class GenericErrorController {
     // redirect added to remove error details in URL
     response.setHeader("Location", ERROR_VIEW_NAME);
     response.setStatus(HttpStatus.FOUND.value());
+    String sessionid = ((HttpServletRequest) request).getSession().getId();
+    response.setHeader("Set-Cookie", "JSESSIONID=" + sessionid + "Secure; SameSite=Strict;");
+    response.setHeader("X-Content-Type-Options", "nosniff");
+    response.setHeader("Cache-Control", "no-cache; no-store; must-revalidate;");
     return REDIRECT_ERROR_VIEW;
   }
 }

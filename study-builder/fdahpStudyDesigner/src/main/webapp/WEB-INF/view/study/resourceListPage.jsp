@@ -23,7 +23,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
@@ -262,6 +262,7 @@
               	$('.eighthResources').find('span').removeClass(
                   'sprites-icons-2 tick pull-right mt-xs');
             	}
+                
                 reloadData(studyId);
               } else {
                 $("#alertMsg").removeClass('s-box').addClass('e-box').text(

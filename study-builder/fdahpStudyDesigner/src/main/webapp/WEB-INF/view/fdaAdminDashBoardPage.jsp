@@ -51,6 +51,7 @@
      <style>
    
 .arrow {
+  display: none !important;
   width: 0px !important;
   height: 0px !important;
   display: inline-block;
@@ -96,7 +97,7 @@
       <div class="logout">
         <div class="dis-line pull-right ml-md line34">
           <div  class="dropdown ml-lg userLi">
-              <a class="dropdown-toggle blue-link text-uppercase" data-toggle="dropdown" style="color:#fff;"
+              <a class="dropdown-toggle blue-link text-uppercase" data-toggle="dropdown" style="color:#fff;" aria-expanded="true"
                  href="javascript:void(0)"> <span class="pr-xs">${sessionObject.firstName}  ${sessionObject.lastName}</span>
                 <span class="arrow"></span>
               </a>
@@ -225,7 +226,8 @@
 
 
     <!-- Vendor -->
-    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/studybuilder/vendor/summernote/jquery.popper.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
     <script src="/studybuilder/vendor/animation/wow.min.js"></script>
     <script src="/studybuilder/vendor/datatable/js/jquery.dataTables.min.js"></script>

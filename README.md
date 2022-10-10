@@ -49,7 +49,7 @@ Each high-level directory contains a `README.md` and the necessary deployment co
 
 For more information about the platform architecture, visit the [Platform overview](documentation/architecture.md). An example of how this architecture can be deployed on Google Cloud is diagrammed below.
 
-![Example architecture](documentation/images/apps-reference-architecture.svg "Example architecture")
+![Example architecture](documentation/images/apps-reference-architecture.svg.png "Example architecture")
 
 ## Data and compliance
 

@@ -59,6 +59,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Optional;
@@ -66,6 +67,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,6 +111,10 @@ public class LoginController {
       Model model)
       throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    String sessionid = ((HttpServletRequest) request).getSession().getId();
+    response.setHeader("Set-Cookie", "JSESSIONID=" + sessionid + "Secure; SameSite=Strict;");
+    response.setHeader("X-Content-Type-Options", "nosniff");
+    response.setHeader("Cache-Control", "no-cache; no-store; must-revalidate;");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     model.addAttribute("loginRequest", new LoginRequest());
 
@@ -150,8 +156,12 @@ public class LoginController {
       Model model,
       HttpServletRequest request,
       HttpServletResponse response)
-      throws JsonProcessingException, UnsupportedEncodingException {
+      throws IOException, JSONException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    String sessionid = ((HttpServletRequest) request).getSession().getId();
+    response.setHeader("Set-Cookie", "JSESSIONID=" + sessionid + "Secure; SameSite=Strict;");
+    response.setHeader("X-Content-Type-Options", "nosniff");
+    response.setHeader("Cache-Control", "no-cache; no-store; must-revalidate;");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     String tempRegId = cookieHelper.getCookieValue(request, TEMP_REG_ID_COOKIE);

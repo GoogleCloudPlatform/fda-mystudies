@@ -22,6 +22,7 @@ import IQKeyboardManagerSwift
 import ResearchKit
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kActivities = "activities"
 
@@ -35,6 +36,8 @@ let kActivityAbondonedAlertMessage =
   """
   The next run of this activity is not available yet. Please try again later.
   """
+
+let kConsentpdfSharingImage = "ConsentpdfSharingImage"
 
 enum ActivityAvailabilityStatus: Int {
   case current
@@ -57,13 +60,14 @@ class ActivitiesViewController: UIViewController {
 
   private lazy var isAnchorDateSet: Bool = false
   private lazy var taskControllerPresented = false
-
+  private var reachability: Reachability!
   /// To fetch the updated Activities.
   var refreshControl: UIRefreshControl?
 
   private lazy var allActivityList: [[String: Any]]! = []
 
   private var lastActivityResponse: JSONDictionary?
+  var fromConsentViewDidload = true
 
   /// Holds the applied FilterTypes.
   var selectedFilter: ActivityFilterType?
@@ -73,16 +77,21 @@ class ActivitiesViewController: UIViewController {
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
   }
+  
+//  weak var delegateComprehension: ActivitiesComprehensionFailureDelegate?
 
   fileprivate func presentUpdatedConsent() {
+    print("22StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appDelegate.checkConsentStatus(controller: self)
   }
-
+  
   // MARK: - Viewcontroller Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    fromConsentViewDidload = true
+      setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "Activities"
     ])
@@ -98,12 +107,14 @@ class ActivitiesViewController: UIViewController {
 
     self.navigationController?.navigationItem.rightBarButtonItem?.tintColor = UIColor.gray
 
+    print("1StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     if (Study.currentStudy?.studyId) != nil {
       if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
         NotificationHandler.instance.activityId = ""
         if StudyUpdates.studyVersion != nil {
           Study.currentStudy?.newVersion = StudyUpdates.studyVersion
         }
+        print("21StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
         presentUpdatedConsent()
       }
     }
@@ -125,14 +136,55 @@ class ActivitiesViewController: UIViewController {
     }
     
     UserDefaults.standard.removeObject(forKey: "isAlertShown")
+    UserDefaults.standard.setValue("", forKey: "consentEnrolledStatus")
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
     UserDefaults.standard.synchronize()
    
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    print("viewWillAppear---")
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+      UserDefaults.standard.synchronize()
+
+    let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+    appDelegate.iscomingFromForgotPasscode
+    
+    if Utilities.isStandaloneApp() {
+      appDelegate.delegateComprehension = self
+    }
+    
+    if !appDelegate.iscomingFromForgotPasscode {
+      if !fromConsentViewDidload && Utilities.isStandaloneApp() {
+        if (Study.currentStudy?.studyId) != nil {
+          print("2StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+          if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+            NotificationHandler.instance.activityId = ""
+            if StudyUpdates.studyVersion != nil {
+              Study.currentStudy?.newVersion = StudyUpdates.studyVersion
+            }
+            print("23StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+            presentUpdatedConsent()
+          } else {
+            WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
+          }
+          
+        } else {
+          print("3StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+          WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
+        }
+      } else {
+        print("4StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+        WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
+      }
+    }
+    fromConsentViewDidload = false
+    
     self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     setNavigationBarColor()
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImage)
+    Utilities.removeImageLocalPath(localPathName: kConsentpdfSharingImage)
     
     if Utilities.isStandaloneApp() {
       self.setNavigationBarItem()
@@ -155,8 +207,69 @@ class ActivitiesViewController: UIViewController {
     }
     checkBlockerScreen()
 
+    if NotificationHandler.instance.appOpenFromNotification == true {
+        NotificationHandler.instance.appOpenFromNotification = false
+        self.refresh(sender: self)
+    }
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    print("viewDidAppear---")
   }
 
+  // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            setOnline()
+            break
+        case .wifi:
+            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+            setOnline()
+            break
+        case .none:
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            setOffline()
+            break
+        case .unavailable:
+            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+            setOffline()
+            break
+        }
+    }
+    func setOnline() {
+        if let viewController = self.presentedViewController as? ORKTaskViewController {
+            viewController.view.hideAllToasts()
+        }
+    }
+  
+    func setOffline() {
+        if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
+          self.refreshControl?.endRefreshing()
+        }
+        if let viewController = self.presentedViewController as? ORKTaskViewController {
+            viewController.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
+        }
+    }
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
+  
   // MARK: - Helper Methods
 
   private func setupStandaloneNotifications() {
@@ -181,10 +294,10 @@ class ActivitiesViewController: UIViewController {
   @objc private func refreshActivities() {
     loadActivitiesFromDatabase()
   }
-
+  
   /// Checks for Activity updates from WCP.
   func checkForActivitiesUpdates() {
-
+    print("2fetchActivityAnchorDateResponse---")
     if StudyUpdates.studyActivitiesUpdated {
 
       self.sendRequestToGetActivityStates()
@@ -250,10 +363,14 @@ class ActivitiesViewController: UIViewController {
   }
 
   @objc func refresh(sender: AnyObject) {
+    UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+    UserDefaults.standard.synchronize()
+    print("5StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
   }
 
   func fetchActivityAnchorDateResponse() {
+    print("1fetchActivityAnchorDateResponse---")
     guard let currentStudy = Study.currentStudy else { return }
     AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { [weak self] (_) in
       self?.loadActivitiesFromDatabase()
@@ -274,6 +391,8 @@ class ActivitiesViewController: UIViewController {
           self.handleActivityListResponse()
         }
       }
+      print("10removeProgressIndicator---")
+      self.removeProgressIndicator()
     }
   }
 
@@ -474,8 +593,9 @@ class ActivitiesViewController: UIViewController {
         ) { (_, notificationlist) in
           Study.currentStudy?.activitiesLocalNotificationUpdated = true
           DBHandler.saveRegisteredLocaNotifications(notificationList: notificationlist)
+          guard let studyId = Study.currentStudy?.studyId else { return }
           DBHandler.updateLocalNotificationScheduleStatus(
-            studyId: (Study.currentStudy?.studyId)!,
+            studyId: studyId,
             status: true
           )
           LocalNotification.refreshAllLocalNotification()
@@ -537,7 +657,12 @@ class ActivitiesViewController: UIViewController {
         activityStatus.incompletedRuns = activity.incompletedRuns
         activityStatus.totalRuns = activity.totalRuns
         activityStatus.activityVersion = activity.version
-        
+        activity.userParticipationStatus.status = status
+              
+              
+              print("\n---------Activity ststus: \(String(describing: activity.actvityId)) \n", activity.userParticipationStatus.status.description)
+              print("\n---------Expected Activity ststus: \n", status.description)
+              print("\n---------User Activity ststus: \n", activityStatus.status.description)
         /// Update participationStatus to DB
         DBHandler.updateParticipationStatus(for: activity)
         
@@ -594,7 +719,9 @@ class ActivitiesViewController: UIViewController {
     )
 
     /// Update to server
-    EnrollServices().updateCompletionAdherence(studyStatus: status, delegate: self)
+      if reachability.connection != .unavailable {
+          EnrollServices().updateCompletionAdherence(studyStatus: status, delegate: self)
+      }
     /// Update Local DB
     DBHandler.updateStudyParticipationStatus(study: currentStudy)
 
@@ -807,15 +934,31 @@ class ActivitiesViewController: UIViewController {
 
   /// Handler for studyUpdateResponse.
   func handleStudyUpdatesResponse() {
+    print("6StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     guard let currentStudy = Study.currentStudy else { return }
     Study.currentStudy?.newVersion = StudyUpdates.studyVersion
-    DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
+    
 
+    if UserDefaults.standard.value(forKey: "enrollmentCompleted") as? String ?? "" == "\(Study.currentStudy?.studyId ?? "")" {
+      UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+      UserDefaults.standard.synchronize()
+      DBHandler.updateMetaDataEnrolledToUpdateForStudy(study: currentStudy, updateDetails: nil)
+      print("3removeProgressIndicator---")
+      self.removeProgressIndicator()
+      
+      UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+      UserDefaults.standard.synchronize()
+    } else {
+      DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
     //Consent Updated
+      print("7StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
     if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
+//      print("8StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+      print("24StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
       presentUpdatedConsent()
 
     } else if StudyUpdates.studyInfoUpdated {
+      print("9StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
       WCPServices().getStudyInformation(
         studyId: currentStudy.studyId,
         delegate: self
@@ -824,6 +967,7 @@ class ActivitiesViewController: UIViewController {
     } else {
       self.checkForActivitiesUpdates()
     }
+    }
 
   }
 
@@ -831,20 +975,32 @@ class ActivitiesViewController: UIViewController {
 
   /// Send Request To Get ActivityStates.
   func sendRequestToGetActivityStates() {
-    ResponseServices().getUserActivityState(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+      if let studyId = Study.currentStudy?.studyId {
+          ResponseServices().getUserActivityState(studyId: studyId, delegate: self)
+      }
+//    ResponseServices().getUserActivityState(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   /// Send Request To Get ActivityList.
   func sendRequesToGetActivityList() {
-    WCPServices().getStudyActivityList(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+      if let studyId = Study.currentStudy?.studyId {
+          WCPServices().getStudyActivityList(studyId: studyId, delegate: self)
+      }
+//    WCPServices().getStudyActivityList(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   func sendRequestToGetDashboardInfo() {
-    WCPServices().getStudyDashboardInfo(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+      if let studyId = Study.currentStudy?.studyId {
+          WCPServices().getStudyDashboardInfo(studyId: studyId, delegate: self)
+      }
+//    WCPServices().getStudyDashboardInfo(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   func sendRequestToGetResourcesInfo() {
-    WCPServices().getResourcesForStudy(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+      if let studyId = Study.currentStudy?.studyId {
+          WCPServices().getResourcesForStudy(studyId: studyId, delegate: self)
+      }
+//    WCPServices().getResourcesForStudy(studyId: (Study.currentStudy?.studyId)!, delegate: self)
   }
 
   // MARK: - Button Actions
@@ -970,6 +1126,9 @@ extension ActivitiesViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
 
+      if reachability.connection == .unavailable {
+          return
+      }
     let availabilityStatus = ActivityAvailabilityStatus(rawValue: indexPath.section)!
 
     switch availabilityStatus {
@@ -995,12 +1154,14 @@ extension ActivitiesViewController: UITableViewDelegate {
                 if found {
                   self.createActivity()
                 } else {
-
+                  guard let studyId = Study.currentStudy?.studyId,
+                          let actvityId = Study.currentActivity?.actvityId,
+                          let version = Study.currentActivity?.version else { return }
                   // Fetch ActivityMetaData from Server
                   WCPServices().getStudyActivityMetadata(
-                    studyId: (Study.currentStudy?.studyId)!,
-                    activityId: (Study.currentActivity?.actvityId)!,
-                    activityVersion: (Study.currentActivity?.version)!,
+                    studyId: studyId,
+                    activityId: actvityId,
+                    activityVersion: version,
                     delegate: self
                   )
                 }
@@ -1117,38 +1278,49 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     if requestName as String == ResponseMethods.activityState.method.methodName {
       self.sendRequesToGetActivityList()
     } else if requestName as String == WCPMethods.activityList.method.methodName {
-
+      print("3fetchActivityAnchorDateResponse---")
       // get DashboardInfo
       self.sendRequestToGetDashboardInfo()
       self.fetchActivityAnchorDateResponse()
       self.refreshControl?.endRefreshing()
       StudyUpdates.studyActivitiesUpdated = false
       // Update StudymetaData for Study
-      DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
-
+        if let currentStudy = Study.currentStudy {
+            DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
+        }
     } else if requestName as String == WCPMethods.activity.method.methodName {
+      print("4removeProgressIndicator---")
       self.removeProgressIndicator()
       self.createActivity()
 
     } else if requestName as String == WCPMethods.studyDashboard.method.methodName {
-      self.removeProgressIndicator()
+      print("5removeProgressIndicator---")
+//      self.removeProgressIndicator()
       self.sendRequestToGetResourcesInfo()
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
+      print("6removeProgressIndicator---")
       self.removeProgressIndicator()
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
-
+      print("65StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+      print("10StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
       // Handle response for study updates.
-      if Study.currentStudy?.version == StudyUpdates.studyVersion {
-
+//      if Study.currentStudy?.version == StudyUpdates.studyVersion {
+      if Study.currentStudy?.version == StudyUpdates.studyVersion &&
+                Study.currentStudy?.userParticipateState.userStudyVersion == Study.currentStudy?.version {
+        print("11StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
         self.loadActivitiesFromDatabase()
-        self.removeProgressIndicator()
+        print("7removeProgressIndicator---")
+//        self.removeProgressIndicator()
         if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
           self.refreshControl?.endRefreshing()
         }
+        UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+        UserDefaults.standard.synchronize()
       } else {
+        print("12StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
         Study.currentStudy?.newVersion = StudyUpdates.studyVersion
         self.handleStudyUpdatesResponse()
       }
@@ -1164,11 +1336,13 @@ extension ActivitiesViewController: NMWebServiceDelegate {
         ResourcesViewController.refreshNotifications()
       }
     } else if requestName as String == EnrollmentMethods.updateStudyState.method.methodName {
+      print("8removeProgressIndicator---")
       self.removeProgressIndicator()
     }
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
+    print("9removeProgressIndicator---")
     self.removeProgressIndicator()
 
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
@@ -1209,11 +1383,12 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       }
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
-        _ = self.updateNewRunCountStatusToComplete(with: false)
+//        _ = self.updateNewRunCountStatusToComplete(with: false)
       } else {
         self.lastActivityResponse = nil
       }
       self.loadActivitiesFromDatabase()
+      print("1removeProgressIndicator---")
       self.removeProgressIndicator()
       if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
         self.refreshControl?.endRefreshing()
@@ -1222,6 +1397,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
         self.tableView?.beginUpdates()
         self.tableView?.reloadData()
+        print("2removeProgressIndicator---")
         self.removeProgressIndicator()
         self.tableView?.endUpdates()
       }
@@ -1293,11 +1469,12 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     case ORKTaskViewControllerFinishReason.discarded:
 
       let study = Study.currentStudy
-      let activity = Study.currentActivity
-      activity?.currentRun.restortionData = nil
+      guard let activity = Study.currentActivity else { return }
+      activity.currentRun.restortionData = nil
+      guard let studyId = study?.studyId else { return }
       DBHandler.updateActivityRestortionDataFor(
-        activity: activity!,
-        studyId: (study?.studyId)!,
+        activity: activity,
+        studyId: studyId,
         restortionData: nil
       )
 
@@ -1322,17 +1499,17 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           .restorationData
         
         let study = Study.currentStudy
-        let activity = Study.currentActivity
+        guard let activity = Study.currentActivity else { return }
         
-        if activity?.type != .activeTask {
-          
+        if activity.type != .activeTask {
+          guard let studyId = study?.studyId else { return }
           // Update RestortionData for Activity in DB
           DBHandler.updateActivityRestortionDataFor(
-            activity: activity!,
-            studyId: (study?.studyId)!,
+            activity: activity,
+            studyId: studyId,
             restortionData: taskViewController.restorationData!
           )
-          activity?.currentRun.restortionData = taskViewController.restorationData!
+          activity.currentRun.restortionData = taskViewController.restorationData!
         }
       }
       self.checkForActivitiesUpdates()
@@ -1541,17 +1718,18 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
       } else {
 
         let study = Study.currentStudy
-        let activity = Study.currentActivity
+        guard let activity = Study.currentActivity else { return }
 
-        if activity?.type != .activeTask {
+        if activity.type != .activeTask {
 
           // Update RestortionData for Activity in DB
+          
           DBHandler.updateActivityRestortionDataFor(
-            activity: activity!,
+            activity: activity,
             studyId: (study?.studyId)!,
             restortionData: taskViewController.restorationData!
           )
-          activity?.currentRun.restortionData = taskViewController.restorationData!
+          activity.currentRun.restortionData = taskViewController.restorationData!
         }
 
         let orkStepResult: ORKStepResult? =
@@ -1559,9 +1737,9 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
             (taskViewController.result.results?.count)! - 2
           ] as! ORKStepResult?
         let activityStepResult: ActivityStepResult? = ActivityStepResult()
-        if (activity?.activitySteps?.count)! > 0 {
+        if (activity.activitySteps?.count)! > 0 {
 
-          let activityStepArray = activity?.activitySteps?.filter({
+          let activityStepArray = activity.activitySteps?.filter({
             $0.key == orkStepResult?.identifier
           })
           if (activityStepArray?.count)! > 0 {
@@ -1576,7 +1754,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         /// check for anchor date.
         if study?.anchorDate != nil
           && study?.anchorDate?.anchorDateActivityId
-            == activity?
+            == activity
             .actvityId
         {
 
@@ -1594,7 +1772,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
           if let value1 = activityStepResult?.value as? NSNumber {
             let value = value1.floatValue
             DBHandler.saveStatisticsDataFor(
-              activityId: (activity?.actvityId)!,
+              activityId: (activity.actvityId)!,
               key: (activityStepResult?.key)!,
               data: value,
               fkDuration: 0,
@@ -1607,7 +1785,7 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
 
         let activityId: String? = ud.value(forKey: "FetalKickActivityId") as! String?
         // Go forward if fetal kick task is running
-        if activity?.type == .activeTask
+        if activity.type == .activeTask
           && ud.bool(forKey: "FKC")
           && activityId != nil
           && activityId == Study.currentActivity?.actvityId
@@ -1643,20 +1821,14 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
   public func stepViewController(
     _ stepViewController: ORKStepViewController,
     didFinishWith direction: ORKStepViewControllerNavigationDirection
-  ) {
+  ) { }
 
-  }
-
-  public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) {
-
-  }
+  public func stepViewControllerResultDidChange(_ stepViewController: ORKStepViewController) { }
 
   public func stepViewControllerDidFail(
     _ stepViewController: ORKStepViewController,
     withError error: Error?
-  ) {
-
-  }
+  ) { }
 
   func taskViewController(
     _ taskViewController: ORKTaskViewController,
@@ -1749,4 +1921,20 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
     }
   }
 
+}
+
+extension ActivitiesViewController: ActivitiesComprehensionFailureDelegate {
+  func didTapOnActivityRetry() {
+    // Create Consent Task on Retry
+    print("3didTapOnRetry---")
+      UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
+      UserDefaults.standard.synchronize()
+      print("5StudyUpdates.studyConsentUpdated---\(StudyUpdates.studyConsentUpdated)---\(StudyUpdates.studyEnrollAgain)")
+      WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
+    
+  }
+}
+
+protocol ActivitiesComprehensionFailureDelegate: class {
+  func didTapOnActivityRetry()
 }

@@ -73,7 +73,8 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
 
     res.setHeader("Access-Control-Allow-Headers", "*");
     res.setHeader("Access-Control-Allow-Methods", "*");
-
+    res.addHeader("X-FRAME-OPTIONS", "SAMEORIGIN");
+    
     if (!StringUtils.contains(corsAllowedOrigins, ",")) {
       res.setHeader("Access-Control-Allow-Origin", corsAllowedOrigins);
     } else {

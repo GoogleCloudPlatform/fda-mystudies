@@ -22,11 +22,13 @@ import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +53,8 @@ public class UserController {
 
   @Autowired private ManageUserService manageUserService;
 
-  @ApiOperation(value = "Add new admin with permissions by sending an email")
+  @CrossOrigin
+  @ApiOperation(value = "add new admin with permissions and invite through email")
   @PostMapping(
       value = "/users",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -71,7 +74,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
-  @ApiOperation(value = "Updates admin with permissions by sending an email")
+  @ApiOperation(value = "update admin with permissions and send permission update email")
   @PutMapping(
       value = "/users/{adminUserId}/",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -93,7 +96,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
-  @ApiOperation(value = "Returns a response containing particular admin detail")
+  @ApiOperation(value = "fetch particular admin detail")
   @GetMapping(value = {"/users/admin/{adminId}"})
   public ResponseEntity<GetAdminDetailsResponse> getAdminDetailsAndApps(
       @RequestHeader("userId") String signedInUserId,
@@ -107,7 +110,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
-  @ApiOperation(value = "Returns list of all admin details")
+  @ApiOperation(value = "fetch all admin details")
   @GetMapping(value = {"/users"})
   public ResponseEntity<GetUsersResponse> getUsers(
       @RequestHeader("userId") String superAdminUserId,
@@ -118,6 +121,8 @@ public class UserController {
       @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    
+    String searchValue = StringUtils.replace(searchTerm, " ", "+");
     String[] allowedSortByValues = {"firstName", "lastName", "email", "status"};
 
     if (!ArrayUtils.contains(allowedSortByValues, sortBy)) {
@@ -131,7 +136,6 @@ public class UserController {
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(superAdminUserId);
-
     GetUsersResponse userResponse =
         manageUserService.getUsers(
             superAdminUserId,
@@ -139,13 +143,13 @@ public class UserController {
             offset,
             auditRequest,
             sortBy + "_" + sortDirection,
-            searchTerm);
+            searchValue);
 
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
-  @ApiOperation(value = "Resends invitation email to the admin")
+  @ApiOperation(value = "resend invitation email to the user")
   @PostMapping(
       value = "/users/{userId}/invite",
       consumes = MediaType.APPLICATION_JSON_VALUE,

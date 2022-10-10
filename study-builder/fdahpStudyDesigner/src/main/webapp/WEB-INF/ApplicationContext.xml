@@ -62,13 +62,13 @@
 
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop>
                 <prop key="hibernate.show_sql">true</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.hbm2ddl.auto">none</prop>
                 <prop key="hibernate.format_sql">false</prop>
-                <prop key="hibernate.c3p0.max_size">20</prop>
+                <prop key="hibernate.c3p0.max_size">3000</prop>
                 <prop key="hibernate.c3p0.min_size">5</prop>
-                <prop key="hibernate.c3p0.timeout">300</prop>
-                <prop key="hibernate.c3p0.max_statements">100</prop>
-                <prop key="hibernate.c3p0.idle_test_period">60</prop>
+                <prop key="hibernate.c3p0.timeout">3000</prop>
+                <prop key="hibernate.c3p0.max_statements">200</prop>
+                <prop key="hibernate.c3p0.idle_test_period">500</prop>
                 <prop key="hibernate.c3p0.acquire_increment">2</prop>
             </props>
         </property>

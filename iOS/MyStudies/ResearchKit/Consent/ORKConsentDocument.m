@@ -197,6 +197,8 @@
     [body appendFormat:@"</div>"];
     
     if (_htmlReviewContent) {
+      // title
+      [body appendFormat:@"<h3>%@</h3>", _title ? : @""];
         [body appendString:_htmlReviewContent];
     } else {
         

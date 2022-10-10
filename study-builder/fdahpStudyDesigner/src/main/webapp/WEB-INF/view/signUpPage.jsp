@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page session="true" %>
@@ -71,7 +72,7 @@
     <script src="/studybuilder/vendor/modernizr/modernizr.js"></script>
 
     <!-- Vendor -->
-    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.6.0.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
     <script src="/studybuilder/js/validator.min.js"></script>
     <script src="/studybuilder/vendor/animation/wow.min.js"></script>

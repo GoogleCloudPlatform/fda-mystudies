@@ -13,7 +13,7 @@
     width: 100px !important;
   }
 </style>
-<div class="col-sm-10 col-rc white-bg p-none" id="settingId">
+<div class="col-sm-9.5 col-rc white-bg p-none" id="settingId">
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateSettingAndAdmins.do?_S=${param._S}"
       data-toggle="validator" role="form" id="settingfoFormId" method="post"
@@ -67,7 +67,7 @@
           <span
               class="sprites_v3 filled-tooltip" id="infoIconId"></span>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-0">
           <span class="checkbox checkbox-inline p-45"><input
               class="platformClass" type="checkbox" id="inlineCheckbox1"
               name="platform" value="I"
@@ -100,7 +100,7 @@
                   title="This field can be updated after the study is launched if you wish to stop enrollment at any point during the course of the study."
                   class="filled-tooltip"></span>
 				</div>
-				<div class="form-group">
+				<div class="form-group mb-0">
 					<span class="radio radio-info radio-inline p-45"><input
 						type="radio" id="inlineRadio1" value="Yes" 
 						name="enrollingParticipants"
@@ -133,7 +133,7 @@
           </span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mb-0">
           <span class="radio radio-info radio-inline p-45"><input
               type="radio" id="inlineRadio11" value="Yes"
               name="enrollmentdateAsAnchordate"

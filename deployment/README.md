@@ -24,8 +24,8 @@ Project | Name | Purpose
 ---------|------------|---------------
 Devops | `{PREFIX}-{ENV}-devops` | This project executes the Terraform CICD pipeline that keeps your infrastructure aligned with the state defined in the [`deployment/terraform/`](/deployment/terraform/) directory of your GitHub repository
 Apps | `{PREFIX}-{ENV}-apps` | This project stores the container images for each of your FDA MyStudies applications, updates those images with CICD pipelines that monitor changes you make to the application directories of your GitHub repository, and administers the Kubernetes cluster that operates those images ([**Figure 2**](#figure-2-application-architecture) diagrams each the applications and how they related to their data sources)
-Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications, and the blob storage buckets that hold study resources and consent documents
-Firebase | `{PREFIX}-{ENV}-firebase` | This project contains the NoSQL database that stores the study response data
+Data | `{PREFIX}-{ENV}-data` | This project contains the MySQL databases that support each of the FDA MyStudies applications, Cloud Healthcare API that allows storing, maintaining, and backing up personal health information(PHI), and the blob storage buckets that hold study resources and consent documents
+Firebase | `{PREFIX}-{ENV}-firebase` | This project manages Android mobile development platform
 Networks | `{PREFIX}-{ENV}-networks` | This project manages the network policies and firewalls 
 Secrets | `{PREFIX}-{ENV}-secrets` | This project manages the deployment’s secrets, such as client ids and client secrets
 Audit | `{PREFIX}-{ENV}-audit` | This project stores the audit logs for the FDA MyStudies platform and applications
@@ -46,10 +46,10 @@ Application | URL | Notes
 More information about the purpose of each application can be found in the [*Platform Overview*](/documentation/architecture.md) guide. Detailed information about configuration and operation of each application can be found in their [respective READMEs](/documentation/README.md).
 
 #### Figure 1: Overall architecture of the semi-automated deployment
-![Architecture](/documentation/images/deployment-reference-architecture.svg "Architecture")
+![Architecture](/documentation/images/deployment-reference-architecture.png "Architecture")
 
 #### Figure 2: Application architecture
-![Applications](/documentation/images/apps-reference-architecture.svg "Applications")
+![Applications](/documentation/images/apps-reference-architecture.svg.png "Applications")
 
 The deployment process takes the following approach:
 1. Create a copy of the FDA MyStudies repository that you will use for your deployment
@@ -219,9 +219,8 @@ The deployment process takes the following approach:
 
 ### Configure your deployment’s databases
 
-1. [Create](https://console.cloud.google.com/datastore/) a [*Native mode*](https://cloud.google.com/datastore/docs/firestore-or-datastore) Cloud Firestore database in your `{PREFIX}-{ENV}-firebase` project (the location selected here does not need to match the region configured in your `deployment.hcl` file) 
-1. Use Terraform and CICD to create Firestore indexes, a Cloud SQL instance, user accounts and IAM role bindings
-    - Uncomment the blocks for steps 5.1 through 5.6 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
+1. Use Terraform and CICD to create Cloud SQL instance, user accounts and IAM role bindings
+    - Uncomment the blocks for steps 5.1 through 5.2 in [`mystudies.hcl`](/deployment/mystudies.hcl), for example:
          ```bash
          sed -e 's/#5# //g' -i.backup $GIT_ROOT/deployment/mystudies.hcl
          ```
@@ -350,7 +349,12 @@ The deployment process takes the following approach:
     `manual-fcm-api-url` | [URL](https://firebase.google.com/docs/reference/fcm/rest) of your Firebase Cloud Messaging API ([documentation](https://firebase.google.com/docs/cloud-messaging/http-server-ref)) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fcm-api-url" --data-file=-`
     `manual-android-deeplink-url` | The sign-in screen is run on the Hydra-based auth server. This URL is a deep link that helps redirect users to the native mobile app after they sign in. (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [Android](/Android/) deployment (leave as placeholder if you will be deploying to iOS only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-android-deeplink-url" --data-file=-`
     `manual-ios-deeplink-url` | The sign-in screen is run on the Hydra-based auth server. This URL is a deep link that helps redirect users to the native mobile app after they sign in. (for example, `app://{PREFIX}-{ENV}.{DOMAIN}/mystudies`) | Set now if you know what this value will be - otherwise create a placeholder and update after completing your [iOS](/iOS/) deployment (leave as placeholder if you will be deploying to Android only) | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ios-deeplink-url" --data-file=-`
-     > Note: When updating secrets after this initial deployment, you must refresh your Kubernetes cluster and restart the relevant pods to ensure the updated secrets are propagated to your applications (you do not need to do this now - only when making updates later), for example you can update your Kubernetes state with:
+    `manual-region-id` | To set FHIR region in Google healthcare API (for example, `us-east1`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fhir-enabled" --data-file=-`
+    `manual-consent-enabled` | To enable Google healthcare consent managment API (for example, `true` or `false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-consent-enabled" --data-file=-`
+    `manual-fhir-enabled` | To enable FHIR and/or FHIR de-identification in Google healthcare API (for example, `false` or `fhir` or `fhir&did`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-fhir-enabled" --data-file=-`
+	`manual-discard-fhir` | To discard FHIR responses in Google healthcare API (for example, `true or false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-discard-fhir-response-enabled" --data-file=-`    
+	`manual-ingest-data-to-bigquery` | To ingest healthcare API response to BigQuery (for example, `true` or `false`) | Set this value now or enter a placeholder | `echo -n "<SECRET_VALUE>" \| gcloud secrets versions add "manual-ingest-data-to-bigquery" --data-file=-`     
+	 > Note: When updating secrets after this initial deployment, you must refresh your Kubernetes cluster and restart the relevant pods to ensure the updated secrets are propagated to your applications (you do not need to do this now - only when making updates later), for example you can update your Kubernetes state with:
      ```bash
      cd $GIT_ROOT/deployment/terraform/kubernetes
      terraform init && terraform apply

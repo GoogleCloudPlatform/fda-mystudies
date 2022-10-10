@@ -94,7 +94,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       Map<String, Object> dataToStoreActivityResults)
       throws ProcessResponseException {
     try {
-      logger.entry("begin saveActivityResponseData()");
+      logger.info("begin saveActivityResponseData()");
       initializeFirestore();
 
       // Check if data already exists before updating it. This is to account for discrepancies
@@ -357,7 +357,7 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
 
   private void initializeFirestore() {
     if (this.responsesDb == null) {
-      logger.debug("In CloudFirestoreResponsesDaoImpl constructor, initializing Firestore");
+      logger.info("In CloudFirestoreResponsesDaoImpl constructor, initializing Firestore");
       FirestoreOptions firestoreOptions =
           FirestoreOptions.getDefaultInstance()
               .toBuilder()

@@ -84,11 +84,37 @@ spec:
                 secretKeyRef:
                   name: shared-secrets
                   key: log_path
-            - name: FIRESTORE_PROJECT_ID
+            # GOOGLE HEALTH CARE API               
+            - name: DATA_PROJECT_ID
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: firestore_project_id
+                  key: data_project_id
+            - name: REGION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: region_id
+            - name: CONSENT_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: consent_enabled
+            - name: FHIR_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: fhir_enabled
+            - name: INGEST_DATA_TO_BIGQUERY
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: ingest_data_to_bigquery                   
+            - name: DISCARD_FHIR
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: discard_fhir            
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:

@@ -8,8 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.bean.FHIRQuestionnaireResponseBean;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.response.model.FHIRresponseEntity;
 import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
+import com.google.gson.Gson;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -18,6 +21,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +43,11 @@ public class CommonDaoImpl implements CommonDao {
     Predicate[] participantBoPredicates = new Predicate[1];
     List<ParticipantInfoEntity> participantBoList = null;
     ParticipantInfoEntity participantBO = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+    Session session = null;
+
+    try {
+
+      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
       criteriaBuilder = session.getCriteriaBuilder();
       participantBoCriteriaQuery = criteriaBuilder.createQuery(ParticipantInfoEntity.class);
       participantBoRoot = participantBoCriteriaQuery.from(ParticipantInfoEntity.class);
@@ -52,6 +60,11 @@ public class CommonDaoImpl implements CommonDao {
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getParticipantInfoDetails() - error ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("getParticipantActivities() - Ends ");
     }
     logger.exit("getParticipantInfoDetails() - Ends ");
     return participantBO;
@@ -66,7 +79,10 @@ public class CommonDaoImpl implements CommonDao {
     Predicate[] predicates = new Predicate[1];
     List<StudyEntity> studyList = null;
     StudyEntity studyInfo = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+    Session session = null;
+
+    try {
+      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
       criteriaBuilder = session.getCriteriaBuilder();
       criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
       root = criteriaQuery.from(StudyEntity.class);
@@ -78,8 +94,113 @@ public class CommonDaoImpl implements CommonDao {
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getStudyDetails() - error ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("getStudyDetails() - Ends ");
     }
 
     return studyInfo;
+  }
+
+  @Override
+  public void saveToFHIREntity(String getFhirJson, String studyId) {
+    logger.entry("begin saveToFHIREntity()");
+
+    Transaction transaction = null;
+    Session session = null;
+
+    try {
+      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
+      transaction = session.beginTransaction();
+      FHIRQuestionnaireResponseBean fhirQuestionnaireResponseBean =
+          new Gson().fromJson(getFhirJson, FHIRQuestionnaireResponseBean.class);
+      FHIRresponseEntity fhiRresponseEntity = new FHIRresponseEntity();
+      fhiRresponseEntity.setPatientReference(
+          fhirQuestionnaireResponseBean.getSource().getReference());
+      fhiRresponseEntity.setQuestionnaireReference(
+          fhirQuestionnaireResponseBean.getResourceType()
+              + '/'
+              + fhirQuestionnaireResponseBean.getId());
+      fhiRresponseEntity.setStudyId(studyId);
+
+      session.saveOrUpdate(fhiRresponseEntity);
+      transaction.commit();
+
+    } catch (Exception e) {
+      logger.error("CommonDaoImpl getParticipantInfoDetails() - error ", e);
+    } finally {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("saveToFHIREntity() - Ends ");
+    }
+
+    logger.exit("saveToFHIREntity() - Ends ");
+  }
+
+  @Override
+  public void updateDidStatus(String questionnaireReference) {
+    logger.entry("begin updateDidStatus() - Starts ");
+    Transaction transaction = null;
+    Session session = null;
+    try {
+      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
+      transaction = session.beginTransaction();
+      session
+          .createQuery(
+              "update FHIRresponseEntity set didStatus = :didStatus "
+                  + "where questionnaireReference = :questionnaireReference")
+          .setParameter("didStatus", Boolean.TRUE)
+          .setParameter("questionnaireReference", questionnaireReference)
+          .executeUpdate();
+      transaction.commit();
+      logger.exit("deleteParticipantActivites()...end ");
+    } catch (Exception e) {
+      logger.error("deleteParticipantActivites: (ERROR) ", e);
+    } finally {
+      if (transaction != null) {
+        transaction.rollback();
+      }
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("deleteParticipantActivites() - Ends ");
+    }
+  }
+
+  @Override
+  public List<FHIRresponseEntity> getFhirDetails(Boolean didStatus) {
+    logger.entry("Begin getFhirDetails()");
+    List<FHIRresponseEntity> fhirList = null;
+
+    CriteriaBuilder criteriaBuilder = null;
+    CriteriaQuery<FHIRresponseEntity> criteriaQuery = null;
+    Root<FHIRresponseEntity> root = null;
+    Predicate[] predicates = new Predicate[1];
+    Session session = null;
+
+    try {
+      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
+      criteriaBuilder = session.getCriteriaBuilder();
+      criteriaQuery = criteriaBuilder.createQuery(FHIRresponseEntity.class);
+      root = criteriaQuery.from(FHIRresponseEntity.class);
+      predicates[0] = criteriaBuilder.equal(root.get("didStatus"), didStatus);
+      criteriaQuery.select(root).where(predicates);
+      fhirList = session.createQuery(criteriaQuery).getResultList();
+    } catch (Exception e) {
+      logger.error("CommonDaoImpl getFhirDetails() - error ", e);
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+      logger.exit("getFhirDetails() - Ends ");
+    }
+    return fhirList;
   }
 }

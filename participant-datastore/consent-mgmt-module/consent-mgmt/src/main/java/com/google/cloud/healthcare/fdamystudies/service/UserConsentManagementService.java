@@ -23,7 +23,11 @@ public interface UserConsentManagementService {
 
   public StudyConsentEntity getStudyConsent(String userId, String studyId, String consentVersion);
 
-  public String saveStudyConsent(StudyConsentEntity studyConsent);
+  public String saveStudyConsent(
+      StudyConsentEntity studyConsent,
+      ParticipantStudyEntity participantStudyEntity,
+      String filePath,
+      String dataSharingPath);
 
   public ConsentStudyResponseBean getStudyConsentDetails(
       String userId, String studyId, String consentVersion, AuditLogEventRequest auditRequest);
@@ -31,4 +35,10 @@ public interface UserConsentManagementService {
   public StudyEntity getStudyInfo(String customStudyId);
 
   public String getUserDetailsId(String userId);
+
+  public ConsentStudyResponseBean getStudyConsentDetailsFromConsentStore(
+      String userId, String studyId, String consentVersion, String customId, AuditLogEventRequest auditRequest);
+
+public StudyConsentEntity getExistStudyConsent(String userId, String studyId, String siteId);
+
 }

@@ -158,7 +158,7 @@ $(document)
                       }
                     }
                   });       
-          $('input[type = text][custAttType != cust]')
+          $('input[type = text][custAttType != cust]' && 'input[type = text][custAttType != studyCust]')
               .on(
                   'keyup',
                   function (e) {
@@ -226,6 +226,39 @@ $(document)
                     }
                   });
 
+					$('input[type = text][custAttType = studyCust]')
+			              .on(
+			                  'keyup',
+			                  function (e) {
+			                    var evt = (e) ? e : window.event;
+			                    var charCode = (evt.which) ? evt.which
+			                        : evt.keyCode;
+			                    if (charCode == 16)
+			                      isShift = false;
+			                    if (!isShift && $(this).val()) {
+			                      var regularExpression = /^[A-Za-z0-9_]*$/;
+			                      if (!regularExpression.test($(this)
+			                          .val())) {
+			                        var newVal = $(this)
+			                            .val()
+			                            .replace(
+			                                /[^A-Za-z0-9_]/g,
+			                                '');
+			                        e.preventDefault();
+			                        $(this).val(newVal);
+			                        $(this).parent().addClass(
+			                            "has-danger has-error");
+			                        $(this)
+			                            .parent()
+			                            .find(".help-block")
+			                            .empty()
+			                            .append($("<ul><li> </li></ul>")
+			                            .attr("class","list-unstyled")
+			                            .text("Please use characters from the following set only: A-Z a-z 0-9 _"));
+			                      }
+			                    }
+			                  });
+                  
           $('div[role = textbox]')
               .keyup(
                   function (e) {

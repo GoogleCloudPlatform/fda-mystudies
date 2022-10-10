@@ -78,12 +78,8 @@ public class RestResponseErrorHandler implements ResponseErrorHandler {
     errorCode = errorCode == null ? ErrorCode.APPLICATION_ERROR : errorCode;
 
     logger.error(
-        String.format(
-            "HTTP request using the RestTemplate failed with status=%d, Content-Type=%s, errorCode=%s and responseBody=%s",
-            response.getRawStatusCode(),
-            headers.getFirst("Content-Type"),
-            errorCode,
-            responseBody));
+        "HTTP request using the RestTemplate failed with status=%d, Content-Type=%s, errorCode=%s and responseBody=%s",
+        response.getRawStatusCode(), headers.getFirst("Content-Type"), errorCode, responseBody);
     throw new ErrorCodeException(errorCode);
   }
 

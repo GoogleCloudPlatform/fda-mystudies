@@ -100,6 +100,9 @@ public class ParticipantStudyEntity implements Serializable {
   @Column(name = "withdrawal_timestamp")
   private Timestamp withdrawalDate;
 
+  @Column(name = "user_study_version")
+  private String userStudyVersion;
+
   @Transient
   public String getUserDetailsId() {
     return userDetails != null ? userDetails.getId() : StringUtils.EMPTY;
