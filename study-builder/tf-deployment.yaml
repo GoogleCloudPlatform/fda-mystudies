@@ -92,27 +92,6 @@ spec:
               value: "http://response-datastore-np:50000/response-datastore"
             - name: SCIM_AUTH_URL
               value: "http://auth-server-np:50000/auth-server"
-            # GOOGLE IDENTITY PLATFORM
-            - name: IDP_ENABLED_SB
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: idp_enabled_sb
-            - name: MFA_ENABLED_SB
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: mfa_enabled_sb
-            - name: IDP_AUTH_DOMAIN
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: idp_auth_domain
-            - name: IDP_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: idp_api_key
             # MISC
             - name: GCP_BUCKET_NAME
               valueFrom:
