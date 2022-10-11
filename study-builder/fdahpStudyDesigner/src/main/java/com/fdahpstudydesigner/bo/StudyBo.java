@@ -220,7 +220,7 @@ public class StudyBo implements Serializable {
     this.destinationCustomStudyId = destinationCustomStudyId;
   }
 
-  @Column(name = "isCloudStorageMoved", columnDefinition = "int default 0")
+  @Column(name = "is_cloud_storage_moved", columnDefinition = "int default 0")
   private Integer isCloudStorageMoved;
 
   public String getButtonText() {
