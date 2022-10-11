@@ -75,7 +75,7 @@ public class ConsentManagementAPIs {
       String parentName =
           String.format(
               "projects/%s/locations/%s/datasets/%s/consentStores/%s",
-              configMap.get("projectId"),
+              configMap.get("dataProjectId"),
               configMap.get("regionId"),
               consentDatasetId,
               consentStoreId);
@@ -118,7 +118,7 @@ public class ConsentManagementAPIs {
       String parentName =
           String.format(
               "projects/%s/locations/%s/datasets/%s",
-              configMap.get("projectId"), configMap.get("regionId"), consentDatasetId);
+              configMap.get("dataProjectId"), configMap.get("regionId"), consentDatasetId);
 
       // Configure the FhirStore to be created.
       //      Map<String, String> labels = new HashMap<>();
@@ -156,7 +156,7 @@ public class ConsentManagementAPIs {
       String parentName =
           String.format(
               "projects/%s/locations/%s/datasets/%s/consentStores/%s",
-              configMap.get("projectId"),
+              configMap.get("dataProjectId"),
               configMap.get("regionId"),
               consentDatasetId,
               consentStoreName);
@@ -178,7 +178,7 @@ public class ConsentManagementAPIs {
   public void createDatasetInHealthcareAPI(String datasetId) throws IOException {
 
     logger.entry("Begin datasetCreateHealthcareAPI()");
-    String projectId = configMap.get("projectId");
+    String projectId = configMap.get("dataProjectId");
     String regionId = configMap.get("regionId");
 
     try {

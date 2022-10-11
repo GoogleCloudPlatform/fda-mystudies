@@ -19,9 +19,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${bucketName}")
   private String bucketName;
 
-  @Value("${projectId}")
-  private String projectId;
-
   @Value("${regionId}")
   private String regionId;
 

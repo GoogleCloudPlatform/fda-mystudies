@@ -410,7 +410,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     String parentName =
         String.format(
             "projects/%s/locations/%s/datasets/%s/consentStores/%s",
-            appConfig.getProjectId(),
+            appConfig.getDataProjectId(),
             appConfig.getRegionId(),
             studyConsent.getStudy().getCustomId(),
             "CONSENT_" + studyConsent.getStudy().getCustomId());

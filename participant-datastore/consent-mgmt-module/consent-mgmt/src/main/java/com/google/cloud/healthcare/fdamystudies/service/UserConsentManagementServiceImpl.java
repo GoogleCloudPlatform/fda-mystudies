@@ -248,7 +248,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
       String parentName =
           String.format(
               "projects/%s/locations/%s/datasets/%s/consentStores/%s",
-              appConfig.getProjectId(),
+              appConfig.getDataProjectId(),
               appConfig.getRegionId(),
               consentStoreId,
               "CONSENT_" + consentStoreId);
@@ -288,7 +288,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
       String parentName =
           String.format(
               "projects/%s/locations/%s/datasets/%s/consentStores/%s",
-              appConfig.getProjectId(),
+              appConfig.getDataProjectId(),
               appConfig.getRegionId(),
               consentStoreId,
               "CONSENT_" + consentStoreId);

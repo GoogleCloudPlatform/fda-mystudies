@@ -186,7 +186,7 @@ public class StudyDAOImpl implements StudyDAO {
 
   protected static final Map<String, String> configMap = FdahpStudyDesignerUtil.getAppProperties();
 
-  String projectId = configMap.get("projectId");
+  String projectId = configMap.get("dataProjectId");
 
   String regionId = configMap.get("regionId");
 
