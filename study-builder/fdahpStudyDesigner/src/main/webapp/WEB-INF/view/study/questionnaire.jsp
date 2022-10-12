@@ -1696,7 +1696,7 @@
                     </select>
                     </span>
                     <span
-                        class="form-group m-none dis-inline vertical-align-middle pr-sm">
+                        class="form-group m-none dis-inline pr-sm">
                       <input id="xdays${customVar.index}" type="text"
                              class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                              count='${customVar.index}' placeholder="X"
@@ -1716,7 +1716,7 @@
                           class="pr-sm light-txt opacity06"> days
                         </span>
                           <span
-                        class="pr-md form-group dis-inline vertical-align-middle"
+                        class="pr-md form-group dis-inline"
                         style="margin-bottom: -13px;width: 170px;"><input
                         id="manualStartTime${customVar.index}" type="text"
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
@@ -1748,7 +1748,7 @@
                     </select>
                     </span>
                     <span
-                        class="form-group m-none dis-inline vertical-align-middle pr-sm">
+                        class="form-group m-none dis-inline pr-sm">
                       <input id="ydays${customVar.index}" type="text"
                              class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
                              count='${customVar.index}' placeholder="Y"
@@ -1764,7 +1764,7 @@
                       </span>
                     </span>
                     <span
-                        class="form-group  dis-inline vertical-align-middle pr-sm"
+                        class="form-group  dis-inline pr-sm"
                         style="margin-bottom: -13px;width: 170px;"><input
                         id="manualEndTime${customVar.index}" type="text"
                         class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
