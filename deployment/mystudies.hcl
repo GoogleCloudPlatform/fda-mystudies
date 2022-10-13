@@ -815,7 +815,7 @@ template "project_data" {
           "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/healthcare.consentArtifactReader" = [
-          "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"  
+          "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
         ]
         "roles/healthcare.consentReader" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
