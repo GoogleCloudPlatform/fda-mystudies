@@ -3009,6 +3009,12 @@ strong {
 }
 
 
+.profileBox li.linkProf a {
+    font-size: 14px !important;
+}
 
+.custom-control-input {
+    opacity: 1 !important;
+}
 
  /* css end here */

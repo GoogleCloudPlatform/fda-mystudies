@@ -27,7 +27,7 @@ export class UserListComponent implements OnInit {
 
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder(
-      'Search user by name or email ID',
+      'Search admin by name or email ID',
     );
     this.getUsers();
   }
