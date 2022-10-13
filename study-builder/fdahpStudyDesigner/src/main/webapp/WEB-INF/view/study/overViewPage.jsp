@@ -300,7 +300,7 @@
                           <button id="" type="button"
                                   class="btn btn-default gray-btn uploadImgbtn">Upload
                           </button>
-                          <input id="uploadImgId" class="dis-none uploadImg"
+                          <input id="uploadImgId${spbSt.count}" class="dis-none uploadImg"
                                  data-imageId='${spbSt.count}' type="file"
                                  name="multipartFiles" accept=".png, .jpg, .jpeg"
                                  onchange="readURL(this);"
@@ -493,14 +493,16 @@
       $(this).css("visibility", "hidden");
       $(this).parent().parent().find(".thumb img").attr("src",
           "/studybuilder/images/dummy-img.jpg");
-      var st=$("#uploadImgId").val();
-      $("#uploadImgId").val("");
-      
-      var pagecount = $(".overview-panel > div").length;     
-      pagecount=pagecount-1;
+      var thisAttr = this;
+      var thisId = $(thisAttr).attr("id"); 
+      if(thisId.includes("remUrl")){
+    	  thisId= thisId.replace('remUrl', '');
+  	}else{
+  		thisId= thisId.replace('hideRemoveUrl', '');
+  	}
+      var pagecount = thisId;  
     	  var st3=$("#uploadImgId"+ pagecount
     	          + "").val();
-    	  var st2=$('#uploadImgId2').val();
     	  $("#uploadImgId"+ pagecount
     	          + "").val("");
       $(this).parent().parent().find(".imagePathCls").val('');
