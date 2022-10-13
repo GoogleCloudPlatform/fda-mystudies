@@ -19,6 +19,7 @@
   .tool-tip [disabled] {
     pointer-events: none;
   }
+  .modal-header .close { padding: 1rem 1rem; margin: -3rem -1rem -1rem auto; }
 </style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->

@@ -2,6 +2,11 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<style>
+.modal-header .close { padding: 1rem 1rem; margin: -3rem -1rem -1rem auto; }
+</style>
+
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
