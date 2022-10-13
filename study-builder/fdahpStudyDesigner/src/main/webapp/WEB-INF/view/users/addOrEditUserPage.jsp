@@ -1219,8 +1219,18 @@ overflow-y: hidden !important;
       $('#inlineCheckbox6').attr('disabled', true);
     } else {
       $('#inlineCheckbox1').attr('disabled', false);
-      $('#inlineCheckbox5').attr('disabled', false);
-      $('#inlineCheckbox6').attr('disabled', false);
+      if($('#inlineCheck6').prop('checked', false)){
+      	   $('.dis-checkbox-app').removeClass('disabled', 'disabled');
+      	  }
+       	  else {
+       	   $('.dis-checkbox-app').addClass('disabled', 'disabled');
+      		 }
+      		if($('#inlineCheck5').prop('checked', false)){
+      	     $('.dis-checkbox-st').removeClass('disabled', 'disabled');
+      		 }
+       		else {
+       		$('.dis-checkbox-st').addClass('disabled', 'disabled');
+      		 }
     }
 
   }
@@ -1238,10 +1248,6 @@ overflow-y: hidden !important;
       	 $('.perm-assign').show();
       	 $('.pull-right').show();
       	 $('#inlineCheckbox5').val('');
-	     $('#inlineCheckbox5').prop('checked', false);
-	     $('.dis-checkbox-st').addClass('disabled', 'disabled');
-	     $('#inlineCheckbox5').prop('checked', false);
-	     $('.dis-checkbox-app').addClass('disabled', 'disabled');
 	     if(actionPage == 'EDIT_PAGE' && "${userBO.accessLevel}"== "SUPERADMIN"){
 	    	 $('#inlineCheckbox5').prop('checked', true);
 		     $('.dis-checkbox-st').removeClass('disabled', 'disabled');
@@ -1264,10 +1270,6 @@ overflow-y: hidden !important;
           	$("<li> </li>").attr("class","text-center").text("- All items are already selected -"));
         }
        
-        if (selected_app > 0 && actionPage == 'ADD_PAGE' ) {
-        	 $(".app-selected-item").remove();
-        }
-        
         if(  selected_app == tot_app){
         	  $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu li").hide()
               $(".app-list .bootstrap-select .dropdown-menu ul.dropdown-menu").append(
