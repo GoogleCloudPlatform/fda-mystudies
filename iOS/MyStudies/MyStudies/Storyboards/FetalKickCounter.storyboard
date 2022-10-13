@@ -616,7 +616,7 @@
                                 <rect key="frame" x="37.5" y="189.5" width="300" height="100"/>
                                 <attributedString key="attributedText">
                                     <fragment>
-                                        <string key="content">Sorry, you are not eligible for participation in this study. We thank you for your interest and time, and encourage you to explore other studies as they are made available in the app.</string>
+                                        <string key="content">Sorry, you are not eligible for participation in this study. We thank you for your interest and time, and encourage you to explore other studies in the future</string>
                                         <attributes>
                                             <font key="NSFont" size="18.5" name="HelveticaNeue-Light"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" lineSpacing="4" tighteningFactorForTruncation="0.0"/>
