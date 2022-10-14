@@ -297,7 +297,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             finish();
           }
         } else {
-          if(nextStep.getIdentifier().equalsIgnoreCase("review") &&
+          if (nextStep.getIdentifier().equalsIgnoreCase("review") &&
               !currentStep.getIdentifier().equalsIgnoreCase("sharing")) {
             if (score >= passScore) {
               Intent intent = new Intent(this, ComprehensionSuccessActivity.class);
@@ -313,7 +313,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               finish();
             }
           } else
-          showStep(nextStep);
+            showStep(nextStep);
         }
       }
     } else {
@@ -740,6 +740,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           && eligibilityConsent.getConsent().getReview() != null
           && eligibilityConsent.getConsent().getReview().getReviewHTML() != null
           && !eligibilityConsent.getConsent().getReview().getReviewHTML().equalsIgnoreCase("")) {
+        docBuilder =
+            new StringBuilder("<br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
+        String title = studyList.getTitle();
+        docBuilder.append(
+            String.format(
+                "<h1 style=\"text-align: center; font-family:sans-serif-light;\">%1$s</h1>",
+                title));
+        docBuilder.append("</div><br>");
         docBuilder.append(
             Html.fromHtml(eligibilityConsent.getConsent().getReview().getReviewHTML().toString())
                 .toString());
@@ -932,7 +940,6 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       body.put("siteId", siteId);
       body.put("eligibility", true);
       if (encode != null && !encode.isEmpty()) {
-        Log.e("check", "updateEligibilityConsent: " + encode.length());
         body.put("dataSharingScreenShot", convertFileToString(encode));
       }
 
@@ -1002,7 +1009,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                 CustomConsentViewTaskActivity.this, getResources().getString(R.string.userid), ""));
     header.put("deviceType", android.os.Build.MODEL);
     header.put("deviceOS", Build.VERSION.RELEASE);
-    header.put("mobilePlatform","ANDROID");
+    header.put("mobilePlatform", "ANDROID");
     ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
         new ParticipantEnrollmentDatastoreConfigEvent(
             "get",
