@@ -92,7 +92,7 @@
       <!-- End Section-->
 
      <!-- Start Section-->
-			<div class="col-md-12 p-none">
+			<div class="col-md-12 p-none mt-2">
 				<div class="gray-xs-f mb-sm">
 					Allow participants to enroll? <span>
             </span><span class="requiredStar"> *</span> <span
