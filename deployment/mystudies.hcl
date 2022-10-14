@@ -612,11 +612,10 @@ template "project_apps" {
           "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:$${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
-	   # BigQuery Permissions
+      # BigQuery Permissions
         "roles/bigquery.admin" = [
-          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-        ]		
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",		  
+        ]
       }
       # Binary Authorization resources.
       # Simple configuration for now. Future
@@ -816,7 +815,7 @@ template "project_data" {
           "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/healthcare.consentArtifactReader" = [
-          "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"  
+          "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
         ]
         "roles/healthcare.consentReader" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
@@ -843,7 +842,7 @@ template "project_data" {
         "roles/bigquery.admin" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
+          "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
         ]
         "roles/bigquery.dataEditor" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
@@ -853,7 +852,7 @@ template "project_data" {
           "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/storage.objectAdmin" = [
-          "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+          "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
         ]
       }
       storage_buckets = [

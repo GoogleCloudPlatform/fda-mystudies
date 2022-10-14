@@ -134,15 +134,15 @@ class ResourceDetailViewController: UIViewController {
           activityIndicator.startAnimating()
           activityIndicator.isHidden.toggle()
 //          let fileURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "").pdf")
-          let fileURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
-          if let url = fileURL {
-            webView.loadFileURL(url, allowingReadAccessTo: url)
-            self.isFileAvailable = true
-            self.webView.isHidden = false
-          } else {
-            self.webView.isHidden = true
-            self.webView.load(URLRequest(url: resourceURL))
-          }
+//          let fileURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
+//          if let url = fileURL {
+//            webView.loadFileURL(url, allowingReadAccessTo: url)
+//            self.isFileAvailable = true
+//            self.webView.isHidden = false
+//          } else {
+          self.webView.isHidden = false
+          self.webView.load(URLRequest(url: resourceURL))
+//          }
         }
       } else if self.resource?.file?.mimeType == .txt,
         let resourceHtmlString = self.resource?.file?.link
@@ -339,10 +339,10 @@ extension ResourceDetailViewController {
         completion(true)
       }
     } else if self.resource?.file?.mimeType == .pdf,
-      isFileAvailable,
-      let path = resourceLink,
+      isFileAvailable, let link = resourceLink,
+              let path = URL.init(string: link),
 //      let documentURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name?.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? "").pdf")
-                let documentURL = checkIfFileExists(pdfNameFromUrl: "\(resource?.file?.name ?? "").pdf")
+              let documentURL = sharePdf(for:path)
     {
       attachResource(from: documentURL)
       completion(true)
@@ -418,6 +418,20 @@ extension ResourceDetailViewController {
         Logger.sharedInstance.error(error)
       }
     }
+  }
+    
+  func sharePdf(for url: URL) -> URL? {
+      let pdfData = try? Data(contentsOf: url)
+      let pdfNameFromUrl = "\(resource?.file?.name ?? "").pdf"
+      let actualPath = AKUtility.cacheDirectoryPath.appendingPathComponent(pdfNameFromUrl)
+      do {
+          try pdfData?.write(to: actualPath, options: .atomic)
+          return actualPath
+      } catch {
+          Logger.sharedInstance.error(error)
+            return nil
+      }
+      return nil
   }
 
   static func saveTempPdf(
