@@ -740,6 +740,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           && eligibilityConsent.getConsent().getReview() != null
           && eligibilityConsent.getConsent().getReview().getReviewHTML() != null
           && !eligibilityConsent.getConsent().getReview().getReviewHTML().equalsIgnoreCase("")) {
+        new StringBuilder("<br><div style=\"padding: 10px 10px 10px 10px;\" class='header'>");
+        String title = studyList.getTitle();
+        docBuilder.append(
+            String.format(
+                "<h1 style=\"text-align: center; font-family:sans-serif-light;\">%1$s</h1>",
+                title));
+        docBuilder.append("</div><br>");
+
         docBuilder.append(
             Html.fromHtml(eligibilityConsent.getConsent().getReview().getReviewHTML().toString())
                 .toString());
