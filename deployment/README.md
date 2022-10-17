@@ -734,12 +734,11 @@ module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of
 #### Changes to secrets when upgrading to 2.0.11 or greater
 
 The following secrets which shoud be part of this release:
--   `manual-android-bundle-id`
--   `manual-android-server-key`
--   `manual-ios-bundle-id`
--   `manual-ios-certificate`
--   `manual-ios-certificate-password`
--   `manual-mobile-app-appid`
+-   `manual_region_id`
+-   `manual_consent_enabled`
+-   `manual_fhir_enabled`
+-   `manual_discard_fhir`
+-   `manual_ingest_data_to_bigquery`
 	
 These secrets can be added from your deployment with the following steps. 
 	
@@ -770,7 +769,7 @@ These secrets can be added from your deployment with the following steps.
           [...]
         }
         ```
-
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
