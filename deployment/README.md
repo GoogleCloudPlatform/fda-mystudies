@@ -746,90 +746,31 @@ These secrets can be added from your deployment with the following steps.
 1. Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
 1. In the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, add the following resources similar to other secrets in the fie:
     -   ```
-	resource "google_secret_manager_secret" "manual_region_id" {
-  provider = google-beta
-
-  secret_id = "manual-region-id"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-east1"
-      }
-    }
-  }
-}
+        resource "google_secret_manager_secret" "manual_region_id" {
+          [...]
+        }
         ```
     -   ```
-resource "google_secret_manager_secret" "manual_consent_enabled" {
-  provider = google-beta
-
-  secret_id = "manual-consent-enabled"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-east1"
-      }
-    }
-  }
-}
+        resource "google_secret_manager_secret" "manual_consent_enabled" {
+          [...]
+        }
         ```
     -   ```
-resource "google_secret_manager_secret" "manual_fhir_enabled" {
-  provider = google-beta
-
-  secret_id = "manual-fhir-enabled"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-east1"
-      }
-    }
-  }
-}
+        resource "google_secret_manager_secret" "manual_fhir_enabled" {
+          [...]
+        }
         ```
     -   ```
-resource "google_secret_manager_secret" "manual_discard_fhir" {
-  provider = google-beta
-
-  secret_id = "manual-discard-fhir"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-east1"
-      }
-    }
-  }
-}
+        resource "google_secret_manager_secret" "manual_discard_fhir" {
+          [...]
+        }
         ```
     -   ```
-resource "google_secret_manager_secret" "manual_ingest_data_to_bigquery" {
-  provider = google-beta
-
-  secret_id = "manual-ingest-data-to-bigquery"
-  project   = module.project.project_id
-
-  replication {
-    user_managed {
-      replicas {
-        location = "us-east1"
-      }
-    }
-  }
-}
+        resource "google_secret_manager_secret" "manual_ingest_data_to_bigquery" {
+          [...]
+        }
         ```
-    	
-	
-	
 
- 
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
