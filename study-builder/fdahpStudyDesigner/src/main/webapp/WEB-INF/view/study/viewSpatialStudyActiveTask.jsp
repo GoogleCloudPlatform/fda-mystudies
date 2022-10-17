@@ -849,7 +849,7 @@
         <c:forEach items="${activeTaskBo.taskAttributeValueBos}" var="taskValueAttributeBo">
           <c:if
               test="${taskMasterAttributeBo.orderByTaskType eq 1 && taskMasterAttributeBo.masterId eq taskValueAttributeBo.activeTaskMasterAttrId}">
-
+              <div class="row">  
             <div class="col-md-3 col-lg-3 p-none mr-lg">
               <div class="gray-xs-f mt-md mb-sm">${taskMasterAttributeBo.displayName}
                 <span
@@ -1059,6 +1059,7 @@
                 <div class="help-block with-errors red-txt"></div>
               </div>
             </div>
+          </div>
             <div class="clearfix"></div>
           </c:if>
           <c:if test="${taskMasterAttributeBo.orderByTaskType eq 8 && count == 0}">
