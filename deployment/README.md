@@ -728,6 +728,13 @@ module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of
     }
     ```
 3.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+### Migration to Cloud Healthcare API from Firestore (2.0.11 Upgrade)
+
+#### Required steps when upgrading to 2.0.11 or greater
+
+1. Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
+
  
 
 ***
