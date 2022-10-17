@@ -733,7 +733,7 @@ module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of
 
 #### Changes to secrets when upgrading to 2.0.11 or greater
 
-The following secrets which shoud be part of this release:
+The following secrets need to be added for this release:
 -   `manual_region_id`
 -   `manual_consent_enabled`
 -   `manual_fhir_enabled`
