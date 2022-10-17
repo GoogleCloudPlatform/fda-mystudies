@@ -792,11 +792,11 @@ To add above secrets to the shared secrets, create a new working branch and make
  -   `discard_fhir                    	= data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data`
  -   `ingest_data_to_bigquery           	= data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data`
 
-1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+1. Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
 
-1.  Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.
+1. Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.
 
-1.  Run the following commands to apply the changes to your cluster:
+1. Run the following commands to apply the changes to your cluster:
 
     ```bash
     cd $GIT_ROOT/deployment/terraform/kubernetes/
