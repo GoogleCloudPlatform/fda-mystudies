@@ -731,10 +731,14 @@ module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of
 
 ### Migration to Cloud Healthcare API from Firestore (2.0.11 Upgrade)
 Release 2.0.11 added functionality to support Healthcare API’s like Consent API, FHIR, DID and Big query. This requires that apps that are running in existing deployments must be updated (and new versions published to the app stores) if the deployment is being upgraded to 2.0.11. These functionality shall be available only for new study and not for existing study. Brief details of the API’s integrated is provide below:
-	-	Consent API: This API shall help in the integration of the GCP Consent Management API into the platform. The vision is to leverage the capabilities of the Consent API in managing consent given by the app user/study participant for the collection and access or use of various types of their data by a study. 
-	-	FHIR: The integration of the GCP FHIR API into the platform will be handled in this deployment, specifically to facilitate the creation and storage of FHIR-compliant study metadata and response data.
-	-	DID:The integration with DID API will help the platform to redact sensitive data from the responses collected, and provide the cleansed version of the data for audiences to use for research purposes.
-	-	Big Query: This will be helpful for data scientists and researchers to carry out data analytics and operations, and derive insights from the collected data. It would be useful to stream data collected in the Response Server into BigQuery. BigQuery will be provided as an optional appended service to the GCP MyStudies platform and will connect to the Response Server to provide data export, reporting and analytics functions.
+	
+Consent API: This API shall help in the integration of the GCP Consent Management API into the platform. The vision is to leverage the capabilities of the Consent API in managing consent given by the app user/study participant for the collection and access or use of various types of their data by a study. 
+	
+FHIR: The integration of the GCP FHIR API into the platform will be handled in this deployment, specifically to facilitate the creation and storage of FHIR-compliant study metadata and response data.
+
+DID:The integration with DID API will help the platform to redact sensitive data from the responses collected, and provide the cleansed version of the data for audiences to use for research purposes.
+
+Big Query: This will be helpful for data scientists and researchers to carry out data analytics and operations, and derive insights from the collected data. It would be useful to stream data collected in the Response Server into BigQuery. BigQuery will be provided as an optional appended service to the GCP MyStudies platform and will connect to the Response Server to provide data export, reporting and analytics functions.
 	
 
 #### Changes to secrets when upgrading to 2.0.11 or greater
