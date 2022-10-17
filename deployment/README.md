@@ -778,19 +778,19 @@ To add above secrets to the shared secrets, create a new working branch and make
 
 1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Data sources from Secret Manager` add the following line to the section `for_each = toset(concat([...] )}` along with other secrets.
 
--   `"manual_region_id",`
--   `"manual_consent_enabled",`
--   `"manual_fhir_enabled",`
--   `"manual_discard_fhir",`
--   `"manual_ingest_data_to_bigquery",`
+ -   `"manual_region_id",`
+ -   `"manual_consent_enabled",`
+ -   `"manual_fhir_enabled",`
+ -   `"manual_discard_fhir",`
+ -   `"manual_ingest_data_to_bigquery",`
 
 1.  In the section `# Shared secrets` add the following line to the section `data = { [...] }`
 
--   `region_id                    	= data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data`
--   `consent_enabled                   	= data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data`
--   `fhir_enabled                      	= data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data`
--   `discard_fhir                    	= data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data`
--   `ingest_data_to_bigquery           	= data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data`
+ -   `region_id                    	= data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data`
+ -   `consent_enabled                   	= data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data`
+ -   `fhir_enabled                      	= data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data`
+ -   `discard_fhir                    	= data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data`
+ -   `ingest_data_to_bigquery           	= data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data`
 
 1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
 
