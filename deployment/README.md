@@ -907,27 +907,17 @@ These secrets can be added from your deployment with the following steps.
 
 #### Follow below steps to apply above secrets to all containers 
 1. Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.	
-1. Run the following commands to apply the changes to your cluster:
-	
+1. Run the following commands to apply the changes to your cluster:	
     ```bash
     cd $GIT_ROOT/deployment/terraform/kubernetes/
     terraform init && terraform apply
-    ```
-	
-1. Run the following command to apply the latest deployment changes:
-	
-    ```bash
-    kubectl apply \
-           -f $GIT_ROOT/study-datastore/tf-deployment.yaml \
-           -f $GIT_ROOT/response-datastore/tf-deployment.yaml \
-           -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-deployment.yaml \
-           -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
-           -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-deployment.yaml \
-           -f $GIT_ROOT/study-builder/tf-deployment.yaml \
-           -f $GIT_ROOT/auth-server/tf-deployment.yaml \
-           -f $GIT_ROOT/participant-manager-datastore/tf-deployment.yaml \
-           -f $GIT_ROOT/participant-manager/tf-deployment.yaml
-    ```
+    ```	
+1. Restart all the default pods except hydra-ic by deleting them in the Kubernetes dashboard or running below commands:
+```bash
+     APP_PATH=<path_to_component_to_restart> # for example, $GIT_ROOT/auth-server
+     kubectl scale --replicas=0 -f $APP_PATH/tf-deployment.yaml && \
+     kubectl scale --replicas=1 -f $APP_PATH/tf-deployment.yaml
+```	
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
