@@ -265,7 +265,7 @@
         </div>
         <div class="clearfix"></div>
         </c:if>
-      </div>
+      
         <c:if test="${taskMasterAttributeBo.orderByTaskType eq 7}">
           <div class="blue-md-f text-uppercase">Results captured from the task</div>
         </c:if>
