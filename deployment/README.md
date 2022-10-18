@@ -908,10 +908,10 @@ These secrets can be added from your deployment with the following steps.
 #### Follow below steps to apply above secrets to all containers 
 1. Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.	
 1. Run the following commands to apply the changes to your cluster:	
-    ```bash
+```bash
     cd $GIT_ROOT/deployment/terraform/kubernetes/
     terraform init && terraform apply
-    ```	
+```	
 1. Restart all the default pods except hydra-ic by running below commands:
 ```bash
      APP_PATH=<path_to_component_to_restart> # for example, $GIT_ROOT/auth-server
