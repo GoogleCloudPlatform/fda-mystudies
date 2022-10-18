@@ -851,11 +851,11 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
 #### Changes to secrets when upgrading to 2.0.11 or greater
 
 The following secrets need to be added for this release:
--   `manual_region_id`
--   `manual_consent_enabled`
--   `manual_fhir_enabled`
--   `manual_discard_fhir`
--   `manual_ingest_data_to_bigquery`
+-   `manual-region-id`
+-   `manual-consent-enabled`
+-   `manual-fhir-enabled`
+-   `manual-discard-fhir`
+-   `manual-ingest-data-to-bigquery`
 	
 These secrets can be added from your deployment with the following steps. 
 	
@@ -889,11 +889,11 @@ These secrets can be added from your deployment with the following steps.
 
 1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Data sources from Secret Manager` add the following lines to the section `for_each = toset(concat([...] )}` along with other secrets.
 	
- 	-   `"manual_region_id",`
- 	-   `"manual_consent_enabled",`
- 	-   `"manual_fhir_enabled",`
- 	-   `"manual_discard_fhir",`
- 	-   `"manual_ingest_data_to_bigquery",`
+ 	-   `"manual-region-id",`
+ 	-   `"manual-consent-enabled",`
+ 	-   `"manual-fhirenabled",`
+ 	-   `"manual-discard-fhir",`
+ 	-   `"manual-ingest-data-to-bigquery",`
 	
 1.  In the section `# Shared secrets` add the following lines to the section `data = { [...] }`
 	
