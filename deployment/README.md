@@ -742,7 +742,7 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
 	
 #### Enabling Healthcare API and adding required permissions to Applications
 
-1. Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
+##### Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
 1.  To enable the Healthcare API in the Data project, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `# Create the project and optionally enable APIs` add the following line to the section `activate_apis = [.....]`.
 	```
 		`"healthcare.googleapis.com",`
