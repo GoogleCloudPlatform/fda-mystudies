@@ -918,6 +918,5 @@ These secrets can be added from your deployment with the following steps.
      kubectl scale --replicas=0 -f $APP_PATH/tf-deployment.yaml && \
      kubectl scale --replicas=1 -f $APP_PATH/tf-deployment.yaml
 ```	
-
 ***
 <p align="center">Copyright 2020 Google LLC</p>
