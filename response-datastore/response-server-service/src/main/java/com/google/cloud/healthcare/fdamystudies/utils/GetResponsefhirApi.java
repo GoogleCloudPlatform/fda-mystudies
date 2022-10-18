@@ -286,7 +286,7 @@ public class GetResponsefhirApi {
                 if (answerFromResouce.getValueBoolean() != null) {
                   Boolean valueBoolean = answerFromResouce.getValueBoolean();
                   mapTsValue.put(AppConstants.VALUE_KEY_STR, valueBoolean);
-                  mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+                  mapTs.put(resouceItem.getLinkId(), mapTsValue);
                 } else if (answerFromResouce.getValueDate() != null) {
                   String valueDate = answerFromResouce.getValueDate();
                   mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDate);
@@ -299,19 +299,19 @@ public class GetResponsefhirApi {
 
                   Double valueDecimal = answerFromResouce.getValueDecimal();
                   mapTsValue.put(AppConstants.VALUE_KEY_STR, valueDecimal);
-                  mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+                  mapTs.put(resouceItem.getLinkId(), mapTsValue);
                 } else if (answerFromResouce.getValueInteger() != null) {
                   Integer valueInteger = answerFromResouce.getValueInteger();
                   mapTsValue.put(AppConstants.VALUE_KEY_STR, valueInteger);
-                  mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+                  mapTs.put(resouceItem.getLinkId(), mapTsValue);
                 } else if (answerFromResouce.getValueString() != null) {
                   String valueString = answerFromResouce.getValueString();
                   mapTsValue.put(AppConstants.VALUE_KEY_STR, valueString);
-                  mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+                  mapTs.put(resouceItem.getLinkId(), mapTsValue);
                 } else if (answerFromResouce.getValueTime() != null) {
                   String valueTime = answerFromResouce.getValueTime();
                   mapTsValue.put(AppConstants.VALUE_KEY_STR, valueTime);
-                  mapTs.put(AppConstants.ANCHOR_DATE_VALUE, mapTsValue);
+                  mapTs.put(resouceItem.getLinkId(), mapTsValue);
                 }
                 responsesRow.getData().add(mapTs);
               }
