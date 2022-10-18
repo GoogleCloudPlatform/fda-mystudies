@@ -747,7 +747,7 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
 	```
 		`"healthcare.googleapis.com",`
 	```	
-1.  To provide Healthcare API access to all application service account, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "project_iam_members"` add the following lines to the section `bindings = {.......}`.
+1.  To provide Healthcare API access to all the application service accounts, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "project_iam_members"` add the following lines to the section `bindings = {.......}`.
 	
 	-   ```   
 	    "roles/healthcare.consentArtifactEditor" = [
@@ -826,7 +826,7 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
 	       "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
 	    ],
 	    ```
-1.  To provide `{prefix}-{env}-mystudies-consent-documents` storage bucket access to study builder and healthcare API service accounts, edit the file  `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "{prefix}_{env}_mystudies_consent_documents"` add the following lines to the section `iam_members = [...]`.
+1.  To provide `{prefix}-{env}-mystudies-consent-documents` storage bucket access to study builder and Healthcare API service accounts, edit the file  `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "{prefix}_{env}_mystudies_consent_documents"` add the following lines to the section `iam_members = [...]`.
 	
     -   ```	
             {
