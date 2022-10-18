@@ -728,7 +728,105 @@ module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of
     }
     ```
 3.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
- 
+
+### Migration to Cloud Healthcare API from Firestore (2.0.11 Upgrade)
+Release 2.0.11 added functionality to support Healthcare API’s like Consent API, FHIR, DID and Big query. This requires that apps that are running in existing deployments must be updated (and new versions published to the app stores) if the deployment is being upgraded to 2.0.11. These functionality shall be available only for new study and not for existing study. Brief details of the API’s integrated is provide below:
+	
+*	Consent API: This API shall help in the integration of the GCP Consent Management API into the platform. The vision is to leverage the capabilities of the Consent API in managing consent given by the app user/study participant for the collection and access or use of various types of their data by a study. 
+	
+*	FHIR: The integration of the GCP FHIR API into the platform will be handled in this deployment, specifically to facilitate the creation and storage of FHIR-compliant study metadata and response data.
+
+*	DID:The integration with DID API will help the platform to redact sensitive data from the responses collected, and provide the cleansed version of the data for audiences to use for research purposes.
+
+*	Big Query: This will be helpful for data scientists and researchers to carry out data analytics and operations, and derive insights from the collected data. It would be useful to stream data collected in the Response Server into BigQuery. BigQuery will be provided as an optional appended service to the GCP MyStudies platform and will connect to the Response Server to provide data export, reporting and analytics functions.
+	
+
+#### Changes to secrets when upgrading to 2.0.11 or greater
+
+The following secrets need to be added for this release:
+-   `manual_region_id`
+-   `manual_consent_enabled`
+-   `manual_fhir_enabled`
+-   `manual_discard_fhir`
+-   `manual_ingest_data_to_bigquery`
+	
+These secrets can be added from your deployment with the following steps. 
+	
+1. Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
+1. In the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, add the following resources similar to other secrets in the file:
+    -   ```
+        resource "google_secret_manager_secret" "manual_region_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_consent_enabled" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_fhir_enabled" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_discard_fhir" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ingest_data_to_bigquery" {
+          [...]
+        }
+        ```
+	
+1.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+	
+#### Add above new secrets to Kubernetes cluster shared secrets
+
+To add above secrets to the shared secrets, create a new working branch and make the following change:
+
+1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Data sources from Secret Manager` add the following line to the section `for_each = toset(concat([...] )}` along with other secrets.
+	
+ 	-   `"manual_region_id",`
+ 	-   `"manual_consent_enabled",`
+ 	-   `"manual_fhir_enabled",`
+ 	-   `"manual_discard_fhir",`
+ 	-   `"manual_ingest_data_to_bigquery",`
+	
+1.  In the section `# Shared secrets` add the following line to the section `data = { [...] }`
+	
+ 	-   `region_id                    	= data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data`
+ 	-   `consent_enabled                   	= data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data`
+ 	-   `fhir_enabled                      	= data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data`
+ 	-   `discard_fhir                    	= data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data`
+ 	-   `ingest_data_to_bigquery           	= data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data`
+	
+1. Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+	
+1. Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.
+	
+1. Run the following commands to apply the changes to your cluster:
+	
+    ```bash
+    cd $GIT_ROOT/deployment/terraform/kubernetes/
+    terraform init && terraform apply
+    ```
+	
+1. Run the following command to apply the latest Study Builder deployment changes:
+	
+    ```bash
+    kubectl apply \
+           -f $GIT_ROOT/study-datastore/tf-deployment.yaml \
+           -f $GIT_ROOT/response-datastore/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-datastore/consent-mgmt-module/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-datastore/user-mgmt-module/tf-deployment.yaml \
+           -f $GIT_ROOT/study-builder/tf-deployment.yaml \
+           -f $GIT_ROOT/auth-server/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-manager-datastore/tf-deployment.yaml \
+           -f $GIT_ROOT/participant-manager/tf-deployment.yaml
+    ```
 
 ***
 <p align="center">Copyright 2020 Google LLC</p>
