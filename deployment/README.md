@@ -887,7 +887,7 @@ These secrets can be added from your deployment with the following steps.
         ```		
 #### Add above new secrets to Kubernetes cluster shared secrets
 
-1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Data sources from Secret Manager` add the following line to the section `for_each = toset(concat([...] )}` along with other secrets.
+1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Data sources from Secret Manager` add the following lines to the section `for_each = toset(concat([...] )}` along with other secrets.
 	
  	-   `"manual_region_id",`
  	-   `"manual_consent_enabled",`
@@ -895,7 +895,7 @@ These secrets can be added from your deployment with the following steps.
  	-   `"manual_discard_fhir",`
  	-   `"manual_ingest_data_to_bigquery",`
 	
-1.  In the section `# Shared secrets` add the following line to the section `data = { [...] }`
+1.  In the section `# Shared secrets` add the following lines to the section `data = { [...] }`
 	
  	-   `region_id                    	= data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data`
  	-   `consent_enabled                   	= data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data`
