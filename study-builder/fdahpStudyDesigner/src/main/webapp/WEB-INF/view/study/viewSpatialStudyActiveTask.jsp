@@ -107,7 +107,7 @@
             </div>
           </div>
         </c:if>
-        <div class="row">
+      
         <c:if test="${taskMasterAttributeBo.orderByTaskType eq 2}">
           <div class="col-md-3 col-lg-3 p-none mr-lg ml-lg">
             <div class="gray-xs-f mt-md mb-sm">${taskMasterAttributeBo.displayName}
@@ -261,8 +261,9 @@
               <div class="help-block with-errors red-txt"></div>
             </div>
           </div>
-          <div class="clearfix"></div>
+         
         </div>
+        <div class="clearfix"></div>
         </c:if>
       </div>
         <c:if test="${taskMasterAttributeBo.orderByTaskType eq 7}">
