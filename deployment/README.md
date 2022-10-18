@@ -905,7 +905,7 @@ These secrets can be added from your deployment with the following steps.
 	
 After all above changes in the working branch, Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
 
-#### To add above latest secrets to all containers follow below steps
+#### Follow below steps to apply above secrets to all containers 
 1. Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.	
 1. Run the following commands to apply the changes to your cluster:
 	
