@@ -740,7 +740,110 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
 
 *	Big Query: This will be helpful for data scientists and researchers to carry out data analytics and operations, and derive insights from the collected data. It would be useful to stream data collected in the Response Server into BigQuery. BigQuery will be provided as an optional appended service to the GCP MyStudies platform and will connect to the Response Server to provide data export, reporting and analytics functions.
 	
+#### Enabling Healthcare API and adding required permissions to Applications
 
+1. Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
+1.  To enable the Healthcare API in the Data project, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf and in the section `# Create the project and optionally enable APIs` add the following line to the section `activate_apis = [.....]`.
+
+-	"healthcare.googleapis.com",
+1.  To provide Healthcare API access to all application service account, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf and in the section `# Create the project and optionally enable APIs` under module "project_iam_members" add the following lines to the section `bindings = {.......}`.
+   -   ```   
+    "roles/healthcare.consentArtifactEditor" = [
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-builder-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:consent-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:enroll-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:user-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ``` 
+    "roles/healthcare.consentArtifactReader" = [
+      "serviceAccount:participant-manager-gke-sa@qa-oct-apps.iam.gserviceaccount.com"  
+    ],
+        ```
+    -   ```
+    
+    "roles/healthcare.consentEditor" = [
+      "serviceAccount:consent-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:enroll-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:user-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```   
+    "roles/healthcare.consentReader" = [
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```
+    "roles/healthcare.consentStoreAdmin" = [
+      "serviceAccount:study-builder-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```    
+    "roles/healthcare.consentStoreViewer" = [
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```
+    "roles/healthcare.datasetAdmin" = [
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-builder-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```
+    "roles/healthcare.fhirResourceEditor" = [
+      "serviceAccount:study-builder-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```
+    "roles/healthcare.fhirStoreAdmin" = [
+      "serviceAccount:study-builder-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```
+    "roles/bigquery.admin" = [
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:user-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",          
+    ],
+        ```
+    -   ```
+    "roles/bigquery.dataEditor" = [
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```
+    "roles/datastore.user" = [
+      "serviceAccount:response-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+      "serviceAccount:user-datastore-gke-sa@qa-oct-apps.iam.gserviceaccount.com",
+    ],
+        ```
+    -   ```
+    "roles/storage.objectAdmin" = [
+       "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+    ],
+	```
+1.  To provide '{{.prefix}}-{{.env}}-mystudies-consent-documents' storage bucket access to study builder and healthcare API service accounts, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf and in the section `# Create the project and optionally enable APIs` under `module "{prefix}_{env}_mystudies_consent_documents"` add the following lines to the section `iam_members = [...]`.
+        ```
+            {
+              role   = "roles/storage.objectAdmin"
+              member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+            },
+        ```
+    -   ```
+            {
+              role   = "roles/storage.objectViewer"
+              member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+            },
+1.  To provide BigQuery admin access to `response-datastore service account`, edit the file `deployment/terraform/{prefix}-{env}-apps/main.tf` and in the section `module "project_iam_members"` add the following lines to the section `bindings = {.......}`.
+ ```
+        "roles/bigquery.admin" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+ ```
+	
 #### Changes to secrets when upgrading to 2.0.11 or greater
 
 The following secrets need to be added for this release:
