@@ -739,10 +739,10 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
 *	DID:The integration with DID API will help the platform to redact sensitive data from the responses collected, and provide the cleansed version of the data for audiences to use for research purposes.
 
 *	Big Query: This will be helpful for data scientists and researchers to carry out data analytics and operations, and derive insights from the collected data. It would be useful to stream data collected in the Response Server into BigQuery. BigQuery will be provided as an optional appended service to the GCP MyStudies platform and will connect to the Response Server to provide data export, reporting and analytics functions.
-	
-#### Enabling Healthcare API and adding required permissions to Applications
 
 ##### Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
+
+#### Enabling Healthcare API and adding required permissions to Applications
 1.  To enable the Healthcare API in the Data project, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `# Create the project and optionally enable APIs` add the following line to the section `activate_apis = [.....]`.
 	```
 		`"healthcare.googleapis.com",`
