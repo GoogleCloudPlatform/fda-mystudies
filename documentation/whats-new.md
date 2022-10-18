@@ -14,7 +14,7 @@
 * Bug fixes and UI refinements
 * Additional code improvements and minor enhancements
 * The full list of bugs and refinements addressed in this release can be viewed [here ](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/14).
-* Refer to [these](/deployment/README.md#whitelisting-the-tcp-port-10256-in-the-firewall-when-upgrading-to-2010-or-greater) steps when upgrading existing deployments to release 2.0.11
+* Refer to [these](/deployment#migration-to-cloud-healthcare-api-from-firestore-2011-upgrade) steps when upgrading existing deployments to release 2.0.11
 
 # Release 2.0.10
 * Spring framework upgrade from version 3.0 to 5.3.18
