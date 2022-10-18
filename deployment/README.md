@@ -914,7 +914,7 @@ These secrets can be added from your deployment with the following steps.
     terraform init && terraform apply
     ```
 	
-1. Run the following command to apply the latest Study Builder deployment changes:
+1. Run the following command to apply the latest deployment changes:
 	
     ```bash
     kubectl apply \
