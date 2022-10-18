@@ -912,7 +912,7 @@ These secrets can be added from your deployment with the following steps.
     cd $GIT_ROOT/deployment/terraform/kubernetes/
     terraform init && terraform apply
     ```	
-1. Restart all the default pods except hydra-ic by deleting them in the Kubernetes dashboard or running below commands:
+1. Restart all the default pods except hydra-ic by running below commands:
 ```bash
      APP_PATH=<path_to_component_to_restart> # for example, $GIT_ROOT/auth-server
      kubectl scale --replicas=0 -f $APP_PATH/tf-deployment.yaml && \
