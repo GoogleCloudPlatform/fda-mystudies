@@ -859,8 +859,7 @@ The following secrets need to be added for this release:
 	
 These secrets can be added from your deployment with the following steps. 
 	
-1. Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
-1. In the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, add the following resources similar to other secrets in the file:
+1. Edit the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, add the following resources similar to other secrets in the file:
     -   ```
         resource "google_secret_manager_secret" "manual_region_id" {
           [...]
