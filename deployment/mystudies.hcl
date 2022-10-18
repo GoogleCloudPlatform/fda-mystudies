@@ -719,6 +719,8 @@ template "project_firebase" {
         "firebase.googleapis.com",
       ]
     }
+  }
+}
 
 # Data project and resources.
 template "project_data" {
@@ -874,7 +876,7 @@ template "project_data" {
 	  # HEALTHCARE API SA role bindling to consent bucket
             {
               role   = "roles/storage.objectViewer"
-              member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+              member = "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
             },			
           ]
         },
