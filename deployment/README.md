@@ -885,7 +885,7 @@ These secrets can be added from your deployment with the following steps.
           [...]
         }
         ```		
-##### Add above new secrets to Kubernetes cluster shared secrets
+#### Add above new secrets to Kubernetes cluster shared secrets
 
 1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Data sources from Secret Manager` add the following line to the section `for_each = toset(concat([...] )}` along with other secrets.
 	
@@ -903,9 +903,9 @@ These secrets can be added from your deployment with the following steps.
  	-   `discard_fhir                    	= data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data`
  	-   `ingest_data_to_bigquery           	= data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data`
 	
-#### After all above changes in the working branch, Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+##### After all above changes in the working branch, Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
 
-##### Follow below steps to apply above secrets to all containers 
+#### Follow below steps to apply above secrets to all containers 
 1. Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.	
 1. Run the following commands to apply the changes to your cluster:
 	
