@@ -69,6 +69,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections4.map.HashedMap;
@@ -119,6 +120,7 @@ public class ProcessActivityResponseController {
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    Locale locale = request.getLocale();
     auditRequest.setUserId(userId);
     String applicationId = null;
     String studyId = null;
@@ -286,7 +288,7 @@ public class ProcessActivityResponseController {
         if (!withdrawalStatus) {
 
           activityResponseProcessorService.saveActivityResponseDataForParticipant(
-              activityMetadatFromWcp, questionnaireActivityResponseBean, auditRequest);
+              activityMetadatFromWcp, questionnaireActivityResponseBean, auditRequest, locale);
           savedResponseData = true;
 
           // Update Participant Activity State
@@ -444,7 +446,7 @@ public class ProcessActivityResponseController {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
-
+      Locale locale = request.getLocale();
       logger.debug(
           "Input values are :\n Study Id: "
               + studyId
@@ -517,7 +519,7 @@ public class ProcessActivityResponseController {
               storedResponseBean = getresponsefhirApi.initStoredResponseBean();
               storedResponseBean =
                   getresponsefhirApi.convertFhirResponseDataToBean(
-                      participantId, fhirBeans, storedResponseBean);
+                      participantId, fhirBeans, storedResponseBean, locale);
               // return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
             } else {
               int runId = 1;
@@ -557,7 +559,7 @@ public class ProcessActivityResponseController {
               }
               storedResponseBean =
                   getresponsefhirApi.convertFhirResponseDataToBean(
-                      participantId, fhirBeans, storedResponseBean);
+                      participantId, fhirBeans, storedResponseBean, locale);
               logger.debug("getresponse()storedResponseBean1", storedResponseBean.toString());
               return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
             }
@@ -603,7 +605,7 @@ public class ProcessActivityResponseController {
               storedResponseBean = getresponsefhirApi.initStoredResponseBean();
               storedResponseBean =
                   getresponsefhirApi.convertFhirResponseDataToBean(
-                      participantId, fhirBeans, storedResponseBean);
+                      participantId, fhirBeans, storedResponseBean, locale);
 
             } else {
               int runId = 1;
@@ -643,7 +645,7 @@ public class ProcessActivityResponseController {
               }
               storedResponseBean =
                   getresponsefhirApi.convertFhirResponseDataToBean(
-                      participantId, fhirBeans, storedResponseBean);
+                      participantId, fhirBeans, storedResponseBean, locale);
               logger.debug("getresponse()storedResponseBean3", storedResponseBean.toString());
               return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
             }

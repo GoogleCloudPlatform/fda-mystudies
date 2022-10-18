@@ -24,12 +24,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -122,12 +123,14 @@ public class GetResponsefhirApi {
    * @param participantId
    * @param fhirBeans
    * @param storedResponseBean
+   * @param locale
    * @return
    */
   public StoredResponseBean convertFhirResponseDataToBean(
       String participantId,
       List<SearchQuestionnaireResponseFhirBean> fhirBeans,
-      StoredResponseBean storedResponseBean) {
+      StoredResponseBean storedResponseBean,
+      Locale locale) {
     logger.entry("begin convertResponseDataToBean()");
     List<ResponseRows> responsesList = new ArrayList<>();
     for (SearchQuestionnaireResponseFhirBean fhirBean : fhirBeans) {
@@ -149,26 +152,24 @@ public class GetResponsefhirApi {
         String timestampFromResponse = null;
         long timestampFromResponse1 = 0;
         try {
+          // Locale l = locale.getLocale();
           timestampFromResponse = activityResponseMap.getResource().getAuthored();
-          timestampFromResponse =
-              timestampFromResponse.substring(0, timestampFromResponse.length() - 10);
+          logger.debug("timestampFromResponsefromFHIR" + timestampFromResponse);
           LocalDateTime localDateTime =
               LocalDateTime.parse(
-                  timestampFromResponse, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+                  timestampFromResponse,
+                  DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"));
           long millis = localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
           Date d = new Date(millis);
-          ZoneOffset zoneOffset = ZoneOffset.of("+0000");
-          TimeZone timezone = TimeZone.getTimeZone(zoneOffset);
-          //   SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-          //  sdf.setTimeZone(timezone);
-          //  String formattedDate = sdf.format(millis);
-          // String dtr = sdf.format(localDateTime.parse(d.toString()));
-          SimpleDateFormat sdf1 = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-          sdf1.setTimeZone(timezone);
+          SimpleDateFormat sdf1 = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", locale.ENGLISH);
+          sdf1.setTimeZone(TimeZone.getTimeZone(locale.getDisplayName()));
+          Calendar c = new GregorianCalendar(locale);
+          TimeZone t = c.getTimeZone();
+          sdf1.setTimeZone(t);
           Date parsedDate = sdf1.parse(d.toString());
           SimpleDateFormat print = new SimpleDateFormat(AppConstants.ISO_DATE_FORMAT_RESPONSE);
+          print.setTimeZone(t);
           String formattedDate = print.format(parsedDate);
-          System.out.println(print.format(parsedDate));
           mapTsValueFortimestamp.put(AppConstants.VALUE_KEY_STR, formattedDate);
           mapTstimestamp.put(AppConstants.CREATED_RESPONSE, mapTsValueFortimestamp);
           responsesRow.getData().add(mapTstimestamp);
