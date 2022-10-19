@@ -229,7 +229,7 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-none mb-md">
   <div class="white-bg box-space">
 
-    <div class="ed-user-layout row">
+    <div class="ed-user-layout">
       <div class="blue-md-f text-uppercase mb-md">Assigned Permissions</div>
 
       <!-- Assigned Permissions List-->
