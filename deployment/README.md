@@ -807,7 +807,7 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
 	    "roles/bigquery.admin" = [
 	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
 	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
-	      "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",          
+	      "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",          
 	    ],
 	    ```
 	-   ``` 
@@ -823,7 +823,7 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
 	    ```
 	-   ``` 
 	    "roles/storage.objectAdmin" = [
-	       "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+	       "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
 	    ],
 	    ```
 1.  To provide `{prefix}-{env}-mystudies-consent-documents` storage bucket access to study builder and Healthcare API service accounts, edit the file  `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "{prefix}_{env}_mystudies_consent_documents"` add the following lines to the section `iam_members = [...]`.
@@ -837,7 +837,7 @@ Release 2.0.11 added functionality to support Healthcare API’s like Consent AP
     -   ```
             {
               role   = "roles/storage.objectViewer"
-              member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+              member = "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
             },
 	
 1.  To provide BigQuery admin access to `Response-Datastore service account`, edit the file `deployment/terraform/{prefix}-{env}-apps/main.tf` and in the section `module "project_iam_members"` add the following lines to the section `bindings = {.......}`.
