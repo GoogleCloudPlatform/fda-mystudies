@@ -47,10 +47,13 @@
                 >
                   {{ location.name }}
                 </option>
-                <option disabled="disabled"
-                class="cursor__pointer" *ngIf="manageLocations.locations.length === 0">
-                No items are available to select
-              </option>
+                <option
+                  disabled="disabled"
+                  class="cursor__pointer"
+                  *ngIf="manageLocations.locations.length === 0"
+                >
+                  No items are available to select
+                </option>
               </select>
             </div>
           </div>
