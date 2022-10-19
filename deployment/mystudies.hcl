@@ -844,7 +844,7 @@ template "project_data" {
         "roles/bigquery.admin" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
+          "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
         ]
         "roles/bigquery.dataEditor" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
@@ -854,7 +854,7 @@ template "project_data" {
           "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/storage.objectAdmin" = [
-          "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+          "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
         ]
       }
       storage_buckets = [
@@ -876,7 +876,7 @@ template "project_data" {
 	  # HEALTHCARE API SA role bindling to consent bucket
             {
               role   = "roles/storage.objectViewer"
-              member = "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+              member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
             },			
           ]
         },
