@@ -65,3 +65,7 @@ CREATE TABLE IF NOT EXISTS `app_sequence` (
 INSERT INTO user_permissions (permission_id , permissions) VALUES (9, 'ROLE_CREATE_MANAGE_APPS'), (10, 'ROLE_MANAGE_APPS');
 
 ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `is_cloud_storage_moved` INT(10) NULL DEFAULT '0';
+
+ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `destination_custom_study_id` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8_general_ci';
+ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `export_signed_url` VARCHAR(1012) NULL DEFAULT NULL COLLATE 'utf8_general_ci';
+ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `export_time` DATETIME(6) NULL DEFAULT NULL;
