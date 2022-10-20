@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -111,7 +112,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   public void saveActivityResponseDataForParticipant(
       QuestionnaireActivityStructureBean activityMetadataBeanFromWcp,
       ActivityResponseBean questionnaireActivityResponseBean,
-      AuditLogEventRequest auditRequest)
+      AuditLogEventRequest auditRequest,
+      Locale locale)
       throws Exception {
     logger.info("begin saveActivityResponseDataForParticipant()");
     if (activityMetadataBeanFromWcp == null) {
@@ -166,7 +168,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
             .getMetadata()
             .setActivityType(activityMetadataBeanFromWcp.getType());
       }
-      this.saveActivityResponseData(questionnaireActivityResponseBean, rawResponseData);
+      this.saveActivityResponseData(questionnaireActivityResponseBean, rawResponseData, locale);
     } else {
       logger.error(
           "saveActivityResponseDataForParticipant() - "
@@ -212,12 +214,15 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               + "Study Id argument or Participant Id argument is null or empty.");
     }
     String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
-    responsesDao.updateWithdrawalStatusForParticipant(studyCollectionName, studyId, participantId);
-    SearchPatientFhirResponseBean searchPatientFhirResponseBean =
-        updateStatusOfPatientInFHIR(studyId, participantId);
-
-    if (appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
-      updateStatusOfPatientInDID(searchPatientFhirResponseBean, studyId);
+    if (!appConfig.getEnableFhirApi().contains("fhir")) {
+      responsesDao.updateWithdrawalStatusForParticipant(
+          studyCollectionName, studyId, participantId);
+    } else {
+      SearchPatientFhirResponseBean searchPatientFhirResponseBean =
+          updateStatusOfPatientInFHIR(studyId, participantId);
+      if (appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
+        updateStatusOfPatientInDID(searchPatientFhirResponseBean, studyId);
+      }
     }
   }
 
@@ -523,7 +528,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   }
 
   private void saveActivityResponseData(
-      ActivityResponseBean questionnaireActivityResponseBean, String rawResponseData)
+      ActivityResponseBean questionnaireActivityResponseBean, String rawResponseData, Locale locale)
       throws Exception {
     logger.debug("begin saveActivityResponseData()");
     logger.debug("DiscardFHIR : \n : " + appConfig.getDiscardFhirAfterDid());
@@ -558,7 +563,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     String fhirJson = "";
     if (appConfig.getEnableFhirApi().contains("fhir")
         && appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
-      fhirJson = processToFhirResponse(questionnaireActivityResponseBean);
+      fhirJson = processToFhirResponse(questionnaireActivityResponseBean, locale);
 
     } else {
       responsesDao.saveActivityResponseData(
@@ -571,7 +576,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     if (appConfig.getEnableFhirApi().contains("did")) {
       logger.info(" did Enabled " + appConfig.getEnableFhirApi());
       if (StringUtils.isBlank(fhirJson)) {
-        fhirJson = processToFhirResponse(questionnaireActivityResponseBean);
+        fhirJson = processToFhirResponse(questionnaireActivityResponseBean, locale);
       }
       processToDIDResponse(fhirJson, questionnaireActivityResponseBean);
       logger.info("did end");
@@ -674,8 +679,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     }
   }
 
-  public String processToFhirResponse(ActivityResponseBean questionnaireActivityResponseBean)
-      throws Exception {
+  public String processToFhirResponse(
+      ActivityResponseBean questionnaireActivityResponseBean, Locale locale) throws Exception {
 
     String getFhirJson = null;
     String studyId = null;
@@ -858,6 +863,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
           questFHIResponseBean.setAuthored(
               AppUtil.convertDateToOtherFormat(
                   questionnaireActivityResponseBean.getData().getSubmittedTime(),
+                  locale,
                   AppConstants.DATE_FORMAT_RESPONSE_MOBILE,
                   AppConstants.DATE_FORMAT_RESPONSE_FHIR));
         }
@@ -1195,7 +1201,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
       if (StringUtils.isNotBlank((String) propertyValue)) {
         answerMap.setValueDateTime(
-            AppUtil.convertDateToOtherFormat(
+            AppUtil.convertDateToOtherFormat1(
                 (String) propertyValue, DATE_FORMAT_RESPONSE_MOBILE, DATE_FORMAT_RESPONSE_FHIR));
       }
     } /* else if (responseResultType.equals("textChoice")) {

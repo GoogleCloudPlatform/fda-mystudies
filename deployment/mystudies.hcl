@@ -719,6 +719,8 @@ template "project_firebase" {
         "firebase.googleapis.com",
       ]
     }
+  }
+}
 
 # Data project and resources.
 template "project_data" {
@@ -838,12 +840,12 @@ template "project_data" {
           "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]	
-	  # BigQuery Permissions
-        "roles/bigquery.admin" = [
-          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
-        ]
+	    # BigQuery Permissions
+        #6# "roles/bigquery.admin" = [
+        #6#  "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        #6#  "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        #6#  "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
+        #6# ]
         "roles/bigquery.dataEditor" = [
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
@@ -851,32 +853,32 @@ template "project_data" {
           "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
-        "roles/storage.objectAdmin" = [
-          "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
-        ]
+        #6# "roles/storage.objectAdmin" = [
+        #6#  "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+        #6# ]
       }
       storage_buckets = [
         {
           name = "{{.prefix}}-{{.env}}-mystudies-consent-documents"
-          iam_members = [
-            {
-              role   = "roles/storage.objectAdmin"
-              member = "serviceAccount:consent-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-            },
-            {
-              role   = "roles/storage.objectAdmin"
-              member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-            },
-            {
-              role   = "roles/storage.objectAdmin"
-              member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-            },			
-	  # HEALTHCARE API SA role bindling to consent bucket
-            {
-              role   = "roles/storage.objectViewer"
-              member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
-            },			
-          ]
+          #6# iam_members = [
+          #6# {
+          #6#   role   = "roles/storage.objectAdmin"
+          #6# member = "serviceAccount:consent-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          #6# },
+          #6# {
+          #6# role   = "roles/storage.objectAdmin"
+          #6# member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          #6# },
+          #6# {
+          #6# role   = "roles/storage.objectAdmin"
+          #6# member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+          #6# },			
+	      # HEALTHCARE API SA role bindling to consent bucket
+          #6# {
+          #6# role   = "roles/storage.objectViewer"
+          #6# member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+          #6# },			
+          #6# ]
         },
         {
           name = "{{.prefix}}-{{.env}}-mystudies-study-resources"
@@ -1031,7 +1033,8 @@ resource "kubernetes_secret" "shared_secrets" {
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
     base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
     studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"
-    data_project_id                   = "{{.prefix}}-{{.env}}-data"	
+    data_project_id                   = "{{.prefix}}-{{.env}}-data"
+    firestore_project_id              = "{{.prefix}}-{{.env}}-firebase"	
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data

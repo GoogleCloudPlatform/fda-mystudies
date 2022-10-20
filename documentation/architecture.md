@@ -62,8 +62,8 @@ Each of the components runs in its own Docker container. Blob storage, relationa
   - [Cloud Storage](https://cloud.google.com/storage) buckets for (1) study content and (2) participant consent forms
 - Relational database
   - [Cloud SQL](https://cloud.google.com/sql/) databases for (1) study configuration data, (2) sensitive participant data, (3) pseudonymized participant activity data, (4) Hydra client data and (5) user account credentials  
-- Document store
-  -  [Cloud Firestore](https://cloud.google.com/firestore) for pseudonymized participant response data
+- Healthcare Datastore
+  -  [Cloud Healthcare API](https://cloud.google.com/healthcare-api) for pseudonymized participant response data
 - Audit logging
   -  [Operations Logging](https://cloud.google.com/logging) for audit log writing and subsequent analysis
 - Identity and access management
@@ -104,15 +104,15 @@ If a participant sends a message with the mobile application’s contact form, t
 
 ## GCP Managed Services 
 
-**Brief**: For the new release, Cloud HealthCareAPIs(FHIR, DID & Consent) are used for accessing and storing healthcare data in the Google Cloud Platform. Using Cloud Healthcare API the data collected is moved to BigQuery for operations such as scalable analytics with BigQuery. 
+**Brief**: For the new release, Cloud HealthCareAPIs(FHIR, DID & Consent) are used for accessing and storing healthcare data in the Google Cloud Platform. Using Cloud Healthcare API the data collected is moved to BigQuery for scalable analytics. 
 
-i)FHIR(Fast Healthcare Interoperability Resources) API is used for storing study response data for the FDA MyStudies Platform. FHIR API helps transform data from Platform JSON format into FHIR format, for the current release R4 version of FHIR is used. The data stored in FHIR datastores is moved to BigQuery and this makes data available for other functions such as data analytics.
+i)FHIR(Fast Healthcare Interoperability Resources) API is used for storing study response data for the FDA MyStudies Platform. FHIR API helps transform data from Platform JSON format into FHIR format. Release R4 version of FHIR is used for this release. The data stored in FHIR datastores is moved to BigQuery and this makes data available for data analytics.
 
-ii)DID(Data de-identification ) API is used to remove protected health information (PHI) information from data. For the current requirement, the DID API removes the sensitive data in FHIR resources, such as protected health information (PHI). De-identification doesn't impact the original dataset, FHIR store, or the original data. The data is stored in a separate DataSet
+ii)DID (Data de-identification) API is used to de-identify protected health information (PHI) from the response data. For the current requirement, the DID API de-identifies the sensitive PHI data in FHIR resources. De-identification doesn't impact the original dataset, FHIR store, or the original data. The data is stored in a separate dataset.
 
-iii) The Consent Management API is used for storing the consent information application receives from users, keeps track of what data is permitted for each use case, and helps the application utilize data only as directed by users in consent stores. The consent data is stored in the cloud by creating a data set for each study. The FDA MyStudies platform uses the Consent  APIs for fetching the consent from the end-user in the platform. The consent information is captured and sent back to the consent artifacts on mobile
+iii) The Consent Management API is used to store the consent received from users, to keep track of what data is permitted for each use case, and to direct the application to utilize data only as consented to by the user. The consent data is stored in the cloud by creating a data set for each study. The FDA MyStudies platform also uses the Consent  APIs to fetch the end user’s consent. The consent information is captured and sent back to the consent artifacts on mobile.
 
-iv) BigQuery: GCP’s serverless, highly scalable cloud data warehouse is used for ingesting the HealthCare data collected using GCP HealthCare APIs(FHIR, DID & Consent) and data from the cloud object storage. The data stored in BigQuery is used for analytics
+iv) BigQuery: GCP’s serverless, highly scalable cloud data warehouse is used for ingesting the data collected using GCP HealthCare APIs(FHIR, DID & Consent) and data from the cloud object storage. The data stored in BigQuery is used for analytics
 
 ## Deployment and operation
 

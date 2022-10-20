@@ -1501,11 +1501,12 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
 
         if consentSignatureResult?.consented == false {
             if reachability.connection != .unavailable {
-                taskViewController.dismiss(
-                  animated: true,
-                  completion: nil
-                )
-                _ = navigationController?.popViewController(animated: true)
+                DispatchQueue.main.async {
+                    if let viewController = self.presentedViewController {
+                        viewController.dismiss(animated: true)
+                        self.unHideSubViews()
+                    }
+                }
             }
           return nil
 

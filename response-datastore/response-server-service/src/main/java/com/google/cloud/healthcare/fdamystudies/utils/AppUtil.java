@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.TimeZone;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -72,11 +73,13 @@ public class AppUtil {
   }
 
   public static String convertDateToOtherFormat(
-      String dateString, String inputFormat, String outputFormat) throws ParseException {
+      String dateString, Locale locale, String inputFormat, String outputFormat)
+      throws ParseException {
     DateFormat sdf = new SimpleDateFormat(inputFormat);
     DateFormat sdf1 = new SimpleDateFormat(outputFormat);
-
-    sdf1.setTimeZone(TimeZone.getTimeZone("GMT" + dateString.substring(dateString.length() - 5)));
+    sdf1.setTimeZone(TimeZone.getTimeZone(locale.getDisplayName()));
+    // sdf1.setTimeZone(TimeZone.getTimeZone("GMT" + dateString.substring(dateString.length() -
+    // 5)));
 
     return sdf1.format(sdf.parse(dateString));
   }
@@ -105,5 +108,14 @@ public class AppUtil {
       logger.error(e.getMessage(), e);
       throw new ProcessResponseException(e.getMessage());
     }
+  }
+
+  public static String convertDateToOtherFormat1(
+      String dateString, String inputFormat, String outputFormat) throws ParseException {
+    DateFormat sdf = new SimpleDateFormat(inputFormat);
+    DateFormat sdf1 = new SimpleDateFormat(outputFormat);
+    sdf1.setTimeZone(TimeZone.getTimeZone("GMT" + dateString.substring(dateString.length() - 5)));
+
+    return sdf1.format(sdf.parse(dateString));
   }
 }

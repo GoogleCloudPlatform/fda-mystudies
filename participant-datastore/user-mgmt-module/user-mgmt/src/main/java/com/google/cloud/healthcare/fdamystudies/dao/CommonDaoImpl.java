@@ -299,8 +299,12 @@ public class CommonDaoImpl implements CommonDao {
       criteriaQuery1.select(root1).where(predicates1);
       list1 = session.createQuery(criteriaQuery1).getResultList();
       if (!list1.isEmpty()) {
-        participantStudyBo = list1.get(0);
-        participantId = participantStudyBo.getParticipantId();
+        for (int i = 0; i < list1.size(); i++) {
+          if (list1.get(i).getParticipantId() != null) {
+            participantId = list1.get(i).getParticipantId();
+            break;
+          }
+        }
       }
     }
     logger.exit("getParticicpantId() - Ends ");

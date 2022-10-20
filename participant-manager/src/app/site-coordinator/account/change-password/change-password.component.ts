@@ -88,13 +88,11 @@ special characters.`);
     //   this.hideClickable = visible;
     // });
 
-  if((this.changePasswordTitle) === 'Set up password') {  
-    this.displayHeader.setDisplayHeaderStatus(false);
-  } else { 
-    this.displayHeader.setDisplayHeaderStatus(true);
-  }
-
-   
+    if (this.changePasswordTitle === 'Set up password') {
+      this.displayHeader.setDisplayHeaderStatus(false);
+    } else {
+      this.displayHeader.setDisplayHeaderStatus(true);
+    }
   }
   getError(err: ErrorCode): string {
     return getErrorMessage(err);

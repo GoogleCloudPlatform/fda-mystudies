@@ -52,11 +52,12 @@ public class ConsentStudyResponseBean {
   public void setSharing(String sharing) {
     this.sharing = sharing;
   }
-  public String getDataSharingScreenShot() {
-	    return dataSharingScreenShot;
-	  }
 
-	  public void setDataSharingScreenShot(String dataSharingScreenShot) {
-	    this.dataSharingScreenShot = dataSharingScreenShot;
-	  }
+  public String getDataSharingScreenShot() {
+    return dataSharingScreenShot;
+  }
+
+  public void setDataSharingScreenShot(String dataSharingScreenShot) {
+    this.dataSharingScreenShot = dataSharingScreenShot;
+  }
 }

@@ -34,5 +34,5 @@ public interface UserConsentManagementDao {
 
   public String getUserDetailsId(String userId);
 
-public StudyConsentEntity getExistStudyConsent(String userId, String studyId,String siteId);
+  public StudyConsentEntity getExistStudyConsent(String userId, String studyId, String siteId);
 }

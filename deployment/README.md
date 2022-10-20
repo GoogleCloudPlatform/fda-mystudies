@@ -728,7 +728,195 @@ module "<prefix>_<env>_gke_cluster" { [...] } and add below script at the end of
     }
     ```
 3.  Create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
- 
 
+### Migration to Cloud Healthcare API from Firestore (2.0.11 Upgrade)
+Release 2.0.11 added functionality to support Healthcare API’s like Consent API, FHIR, DID and Big query. This requires that apps that are running in existing deployments must be updated (and new versions published to the app stores) if the deployment is being upgraded to 2.0.11. These functionality shall be available only for new study and not for existing study. Brief details of the API’s integrated is provide below:
+	
+*	Consent API: This API shall help in the integration of the GCP Consent Management API into the platform. The vision is to leverage the capabilities of the Consent API in managing consent given by the app user/study participant for the collection and access or use of various types of their data by a study. 
+	
+*	FHIR: The integration of the GCP FHIR API into the platform will be handled in this deployment, specifically to facilitate the creation and storage of FHIR-compliant study metadata and response data.
+
+*	DID:The integration with DID API will help the platform to redact sensitive data from the responses collected, and provide the cleansed version of the data for audiences to use for research purposes.
+
+*	Big Query: This will be helpful for data scientists and researchers to carry out data analytics and operations, and derive insights from the collected data. It would be useful to stream data collected in the Response Server into BigQuery. BigQuery will be provided as an optional appended service to the GCP MyStudies platform and will connect to the Response Server to provide data export, reporting and analytics functions.
+
+#### Note: Update your repository with the latest changes from release 2.0.11 or greater, create a new working branch and make the following changes:
+
+#### Enabling Healthcare API and adding required permissions to Applications
+1.  To enable the Healthcare API in the Data project, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `# Create the project and optionally enable APIs` add the following line to the section `activate_apis = [.....]`.
+	```
+		`"healthcare.googleapis.com",`
+	```	
+1.  To provide Healthcare API access to all the application service accounts, edit the file `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "project_iam_members"` add the following lines to the section `bindings = {.......}`.
+	
+	-   ```   
+	    "roles/healthcare.consentArtifactEditor" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:consent-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:enroll-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.consentArtifactReader" = [
+	      "serviceAccount:participant-manager-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com"  
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.consentEditor" = [
+	      "serviceAccount:consent-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:enroll-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ```   
+	    "roles/healthcare.consentReader" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.consentStoreAdmin" = [
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ```   
+	    "roles/healthcare.consentStoreViewer" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.datasetAdmin" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.fhirResourceEditor" = [
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/healthcare.fhirStoreAdmin" = [
+	      "serviceAccount:study-builder-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/bigquery.admin" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",          
+	    ],
+	    ```
+	-   ``` 
+	    "roles/bigquery.dataEditor" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/datastore.user" = [
+	      "serviceAccount:response-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	      "serviceAccount:user-datastore-gke-sa@{prefix}-{env}-apps.iam.gserviceaccount.com",
+	    ],
+	    ```
+	-   ``` 
+	    "roles/storage.objectAdmin" = [
+	       "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+	    ],
+	    ```
+1.  To provide `{prefix}-{env}-mystudies-consent-documents` storage bucket access to study builder and Healthcare API service accounts, edit the file  `deployment/terraform/{prefix}-{env}-data/main.tf` and in the section `module "{prefix}_{env}_mystudies_consent_documents"` add the following lines to the section `iam_members = [...]`.
+	
+    -   ```	
+            {
+              role   = "roles/storage.objectAdmin"
+              member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+            },
+        ```
+    -   ```
+            {
+              role   = "roles/storage.objectViewer"
+              member = "serviceAccount:service-${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+            },
+	
+1.  To provide BigQuery admin access to `Response-Datastore service account`, edit the file `deployment/terraform/{prefix}-{env}-apps/main.tf` and in the section `module "project_iam_members"` add the following lines to the section `bindings = {.......}`.
+	 
+	```
+		"roles/bigquery.admin" = [
+		  "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+		]
+	 ```
+	
+#### Changes to secrets when upgrading to 2.0.11 or greater
+
+The following secrets need to be added for this release:
+-   `manual-region-id`
+-   `manual-consent-enabled`
+-   `manual-fhir-enabled`
+-   `manual-discard-fhir`
+-   `manual-ingest-data-to-bigquery`
+	
+These secrets can be added from your deployment with the following steps. 
+	
+1. Edit the file `deployment/terraform/{prefix}-{env}-secret/main.tf`, add the following resources similar to other secrets in the file:
+    -   ```
+        resource "google_secret_manager_secret" "manual_region_id" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_consent_enabled" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_fhir_enabled" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_discard_fhir" {
+          [...]
+        }
+        ```
+    -   ```
+        resource "google_secret_manager_secret" "manual_ingest_data_to_bigquery" {
+          [...]
+        }
+        ```		
+#### Add above new secrets to Kubernetes cluster shared secrets
+
+1.  Edit the file `deployment/terraform/kubernetes/main.tf` and in the section `# Data sources from Secret Manager` add the following lines to the section `for_each = toset(concat([...] )}` along with other secrets.
+	
+ 	-   `"manual-region-id",`
+ 	-   `"manual-consent-enabled",`
+ 	-   `"manual-fhirenabled",`
+ 	-   `"manual-discard-fhir",`
+ 	-   `"manual-ingest-data-to-bigquery",`
+	
+1.  In the section `# Shared secrets` add the following lines to the section `data = { [...] }`
+	
+ 	-   `region_id                    	= data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data`
+ 	-   `consent_enabled                   	= data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data`
+ 	-   `fhir_enabled                      	= data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data`
+ 	-   `discard_fhir                    	= data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data`
+ 	-   `ingest_data_to_bigquery           	= data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data`
+	
+##### Note: After all above changes in the working branch, create a pull request from this working branch to your specified branch, which will start the terraform plan and validation. After completion of the plan and validation, merge the pull request. That will run the terraform apply.
+
+#### Follow below steps to apply above secrets to all containers 
+1. Pull the latest code from your repository and checkout your specified branch which contains the new shared secret.	
+1. Run the following commands to apply the changes to your cluster:	
+```bash
+    cd $GIT_ROOT/deployment/terraform/kubernetes/
+    terraform init && terraform apply
+```	
+1. Restart all default pods except hydra-ic by running below commands:
+```bash
+     APP_PATH=<path_to_component_to_restart> # for example, $GIT_ROOT/auth-server
+     kubectl scale --replicas=0 -f $APP_PATH/tf-deployment.yaml && \
+     kubectl scale --replicas=1 -f $APP_PATH/tf-deployment.yaml
+```	
 ***
 <p align="center">Copyright 2020 Google LLC</p>

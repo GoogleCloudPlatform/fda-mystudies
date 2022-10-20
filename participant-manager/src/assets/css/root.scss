@@ -49,7 +49,7 @@ html {
     background-position: 5% !important;
     text-indent: 5px !important;
     margin-right: 20px !important;
-    padding-right:15px !important;
+    padding-right: 15px !important;
     padding-left: 35px !important;
   }
 
@@ -1756,34 +1756,33 @@ input::-webkit-calendar-picker-indicator {
   }
 }
 
-
-
 /* angular upgradtion CSS fixed here */
 
-.table>:not(:first-child) {
+.table > :not(:first-child) {
   border-top: 1px solid var(--periwinkle-gray) !important;
 }
 
-.table-striped>tbody>tr:nth-of-type(odd)>* {
+.table-striped > tbody > tr:nth-of-type(odd) > * {
   --bs-table-accent-bg: transparent;
   color: transparent;
 }
 
-input[type=password]::-ms-reveal,
-input[type=password]::-ms-clear
-{
-    display: none;
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }
 
-.btn.disabled, .btn:disabled, fieldset:disabled .btn {
+.btn.disabled,
+.btn:disabled,
+fieldset:disabled .btn {
   pointer-events: visible !important;
   cursor: not-allowed !important;
 }
 
 @media only screen and (max-width: 500px) and (min-width: 200px) {
   #body-container .usr_dtls_search__ {
-    min-width: 220px 
-}
+    min-width: 220px;
+  }
 }
 
 .select_disabled .ng-select-container .ng-value-container .ng-placeholder {
@@ -1796,22 +1795,26 @@ input[type=password]::-ms-clear
   cursor: not-allowed;
 }
 
-.ng-select.ng-select-disabled>.ng-select-container:hover {
+.ng-select.ng-select-disabled > .ng-select-container:hover {
   background-color: #f9f9f9;
   cursor: not-allowed;
 }
 .select_disabled {
   cursor: not-allowed;
 }
-.select_disabled.ng-select-multiple .ng-select-container .ng-value-container .ng-input {
+.select_disabled.ng-select-multiple
+  .ng-select-container
+  .ng-value-container
+  .ng-input {
   cursor: not-allowed;
 }
-.select_disabled.ng-select-disabled>.ng-select-container {
+.select_disabled.ng-select-disabled > .ng-select-container {
   background-color: #f9f9f9;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.table td, .table th {
+.table td,
+.table th {
   vertical-align: middle !important;
 }
