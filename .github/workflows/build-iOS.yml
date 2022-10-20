@@ -10,21 +10,21 @@ jobs:
     runs-on: macOS-latest
     strategy:
         matrix:
-          destination: ['platform=iOS Simulator,OS=13.7,name=iPhone 11']
+          destination: ['platform=iOS Simulator,OS=16.0,name=iPhone 11']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Force XCode 11.7
-        run: sudo xcode-select -switch /Applications/Xcode_11.7.app/Contents/Developer
+      - name: Force XCode 14.0
+        run: sudo xcode-select -switch /Applications/Xcode_14.0.app
       - name: Build
         run: |
           cd iOS/MyStudies
           xcodebuild clean build -workspace MyStudies.xcworkspace -scheme MyStudies -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=YES
-        env: 
+        env:
          destination: ${{ matrix.destination }}
       - name: Test
         run: |
           cd iOS/MyStudies
           xcodebuild test -workspace MyStudies.xcworkspace -scheme MyStudies -destination "${destination}"
-        env: 
+        env:
          destination: ${{ matrix.destination }}
