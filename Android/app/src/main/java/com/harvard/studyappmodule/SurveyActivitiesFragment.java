@@ -3108,7 +3108,7 @@ public class SurveyActivitiesFragment extends Fragment
       String actvityRunId = null;
 
       for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
-        if(anchorDateSchedulingDetails.getSourceActivityId().equalsIgnoreCase(
+        if (anchorDateSchedulingDetails.getSourceActivityId().equalsIgnoreCase(
             activityDataRunId.getActivities().get(i).getActivityId())) {
           actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
         }
@@ -3236,7 +3236,7 @@ public class SurveyActivitiesFragment extends Fragment
                 String key = entry.getKey();
                 String valueobj = gson.toJson(entry.getValue());
                 Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
-                if (key.equalsIgnoreCase("anchorDate")){
+                if (key.equalsIgnoreCase("anchorDate")) {
                   value = vauleMap.get("value");
                   try {
                     Date anchordate = AppController.getLabkeyDateFormat().parse("" + value);
