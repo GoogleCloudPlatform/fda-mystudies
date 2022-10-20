@@ -61,6 +61,7 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
 /**
  * UserConsentManagementDaoImpl Repository
  *
@@ -96,6 +97,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       CriteriaBuilder criteriaBuilder = null;
 
       CriteriaQuery<StudyEntity> studiesBoCriteria = null;
+
       Root<StudyEntity> studiesBoRoot = null;
       Predicate[] studiesBoPredicates = new Predicate[1];
 
