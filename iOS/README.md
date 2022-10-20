@@ -37,8 +37,15 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
     -    Set the boolean `IsStandaloneStudyApp` value to  “gateway” or “standalone” in  [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist)
     -    Update `StandaloneStudyId` key in [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
+1. If you haven't already, [add Firebase to your Apple project](https://firebase.google.com/docs/ios/setup) and make sure that Google Analytics is enabled in your Firebase project:
+    -    If you're creating a new Firebase project, enable Google Analytics during the project creation workflow.
+    -    If you're using an existing Firebase project that doesn't have Google Analytics enabled, go to the [Integrations](https://console.firebase.google.com/project/_/settings/integrations) tab of your settings > Project settings to enable it.
+    -    When you enable Google Analytics in your project, your Firebase apps are linked to Google Analytics data streams.
+    -    Add a Firebase [configuration file](https://firebase.google.com/docs/ios/setup#add-config-file) into the root of your Xcode project for using firebase services.
 1. Enable push notifications by creating [push notification certificates](https://help.apple.com/developer-account/#/dev82a71386a) in encrypted `.p12` format (for more information, visit [Establishing a Certificate-Based Connection to APNs](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_certificate-based_connection_to_apns))
-1. *Optional.* Customize images and text
+1. Enable push notification by [token based connection](https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_token-based_connection_to_apns) with an authentication token signing key, specified as a text file (with a .p8 file extension).
+2. Enable [FCM based push notification](https://firebase.google.com/docs/cloud-messaging/ios/client#upload_your_apns_authentication_key) by uploading your APNs authentication key to Firebase.
+3. *Optional.* Customize images and text
     -    Replace icons and images in [`iOS/MyStudies/MyStudies/Assets/Assets.xcassets`](MyStudies/MyStudies/Assets/Assets.xcassets/)
     -    Update user-facing text in the [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) file, fields to consider include:
          -    `ProductTitleName` - Application name that is shown to the user
