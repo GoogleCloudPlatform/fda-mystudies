@@ -24,14 +24,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.os.Build;
-import androidx.annotation.AnimatorRes;
-import androidx.annotation.DrawableRes;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
+import androidx.annotation.AnimatorRes;
+import androidx.annotation.DrawableRes;
+import androidx.viewpager.widget.ViewPager;
 import com.harvard.R;
 
 public class CircleIndicator extends LinearLayout {

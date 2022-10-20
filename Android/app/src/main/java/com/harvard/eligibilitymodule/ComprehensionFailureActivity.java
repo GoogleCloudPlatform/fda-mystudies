@@ -15,14 +15,14 @@
 
 package com.harvard.eligibilitymodule;
 
+import static com.harvard.studyappmodule.StudyFragment.CONSENT;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.harvard.AppConfig;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -35,16 +35,11 @@ import com.harvard.studyappmodule.consent.model.Consent;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
-
+import io.realm.Realm;
+import java.util.List;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.task.OrderedTask;
 import org.researchstack.backbone.task.Task;
-
-import java.util.List;
-
-import io.realm.Realm;
-
-import static com.harvard.studyappmodule.StudyFragment.CONSENT;
 
 public class ComprehensionFailureActivity extends AppCompatActivity {
 

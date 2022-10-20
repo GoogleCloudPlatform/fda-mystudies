@@ -17,14 +17,13 @@ package com.harvard.studyappmodule;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.R;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.utils.AppController;
