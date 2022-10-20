@@ -69,3 +69,16 @@ ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `is_cloud_storage_moved` INT(10) NUL
 ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `destination_custom_study_id` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8_general_ci';
 ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `export_signed_url` VARCHAR(1012) NULL DEFAULT NULL COLLATE 'utf8_general_ci';
 ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `export_time` DATETIME(6) NULL DEFAULT NULL;
+
+ALTER TABLE `fda_hphc`.`questionnaires` ADD COLUMN `sequence_number` INT(10) NULL DEFAULT NULL;
+ALTER TABLE `fda_hphc`.`active_task_custom_frequencies` ADD COLUMN `sequence_number` INT(10) NULL DEFAULT NULL;
+ALTER TABLE `fda_hphc`.`active_task_frequencies` ADD COLUMN `sequence_number` INT(10) NULL DEFAULT NULL;
+ALTER TABLE `fda_hphc`.`notification` ADD COLUMN `sequence_number` INT(10) NULL DEFAULT NULL;
+ALTER TABLE `fda_hphc`.`questionnaires_custom_frequencies` ADD COLUMN `sequence_number` INT(10) NULL DEFAULT NULL;
+ALTER TABLE `fda_hphc`.`questionnaires_frequencies` ADD COLUMN `sequence_number` INT(10) NULL DEFAULT NULL;
+ALTER TABLE `fda_hphc`.`response_sub_type_value` ADD COLUMN `sequence_number` INT(10) NULL DEFAULT NULL;
+
+
+	
+	
+	
