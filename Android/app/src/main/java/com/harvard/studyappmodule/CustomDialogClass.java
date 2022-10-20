@@ -18,10 +18,10 @@ package com.harvard.studyappmodule;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.view.Window;
 import android.widget.NumberPicker;
+import androidx.appcompat.widget.AppCompatTextView;
 import com.harvard.R;
 import com.harvard.utils.CustomFirebaseAnalytics;
 

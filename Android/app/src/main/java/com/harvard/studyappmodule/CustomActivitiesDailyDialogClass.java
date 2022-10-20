@@ -20,7 +20,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +27,10 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import com.harvard.R;
 import com.harvard.studyappmodule.surveyscheduler.model.ActivityStatus;
 import com.harvard.utils.CustomFirebaseAnalytics;
-
 import java.util.ArrayList;
 
 public class CustomActivitiesDailyDialogClass extends Dialog implements View.OnClickListener {

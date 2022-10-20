@@ -17,13 +17,13 @@ package com.harvard.studyappmodule;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.utils.AppController;

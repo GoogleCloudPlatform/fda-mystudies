@@ -16,11 +16,9 @@ package com.harvard.eligibilitymodule;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
+import androidx.appcompat.app.AppCompatActivity;
 import com.harvard.R;
 import com.harvard.utils.CustomFirebaseAnalytics;
 

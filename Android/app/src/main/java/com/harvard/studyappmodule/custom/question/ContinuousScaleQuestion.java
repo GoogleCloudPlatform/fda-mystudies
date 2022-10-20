@@ -33,7 +33,6 @@ import com.harvard.utils.VerticalSeekBar;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
-
 import java.text.NumberFormat;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;

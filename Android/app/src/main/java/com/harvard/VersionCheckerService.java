@@ -17,8 +17,6 @@ package com.harvard;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import androidx.appcompat.app.AlertDialog;
-
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.RegisterUserEvent;
@@ -28,7 +26,6 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-
 import java.util.HashMap;
 
 public class VersionCheckerService extends Service implements ApiCall.OnAsyncRequestComplete {

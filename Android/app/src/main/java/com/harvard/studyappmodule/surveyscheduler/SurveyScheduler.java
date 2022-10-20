@@ -18,7 +18,6 @@ package com.harvard.studyappmodule.surveyscheduler;
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.util.Log;
-
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.storagemodule.DbServiceSubscriber;
