@@ -4,3 +4,5 @@
 ALTER TABLE `fda_hphc`.`consent` ADD COLUMN `signature_Removal` BIT(1) NULL DEFAULT NULL;
 
 ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `destination_custom_study_id` VARCHAR(255) NULL DEFAULT NULL COLLATE 'utf8_general_ci';
+ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `export_signed_url` VARCHAR(1012) NULL DEFAULT NULL COLLATE 'utf8_general_ci';
+ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `export_time` DATETIME(6) NULL DEFAULT NULL;
