@@ -31,7 +31,6 @@ import com.harvard.R;
 import com.harvard.studyappmodule.custom.ChoiceAnswerFormatCustom;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.utils.CustomFirebaseAnalytics;
-
 import org.researchstack.backbone.answerformat.ChoiceAnswerFormat;
 import org.researchstack.backbone.model.Choice;
 import org.researchstack.backbone.result.StepResult;

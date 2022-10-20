@@ -23,11 +23,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.widget.Toast;
-
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.auth.SyncAdapterManager;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -46,11 +44,8 @@ import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
-
 import java.util.HashMap;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
 
@@ -365,9 +360,9 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                            SplashActivity.this,
-                            "Please update the app to continue using",
-                            Toast.LENGTH_SHORT)
+                        SplashActivity.this,
+                        "Please update the app to continue using",
+                        Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {

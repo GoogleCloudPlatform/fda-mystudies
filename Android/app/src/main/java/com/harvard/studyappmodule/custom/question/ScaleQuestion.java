@@ -32,7 +32,6 @@ import com.harvard.utils.Logger;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
-
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.BodyAnswer;
@@ -106,9 +105,9 @@ public class ScaleQuestion implements StepBody {
       seekbarlayout = inflater.inflate(R.layout.seekbar_vertical_layout, parent, false);
       seekBar = (VerticalRangeSeekBar) seekbarlayout.findViewById(R.id.seekbar);
     }
-    seekBar.setSteps((max-min) / stepSection);
+    seekBar.setSteps((max - min) / stepSection);
 //    seekBar.setRange(0, ((max - min) / stepSection));
-    seekBar.setRange(min,max,stepSection);
+    seekBar.setRange(min, max, stepSection);
 
     TextView mindesc = (TextView) seekbarlayout.findViewById(R.id.mindesc);
     ImageView minimage = (ImageView) seekbarlayout.findViewById(R.id.minimage);
@@ -186,7 +185,7 @@ public class ScaleQuestion implements StepBody {
   }
 
   private void setvaluetotxt() {
-    value = (((int)seekBar.getLeftSeekBar().getProgress()) * stepSection);
+    value = (((int) seekBar.getLeftSeekBar().getProgress()) * stepSection);
     mcurrentvalue.setText(String.valueOf((int) value));
   }
 

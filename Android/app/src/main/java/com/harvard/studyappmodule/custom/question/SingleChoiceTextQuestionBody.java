@@ -17,11 +17,6 @@ package com.harvard.studyappmodule.custom.question;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.SearchView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +26,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import com.google.gson.Gson;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
@@ -218,7 +216,7 @@ public class SingleChoiceTextQuestionBody<T>
 
         if (item.getValue().toString().equalsIgnoreCase(otherOptionValue)) {
           otherText.setVisibility(View.VISIBLE);
-          if(otherOptionModel.getText() == "" && otherOptionModel.getText().isEmpty()) {
+          if (otherOptionModel.getText() == "" && otherOptionModel.getText().isEmpty()) {
             otherText.setText(null);
           } else {
             otherText.setText(otherOptionModel.getText());
@@ -277,7 +275,7 @@ public class SingleChoiceTextQuestionBody<T>
     }
 
     if (otherOptionModel != null && otherOptionModel.getText() != null) {
-      if(otherOptionModel.getText().isEmpty()) {
+      if (otherOptionModel.getText().isEmpty()) {
         otherText.setText(null);
       } else {
         otherText.setText(otherOptionModel.getText());
