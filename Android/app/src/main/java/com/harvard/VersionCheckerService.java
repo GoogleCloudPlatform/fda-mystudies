@@ -18,7 +18,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import androidx.appcompat.app.AlertDialog;
-
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.RegisterUserEvent;

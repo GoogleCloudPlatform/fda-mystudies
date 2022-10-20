@@ -17,10 +17,10 @@ package com.harvard.studyappmodule;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -35,7 +35,6 @@ import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityObj
 import com.harvard.studyappmodule.custom.result.StepRecordCustom;
 import com.harvard.studyappmodule.events.ProcessResponseEvent;
 import com.harvard.usermodule.UserModulePresenter;
-import com.harvard.usermodule.event.ActivityStateEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Activities;
 import com.harvard.usermodule.webservicemodel.LoginData;
@@ -51,10 +50,7 @@ import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigE
 import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
-
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

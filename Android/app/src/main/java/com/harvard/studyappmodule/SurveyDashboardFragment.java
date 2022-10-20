@@ -48,14 +48,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -85,15 +83,14 @@ import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
-
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -102,7 +99,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1497,8 +1493,6 @@ public class SurveyDashboardFragment extends Fragment
       AppController.getHelperProgressDialog().showProgress(context, "", "", false);
       id = responseInfoActiveTaskModel.getActivityId();
       stepKey = responseInfoActiveTaskModel.getKey();
-      Log.e("check" ,"id "+ id);
-      Log.e("check" ,"stepKey "+ stepKey);
       ActivityListData activityListData = dbServiceSubscriber.getActivities(studyId, realm);
       if (activityListData != null) {
         RealmList<ActivitiesWS> activitiesWSes = activityListData.getActivities();
@@ -1562,7 +1556,6 @@ public class SurveyDashboardFragment extends Fragment
           try {
             SimpleDateFormat simpleDateFormat = AppController.getLabkeyDateFormat();
             JSONObject jsonObject = new JSONObject(response);
-            Log.e("check","response is "+jsonObject);
             JSONArray jsonArray = (JSONArray) jsonObject.get("rows");
             Gson gson = new Gson();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -1570,6 +1563,7 @@ public class SurveyDashboardFragment extends Fragment
               JSONArray jsonArray1 = (JSONArray) jsonObject1.get("data");
               int duration = 0;
               Date completedDate = null;
+              Date date = new Date();
               for (int j = 0; j < jsonArray1.length(); j++) {
                 JSONObject jsonObjectData = (JSONObject) jsonArray1.get(j);
                 Type type = new TypeToken<Map<String, Object>>() {
@@ -1584,11 +1578,9 @@ public class SurveyDashboardFragment extends Fragment
                     if (completedDateVal != null) {
                       completedDate =
                           simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
-                      Log.e("check","date is not null "+completedDate);
                     }
                   } catch (JsonSyntaxException | ParseException e) {
                     Logger.log(e);
-                    Log.e("check","date is not null "+completedDate);
                   }
                 }
 
@@ -1608,7 +1600,6 @@ public class SurveyDashboardFragment extends Fragment
                   String valueobj = gson.toJson(entry.getValue());
                   Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
                   Object value = vauleMap.get("value");
-                  Log.e("check ","key is "+ key);
                   if (!key.equalsIgnoreCase("container")
                       && !key.equalsIgnoreCase("ParticipantId")
                       && !key.equalsIgnoreCase("EntityId")
@@ -1621,7 +1612,6 @@ public class SurveyDashboardFragment extends Fragment
                       && !key.equalsIgnoreCase(stepKey + "Id")
                       && !key.equalsIgnoreCase("Created")) {
 
-                    Log.e("check ","key is 2 "+ key);
                     int runId =
                         dbServiceSubscriber.getActivityRunForStatsAndCharts(
                             responseInfoActiveTaskModel.getActivityId(),
@@ -1668,7 +1658,6 @@ public class SurveyDashboardFragment extends Fragment
                       }
 
                       stepRecordCustom.setResult(String.valueOf(jsonObject2));
-                      Log.e("check","jsonObject2 "+jsonObject2.toString());
                       Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
                       if (currentIdNum == null) {
                         stepRecordCustom.setId(1);

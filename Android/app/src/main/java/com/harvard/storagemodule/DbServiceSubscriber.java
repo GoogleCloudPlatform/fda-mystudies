@@ -17,7 +17,7 @@
 package com.harvard.storagemodule;
 
 import android.content.Context;
-
+import android.util.Log;
 import com.harvard.AppConfig;
 import com.harvard.notificationmodule.PendingIntents;
 import com.harvard.notificationmodule.model.NotificationDb;
