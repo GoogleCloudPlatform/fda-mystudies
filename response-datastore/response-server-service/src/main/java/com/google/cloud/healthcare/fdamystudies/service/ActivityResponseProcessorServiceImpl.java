@@ -214,12 +214,15 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               + "Study Id argument or Participant Id argument is null or empty.");
     }
     String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
-    responsesDao.updateWithdrawalStatusForParticipant(studyCollectionName, studyId, participantId);
-    SearchPatientFhirResponseBean searchPatientFhirResponseBean =
-        updateStatusOfPatientInFHIR(studyId, participantId);
-
-    if (appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
-      updateStatusOfPatientInDID(searchPatientFhirResponseBean, studyId);
+    if (!appConfig.getEnableFhirApi().contains("fhir")) {
+      responsesDao.updateWithdrawalStatusForParticipant(
+          studyCollectionName, studyId, participantId);
+    } else {
+      SearchPatientFhirResponseBean searchPatientFhirResponseBean =
+          updateStatusOfPatientInFHIR(studyId, participantId);
+      if (appConfig.getDiscardFhirAfterDid().equalsIgnoreCase("false")) {
+        updateStatusOfPatientInDID(searchPatientFhirResponseBean, studyId);
+      }
     }
   }
 
