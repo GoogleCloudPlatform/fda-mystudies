@@ -37,7 +37,7 @@ The **FDA MyStudies** mobile application fetches all study, schedule, activity, 
     -    Update `APP_ID` variable with the `AppId` that will be configured by the study administrator in the [`Study builder`](../study-builder/) user interface
     -    Set the boolean `IsStandaloneStudyApp` value to  “gateway” or “standalone” in  [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist)
     -    Update `StandaloneStudyId` key in [`iOS/MyStudies/MyStudies/Branding/Generic/Branding.plist`](MyStudies/MyStudies/Branding/Generic/Branding.plist) with the `StudyId` configured by the study administrator in the [`Study builder`](../study-builder/) user interface (not required for *Gateway* applications)
-1. If you haven't already, [add Firebase to your Apple project](https://firebase.google.com/docs/ios/setup) and make sure that Google Analytics is enabled in your Firebase project:
+1. If you haven't already created the Firebase project then, [add Firebase to your Xcode project](https://firebase.google.com/docs/ios/setup) and make sure that Google Analytics is enabled in your Firebase project:
     -    If you're creating a new Firebase project, enable Google Analytics during the project creation workflow.
     -    If you're using an existing Firebase project that doesn't have Google Analytics enabled, go to the [Integrations](https://console.firebase.google.com/project/_/settings/integrations) tab of your settings > Project settings to enable it.
     -    When you enable Google Analytics in your project, your Firebase apps are linked to Google Analytics data streams.
