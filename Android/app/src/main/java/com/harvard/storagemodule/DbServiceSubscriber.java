@@ -1047,12 +1047,14 @@ public class DbServiceSubscriber {
       Apps apps = getApps(realm);
       Apps tempApps = null;
       realm.beginTransaction();
-      if (apps != null)
-         tempApps = realm.copyFromRealm(apps);
+      if (apps != null) {
+        tempApps = realm.copyFromRealm(apps);
+      }
       realm.deleteAll();
       realm.commitTransaction();
-      if (tempApps != null)
+      if (tempApps != null) {
         saveApps(context, tempApps);
+      }
       closeRealmObj(realm);
     } catch (Exception e) {
       Logger.log(e);
@@ -1533,7 +1535,7 @@ public class DbServiceSubscriber {
   }
 
   public void updateActivitiesWsVersion(
-          String activityId, String studyId, Realm realm, final String version) {
+      String activityId, String studyId, Realm realm, final String version) {
     final ActivitiesWS activitiesWS = getActivityObj(activityId, studyId, realm);
     realm.executeTransaction(new Realm.Transaction() {
       @Override
@@ -1545,12 +1547,13 @@ public class DbServiceSubscriber {
     });
   }
 
-  public void deleteStepRecord(Context context, String stepId){
+  public void deleteStepRecord(Context context, String stepId) {
     realm = AppController.getRealmobj(context);
-    StepRecordCustom stepRecordCustom = realm.where(StepRecordCustom.class).equalTo("stepId",stepId).findFirst();
+    StepRecordCustom stepRecordCustom = realm.where(StepRecordCustom.class)
+        .equalTo("stepId",stepId).findFirst();
 
     realm.beginTransaction();
-    if(stepRecordCustom != null){
+    if (stepRecordCustom != null) {
       stepRecordCustom.deleteFromRealm();
     }
     realm.commitTransaction();

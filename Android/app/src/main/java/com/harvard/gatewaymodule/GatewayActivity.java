@@ -121,8 +121,10 @@ public class GatewayActivity extends AppCompatActivity
               .setShowTitle(true)
               .setCloseButtonIcon(
                   BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
-              .setStartAnimations(GatewayActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
-              .setExitAnimations(GatewayActivity.this, R.anim.slide_in_left, R.anim.slide_out_right);
+              .setStartAnimations(GatewayActivity.this, R.anim.slide_in_right,
+                  R.anim.slide_out_left)
+              .setExitAnimations(GatewayActivity.this, R.anim.slide_in_left,
+                  R.anim.slide_out_right);
       CustomTabsIntent customTabsIntent = builder.build();
       customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL
           .replace("$FromEmail", apps.getFromEmail())
@@ -193,7 +195,9 @@ public class GatewayActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null) alertDialog.dismiss();
+      if (alertDialog != null) {
+        alertDialog.dismiss();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

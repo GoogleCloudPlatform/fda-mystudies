@@ -805,7 +805,9 @@ public class SurveyActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null) alertDialog.dismiss();
+      if (alertDialog != null) {
+        alertDialog.dismiss();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
