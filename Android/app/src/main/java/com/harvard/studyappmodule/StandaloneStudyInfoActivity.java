@@ -925,7 +925,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
 
     header.put("deviceType", android.os.Build.MODEL);
     header.put("deviceOS", Build.VERSION.RELEASE);
-    header.put("mobilePlatform","ANDROID");
+    header.put("mobilePlatform", "ANDROID");
 
     ParticipantEnrollmentDatastoreConfigEvent participantDatastoreConfigEvent =
         new ParticipantEnrollmentDatastoreConfigEvent(
@@ -968,7 +968,9 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
       e.printStackTrace();
     }
     try {
-      if (alertDialog != null) alertDialog.dismiss();
+      if (alertDialog != null) {
+        alertDialog.dismiss();
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }

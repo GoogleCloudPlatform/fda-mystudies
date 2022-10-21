@@ -106,7 +106,7 @@ public class VersionCheckerService extends Service implements ApiCall.OnAsyncReq
     stopSelf();
     Intent intent = new Intent();
     intent.setAction(BuildConfig.APPLICATION_ID);
-    intent.putExtra("api","fail");
+    intent.putExtra("api", "fail");
     sendBroadcast(intent);
   }
 
