@@ -915,8 +915,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         "Authorization",
         "Bearer "
             + AppController.getHelperSharedPreference()
-                .readPreference(
-                    StandaloneStudyInfoActivity.this, getResources().getString(R.string.auth), ""));
+            .readPreference(
+                StandaloneStudyInfoActivity.this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()

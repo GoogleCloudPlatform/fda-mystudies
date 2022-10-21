@@ -1550,7 +1550,7 @@ public class DbServiceSubscriber {
   public void deleteStepRecord(Context context, String stepId) {
     realm = AppController.getRealmobj(context);
     StepRecordCustom stepRecordCustom = realm.where(StepRecordCustom.class)
-        .equalTo("stepId",stepId).findFirst();
+        .equalTo("stepId", stepId).findFirst();
 
     realm.beginTransaction();
     if (stepRecordCustom != null) {
