@@ -83,8 +83,9 @@
     </div>
     <c:if test="${fn:length(activeTaskBo.taskAttributeValueBos) eq 0}">
       <c:forEach items="${activeTaskBo.taskMasterAttributeBos}" var="taskMasterAttributeBo">
-        <div class="row">  
+        
         <c:if test="${taskMasterAttributeBo.orderByTaskType eq 1}">
+          <div class="row">  
           <div class="col-md-3 col-lg-3 p-none mr-lg ">
             <div class="gray-xs-f mt-md mb-sm">${taskMasterAttributeBo.displayName}
               <span
