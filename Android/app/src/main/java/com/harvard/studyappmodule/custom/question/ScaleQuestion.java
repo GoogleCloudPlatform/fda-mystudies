@@ -106,7 +106,6 @@ public class ScaleQuestion implements StepBody {
       seekBar = (VerticalRangeSeekBar) seekbarlayout.findViewById(R.id.seekbar);
     }
     seekBar.setSteps((max - min) / stepSection);
-//    seekBar.setRange(0, ((max - min) / stepSection));
     seekBar.setRange(min, max, stepSection);
 
     TextView mindesc = (TextView) seekbarlayout.findViewById(R.id.mindesc);

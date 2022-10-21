@@ -1398,19 +1398,7 @@ public class SurveyDashboardFragment extends Fragment
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
       Realm realm = AppController.getRealmobj(context);
 
-//       ActivityData activityDataRunId = realm.where(ActivityData.class).equalTo("studyId", studyId).findFirst();
-
       String actvityRunId = "";
-//      try {
-//        for (int i = 0; i < activityDataRunId.getActivities().size(); i++) {
-//          if (responseInfoActiveTaskModel.getActivityId().equalsIgnoreCase(
-//              activityDataRunId.getActivities().get(i).getActivityId())) {
-//            actvityRunId = activityDataRunId.getActivities().get(i).getActivityRunId();
-//          }
-//        }
-//      } catch (Exception e) {
-//        Log.e("check", "doInBackground: " + e.getMessage());
-//      }
 
       if (connectionDetector.isConnectingToInternet()) {
 
@@ -1492,8 +1480,8 @@ public class SurveyDashboardFragment extends Fragment
       AppController.getHelperProgressDialog().showProgress(context, "", "", false);
       id = responseInfoActiveTaskModel.getActivityId();
       stepKey = responseInfoActiveTaskModel.getKey();
-      Log.e("check" ,"id "+ id);
-      Log.e("check" ,"stepKey "+ stepKey);
+      Log.e("check", "id " + id);
+      Log.e("check", "stepKey " + stepKey);
       ActivityListData activityListData = dbServiceSubscriber.getActivities(studyId, realm);
       if (activityListData != null) {
         RealmList<ActivitiesWS> activitiesWSes = activityListData.getActivities();
@@ -1579,11 +1567,11 @@ public class SurveyDashboardFragment extends Fragment
                     if (completedDateVal != null) {
                       completedDate =
                           simpleDateFormat.parse(String.valueOf(completedDateVal.get("value")));
-                      Log.e("check","date is not null "+completedDate);
+                      Log.e("check", "date is not null " + completedDate);
                     }
                   } catch (JsonSyntaxException | ParseException e) {
                     Logger.log(e);
-                    Log.e("check","date is not null "+completedDate);
+                    Log.e("check", "date is not null " + completedDate);
                   }
                 }
 
@@ -1603,7 +1591,6 @@ public class SurveyDashboardFragment extends Fragment
                   String valueobj = gson.toJson(entry.getValue());
                   Map<String, Object> vauleMap = gson.fromJson(String.valueOf(valueobj), type);
                   Object value = vauleMap.get("value");
-                  Log.e("check ","key is "+ key);
                   if (!key.equalsIgnoreCase("container")
                       && !key.equalsIgnoreCase("ParticipantId")
                       && !key.equalsIgnoreCase("EntityId")
@@ -1616,7 +1603,6 @@ public class SurveyDashboardFragment extends Fragment
                       && !key.equalsIgnoreCase(stepKey + "Id")
                       && !key.equalsIgnoreCase("Created")) {
 
-                    Log.e("check ","key is 2 "+ key);
                     int runId =
                         dbServiceSubscriber.getActivityRunForStatsAndCharts(
                             responseInfoActiveTaskModel.getActivityId(),
@@ -1663,7 +1649,6 @@ public class SurveyDashboardFragment extends Fragment
                       }
 
                       stepRecordCustom.setResult(String.valueOf(jsonObject2));
-                      Log.e("check","jsonObject2 "+jsonObject2.toString());
                       Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
                       if (currentIdNum == null) {
                         stepRecordCustom.setId(1);

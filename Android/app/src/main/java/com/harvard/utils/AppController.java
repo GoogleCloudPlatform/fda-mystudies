@@ -1199,7 +1199,9 @@ public class AppController {
     if (dir.exists()) {
       File from = new File(dir, oldName);
       File to = new File(dir, newName);
-      if (from.exists()) from.renameTo(to);
+      if (from.exists()) {
+        from.renameTo(to);
+      }
     }
   }
 

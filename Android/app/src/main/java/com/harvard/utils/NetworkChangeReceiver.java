@@ -38,9 +38,11 @@ public class NetworkChangeReceiver<T, V> extends BroadcastReceiver {
 
   private boolean isNetworkAvailable(Context context) {
     try {
-      ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+      ConnectivityManager cm = (ConnectivityManager)
+          context.getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
-      return (activeNetworkInfo != null && ((NetworkInfo) activeNetworkInfo).isConnectedOrConnecting());
+      return (activeNetworkInfo != null
+          && ((NetworkInfo) activeNetworkInfo).isConnectedOrConnecting());
     } catch (NullPointerException e) {
       return false;
     }

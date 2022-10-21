@@ -170,7 +170,7 @@ public class ScaleTextQuestion implements StepBody {
   }
 
   private void setvaluetotxt(float rangeSeekBar) {
-    value = (int)(rangeSeekBar);
+    value = (int) (rangeSeekBar);
     mcurrentvalue.setText(String.valueOf(choiceTextExclusives[value].getText()));
   }
 

@@ -297,8 +297,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             finish();
           }
         } else {
-          if (nextStep.getIdentifier().equalsIgnoreCase("review") &&
-              !currentStep.getIdentifier().equalsIgnoreCase("sharing")) {
+          if (nextStep.getIdentifier().equalsIgnoreCase("review")
+              && !currentStep.getIdentifier().equalsIgnoreCase("sharing")) {
             if (score >= passScore) {
               Intent intent = new Intent(this, ComprehensionSuccessActivity.class);
               startActivityForResult(intent, 123);
