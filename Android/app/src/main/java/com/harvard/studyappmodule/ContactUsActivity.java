@@ -239,6 +239,7 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
       }
     }
   }
+
   @Override
   public void onNetworkChanged(boolean status) {
     if (!status) {
@@ -251,12 +252,14 @@ public class ContactUsActivity extends AppCompatActivity implements ApiCall.OnAs
       submitButton.setAlpha(1F);
     }
   }
+
   @Override
   public void onResume() {
     super.onResume();
     IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
     registerReceiver(networkChangeReceiver, intentFilter);
   }
+
   @Override
   public void onPause() {
     super.onPause();
