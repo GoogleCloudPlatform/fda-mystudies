@@ -201,9 +201,11 @@ public class ValuePickerQuestion<T> implements StepBody {
 
   @Override
   public BodyAnswer getBodyAnswerState() {
-    if (resultValue != null)
+    if (resultValue != null) {
       return BodyAnswer.VALID;
-    else
+    }
+    else {
       return BodyAnswer.INVALID;
+    }
   }
 }

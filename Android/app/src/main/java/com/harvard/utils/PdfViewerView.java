@@ -158,7 +158,6 @@ public class PdfViewerView extends ViewPager {
     @NonNull
     private final PdfRenderer renderer;
     private final int count;
-//    private PdfRenderer.Page currentPage;
     @NonNull
     private final Context context;
 
@@ -244,6 +243,7 @@ public class PdfViewerView extends ViewPager {
     }
     return false;
   }
+
   public void destroyPdfRender() {
     try {
       if (currentPage != null) {
@@ -260,7 +260,7 @@ public class PdfViewerView extends ViewPager {
       e.printStackTrace();
     }
     try {
-      if(mFileDescriptor != null) {
+      if (mFileDescriptor != null) {
         mFileDescriptor.close();
       }
     } catch (IOException e) {

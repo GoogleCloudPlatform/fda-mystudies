@@ -345,10 +345,12 @@ public class SurveyScheduler {
         if (DateFormat.format("MMM", startDate).equals("Feb")
             && (DateFormat.format("dd", startDate).equals("28")
                 || DateFormat.format("dd", startDate).equals("29"))) {
-          if (DateFormat.format("dd", startDate).equals("28"))
+          if (DateFormat.format("dd", startDate).equals("28")) {
             startCalendar.set(Calendar.DAY_OF_MONTH, 58);
-          else if (DateFormat.format("dd", startDate).equals("29"))
+          }
+          else if (DateFormat.format("dd", startDate).equals("29")) {
             startCalendar.set(Calendar.DAY_OF_MONTH, 59);
+          }
         } else if (DateFormat.format("dd", endTime).equals("31")) {
           if (DateFormat.format("dd", endTime).equals("31")
               && (DateFormat.format("MMM", startDate).equals("Apr")

@@ -66,7 +66,8 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
       } else {
         title.setText(getIntent().getStringExtra("title"));
       }
-      AppController.getHelperProgressDialog().showProgress(TermsPrivacyPolicyActivity.this,"","",false);
+      AppController.getHelperProgressDialog()
+          .showProgress(TermsPrivacyPolicyActivity.this, "", "", false);
       webView.getSettings().setLoadsImagesAutomatically(true);
       webView.getSettings().setJavaScriptEnabled(true);
       webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);

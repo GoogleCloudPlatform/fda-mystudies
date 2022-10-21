@@ -468,14 +468,6 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                         }
                       }
                     }
-//                    if (notificationsDb == null) {
-//                    setRemainder(
-//                          startCalender,
-//                          AppController.getSourceActivityId(resourceArrayList.get(i)),
-//                          ((SurveyActivity) context).getStudyId(),
-//                          resourceArrayList.get(i).getNotificationText(),
-//                          resourceArrayList.get(i).getResourcesId());
-//                    }
 
                     endCalender.setTime(
                         AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
@@ -683,10 +675,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
 
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
       Realm realm = AppController.getRealmobj(context);
-       ActivityData activityDataRunId = realm
-           .where(ActivityData.class)
-           .equalTo("studyId", anchorDateSchedulingDetails.getStudyId())
-           .findFirst();
+      ActivityData activityDataRunId = realm
+          .where(ActivityData.class)
+          .equalTo("studyId", anchorDateSchedulingDetails.getStudyId())
+          .findFirst();
 
       String actvityRunId = "";
 

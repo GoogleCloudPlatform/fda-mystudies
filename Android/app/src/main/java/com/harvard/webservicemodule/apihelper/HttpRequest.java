@@ -57,9 +57,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.json.JSONObject;
-
 import io.realm.Realm;
+import org.json.JSONObject;
 
 public class HttpRequest {
 
@@ -202,10 +201,12 @@ public class HttpRequest {
         DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
         Realm realm = AppController.getRealmobj(FdaApplication.getInstance());
         Apps apps = dbServiceSubscriber.getApps(realm);
-        if (apps == null)
+        if (apps == null) {
           httppost.addHeader(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
-        else
+        }
+        else {
           httppost.addHeader(APP_NAME_KEY, dbServiceSubscriber.getApps(realm).getAppName());
+        }
         dbServiceSubscriber.closeRealmObj(realm);
         httppost.addHeader(SOURCE_KEY, SOURCE_VALUE);
         httppost.addHeader(MOBILE_PLATFORM_KEY, MOBILE_PLATFORM_VALUE);
@@ -315,10 +316,12 @@ public class HttpRequest {
       DbServiceSubscriber dbServiceSubscriber = new DbServiceSubscriber();
       Realm realm = AppController.getRealmobj(FdaApplication.getInstance());
       Apps apps = dbServiceSubscriber.getApps(realm);
-      if (apps == null)
+      if (apps == null) {
         conn.setRequestProperty(APP_NAME_KEY, FdaApplication.getInstance().getString(R.string.app_name));
-      else
+      }
+      else {
         conn.setRequestProperty(APP_NAME_KEY, apps.getAppName());
+      }
       dbServiceSubscriber.closeRealmObj(realm);
       conn.setRequestProperty(SOURCE_KEY, SOURCE_VALUE);
       conn.setRequestProperty(MOBILE_PLATFORM_KEY, MOBILE_PLATFORM_VALUE);
