@@ -297,7 +297,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             finish();
           }
         } else {
-          if(nextStep.getIdentifier().equalsIgnoreCase("review") &&
+          if (nextStep.getIdentifier().equalsIgnoreCase("review") &&
               !currentStep.getIdentifier().equalsIgnoreCase("sharing")) {
             if (score >= passScore) {
               Intent intent = new Intent(this, ComprehensionSuccessActivity.class);
@@ -312,8 +312,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               startActivity(intent);
               finish();
             }
-          } else
-          showStep(nextStep);
+          } else {
+            showStep(nextStep);
+          }
         }
       }
     } else {
