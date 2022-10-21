@@ -28,7 +28,7 @@ import com.harvard.utils.CustomFirebaseAnalytics;
 
 public class LoadMoreActivity extends AppCompatActivity {
 
-    private CustomFirebaseAnalytics analyticsInstance;
+  private CustomFirebaseAnalytics analyticsInstance;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

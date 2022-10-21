@@ -312,8 +312,9 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               startActivity(intent);
               finish();
             }
-          } else
+          } else {
             showStep(nextStep);
+          }
         }
       }
     } else {
