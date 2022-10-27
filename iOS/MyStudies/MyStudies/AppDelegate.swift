@@ -382,9 +382,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
   func setupReachability() {
       do {
           self.reachability = try Reachability()
-          } catch(let error) {
-            print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-          }
+          } catch(let error) { }
   }
   // MARK: - NOTIFICATION
 
@@ -566,13 +564,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
       
       var topController: UIViewController?
       if let navigationController = self.window?.rootViewController as? UINavigationController {
-        print("111---")
         topController = navigationController
         if navigationController.viewControllers.count > 0 {
           topController = navigationController.viewControllers.first!
         }
       } else {
-        print("222---")
         let navigationController = self.window?.rootViewController as? UIViewController
         topController = navigationController
         //        topController = (self.window?.topMostController())!

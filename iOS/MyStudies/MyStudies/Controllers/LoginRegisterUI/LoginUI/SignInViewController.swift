@@ -90,51 +90,6 @@ class SignInViewController: UIViewController {
         }
     }
 
-    func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                               name: Notification.Name.reachabilityChanged, object: nil);
-
-        
-        
-        do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-            } catch(let error) {
-                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
-    }
-    
-    @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-            print("Network available via Cellular Data.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            self.view.hideAllToasts()
-            loadContent()
-            break
-        case .wifi:
-            print("Network available via WiFi.")
-//            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            self.view.hideAllToasts()
-            loadContent()
-            break
-        case .none:
-            print("Network is not available.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
-            break
-        case .unavailable:
-            print("Network is  unavailable.")
-//            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: false)
-            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
-            break
-        }
-    }
-    override func showOfflineIndicator() -> Bool {
-        return true
-    }
-
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
@@ -184,6 +139,44 @@ class SignInViewController: UIViewController {
     self.webKitView.navigationDelegate = nil
     progressView.removeFromSuperview()
   }
+  
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            self.view.hideAllToasts()
+            loadContent()
+            break
+        case .wifi:
+            self.view.hideAllToasts()
+            loadContent()
+            break
+        case .none:
+            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+            break
+        case .unavailable:
+            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
+  
   // MARK: - UI Utils
 
   private func setupNavigation() {

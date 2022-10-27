@@ -68,51 +68,7 @@ class StudyListViewController: UIViewController {
       UITableView.appearance().sectionHeaderTopPadding = CGFloat(0)
     }
   }
-    func setupNotifiers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
-                                               name: Notification.Name("Menu Clicked"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
-                                               name: Notification.Name("LeftMenu Home"), object: nil)
-        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
-                                               name: Notification.Name.reachabilityChanged, object: nil);
-
-        
-        
-        do {
-            self.reachability = try Reachability()
-            try self.reachability.startNotifier()
-            } catch(let error) {
-                print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-            }
-    }
-    func removeNotifier() {
-        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("Menu Clicked"), object: nil)
-        NotificationCenter.default.removeObserver(self, name: Notification.Name("LeftMenu Home"), object: nil)
-    }
-    @objc func reachabilityChanged(note: Notification) {
-        let reachability = note.object as! Reachability
-        switch reachability.connection {
-        case .cellular:
-            print("Network available via Cellular Data.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            break
-        case .wifi:
-            print("Network available via WiFi.")
-            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
-            break
-        case .none:
-            print("Network is not available.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
-            
-            break
-        case .unavailable:
-            print("Network is  unavailable.")
-            ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
-            break
-        }
-    }
-    
+  
     override func viewWillDisappear(_ animated: Bool) {
         removeNotifier()
     }
@@ -120,13 +76,13 @@ class StudyListViewController: UIViewController {
         return true
     }
   override func viewWillAppear(_ animated: Bool) {
-      setupNotifiers()
-    if !isComingFromFilterScreen {
+    setupNotifiers()
+    if !isComingFromFilterScreen && !(self.slideMenuController()?.isLeftOpen() ?? true) {
       self.addProgressIndicator()
     }
     setNavigationBarColor()
-    Utilities.removeImageLocalPath(localPathName: "ConsentSharingImage")
-    Utilities.removeImageLocalPath(localPathName: "ConsentpdfSharingImage")
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImage)
+    Utilities.removeImageLocalPath(localPathName: kConsentSharingImagePDF)
     UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
     UserDefaults.standard.synchronize()
   }
@@ -196,6 +152,49 @@ class StudyListViewController: UIViewController {
     let ud = UserDefaults.standard
     ud.set(false, forKey: kIsStudylistGeneral)
     ud.synchronize()
+  }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                           name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
+                                           name: Notification.Name("LeftMenu Home"), object: nil)
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    
+    
+    
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) {
+    }
+  }
+  
+  func removeNotifier() {
+    NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: nil)
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("Menu Clicked"), object: nil)
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("LeftMenu Home"), object: nil)
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+      break
+    case .wifi:
+      ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
+      break
+    case .none:
+      ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+      
+      break
+    case .unavailable:
+      ReachabilityIndicatorManager.shared.presentIndicator(viewController: self, isOffline: true)
+      break
+    }
   }
 
   // MARK: - UI Utils

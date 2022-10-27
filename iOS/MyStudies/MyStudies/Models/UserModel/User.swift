@@ -190,11 +190,8 @@ class User {
 
     let studies = self.participatedStudies
     if let study = studies?.filter({ $0.studyId == studyId }).first {
-print("1udpateUserStudyVersion---")
       study.userStudyVersion = userStudyVersion
-
     }
-    print("2udpateUserStudyVersion---")
   }
 
   // MARK: Study Status
@@ -528,7 +525,6 @@ class UserStudyStatus {
 
     let id = self.participantId ?? (Study.currentStudy?.userParticipateState.participantId ?? "")
     var valUserStudyVersion = Study.currentStudy?.newVersion ?? ""
-    print("2valUserStudyVersion---\(StudyUpdates.studyEnrollAgain)---\(StudyUpdates.studyConsentUpdated)---\(Study.currentStudy?.userParticipateState.userStudyVersion)---\(Study.currentStudy?.newVersion)")
     if StudyUpdates.studyConsentUpdated && StudyUpdates.studyEnrollAgain {
       if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&
           Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "0") {
@@ -559,7 +555,6 @@ class UserStudyStatus {
     let id = self.participantId ?? ""
     var valUserStudyVersion = Study.currentStudy?.newVersion ?? ""
     
-    print("1valUserStudyVersion---\(StudyUpdates.studyEnrollAgain)---\(StudyUpdates.studyConsentUpdated)---\(Study.currentStudy?.userParticipateState.userStudyVersion)---\(Study.currentStudy?.newVersion)")
     if StudyUpdates.studyConsentUpdated &&
         StudyUpdates.studyEnrollAgain {
       if (Study.currentStudy?.userParticipateState.userStudyVersion ?? "" != "" &&

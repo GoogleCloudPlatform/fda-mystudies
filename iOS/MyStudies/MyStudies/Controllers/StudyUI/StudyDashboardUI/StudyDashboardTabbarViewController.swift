@@ -94,7 +94,6 @@ extension StudyDashboardTabbarViewController: MFMailComposeViewControllerDelegat
 extension StudyDashboardTabbarViewController: UITabBarControllerDelegate {
   
   override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-    print("itemitem---\(item)")
     UserDefaults.standard.setValue("", forKey: "enrollmentCompleted")
     UserDefaults.standard.synchronize()
   }

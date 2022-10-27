@@ -448,10 +448,7 @@ class ResponseDataFetch: NMWebServiceDelegate {
           if reachability.connection != .unavailable {
               WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
           }
-      } catch(let error) {
-              print("Error occured while starting reachability notifications : \(error.localizedDescription)")
-          }
-      
+      } catch(let error) { }      
 //    WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
   }
 

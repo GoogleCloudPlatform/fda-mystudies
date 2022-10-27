@@ -153,12 +153,10 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
     buttonViewPdf?.isHidden = false
     labelTitle.isHidden = false
     lableDescription.isHidden = false
-    print("1enrollmentCompleted---")
     UserDefaults.standard.setValue("\(Study.currentStudy?.studyId ?? "")", forKey: "enrollmentCompleted")
     UserDefaults.standard.synchronize()
     
     if (Study.currentStudy?.studyId) != nil {
-      print("2enrollmentCompleted---")
       StudyUpdates.studyConsentUpdated = false
       
       guard let currentStudy = Study.currentStudy else { return }
@@ -166,9 +164,7 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
         studyId: currentStudy.studyId,
         userStudyVersion: (currentStudy.newVersion ?? currentStudy.version) ?? ""
       )
-      print("3enrollmentCompleted---")
       DBHandler.updateStudyParticipationStatus(study: currentStudy)
-      print("4enrollmentCompleted---")
     }
   }
 
