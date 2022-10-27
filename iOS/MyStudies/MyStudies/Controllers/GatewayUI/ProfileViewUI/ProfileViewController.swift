@@ -161,7 +161,7 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
     super.viewWillAppear(animated)
     user = User.currentUser
 
-    if !isPasscodeViewPresented {
+    if !isPasscodeViewPresented && reachability.connection != .unavailable {
       UserServices().getUserProfile(self as NMWebServiceDelegate)
     }
     self.setNavigationBarItem()

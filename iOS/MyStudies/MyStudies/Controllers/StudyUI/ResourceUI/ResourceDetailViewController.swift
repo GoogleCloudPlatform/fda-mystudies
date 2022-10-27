@@ -22,6 +22,7 @@ import SafariServices
 import UIKit
 import WebKit
 import FirebaseAnalytics
+import Reachability
 
 class ResourceDetailViewController: UIViewController {
 
@@ -29,12 +30,14 @@ class ResourceDetailViewController: UIViewController {
   @IBOutlet var webView: WKWebView!
   @IBOutlet var bottomToolBar: UIToolbar!
   @IBOutlet var activityIndicator: UIActivityIndicatorView!
+  @IBOutlet var shareButton: UIBarButtonItem!
 
   // MARK: - Properties
   var requestLink: String?
   var type: String?
   var htmlString: String?
   var resource: Resource?
+  private var reachability: Reachability!
 
   /// Resource converted from HTML string and saved in Cache directory.
   var tempResourceFilePath: URL?
@@ -51,12 +54,50 @@ class ResourceDetailViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupNotifiers()
     self.hidesBottomBarWhenPushed = true
     self.addBackBarButton()
     self.title = resource?.title
     setNavigationBarColor()
   }
-
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+          
+    do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) {
+            print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+        }
+  }
+      
+  @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+              print("Network available via Cellular Data.")
+              setOnline()
+              break
+        case .wifi:
+              print("Network available via WiFi.")
+              setOnline()
+              break
+        case .none:
+              print("Network is not available.")
+              setOffline()
+              break
+        case .unavailable:
+              print("Network is  unavailable.")
+              setOffline()
+              break
+        }
+    }
+    func setOffline() {
+        shareButton.isEnabled = false
+    }
+    func setOnline() {
+        shareButton.isEnabled = true
+    }
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     webView.navigationDelegate = self

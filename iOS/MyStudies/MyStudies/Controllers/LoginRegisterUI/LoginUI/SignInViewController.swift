@@ -81,11 +81,14 @@ class SignInViewController: UIViewController {
       setupNotifiers()
     SessionService.resetSession()
     setupNavigation()
-    DispatchQueue.main.async {
-      self.load()
-      self.initializeTermsAndPolicy()
-    }
+    loadContent()
   }
+    func loadContent() {
+        DispatchQueue.main.async {
+          self.load()
+          self.initializeTermsAndPolicy()
+        }
+    }
 
     func setupNotifiers() {
         NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
@@ -107,11 +110,13 @@ class SignInViewController: UIViewController {
             print("Network available via Cellular Data.")
 //            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
             self.view.hideAllToasts()
+            loadContent()
             break
         case .wifi:
             print("Network available via WiFi.")
 //            ReachabilityIndicatorManager.shared.removeIndicator(viewController: self)
             self.view.hideAllToasts()
+            loadContent()
             break
         case .none:
             print("Network is not available.")

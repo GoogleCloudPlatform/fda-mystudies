@@ -20,6 +20,7 @@
 import Foundation
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kConsentPdfKey = "consent"
 let kDataSharingScreenShotKey = "dataSharingScreenShot"
@@ -80,7 +81,7 @@ class ResourcesViewController: UIViewController {
   var consentPDF: String = TableRow.consent.title
   private lazy var tableViewSections: [[String: Any]]! = []
   private lazy var selectedIndexPath: IndexPath? = nil
-
+  private var reachability: Reachability!
   private var tableRows: [ResourceRow] = []
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -89,6 +90,7 @@ class ResourcesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+      setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "Resources"
     ])
@@ -107,7 +109,44 @@ class ResourcesViewController: UIViewController {
       StudyUpdates.studyResourcesUpdated = true
     }
   }
-
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
+          
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) {
+              print("Error occured while starting reachability notifications : \(error.localizedDescription)")
+            }
+    }
+      
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+              print("Network available via Cellular Data.")
+              setOnline()
+              break
+        case .wifi:
+              print("Network available via WiFi.")
+              setOnline()
+              break
+        case .none:
+              print("Network is not available.")
+              setOffline()
+              break
+        case .unavailable:
+              print("Network is  unavailable.")
+              setOffline()
+              break
+        }
+    }
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .bottom, title: nil, image: nil, completion: nil)
+    }
+    func setOnline() {
+        self.view.hideAllToasts()
+    }
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 

@@ -58,11 +58,6 @@ class StudyListViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-      setupNotifiers()
-    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
-                                           name: Notification.Name("Menu Clicked"), object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
-                                           name: Notification.Name("LeftMenu Home"), object: nil)
     
     addNavigationTitle()
     isComingFromFilterScreen = false
@@ -74,6 +69,10 @@ class StudyListViewController: UIViewController {
     }
   }
     func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
+                                               name: Notification.Name("Menu Clicked"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification1(notification:)),
+                                               name: Notification.Name("LeftMenu Home"), object: nil)
         NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)), name: Notification.Name.reachabilityChanged, object: nil);
 
         
@@ -85,7 +84,11 @@ class StudyListViewController: UIViewController {
                 print("Error occured while starting reachability notifications : \(error.localizedDescription)")
             }
     }
-    
+    func removeNotifier() {
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("Menu Clicked"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("LeftMenu Home"), object: nil)
+    }
     @objc func reachabilityChanged(note: Notification) {
         let reachability = note.object as! Reachability
         switch reachability.connection {
@@ -109,12 +112,15 @@ class StudyListViewController: UIViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        removeNotifier()
+    }
     override func showOfflineIndicator() -> Bool {
         return true
     }
   override func viewWillAppear(_ animated: Bool) {
-    print("self.slideMenuController()?.isLeftOpen()---\(self.slideMenuController()?.isLeftOpen())")
-    if !isComingFromFilterScreen && !(self.slideMenuController()?.isLeftOpen() ?? true) {
+      setupNotifiers()
+    if !isComingFromFilterScreen {
       self.addProgressIndicator()
     }
     setNavigationBarColor()
@@ -1172,7 +1178,9 @@ extension StudyListViewController: ORKTaskViewControllerDelegate {
   func taskViewController(
     _: ORKTaskViewController,
     stepViewControllerWillAppear _: ORKStepViewController
-  ) {}
+  ) {
+      
+  }
 }
 
 extension Array {
