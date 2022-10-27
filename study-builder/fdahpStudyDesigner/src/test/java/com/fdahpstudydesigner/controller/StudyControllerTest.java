@@ -70,6 +70,7 @@ import com.fdahpstudydesigner.common.JsonUtils;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.dao.NotificationDAOImpl;
+import com.fdahpstudydesigner.service.StudyExportImportService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -109,6 +110,8 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String TEST_STUDY_ID_STRING = "678680";
 
   @Autowired NotificationDAOImpl notificationDaoImpl;
+
+  @Autowired StudyExportImportService studyExportService;
 
   private static final String OAUTH_TOKEN = "/oauth2/token";
 
@@ -1299,12 +1302,6 @@ public class StudyControllerTest extends BaseMockIT {
     verifyAuditEventCall(STUDY_METADATA_SEND_FAILED);
   }
 
-  public static String readJsonFile(String filepath) throws IOException {
-    return JsonUtils.getObjectMapper()
-        .readValue(JsonUtils.class.getResourceAsStream(filepath), JsonNode.class)
-        .toString();
-  }
-
   @Test
   public void shouldCreateInsertSqlQueries() throws Exception {
 
@@ -1320,6 +1317,12 @@ public class StudyControllerTest extends BaseMockIT {
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isOk());
+  }
+
+  public static String readJsonFile(String filepath) throws IOException {
+    return JsonUtils.getObjectMapper()
+        .readValue(JsonUtils.class.getResourceAsStream(filepath), JsonNode.class)
+        .toString();
   }
 
   @Test

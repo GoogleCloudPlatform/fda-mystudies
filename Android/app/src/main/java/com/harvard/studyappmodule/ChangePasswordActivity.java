@@ -18,14 +18,17 @@ package com.harvard.studyappmodule;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
@@ -37,6 +40,7 @@ import com.harvard.usermodule.webservicemodel.ChangePasswordData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -46,7 +50,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ChangePasswordActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
 
   private static final int CHANGE_PASSWORD_REQUEST = 8;
   private RelativeLayout backBtn;
@@ -67,6 +71,8 @@ public class ChangePasswordActivity extends AppCompatActivity
   private String emailId;
   private boolean clicked;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +80,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     userId = getIntent().getStringExtra("userid");
     auth = getIntent().getStringExtra("auth");
     isVerified = getIntent().getBooleanExtra("verified", false);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
     emailId = getIntent().getStringExtra("email");
     try {
@@ -102,6 +109,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     newPassword = (AppCompatEditText) findViewById(R.id.edittxt_password_new);
     confirmPassword = (AppCompatEditText) findViewById(R.id.edittxt_password_confirm);
     submitButton = (AppCompatTextView) findViewById(R.id.submitButton);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setTextForView() {
@@ -149,27 +157,30 @@ public class ChangePasswordActivity extends AppCompatActivity
           }
         });
 
-    newPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      @Override
-      public void onFocusChange(View v, boolean hasFocus) {
-        if (!hasFocus) {
-          if (!newPassword.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
-            newPassword.setError(getResources().getString(R.string.password_validation));
+    newPassword.setOnFocusChangeListener(
+        new View.OnFocusChangeListener() {
+          @Override
+          public void onFocusChange(View v, boolean hasFocus) {
+            if (!hasFocus) {
+              if (!newPassword.getText().toString().matches(AppController.PASSWORD_PATTERN)) {
+                newPassword.setError(getResources().getString(R.string.password_validation));
+              }
+            }
           }
-        }
-      }
-    });
+        });
 
-    confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-      @Override
-      public void onFocusChange(View v, boolean hasFocus) {
-        if (!hasFocus) {
-          if (!newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-            confirmPassword.setError(getResources().getString(R.string.password_mismatch_error));
+    confirmPassword.setOnFocusChangeListener(
+        new View.OnFocusChangeListener() {
+          @Override
+          public void onFocusChange(View v, boolean hasFocus) {
+            if (!hasFocus) {
+              if (!newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
+                confirmPassword.setError(
+                    getResources().getString(R.string.password_mismatch_error));
+              }
+            }
           }
-        }
-      }
-    });
+        });
 
     submitButton.setOnClickListener(
         new View.OnClickListener() {
@@ -307,9 +318,7 @@ public class ChangePasswordActivity extends AppCompatActivity
       finish();
     } else {
       Toast.makeText(
-              this,
-              getResources().getString(R.string.password_change_message),
-              Toast.LENGTH_SHORT)
+              this, getResources().getString(R.string.password_change_message), Toast.LENGTH_SHORT)
           .show();
       Intent intent = new Intent();
       setResult(RESULT_OK, intent);
@@ -357,6 +366,34 @@ public class ChangePasswordActivity extends AppCompatActivity
         startActivity(mainIntent);
         finish();
       }
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      submitButton.setClickable(false);
+      submitButton.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      submitButton.setClickable(true);
+      submitButton.setAlpha(1F);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 }

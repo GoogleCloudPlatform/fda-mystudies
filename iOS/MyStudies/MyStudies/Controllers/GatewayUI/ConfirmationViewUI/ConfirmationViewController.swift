@@ -18,6 +18,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kConfirmationSegueIdentifier = "confirmationSegue"
 let kHeaderDescription =
@@ -79,12 +80,12 @@ class ConfirmationViewController: UIViewController {
   lazy var joinedStudies: [Study]! = []
   var studyWithoutWCData: Study?
   lazy var studiesToWithdraw: [StudyToDelete] = []
-
+  private var reachability: Reachability!
   // MARK: - View Controller LifeCycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    setupNotifiers()
     let navTitle = Branding.productTitle
     var descriptionText =
       Utilities.isStandaloneApp()
@@ -105,11 +106,63 @@ class ConfirmationViewController: UIViewController {
     self.checkWithdrawlConfigurationForNextStudy()
 
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.addBackBarButton()
   }
+  
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) {
+        }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonDoNotDeleteAccount?.isEnabled = true
+        buttonDoNotDeleteAccount?.layer.opacity = 1
+        buttonDeleteAccount?.isEnabled = true
+        buttonDeleteAccount?.layer.opacity = 1
+    }
+    
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+        buttonDoNotDeleteAccount?.isEnabled = false
+        buttonDoNotDeleteAccount?.layer.opacity = 0.5
+        buttonDeleteAccount?.isEnabled = false
+        buttonDeleteAccount?.layer.opacity = 0.5
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
 
   // MARK: - Utils
 

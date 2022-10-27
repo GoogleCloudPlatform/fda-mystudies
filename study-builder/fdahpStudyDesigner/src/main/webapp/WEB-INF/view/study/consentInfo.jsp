@@ -4,10 +4,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<style>
+.modal-header .close { padding: 1rem 1rem; margin: -3rem -1rem -1rem auto; }
+</style>
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <!--  Start top tab section-->
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateConsentInfo.do?_S=${param._S}&${_csrf.parameterName}=${_csrf.token}"
@@ -87,7 +90,7 @@
           <select class="selectpicker" id="consentItemTitleId"
                   name="consentItemTitleId" required
                   data-error="Please select a topic">
-            <option value="">Select</option>
+            <option selected value="">Select</option>
             <c:forEach items="${consentMasterInfoList}" var="consentMaster">
               <option value="${consentMaster.id}"
                 ${consentInfoBo.consentItemTitleId eq consentMaster.id  ? 'selected' : ''}>${consentMaster.title}</option>
@@ -112,7 +115,7 @@
         </div>
         <div class="form-group">
           <input autofocus="autofocus" type="text" id="displayTitle"
-                 class="form-control" name="displayTitle" required data-error="Please fill out this field" 
+                 class="form-control" name="displayTitle" required data-error="Please fill out this field"
                  value="${fn:escapeXml(consentInfoBo.displayTitle)}" maxlength="75">
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -127,7 +130,7 @@
         </div>
         <div class="form-group">
           <textarea class="form-control" rows="7" id="briefSummary"
-                    name="briefSummary" required data-error="Please fill out this field" 
+                    name="briefSummary" required data-error="Please fill out this field"
                     maxlength="500">${consentInfoBo.briefSummary}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -141,8 +144,8 @@
           </span>
         </div>
         <div class="form-group">
-          <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE"
-                    required data-error="Please fill out this field" >${consentInfoBo.elaborated}</textarea>
+          <textarea class="" rows="8" id="elaboratedRTE" name="elaboratedRTE" data-error="Please fill out this field"
+                    required>${consentInfoBo.elaborated}</textarea>
           <div class="help-block with-errors red-txt"></div>
         </div>
       </div>
@@ -349,6 +352,7 @@
                 var elaboratedContent = $(
                     '#elaboratedRTE')
                     .summernote('code');
+                
                 var briefSummaryText = replaceSpecialCharacters($(
                     "#briefSummary")
                     .val());
@@ -490,7 +494,7 @@
     $(item).prop('disabled', true);
     bootbox
         .confirm({
-          closeButton: false,
+          closeButton: true,
           message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
           buttons: {
             'cancel': {
@@ -565,7 +569,7 @@
         if ('${consentInfo.consentItemTitleId}' != ''
             && '${consentInfo.consentItemTitleId}' != null) {
           if ('${consentInfo.consentItemTitleId}' == selectedTitle.options[i].value
-        		  && '${consentInfo.consentItemTitleId}' != '${consentInfoBo.consentItemTitleId}' && '${consentInfo.consentItemType}' != 'Custom') {
+              && '${consentInfo.consentItemTitleId}' != '${consentInfoBo.consentItemTitleId}' && '${consentInfo.consentItemType}' != 'Custom') {
             $(
                 "select option[value="
                 + selectedTitle.options[i].value + "]")
@@ -606,39 +610,39 @@
   </c:if>
 
   function maxLenValEditor() {
-	    var isValid = true;
-	    var value = $('#elaboratedRTE').summernote('code');
-	    if (value == '<br>' || value == '<p><br></p>') {
-	    	value = '';
-	    }
-	    
-	    if (value != '') {
-	      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
-	        if (isValid) {
-	          isValid = false;
-	        }
-	        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
-	        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	            "Maximum 15000 characters are allowed"));
+    var isValid = true;
+    var value = $('#elaboratedRTE').summernote('code');
+    if (value == '<br>' || value == '<p><br></p>') {
+    	value = '';
+    }
+    
+    if (value != '') {
+      if ($.trim(value.replace(/(<([^>]+)>)/ig, "")).length > 15000) {
+        if (isValid) {
+          isValid = false;
+        }
+        $('#elaboratedRTE').parent().addClass('has-error-cust').find(".help-block").empty().append(
+        	$("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+            "Maximum 15000 characters are allowed"));
 
-	      } else {
-	        $('#elaboratedRTE').parent().removeClass("has-danger")
-	            .removeClass("has-error");
-	        $('#elaboratedRTE').parent().find(".help-block").empty();
-	      }
-	    } else {
-	      isValid = false;
-	      $('#elaboratedRTE')
-	          .parent()
-	          .addClass('has-error has-danger')
-	          .find(".help-block")
-	          .empty()
-	          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-	              "Please fill out this field"));
+      } else {
+        $('#elaboratedRTE').parent().removeClass("has-danger")
+            .removeClass("has-error");
+        $('#elaboratedRTE').parent().find(".help-block").empty();
+      }
+    } else {
+      isValid = false;
+      $('#elaboratedRTE')
+          .parent()
+          .addClass('has-error has-danger')
+          .find(".help-block")
+          .empty()
+          .append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
+              "Please fill out this field"));
 
-	    }
-	    return isValid;
-	  }
+    }
+    return isValid;
+  }
 
   $(document).on('mouseenter', '.dropdown-toggle',  function () {
       $(this).removeAttr("title");

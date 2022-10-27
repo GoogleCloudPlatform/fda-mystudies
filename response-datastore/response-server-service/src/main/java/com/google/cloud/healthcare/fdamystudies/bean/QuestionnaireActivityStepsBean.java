@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,4 +47,6 @@ public class QuestionnaireActivityStepsBean {
   private Object value = AppConstants.EMPTY_STR;
 
   private ActivityValueGroupBean actvityValueGroup = new ActivityValueGroupBean();
+
+  @JsonIgnore private String wcpResultType = AppConstants.EMPTY_STR;
 }

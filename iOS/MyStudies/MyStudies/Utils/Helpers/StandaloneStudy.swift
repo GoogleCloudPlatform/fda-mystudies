@@ -41,12 +41,13 @@ class StandaloneStudy: NSObject {
   }
 
   func getStudyDashboardInfo() {
-    WCPServices().getStudyInformation(studyId: (Study.currentStudy?.studyId)!, delegate: self)
+    guard let studyId = Study.currentStudy?.studyId else { return }
+    WCPServices().getStudyInformation(studyId: studyId, delegate: self)
   }
 
   func fetchStudyDashboardInfo() {
-
-    DBHandler.loadStudyOverview(studyId: (Study.currentStudy?.studyId)!) { (overview) in
+    guard let studyId = Study.currentStudy?.studyId else { return }
+    DBHandler.loadStudyOverview(studyId: studyId) { (overview) in
       if overview != nil {
         Study.currentStudy?.overview = overview
         self.getStudyUpdates()
@@ -58,9 +59,9 @@ class StandaloneStudy: NSObject {
 
   func getStudyUpdates() {
 
-    let study = Study.currentStudy
+    guard let studyId = Study.currentStudy?.studyId else { return }
     DBHandler.loadStudyDetailsToUpdate(
-      studyId: (study?.studyId)!,
+      studyId: studyId,
       completionHandler: { (_) in
         NotificationCenter.default.post(
           name: NSNotification.Name(rawValue: "StudySetupCompleted"),

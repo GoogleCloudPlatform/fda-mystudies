@@ -8,11 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CONSENT_TYPE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PRIMARY;
+
+import com.google.api.services.healthcare.v1.model.Consent;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.mapper.ConsentManagementAPIs;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
@@ -62,6 +68,10 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   @Autowired CommonDao commonDao;
 
   @Autowired private ParticipantEnrollmentHistoryRepository participantEnrollmentHistoryRepository;
+
+  @Autowired private ConsentManagementAPIs consentApis;
+
+  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
   public UserDetailsEntity getParticipantInfoDetails(String userId) {
@@ -310,6 +320,10 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
           studyIdPredicates.toArray(new Predicate[studyIdPredicates.size()]));
       session.createQuery(criteriaParticipantStudiesUpdate).executeUpdate();
 
+      if (Boolean.valueOf(appConfig.getEnableConsentManagementAPI())) {
+        revokeConsent(userDetails, studyInfoBoList);
+      }
+
       session
           .createSQLQuery(
               "UPDATE participant_registry_site SET onboarding_status=:onboardingStatus, "
@@ -374,5 +388,37 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     userDetailsEntity.setStatus(UserStatus.DEACTIVATED.getValue());
     userDetailsEntity.setEmail(alteredEmail);
     userDetailsRepository.saveAndFlush(userDetailsEntity);
+  }
+  /**
+   * revoke consent
+   *
+   * @param userDetailsEntity
+   * @param studyList
+   */
+  private void revokeConsent(UserDetailsEntity userDetailsEntity, List<StudyEntity> studyList) {
+    logger.entry("Begin revokeConsent()");
+
+    for (StudyEntity study : studyList) {
+      String parentName =
+          String.format(
+              "projects/%s/locations/%s/datasets/%s/consentStores/",
+              appConfig.getProjectId(), appConfig.getRegionId(), study.getCustomId());
+
+      String participantId =
+          commonDao.getParticipantId(userDetailsEntity.getId(), study.getCustomId());
+      String filter1 = "user_id=\"" + participantId + "\"";
+      String filter2 = "Metadata(\"" + CONSENT_TYPE + "\")=\"" + PRIMARY + "\"";
+      String consentFilter = filter1 + " AND " + filter2;
+
+      List<Consent> list =
+          consentApis.getListOfConsents(
+              consentFilter, parentName + "CONSENT_" + study.getCustomId());
+      if (CollectionUtils.isNotEmpty(list)) {
+        Consent consent = list.get(0);
+        // updating consent state to REVOKED
+        consentApis.revokeConsent(consent.getName());
+      }
+    }
+    logger.exit("revokeConsent() - Ends ");
   }
 }

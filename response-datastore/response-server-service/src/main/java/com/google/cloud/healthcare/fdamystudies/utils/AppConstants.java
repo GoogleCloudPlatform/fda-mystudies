@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020-2021 Google LLC
  *
  * Use of this source code is governed by an MIT-style
  * license that can be found in the LICENSE file or at
@@ -20,6 +20,7 @@ public class AppConstants {
   public static final String RESPONSE_DATA_QUERY_NAME_LEGACY = "firestore_response_query";
   public static final String TRUE_STR = "true";
   public static final String VALUE_KEY_STR = "value";
+  public static final String ANCHOR_DATE_VALUE = "anchorDate";
   public static final String PARTICIPANT_ID_KEY = "participantId";
   public static final String PARTICIPANT_ID_RESPONSE = "ParticipantId";
   public static final String CREATED_TS_KEY = "createdTimestamp";
@@ -71,4 +72,11 @@ public class AppConstants {
   public static final String DETAIL_MESSAGE = "detailMessage";
   public static final String BASIC_PREFIX = "Basic ";
   public static final String COMMA_STR = ",";
+
+  public static final String DATE_FORMAT_RESPONSE_MOBILE = "yyyy-MM-dd'T'HH:mm:ss.SSSXX";
+  public static final String DATE_FORMAT_RESPONSE_FHIR = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+  public static final String PATIENT_TYPE = "Patient";
+  public static final String QUESTIONNAIRE_RESPONSE_TYPE = "QuestionnaireResponse";
+  public static final String QUESTIONNAIRE_TYPE_FHIR = "Questionnaire";
 }

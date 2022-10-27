@@ -19,6 +19,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.BodyPart;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -49,7 +50,7 @@ public class EmailServiceImpl implements EmailService {
     try {
       MimeMessage message = emailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(message, false);
-      helper.setFrom(emailRequest.getFrom());
+      helper.setFrom(new InternetAddress(emailRequest.getFrom()));
       helper.setTo(emailRequest.getTo());
 
       if (ArrayUtils.isNotEmpty(emailRequest.getCc())) {
@@ -60,6 +61,7 @@ public class EmailServiceImpl implements EmailService {
         helper.setBcc(emailRequest.getBcc());
       }
 
+      message.setFrom(new InternetAddress(emailRequest.getFrom()));
       message.setSubject(getSubject(emailRequest));
       message.setText(getBodyContent(emailRequest), "utf-8", "html");
       message.setSentDate(Calendar.getInstance().getTime());

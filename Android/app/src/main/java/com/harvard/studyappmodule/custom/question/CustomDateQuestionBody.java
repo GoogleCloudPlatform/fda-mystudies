@@ -21,8 +21,9 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.os.Bundle;
 import androidx.appcompat.view.ContextThemeWrapper;
+
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class CustomDateQuestionBody implements StepBody {
   private Calendar calendar;
   private DateFormat dateformatter;
   private CustomFirebaseAnalytics analyticsInstance;
-  Context context;
+  private Context context;
 
   private boolean hasChosenDate;
 
@@ -243,37 +244,46 @@ public class CustomDateQuestionBody implements StepBody {
                     datePickerDialog.getDatePicker().getYear(),
                     datePickerDialog.getDatePicker().getMonth(),
                     datePickerDialog.getDatePicker().getDayOfMonth());
-            if (format.validateAnswer(calendar1.getTime()).isValid()) {
-              hasChosenDate = true;
+                if (format.validateAnswer(calendar1.getTime()).isValid()) {
+                  hasChosenDate = true;
 
-              calendar.set(
+                  calendar.set(
                       datePickerDialog.getDatePicker().getYear(),
                       datePickerDialog.getDatePicker().getMonth(),
                       datePickerDialog.getDatePicker().getDayOfMonth());
-              // Set result to our edit text
-              String formattedResult = CustomDateQuestionBody.this.createFormattedResult();
-              tv.setText(formattedResult);
-            } else {
-              Toast.makeText(
-                      inflater.getContext(),
-                      format
+                  // Set result to our edit text
+                  String formattedResult = CustomDateQuestionBody.this.createFormattedResult();
+                  tv.setText(formattedResult);
+                } else {
+                  Toast.makeText(
+                          inflater.getContext(),
+                          format
                               .validateAnswer(calendar1.getTime())
                               .getString(inflater.getContext()),
-                      Toast.LENGTH_LONG)
+                          Toast.LENGTH_LONG)
                       .show();
+                }
+              }
             }
-          }
-        }
-      });
-      datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, inflater.getContext().getString(R.string.clear), new DialogInterface.OnClickListener() {
-        public void onClick(DialogInterface dialog, int which) {
-          if (which == DialogInterface.BUTTON_NEUTRAL) {
-            dialog.dismiss();
-            tv.setText("");
-            hasChosenDate = false;
-          }
-        }
-      });
+          });
+      datePickerDialog.setButton(
+          DialogInterface.BUTTON_NEUTRAL,
+          inflater.getContext().getString(R.string.clear),
+          new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+              Bundle eventProperties = new Bundle();
+              eventProperties.putString(
+                  CustomFirebaseAnalytics.Param.BUTTON_CLICK_REASON,
+                  context.getString(R.string.custom_data_question_clear));
+              analyticsInstance.logEvent(
+                  CustomFirebaseAnalytics.Event.ADD_BUTTON_CLICK, eventProperties);
+              if (which == DialogInterface.BUTTON_NEUTRAL) {
+                dialog.dismiss();
+                tv.setText("");
+                hasChosenDate = false;
+              }
+            }
+          });
       datePickerDialog.show();
     } else if (format.getStyle() == AnswerFormatCustom.DateAnswerStyle.TimeOfDay) {
       TimePickerDialog timePickerDialog =

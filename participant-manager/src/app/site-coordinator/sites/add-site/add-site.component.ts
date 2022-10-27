@@ -45,6 +45,7 @@ export class AddSiteComponent
   getLocation(studyId: string): void {
     this.location$ = this.locationService.getLocationsForSiteCreation(studyId);
   }
+
   add(): void {
     this.disableButton = true;
     this.subs.add(

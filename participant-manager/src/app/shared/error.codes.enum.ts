@@ -41,7 +41,8 @@ const errorMessages = {
   EC_0029: 'This location is already decommissioned',
   EC_0030: 'You do not have permission to update the location',
   EC_0031: 'Participant(s) cannot be added to the registry of an open study',
-  EC_0032: 'The admin must have at least one permission assigned',
+  EC_0032:
+    'The admin should have atleast one permission in the system to access this resource',
   EC_0033: 'Invalid security code',
   EC_0035: 'Error in getting participants details',
   EC_0036: 'The uploaded file is not in the prescribed format',
@@ -81,7 +82,7 @@ const errorMessages = {
   EC_0063:
     'This view displays app-wise enrolment if you manage multiple studies.',
   EC_0064: 'The email already exists',
-  EC_0122: 'Sites cannot be added using decommissioned locations.',
+  EC_0122: 'Cannot add site using a decommissioned location.',
   EC_0123: 'You do not have permission to access this app.',
   EC_0124:
     'This study is deactivated. Sites cannot be added to deactivated studies.',
@@ -126,7 +127,6 @@ const errorMessages = {
     'This is a default location ID in use by the system already. Please enter a different location ID.',
   EC_0087:
     'This is a default location name in use by the system already. Please enter a different location name.',
-  /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;
 

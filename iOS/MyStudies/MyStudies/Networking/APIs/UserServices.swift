@@ -75,6 +75,7 @@ let kActivityVersion = "activityVersion"
 let kActivityRunId = "activityRunId"
 let kCompletion = "completion"
 let kAdherence = "adherence"
+let kDataSharingPermission = "dataSharingPermission"
 
 // MARK: - Logout Api constants
 let kLogoutReason = "reason"
@@ -306,7 +307,12 @@ class UserServices: NSObject {
   }
 
   func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {
+    
+    guard !APIService.instance.isTokenRefreshing else { return }
+        
+      APIService.instance.isTokenRefreshing = true
     HydraAPI.refreshToken { (status, error) in
+        APIService.instance.isTokenRefreshing = false
       if status {
         self.handleUpdateTokenResponse()
       } else if let error = error {

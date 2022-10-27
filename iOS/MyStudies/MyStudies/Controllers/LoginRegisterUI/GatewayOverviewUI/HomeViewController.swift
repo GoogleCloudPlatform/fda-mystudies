@@ -21,6 +21,7 @@ import Foundation
 import SlideMenuControllerSwift
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 class HomeViewController: UIViewController {
 
@@ -34,6 +35,7 @@ class HomeViewController: UIViewController {
   @IBOutlet var buttonGetStarted: UIButton?
 
   var websiteName: String!
+  private var reachability: Reachability!
 
   // MARK: - ViewController Lifecycle
 
@@ -45,6 +47,7 @@ class HomeViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+      setupNotifiers()
     /// Added to change next screen
     pageControlView?.addTarget(
       self,
@@ -57,7 +60,7 @@ class HomeViewController: UIViewController {
 
     buttonLink.setTitle(title, for: .normal)
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -65,6 +68,55 @@ class HomeViewController: UIViewController {
     self.navigationController?.setNavigationBarHidden(true, animated: true)
 
   }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+  }
+    
+  @objc func reachabilityChanged(note: Notification) {
+      let reachability = note.object as! Reachability
+      switch reachability.connection {
+      case .cellular:
+          setOnline()
+          break
+      case .wifi:
+          setOnline()
+          break
+      case .none:
+          setOffline()
+          break
+      case .unavailable:
+          setOffline()
+            break
+      }
+    }
+  
+    func setOnline() {
+        self.view.hideAllToasts()
+        buttonSignin.isEnabled = true
+        buttonSignin.layer.opacity = 1
+        buttonLink.isEnabled = true
+        buttonLink.layer.opacity = 1
+    }
+  
+    func setOffline() {
+        self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .top, title: nil, image: nil, completion: nil)
+        buttonSignin.isEnabled = false
+        buttonSignin.layer.opacity = 0.5
+        buttonLink.isEnabled = false
+        buttonLink.layer.opacity = 0.5
+    }
+  
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
 
   // MARK: - UI Utils
 

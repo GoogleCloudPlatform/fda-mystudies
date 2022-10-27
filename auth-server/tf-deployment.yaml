@@ -149,8 +149,8 @@ spec:
             periodSeconds: 20
           resources:
             requests:
-              memory: "500Mi"
-              cpu: "50m"
+                cpu: "50m"
+                memory: "500Mi" 
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
@@ -158,7 +158,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-                    "-instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
+                    "instances=<PREFIX>-<ENV>-data:<LOCATION>:mystudies=tcp:3306",
                     "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

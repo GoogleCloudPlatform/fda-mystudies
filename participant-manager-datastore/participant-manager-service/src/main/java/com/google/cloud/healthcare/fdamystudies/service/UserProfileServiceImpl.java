@@ -71,6 +71,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
   @Autowired private OAuthService oauthService;
 
+  @Autowired private ManageUserService manageUserService;
+
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
   @Override
@@ -264,6 +266,14 @@ public class UserProfileServiceImpl implements UserProfileService {
     ParticipantManagerEvent participantManagerEvent =
         user.getStatus() == UserStatus.ACTIVE.getValue() ? ADMIN_REACTIVATED : ADMIN_DEACTIVATED;
     participantManagerHelper.logEvent(participantManagerEvent, auditRequest, map);
+
+    if (statusRequest.getSignedInUserId().equals(statusRequest.getUserId())
+        && user.getStatus() == UserStatus.DEACTIVATED.getValue()) {
+      // logout condition write here
+      if (StringUtils.isNotEmpty(user.getUrAdminAuthId())) {
+        manageUserService.logoutAdminUser(user.getUrAdminAuthId(), auditRequest);
+      }
+    }
 
     logger.exit(messageCode);
     return new PatchUserResponse(messageCode);

@@ -44,7 +44,7 @@ public class ConfirmPasscodeSetup extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_passcode_setup);
-    analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    analyticsInstance =CustomFirebaseAnalytics.getInstance(this);
 
     initializeXmlId();
     setTextForView();

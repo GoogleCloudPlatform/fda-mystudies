@@ -28,6 +28,7 @@ import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+
 import io.realm.Realm;
 
 public class TermsPrivacyPolicyActivity extends AppCompatActivity {
@@ -67,7 +68,7 @@ public class TermsPrivacyPolicyActivity extends AppCompatActivity {
       } else {
         title.setText(getIntent().getStringExtra("title"));
       }
-      AppController.getHelperProgressDialog().showProgress(TermsPrivacyPolicyActivity.this, "", "", false);
+      AppController.getHelperProgressDialog().showProgress(TermsPrivacyPolicyActivity.this,"","",false);
       webView.getSettings().setLoadsImagesAutomatically(true);
       webView.getSettings().setJavaScriptEnabled(true);
       webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);

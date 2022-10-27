@@ -19,14 +19,17 @@
 
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 class ReachoutOptionsViewController: UIViewController {
 
   @IBOutlet var tableView: UITableView?
+  private var reachability: Reachability!
 
   // MARK: - Viewcontroller Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupNotifiers()
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
       buttonClickReasonsKey: "LeftMenu Reach Out"
     ])
@@ -35,10 +38,46 @@ class ReachoutOptionsViewController: UIViewController {
 
     self.navigationItem.title = NSLocalizedString("Reach out", comment: "")
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.setNavigationBarItem()
+  }
+  
+  // MARK: - Utility functions
+  func setupNotifiers() {
+    NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                           name: Notification.Name.reachabilityChanged, object: nil);
+    do {
+      self.reachability = try Reachability()
+      try self.reachability.startNotifier()
+    } catch(let error) { }
+  }
+  
+  @objc func reachabilityChanged(note: Notification) {
+    let reachability = note.object as! Reachability
+    switch reachability.connection {
+    case .cellular:
+      setOnline()
+      break
+    case .wifi:
+      setOnline()
+      break
+    case .none:
+      setOffline()
+      break
+    case .unavailable:
+      setOffline()
+      break
+    }
+  }
+  
+  func setOnline() {
+    self.view.hideAllToasts()
+  }
+  
+  func setOffline() {
+    self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude, position: .center, title: nil, image: nil, completion: nil)
   }
   
   @objc func methodOfReceivedNotification(notification: Notification) {

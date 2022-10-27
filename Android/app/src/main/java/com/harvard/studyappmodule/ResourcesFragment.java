@@ -16,31 +16,39 @@
 package com.harvard.studyappmodule;
 
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.harvard.R;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.studymodel.Resource;
 import com.harvard.studyappmodule.studymodel.StudyResource;
 import com.harvard.utils.AppController;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import io.realm.Realm;
 import io.realm.RealmList;
 
-public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncRequestComplete {
+public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncRequestComplete,
+    NetworkChangeReceiver.NetworkChangeCallback {
 
   private RecyclerView studyRecyclerView;
   private Context context;
   private RealmList<Resource> resourceArrayList;
   private static final int RESOURCE_REQUEST_CODE = 213;
   DbServiceSubscriber dbServiceSubscriber;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
   Realm realm;
+
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -52,6 +60,7 @@ public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncReq
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_resources, container, false);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     initializeXmlId(view);
 
     dbServiceSubscriber = new DbServiceSubscriber();
@@ -85,6 +94,7 @@ public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncReq
 
   private void initializeXmlId(View view) {
     studyRecyclerView = (RecyclerView) view.findViewById(R.id.studyRecyclerView);
+    offlineIndicatior = view.findViewById(R.id.offlineIndicatior);
   }
 
   @Override
@@ -116,6 +126,30 @@ public class ResourcesFragment<T> extends Fragment implements ApiCall.OnAsyncReq
       AppController.getHelperSessionExpired(context, errormsg);
     } else if (responseCode == RESOURCE_REQUEST_CODE) {
       Toast.makeText(getContext(), errormsg, Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    context.registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      context.unregisterReceiver(networkChangeReceiver);
     }
   }
 }

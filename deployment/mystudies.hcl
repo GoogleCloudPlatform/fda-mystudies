@@ -169,6 +169,21 @@ template "project_secrets" {
           secret_id = "manual-android-deeplink-url"
         },
         {
+          secret_id = "manual-region-id"
+        },
+        {
+          secret_id = "manual-consent-enabled"
+        },
+        {
+          secret_id = "manual-fhir-enabled"
+        },
+        {
+          secret_id = "manual-discard-fhir"
+        },
+        {
+          secret_id = "manual-ingest-data-to-bigquery"
+        },		
+        {
           secret_id   = "auto-mystudies-sql-default-user-password"
           secret_data = "$${random_password.passwords[\"mystudies_sql_default_user_password\"].result}"
         },
@@ -597,6 +612,10 @@ template "project_apps" {
           "serviceAccount:$${google_service_account.participant_manager_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:$${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
+      # BigQuery Permissions
+        "roles/bigquery.admin" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",		  
+        ]
       }
       # Binary Authorization resources.
       # Simple configuration for now. Future
@@ -700,83 +719,6 @@ template "project_firebase" {
         "firebase.googleapis.com",
       ]
     }
-    resources = {
-      iam_members = {
-        # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
-        #5# "roles/datastore.importExportAdmin" = [
-        #5#   "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
-        #5# ]
-        "roles/datastore.user" = [
-          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-        ]
-        "roles/pubsub.subscriber" = [
-          "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
-        ]
-      }
-      storage_buckets = [
-        {
-          # Firestore data export
-          name = "{{.prefix}}-{{.env}}-mystudies-firestore-raw-data"
-          # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
-          #5# iam_members = [{
-          #5#   role   = "roles/storage.admin"
-          #5#   member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
-          #5# }]
-          # TTL 7 days.
-          lifecycle_rules = [{
-            action = {
-              type = "Delete"
-            }
-            condition = {
-              age        = 7 # 7 days
-              with_state = "ANY"
-            }
-          }]
-        },
-      ]
-      # Terraform-generated service account for use by Cloud Function.
-      service_accounts = [
-        { account_id = "raw-data-export" },
-        { account_id = "bigquery-export" },
-        { account_id = "real-time-triggers" },
-      ]
-      pubsub_topics = [{
-        name = "surveyWriteTrigger"
-        pull_subscriptions = [
-          {
-            name                 = "surveyWriteGlobal"
-            ack_deadline_seconds = 10
-          }
-        ]
-      }]
-    }
-    terraform_addons = {
-      raw_config = <<EOF
-resource "google_firebase_project" "firebase" {
-  provider = google-beta
-  project  = module.project.project_id
-}
-
-# Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
-#5# resource "google_firestore_index" "activities_index" {
-#5#   project    = module.project.project_id
-#5#   collection = "Activities"
-#5#   fields {
-#5#     field_path = "participantId"
-#5#     order      = "ASCENDING"
-#5#   }
-#5#   fields {
-#5#     field_path = "createdTimestamp"
-#5#     order      = "ASCENDING"
-#5#   }
-#5#   fields {
-#5#     field_path = "__name__"
-#5#     order      = "ASCENDING"
-#5#   }
-#5# }
-EOF
-    }
   }
 }
 
@@ -792,12 +734,13 @@ template "project_data" {
         "compute.googleapis.com",
         "servicenetworking.googleapis.com",
         "sqladmin.googleapis.com",
+        "healthcare.googleapis.com",		
       ]
       shared_vpc_attachment = {
         host_project_id = "{{.prefix}}-{{.env}}-networks"
       }
     }
-    # Step 5.4: uncomment and re-run the engine once all previous steps have been completed.
+    # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
 #5#     terraform_addons = {
 #5#       raw_config = <<EOF
 #5# locals {
@@ -838,7 +781,7 @@ template "project_data" {
 #5# EOF
 #5#     }
     resources = {
-      # Step 5.5: uncomment and re-run the engine once all previous steps have been completed.
+      # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
       #5# cloud_sql_instances = [{
       #5#   name               = "mystudies"
       #5#   type               = "mysql"
@@ -860,13 +803,59 @@ template "project_data" {
           "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
-        # Step 5.6: uncomment and re-run the engine once all previous steps have been completed.
-        #5# "roles/bigquery.jobUser" = [
-        #5#   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
-        #5# ]
-        #5# "roles/bigquery.dataEditor" = [
-        #5#   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
-        #5# ]
+	  # HEALTH CARE API Roles/Permissions
+        "roles/healthcare.consentArtifactEditor" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:consent-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:enroll-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.consentEditor" = [
+          "serviceAccount:consent-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:enroll-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.consentArtifactReader" = [
+          "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+        ]
+        "roles/healthcare.consentReader" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+        ]
+        "roles/healthcare.consentStoreViewer" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",  
+        ]
+        "roles/healthcare.datasetAdmin" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.consentStoreAdmin" = [
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.fhirStoreAdmin" = [
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/healthcare.fhirResourceEditor" = [
+          "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]	
+	  # BigQuery Permissions
+        "roles/bigquery.admin" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",  
+        ]
+        "roles/bigquery.dataEditor" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/datastore.user" = [
+          "serviceAccount:response-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
+        ]
+        "roles/storage.objectAdmin" = [
+          "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com",
+        ]
       }
       storage_buckets = [
         {
@@ -879,7 +868,16 @@ template "project_data" {
             {
               role   = "roles/storage.objectAdmin"
               member = "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
-            }
+            },
+            {
+              role   = "roles/storage.objectAdmin"
+              member = "serviceAccount:study-builder-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com"
+            },			
+	  # HEALTHCARE API SA role bindling to consent bucket
+            {
+              role   = "roles/storage.objectViewer"
+              member = "serviceAccount:service-$${module.project.project_number}@gcp-sa-healthcare.iam.gserviceaccount.com"
+            },			
           ]
         },
         {
@@ -910,9 +908,6 @@ template "project_data" {
           #6# }]
         },
       ]
-      bigquery_datasets = [{
-        dataset_id = "{{.prefix}}_{{.env}}_mystudies_firestore_data"
-      }]
     }
   }
 }
@@ -1002,6 +997,11 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-fcm-api-url",
       "manual-ios-deeplink-url",
       "manual-android-deeplink-url",
+      "manual-region-id",
+      "manual-consent-enabled",
+      "manual-fhir-enabled",
+      "manual-discard-fhir",
+      "manual-ingest-data-to-bigquery",	  
       "auto-auth-server-encryptor-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
@@ -1033,12 +1033,17 @@ resource "kubernetes_secret" "shared_secrets" {
     institution_resources_bucket_name = "{{.prefix}}-{{.env}}-mystudies-institution-resources"
     base_url                          = "https://participants.{{.prefix}}-{{.env}}.{{.domain}}"
     studies_base_url                  = "https://studies.{{.prefix}}-{{.env}}.{{.domain}}"
-    firestore_project_id              = "{{.prefix}}-{{.env}}-firebase"
+    data_project_id                   = "{{.prefix}}-{{.env}}-data"	
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
     privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
     fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
+    region_id                         = data.google_secret_manager_secret_version.secrets["manual-region-id"].secret_data
+    consent_enabled                   = data.google_secret_manager_secret_version.secrets["manual-consent-enabled"].secret_data
+    fhir_enabled                      = data.google_secret_manager_secret_version.secrets["manual-fhir-enabled"].secret_data
+    discard_fhir                      = data.google_secret_manager_secret_version.secrets["manual-discard-fhir"].secret_data
+    ingest_data_to_bigquery           = data.google_secret_manager_secret_version.secrets["manual-ingest-data-to-bigquery"].secret_data	
   }
 }
 

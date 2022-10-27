@@ -21,6 +21,12 @@ public final class Constants {
 
   public static final String USER_ID_HEADER = "userId";
 
+  public static final String USER_DEVICE_TYPE = "deviceType";
+
+  public static final String USER_DEVICE_OS = "deviceOS";
+
+  public static final String USER_MOBILE_PLATFORM = "mobilePlatform";
+
   public static final String VALID_USER_ID = "kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg";
 
   public static final String NEW_USER_ID = "leqmF97faSdVEB8-aUpS0dbXtSMDwIC-Iu9DgRWEcGxZezM";

@@ -266,3 +266,8 @@ extension UIViewController {
 
 }
 
+@objc public extension UIViewController {
+    func showOfflineIndicator() -> Bool {
+        return false
+    }
+}

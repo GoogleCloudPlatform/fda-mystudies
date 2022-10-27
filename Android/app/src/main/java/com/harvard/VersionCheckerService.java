@@ -17,6 +17,8 @@ package com.harvard;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import androidx.appcompat.app.AlertDialog;
+
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.RegisterUserEvent;
@@ -74,9 +76,9 @@ public class VersionCheckerService extends Service implements ApiCall.OnAsyncReq
 
         if (!Boolean.parseBoolean(apps.getVersion().getAndroid().getForceUpdate())) {
           String latestVer = apps.getVersion().getAndroid().getLatestVersion();
-          if (!AppController.getHelperSharedPreference().readPreference(this, "latestVersion", "").equals(latestVer)) {
+          if (!AppController.getHelperSharedPreference().readPreference(this,"latestVersion","").equals(latestVer)) {
             AppController.getHelperSharedPreference().writePreference(this, "versionalert", "");
-            AppController.getHelperSharedPreference().writePreference(this, "latestVersion", apps.getVersion().getAndroid().getLatestVersion());
+            AppController.getHelperSharedPreference().writePreference(this,"latestVersion",apps.getVersion().getAndroid().getLatestVersion());
           }
 
           if (!AppController.getHelperSharedPreference().readPreference(this, "versionalert", "").equalsIgnoreCase("done")) {
@@ -107,7 +109,7 @@ public class VersionCheckerService extends Service implements ApiCall.OnAsyncReq
     stopSelf();
     Intent intent = new Intent();
     intent.setAction(BuildConfig.APPLICATION_ID);
-    intent.putExtra("api", "fail");
+    intent.putExtra("api","fail");
     sendBroadcast(intent);
   }
 

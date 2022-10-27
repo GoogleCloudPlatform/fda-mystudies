@@ -42,8 +42,8 @@
     <link rel="stylesheet" href="/studybuilder/css/style.css">
 
     <!-- Vendor -->
-    <script src="/studybuilder/vendor/jquery/jquery-3.1.1.min.js"></script>
-    <script src="/studybuilder/vendor/summernote/popper.min.js"></script>
+    <script src="/studybuilder/vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/studybuilder/vendor/summernote/jquery.popper.min.js"></script>
     <script src="/studybuilder/vendor/boostrap/bootstrap.min.js"></script>
   
    
@@ -133,8 +133,8 @@ html, body {
         </span>
         <div class="custom__font_error">404</div>
         <div class="mb-4 custom_sub_font">
-		<div class="custom__font_error">Oops 403</div>
-    	<span class="subTxt">Access is denied <br> You do not have permission to access this page</span>
+		<div class="custom__font_error">Oops 403!</div>
+    	<span class="subTxt">Access is denied <br> You do not have permission to access this page!</span>
         </div>
       </div>
 </div>

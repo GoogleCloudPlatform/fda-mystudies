@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020-2021 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.fdahpstudydesigner.util;
 
 import java.io.IOException;
@@ -16,8 +24,9 @@ public class PropertiesUtil {
   // Expects environment variables to be in the form ${VAR_NAME}.
   public static Properties makePropertiesWithEnvironmentVariables(String properties_file) {
     Properties properties = new Properties();
+    ClassLoader loader = Thread.currentThread().getContextClassLoader();
     try {
-      properties.load(PropertiesUtil.class.getClassLoader().getResourceAsStream(properties_file));
+      properties.load(loader.getResourceAsStream(properties_file));
     } catch (IOException ex) {
       logger.error("Unable to access " + properties_file, ex);
     }

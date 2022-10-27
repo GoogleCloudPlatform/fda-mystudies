@@ -19,7 +19,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,6 @@ public class CommonDaoImpl implements CommonDao {
   @Override
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId) {
     logger.entry("Begin validatedUserAppDetailsByAllApi()");
-    Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppEntity> appDetailsBoCriteria = null;
     Root<AppEntity> appDetailsBoRoot = null;
@@ -45,7 +43,6 @@ public class CommonDaoImpl implements CommonDao {
     AppEntity appEntity = null;
 
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    String message = "";
     String appInfoId = String.valueOf(0);
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
@@ -75,7 +72,6 @@ public class CommonDaoImpl implements CommonDao {
   @Override
   public String getUserDetailsId(String userId) {
     logger.entry("Begin getUserDetailsId()");
-    Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> userDetailsBoCriteria = null;
     Root<UserDetailsEntity> userDetailsBoRoot = null;
