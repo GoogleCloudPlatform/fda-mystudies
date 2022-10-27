@@ -73,9 +73,9 @@ public class VersionCheckerService extends Service implements ApiCall.OnAsyncReq
 
         if (!Boolean.parseBoolean(apps.getVersion().getAndroid().getForceUpdate())) {
           String latestVer = apps.getVersion().getAndroid().getLatestVersion();
-          if (!AppController.getHelperSharedPreference().readPreference(this,"latestVersion","").equals(latestVer)) {
+          if (!AppController.getHelperSharedPreference().readPreference(this, "latestVersion", "").equals(latestVer)) {
             AppController.getHelperSharedPreference().writePreference(this, "versionalert", "");
-            AppController.getHelperSharedPreference().writePreference(this,"latestVersion",apps.getVersion().getAndroid().getLatestVersion());
+            AppController.getHelperSharedPreference().writePreference(this, "latestVersion", apps.getVersion().getAndroid().getLatestVersion());
           }
 
           if (!AppController.getHelperSharedPreference().readPreference(this, "versionalert", "").equalsIgnoreCase("done")) {
