@@ -537,7 +537,6 @@ public class UsersController {
     UserBO userBO = null;
     List<StudyListBean> studyBOs = null;
     List<RoleBO> roleBOList = null;
-    List<StudyBo> studyBOList = null;
     String actionPage = FdahpStudyDesignerConstants.VIEW_PAGE;
     List<Integer> permissions = null;
     Map<String, String> values = new HashMap<>();
@@ -602,7 +601,6 @@ public class UsersController {
     logger.entry("begin deleteAdminDetails()");
     ModelAndView mav = new ModelAndView();
     String msg = "";
-    UserBO userBo = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {

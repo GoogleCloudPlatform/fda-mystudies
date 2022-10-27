@@ -32,27 +32,23 @@ public class AuditEventService {
   public void postAuditLogEvent(AuditLogEventRequest auditRequest) {
     LOGGER.entry(
         String.format("begin postAuditLogEvent() for %s event", auditRequest.getEventCode()));
-    try (Logging logging = LoggingOptions.getDefaultInstance().getService()) {
 
-      JsonNode requestBody = getObjectMapper().convertValue(auditRequest, JsonNode.class);
+    JsonNode requestBody = getObjectMapper().convertValue(auditRequest, JsonNode.class);
+    Logging logging = LoggingOptions.getDefaultInstance().getService();
 
-      // The data to write to the log
-      Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);
+    // The data to write to the log
+    Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);
 
-      LogEntry entry =
-          LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
-              .setTimestamp(auditRequest.getOccurred().getTime())
-              .setSeverity(Severity.INFO)
-              .setLogName(AUDIT_LOG_NAME)
-              .setResource(MonitoredResource.newBuilder("global").build())
-              .build();
+    LogEntry entry =
+        LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
+            .setTimestamp(auditRequest.getOccurred().getTime())
+            .setSeverity(Severity.INFO)
+            .setLogName(AUDIT_LOG_NAME)
+            .setResource(MonitoredResource.newBuilder("global").build())
+            .build();
+    // Writes the log entry asynchronously
+    logging.write(Collections.singleton(entry));
 
-      // Writes the log entry asynchronously
-      logging.write(Collections.singleton(entry));
-
-    } catch (Exception e) {
-      LOGGER.error(String.format("%s failed with an exception", auditRequest.getEventCode()), e);
-    }
     LOGGER.exit(
         String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }

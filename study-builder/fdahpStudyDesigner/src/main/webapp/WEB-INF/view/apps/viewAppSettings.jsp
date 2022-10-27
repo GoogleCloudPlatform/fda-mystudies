@@ -13,7 +13,7 @@
     width: 100px !important;
   }
 </style>
-<div class="col-sm-10 col-rc white-bg p-none" id="settingId">
+<div class="col-sm-9.5 col-rc white-bg p-none" id="settingId">
   <form:form
       action="/studybuilder/adminApps/saveOrUpdateAppSettingAndAdmins.do?_S=${param._S}"
       data-toggle="validator" role="form" id="settingFormId" method="post"
@@ -64,14 +64,14 @@
                   class="filled-tooltip"></span>
 				</div>
 				<div class="form-group">
-					<span class="radio radio-info radio-inline p-45"><input
+					<span class="radio radio-info radio-inline p-45 pl-0"><input
 						type="radio" id="inlineRadio1" value="GT" class="appTypeClass"
 						${appBo.type eq 'GT'?'checked':""} name="type"
 						 required data-error="Please fill out this field"
 						 <c:if
 	                    test="${not empty appBo.appStatus && (appBo.appStatus == 'Active' || appBo.appStatus == 'Deactivated')}"> disabled</c:if>> 
 						 <label for="inlineRadio1">Gateway</label> </span> 
-						 <span class="radio radio-inline"><input
+						 <span class="radio radio-inline pl-0"><input
 						  type="radio" id="inlineRadio2" value="SD" class="appTypeClass"
 						  name="type"
 						  ${appBo.type eq 'SD'?'checked':""}
@@ -150,14 +150,14 @@ $('#completedId').click(
     	    $("input").attr("required", true);
         }
       var count = "${countOfStudies}";
-      if($('.checkbox input:checked').length >= 1 && document.getElementById('inlineRadio2').checked == true && count > 1) {
-		  bootbox.alert("This app seems to be linked to multiple studies. Please select the 'gateway' app type to proceed.") ;
-    }else{
-	    if( isFromValid("#settingFormId")){
-	   	 $("#buttonText").val('completed');
-	   	 $("#settingFormId").submit();
-	    }
-     }
+    	  if($('.checkbox input:checked').length >= 1 && document.getElementById('inlineRadio2').checked == true && count > 1) {
+  	            bootbox.alert("This app seems to be linked to multiple studies. Please select the 'Gateway' app type to proceed.") ;
+	    }else{
+		    if( isFromValid("#settingFormId")){
+		   	 $("#buttonText").val('completed');
+		   	 $("#settingFormId").submit();
+		    }
+         }
     });
     
 	var sucMsg = '${sucMsg}';

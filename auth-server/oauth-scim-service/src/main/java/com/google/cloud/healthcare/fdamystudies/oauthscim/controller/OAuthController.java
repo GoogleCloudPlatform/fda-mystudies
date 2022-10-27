@@ -85,6 +85,8 @@ public class OAuthController {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
+    logger.debug("oauth2/token entry ");
+    logger.debug("getToken() paramMap value: " + paramMap.toString());
     String grantType = StringUtils.defaultString(paramMap.getFirst(GRANT_TYPE));
     // validate required params
     ValidationErrorResponse errors = null;
@@ -104,7 +106,7 @@ public class OAuthController {
     }
 
     if (errors.hasErrors()) {
-      logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
+      logger.debug("error400: " + String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
@@ -114,6 +116,10 @@ public class OAuthController {
     Map<String, String> values = Collections.singletonMap("grant_type", grantType);
     auditHelper.logEvent(NEW_ACCESS_TOKEN_GENERATED, auditRequest, values);
 
+    logger.debug("get token from hydra: response.getBody() " + response.getBody());
+
+    logger.debug(
+        "get token from hydra:response.getStatusCodeValue() " + response.getStatusCodeValue());
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
 
     return response;

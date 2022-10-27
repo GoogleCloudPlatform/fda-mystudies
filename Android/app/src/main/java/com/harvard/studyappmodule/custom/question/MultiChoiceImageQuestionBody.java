@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.harvard.R;
 import com.harvard.studyappmodule.custom.QuestionStepCustom;
 import com.harvard.utils.CustomFirebaseAnalytics;
+
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;
 import org.researchstack.backbone.ui.step.body.BodyAnswer;

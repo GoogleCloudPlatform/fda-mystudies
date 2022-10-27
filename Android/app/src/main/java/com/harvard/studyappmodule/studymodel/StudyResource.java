@@ -24,6 +24,8 @@ public class StudyResource extends RealmObject {
   @PrimaryKey
   private String mStudyId;
 
+  private boolean shareDataPermissions;
+
   public String getStudyId() {
     return mStudyId;
   }
@@ -48,5 +50,13 @@ public class StudyResource extends RealmObject {
 
   public void setResources(RealmList<Resource> resources) {
     this.resources = resources;
+  }
+
+  public boolean isShareDataPermissions() {
+    return shareDataPermissions;
+  }
+
+  public void setShareDataPermissions(boolean shareDataPermissions) {
+    this.shareDataPermissions = shareDataPermissions;
   }
 }

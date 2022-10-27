@@ -3,6 +3,7 @@ package com.harvard.usermodule.model;
 
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionModel;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 

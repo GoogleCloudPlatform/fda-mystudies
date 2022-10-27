@@ -20,4 +20,17 @@ public class ParticipantStudyInformation {
   private String enrollment;
   private String withdrawal;
   private String message;
+
+  @Override
+  public String toString() {
+    return "ParticipantStudyInformation [sharing="
+        + sharing
+        + ", enrollment="
+        + enrollment
+        + ", withdrawal="
+        + withdrawal
+        + ", message="
+        + message
+        + "]";
+  }
 }

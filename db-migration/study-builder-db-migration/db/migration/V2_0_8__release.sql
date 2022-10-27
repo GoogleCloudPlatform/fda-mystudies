@@ -63,3 +63,5 @@ CREATE TABLE IF NOT EXISTS `app_sequence` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO user_permissions (permission_id , permissions) VALUES (9, 'ROLE_CREATE_MANAGE_APPS'), (10, 'ROLE_MANAGE_APPS');
+
+ALTER TABLE `fda_hphc`.`studies` ADD COLUMN `is_cloud_storage_moved` INT(10) NULL DEFAULT '0';

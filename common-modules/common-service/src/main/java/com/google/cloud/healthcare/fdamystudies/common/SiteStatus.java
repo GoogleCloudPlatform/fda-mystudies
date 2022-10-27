@@ -25,8 +25,10 @@ public enum SiteStatus {
 
   public static SiteStatus fromValue(Integer value) {
     for (SiteStatus e : SiteStatus.values()) {
-      if (e.value == value) {
-        return e;
+      if (null != e.value) {
+        if (e.value.equals(value)) {
+          return e;
+        }
       }
     }
     return null;

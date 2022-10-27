@@ -40,7 +40,8 @@ class ChartsViewController: UIViewController {
     super.viewWillAppear(animated)
 
     DispatchQueue.main.async {
-      DBHandler.loadChartsForStudy(studyId: (Study.currentStudy?.studyId)!) { (chartList) in
+      guard let studyId = Study.currentStudy?.studyId else { return }
+      DBHandler.loadChartsForStudy(studyId: studyId) { (chartList) in
         if chartList.count != 0 {
           StudyDashboard.instance.charts = chartList
           self.tableView?.reloadData()

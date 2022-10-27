@@ -65,7 +65,8 @@ class APIService {
   private func refreshToken() {
 
     guard !isTokenRefreshing else { return }
-
+      
+    isTokenRefreshing = true
     HydraAPI.refreshToken { [unowned self] (status, error) in
       self.isTokenRefreshing = false
       let failedRouters = self.failedServices

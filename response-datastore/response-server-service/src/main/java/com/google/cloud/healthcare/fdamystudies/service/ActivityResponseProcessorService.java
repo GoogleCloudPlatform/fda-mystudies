@@ -13,13 +13,15 @@ import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStruct
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import java.util.Locale;
 
 public interface ActivityResponseProcessorService {
 
   void saveActivityResponseDataForParticipant(
       QuestionnaireActivityStructureBean activityMetadatFromWcp,
       ActivityResponseBean questionnaireActivityResponseBean,
-      AuditLogEventRequest auditRequest)
+      AuditLogEventRequest auditRequest,
+      Locale locale)
       throws ProcessResponseException, Exception;
 
   StoredResponseBean getActivityResponseDataForParticipant(

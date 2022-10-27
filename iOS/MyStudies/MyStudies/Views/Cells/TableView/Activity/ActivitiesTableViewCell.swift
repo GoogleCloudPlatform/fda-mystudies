@@ -286,16 +286,23 @@ class ActivitiesTableViewCell: UITableViewCell {
       let dailyStartDate = ActivitiesTableViewCell.dailyActivityFormatter.string(
         from: startDate!
       )
+      if endDate != nil {
       let endDate = ActivitiesTableViewCell.dailyActivityFormatter.string(from: endDate!)
       labelTime?.text = runStartTime + "\n" + dailyStartDate + " to " + endDate
+      } else {
+        labelTime?.text = runStartTime + "\n" + dailyStartDate + " to " 
+      }
 
     case .weekly:
       var weeklyStartTime = ActivitiesTableViewCell.weeklyformatter.string(from: startDate!)
       weeklyStartTime = weeklyStartTime.replacingOccurrences(of: "+", with: "every")
       weeklyStartTime = weeklyStartTime.replacingOccurrences(of: ";", with: "\n")
+      if endDate != nil {
       let endDate = ActivitiesTableViewCell.formatter.string(from: endDate!)
-
-      labelTime?.text = weeklyStartTime + " to " + endDate
+        labelTime?.text = weeklyStartTime + " to " + endDate
+      } else {
+      labelTime?.text = weeklyStartTime + " to "
+      }
 
     case .monthly:
       var monthlyStartTime = ActivitiesTableViewCell.monthlyformatter.string(from: startDate!)
@@ -525,7 +532,7 @@ class ActivitiesTableViewCell: UITableViewCell {
       
       let updatedEndTime = runEndDate?.addingTimeInterval(TimeInterval(offset!))
       
-      if activityEndTime! > updatedStartTime! {
+      if activityEndTime != nil && activityEndTime! > updatedStartTime! {
         if !(updatedEndTime! < updatedStartTime!) {
           // append in activityRun array
           let activityRun = ActivityRun()
@@ -653,31 +660,31 @@ class ActivitiesTableViewCell: UITableViewCell {
 
   private static let oneTimeFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma ; MMM dd, yyyy"
+    formatter.dateFormat = "hh:mm a ; MMM dd, yyyy"
     return formatter
   }()
 
   private static var customScheduleFormatter: DateFormatter {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma, MMM dd, yyyy"
+    formatter.dateFormat = "hh:mm a, MMM dd, yyyy"
     return formatter
   }
 
   private static let weeklyformatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma + EEE;MMM dd, yyyy"
+    formatter.dateFormat = "hh:mm a + EEE;MMM dd, yyyy"
     return formatter
   }()
 
   private static let monthlyformatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma + dd ;MMM yyyy"
+    formatter.dateFormat = "hh:mm a + dd ;MMM yyyy"
     return formatter
   }()
 
   private static let timeFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "hh:mma"
+    formatter.dateFormat = "hh:mm a"
     return formatter
   }()
 
