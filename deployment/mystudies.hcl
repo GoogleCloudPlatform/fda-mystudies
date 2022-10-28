@@ -137,7 +137,7 @@ template "project_secrets" {
         },
         {
           secret_id = "manual-mystudies-contact-email-address"
-        },
+        },        
         {
           secret_id = "manual-mystudies-from-email-domain"
         },
