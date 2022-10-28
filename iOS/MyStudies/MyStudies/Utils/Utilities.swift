@@ -132,6 +132,15 @@ class Utilities: NSObject {
 
     return resDate!
   }
+  
+  class func removeImageLocalPath(localPathName:String) {
+    let filemanager = FileManager.default
+    let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as NSString
+    let destinationPath = documentsPath.appendingPathComponent(localPathName)
+    do {
+      try filemanager.removeItem(atPath: destinationPath)
+    } catch let error as NSError { }
+  }
 
   // MARK: - Validation Methods
 

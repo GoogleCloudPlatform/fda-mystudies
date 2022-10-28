@@ -10,7 +10,7 @@
 
   -->
 </style>
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <!--  Start top tab section-->
   <div class="right-content-head">
     <div class="text-right">
@@ -167,16 +167,16 @@
     showSucMsg(sucMsg);
   }
 
-  function showSucMsg(message) {
-    $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
-    $('#alertMsg').show('5000');
-    if('${param.buttonText}' == 'completed'){
+function showSucMsg(message) {
+  $("#alertMsg").removeClass('e-box').addClass('s-box').text(message);
+  $('#alertMsg').show('5000');
+  if('${param.buttonText}' == 'completed'){
 	    window.setTimeout(function(){
 	        window.location.href = "/studybuilder/adminStudies/actionList.do?_S=${param._S}";
 	
 	    }, 5000);
-    }else{
+  }else{
   	setTimeout(hideDisplayMessage, 5000);
-    }
   }
+}
 </script>

@@ -29,7 +29,6 @@ import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jaygoo.widget.SeekBar;
 import com.jaygoo.widget.VerticalRangeSeekBar;
-
 import java.util.ArrayList;
 import org.researchstack.backbone.result.StepResult;
 import org.researchstack.backbone.step.Step;

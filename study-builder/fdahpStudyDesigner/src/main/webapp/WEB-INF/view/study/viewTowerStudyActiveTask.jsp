@@ -4,13 +4,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <style>
-    .help-block .list-unstyled {
-      width: max-content !important;
-    }
-
 	.bootstrap-select.btn-group .dropdown-toggle .filter-option {
 	    text-transform: inherit; !important
 		}
+		
+    .help-block .list-unstyled {
+    width: max-content !important;
+    }
 </style>
 <div class="changeContent">
   <form:form
@@ -22,12 +22,12 @@
   <input type="hidden" name="taskTypeId"
          value="${activeTaskBo.taskTypeId}">
   <input type="hidden" name="studyId" value="${activeTaskBo.studyId}">
+  <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <input type="hidden" value="" id="buttonText" name="buttonText">
   <input type="hidden" value="${actionPage}" id="actionPage"
          name="actionPage">
   <input type="hidden" value="${currentPage}" id="currentPageId"
          name="currentPage">
-         <input type="hidden" name="activeTaskCreated" id="activeTaskCreated" value="${activeTaskBo.activeTaskCreated}">
   <div class="pt-lg">
     <div class="gray-xs-f mb-sm">
       Activity short title or key
@@ -37,18 +37,18 @@
       </span>
       <span
           class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-          title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)."></span>
+          title="A human-readable identifier that must be unique across all activities of the study. Allowed characters are lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)."></span>
     </div>
       <div class="form-group shortTitleClass col-md-4 p-none">
         <input autofocus="autofocus" type="text" custAttType="cust"
-               class="form-control shortTitleCls" id="shortTitleId" data-error="Please fill out this field" 
+               class="form-control shortTitleCls" id="shortTitleId"
                name="shortTitle" value="${fn:escapeXml(activeTaskBo.shortTitle)}"
             <c:if
                 test="${not empty activeTaskBo.isDuplicate && (activeTaskBo.isDuplicate gt 0)}"> disabled</c:if>
-               maxlength="50" required/>
+               maxlength="50" required data-error="Please fill out this field" />
         <div class="help-block with-errors red-txt"></div>
       </div>
-    <div class="clearfix"></div>
+      <div class="clearfix"></div>
   </div>
   <div>
     <div class="gray-xs-f mb-sm">
@@ -64,8 +64,8 @@
     <div>
       <div class="form-group">
         <input type="text" class="form-control" name="displayName"
-               value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150" data-error="Please fill out this field" 
-               required/>
+               value="${fn:escapeXml(activeTaskBo.displayName)}" maxlength="150"
+               required data-error="Please fill out this field" />
         <div class="help-block with-errors red-txt"></div>
       </div>
     </div>
@@ -103,7 +103,7 @@
       type="hidden" name="taskAttributeValueBos[0].addToDashboard"
       value="${taskMasterAttributeBo.addToDashboard}">
     <div class="form-group">
-      <select class="selectpicker aq-select aq-select-form elaborateClass  requireClass" required data-error="Please fill out this field" 
+      <select class="selectpicker aq-select aq-select-form elaborateClass  requireClass" required data-error="Please select an item in the list"
               name="taskAttributeValueBos[0].attributeVal">
         <option value="1">1</option>
         <option value="2">2</option>
@@ -162,10 +162,11 @@
             </div>
             <div class="add_notify_option form-group">
               <select
-                  class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please fill out this field" 
+                  class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList elaborateClass requireClass" data-error="Please select an item in the list"
+						
                   id="chartId" name="taskAttributeValueBos[1].timeRangeChart"
                   title="Select">
-                <option value="" disabled>Select</option>
+                <option value="" selected disabled>Select</option>
                 <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                   <option value="${timeRangeAttr}">${timeRangeAttr}</option>
                 </c:forEach>
@@ -208,7 +209,7 @@
             </div>
             <div class="add_notify_option">
               <div class="form-group">
-                <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
+                <input type="text" class="form-control requireClass" data-error="Please fill out this field"
                        name="taskAttributeValueBos[1].titleChat" maxlength="30"/>
                 <div class="help-block with-errors red-txt"></div>
               </div>
@@ -239,9 +240,9 @@
           <div class="add_notify_option">
             <div class="form-group">
               <input autofocus="autofocus" type="text" custAttType="cust"
-                     class="form-control requireClass shortTitleStatCls" data-error="Please fill out this field" 
+                     class="form-control requireClass shortTitleStatCls" 
                      id="static"
-                     name="taskAttributeValueBos[1].identifierNameStat"
+                     name="taskAttributeValueBos[1].identifierNameStat" data-error="Please fill out this field" 
                      maxlength="20"/>
               <div class="help-block with-errors red-txt"></div>
             </div>
@@ -258,7 +259,7 @@
             </span>
           </div>
           <div class="form-group">
-            <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
+            <input type="text" class="form-control requireClass" data-error="Please fill out this field"
                    name="taskAttributeValueBos[1].displayNameStat" maxlength="50"/>
             <div class="help-block with-errors red-txt"></div>
           </div>
@@ -274,7 +275,7 @@
           </div>
           <div class="add_notify_option">
             <div class="form-group">
-              <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
+              <input type="text" class="form-control requireClass" data-error="Please fill out this field"
                      name="taskAttributeValueBos[1].displayUnitStat"
                      maxlength="15"/>
               <div class="help-block with-errors red-txt"></div>
@@ -289,7 +290,7 @@
           </div>
           <div class="add_notify_option form-group">
             <select
-                class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
+                class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                 title="Select" name="taskAttributeValueBos[1].uploadTypeStat">
               <c:forEach items="${statisticImageList}" var="statisticImage">
                 <option value="${statisticImage.statisticImageId}">${statisticImage.value}</option>
@@ -306,7 +307,7 @@
           </div>
           <div class="form-group">
             <select
-                class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
+                class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                 title="Select"
                 name="taskAttributeValueBos[1].formulaAppliedStat">
               <c:forEach items="${activetaskFormulaList}"
@@ -371,7 +372,7 @@
       <input type="hidden" name="taskAttributeValueBos[0].addToDashboard"
              value="${taskMasterAttributeBo.addToDashboard}">
       <div class="form-group">
-        <select class="selectpicker aq-select aq-select-form elaborateClass  requireClass" required data-error="Please fill out this field" 
+        <select class="selectpicker aq-select aq-select-form elaborateClass  requireClass" required data-error="Please select an item in the list"
                 name="taskAttributeValueBos[0].attributeVal">
           <option value="1" ${taskValueAttributeBo.attributeVal eq '1'?'selected':''}>1</option>
           <option value="2" ${taskValueAttributeBo.attributeVal eq '2'?'selected':''}>2</option>
@@ -437,8 +438,8 @@
                 </div>
                 <div class="add_notify_option form-group mb-none">
                   <select
-                      class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass" data-error="Please fill out this field" 
-                      id="chartId" name="taskAttributeValueBos[1].timeRangeChart" title="Select">
+                      class="selectpicker aq-select aq-select-form elaborateClass frequencyIdList requireClass"
+                      id="chartId" data-error="Please fill out this field"  name="taskAttributeValueBos[1].timeRangeChart" title="Select">
                     <c:forEach items="${timeRangeList}" var="timeRangeAttr">
                       <option
                           value="${timeRangeAttr}" ${fn:escapeXml(taskValueAttributeBo.timeRangeChart) eq fn:escapeXml(timeRangeAttr)?'selected':''}>${timeRangeAttr}</option>
@@ -544,8 +545,8 @@
                 </span>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
-                       name="taskAttributeValueBos[1].displayNameStat"
+                <input type="text" class="form-control requireClass"
+                       name="taskAttributeValueBos[1].displayNameStat" data-error="Please fill out this field" 
                        maxlength="50"
                        value="${fn:escapeXml(taskValueAttributeBo.displayNameStat)}"/>
                 <div class="help-block with-errors red-txt"></div>
@@ -563,8 +564,8 @@
               </div>
               <div class="add_notify_option">
                 <div class="form-group">
-                  <input type="text" class="form-control requireClass" data-error="Please fill out this field" 
-                         name="taskAttributeValueBos[1].displayUnitStat"
+                  <input type="text" class="form-control requireClass"
+                         name="taskAttributeValueBos[1].displayUnitStat" data-error="Please fill out this field" 
                          maxlength="15"
                          value="${fn:escapeXml(taskValueAttributeBo.displayUnitStat)}"/>
                   <div class="help-block with-errors red-txt"></div>
@@ -584,7 +585,7 @@
                 </div>
                 <div class="add_notify_option form-group">
                   <select
-                      class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
+                      class="selectpicker  aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
                       title="Select"
                       name="taskAttributeValueBos[1].uploadTypeStat">
                     <c:forEach items="${statisticImageList}"
@@ -603,7 +604,8 @@
                 </div>
                 <div class="form-group">
                   <select
-                      class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please fill out this field" 
+                      class="selectpicker aq-select aq-select-form elaborateClass requireClass" data-error="Please select an item in the list"
+						
                       title="Select"
                       name="taskAttributeValueBos[1].formulaAppliedStat">
                     <c:forEach items="${activetaskFormulaList}"
@@ -937,9 +939,8 @@
               var newVal = $(this).val().replace(/[^a-z0-9_-]/g, '');
               e.preventDefault();
               $(this).val(newVal);
-              $(this).parent().addClass("has-danger has-error");
               $(this).parent().find(".help-block").empty().append($("<ul><li> </li></ul>").attr("class","list-unstyled").text(
-                  "Please use allowed characters only: lowercase letters (a-z), digits (0-9), _ (underscore) and - (minus)"));
+                  "Please use allowed characters only: lowercase alphabets (a-z), digits (0-9), _ (underscore) and -(minus)"));
             }
           }
         });

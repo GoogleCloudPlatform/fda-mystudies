@@ -6,6 +6,16 @@
 -->
 
 > Subscribe to [mystudies-announce@googlegroups.com](https://groups.google.com/g/mystudies-announce/) to receive release notifications and announcements
+# Release 2.0.11
+* New HealthCare API functionality has been introduced namely Consent API,FHIR,DID
+* Introduced BigQuery data warehouse functionality for analytics of data
+* Security updates
+* Introduced Offline Indicator for the iOS and Android mobile apps
+* Bug fixes and UI refinements
+* Additional code improvements and minor enhancements
+* The full list of bugs and refinements addressed in this release can be viewed [here ](https://github.com/GoogleCloudPlatform/fda-mystudies/milestone/14).
+* Refer to [these](/deployment/README.md#migration-to-cloud-healthcare-api-from-firestore-2011-upgrade) steps when upgrading existing deployments to release 2.0.11
+
 # Release 2.0.10
 * Spring framework upgrade from version 3.0 to 5.3.18
 * Upgrade of related dependencies -- H2, Junit, Hibernate, Tiles, spring-security etc

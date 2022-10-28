@@ -67,13 +67,13 @@ void RLMRealmCreateAccessors(RLMSchema *schema) {
 
 static inline void RLMVerifyRealmRead(__unsafe_unretained RLMRealm *const realm) {
     if (!realm) {
-        @throw RLMException(@"Realm must not be nil");
+//        @throw RLMException(@"Realm must not be nil");
     }
     [realm verifyThread];
     if (realm->_realm->is_closed()) {
         // This message may seem overly specific, but frozen Realms are currently
         // the only ones which we outright close.
-        @throw RLMException(@"Cannot read from a frozen Realm which has been invalidated.");
+//        @throw RLMException(@"Cannot read from a frozen Realm which has been invalidated.");
     }
 }
 
@@ -81,7 +81,7 @@ static inline void RLMVerifyInWriteTransaction(__unsafe_unretained RLMRealm *con
     RLMVerifyRealmRead(realm);
     // if realm is not writable throw
     if (!realm.inWriteTransaction) {
-        @throw RLMException(@"Can only add, remove, or create objects in a Realm in a write transaction - call beginWriteTransaction on an RLMRealm instance first.");
+//        @throw RLMException(@"Can only add, remove, or create objects in a Realm in a write transaction - call beginWriteTransaction on an RLMRealm instance first.");
     }
 }
 
@@ -197,8 +197,9 @@ RLMObjectBase *RLMCreateObjectInRealmWithValue(RLMRealm *realm, NSString *classN
 void RLMDeleteObjectFromRealm(__unsafe_unretained RLMObjectBase *const object,
                               __unsafe_unretained RLMRealm *const realm) {
     if (realm != object->_realm) {
-        @throw RLMException(@"Can only delete an object from the Realm it belongs to.");
-    }
+//        @throw RLMException(@"Can only delete an object from the Realm it belongs to.");
+    
+    } else {
 
     RLMVerifyInWriteTransaction(object->_realm);
 
@@ -211,6 +212,7 @@ void RLMDeleteObjectFromRealm(__unsafe_unretained RLMObjectBase *const object,
 
     // set realm to nil
     object->_realm = nil;
+    }
 }
 
 void RLMDeleteAllObjectsFromRealm(RLMRealm *realm) {

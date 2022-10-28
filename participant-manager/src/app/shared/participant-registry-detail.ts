@@ -21,7 +21,7 @@ export interface ParticipantRegistryDetail {
   registryParticipants: RegistryParticipant[];
   countByStatus: CountByStatus;
   status?: string;
-  appStatus: Status;
+  appStatus?: Status;
   studyStatus: Status;
   studyPermission: Permission;
 }

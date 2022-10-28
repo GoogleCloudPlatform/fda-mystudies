@@ -18,12 +18,12 @@ package com.harvard.studyappmodule;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatTextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.harvard.R;

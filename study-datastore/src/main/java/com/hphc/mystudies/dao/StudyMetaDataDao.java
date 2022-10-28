@@ -915,6 +915,7 @@ public class StudyMetaDataDao {
     ResourcesResponse resourcesResponse = new ResourcesResponse();
     List<ResourcesDto> resourcesDtoList = null;
     StudyDto studyDto = null;
+    ConsentDto consentDto=null;
     try {
       session = sessionFactory.openSession();
 
@@ -925,7 +926,18 @@ public class StudyMetaDataDao {
                   .setString(StudyMetaDataEnum.QF_CUSTOM_STUDY_ID.value(), studyId)
                   .uniqueResult();
       if (studyDto != null) {
-
+    	  //for enabled sharing permision
+    	  consentDto =
+                  (ConsentDto)
+                      session
+                      .createQuery(
+                              "from ConsentDto CDTO  where CDTO.customStudyId =:customStudyId and CDTO.live=1")
+                          .setString("customStudyId", studyDto.getCustomStudyId())
+                          .uniqueResult();
+    	  if(consentDto!=null && consentDto.getShareDataPermissions()!=null) {
+    	  resourcesResponse.setShareDataPermissions(consentDto.getShareDataPermissions().equalsIgnoreCase("Yes") ? true : false);
+    	  }
+    	  //end here
         resourcesDtoList =
             session
                 .getNamedQuery("getResourcesListByStudyId")

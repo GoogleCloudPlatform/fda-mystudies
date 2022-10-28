@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,8 @@ public class StudyController {
       @RequestParam(required = false) String searchTerm,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    
+    String searchValue = StringUtils.replace(searchTerm, " ", "+");
     String[] allowedSortByValues = {
       "email", "locationName", "onboardingStatus", "enrollmentStatus", "enrollmentDate"
     };
@@ -116,7 +119,7 @@ public class StudyController {
             limit,
             offset,
             sortBy + "_" + sortDirection,
-            searchTerm);
+            searchValue);
     logger.exit(String.format(STATUS_LOG, participantRegistryResponse.getHttpStatusCode()));
     return ResponseEntity.status(participantRegistryResponse.getHttpStatusCode())
         .body(participantRegistryResponse);

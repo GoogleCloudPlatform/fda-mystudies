@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETION_FAILED;
 
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
@@ -48,6 +47,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -261,6 +261,10 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
     userDetailsId = commonDao.getUserInfoDetails(userId);
 
+    logger.info(
+        "deactivateAcctBean Request=" + ReflectionToStringBuilder.toString(deactivateAcctBean));
+    logger.info("deactivateAcctBean Request=" + deactivateAcctBean.toString());
+
     if (deactivateAcctBean != null
         && deactivateAcctBean.getStudyData() != null
         && !deactivateAcctBean.getStudyData().isEmpty()) {
@@ -307,8 +311,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       // change the status from DEACTIVATE_PENDING to DEACTIVATED
       userProfileManagementDao.deactivateUserAccount(userId);
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-
-      userMgmntAuditHelper.logEvent(USER_DELETED, auditRequest);
+      // Todo uncomment
+      // userMgmntAuditHelper.logEvent(USER_DELETED, auditRequest);
     } else {
       userMgmntAuditHelper.logEvent(USER_DELETION_FAILED, auditRequest);
     }
@@ -355,6 +359,13 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             : appConfig.getFromEmail();
 
     templateArgs.put("appName", appName);
+
+    logger.debug("resend applicationId: " + applicationId);
+    logger.debug("resend appName: " + appName);
+    logger.debug("getAppSupportEmailAddress resend: " + optApp.get().getAppSupportEmailAddress());
+    // TODO(#496): replace with actual study's org name.
+    /*templateArgs.put("orgName", optApp.get().getOrganizationName());*/
+    templateArgs.put("contactEmail", optApp.get().getContactUsToEmail());
     templateArgs.put("supportEMail", optApp.get().getAppSupportEmailAddress());
     templateArgs.put("securitytoken", securityToken);
     EmailRequest emailRequest =

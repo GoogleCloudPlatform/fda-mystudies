@@ -22,4 +22,6 @@ public class AppConstants {
   public static final String SDF_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   public static final String STATUS_COMPLETED = "completed";
+  public static final String STUDY = "study";
+  public static final String USER_DETAILS = "userDetails";
 }

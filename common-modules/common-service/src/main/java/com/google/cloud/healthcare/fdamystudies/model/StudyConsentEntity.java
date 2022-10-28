@@ -62,6 +62,9 @@ public class StudyConsentEntity implements Serializable {
 
   @Column(length = LARGE_LENGTH)
   private String pdfPath;
+  
+  @Column(length = LARGE_LENGTH)
+  private String DataSharingConsentArtifactPath;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "participant_study_id")

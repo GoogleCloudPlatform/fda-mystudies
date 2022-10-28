@@ -107,6 +107,7 @@ class File {
       if Utilities.isValidValue(someObject: dict[kFileTitleForStudy] as AnyObject) {
         self.name = dict[kFileTitleForStudy] as? String
       }
+      
       if Utilities.isValidValue(someObject: dict[kFileLinkForStudy] as AnyObject) {
 
         self.link = dict[kFileLinkForStudy] as? String

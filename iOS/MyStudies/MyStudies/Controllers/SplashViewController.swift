@@ -41,6 +41,22 @@ class SplashViewController: UIViewController {
     ud.set(false, forKey: kIsShowUpdateAppVersion)
     ud.set("", forKey: "pausedNotification")
     ud.removeObject(forKey: "isAlertShown")
+    ud.setValue("", forKey: "consentEnrolledStatus")
+    
+    print("777userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity1"))")
+    print("888userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity2"))")
+    print("555userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity3"))")
+    print("333userInfoDetails---\(UserDefaults.standard.value(forKey: "newactivity4"))")
+    print("999userInfoDetails---\(UserDefaults.standard.value(forKey: "userInfoDetails"))")
+    ud.set("", forKey: "userInfoDetails")
+      UserDefaults.standard.set("", forKey: "performTaskBasedOnStudyStatus")
+    UserDefaults.standard.set("", forKey: "performActivityTaskBasedOnStudyStatus")
+//    UserDefaults.standard.set("", forKey: "newactivity2")
+//    UserDefaults.standard.set("", forKey: "newactivity1")
+//    UserDefaults.standard.set("", forKey: "newactivity3")
+//    UserDefaults.standard.set("", forKey: "newactivity4")
+    UserDefaults.standard.set("", forKey: "sync")
+    UserDefaults.standard.synchronize()
     ud.synchronize()
   }
 

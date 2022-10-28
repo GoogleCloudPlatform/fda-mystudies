@@ -3,10 +3,22 @@
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
         <a
+          *ngIf="displayHeaderOnResetpassword === true"
           [routerLink]="
             displayHeaderOnResetpassword ? '/coordinator/studies/sites' : []
           "
-          [ngClass]="{cursor__none: displayHeaderOnResetpassword === false}"
+          class="navbar-brand"
+        >
+          <img
+            class="mr-sm width__auto"
+            src="assets/images/branding/landing-logo.png"
+            alt="mainlogo "
+          />
+        </a>
+
+        <a
+          *ngIf="displayHeaderOnResetpassword === false"
+          class="cursor__none"
           class="navbar-brand"
         >
           <img
@@ -15,6 +27,7 @@
             alt="main logo "
           />
         </a>
+
         <div
           *ngIf="displayHeaderOnResetpassword"
           class="collapse navbar-collapse"
@@ -103,6 +116,7 @@
                 routerLink="/coordinator/accounts"
                 routerLinkActive="active"
                 class="nav-item nav-link"
+                style="margin-top: -3px !important"
               >
                 My account
                 <span class="navbar__name">{{ userName | slice: 0:1 }}</span>

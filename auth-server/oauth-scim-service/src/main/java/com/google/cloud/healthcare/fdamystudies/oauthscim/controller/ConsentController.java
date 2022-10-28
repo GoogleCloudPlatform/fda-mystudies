@@ -61,6 +61,10 @@ public class ConsentController {
       Model model)
       throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    String sessionid = ((HttpServletRequest) request).getSession().getId();
+    response.setHeader("Set-Cookie", "JSESSIONID=" + sessionid + "Secure; SameSite=Strict;");
+    response.setHeader("X-Content-Type-Options", "nosniff");
+    response.setHeader("Cache-Control", "no-cache; no-store; must-revalidate;");
 
     cookieHelper.addCookie(response, CONSENT_CHALLENGE_COOKIE, consentChallenge);
     MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
@@ -86,6 +90,10 @@ public class ConsentController {
   public String authenticate(HttpServletRequest request, HttpServletResponse response, Model model)
       throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    String sessionid = ((HttpServletRequest) request).getSession().getId();
+    response.setHeader("Set-Cookie", "JSESSIONID=" + sessionid + "Secure; SameSite=Strict;");
+    response.setHeader("X-Content-Type-Options", "nosniff");
+    response.setHeader("Cache-Control", "no-cache; no-store; must-revalidate;");
 
     String consentChallenge = cookieHelper.getCookieValue(request, CONSENT_CHALLENGE_COOKIE);
 

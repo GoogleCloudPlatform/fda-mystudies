@@ -90,10 +90,12 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
     ResponseEntity<JsonNode> response =
         exchangeForJson(introspectEndpoint, headers, requestBody, HttpMethod.POST);
-    logger.exit(
-        String.format(
-            "status=%d, active=%b",
-            response.getStatusCodeValue(), response.getBody().get(ACTIVE).booleanValue()));
+    if (response.getBody() != null) {
+      logger.exit(
+          String.format(
+              "status=%d, active=%b",
+              response.getStatusCodeValue(), response.getBody().get(ACTIVE).booleanValue()));
+    }
     return response;
   }
 
@@ -110,13 +112,14 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     logger.entry("begin getNewAccessToken()");
     ResponseEntity<JsonNode> response = getToken();
     if (isSuccessful(response)) {
-      this.accessToken = response.getBody().get(ACCESS_TOKEN).textValue();
-      logger.exit(String.format("status=%d", response.getStatusCodeValue()));
+      if (response.getBody() != null) {
+        this.accessToken = response.getBody().get(ACCESS_TOKEN).textValue();
+        logger.exit(String.format("status=%d", response.getStatusCodeValue()));
+      }
     } else {
       logger.error(
-          String.format(
-              "Get new access token from oauth scim service failed with status=%d and response=%s",
-              response.getStatusCodeValue(), response.getBody()));
+          "Get new access token from oauth scim service failed with status=%d and response=%s",
+          response.getStatusCodeValue(), response.getBody());
     }
     return this.accessToken;
   }
@@ -135,10 +138,11 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
         exchangeForJson(tokenEndpoint, headers, requestBody, HttpMethod.POST);
 
     if (!response.getStatusCode().is2xxSuccessful()) {
-      logger.error(
-          String.format(
-              "get token failed with status %d and response %s",
-              response.getStatusCodeValue(), response.getBody().toString()));
+      if (response.getBody() != null && response != null) {
+        logger.error(
+            "get token failed with status %d and response %s",
+            response.getStatusCodeValue(), response.getBody().toString());
+      }
     }
 
     return response;

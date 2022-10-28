@@ -34,9 +34,8 @@ public class ErrorController extends AbstractErrorController {
   public ErrorResponse handleError(HttpServletRequest request) {
     Map<String, Object> errorAttributes = super.getErrorAttributes(request, true);
     ErrorResponse er = new ErrorResponse(errorAttributes);
-    logger.error(
-        String.format(
-            "%s failed with error attributes %s", request.getRequestURI(), errorAttributes));
+    logger.error("%s failed with error attributes %s", request.getRequestURI(), errorAttributes);
+
     return er;
   }
 

@@ -923,6 +923,8 @@ ORK_CLASS_AVAILABLE
  */
 + (instancetype)choiceWithText:(NSString *)text value:(id<NSCopying, NSCoding, NSObject>)value;
 
++ (instancetype)choiceWithTextExclusive:(NSString *)text value:(id<NSCopying, NSCoding, NSObject>)value;
+
 /**
  Returns an initialized text choice object using the specified primary text, detail text,
  and exclusivity.

@@ -39,6 +39,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
+import com.harvard.utils.realm.RealmMigrationHelper;
 import com.harvard.utils.version.Version;
 import com.harvard.utils.version.VersionChecker;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -359,9 +360,9 @@ public class SplashActivity extends AppCompatActivity implements ApiCall.OnAsync
                   dialog.dismiss();
                   if (force) {
                     Toast.makeText(
-                            SplashActivity.this,
-                            "Please update the app to continue using",
-                            Toast.LENGTH_SHORT)
+                        SplashActivity.this,
+                        "Please update the app to continue using",
+                        Toast.LENGTH_SHORT)
                         .show();
                     moveTaskToBack(true);
                     if (Build.VERSION.SDK_INT < 21) {

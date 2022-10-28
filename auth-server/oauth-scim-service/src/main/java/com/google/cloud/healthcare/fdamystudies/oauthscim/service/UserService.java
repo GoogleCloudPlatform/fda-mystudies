@@ -20,6 +20,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
+import java.io.IOException;
 import java.util.Optional;
 
 public interface UserService {

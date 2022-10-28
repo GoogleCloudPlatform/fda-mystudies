@@ -16,26 +16,31 @@
 package com.harvard.studyappmodule;
 
 import android.app.Activity;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
 import com.harvard.R;
 import com.harvard.studyappmodule.events.ContactUsEvent;
 import com.harvard.studyappmodule.studymodel.ReachOut;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 
-public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
+public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete,
+    NetworkChangeReceiver.NetworkChangeCallback {
   private AppCompatTextView title;
   private AppCompatTextView feedbackText;
   private AppCompatEditText feedbackEdittext;
@@ -44,6 +49,8 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
   private AppCompatTextView submitButton;
   private static final int FEEDBACK = 16;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +64,13 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
 
   private void initializeXmlId() {
     backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     title = (AppCompatTextView) findViewById(R.id.title);
     feedbackText = (AppCompatTextView) findViewById(R.id.feedback_label);
     feedbackEdittext = (AppCompatEditText) findViewById(R.id.edittxt_feedback);
     subject = (AppCompatEditText) findViewById(R.id.subject);
     submitButton = (AppCompatTextView) findViewById(R.id.submitButton);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setFont() {
@@ -175,6 +184,34 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
       if (responseCode == FEEDBACK) {
         Toast.makeText(FeedbackActivity.this, errormsg, Toast.LENGTH_SHORT).show();
       }
+    }
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      submitButton.setClickable(false);
+      submitButton.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      submitButton.setClickable(true);
+      submitButton.setAlpha(1F);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
     }
   }
 }

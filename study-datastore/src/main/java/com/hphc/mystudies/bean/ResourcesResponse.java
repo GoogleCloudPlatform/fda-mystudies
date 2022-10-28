@@ -29,6 +29,7 @@ import java.util.List;
 public class ResourcesResponse {
 
   private String message = StudyMetaDataConstants.FAILURE;
+  private Boolean shareDataPermissions;
 
   private List<ResourcesBean> resources = new ArrayList<>();
 
@@ -47,4 +48,14 @@ public class ResourcesResponse {
   public void setResources(List<ResourcesBean> resources) {
     this.resources = resources;
   }
+
+public Boolean getShareDataPermissions() {
+	return shareDataPermissions;
+}
+
+public void setShareDataPermissions(Boolean shareDataPermissions) {
+	this.shareDataPermissions = shareDataPermissions;
+}
+
+
 }

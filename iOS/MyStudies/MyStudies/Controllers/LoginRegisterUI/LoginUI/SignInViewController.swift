@@ -23,6 +23,7 @@ import SlideMenuControllerSwift
 import UIKit
 import WebKit
 import FirebaseAnalytics
+import Reachability
 
 let kVerifyMessageFromSignIn =
   """
@@ -65,7 +66,7 @@ class SignInViewController: UIViewController {
 
   /// The observation object for the progress of the web view (we only receive notifications until it is deallocated).
   private var estimatedProgressObserver: NSKeyValueObservation?
-
+  private var reachability: Reachability!
   lazy var viewLoadFrom: SignInLoadFrom = .menu
   lazy var user = User.currentUser
 
@@ -77,13 +78,17 @@ class SignInViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+      setupNotifiers()
     SessionService.resetSession()
     setupNavigation()
-    DispatchQueue.main.async {
-      self.load()
-      self.initializeTermsAndPolicy()
-    }
+    loadContent()
   }
+    func loadContent() {
+        DispatchQueue.main.async {
+          self.load()
+          self.initializeTermsAndPolicy()
+        }
+    }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -134,6 +139,44 @@ class SignInViewController: UIViewController {
     self.webKitView.navigationDelegate = nil
     progressView.removeFromSuperview()
   }
+  
+    // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+        
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+        } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            self.view.hideAllToasts()
+//            loadContent()
+            break
+        case .wifi:
+            self.view.hideAllToasts()
+//            loadContent()
+            break
+        case .none:
+            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+            break
+        case .unavailable:
+            self.view.makeToast("You are offline", duration: 100, position: .center, title: nil, image: nil, completion: nil)
+            break
+        }
+    }
+    
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
+  
   // MARK: - UI Utils
 
   private func setupNavigation() {
@@ -187,6 +230,7 @@ class SignInViewController: UIViewController {
   }
 
   fileprivate func handleDataCallback(_ url: URL) {
+    print("handleDataCallback---\(url)---\(url["code"])")
     if let code = url["code"],
       let userID = url["userId"],
       let status = Int(url["accountStatus"] ?? ""),
@@ -233,6 +277,7 @@ class SignInViewController: UIViewController {
   /// Grants the user for access token.
   /// - Parameter code: Login authentication code from callback.
   private func grantVerifiedUser(with code: String) {
+    print("grantVerifiedUser---\(code)")
     HydraAPI.grant(user: User.currentUser, with: code) { [weak self] (status, error) in
       if status {
         if self?.viewLoadFrom == .signUp {
@@ -451,7 +496,10 @@ extension SignInViewController: WKNavigationDelegate {
     didFail navigation: WKNavigation!,
     withError error: Error
   ) {
-    self.view.makeToast(error.localizedDescription)
+      if reachability.connection != .unavailable {
+          self.view.makeToast(error.localizedDescription)
+      }
+    
   }
 
   func webView(
@@ -460,7 +508,9 @@ extension SignInViewController: WKNavigationDelegate {
     withError error: Error
   ) {
     if (error as NSError).code != 102 {  // Ignore frame load error
-      self.view.makeToast(error.localizedDescription)
+        if reachability.connection != .unavailable {
+            self.view.makeToast(error.localizedDescription)
+        }
     }
     UIView.animate(
       withDuration: 0.33,
@@ -489,6 +539,8 @@ extension SignInViewController: WKNavigationDelegate {
     decidePolicyFor navigationAction: WKNavigationAction,
     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
   ) {
+    print("navigationAction.request.url---\(navigationAction.request.url)")
+    print("navigationAction.request.url.scheme---\(navigationAction.request.url?.scheme)")
     if let url = navigationAction.request.url, url.scheme == "app" {
       decisionHandler(.cancel)
       // Handle the callbacks

@@ -49,11 +49,24 @@ class EnrollServices: NSObject {
 
     self.delegate = delegate
 
+    print("UIDevice.current.systemVersion---\(UIDevice.current.systemVersion)---\(deviceName())---\(UIDevice.current.model)---\(UIDevice.current.localizedModel)---\(UIDevice.current.systemName))")
     let user = User.currentUser
-    let headerParams = [kUserId: user.userId ?? ""]
+    let headerParams = [kUserId: user.userId ?? "",
+                        "deviceType": "\(deviceName())",
+                        "deviceOS": "\(UIDevice.current.systemVersion)",
+                        "mobilePlatform": "iOS"]
     let method = EnrollmentMethods.studyState.method
 
     self.sendRequestWith(method: method, params: nil, headers: headerParams)
+  }
+  
+  func deviceName() -> String {
+    var systemInfo = utsname()
+    uname(&systemInfo)
+    let str = withUnsafePointer(to: &systemInfo.machine.0) { ptr in
+      return String(cString: ptr)
+    }
+    return str
   }
 
   /// Creates a request to update `Study` status
@@ -149,7 +162,11 @@ class EnrollServices: NSObject {
   }
 
   func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {
+    guard !APIService.instance.isTokenRefreshing else { return }
+            
+      APIService.instance.isTokenRefreshing = true
     HydraAPI.refreshToken { (status, error) in
+        APIService.instance.isTokenRefreshing = true
       if status {
         self.handleUpdateTokenResponse()
       } else if let error = error {
