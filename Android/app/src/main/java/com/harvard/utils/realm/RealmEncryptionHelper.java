@@ -78,7 +78,7 @@ public class RealmEncryptionHelper {
     prefsHelper = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
-  public void deleteEntry(String alias) {
+  public void deleteEntry(String alias){
     try {
       keyStore = KeyStore.getInstance(ANDROID_KEY_STORE);
       keyStore.load(null);

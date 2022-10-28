@@ -17,20 +17,23 @@
 package com.harvard.studyappmodule;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import com.harvard.R;
 import com.harvard.studyappmodule.enroll.EnrollData;
 import com.harvard.studyappmodule.events.VerifyEnrollmentIdEvent;
 import com.harvard.utils.AppController;
 import com.harvard.utils.CustomFirebaseAnalytics;
 import com.harvard.utils.Logger;
+import com.harvard.utils.NetworkChangeReceiver;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
@@ -38,7 +41,7 @@ import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigE
 import java.util.HashMap;
 
 public class EligibilityEnrollmentActivity extends AppCompatActivity
-    implements ApiCall.OnAsyncRequestComplete {
+    implements ApiCall.OnAsyncRequestComplete, NetworkChangeReceiver.NetworkChangeCallback {
 
   private static final int VERIFY_ENROLLMENT_ID = 101;
   private RelativeLayout backBtn;
@@ -49,12 +52,15 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
   private TextView submit;
   private String enteredId;
   private CustomFirebaseAnalytics analyticsInstance;
+  private TextView offlineIndicatior;
+  private NetworkChangeReceiver networkChangeReceiver;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_eligibility_enrollment);
     analyticsInstance = CustomFirebaseAnalytics.getInstance(this);
+    networkChangeReceiver = new NetworkChangeReceiver(this);
     initializeXmlId();
     setTextForView();
     setFont();
@@ -69,6 +75,7 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
     enrollmentdesc = (TextView) findViewById(R.id.enrollmentdesc);
     enrollmentID = (EditText) findViewById(R.id.enrollmentidtxt);
     submit = (TextView) findViewById(R.id.submitbutton);
+    offlineIndicatior = findViewById(R.id.offlineIndicatior);
   }
 
   private void setTextForView() {
@@ -93,6 +100,9 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
   protected void onPause() {
     super.onPause();
     AppController.getHelperHideKeyboard(this);
+    if (networkChangeReceiver != null) {
+      unregisterReceiver(networkChangeReceiver);
+    }
   }
 
   private void bindEvents() {
@@ -219,5 +229,25 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
+  }
+
+  @Override
+  public void onNetworkChanged(boolean status) {
+    if (!status) {
+      offlineIndicatior.setVisibility(View.VISIBLE);
+      submit.setClickable(false);
+      submit.setAlpha(0.5F);
+    } else {
+      offlineIndicatior.setVisibility(View.GONE);
+      submit.setClickable(true);
+      submit.setAlpha(1F);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+    registerReceiver(networkChangeReceiver, intentFilter);
   }
 }

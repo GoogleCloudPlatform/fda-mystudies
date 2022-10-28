@@ -49,13 +49,13 @@ html {
     background-position: 5% !important;
     text-indent: 5px !important;
     margin-right: 20px !important;
-    padding-right: 30px !important;
+    padding-right:15px !important;
     padding-left: 35px !important;
   }
 
   .usr_dtls_search__ {
     border: transparent;
-    min-width: 300px !important;
+    min-width: 300px;
     height: 32px !important;
     font-size: 87.5% !important;
     background-color: var(--aqualight-gray) !important;
@@ -163,7 +163,7 @@ html {
     font-weight: 700;
   }
   .table td {
-    border-top: 1px solid var(--periwinkle-gray);
+    border-top: 1px solid var(--periwinkle-gray) !important;
     color: var(--space-gray);
     font-size: 87.5%;
     padding: 75% 30px;
@@ -1185,7 +1185,6 @@ select {
     display: none;
   }
 }
-
 @media only screen and (max-width: 360px) and (min-width: 320px) {
   .search_svg {
     background: transparent;
@@ -1515,9 +1514,6 @@ select {
   }
 }
 
-// .table_row_hover_shadow tr {
-//   position: relative;
-// }
 .table_row_hover_shadow tr:hover {
   box-shadow: 1px 1px 6px 1px #ccd7e2;
   cursor: pointer;
@@ -1723,9 +1719,9 @@ meter::-moz-meter-bar {
     display: none !important;
   }
 }
-@media only screen and (max-width: 390px) and (min-width: 320px) {
+@media only screen and (max-width: 500px) and (min-width: 320px) {
   .btn_mb_2 {
-    margin-bottom: 20px !important;
+    margin-bottom: 10px !important;
   }
 }
 
@@ -1741,10 +1737,81 @@ meter::-moz-meter-bar {
 input::-webkit-calendar-picker-indicator {
   display: none !important;
 }
+// .myarrow:after {
+//   content: "";
+//   width: 0;
+//   position: absolute;
+//   top: 60%;
+//   right: 12px;
+//   border-width: 6px 4px;
+//   border-style: solid;
+//   pointer-events: none;
+//   border-color: #999 transparent transparent transparent;
+// }
 
 @media only screen and (max-width: 500px) and (min-width: 200px) {
   .tab_sub_menu {
     width: 100% !important;
     max-width: 100% !important;
   }
+}
+
+
+
+/* angular upgradtion CSS fixed here */
+
+.table>:not(:first-child) {
+  border-top: 1px solid var(--periwinkle-gray) !important;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd)>* {
+  --bs-table-accent-bg: transparent;
+  color: transparent;
+}
+
+input[type=password]::-ms-reveal,
+input[type=password]::-ms-clear
+{
+    display: none;
+}
+
+.btn.disabled, .btn:disabled, fieldset:disabled .btn {
+  pointer-events: visible !important;
+  cursor: not-allowed !important;
+}
+
+@media only screen and (max-width: 500px) and (min-width: 200px) {
+  #body-container .usr_dtls_search__ {
+    min-width: 220px 
+}
+}
+
+.select_disabled .ng-select-container .ng-value-container .ng-placeholder {
+  margin-top: 7px !important;
+  cursor: not-allowed;
+}
+
+.select_disabled.ng-select-disabled .ng-arrow-wrapper {
+  top: 0px !important;
+  cursor: not-allowed;
+}
+
+.ng-select.ng-select-disabled>.ng-select-container:hover {
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+}
+.select_disabled {
+  cursor: not-allowed;
+}
+.select_disabled.ng-select-multiple .ng-select-container .ng-value-container .ng-input {
+  cursor: not-allowed;
+}
+.select_disabled.ng-select-disabled>.ng-select-container {
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.table td, .table th {
+  vertical-align: middle !important;
 }

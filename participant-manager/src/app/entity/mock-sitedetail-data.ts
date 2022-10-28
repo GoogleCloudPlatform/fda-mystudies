@@ -21,12 +21,12 @@ export const expectedSiteParticipantDetails = {
     appId: 'Studies',
     customAppId: 'Studies',
     appName: 'My-Studies',
-    appStatus: 'Active',
     siteId: '2',
     customLocationId: 'Location1',
     locationName: 'Location1',
     targetEnrollment: 1,
     studyStatus: Status.Active,
+    appStatus: Status.Active,
     studyPermission: Permission.ViewAndEdit,
     registryParticipants: [
       {

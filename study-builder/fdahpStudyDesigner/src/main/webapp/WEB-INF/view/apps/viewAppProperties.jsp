@@ -13,7 +13,7 @@
     width: 100px !important;
   }
 </style>
-<div class="col-sm-10 col-rc white-bg p-none" id="settingId">
+<div class="col-sm-9.5 col-rc white-bg p-none" id="settingId">
   <form:form
       action="/studybuilder/adminApps/saveOrUpdateAppProperties.do?_S=${param._S}"
       data-toggle="validator" role="form" id="appPropertiesFormId" method="post"

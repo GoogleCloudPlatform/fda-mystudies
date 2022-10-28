@@ -77,12 +77,14 @@ public class AuditLogDAOImpl implements AuditLogDAO {
               .createQuery(queryString)
               .setParameter("userId", userId)
               .setParameter("studyId", studyId)
+              .setHint("javax.persistence.lock.timeout", 15000)
               .executeUpdate();
         } else {
           session
               .createQuery(queryString)
               .setParameter("userId", userId)
               .setParameter("studyId", studyId)
+              .setHint("javax.persistence.lock.timeout", 15000)
               .executeUpdate();
         }
         message = FdahpStudyDesignerConstants.SUCCESS;

@@ -5,7 +5,7 @@
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
-<div class="col-sm-10 col-rc white-bg p-none">
+<div class="col-sm-9.5 col-rc white-bg p-none">
   <!--  Start top tab section-->
   <form:form
       action="/studybuilder/adminStudies/saveOrUpdateComprehensionTestQuestion.do?_S=${param._S}&${_csrf.parameterName}=${_csrf.token}"
@@ -58,7 +58,7 @@
           </span>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" name="questionText" id="questionText" required data-error="Please fill out this field" 
+          <input type="text" class="form-control" name="questionText" id="questionText" required data-error="Please fill out this field"
                  value="${comprehensionQuestionBo.questionText}" maxlength="300"/>
           <div class="help-block with-errors red-txt"></div>
         </div>
@@ -68,7 +68,7 @@
         <!-- Bending Answer options -->
         <div class="unitDivParent">
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) eq 0}">
-            <div class="col-md-12 p-none">
+            <div class="col-md-12 row p-none">
               <div class='col-md-6 pl-none'>
                 <div class="gray-xs-f mb-xs">Answer options (150 characters max)
                   <span
@@ -93,11 +93,11 @@
               </div>
               <div class="clearfix"></div>
             </div>
-            <div class="ans-opts col-md-12 p-none" id="0">
+            <div class="ans-opts col-md-12 row p-none" id="0">
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
-                  <input type='text' class='form-control responseOptionClass' 
-                         name="responseList[0].responseOption" id="responseOptionId0" required data-error="Please fill out this field" 
+                  <input type='text' class='form-control responseOptionClass'
+                         name="responseList[0].responseOption" id="responseOptionId0" required data-error="Please fill out this field"
                          maxlength="150" onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -107,7 +107,7 @@
                 <div class="form-group">
                   <select class='selectpicker wid100' name="responseList[0].correctAnswer"
                           id="correctAnswerId0" required data-error='Please choose one option'>
-                    <option value=''>Select</option>
+                    <option selected value=''>Select</option>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                   </select>
@@ -125,11 +125,11 @@
                 </div>
               </div>
             </div>
-            <div class="ans-opts col-md-12 p-none" id="1">
+            <div class="ans-opts col-md-12 row p-none" id="1">
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control' name="responseList[1].responseOption"
-                         id="responseOptionId1" required data-error="Please fill out this field"  maxlength="150"
+                         id="responseOptionId1" required maxlength="150" data-error="Please fill out this field"
                          onblur="validateForUniqueValue(this,function(){});"
                          onkeypress="resetValue(this);"/>
                   <div class='help-block with-errors red-txt'></div>
@@ -139,7 +139,7 @@
                 <div class="form-group">
                   <select class='selectpicker wid100' name="responseList[1].correctAnswer"
                           id="correctAnswerId1" required data-error='Please choose one option'>
-                    <option value=''>Select</option>
+                    <option selected value=''>Select</option>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                   </select>
@@ -159,7 +159,7 @@
             </div>
           </c:if>
           <c:if test="${fn:length(comprehensionQuestionBo.responseList) gt 0}">
-            <div class="col-md-12 p-none">
+            <div class="col-md-12 row p-none">
               <div class='col-md-6 pl-none'>
                 <div class="gray-xs-f mb-xs">Answer options (150 characters max)
                   <span
@@ -180,13 +180,13 @@
             </div>
             <c:forEach items="${comprehensionQuestionBo.responseList}" var="responseBo"
                        varStatus="responseBoVar">
-              <div class="ans-opts col-md-12 p-none" id="${responseBoVar.index}">
+              <div class="ans-opts col-md-12 row p-none" id="${responseBoVar.index}">
                 <div class='col-md-6 pl-none'>
                   <div class='form-group'>
                     <input type='text' class='form-control'
                            name="responseList[${responseBoVar.index}].responseOption"
                            id="responseOptionId${responseBoVar.index}"
-                           value="${responseBo.responseOption}" required data-error="Please fill out this field" maxlength="150"
+                           value="${responseBo.responseOption}" required maxlength="150"
                            onblur="validateForUniqueValue(this,function(){});"
                            onkeypress="resetValue(this);"/>
                     <div class='help-block with-errors red-txt'></div>
@@ -194,11 +194,11 @@
                 </div>
                 <div class='col-md-3'>
                   <div class="form-group">
-                    <select class='selectpicker wid100' required 
+                    <select class='selectpicker wid100' required data-error="Please fill out this field"
                             data-error='Please choose one option'
                             name="responseList[${responseBoVar.index}].correctAnswer"
                             id="correctAnswerId${responseBoVar.index}">
-                      <option value=''>Select</option>
+                      <option selected value=''>Select</option>
                       <option value="true" ${responseBo.correctAnswer ? 'selected':''}>Yes
                       </option>
                       <option value="false" ${responseBo.correctAnswer eq false ? 'selected':''}>
@@ -220,7 +220,7 @@
               </div>
             </c:forEach>
             <c:if test="${fn:length(comprehensionQuestionBo.responseList) eq 1}">
-            <div class="ans-opts col-md-12 p-none" id="1">
+            <div class="ans-opts col-md-12 row p-none" id="1">
               <div class='col-md-6 pl-none'>
                 <div class='form-group'>
                   <input type='text' class='form-control' name="responseList[1].responseOption"
@@ -234,7 +234,7 @@
                 <div class="form-group">
                   <select class='selectpicker wid100' name="responseList[1].correctAnswer"
                           id="correctAnswerId1" required data-error='Please choose one option'>
-                    <option value=''>Select</option>
+                    <option selected value=''>Select</option>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                   </select>
@@ -259,7 +259,7 @@
       <div class="clearfix"></div>
 
       <div>
-      <div class="gray-xs-f mb-sm">The question can be considered correctly answered if the app user responds with
+      <div class="gray-xs-f mb-sm">Consider the question to be correctly answered if the app user responds with
           <span
               class="requiredStar">*
           </span>
@@ -323,10 +323,10 @@
 
   function addAns() {
     ansCount = parseInt(ansCount) + 1;
-    var newAns = "<div class='ans-opts col-md-12 p-none' id='" + ansCount
+    var newAns = "<div class='ans-opts col-md-12 row p-none' id='" + ansCount
         + "'><div class='col-md-6 pl-none'>"
         + "<div class='form-group'>"
-        + "<input type='text' class='form-control' required data-error='Please fill out this field'  name='responseList[" + ansCount
+        + "<input type='text' class='form-control' required data-error='Please fill out this field' name='responseList[" + ansCount
         + "].responseOption' id='responseOptionId" + ansCount
         + "'  maxlength='150' onblur='validateForUniqueValue(this,function(){});' onkeypress='resetValue(this);'/>"
         + "<div class='help-block with-errors red-txt'></div>"
@@ -335,7 +335,7 @@
         + "<div class='col-md-3'><div class='form-group'>"
         + "<select class='selectpicker' required data-error='Please choose one option' name='responseList["
         + ansCount + "].correctAnswer' id='correctAnswerId" + ansCount + "'>"
-        + "<option value=''>Select</option>"
+        + "<option selected value=''>Select</option>"
         + "<option value='true'>Yes</option>"
         + "<option value='false'>No</option>"
         + "</select>"
@@ -390,7 +390,7 @@
     <c:if test="${actionPage ne 'view'}">
     $(item).prop('disabled', true);
     bootbox.confirm({
-      closeButton: false,
+      closeButton: true,
       message: 'You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed?',
       buttons: {
         'cancel': {

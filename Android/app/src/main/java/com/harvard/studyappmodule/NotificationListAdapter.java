@@ -19,9 +19,10 @@ package com.harvard.studyappmodule;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,8 +220,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                         }
                       }
                       if (!isStudyAvailable) {
-                        Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT)
-                            .show();
+                        Intent intent =
+                            new Intent(context.getApplicationContext(), StudyActivity.class);
+                        context.startActivity(intent);
                       }
                     } else {
                       Toast.makeText(context, R.string.studyNotAvailable, Toast.LENGTH_SHORT)

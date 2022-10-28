@@ -21,6 +21,7 @@ import Foundation
 import ResearchKit
 import UIKit
 import FirebaseAnalytics
+import Reachability
 
 let kEligibilityConsentTask = "EligibilityConsentTask"
 let kEligibilityTokenStep = "EligibilityTokenStep"
@@ -36,6 +37,9 @@ let kStudyDashboardViewControllerIdentifier = "StudyDashboardViewController"
 let kStudyDashboardTabbarControllerIdentifier = "StudyDashboardTabbarViewControllerIdentifier"
 
 let kShareConsentFailureAlert = "You can't join study without sharing your data"
+
+let kConsentSharingImagePDF = "ConsentpdfSharingImage.pdf"
+let kConsentSharingImage = "ConsentSharingImage"
 
 protocol StudyHomeViewDontrollerDelegate: class {
   func studyHomeJoinStudy()
@@ -68,7 +72,7 @@ class StudyHomeViewController: UIViewController {
   lazy var hideViewConsentAfterJoining = false
   lazy var loadViewFrom: StudyHomeLoadFrom = .home
   var isUpdatingIneligibility: Bool = false
-
+  private var reachability: Reachability!
   var consentRestorationData: Data?
   var isStudyActivitiesPresented = false
 
@@ -86,7 +90,7 @@ class StudyHomeViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    setupNotifiers()
     // Added to change next screen
     pageControlView?.addTarget(
       self,
@@ -114,15 +118,12 @@ class StudyHomeViewController: UIViewController {
 
     let viewConsent = Branding.viewConsentButtonTitle
     buttonViewConsent?.setTitle(viewConsent, for: .normal)
-    
-//    NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)),
-//                                               name: Notification.Name("ORKCancel"), object: nil)
   }
-
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     // hide navigationbar
-
+      
     setNeedsStatusBarAppearanceUpdate()
     navigationController?.setNavigationBarHidden(true, animated: true)
     if Utilities.isValidValue(
@@ -163,6 +164,87 @@ class StudyHomeViewController: UIViewController {
 
     configureStandaloneUI()
   }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        reachabilityCheck()
+    }
+  // MARK: - Utility functions
+    func setupNotifiers() {
+        NotificationCenter.default.addObserver(self, selector:#selector(reachabilityChanged(note:)),
+                                               name: Notification.Name.reachabilityChanged, object: nil);
+
+        
+        
+        do {
+            self.reachability = try Reachability()
+            try self.reachability.startNotifier()
+            } catch(let error) { }
+    }
+    
+    @objc func reachabilityChanged(note: Notification) {
+        let reachability = note.object as! Reachability
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+    func reachabilityCheck() {
+        guard let reachability = self.reachability else {
+            return
+        }
+        switch reachability.connection {
+        case .cellular:
+            setOnline()
+            break
+        case .wifi:
+            setOnline()
+            break
+        case .none:
+            setOffline()
+            break
+        case .unavailable:
+            setOffline()
+            break
+        }
+    }
+  
+    func setOnline() {
+        if let viewController = self.presentedViewController {
+            viewController.view.hideAllToasts()
+        } else {
+            self.view.hideAllToasts()
+        }
+        
+        buttonJoinStudy?.isEnabled = true
+        buttonJoinStudy?.layer.opacity = 1
+        
+    }
+  
+    func setOffline() {
+        if let viewController = self.presentedViewController {
+            viewController.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
+        } else {
+            self.view.makeToast("You are offline", duration: Double.greatestFiniteMagnitude,
+                                position: .center, title: nil, image: nil, completion: nil)
+        }
+        buttonJoinStudy?.isEnabled = false
+        buttonJoinStudy?.layer.opacity = 0.5
+    }
+  
+    override func showOfflineIndicator() -> Bool {
+        return true
+    }
   
   @objc func methodOfReceivedNotification(notification: Notification) {
     Analytics.logEvent(analyticsButtonClickEventsName, parameters: [
@@ -183,6 +265,10 @@ class StudyHomeViewController: UIViewController {
   private func unHideSubViews() {
     for subview in view.subviews {
       subview.isHidden = false
+      let val = subview.alpha
+      if val == 0.6499999761581421 && subview != viewBottombarBg && subview != viewBottombarTopBg {
+        subview.alpha = 0
+      }
     }
     updateViewsStatus()
   }
@@ -266,10 +352,14 @@ class StudyHomeViewController: UIViewController {
       let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
       consentResult?.token = appdelegate.consentToken
     }
-
+    
+    UserDefaults.standard.setValue("\(Study.currentStudy?.userParticipateState.status.description ?? "")", forKey: "consentEnrolledStatus")
+    UserDefaults.standard.synchronize()
+    guard let studyId = Study.currentStudy?.studyId,
+            let consentToken = ConsentBuilder.currentConsent?.consentResult?.token else { return }
     EnrollServices().enrollForStudy(
-      studyId: (Study.currentStudy?.studyId)!,
-      token: (ConsentBuilder.currentConsent?.consentResult?.token)!,
+      studyId: studyId,
+      token: consentToken,
       delegate: self
     )
 
@@ -570,17 +660,17 @@ class StudyHomeViewController: UIViewController {
       navigationController?.pushViewController(signInController, animated: true)
 
     } else {
-      let currentStudy = Study.currentStudy!
+      guard let currentStudy = Study.currentStudy else { return }
       let participatedStatus = currentStudy.userParticipateState.status
 
       switch currentStudy.status {
       case .active:
-
+        guard let studyId = Study.currentStudy?.studyId else { return }
         if participatedStatus == .yetToEnroll || participatedStatus == .notEligible {
           // check if enrolling is allowed
           if currentStudy.studySettings.enrollingAllowed {
             WCPServices().getEligibilityConsentMetadata(
-              studyId: (Study.currentStudy?.studyId)!,
+              studyId: studyId,
               delegate: self as NMWebServiceDelegate
             )
           } else {
@@ -595,7 +685,7 @@ class StudyHomeViewController: UIViewController {
           }
         } else if participatedStatus == .withdrawn {
           WCPServices().getEligibilityConsentMetadata(
-            studyId: (Study.currentStudy?.studyId)!,
+            studyId: studyId,
             delegate: self as NMWebServiceDelegate
           )
         }
@@ -685,8 +775,9 @@ class StudyHomeViewController: UIViewController {
         {
           // check if enrolling is allowed
           if study.studySettings.enrollingAllowed {
+            guard let studyId = Study.currentStudy?.studyId else { return }
             WCPServices().getEligibilityConsentMetadata(
-              studyId: (Study.currentStudy?.studyId)!,
+              studyId: studyId,
               delegate: self as NMWebServiceDelegate
             )
           } else {
@@ -712,8 +803,9 @@ class StudyHomeViewController: UIViewController {
     } else {
       if study.status == .active {
         if study.studySettings.enrollingAllowed {
+          guard let studyId = Study.currentStudy?.studyId else { return }
           WCPServices().getEligibilityConsentMetadata(
-            studyId: (Study.currentStudy?.studyId)!,
+            studyId: studyId,
             delegate: self as NMWebServiceDelegate
           )
         } else {
@@ -734,8 +826,9 @@ class StudyHomeViewController: UIViewController {
       let siteID = response["siteId"] as? String ?? ""
       let tokenIdentifier = response["hashedToken"] as? String ?? ""
       // update token
+      guard let studyId = Study.currentStudy?.studyId else { return }
       let currentUserStudyStatus = User.currentUser.updateStudyStatus(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: studyId,
         status: .enrolled
       )
       currentUserStudyStatus.tokenIdentifier = tokenIdentifier
@@ -769,11 +862,11 @@ class StudyHomeViewController: UIViewController {
   func navigateToWebView(link: String?, htmlText: String?, isEmailAvailable: Bool?) {
     let loginStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
     let webViewController =
-      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
-      as? UINavigationController)!
+    (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+     as? UINavigationController)!
     let webView = (webViewController.viewControllers[0] as? WebViewController)!
     webView.isEmailAvailable = isEmailAvailable!
-
+    
     if link != nil {
       webView.requestLink = Study.currentStudy?.overview.websiteLink
     }
@@ -781,14 +874,42 @@ class StudyHomeViewController: UIViewController {
       webView.htmlString = htmlText
       let regex = "<[^>]+>"
       let detailText = htmlText ?? ""
-      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) != nil {
-        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttributedString?.attributedString2Html {
-          webView.htmlString = "\(valReConversiontoHTMLfromHTML)"
+      //      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) != nil {
+      //        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attributedString2Html {
+      //          webView.htmlString = "\(valReConversiontoHTMLfromHTML)"
+      //        }
+      //      }
+      if detailText.stringByDecodingHTMLEntities.range(of: regex, options: .regularExpression) == nil {
+        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+          
+          if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else if let attributedText =
+                      detailText.htmlToAttriString?.attriString2Html?.stringByDecodingHTMLEntities.htmlToAttriString,
+                    attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else {
+            webView.htmlString = detailText
+          }
+        } else {
+          webView.htmlString = detailText
+        }
+      } else {
+        if let valReConversiontoHTMLfromHTML = detailText.stringByDecodingHTMLEntities.htmlToAttriString?.attriString2Html {
+          
+          if let attributedText = valReConversiontoHTMLfromHTML.stringByDecodingHTMLEntities.htmlToAttriString, attributedText.length > 0 {
+            webView.htmlString = attributedText.attriString2Html
+          } else {
+            webView.htmlString = "\(detailText.stringByDecodingHTMLEntities.htmlToAttriString!)"
+          }
+        } else {
+          webView.htmlString = "\(detailText.stringByDecodingHTMLEntities.htmlToAttriString!)"
         }
       }
     }
     navigationController?.present(webViewController, animated: true, completion: nil)
   }
+
 }
 
 extension StudyHomeViewController: ComprehensionFailureDelegate {
@@ -798,6 +919,9 @@ extension StudyHomeViewController: ComprehensionFailureDelegate {
 
   func didTapOnCancel() {
     consentRestorationData = nil
+    if Utilities.isStandaloneApp() {
+      unHideSubViews()
+    }
   }
 }
 
@@ -893,8 +1017,8 @@ extension StudyHomeViewController: NMWebServiceDelegate {
       == ConsentServerMethods.updateEligibilityConsentStatus.method
       .methodName
     {
-
-      if User.currentUser.getStudyStatus(studyId: (Study.currentStudy?.studyId)!)
+      guard let studyId = Study.currentStudy?.studyId else { return }
+      if User.currentUser.getStudyStatus(studyId: studyId)
         == UserStudyStatus
         .StudyStatus.enrolled
       {
@@ -929,7 +1053,7 @@ extension StudyHomeViewController: NMWebServiceDelegate {
     }
 
     if requestName as String == RegistrationMethods.userProfile.description {
-      if User.currentUser.settings?.passcode == true {
+      if User.currentUser.settings?.passcode == true && ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
         setPassCode()
       } else {
         EnrollServices().getStudyStates(self)
@@ -1000,7 +1124,6 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   /// This method updates the study status to DB and Server.
   /// - Parameter status: `UserStudyStatus.StudyStatus` to be updated.
   fileprivate func updateStudyStatus(status: UserStudyStatus.StudyStatus) {
-
     guard let currentStudy = Study.currentStudy,
       let studyID = currentStudy.studyId
     else { return }
@@ -1025,6 +1148,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     didFinishWith reason: ORKTaskViewControllerFinishReason,
     error: Error?
   ) {
+//      print("---------Step did finish")
     consentRestorationData = nil
 
     if taskViewController.task?.identifier == kPasscodeTaskIdentifier {
@@ -1107,6 +1231,7 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
     _ taskViewController: ORKTaskViewController,
     stepViewControllerWillAppear stepViewController: ORKStepViewController
   ) {
+//      print("---------Step will appear")
     if (taskViewController.result.results?.count)! > 1 {
       if activityBuilder?.actvityResult?.result?.count
         == taskViewController.result.results?
@@ -1131,6 +1256,12 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       || stepIndentifer == kComprehensionInstructionStepIdentifier
     {
 
+        if stepIndentifer == kReviewTitle {
+//            print("--------Review controller")
+            if reachability.connection == .unavailable {
+                setOffline()
+            }
+        }
       if stepIndentifer == kInEligibilityStep {
         self.isUpdatingIneligibility = true
         self.updateStudyStatus(status: .notEligible)
@@ -1201,22 +1332,147 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
   }
 
   // MARK: - StepViewController Delegate
-
   public func stepViewController(
-    _: ORKStepViewController,
+    stepViewController: ORKStepViewController,
     didFinishWith _: ORKStepViewControllerNavigationDirection
-  ) {}
+  ) {
 
-  public func stepViewControllerResultDidChange(_: ORKStepViewController) {}
+      print("\n---------step navigation next button")
+      if reachability.connection == .unavailable {
+          if let viewController = self.presentedViewController {
+              viewController.view.hideAllToasts()
+          }
+          if let taskViewController = stepViewController.taskViewController {
+              UIUtilities.showAlertMessageWithActionHandler(
+                "You are offline",
+                message: kOffline,
+                buttonTitle: kTitleOk,
+                viewControllerUsed: taskViewController,
+                action: {
+                    taskViewController.dismiss(
+                      animated: true,
+                      completion: nil
+                    )
+    //                self.navigationController?.popViewController(animated: true)
+                }
+              )
+          }
+          
+      }
+  }
 
-  public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {}
+  public func stepViewControllerResultDidChange(_: ORKStepViewController) {
+      
+  }
+
+  func taskViewController(_ taskViewController: ORKTaskViewController, willChange result: ORKTaskResult) {
+      if let identifier =
+          taskViewController.currentStepViewController?.step?.identifier {
+          if reachability.connection == .unavailable && identifier == "Review"{
+              if let viewController = self.presentedViewController {
+//                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+                  viewController.view.hideAllToasts()
+              }
+              UIUtilities.showAlertMessageWithActionHandler(
+                "You are offline",
+                message:
+                  kOffline,
+                buttonTitle: kTitleOk,
+                viewControllerUsed: taskViewController,
+                action: {
+                  taskViewController.dismiss(
+                    animated: true,
+                    completion: nil
+                    )
+                }
+                )
+          }
+      }
+  }
+  func taskViewController(_ taskViewController: ORKTaskViewController, didChange result: ORKTaskResult) {
+//      print("---------Result change result")
+//      if let identifier =
+//    taskViewController.currentStepViewController?.step?.identifier {
+//          if reachability.connection == .unavailable && identifier == "Review"{
+      if reachability.connection == .unavailable {
+
+              if let viewController = self.presentedViewController {
+//                  ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+                  viewController.view.hideAllToasts()
+              }
+              UIUtilities.showAlertMessageWithActionHandler(
+                "You are offline",
+                message:
+                  kOffline,
+                buttonTitle: kTitleOk,
+                viewControllerUsed: taskViewController,
+                action: {
+                    taskViewController.dismiss(
+                      animated: true,
+                      completion: nil
+                    )
+                }
+              )
+          }
+//      }
+  }
+  public func stepViewControllerDidFail(_: ORKStepViewController, withError _: Error?) {
+//      print("---------Result fail step")
+  }
+  
+  func captureScreen() -> UIImage {
+
+      UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, false, 0);
+
+    self.view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+
+      let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+
+      UIGraphicsEndImageContext()
+
+      return image
+  }
 
   func taskViewController(
     _ taskViewController: ORKTaskViewController,
     viewControllerFor step: ORKStep
   ) -> ORKStepViewController? {
+      
+      if reachability.connection == .unavailable {
+          if let viewController = self.presentedViewController {
+//              ReachabilityIndicatorManager.shared.removeIndicator(viewController: viewController)
+              viewController.view.hideAllToasts()
+          }
+          UIUtilities.showAlertMessageWithActionHandler(
+            "You are offline",
+            message: kOffline,
+            buttonTitle: kTitleOk,
+            viewControllerUsed: taskViewController,
+            action: {
+                taskViewController.dismiss(
+                  animated: true,
+                  completion: nil
+                )
+//                self.navigationController?.popViewController(animated: true)
+            }
+          )
+      }
+//      print("---------Current step")
     // CurrentStep is TokenStep
+    let val = captureScreen()
+    
+    UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0);
 
+  self.view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+
+    let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+
+    UIGraphicsEndImageContext()
+
+    let image2 = image
+    
+    
+    
     if step.identifier == kEligibilityTokenStep {
       let gatewayStoryboard = UIStoryboard(name: kFetalKickCounterStep, bundle: nil)
 
@@ -1244,11 +1500,14 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
           as? ORKConsentSignatureResult
 
         if consentSignatureResult?.consented == false {
-          taskViewController.dismiss(
-            animated: true,
-            completion: nil
-          )
-          _ = navigationController?.popViewController(animated: true)
+            if reachability.connection != .unavailable {
+                DispatchQueue.main.async {
+                    if let viewController = self.presentedViewController {
+                        viewController.dismiss(animated: true)
+                        self.unHideSubViews()
+                    }
+                }
+            }
           return nil
 
         } else {
@@ -1447,4 +1706,71 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
       return nil
     }
   }
+
+  func taskViewController(_ taskViewController: ORKTaskViewController,
+                          stepViewControllerWillDisappear stepViewController: ORKStepViewController,
+                          navigationDirection direction: ORKStepViewControllerNavigationDirection) {
+      print("\n---------step navigation")
+      if reachability.connection == .unavailable {
+          if let viewController = self.presentedViewController {
+              viewController.view.hideAllToasts()
+          }
+          UIUtilities.showAlertMessageWithActionHandler(
+            "You are offline",
+            message: kOffline,
+            buttonTitle: kTitleOk,
+            viewControllerUsed: taskViewController,
+            action: {
+                taskViewController.dismiss(
+                  animated: true,
+                  completion: nil
+                )
+//                self.navigationController?.popViewController(animated: true)
+            }
+          )
+      }
+    
+    if let val = stepViewController.step?.identifier, val == kConsentSharing {
+      UIGraphicsBeginImageContextWithOptions(taskViewController.view.bounds.size, false, 0)
+      taskViewController.view.drawHierarchy(in: taskViewController.view.bounds, afterScreenUpdates: true)
+      let image: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+      UIGraphicsEndImageContext()
+      let image2 = image
+      let imageURl = saveImageInDocumentDirectory(image: image2, fileName: kConsentSharingImage)
+      
+      let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+      
+      let docURL = documentDirectory.appendingPathComponent(kConsentSharingImagePDF)
+      
+      createPDFForSnapShot(image: image2)?.write(to: docURL, atomically: true)
+    }
+  }
+  
+  func saveImageInDocumentDirectory(image: UIImage, fileName: String) -> URL? {
+
+          let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!;
+          let fileURL = documentsUrl.appendingPathComponent(fileName)
+    if let imageData = image.pngData() {
+              try? imageData.write(to: fileURL, options: .atomic)
+              return fileURL
+          }
+          return nil
+      }
+
+  func createPDFForSnapShot(image: UIImage) -> NSData? {
+
+          let pdfData = NSMutableData()
+          let pdfConsumer = CGDataConsumer(data: pdfData as CFMutableData)!
+
+          var mediaBox = CGRect.init(x: 0, y: 0, width: image.size.width, height: image.size.height)
+
+          let pdfContext = CGContext(consumer: pdfConsumer, mediaBox: &mediaBox, nil)!
+
+          pdfContext.beginPage(mediaBox: &mediaBox)
+          pdfContext.draw(image.cgImage!, in: mediaBox)
+          pdfContext.endPage()
+
+          return pdfData
+      }
+  
 }
